@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TQD · Hình hiển thị đánh giá Google</title>
+<style>
+  :root{ --bg:#F4EEEA; --ivory:#FBF6F1; --card:#FFFDFB; --line:rgba(215,185,129,.5); --gold:#C38C40; --gold-d:#9E5A12; --pink:#C2306A; --pink-d:#8E1B4C;
+    --ink:#3A2530; --muted:#8A7470; --green:#2F6B3A; --red:#B42A3A; --navy:#2C3E5E; --pl:#EFDCE3; }
+  *{ box-sizing:border-box; } html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--ink); font:14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .wrap{ max-width:1240px; margin:0 auto; padding:18px 16px 50px; }
+  h1{ font-size:21px; color:var(--pink-d); margin:0 0 4px; } .lead{ color:var(--muted); margin:0 0 18px; font-size:13.5px; }
+  h2{ font-size:17px; color:var(--pink-d); margin:28px 0 4px; padding-top:14px; border-top:1px solid #E4D6CC; } h2 + p{ color:var(--muted); font-size:13px; margin:0 0 14px; }
+  .board{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:22px 18px; }
+  .shot > .cap{ font-size:13px; font-weight:800; color:var(--ink); margin:0 0 3px; } .shot > .cap i{ font-style:normal; color:#fff; background:var(--pink-d); border-radius:6px; padding:0 6px; margin-right:6px; font-size:12px; }
+  .shot > .sub{ font-size:12px; color:var(--muted); margin:0 0 8px; min-height:34px; }
+  /* khung điện thoại */
+  .ph{ width:100%; max-width:300px; aspect-ratio:9/18.5; background:var(--ivory); border-radius:30px; box-shadow:0 0 0 7px #2C2026, 0 12px 30px rgba(60,20,40,.18); overflow:hidden; position:relative; margin:7px auto 0; display:flex; flex-direction:column; }
+  .sb{ height:26px; display:flex; justify-content:space-between; align-items:center; padding:0 18px; font-size:11px; font-weight:700; flex:none; }
+  .scr{ flex:1; padding:6px 12px 0; overflow:hidden; background:linear-gradient(180deg,#FFF6F1,#FBF2EE); position:relative; }
+  .tb{ height:46px; flex:none; display:flex; justify-content:space-around; align-items:center; background:linear-gradient(90deg,#FFF6D8,#EAF6EE,#FFF0F2,#ECEFFF); border-top:1px solid #F0E3D8; font-size:9px; color:var(--muted); }
+  .tb span{ display:flex; flex-direction:column; align-items:center; gap:2px; } .tb span::before{ content:''; width:18px; height:18px; border-radius:50%; background:#E8D6C0; box-shadow:inset 0 0 0 2px #fff; }
+  .tb span.on{ color:var(--gold-d); font-weight:800; } .tb span.on::before{ background:#E9C987; }
+  .hd{ display:flex; align-items:center; gap:8px; margin:4px 0 10px; } .hd .bk{ width:26px; height:26px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); display:grid; place-items:center; color:var(--muted); font-size:13px; }
+  .hd b{ display:block; font-size:14px; color:var(--pink-d); } .hd small{ font-size:10px; color:var(--muted); }
+  .c{ background:var(--card); border-radius:14px; box-shadow:0 0 0 1px var(--line), 0 3px 10px rgba(150,90,60,.05); padding:10px; margin-bottom:9px; font-size:11.5px; }
+  .ok{ display:flex; gap:8px; align-items:center; } .ok .d{ width:24px; height:24px; border-radius:50%; background:#E3F2E1; color:var(--green); display:grid; place-items:center; font-weight:900; font-size:12px; flex:none; }
+  .ok b{ display:block; font-size:12px; } .ok small{ color:var(--muted); font-size:10px; }
+  .it{ color:var(--muted); font-size:10.5px; margin-top:6px; padding-top:6px; border-top:1px solid #F3E8E2; }
+  .inv{ background:linear-gradient(135deg,#FFF8EA,#FFF1F3); outline:2px solid #E9B44C; outline-offset:2px; }
+  .inv .k{ font-size:8.5px; letter-spacing:.12em; font-weight:800; color:#A47A2C; text-transform:uppercase; } .inv h4{ margin:3px 0; font-size:13px; color:var(--pink-d); line-height:1.3; }
+  .inv p{ margin:0 0 8px; color:var(--muted); font-size:10.5px; }
+  .b1{ display:block; text-align:center; border-radius:11px; padding:8px; font-weight:800; font-size:12px; background:var(--pink); color:#fff; } .b2{ display:block; text-align:center; padding:6px; color:var(--muted); font-size:11px; font-weight:700; }
+  .b3{ display:block; text-align:center; border-radius:11px; padding:8px 4px; font-weight:800; font-size:11.5px; background:#FDE69B; color:#7A4C14; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .greet{ font-size:16px; font-weight:800; color:var(--pink-d); margin:4px 0 0; } .gs{ font-size:10px; color:var(--muted); margin-bottom:8px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:8px; } .mem{ height:70px; border-radius:12px; background:linear-gradient(135deg,#F3DFAE,#E7C981); padding:7px; font-size:9px; font-weight:800; color:#6B4A12; }
+  .cal{ height:70px; border-radius:12px; background:#FFF4EE; box-shadow:0 0 0 1px var(--line); padding:7px; font-size:8.5px; color:#A47A2C; font-weight:800; }
+  .ban{ height:100px; border-radius:14px; background:linear-gradient(110deg,#7A1E45 0%,#9B3A60 45%,#E9B9A8 100%); color:#fff; padding:10px; font-size:13px; font-weight:800; }
+  .ban small{ display:block; font-size:8px; letter-spacing:.12em; color:#F8D789; margin-bottom:3px; }
+  .mini{ display:flex; gap:8px; align-items:center; padding:8px 10px; } .mini .ic{ width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#C38C40,#9E5A12); color:#fff; display:grid; place-items:center; font-size:13px; flex:none; }
+  .mini b{ display:block; font-size:11.5px; color:var(--pink-d); } .mini small{ font-size:9.5px; color:var(--muted); } .mini em{ margin-left:auto; font-style:normal; font-size:10px; font-weight:800; color:var(--pink); white-space:nowrap; }
+  .lock{ position:absolute; inset:0; background:linear-gradient(165deg,#4B2A3A,#7A3B4F 60%,#A35C68); color:#fff; display:flex; flex-direction:column; align-items:center; padding-top:60px; }
+  .lock .t{ font-size:52px; font-weight:300; line-height:1; } .lock .dd{ font-size:12px; opacity:.85; margin:6px 0 26px; }
+  .push{ width:92%; background:rgba(255,255,255,.95); color:#222; border-radius:16px; padding:9px 10px; display:flex; gap:8px; box-shadow:0 6px 20px rgba(0,0,0,.2); }
+  .push .ic{ width:30px; height:30px; border-radius:8px; background:#9E281B; color:#F8D789; display:grid; place-items:center; font-weight:900; font-size:10px; flex:none; }
+  .push b{ font-size:11px; display:block; } .push small{ font-size:11px; color:#444; } .push em{ font-style:normal; color:#999; font-size:9.5px; float:right; }
+  .dim{ position:absolute; inset:0; background:rgba(40,20,25,.35); }
+  .sheet{ position:absolute; left:0; right:0; bottom:0; background:#FFFDFB; border-radius:20px 20px 0 0; padding:12px 12px 14px; box-shadow:0 -6px 20px rgba(0,0,0,.12); }
+  .sheet .grab{ width:34px; height:4px; border-radius:2px; background:#E2D5CF; margin:0 auto 8px; }
+  .sheet h4{ margin:0 0 3px; font-size:14px; color:var(--pink-d); } .sheet .s{ font-size:10.5px; color:var(--muted); margin:0 0 8px; }
+  .lb{ font-size:8.5px; font-weight:800; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin:8px 0 5px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:4px; } .chips span{ border:1px solid #E7CFA5; background:#fff; border-radius:999px; padding:3px 8px; font-size:10.5px; } .chips span.cp{ background:#E3F2E1; border-color:#BFDDBB; color:var(--green); }
+  .q{ font-size:10.5px; padding:4px 0; border-bottom:1px dashed #EFE2D6; } .tip{ background:#FFF8E8; border-radius:9px; padding:6px 8px; font-size:9.5px; color:#7A4C14; margin:8px 0; }
+  .thx{ text-align:center; padding:18px 8px; } .thx .big{ font-size:34px; } .thx h4{ margin:4px 0; color:var(--pink-d); font-size:14px; } .thx p{ font-size:10.5px; color:var(--muted); margin:0; }
+  .seg{ display:flex; gap:4px; margin-bottom:8px; } .seg span{ font-size:10px; padding:4px 8px; border-radius:999px; background:#fff; box-shadow:0 0 0 1px var(--line); } .seg span.on{ background:var(--pink-d); color:#fff; box-shadow:none; }
+  .oh{ display:flex; justify-content:space-between; font-size:10.5px; } .oh b{ font-size:11.5px; } .oh .st{ font-size:9.5px; color:var(--green); font-weight:800; }
+  .rvb{ display:inline-flex; align-items:center; gap:4px; margin-top:7px; border:1px solid #E7CFA5; background:#FFF8E8; color:var(--gold-d); font-weight:800; font-size:10.5px; border-radius:9px; padding:5px 9px; }
+  .rvb.done{ background:#E3F2E1; border-color:#BFDDBB; color:var(--green); }
+  .nt{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid #F0E6DE; } .nt b{ display:block; font-size:11.5px; } .nt small{ font-size:9.5px; color:var(--muted); }
+  .sw{ width:32px; height:19px; border-radius:10px; background:#DDD; position:relative; flex:none; } .sw::after{ content:''; position:absolute; top:2.5px; left:2.5px; width:14px; height:14px; border-radius:50%; background:#fff; } .sw.on{ background:var(--green); } .sw.on::after{ left:15.5px; }
+  .new{ font-size:8px; font-weight:800; color:#fff; background:var(--pink); border-radius:5px; padding:1px 5px; margin-left:4px; vertical-align:2px; }
+  .hl{ outline:2px solid #E9B44C; outline-offset:2px; border-radius:8px; }
+  /* POS */
+  .pos{ background:#FBF6F3; border-radius:14px; box-shadow:0 0 0 1px #E2D3CC, 0 12px 30px rgba(60,20,40,.12); overflow:hidden; display:grid; grid-template-columns:190px 1fr; margin-top:8px; font-size:13px; }
+  .side{ background:#2E1A26; color:#E9D7E0; padding:14px 10px; } .side .br{ font-weight:800; letter-spacing:.06em; color:#F8D789; font-size:12px; padding:2px 8px 12px; } .side .br small{ display:block; font-weight:500; letter-spacing:0; color:#C9AFBC; font-size:10.5px; }
+  .side .g{ font-size:10px; letter-spacing:.1em; color:#B99AAA; text-transform:uppercase; margin:10px 8px 4px; } .side .n{ padding:7px 10px; border-radius:9px; font-size:12.5px; } .side .n.on{ background:rgba(248,215,137,.16); color:#fff; font-weight:700; }
+  .side .n .new{ background:#E9B44C; color:#2E1A26; }
+  .pm{ min-width:0; } .ptop{ display:flex; align-items:center; gap:10px; padding:11px 18px; background:#FFFDFB; border-bottom:1px solid var(--pl); } .ptop h3{ margin:0; font-size:16px; color:var(--pink-d); flex:1; } .ptop small{ color:var(--muted); font-size:11.5px; }
+  .ptabs{ display:flex; gap:2px; padding:0 14px; background:#FFFDFB; border-bottom:1px solid var(--pl); } .ptabs span{ padding:9px 12px; font-weight:700; font-size:12.5px; color:var(--muted); border-bottom:2px solid transparent; } .ptabs span.on{ color:var(--pink-d); border-color:var(--pink-d); }
+  .pp{ padding:14px 18px 18px; }
+  .pc{ background:#FFFDFB; border-radius:14px; box-shadow:0 0 0 1px var(--pl); padding:12px 14px; min-width:0; }
+  .kp{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; } .kp small{ display:block; color:var(--muted); font-size:11px; } .kp b{ display:block; font-size:21px; margin:2px 0; } .kp span{ font-size:11px; color:var(--green); font-weight:700; }
+  .fl{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; } .fl span{ border:1px solid var(--pl); background:#fff; padding:5px 10px; border-radius:14px; font-size:11.5px; } .fl span.on{ background:var(--pink-d); color:#fff; border-color:var(--pink-d); }
+  .rl{ display:grid; grid-template-columns:1fr; gap:8px; }
+  .rv{ background:#fff; border-radius:12px; box-shadow:0 0 0 1px var(--pl); padding:10px 12px; display:grid; grid-template-columns:minmax(0,1fr) 230px; gap:12px; }
+  .rv.low{ box-shadow:0 0 0 1.5px #E7A3A3; background:#FFF8F8; }
+  .rv .h{ font-weight:800; font-size:13px; } .rv .h small{ font-weight:500; color:var(--muted); font-size:11px; margin-left:6px; } .stars{ color:#E3B04B; letter-spacing:1px; } .stars i{ font-style:normal; color:#DDD; }
+  .rv p{ margin:4px 0 0; font-size:12.5px; } .al{ display:inline-block; font-size:10px; font-weight:800; color:#fff; background:var(--red); border-radius:6px; padding:1px 6px; margin-left:6px; }
+  .mt{ font-size:11px; color:var(--muted); } .mt b{ display:block; font-size:11.5px; } .mt .hi{ color:var(--green); } .mt .md{ color:#A47A2C; } .mt .no{ color:#999; }
+  .rp{ margin-top:6px; display:flex; gap:6px; } .rp span{ flex:1; border:1px solid #E7D5CC; border-radius:9px; padding:5px 8px; color:#B3A39E; font-size:11.5px; background:#fff; } .rp em{ font-style:normal; background:var(--pink); color:#fff; border-radius:9px; padding:5px 10px; font-size:11.5px; font-weight:700; }
+  .rd{ margin-top:6px; font-size:11.5px; background:#F6F1EC; border-radius:9px; padding:5px 8px; color:#5A4A45; }
+  .g2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; } .ph3{ margin:0 0 8px; font-size:13px; color:var(--pink-d); }
+  .fun{ display:flex; flex-direction:column; gap:6px; } .fun div{ display:flex; align-items:center; gap:8px; font-size:12px; } .fun i{ display:block; height:20px; border-radius:6px; background:linear-gradient(90deg,#C2306A,#E3789F); } .fun b{ min-width:34px; text-align:right; }
+  .bars{ display:flex; align-items:flex-end; gap:8px; height:110px; padding-top:6px; } .bars div{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; font-size:10px; color:var(--muted); height:100%; }
+  .bars i{ display:block; width:100%; border-radius:5px 5px 0 0; background:#E9C987; } .bars b{ font-size:10.5px; color:var(--ink); }
+  table.t{ width:100%; border-collapse:collapse; font-size:12px; } .t th{ text-align:left; color:var(--muted); font-size:11px; padding:5px 6px; border-bottom:1px solid var(--pl); } .t td{ padding:6px; border-bottom:1px solid #F6ECEF; } .t .n{ text-align:right; font-variant-numeric:tabular-nums; }
+  .sg{ display:grid; grid-template-columns:1fr 1fr; gap:0 18px; }
+  .si{ padding:9px 0; border-bottom:1px solid #F3E8EC; } .si > b{ display:flex; justify-content:space-between; font-size:12.5px; gap:8px; } .si > b span{ color:var(--green); white-space:nowrap; } .si small{ display:block; font-size:10.5px; color:var(--muted); margin:1px 0 5px; }
+  .op{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; } .op span{ border:1px solid #E7CFA5; background:#fff; border-radius:999px; padding:2px 9px; font-size:11px; } .op span.on{ background:var(--pink-d); color:#fff; border-color:var(--pink-d); }
+  .op .cu{ border:1px solid #E7D5CC; color:#B3A39E; min-width:70px; } .op .cu.f{ color:var(--ink); border-color:var(--pink-d); }
+  .pbtn{ display:inline-block; background:var(--pink-d); color:#fff; font-weight:700; padding:7px 14px; border-radius:10px; font-size:12.5px; }
+  .prof{ display:grid; grid-template-columns:1fr 1fr; gap:12px; } .kv{ display:grid; grid-template-columns:130px 1fr; gap:5px 10px; font-size:12.5px; } .kv dt{ color:var(--muted); } .kv dd{ margin:0; font-weight:600; }
+  .kv dd.hl{ background:#FFF8E8; padding:1px 6px; }
+  .qr{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
+  .stand{ background:#FFFDFB; border-radius:14px; box-shadow:0 0 0 1px var(--line), 0 8px 20px rgba(60,20,40,.1); padding:16px; text-align:center; }
+  .stand b{ display:block; color:var(--pink-d); font-size:15px; margin-bottom:4px; } .stand small{ color:var(--muted); font-size:11.5px; }
+  .code{ width:110px; height:110px; margin:10px auto; background:
+    repeating-linear-gradient(90deg,#2C2026 0 6px,transparent 6px 12px), repeating-linear-gradient(0deg,#2C2026 0 6px,transparent 6px 12px); background-blend-mode:multiply; border:6px solid #fff; box-shadow:0 0 0 1px #E7CFA5; opacity:.85; }
+  .cup{ width:150px; margin:0 auto; background:#F7F1EA; border-radius:6px 6px 20px 20px; padding:14px 10px; box-shadow:inset 0 0 0 1px #E2D3C4; }
+  .label{ background:#fff; border-radius:8px; padding:8px; font-size:10px; text-align:left; box-shadow:0 0 0 1px #E7CFA5; } .label b{ font-size:11px; color:var(--pink-d); display:block; }
+  .label .code{ width:46px; height:46px; margin:6px 0 0; border-width:3px; float:right; } .label:after{ content:''; display:block; clear:both; }
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--muted); margin:6px 0 0; } .legend span::before{ content:''; display:inline-block; width:12px; height:12px; border-radius:3px; outline:2px solid #E9B44C; margin-right:5px; vertical-align:-2px; }
+  @media (max-width:760px){ .pos{ grid-template-columns:1fr; } .side{ display:none; } .kp{ grid-template-columns:1fr 1fr; } .rv{ grid-template-columns:1fr; } .g2, .sg, .prof{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Đánh giá Google · hình hiển thị từng trang</h1>
+  <p class="lead">Bản hình tĩnh để chủ quán xem chỗ đặt, không bấm được. Chi tiết kỹ thuật: đặc tả mục 17. Khung POS là mô phỏng, sẽ chỉnh theo giao diện POS thật.</p>
+  <div class="legend"><span>Viền vàng = phần mới thêm</span></div>
+
+  <h2>A. App khách hàng</h2>
+  <p>Luồng: nhận món → chờ theo cài đặt (ví dụ 60 phút) → thông báo + thẻ mời → gợi nhớ → Google Maps → quay lại app.</p>
+  <div class="board">
+
+    <div class="shot"><div class="cap"><i>1</i>Thông báo đẩy</div><div class="sub">Gửi theo giờ cài đặt, chỉ tới khách đã bật thông báo loại "Mời đánh giá".</div>
+      <div class="ph"><div class="sb" style="color:#fff;position:absolute;left:0;right:0;z-index:2"><span>16:05</span><span>●●● 82%</span></div>
+        <div class="lock"><div class="t">16:05</div><div class="dd">Thứ Tư, 28 tháng 10</div>
+          <div class="push hl"><span class="ic">TQĐ</span><div style="flex:1"><em>bây giờ</em><b>Tứ Quý Đường</b><small>Trà Dưỡng Nhan hôm nay thế nào ạ? Chạm để đánh giá quán trên Google 🌸</small></div></div></div></div></div>
+
+    <div class="shot"><div class="cap"><i>2</i>Trang đơn · thẻ mời</div><div class="sub">Đơn đã giao / hoàn thành. Thẻ chỉ hiện sau giờ mời, không hiện lúc nhận hàng.</div>
+      <div class="ph"><div class="sb"><span>16:05</span><span>●●● 82%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Theo dõi đơn</b><small>Đơn #TQD1842</small></div></div>
+        <div class="c inv"><div class="k">Trải nghiệm của chị</div><h4>Chị thấy Tứ Quý Đường hôm nay thế nào?</h4><p>Vài dòng đánh giá trên Google giúp quán được nhiều người biết hơn.</p>
+          <span class="b1">Đánh giá trên Google</span><span class="b2">Để sau</span></div>
+        <div class="c"><div class="ok"><span class="d">✓</span><div><b>Đơn #TQD1842 đã giao</b><small>Lúc 15:00 · Cảm ơn chị đã chọn Tứ Quý Đường</small></div></div>
+          <div class="it">Trà Dưỡng Nhan · Tàu hũ Mộc Quế Hoa · Cà phê Muối</div></div>
+        <div class="c" style="opacity:.6"><b style="font-size:11px">Hành trình giao</b><div class="it" style="border:none">Đã thanh toán · Quán pha chế · GHN lấy hàng · Đã giao 15:00</div></div>
+      </div><div class="tb"><span>Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span class="on">Tài khoản</span></div></div></div>
+
+    <div class="shot"><div class="cap"><i>3</i>Trang chủ · thẻ mời gọn</div><div class="sub">Dưới lời chào, cùng chỗ thẻ video hướng dẫn. Chỉ hiện khi có lời mời đang chờ.</div>
+      <div class="ph"><div class="sb"><span>16:06</span><span>●●● 82%</span></div><div class="scr">
+        <div class="greet">Chào buổi chiều, chị Linh</div><div class="gs">Tứ Quý Đường — Sức khỏe mỗi ngày</div>
+        <div class="c mini inv"><span class="ic">★</span><div><b>Đơn sáng nay thế nào ạ?</b><small>Đánh giá trên Google giúp quán</small></div><em>Đánh giá ›</em></div>
+        <div class="row2"><div class="mem">TỨ QUÝ ĐƯỜNG<br><br>Hạng Vàng · 1.250</div><div class="cal">KẾ HOẠCH VÀ NHẮC VIỆC<br><span style="font-size:15px;color:var(--pink-d)">28</span> Trợ lý của bạn</div></div>
+        <div class="ban"><small>HÔM NAY · THỨ TƯ 28/10</small>Ra mắt Combo<br>mua kèm</div>
+      </div><div class="tb"><span class="on">Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span>Tài khoản</span></div></div></div>
+
+    <div class="shot"><div class="cap"><i>4</i>Bấm "Đánh giá trên Google"</div><div class="sub">Màn gợi nhớ trượt lên. Khách có thể bấm Mở Google ngay, không cần đọc.</div>
+      <div class="ph"><div class="sb"><span>16:06</span><span>●●● 82%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Theo dõi đơn</b><small>Đơn #TQD1842</small></div></div>
+        <div class="c inv"><h4>Chị thấy Tứ Quý Đường hôm nay thế nào?</h4></div>
+        <div class="dim"></div>
+        <div class="sheet hl"><div class="grab"></div><h4>Đánh giá trên Google</h4><p class="s">Chỉ cần chọn số sao cũng được. Muốn viết thêm thì đây là vài gợi ý.</p>
+          <div class="lb">Món chị vừa dùng · chạm để sao chép tên</div>
+          <div class="chips"><span class="cp">✓ Trà Dưỡng Nhan</span><span>Tàu hũ Mộc Quế Hoa</span><span>Cà phê Muối</span></div>
+          <div class="lb">Gợi ý để chị tự viết</div>
+          <div class="q">Chị thích món nào nhất? Vị ra sao?</div><div class="q">Không gian, cách phục vụ thế nào?</div><div class="q" style="border:none">Giao hàng có nhanh, đóng gói có cẩn thận không?</div>
+          <div class="tip">Cần đăng nhập Google (Gmail) trên máy để đăng. Máy có Google Maps thì mở bằng app.</div>
+          <span class="b1">Mở Google</span></div>
+      </div></div></div>
+
+    <div class="shot"><div class="cap"><i>5</i>Google Maps (của Google)</div><div class="sub">Mở thẳng khung viết đánh giá của quán. Khách chọn sao, viết (hoặc không), bấm Đăng.</div>
+      <div class="ph" style="background:#fff"><div class="sb"><span>16:07</span><span>●●● 82%</span></div><div class="scr" style="background:#fff">
+        <div style="font-size:9.5px;color:#888;background:#F2F2F2;border-radius:7px;padding:4px 7px;margin:4px 0 12px">Hình minh hoạ · màn thật do Google hiển thị</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><span style="width:30px;height:30px;border-radius:50%;background:#C8D4E6;display:grid;place-items:center;font-weight:800;color:#fff">L</span><div><b style="font-size:12px">Linh Phạm</b><div style="font-size:10px;color:#777">Đăng công khai</div></div></div>
+        <b style="font-size:14px">Tứ Quý Đường</b>
+        <div style="font-size:30px;color:#F4B400;letter-spacing:4px;margin:8px 0">★★★★<span style="color:#DDD">★</span></div>
+        <div style="border:1px solid #DDD;border-radius:9px;padding:9px;font-size:11.5px;min-height:110px;color:#333">Trà Dưỡng Nhan thơm dịu, không quá ngọt. Giao nhanh, đóng gói cẩn thận.</div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12px;font-weight:700;color:#1A73E8"><span>Huỷ</span><span style="background:#1A73E8;color:#fff;border-radius:999px;padding:5px 16px">Đăng</span></div>
+      </div></div></div>
+
+    <div class="shot"><div class="cap"><i>6</i>Quay lại app</div><div class="sub">App không biết khách đã đăng chưa nên hỏi. Chọn "Lúc khác" thì ẩn thẻ, nhắc lại theo cài đặt.</div>
+      <div class="ph"><div class="sb"><span>16:09</span><span>●●● 81%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Theo dõi đơn</b><small>Đơn #TQD1842</small></div></div>
+        <div class="c inv"><div class="k">Chào mừng chị quay lại</div><h4>Chị đã đánh giá xong chưa ạ?</h4><p>Chị chọn giúp quán để app biết nên cảm ơn hay nhắc lại lúc khác.</p>
+          <div class="two"><span class="b1">Đã đánh giá xong</span><span class="b3">Đánh giá lúc khác</span></div></div>
+        <div class="c"><div class="ok"><span class="d">✓</span><div><b>Đơn #TQD1842 đã giao</b><small>Lúc 15:00</small></div></div></div>
+      </div><div class="tb"><span>Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span class="on">Tài khoản</span></div></div></div>
+
+    <div class="shot"><div class="cap"><i>7</i>Chọn "Đã đánh giá xong"</div><div class="sub">Cảm ơn, ẩn thẻ mời. Hệ thống tự kiểm qua Google trong 24 giờ.</div>
+      <div class="ph"><div class="sb"><span>16:09</span><span>●●● 81%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Theo dõi đơn</b><small>Đơn #TQD1842</small></div></div>
+        <div class="c thx hl"><div class="big">🌸</div><h4>Cảm ơn chị rất nhiều!</h4><p>Mỗi đánh giá giúp Tứ Quý Đường đến với nhiều người hơn. Quán sẽ đọc và trả lời chị trên Google.</p></div>
+        <div class="c"><div class="ok"><span class="d">✓</span><div><b>Đơn #TQD1842 đã giao</b><small>Lúc 15:00</small></div></div><div class="it">Trà Dưỡng Nhan · Tàu hũ Mộc Quế Hoa · Cà phê Muối</div></div>
+      </div><div class="tb"><span>Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span class="on">Tài khoản</span></div></div></div>
+
+    <div class="shot"><div class="cap"><i>8</i>Tài khoản › Lịch sử đơn</div><div class="sub">Nút ở đơn hoàn thành, khách tự bấm khi muốn. Đã đánh giá thì hiện dấu xanh.</div>
+      <div class="ph"><div class="sb"><span>18:20</span><span>●●● 74%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Đơn hàng của tôi</b><small>4 đơn gần nhất</small></div></div>
+        <div class="seg"><span class="on">Tất cả</span><span>Đang giao</span><span>Hoàn thành</span></div>
+        <div class="c"><div class="oh"><b>#TQD1842</b><span class="st">Hoàn thành</span></div><div class="oh muted"><span>Hôm nay · 15:00</span><b>100.500đ</b></div>
+          <div class="it" style="margin-top:4px">Trà Dưỡng Nhan ×1, Cà phê Muối ×2</div><span class="rvb hl">★ Đánh giá trên Google</span></div>
+        <div class="c"><div class="oh"><b>#TQD1798</b><span class="st">Hoàn thành</span></div><div class="oh muted"><span>12/10 · 08:15</span><b>76.000đ</b></div>
+          <div class="it" style="margin-top:4px">Hồng Tân Sinh ×1, Phổ Nhĩ ×1</div><span class="rvb done">✓ Đã đánh giá Google</span></div>
+        <div class="c" style="opacity:.6"><div class="oh"><b>#TQD1701</b><span class="st" style="color:#B42A3A">Đã huỷ</span></div><div class="it">Đơn huỷ: không có nút đánh giá</div></div>
+      </div><div class="tb"><span>Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span class="on">Tài khoản</span></div></div></div>
+
+    <div class="shot"><div class="cap"><i>9</i>Tài khoản › Thông báo</div><div class="sub">Thêm loại tin thứ 7 "Mời đánh giá", khách tự tắt được.</div>
+      <div class="ph"><div class="sb"><span>18:21</span><span>●●● 74%</span></div><div class="scr">
+        <div class="hd"><span class="bk">‹</span><div><b>Thông báo & âm thanh</b><small>Chọn tin chị muốn nhận</small></div></div>
+        <div class="c">
+          <div class="nt"><div><b>Nhắc việc của tôi</b><small>Đúng giờ chị hẹn</small></div><i class="sw on"></i></div>
+          <div class="nt"><div><b>Đơn hàng</b><small>Xác nhận, đang giao, đã giao</small></div><i class="sw on"></i></div>
+          <div class="nt"><div><b>Giờ vàng bắt đầu</b><small>1 tin mỗi ngày lúc mở bán</small></div><i class="sw"></i></div>
+          <div class="nt"><div><b>Quà sinh nhật, voucher, điểm</b><small>Để không lỡ quà</small></div><i class="sw on"></i></div>
+          <div class="nt"><div><b>Gia đình</b><small>Người thân mua, yêu cầu duyệt</small></div><i class="sw on"></i></div>
+          <div class="nt hl" style="padding-left:4px;padding-right:4px"><div><b>Mời đánh giá <span class="new">MỚI</span></b><small>Sau khi nhận món, tối đa 3 lần/năm</small></div><i class="sw on"></i></div>
+          <div class="nt" style="border:none"><div><b>Khuyến mãi và món mới</b><small>Tối đa 1 tin mỗi tuần</small></div><i class="sw"></i></div></div>
+      </div><div class="tb"><span>Trang chủ</span><span>Menu</span><span>Giỏ hàng</span><span>Ưu đãi</span><span class="on">Tài khoản</span></div></div></div>
+  </div>
+
+  <h2>B. POS · App khách hàng › Đánh giá Google</h2>
+  <p>Mục mới trong nhóm menu "App khách hàng". 3 thẻ: Đánh giá · Báo cáo · Cài đặt lời mời. Thêm 1 dòng trong hồ sơ khách.</p>
+
+  <div class="shot"><div class="cap"><i>10</i>Thẻ Đánh giá</div><div class="sub">Danh sách đánh giá từ Google, ghép khách gần đúng, trả lời ngay. Đánh giá thấp có nhãn đỏ và đã báo chủ quán.</div>
+    <div class="pos"><div class="side"><div class="br">TỨ QUÝ ĐƯỜNG<small>POS · Chủ quán Linh</small></div>
+      <div class="n">Bán hàng</div><div class="n">Đơn hàng</div><div class="n">Menu & giá</div><div class="n">Báo cáo bán hàng</div>
+      <div class="g">App khách hàng</div><div class="n">Khách hàng</div><div class="n">Báo cáo</div><div class="n">Nhật ký</div><div class="n">Phân quyền</div><div class="n">Nội dung app</div><div class="n">Giờ vàng</div><div class="n on">Đánh giá Google <span class="new">MỚI</span></div></div>
+      <div class="pm"><div class="ptop"><h3>Đánh giá Google</h3><small>Cập nhật 2 phút trước · ★ 4,7 · 186 đánh giá</small></div>
+        <div class="ptabs"><span class="on">Đánh giá</span><span>Báo cáo</span><span>Cài đặt lời mời</span></div>
+        <div class="pp"><div class="fl"><span class="on">Tất cả</span><span>Chưa trả lời · 3</span><span>1–3 sao · 1</span><span>Chưa ghép khách · 1</span><span>7 ngày</span></div>
+          <div class="rl">
+            <div class="rv low"><div><div class="h">Minh Tuấn <span class="stars">★★<i>★★★</i></span><span class="al">Đã báo chủ quán</span><small>28/10 · 11:40</small></div><p>Giao hơi lâu, đá tan gần hết.</p>
+              <div class="rp"><span>Xin lỗi anh, quán sẽ…</span><em>Trả lời</em></div></div>
+              <div class="mt"><b class="md">Có thể: Anh Tuấn</b>0987 xxx 102 · tên gần giống, cùng buổi<br>Đơn #TQD1839 · giao 10:35 · <u>Sửa ghép</u></div></div>
+            <div class="rv"><div><div class="h">Lan Phạm <span class="stars">★★★★★</span><small>28/10 · 16:12</small></div><p>Trà Dưỡng Nhan thơm dịu, không quá ngọt. Tàu hũ mát, quế hoa thơm. Sẽ quay lại!</p>
+              <div class="rp"><span>Cảm ơn chị…</span><em>Trả lời</em></div></div>
+              <div class="mt"><b class="hi">Khớp cao: Chị Lan</b>0912 xxx 381 · bấm "Mở Google" 16:05<br>Đơn #TQD1842 · Hạng Vàng</div></div>
+            <div class="rv"><div><div class="h">Hoa Nguyen <span class="stars">★★★★<i>★</i></span><small>27/10 · 20:05</small></div><p class="mt">(chỉ chấm sao)</p>
+              <div class="rd"><b>Quán đã trả lời:</b> Cảm ơn chị Hoa, hẹn gặp lại chị ở quán ạ!</div></div>
+              <div class="mt"><b class="hi">Khớp cao: Chị Hoa</b>0909 xxx 554 · bấm "Mở Google" 19:58</div></div>
+            <div class="rv"><div><div class="h">K. <span class="stars">★★★★★</span><small>27/10 · 09:15</small></div><p>Cà phê muối ngon.</p>
+              <div class="rp"><span>Cảm ơn bạn…</span><em>Trả lời</em></div></div>
+              <div class="mt"><b class="no">Không rõ</b>Tên quá ngắn · có thể khách quét QR tại quán<br><u>Ghép tay</u></div></div>
+          </div></div></div></div></div>
+
+  <div class="shot" style="margin-top:22px"><div class="cap"><i>11</i>Thẻ Báo cáo</div><div class="sub">Phễu mời, sao theo tháng, theo kênh và kiểu đơn, tốc độ trả lời. Không báo cáo theo tên nhân viên.</div>
+    <div class="pos"><div class="side"><div class="br">TỨ QUÝ ĐƯỜNG<small>POS · Chủ quán Linh</small></div><div class="g">App khách hàng</div><div class="n">Khách hàng</div><div class="n">Báo cáo</div><div class="n">Nội dung app</div><div class="n">Giờ vàng</div><div class="n on">Đánh giá Google</div></div>
+      <div class="pm"><div class="ptop"><h3>Đánh giá Google</h3><small>30 ngày · 29/09 – 28/10</small></div>
+        <div class="ptabs"><span>Đánh giá</span><span class="on">Báo cáo</span><span>Cài đặt lời mời</span></div>
+        <div class="pp">
+          <div class="kp"><div class="pc"><small>Đánh giá mới</small><b>34</b><span>▲ 12 so với tháng trước</span></div><div class="pc"><small>Sao trung bình</small><b>4,7</b><span>tổng 186 đánh giá</span></div>
+            <div class="pc"><small>Đã trả lời</small><b>94%</b><span>trung bình sau 3 giờ</span></div><div class="pc"><small>Đánh giá 1–3 sao</small><b style="color:var(--red)">3</b><span style="color:var(--muted)">đã xử lý 3/3</span></div></div>
+          <div class="g2">
+            <div class="pc"><div class="ph3">Phễu lời mời</div><div class="fun">
+              <div><span style="width:110px">Lời mời đã gửi</span><i style="width:100%"></i><b>128</b></div>
+              <div><span style="width:110px">Bấm "Mở Google"</span><i style="width:41%"></i><b>52</b></div>
+              <div><span style="width:110px">Đánh giá thật</span><i style="width:27%"></i><b>34</b></div>
+              <div><span style="width:110px">Chọn "Lúc khác"</span><i style="width:18%;background:#E9C987"></i><b>23</b></div></div></div>
+            <div class="pc"><div class="ph3">Số đánh giá theo tháng</div><div class="bars">
+              <div><b>11</b><i style="height:24%"></i>T6</div><div><b>14</b><i style="height:31%"></i>T7</div><div><b>18</b><i style="height:40%"></i>T8</div><div><b>22</b><i style="height:49%"></i>T9</div><div><b>34</b><i style="height:76%;background:#C2306A"></i>T10</div></div></div>
+            <div class="pc"><div class="ph3">Theo kênh</div><table class="t"><tr><th>Kênh</th><th class="n">Mời</th><th class="n">Đánh giá</th><th class="n">Tỷ lệ</th></tr>
+              <tr><td>Thông báo đẩy</td><td class="n">74</td><td class="n">18</td><td class="n">24%</td></tr><tr><td>Thẻ trong app</td><td class="n">54</td><td class="n">9</td><td class="n">17%</td></tr>
+              <tr><td>Lịch sử đơn (khách tự bấm)</td><td class="n">–</td><td class="n">3</td><td class="n">–</td></tr><tr><td>QR tại quán / tem ly</td><td class="n">–</td><td class="n">4</td><td class="n">–</td></tr></table></div>
+            <div class="pc"><div class="ph3">Theo kiểu đơn</div><table class="t"><tr><th>Kiểu đơn</th><th class="n">Mời</th><th class="n">Đánh giá</th><th class="n">★ TB</th></tr>
+              <tr><td>Giao tận nơi</td><td class="n">61</td><td class="n">15</td><td class="n">4,5</td></tr><tr><td>Mua mang đi</td><td class="n">39</td><td class="n">10</td><td class="n">4,8</td></tr><tr><td>Uống tại quán</td><td class="n">28</td><td class="n">9</td><td class="n">4,9</td></tr></table></div>
+          </div></div></div></div></div>
+
+  <div class="shot" style="margin-top:22px"><div class="cap"><i>12</i>Thẻ Cài đặt lời mời</div><div class="sub">Mỗi mục: mức gợi ý (chạm chọn) + ô Tùy chỉnh. Chỉ chủ quán sửa, có ghi nhật ký. Ví dụ đang tùy chỉnh 75 phút cho uống tại quán.</div>
+    <div class="pos"><div class="side"><div class="br">TỨ QUÝ ĐƯỜNG<small>POS · Chủ quán Linh</small></div><div class="g">App khách hàng</div><div class="n">Khách hàng</div><div class="n">Báo cáo</div><div class="n">Nội dung app</div><div class="n">Giờ vàng</div><div class="n on">Đánh giá Google</div></div>
+      <div class="pm"><div class="ptop"><h3>Đánh giá Google</h3><small>Sửa lần cuối 28/10 09:12 · Chủ quán Linh</small></div>
+        <div class="ptabs"><span>Đánh giá</span><span>Báo cáo</span><span class="on">Cài đặt lời mời</span></div>
+        <div class="pp"><div class="pc"><div class="sg">
+          <div class="si"><b>Đang gửi lời mời<i class="sw on" style="display:inline-block"></i></b><small>Tắt để tạm dừng mọi lời mời</small></div>
+          <div class="si"><b>Link viết đánh giá của quán</b><small>Lấy trong Google Business Profile › Xin đánh giá</small><div class="op"><span class="cu f" style="flex:1">https://g.page/r/…/review</span><span>Thử</span></div></div>
+          <div class="si"><b>Chờ sau khi giao xong<span>60 phút</span></b><small>Từ lúc GHN báo giao thành công</small><div class="op"><span>30</span><span>45</span><span class="on">60</span><span>90</span><span>120 phút</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Chờ sau khi mua mang đi<span>60 phút</span></b><small>Từ lúc thanh toán</small><div class="op"><span>30</span><span>45</span><span class="on">60</span><span>90 phút</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Chờ sau khi uống tại quán<span>75 phút</span></b><small>Từ lúc thanh toán · khách ngồi lâu thì để dài hơn</small><div class="op"><span>30</span><span>45</span><span>60</span><span>90 phút</span><span class="cu f">75</span></div></div>
+          <div class="si"><b>Không gửi trong khung giờ<span>21:00–09:00 → 10:00</span></b><small>Rơi vào khung này thì dời sang giờ bên phải</small><div class="op"><span class="on">21:00–09:00</span><span>22:00–08:00</span><span class="cu">từ … đến …</span><em style="font-style:normal;font-size:11px;color:var(--muted)">dời</em><span>09:00</span><span class="on">10:00</span><span class="cu">…</span></div></div>
+          <div class="si"><b>Bắt đầu mời từ đơn thứ<span>1</span></b><small>Có quán chọn mời từ đơn thứ 2</small><div class="op"><span class="on">1</span><span>2</span><span>3</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Tối đa mỗi khách mỗi ngày<span>1 lời mời</span></b><small>Mua nhiều đơn trong ngày chỉ nhận 1 lời mời</small><div class="op"><span class="on">1</span><span>2</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Nhắc lại khi chọn "Lúc khác"<span>1 lần</span></b><small>Ở đơn hoàn thành tiếp theo</small><div class="op"><span>0</span><span class="on">1</span><span>2 lần</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Nghỉ mời sau khi bỏ qua hết<span>60 ngày</span></b><small>Hết số lần nhắc mà vẫn chưa đánh giá</small><div class="op"><span>30</span><span class="on">60</span><span>90</span><span>180 ngày</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Tối đa mỗi khách mỗi năm<span>3 lời mời</span></b><small>Khách đã đánh giá thì không mời nữa</small><div class="op"><span>2</span><span class="on">3</span><span>4</span><span>6</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Báo ngay cho chủ quán khi<span>≤ 3 sao</span></b><small>Trong POS + thông báo về máy chủ quán</small><div class="op"><span>1</span><span>2</span><span class="on">3 sao trở xuống</span><span class="cu">Tùy chỉnh</span></div></div>
+          <div class="si"><b>Kênh mời</b><small>Bật/tắt từng kênh</small><div class="op"><span class="on">Thông báo đẩy</span><span class="on">Thẻ trong app</span><span class="on">Nút ở Lịch sử đơn</span></div></div>
+        </div><div style="text-align:right;margin-top:10px"><span class="pbtn">Lưu cài đặt</span></div></div></div></div></div></div>
+
+  <div class="shot" style="margin-top:22px"><div class="cap"><i>13</i>Khách hàng › hồ sơ khách</div><div class="sub">Thẻ Tổng quan có thêm 1 dòng về đánh giá Google.</div>
+    <div class="pos"><div class="side"><div class="br">TỨ QUÝ ĐƯỜNG<small>POS · Chủ quán Linh</small></div><div class="g">App khách hàng</div><div class="n on">Khách hàng</div><div class="n">Báo cáo</div><div class="n">Đánh giá Google</div></div>
+      <div class="pm"><div class="ptop"><h3>Chị Lan · 0912 xxx 381</h3><small>Hạng Vàng · khách từ 03/2026</small></div>
+        <div class="ptabs"><span class="on">Tổng quan</span><span>Ví & điểm</span><span>Đơn & voucher</span><span>Bảo mật</span></div>
+        <div class="pp"><div class="prof"><div class="pc"><dl class="kv"><dt>Họ tên</dt><dd>Phạm Thị Lan</dd><dt>Xưng hô</dt><dd>Chị</dd><dt>Sinh nhật</dt><dd>14/11</dd><dt>Tổng chi</dt><dd>2.150.000đ · 23 đơn</dd><dt>Lần cuối</dt><dd>Hôm nay</dd>
+          <dt>Đánh giá Google <span class="new">MỚI</span></dt><dd class="hl">★★★★★ ngày 28/10 · khớp cao · <u>xem</u></dd></dl></div>
+          <div class="pc"><dl class="kv"><dt>Gia đình</dt><dd>2 người thân</dd><dt>Thể chất</dt><dd>Khí hư (đã đồng ý lưu)</dd><dt>Ghi chú</dt><dd>Ít ngọt</dd>
+          <dt>Khách chưa đánh giá</dt><dd class="muted" style="font-weight:500">sẽ hiện "Chưa đánh giá · đã mời 2 lần"</dd></dl></div></div></div></div></div></div>
+
+  <h2>C. Tại quán (cho khách không dùng app)</h2>
+  <p>Mã QR mở thẳng khung viết đánh giá Google. Mỗi chỗ đặt một mã riêng để báo cáo biết đánh giá đến từ đâu.</p>
+  <div class="qr">
+    <div class="stand"><b>Biển nhỏ trên bàn</b><small>Chị thấy món hôm nay thế nào?</small><div class="code"></div><small>Quét để đánh giá Tứ Quý Đường trên Google</small></div>
+    <div class="stand"><b>Tem ly / túi giấy</b><div class="cup"><div class="label"><div class="code"></div><b>Trà Dưỡng Nhan · L</b>Ít đường · Nóng<br>#TQD1842<br><span style="color:var(--muted)">Quét: đánh giá quán</span></div></div></div>
+    <div class="stand"><b>Hoá đơn in</b><div style="background:#fff;width:150px;margin:8px auto 0;padding:10px;font:10px/1.5 monospace;text-align:left;box-shadow:0 0 0 1px #E2D3C4">TỨ QUÝ ĐƯỜNG<br>#TQD1842 · 28/10 15:00<br>Trà Dưỡng Nhan  39.000<br>…<br>Tổng          100.500<br>--------------------<div class="code" style="width:60px;height:60px;margin:6px auto;border-width:3px"></div><div style="text-align:center">Cảm ơn quý khách!<br>Quét để đánh giá</div></div></div>
+  </div>
+</div>
+</body>
+</html>

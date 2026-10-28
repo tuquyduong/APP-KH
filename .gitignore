@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+.env.*
+*.log
+.DS_Store
+.claude/settings.local.json
+.claude/settings.json.truoc_TUCHAY

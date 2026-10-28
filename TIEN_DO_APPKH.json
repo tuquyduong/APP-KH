@@ -1,0 +1,107 @@
+{
+  "he": "APP-KH",
+  "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
+  "phien_ban_so": 1,
+  "cap_nhat": "2026-10-28",
+  "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
+  "viec": [
+    {
+      "ma": "KHOI-TAO",
+      "ten": "Dung kho App KH rieng: bo khung tu-chay 1.8.0 chep tu POS 40e07ce, app nen tu app_kh/ POS, demo + dac ta + hop dong /api/kh vao thiet_ke/",
+      "loai": "chat",
+      "trang_thai": "xong",
+      "ngay": "2026-10-28"
+    },
+    {
+      "ma": "KH-UI-2",
+      "ten": "Giao dien theo demo cho cac man xem duoc (dang nhap, trang chu, menu, trang mon, uu dai, QR thanh vien, tai khoan, lich su don), PWA, link QR hoa don ?ma=, dien thoai / may tinh bang / may tinh khong vo",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "han": "2026-11-04",
+      "ngay": "2026-10-28"
+    },
+    {
+      "ma": "KH-UI-3",
+      "ten": "Noi hop dong v2 (KH-API-2: hang, so du vi, gia tung hang, Gio vang, gio hoat dong + bay_gio) + v3 (TOPPING-1: topping theo mon) + lien he ho tro that",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-2",
+        "POS KH-API-2 (hop dong v2)",
+        "POS TOPPING-1 (hop dong v3)"
+      ],
+      "han": "2026-11-04"
+    },
+    {
+      "ma": "KH-CF-1",
+      "ten": "Cloudflare Pages noi kho + bien VITE_POS_API + ten mien tuquyduong.com; chu quan dan dia chi vao Cai dat POS (HD-1) ngay 06.11",
+      "loai": "chu_quan",
+      "trang_thai": "cho",
+      "han": "2026-11-06"
+    },
+    {
+      "ma": "KH-TACH-1",
+      "ten": "May App KH rieng (Render) + kho nho (Turso) + dang nhap kieu so phien thu hoi duoc + khoa dich vu toi POS + chan trang gia + sao luu kho nho (quay lai 10 ngay goi Turso + ban sao hang dem) + dang nhap admin cho che do sua (POS xac nhan tai khoan + quyen)",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "ghi_chu": "sau khai truong 07.11"
+    },
+    {
+      "ma": "KH-MUA-1",
+      "ten": "Phan man hinh dat don: gio, gia that, tra QR payOS / vi + PIN, theo doi don, giao Ahamove, nap vi, mua the hang, doi diem",
+      "loai": "T",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-TACH-1",
+        "POS KH-MUA-1"
+      ]
+    },
+    {
+      "ma": "KH-HOSO-1",
+      "ten": "Man ho so day du (xung ho, email, gioi tinh, ngay sinh, thong tin hoa don) theo KH-HOSO-1 phia POS",
+      "loai": "Th",
+      "trang_thai": "cho"
+    },
+    {
+      "ma": "KH-OTP-1",
+      "ten": "Ma dang nhap qua Zalo ZNS",
+      "loai": "Th",
+      "trang_thai": "cho"
+    },
+    {
+      "ma": "KH-TB-1",
+      "ten": "Thong bao day (Web Push) tu may App KH: dang ky, cac loai tin, cong tac tung loai, tien trinh moi phut (chung nhac viec) + nhan loi nho gui cua POS (POST /internal/thong-bao, khoa dich vu) — dung cho moi danh gia",
+      "loai": "T",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-TACH-1"
+      ]
+    },
+    {
+      "ma": "KH-GOOGLE-0",
+      "ten": "Chu quan: xin quyen Google Business Profile API (som — duyet vai ngay den vai tuan); lay review link; in QR tai quan tro thang review link tu khai truong (khong can code)",
+      "loai": "chu_quan",
+      "trang_thai": "cho"
+    },
+    {
+      "ma": "KH-GOOGLE-1",
+      "ten": "Moi danh gia Google — GIAO DIEN KHACH: the moi Trang chu, Lich su don (Danh gia / Da danh gia), bang truot goi nho, Mo Google, hoi lai khi quay ve; cong tac loai tin 'Moi danh gia' (khi co KH-TB-1). Du lieu + logic o POS (DG-GOOGLE-1)",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS DG-GOOGLE-1 (hop dong)"
+      ],
+      "ghi_chu": "sau khai truong; thiet_ke/DANH_GIA_GOOGLE.md (doc ghi chu dau file)"
+    },
+    {
+      "ma": "KH-SAU-1",
+      "ten": "Dot 4 gom: vi gia dinh, trac nghiem the trang (luu ban rut gon khi khach dong y, quan theo doi), lich & viec cua toi, che do sua noi dung, qua sinh nhat, the qua, moi ban",
+      "loai": "tach_sau",
+      "trang_thai": "cho"
+    }
+  ]
+}
