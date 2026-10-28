@@ -21,8 +21,10 @@ Giấy tờ trao đổi giữa hai chat: `thiet_ke/trao_doi/` (chỉ để tra, 
 ## 2. Kho này khác kho POS thế nào (bộ khung tu-chay chép nguyên từ POS 1.8.0)
 - Code chạy ở `src/` (React + Vite, ESM — `src/package.json` đặt `"type": "module"`). KHÔNG có `server/`, `client/`.
   Chỗ nào trong `tu_chay/` / `/lam-viec` / `/ra-soat` nói `server/`, `client/src/`, `client/dist`, "quầy POS" → hiểu là `src/` của App KH.
-- `tu_chay/cau_hinh.json` giữ nguyên các mục của POS (`ban_mau_pos/…`, `cong_cu/thu_P2x.js`, `gia_lap`) để bài thử của bộ khung chạy xanh không
-  phải sửa khung (đóng băng tới khai trương) — những file đó không có ở kho này, mục thừa vô hại. Thêm: `LUAT_XAY_APP.md`, `src/package.json`.
+- `tu_chay/cau_hinh.json`: `file_luat` giữ nguyên các mục của POS (`ban_mau_pos/…`, `cong_cu/thu_P2x.js`, `gia_lap`) — file không có ở kho này,
+  mục thừa vô hại; thêm `LUAT_XAY_APP.md`, `src/package.json`. `tep_bash_them` để TRỐNG: người gác đòi mỗi tệp trong đó phải có thật — để tên tệp
+  của POS là người gác chặn MỌI lệnh (lỗi NG-CAUHINH, gặp 28.10). Vài ca tự thử của khung gắn với POS (tep_bash_them, keep-alive.yml, tài liệu
+  POS) sẽ đỏ ở kho này — không chạy ở đây, gỡ khi đóng gói khung chung.
 - KHÔNG commit `dist/` (Cloudflare tự dựng `npm run build`). Đổi `src/` thì chạy `node kiem_tra_truoc_khi_giao.js --day-du` (có dựng thử).
 - Sổ việc: `TIEN_DO_APPKH.json` — máy không ghi; chủ quán ghi bằng script chat soạn.
 - Đổi gì ở POS (cổng `/api/kh`, bảng dữ liệu, giá, điểm) → KHÔNG làm ở đây: ghi `## Câu hỏi` / `## Phát hiện`, chủ quán chuyển chat POS.
