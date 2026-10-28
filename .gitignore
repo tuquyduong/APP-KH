@@ -6,3 +6,12 @@ dist/
 .DS_Store
 .claude/settings.local.json
 .claude/settings.json.truoc_TUCHAY
+*.truoc_*
+# Nhật ký người gác (bộ khung tu-chay) — ghi mỗi quyết định, xoay vòng ở 1 MB
+.tu_chay_nhat_ky*.jsonl
+# Rác Replit / cache
+.local/
+.cache/
+.upm/
+.config/
+__pycache__/
