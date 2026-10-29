@@ -124,6 +124,7 @@ function kichThuocPng(f) {
   const css = doc('src/giaoDien/giaoDien.css');
   k('F1 khung giữa tối đa 720px, nền thương hiệu từ 600px', /--khung-rong:\s*720px/.test(css) && /@media \(min-width: 600px\)[^}]*background: var\(--mau-thuong-hieu\)/.test(css));
   k('F2 ảnh có aspect-ratio + object-fit: cover', /aspect-ratio/.test(css) && /object-fit: cover/.test(css));
+  k('F2 khung có chữ + nút (banner) không khoá aspect-ratio khi overflow: hidden', (() => { const r = /\.banner \{[^}]*\}/.exec(css); return !!r && !/aspect-ratio/.test(r[0]) && /min-height/.test(r[0]); })());
   k('F3 nút chạm ≥ 44px + safe-area', /--cham:\s*44px/.test(css) && /env\(safe-area-inset-bottom/.test(css));
   k('F4 100dvh có dự phòng 100vh', /height: 100vh;\s*height: 100dvh/.test(css));
   k('B1 tôn trọng prefers-reduced-motion', /prefers-reduced-motion: reduce/.test(css));

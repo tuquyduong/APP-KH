@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { docToken, xoaToken, datKhiHetPhien } from './api.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungNganXep } from './dieuHuong.js';
@@ -32,9 +32,12 @@ export default function App() {
   const [nhuCau, datNhuCau] = useState('');
   const nx = dungNganXep();
 
+  // 401 giữa phiên: về đăng nhập VÀ dọn màn con (người đăng nhập sau không thấy màn của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
   useEffect(() => {
-    datKhiHetPhien(() => datDangNhap(false));
-  }, []);
+    datKhiHetPhien(() => { nx.veDau(); datDangNhap(false); });
+  }, [nx.veDau]);
+  const khungCuon = useRef(null);
+  useEffect(() => { if (khungCuon.current) khungCuon.current.scrollTop = 0; }, [tab, nx.man]);
 
   const chonTab = (t) => { nx.veDau(); datNhuCau(''); datTab(t); };
   const dangXuat = () => { xoaToken(); nx.veDau(); datMaCho(''); datDangNhap(false); datTab('trangchu'); };
@@ -69,7 +72,7 @@ export default function App() {
     <div className="khung">
       {dangNhap ? (
         <>
-          <main className="noi-dung">{noiDung}</main>
+          <main className="noi-dung" ref={khungCuon}>{noiDung}</main>
           <ThanhTab tab={tab} chon={chonTab} />
         </>
       ) : <DangNhap khiXong={khiDangNhapXong} />}

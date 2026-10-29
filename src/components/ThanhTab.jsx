@@ -1,7 +1,7 @@
 import BieuTuong from './BieuTuong.jsx';
 
 // Đúng 4 mục; mục mua hàng thêm ở KH-MUA-1.
-export const CAC_TAB = [
+const CAC_TAB = [
   ['trangchu', 'Trang chủ', 'nha'],
   ['menu', 'Menu', 'menu'],
   ['uudai', 'Ưu đãi', 'qua'],

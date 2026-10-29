@@ -4,11 +4,12 @@ import { dungTai } from '../dungTai.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import TrangTai from '../components/TrangTai.jsx';
 
-// Nhãn trạng thái suy từ trường máy chủ trả (trang_thai, thanh_toan, tong, da_tra) — không tự tính tiền.
+// Nhãn trạng thái suy từ trường máy chủ trả (trang_thai, thanh_toan, tong, da_tra); "còn nợ" chỉ hiện khi cả hai số có và tong > da_tra.
 function nhanDon(d) {
   if (d.trang_thai === 'cancelled') return <span className="nhan-xau">Đã huỷ</span>;
   if (d.thanh_toan === 'paid') return <span className="nhan-tot">Đã thanh toán</span>;
-  return <span className="nhan-xau">Còn nợ {dinhDangGia(d.tong - d.da_tra)}</span>;
+  if (typeof d.tong === 'number' && typeof d.da_tra === 'number' && d.tong > d.da_tra) return <span className="nhan-xau">Còn nợ {dinhDangGia(d.tong - d.da_tra)}</span>;
+  return null; // thiếu số liệu / không còn nợ: không hiện nhãn (không bịa)
 }
 
 export function ChiTietDon({ ma }) {

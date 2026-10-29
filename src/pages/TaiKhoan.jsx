@@ -21,7 +21,7 @@ function useGui(viec) {
 
 function SuaTen({ khach }) {
   const [ten, datTen] = useState(khach.ten || '');
-  const g = useGui(async () => { const r = await doiTen(ten.trim()); datTen(r.khach.ten); });
+  const g = useGui(async () => { const r = await doiTen(ten.trim()); datTen(r.khach?.ten ?? ten.trim()); });
   return (
     <div className="the">
       <b>Tên hiển thị</b>

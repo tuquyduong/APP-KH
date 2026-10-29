@@ -54,6 +54,7 @@ export default function UuDai({ maSan, khiNhanXong }) {
   return (
     <div>
       <h2>Ưu đãi</h2>
+      <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={tai.taiLai} />
       <TrangTai tai={tai}>
         {(dl) => (
           <>
@@ -61,7 +62,6 @@ export default function UuDai({ maSan, khiNhanXong }) {
               <div className="phu">Điểm của bạn</div>
               <div className="so-lon">{dinhDangSo(dl.points)}</div>
             </div>
-            <NhanMa maSan={maSan} khiXong={() => { tai.taiLai(); khiNhanXong(); }} />
             <div className="tieu-de">Voucher</div>
             <Voucher tatCa={tatCa} />
             <button className="nut phu-nut" onClick={() => datTatCa(!tatCa)}>{tatCa ? 'Chỉ xem mã còn dùng' : 'Xem tất cả'}</button>
