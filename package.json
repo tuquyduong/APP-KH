@@ -10,6 +10,7 @@
     "test": "node kiem_tra_truoc_khi_giao.js"
   },
   "dependencies": {
+    "qrcode-generator": "2.0.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
