@@ -49,12 +49,21 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
 | `cong_cu/thu_*.js` | bài thử, in dòng cuối "n đạt · m hỏng" |
 | `thiet_ke/` | demo + đặc tả + hợp đồng `/api/kh` — tài liệu, không phải code chạy |
 
-## 5. Giao diện (chủ quán chốt 27–28.10.2026)
-- Theo demo `thiet_ke/app_kh_demo.html` (bản patch39). Số liệu trong demo chỉ minh hoạ — số thật lấy từ POS.
-- Demo ghi giao hàng GHN là nhầm — quán dùng Ahamove. Hotline / email trong demo (1900 xxxx, support@…) là chữ mẫu, không dùng.
-- Điện thoại trước; máy tính bảng và máy tính KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), máy tính hiện khung giữa màn có nền
-  thương hiệu, chữ to theo cài đặt máy vẫn không tràn, mở trong trình duyệt của Zalo vẫn dùng được.
-- Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa.
+## 5. Giao diện — CHUẨN THEO DEMO (chủ quán chốt 27–29.10.2026)
+- `thiet_ke/app_kh_demo.html` (patch39) là BẢN CHUẨN cho điện thoại. Màu, phông, cỡ chữ, độ đậm, khoảng cách, bo góc, bóng, biểu tượng,
+  chữ trên màn, thứ tự khối, chuyển động, âm thanh, biểu tượng SVG, ảnh, hoạ tiết nền: CHÉP NGUYÊN từ CSS / HTML / JS của demo — không ước lượng, không "gần giống".
+  Bộ kiểm K9 chặn mọi màu / phông không có trong demo.
+- Chỉ được khác demo vì 4 lý do: (a) dữ liệu POS chưa có, hoặc khối thuộc VIỆC SAU đã ghi trong sổ (`TIEN_DO_APPKH.json`) → để trống chỗ,
+  ghi rõ việc nào; (b) chữ / số mẫu của demo không dùng (số liệu, hotline 1900 xxxx,
+  support@…; giao hàng là Ahamove, không GHN); (c) chưa có giỏ hàng / đặt đơn; (d) màn rộng ≥ 1024 px theo MẪU MÀN TO chủ quán đã duyệt
+  (`thiet_ke/mau_man_to/` — khi có). Khác vì lý do nào khác → `## Câu hỏi`, không tự quyết.
+- Mọi việc giao diện PHẢI: (1) tự so ảnh demo ↔ app bằng Chromium + Playwright CÓ SẴN trong môi trường (không thêm vào `package.json`;
+  công cụ so ảnh và API giả để ở nháp), cùng cỡ 390×844 (thêm 360 và 430), cùng dữ liệu mẫu như demo; sửa tới khi chỉ còn khác vì (a)–(d);
+  (2) lưu cặp ảnh + ảnh tô chỗ lệch vào `viec/<MÃ>/so_anh/`; (3) lập `viec/<MÃ>/doi_chieu_demo.md` — mỗi màn một bảng: khối trong demo /
+  đã làm / khác gì, lý do (a)–(d). Chat App KH so ảnh lại lần cuối trước khi gộp.
+- Mọi cỡ màn KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), chữ to theo cài đặt máy không tràn, trình duyệt Zalo dùng được.
+- Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa. Quán KHÔNG có công nợ → app không bao giờ
+  hiện chữ "nợ".
 
 ## 6. Giờ — giờ Việt Nam (chủ quán chốt 28.10)
 - Mọi giờ POS trả là giờ VN dạng `YYYY-MM-DDTHH:mm:ss`, không hậu tố múi giờ. KHÔNG `new Date(chuỗi giờ POS)`; hiện đúng như chuỗi (`dinhDangNgay`).
