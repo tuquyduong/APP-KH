@@ -1,0 +1,118 @@
+{
+ "nhom": {
+  "bh": {
+   "nen": [
+    "Toàn bộ menu theo mùa",
+    "Trà Tứ Quý theo tiết khí"
+   ],
+   "tranh": []
+  },
+  "kh": {
+   "nen": [
+    "Canh Đại Bổ",
+    "Linh Chi",
+    "Topping táo đỏ, kỷ tử, liên tử",
+    "Trà nền Phổ Nhĩ uống ấm"
+   ],
+   "tranh": [
+    "Cà phê đậm",
+    "Đồ uống quá lạnh"
+   ]
+  },
+  "dh": {
+   "nen": [
+    "Trà Phổ Nhĩ, uống nóng",
+    "Canh Đại Bổ",
+    "Tàu hũ Mộc Quế Hoa dùng ấm",
+    "Topping quế hoa, táo đỏ"
+   ],
+   "tranh": [
+    "Hồng Tân Sinh, Thanh Tân Dưỡng (nước ép lạnh)",
+    "Súp lê Thanh Phế",
+    "Đá, thạch lạnh"
+   ]
+  },
+  "ah": {
+   "nen": [
+    "Súp lê Thanh Phế",
+    "Topping nấm tuyết, tuyết yến, đào giao, kỷ tử",
+    "Trà Dưỡng Nhan (*)",
+    "Trà Phổ Nhĩ Minh Mục (*)"
+   ],
+   "tranh": [
+    "Cà phê",
+    "Topping quế hoa",
+    "Món cay, ấm"
+   ]
+  },
+  "dt": {
+   "nen": [
+    "Trà Phổ Nhĩ, ít đường",
+    "Linh Chi"
+   ],
+   "tranh": [
+    "Nếp Cẩm Xoài",
+    "Tàu hũ ngọt",
+    "Topping ngọt dẻo dùng nhiều",
+    "Đồ uống nhiều đường"
+   ]
+  },
+  "tn": {
+   "nen": [
+    "Thanh Tân Dưỡng (*)",
+    "Trà Ngọc Thanh (*)",
+    "Hoa quả theo ngày"
+   ],
+   "tranh": [
+    "Cà phê",
+    "Nếp Cẩm Xoài",
+    "Topping quế hoa",
+    "Món ngọt béo"
+   ]
+  },
+  "hu": {
+   "nen": [
+    "Trà Dưỡng Nhan (*)",
+    "Hồng Tân Sinh (*)",
+    "Tàu hũ Mộc Quế Hoa",
+    "Topping quế hoa, táo đỏ, uống ấm"
+   ],
+   "tranh": [
+    "Đồ uống đá, lạnh"
+   ]
+  },
+  "ku": {
+   "nen": [
+    "Trà Ngọc Thanh Thơm Người (*)",
+    "Tàu hũ Mộc Quế Hoa",
+    "Topping quế hoa",
+    "Hoa quả cam, quýt, bưởi"
+   ],
+   "tranh": [
+    "Cà phê đậm buổi chiều tối"
+   ]
+  },
+  "db": {
+   "nen": [
+    "Linh Chi",
+    "Topping táo đỏ, kỷ tử",
+    "Món ít thành phần"
+   ],
+   "tranh": [
+    "Món có hoa (quế hoa, cúc, nhài): thử lượng nhỏ",
+    "Tuyết yến, đào giao: thử lượng nhỏ"
+   ]
+  }
+ },
+ "anToan": {
+  "nen": [
+   "Trà Phổ Nhĩ pha nhạt",
+   "Topping táo đỏ, kỷ tử",
+   "Hoa quả theo ngày"
+  ],
+  "tranh": [
+   "Món có sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi",
+   "Cà phê"
+  ]
+ }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { KHAU_HIEU } from '../noiDung/thuongHieu.js';
 
 // Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu mỗi phiên trình duyệt, chạm hoặc "Bỏ qua" để vào app.
 // Âm thanh của demo: nút "Bật âm thanh", MẶC ĐỊNH TẮT, nhớ lựa chọn trong phiên. prefers-reduced-motion → bỏ chuyển động.
@@ -99,7 +100,7 @@ export default function ManDau() {
         <div className="e3-em"><img src="/anh/logo-bieu-tuong.webp" alt="" /></div>
         <div className="e3-tw" role="img" aria-label="Tứ Quý Đường">{chu('w1')}{chu('w2')}{chu('w3')}</div>
         <div className="e3-dv" aria-hidden="true"><i /><b /><i /></div>
-        <div className="e3-tg">Sức khỏe mỗi ngày</div>
+        <div className="e3-tg">{KHAU_HIEU}</div>
       </div>
       <div className="e3-prog"><i /></div>
       <div className="e3-veil" />

@@ -1,0 +1,2338 @@
+{
+ "meta": {
+  "name": "Trắc nghiệm thể trạng – Tứ Quý Đường",
+  "source": "Vương Kỳ, Tiêu chuẩn ZYYXH/T157-2009 (bản dịch tiếng Việt, 60 câu)",
+  "version": "2026-10-23"
+ },
+ "flow": [
+  "Chọn giới tính (nu|nam) trước",
+  "Hiển thị các câu có only = null hoặc only = giới tính đã chọn (60 câu)",
+  "Câu kiểm tra chéo climate: lanh|nong|deu (không tính điểm)",
+  "Checklist tình trạng đặc biệt theo giới",
+  "Tính điểm và hiển thị kết quả"
+ ],
+ "scale": {
+  "values": [
+   1,
+   2,
+   4,
+   5
+  ],
+  "note": "4 mức A–D quy về điểm 1,2,4,5"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "text": "Tôi cảm thấy tràn đầy năng lượng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Thường mệt, phải cố mới làm hết việc trong ngày",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Đủ sức làm việc, nhưng đến chiều tối là đuối",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Khá sung sức, hiếm khi thấy đuối",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Luôn tràn đầy năng lượng, còn sức làm thêm việc khác",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "bh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 2,
+   "text": "Tôi dễ bị mệt mỏi.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, chỉ mệt khi làm việc nặng hoặc thức khuya",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng mệt dù không làm gì nặng, vài lần mỗi tháng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hầu như tuần nào cũng có ngày mệt dù không làm gì nặng",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như ngày nào cũng mệt, mệt là trạng thái thường trực",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    },
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 3,
+   "text": "Tay chân tôi lạnh.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Tay chân thường ấm",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Chỉ lạnh khi trời lạnh hoặc ngồi điều hòa lâu",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay lạnh ngay cả khi thời tiết bình thường",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Lạnh gần như quanh năm, người khác chạm vào cũng nhận ra",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 4,
+   "text": "Lòng bàn tay, lòng bàn chân tôi hay nóng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không có",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng thấy nóng, nhất là buổi tối hoặc sau khi ăn đồ nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay thấy nóng, nhiều hôm muốn áp tay chân vào chỗ mát",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Nóng gần như mỗi tối, thường phải thò chân ra ngoài chăn hoặc tìm chỗ mát",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 5,
+   "text": "Tôi hay thấy tức ngực hoặc đầy bụng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, thường sau bữa ăn no",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị, vài lần mỗi tuần, kể cả khi không ăn no",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như ngày nào cũng thấy tức ngực hoặc đầy bụng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 6,
+   "text": "Mặt hoặc mũi tôi nhờn dầu, bóng dầu.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Da khô hoặc bình thường, không dầu",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi dầu vùng trán, mũi vào buổi chiều hoặc trời nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Dầu rõ, phải lau hoặc thấm dầu trong ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Bóng dầu cả ngày, rửa mặt xong vài giờ lại nhờn",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 7,
+   "text": "Trên da tôi tự xuất hiện vết bầm tím mà không biết từ lúc nào.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Chưa bao giờ",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hiếm, 1–2 lần trong năm",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thỉnh thoảng, hầu như tháng nào cũng có vết",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Thường xuyên, lúc nào trên người cũng có vết bầm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 8,
+   "text": "Tôi hay thấy buồn bực, tâm trạng chùng xuống.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Hiếm khi, tâm trạng nhìn chung ổn",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, khi có chuyện không vui",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay buồn, nhiều lúc không rõ vì sao",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Phần lớn thời gian thấy buồn, không thiết làm gì",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    },
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 9,
+   "text": "Dù không bị cảm, tôi vẫn hay hắt hơi.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng vài cái khi gặp bụi, mùi lạ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay hắt hơi từng tràng, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Hắt hơi hầu như mỗi sáng hoặc mỗi ngày",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 10,
+   "text": "Tôi dễ bị mất ngủ.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Ngủ dễ, ngủ sâu",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khó ngủ khi có chuyện lo nghĩ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay khó ngủ hoặc tỉnh giấc giữa đêm, vài đêm mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Mất ngủ gần như thường xuyên",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 11,
+   "text": "Tôi dễ bị hụt hơi, thở ngắn, không đủ hơi.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, chỉ khi chạy hoặc làm việc nặng",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hụt hơi khi leo 3–4 tầng cầu thang hoặc đi nhanh",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hụt hơi khi leo 1–2 tầng hoặc nói chuyện lâu",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Hụt hơi cả khi làm việc nhẹ trong nhà",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 12,
+   "text": "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi khó chịu khi gió lạnh thổi thẳng vào bụng, lưng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thường phải giữ ấm bụng, lưng hoặc gối, kể cả ngày thường",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất sợ lạnh vùng này, lạnh là đau hoặc khó chịu ngay",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 13,
+   "text": "Tôi hay thấy người nóng, mặt nóng bừng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, khi căng thẳng hoặc ăn đồ cay nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay nóng bừng mặt vài lần mỗi tuần dù không có lý do rõ",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như ngày nào cũng thấy người nóng, mặt bừng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 14,
+   "text": "Tôi hay thấy người nặng nề, không nhẹ nhõm.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, người nhẹ nhõm",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, nhất là ngày mưa ẩm hoặc sau khi ăn nhiều",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay nặng nề, lười vận động, vài ngày mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Luôn thấy người nặng, ì ạch, ngủ dậy vẫn nặng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 15,
+   "text": "Tôi dễ nổi mụn trứng cá hoặc mụn nhọt.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không hoặc rất hiếm",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng vài nốt, thường sau khi ăn cay nóng hoặc thức khuya",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thường có mụn, hết nốt này nổi nốt khác",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Mụn nhiều, kéo dài, có cả mụn bọc hoặc mụn ở lưng, ngực",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 16,
+   "text": "Hai gò má tôi có các mạch máu đỏ li ti.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Nhìn kỹ mới thấy vài sợi",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thấy rõ khi nhìn gần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Nhìn từ xa đã thấy mảng đỏ có sợi máu",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 17,
+   "text": "Tôi dễ căng thẳng, lo âu, bất an.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Hiếm khi",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Chỉ khi có việc quan trọng, áp lực",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay lo lắng cả những việc nhỏ, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Lo âu, bất an gần như thường trực",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 18,
+   "text": "Dù không bị cảm, tôi vẫn hay nghẹt mũi, chảy nước mũi.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi đổi thời tiết",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Vài lần mỗi tuần, nhất là sáng sớm",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như ngày nào cũng nghẹt mũi hoặc chảy nước mũi",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 19,
+   "text": "Tôi hay quên.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Trí nhớ bình thường",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng quên việc nhỏ như để đồ ở đâu",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay quên, phải ghi chú mới nhớ việc",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Quên rất nhiều, ảnh hưởng đến công việc, sinh hoạt",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    },
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 20,
+   "text": "Tôi dễ bị hồi hộp, tim đập nhanh.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi uống cà phê, căng thẳng hoặc gắng sức",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay hồi hộp dù ngồi yên, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như ngày nào cũng có lúc hồi hộp, tim đập nhanh",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 21,
+   "text": "Tôi sợ lạnh, thường mặc nhiều áo hơn người khác.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, mặc như mọi người",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi sợ lạnh, hay mang thêm áo khoác mỏng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thường mặc nhiều hơn người xung quanh 1–2 lớp",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Mặc rất nhiều lớp, mùa nóng vẫn ngại điều hòa, quạt",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 22,
+   "text": "Da hoặc môi tôi khô.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Da, môi bình thường",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi khô vào mùa hanh hoặc trong phòng điều hòa",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Khô quanh năm, phải bôi dưỡng ẩm thường xuyên",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất khô, nứt nẻ, bong vảy dù đã dưỡng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 23,
+   "text": "Bụng tôi to, mỡ bụng mềm nhão.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Bụng gọn",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi có mỡ bụng nhưng không đáng kể",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Bụng to rõ, mỡ mềm, quần hay chật ở bụng",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Bụng rất to, chảy xệ",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 24,
+   "text": "Tôi hay đắng miệng hoặc miệng có mùi lạ.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, thường lúc sáng ngủ dậy",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị, vài lần mỗi tuần, cả ban ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lúc nào miệng cũng đắng hoặc có mùi",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 25,
+   "text": "Tôi hay bị đau ở một chỗ nào đó trên cơ thể.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng đau mỏi khi làm việc nhiều",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay đau ở một chỗ cố định, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Đau gần như hằng ngày ở một chỗ, đau như kim châm hoặc âm ỉ kéo dài",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 26,
+   "text": "Tôi đa sầu đa cảm, dễ xúc động.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, khá vững vàng",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng xúc động khi gặp chuyện buồn",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Dễ xúc động, dễ khóc, dễ tủi thân",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất nhạy cảm, một câu nói cũng làm buồn cả ngày",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 27,
+   "text": "Tôi hay bị ho, khò khè khi đổi mùa, đổi nhiệt độ hoặc ngửi mùi lạ.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hiếm, 1–2 lần mỗi năm",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị khi giao mùa, mỗi đợt kéo dài vài ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Mỗi lần đổi thời tiết hoặc ngửi mùi lạ là ho, khò khè",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 28,
+   "text": "Khi môi trường, thời tiết hay hoàn cảnh thay đổi, cơ thể tôi thích nghi dễ dàng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Hay mệt, ốm vặt mỗi khi đổi thời tiết hoặc đi xa",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Mất vài ngày mới quen",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thích nghi khá nhanh, ít bị ảnh hưởng",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Thích nghi dễ dàng, gần như không ảnh hưởng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "bh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 29,
+   "text": "Tôi dễ bị chóng mặt, hoặc choáng váng khi đứng dậy.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi đứng dậy đột ngột",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lần nào đứng dậy cũng choáng, có lúc phải vịn",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 30,
+   "text": "Tôi chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt).",
+   "options": [
+    {
+     "label": "A",
+     "text": "Chịu lạnh tốt, có khi tốt hơn người khác",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Bình thường, hơi ngại lạnh",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Chịu lạnh kém, ngồi điều hòa hay quạt là khó chịu",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất kém, lạnh một chút là run, ốm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    },
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 31,
+   "text": "Môi tôi đỏ hơn người bình thường.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Môi hồng bình thường",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi đỏ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Đỏ rõ, mọi người hay hỏi có tô son không",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Đỏ sẫm bất thường",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 32,
+   "text": "Trán tôi tiết nhiều dầu.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi dầu khi trời nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Trán bóng dầu phần lớn thời gian",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Dầu nhiều, bết tóc mái, rửa xong lại nhờn",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 33,
+   "text": "Tôi đi đại tiện phân dính, khó sạch, có cảm giác đi chưa hết.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, đi dễ và sạch",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, thường sau khi ăn nhiều dầu mỡ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị, phân dính bồn, phải lau nhiều lần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lần nào cũng dính, luôn cảm giác đi chưa hết",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 34,
+   "text": "Sắc mặt tôi tối sạm, hoặc dễ nổi nám, đốm nâu.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Da sáng, đều màu",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi xỉn màu khi thiếu ngủ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Da sạm rõ hoặc có vài mảng nám",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Sạm tối rõ, nám nhiều",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 35,
+   "text": "Tôi dễ cảm thấy sợ hãi hoặc dễ giật mình.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng giật mình khi có tiếng động bất ngờ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Dễ giật mình, hay thấy lo sợ không rõ lý do",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất dễ sợ hãi, giật mình, tim đập mạnh lâu mới hết",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 36,
+   "text": "Tôi dễ bị dị ứng (thuốc, thức ăn, mùi, phấn hoa, lúc giao mùa, thời tiết thay đổi).",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không bị",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Từng bị 1–2 lần với một thứ cụ thể",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Dị ứng với vài thứ, thỉnh thoảng lại bị",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Dị ứng với nhiều thứ, hầu như lúc giao mùa nào cũng bị",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 37,
+   "text": "Tôi dễ bị cảm hơn người khác.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Ít cảm, 1 lần mỗi năm hoặc không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "2–3 lần mỗi năm",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "4–6 lần mỗi năm, cảm lâu khỏi",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Hơn 6 lần mỗi năm, cứ đổi gió là cảm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    },
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 38,
+   "text": "Tôi dễ bị táo bón hoặc phân khô.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, đi mỗi ngày, phân mềm",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, khi ăn ít rau hoặc đi xa",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay táo bón, 2–3 ngày mới đi, phân khô",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Táo bón kéo dài, phải dùng biện pháp hỗ trợ",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 39,
+   "text": "Mí mắt trên của tôi hơi sưng mọng hơn người khác.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi mọng buổi sáng, đến trưa hết",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Mọng rõ phần lớn thời gian trong ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Luôn sưng mọng, mắt như híp lại",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 40,
+   "text": "Khi đi tiểu tôi thấy nóng rát, nước tiểu màu đậm.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, nước tiểu nhạt màu",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng màu đậm khi uống ít nước",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay thấy nóng rát hoặc vàng đậm dù uống đủ nước",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lần nào cũng nóng rát, nước tiểu vàng sẫm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 41,
+   "text": "Tôi dễ bị quầng thâm mắt.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Chỉ khi thiếu ngủ",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thâm rõ phần lớn thời gian",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Thâm đậm thường trực, ngủ đủ vẫn thâm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 42,
+   "text": "Tôi hay bị căng tức vùng sườn hoặc ngực (vú).",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi tức 1–2 ngày trước kỳ kinh",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Căng tức rõ gần một tuần trước kỳ kinh",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Căng tức, đau cả ngoài kỳ kinh",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": "nu"
+  },
+  {
+   "id": 43,
+   "text": "Tôi hay bị căng tức, đau vùng hai bên sườn.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi bực bội, căng thẳng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay tức sườn, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Tức hoặc đau sườn gần như hằng ngày",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": "nam"
+  },
+  {
+   "id": 44,
+   "text": "Da tôi dễ nổi mề đay (mẩn đỏ từng mảng, ngứa).",
+   "options": [
+    {
+     "label": "A",
+     "text": "Chưa từng",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Từng bị 1–2 lần",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thỉnh thoảng, vài lần mỗi năm",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Hay bị, hầu như tháng nào cũng nổi",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 45,
+   "text": "Tôi thích yên tĩnh, ngại nói chuyện.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, thích trò chuyện",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Bình thường, tùy lúc",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Ngại nói, nói nhiều là thấy mệt",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất ngại nói chuyện, chỉ muốn ngồi yên",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 46,
+   "text": "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, ăn uống lạnh bình thường",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi ngại, nhưng ăn vào không sao",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Ăn lạnh là khó chịu bụng, nên ít dám ăn",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Không dám ăn uống đồ lạnh, ăn vào là đau bụng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 47,
+   "text": "Hai gò má tôi hay ửng đỏ.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Ửng nhẹ khi nóng hoặc xúc động",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay đỏ hai gò má vào buổi chiều, tối",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Hai gò má đỏ gần như thường trực",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 48,
+   "text": "Trong miệng tôi có cảm giác dính nhớt.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng lúc sáng ngủ dậy",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay thấy dính, vài lần mỗi tuần, cả ban ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lúc nào miệng cũng dính, nhớt",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 49,
+   "text": "Tôi hay ra khí hư (huyết trắng) màu vàng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, khí hư trong hoặc trắng, ít",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng hơi vàng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Thường vàng, lượng nhiều hơn bình thường",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Vàng đậm, nhiều, có mùi, kéo dài",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": "nu"
+  },
+  {
+   "id": 50,
+   "text": "Vùng bìu của tôi hay bị ẩm ướt.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi ẩm khi trời nóng, vận động nhiều",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay ẩm ướt kể cả ngày thường",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Ẩm ướt gần như thường xuyên, khó chịu",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "tn",
+     "reverse": false
+    }
+   ],
+   "only": "nam"
+  },
+  {
+   "id": 51,
+   "text": "Môi tôi có màu sẫm.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Môi hồng",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi tối màu",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Sẫm rõ, tím nhạt",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Tím sẫm rõ rệt",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "hu",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 52,
+   "text": "Tôi hay thở dài vô cớ.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi mệt",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay thở dài, vài lần mỗi ngày, người khác nhận ra",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Thở dài liên tục mà không để ý",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 53,
+   "text": "Tôi từng bị nổi các chấm, mảng tím bầm dưới da do dị ứng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Chưa từng",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Từng bị 1 lần",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Vài lần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Nhiều lần, hầu như mỗi đợt dị ứng",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 54,
+   "text": "Giọng nói của tôi nhỏ, yếu.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Giọng vang, rõ",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Bình thường",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Giọng nhỏ, người khác hay phải hỏi lại",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất nhỏ, yếu, nói một lúc là hụt hơi",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    },
+    {
+     "group": "bh",
+     "reverse": true
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 55,
+   "text": "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hiếm, 1–2 lần mỗi năm",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay bị, ăn lạnh hoặc nhiễm lạnh là đi ngoài",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như lần nào cũng bị",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 56,
+   "text": "Tôi hay thấy mắt khô, rát.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Chỉ khi nhìn màn hình lâu",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay khô rát vài lần mỗi tuần dù không dùng máy",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Khô rát gần như hằng ngày, phải nhỏ mắt",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 57,
+   "text": "Tôi hay có đờm, nhất là cảm giác đờm vướng ở cổ họng.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, khi cảm hoặc sáng sớm",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay có đờm, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Lúc nào cũng cảm giác đờm vướng họng, phải khạc",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 58,
+   "text": "Tôi hay có cảm giác vướng ở cổ họng, nuốt không trôi, khạc không ra.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng khi căng thẳng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay có, vài lần mỗi tuần",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Gần như thường trực",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ku",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 59,
+   "text": "Da tôi hễ gãi là đỏ lên và nổi vệt.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi đỏ, nhanh hết",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Đỏ và nổi vệt rõ, vài phút mới hết",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Nổi vệt dày, lâu hết, có thể viết chữ lên da",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "db",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 60,
+   "text": "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không, mồ hôi bình thường",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Ra mồ hôi khi đi nhanh hoặc trời nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Chỉ đi bộ nhẹ, làm việc nhà là ướt áo",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Ngồi yên cũng ra mồ hôi, động nhẹ là ướt đẫm",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "kh",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 61,
+   "text": "Tôi hay khô miệng, khô họng, lúc nào cũng muốn uống nước.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Không",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Thỉnh thoảng, khi nói nhiều hoặc trời nóng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Hay khô, uống xong vẫn thấy khát, vài lần mỗi ngày",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Khô gần như liên tục, luôn mang nước bên mình",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "ah",
+     "reverse": false
+    }
+   ],
+   "only": null
+  },
+  {
+   "id": 62,
+   "text": "Rêu lưỡi của tôi dày, nhớt, hoặc tôi có cảm giác lưỡi bị phủ dày.",
+   "options": [
+    {
+     "label": "A",
+     "text": "Rêu lưỡi mỏng, trắng nhạt",
+     "value": 1
+    },
+    {
+     "label": "B",
+     "text": "Hơi dày vào buổi sáng",
+     "value": 2
+    },
+    {
+     "label": "C",
+     "text": "Dày, nhớt phần lớn thời gian",
+     "value": 4
+    },
+    {
+     "label": "D",
+     "text": "Rất dày, nhớt, vàng, lưỡi như bị phủ một lớp",
+     "value": 5
+    }
+   ],
+   "scales": [
+    {
+     "group": "dt",
+     "reverse": false
+    }
+   ],
+   "only": null
+  }
+ ],
+ "groups": {
+  "bh": {
+   "name": "Bình hòa",
+   "phai": "Thể trạng Bình hòa",
+   "care": [
+    "Ăn đa dạng, không thiên lệch, không quá no",
+    "Sinh hoạt thuận theo mùa, làm nghỉ điều độ",
+    "Vận động đều đặn phù hợp lứa tuổi"
+   ],
+   "tea": "Thức uống theo mùa; không cần bồi bổ đặc biệt.",
+   "solution": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ]
+   }
+  },
+  "kh": {
+   "name": "Khí hư",
+   "phai": "Thể trạng Khí hư",
+   "care": [
+    "Ăn các món dễ tiêu, ấm bụng: gạo, kê, khoai, táo đỏ, nấm hương, thịt gà",
+    "Tránh làm việc quá sức, nhưng cũng tránh nằm nhiều",
+    "Vận động nhẹ và đều: đi bộ, thái cực, bát đoạn cẩm"
+   ],
+   "tea": "Hướng bổ khí: hoàng kỳ, táo đỏ, kỷ tử, hạt sen.",
+   "solution": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức"
+    ]
+   }
+  },
+  "dh": {
+   "name": "Dương hư",
+   "phai": "Thể trạng Dương hư",
+   "care": [
+    "Ăn món ấm: gừng, thịt dê, thịt gà, hẹ; hạn chế đồ sống lạnh, nước đá",
+    "Giữ ấm lưng, bụng, bàn chân; tránh điều hòa, quạt thổi thẳng; ngâm chân nước ấm buổi tối",
+    "Vận động mỗi ngày để sinh dương khí, tránh tập lúc gió lạnh"
+   ],
+   "tea": "Hướng làm ấm: Phổ Nhĩ chín, gừng, quế, táo đỏ, long nhãn. Uống ấm; tránh nước ép lạnh và đá.",
+   "solution": {
+    "nen": [
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh"
+    ],
+    "tranh": [
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh"
+    ]
+   }
+  },
+  "ah": {
+   "name": "Âm hư",
+   "phai": "Thể trạng Âm hư",
+   "care": [
+    "Ăn món mát, mềm: lê, bách hợp, nấm tuyết, đu đủ; hạn chế cay nóng, đồ chiên nướng",
+    "Tránh thức khuya; uống đủ nước; nơi ở yên tĩnh, mát",
+    "Vận động vừa sức, không để ra mồ hôi quá nhiều"
+   ],
+   "tea": "Hướng dưỡng âm: nấm tuyết, bách hợp, mạch môn, kỷ tử, lê.",
+   "solution": {
+    "nen": [
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ]
+   }
+  },
+  "dt": {
+   "name": "Đàm thấp",
+   "phai": "Thể trạng Đàm thấp",
+   "care": [
+    "Ăn thanh đạm: củ cải, bí đao, đậu đỏ, ý dĩ; hạn chế đồ ngọt, béo, dính; không ăn quá no",
+    "Tránh nơi ẩm thấp; mặc đồ thoáng; phơi nắng",
+    "Kiên trì vận động, tăng dần: đi bộ nhanh, bơi, cầu lông"
+   ],
+   "tea": "Hướng hóa đàm trừ thấp: trà chín, trần bì, ý dĩ, lá sen; chọn ít đường.",
+   "solution": {
+    "nen": [
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường"
+    ],
+    "tranh": [
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp"
+    ]
+   }
+  },
+  "tn": {
+   "name": "Thấp nhiệt",
+   "phai": "Thể trạng Thấp nhiệt",
+   "care": [
+    "Ăn mát, nhiều rau: dưa leo, cà chua, mướp đắng, đậu xanh; hạn chế cay, chiên nướng, rượu bia",
+    "Nơi ở khô thoáng; tránh thức khuya",
+    "Vận động cường độ cao hơn: chạy, bơi, leo núi, chọn giờ mát"
+   ],
+   "tea": "Hướng thanh nhiệt lợi thấp: ý dĩ, rễ tranh, actiso, trà xanh, kim ngân. Tránh cay nóng, cà phê đậm.",
+   "solution": {
+    "nen": [
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió"
+    ]
+   }
+  },
+  "hu": {
+   "name": "Huyết ứ",
+   "phai": "Thể trạng Huyết ứ",
+   "care": [
+    "Ăn món giúp lưu thông: hoa hồng, sơn tra, giấm, chút đường đỏ; hạn chế đồ lạnh",
+    "Giữ ấm, ngủ đủ; không ngồi lâu một chỗ",
+    "Vận động toàn thân: múa, thái cực, đi bộ, xoa bóp"
+   ],
+   "tea": "Hướng lưu thông khí huyết: hoa hồng, sơn tra, quế hoa, táo đỏ. Uống ấm, tránh đồ lạnh.",
+   "solution": {
+    "nen": [
+     "Thức uống ấm, giúp lưu thông: hoa hồng, sơn tra, quế hoa",
+     "Uống ấm, nhất là trước và trong kỳ kinh (nữ)"
+    ],
+    "tranh": [
+     "Nước đá, đồ lạnh",
+     "Ngồi lâu một chỗ, ít vận động",
+     "Thức khuya, ngủ thiếu",
+     "Để cơ thể nhiễm lạnh"
+    ]
+   }
+  },
+  "ku": {
+   "name": "Khí uất",
+   "phai": "Thể trạng Khí uất",
+   "care": [
+    "Ăn các món thơm, thông khí: cam quýt, phật thủ, hẹ, hoa thơm",
+    "Phòng ở sáng, thoáng; ngày mưa chủ động giải khuây",
+    "Ra ngoài nhiều hơn: đi bộ, du lịch, hít thở sâu; xem hài, nghe nhạc vui"
+   ],
+   "tea": "Hướng thư giãn, lý khí: hoa hồng, phật thủ, hoa nhài, trần bì, lạc tiên.",
+   "solution": {
+    "nen": [
+     "Thức uống thơm, dịu: hoa hồng, hoa nhài, phật thủ, vỏ quýt",
+     "Buổi tối: trà hoa, lạc tiên thay cho cà phê"
+    ],
+    "tranh": [
+     "Cà phê đậm sau 14 giờ",
+     "Uống rượu để giải sầu",
+     "Ở một mình trong phòng kín, tối",
+     "Thức khuya lướt điện thoại"
+    ]
+   }
+  },
+  "db": {
+   "name": "Đặc bẩm",
+   "phai": "Thể trạng Đặc bẩm",
+   "care": [
+    "Ăn thanh đạm; tránh món từng gây dị ứng; món lạ thử lượng nhỏ",
+    "Giữ ấm khi giao mùa; đeo khẩu trang mùa phấn hoa, bụi",
+    "Vận động đều đặn để tăng sức đề kháng"
+   ],
+   "tea": "Hướng cố biểu, điều hòa: ô mai, hoàng kỳ, táo đỏ, linh chi. Món ít thành phần; thử lượng nhỏ với món có hoa.",
+   "solution": {
+    "nen": [
+     "Thức uống đơn giản, ít thành phần: táo đỏ, kỷ tử, ô mai",
+     "Món mới chỉ thử với lượng nhỏ"
+    ],
+    "tranh": [
+     "Thức ăn, đồ uống từng gây dị ứng",
+     "Hải sản, đồ cay, rượu lúc đang nhạy cảm",
+     "Phấn hoa, bụi, mùi sơn mới",
+     "Thay đổi nóng lạnh đột ngột"
+    ]
+   }
+  }
+ },
+ "safetyChecklist": {
+  "nu": [
+   "Đang mang thai",
+   "Đang cho con bú",
+   "Đang dùng thuốc huyết áp",
+   "Đang dùng thuốc tiểu đường",
+   "Đang dùng thuốc chống đông máu",
+   "Đang dùng thuốc điều trị lâu dài khác"
+  ],
+  "nam": [
+   "Đang dùng thuốc huyết áp",
+   "Đang dùng thuốc tiểu đường",
+   "Đang dùng thuốc chống đông máu",
+   "Đang dùng thuốc điều trị lâu dài khác"
+  ]
+ },
+ "safeSolution": {
+  "nen": [
+   "Thức uống tính bình, nhẹ: nước ấm, trà nhạt, táo đỏ, kỷ tử",
+   "Hoa quả tươi theo mùa"
+  ],
+  "tranh": [
+   "Thảo dược tác dụng mạnh (sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi) khi chưa hỏi bác sĩ",
+   "Cà phê, rượu bia"
+  ]
+ },
+ "scoring": {
+  "raw": "Mỗi câu 1–5; câu reverse tính 6 − điểm; cộng theo nhóm",
+  "transformed": "(raw − n) / (4n) × 100, n = số câu của nhóm",
+  "offset": {
+   "co": ">= 40",
+   "thienHuong": "30–39",
+   "khong": "< 30"
+  },
+  "binhHoa": {
+   "co": "bh >= 60 và mọi nhóm lệch < 30",
+   "coBanCo": "bh >= 60 và mọi nhóm lệch < 40"
+  },
+  "pick": "Lấy tối đa 2 nhóm lệch điểm cao nhất (>=40 ưu tiên, nếu không có thì 30–39)",
+  "plausibility": "climate=lanh → loại Âm hư, Thấp nhiệt khỏi kết luận; climate=nong → loại Dương hư",
+  "flags": [
+   "Dương hư >=40 cùng Âm hư hoặc Thấp nhiệt >=40 → gợi ý món tính bình, tư vấn trực tiếp",
+   ">=3 nhóm >=40 → chỉ định hướng, tư vấn trực tiếp",
+   "Có tình trạng đặc biệt → chỉ món tính bình (safeSolution)"
+  ]
+ }
+}

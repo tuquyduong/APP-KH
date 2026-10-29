@@ -1,6 +1,8 @@
 import { layToi, layDiem, layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { cheSdt, dinhDangSo } from '../dinhDang.js';
+import { cheSdt, dinhDangSo, dinhDangNgay } from '../dinhDang.js';
+import { THE_CHAT } from '../noiDung/theChat.js';
+import { DONG_TAI_KHOAN } from '../noiDung/tracNghiemChu.js';
 import { LIEN_HE, coLienHe } from '../noiDung/lienHe.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
@@ -8,7 +10,7 @@ import { Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 
 // Tài khoản theo demo (account): thẻ tên + 3 ô nhanh, nhóm "Của tôi" / "Cài đặt", đăng xuất.
-// Bỏ: Ví & Thẻ quà tặng, Gia đình (KH-UI-3 / sau khai trương), Thể trạng (KH-UI-5), Thông báo & âm thanh, Quản trị (không thuộc app khách).
+// Bỏ: Ví & Thẻ quà tặng, Gia đình (KH-UI-3 / sau khai trương), Thông báo & âm thanh, Quản trị (không thuộc app khách).
 // Ô nhanh chỉ có Điểm và Voucher (Ví → KH-UI-3); hạng cạnh số điện thoại → KH-UI-3.
 
 function DongMenu({ bieuTuong, ten, phu, chon }) {
@@ -21,7 +23,7 @@ function DongMenu({ bieuTuong, ten, phu, chon }) {
   );
 }
 
-export default function TaiKhoan({ moDon, moQR, moHoSo, moHoTro, moUuDai, dangXuat }) {
+export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moTracNghiem, moUuDai, dangXuat }) {
   const tai = dungTai(layToi);
   const diem = dungTai(layDiem);
   const voucher = dungTai(layVoucher);
@@ -48,6 +50,12 @@ export default function TaiKhoan({ moDon, moQR, moHoSo, moHoTro, moUuDai, dangXu
             </div>
             <div className="acc-g">Của tôi</div>
             <DongMenu bieuTuong="package" ten="Đơn hàng" phu="Lịch sử các đơn đã mua" chon={moDon} />
+            <div className="acc-g">{DONG_TAI_KHOAN.nhom}</div>
+            <div className="menu-item acc-it" {...bam(moTracNghiem)}>
+              <div className="ic"><img className="en" src="/anh/the-chat-scale.svg" width="40" height="40" alt="" /></div>
+              <div className="t">{DONG_TAI_KHOAN.ten}<small>{klLuu ? `${THE_CHAT[klLuu.picks[0]].phai} · ${dinhDangNgay(luu.ngay.slice(0, 10))}` : DONG_TAI_KHOAN.chuaLam}</small></div>
+              <div className="chev">›</div>
+            </div>
             <div className="acc-g">Cài đặt</div>
             <DongMenu bieuTuong="name" ten="Thông tin cá nhân" phu="Tên hiển thị, mã PIN" chon={moHoSo} />
             {coLienHe(LIEN_HE) && <DongMenu bieuTuong="chat" ten="Hỗ trợ" phu="Gọi, nhắn Zalo cho quán" chon={moHoTro} />}
