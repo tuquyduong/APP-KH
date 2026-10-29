@@ -53,12 +53,12 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
 - `thiet_ke/app_kh_demo.html` (patch39) là BẢN CHUẨN cho điện thoại. Màu, phông, cỡ chữ, độ đậm, khoảng cách, bo góc, bóng, biểu tượng,
   chữ trên màn, thứ tự khối, chuyển động, âm thanh, biểu tượng SVG, ảnh, hoạ tiết nền: CHÉP NGUYÊN từ CSS / HTML / JS của demo — không ước lượng, không "gần giống".
   Bộ kiểm K9 chặn mọi màu / phông không có trong demo.
-- Chỉ được khác demo vì 4 lý do: (a) dữ liệu POS chưa có, hoặc khối thuộc VIỆC SAU đã ghi trong sổ (`TIEN_DO_APPKH.json`) → để trống chỗ,
+- Chỉ được khác demo vì 5 lý do: (a) dữ liệu POS chưa có, hoặc khối thuộc VIỆC SAU đã ghi trong sổ (`TIEN_DO_APPKH.json`) → để trống chỗ,
   ghi rõ việc nào; (b) chữ / số mẫu của demo không dùng (số liệu, hotline 1900 xxxx,
   support@…; giao hàng là Ahamove, không GHN); (c) chưa có giỏ hàng / đặt đơn; (d) màn rộng ≥ 1024 px theo MẪU MÀN TO chủ quán đã duyệt
-  (`thiet_ke/mau_man_to/` — khi có). Khác vì lý do nào khác → `## Câu hỏi`, không tự quyết.
+  (`thiet_ke/mau_man_to/` — khi có); (e) token khẩu hiệu B2.3 có trong danh sách duyệt của bộ kiểm (`DUYET_NGOAI_DEMO`). Khác vì lý do nào khác → `## Câu hỏi`, không tự quyết.
 - Mọi việc giao diện PHẢI: (1) tự so ảnh demo ↔ app bằng Chromium + Playwright CÓ SẴN trong môi trường (không thêm vào `package.json`;
-  công cụ so ảnh và API giả để ở nháp), cùng cỡ 390×844 (thêm 360 và 430), cùng dữ liệu mẫu như demo; sửa tới khi chỉ còn khác vì (a)–(d);
+  công cụ so ảnh và API giả để ở nháp), cùng cỡ 390×844 (thêm 360 và 430), cùng dữ liệu mẫu như demo; sửa tới khi chỉ còn khác vì (a)–(e);
   (2) lưu cặp ảnh + ảnh tô chỗ lệch vào `viec/<MÃ>/so_anh/`; (3) lập `viec/<MÃ>/doi_chieu_demo.md` — mỗi màn một bảng: khối trong demo /
   đã làm / khác gì, lý do (a)–(d). Chat App KH so ảnh lại lần cuối trước khi gộp.
 - Khách CHƯA đăng nhập vẫn vào thẳng Trang chủ sau màn mở, LÚC NÀO cũng xem được Trang chủ, Menu, giá, Trang món (chủ quán chốt 29.10). Đăng nhập / đăng ký chỉ
@@ -73,7 +73,9 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
   — khai báo ở MỘT chỗ `src/duongDan.js`; màn mới phải thêm đường dẫn vào bảng đó; mở thẳng, tải lại, Back / Tiến đều đúng.
 - **Không có mục quản trị trong app khách.** Khu quản trị (chế độ sửa nội dung…) ở `/admin`, đăng nhập bằng TÀI KHOẢN POS (tên đăng nhập + mật khẩu,
   theo quyền POS) — việc KH-ADMIN-1 sau khai trương. Trước đó `/admin` chuyển về `/trangchu`.
-- Khẩu hiệu thương hiệu: **"Đông Y Dưỡng Thể"** (chủ quán chốt 29.10) — dòng dưới "TỨ QUÝ ĐƯỜNG" ở màn mở. Chữ thương hiệu đặt ở `src/noiDung/`.
+- Khẩu hiệu thương hiệu: **"Đông Y Dưỡng Thể"** (chủ quán chốt 29.10; 30.10 chốt thêm: ĐỔI HẾT mọi chỗ từng ghi "Sức khỏe mỗi ngày" — Trang chủ, màn đăng nhập nếu có, chân trang màn rộng). Chữ đặt ở một chỗ `src/noiDung/thuongHieu.js` (`KHAU_HIEU`). Ở MÀN MỞ (điện thoại + màn rộng) khẩu hiệu dùng kiểu **B2.3** (chủ quán chọn 30.10): phông EB Garamond 600 tự lưu ở `public/fonts/`, màu `#FBE3A2`, bóng `rgba(60,10,5,.35)`, in hoa, giãn chữ — CSS ở `src/giaoDien/khau_hieu.css` (lớp `.khau-hieu`, nạp sau `demo*.css`). Đây là ngoại lệ DUY NHẤT ngoài demo của K9 (xem `DUYET_NGOAI_DEMO` trong bộ kiểm); các chỗ khác vẫn kiểu chữ demo.
+- Tên miền `tuquyduong.com` là trang MỚI (chủ quán 30.10): gắn thẳng vào Pages `app-kh` (KH-CF-1), không phải giữ trang cũ.
+- Cần POS làm gì → chat App KH tự soạn file `thiet_ke/trao_doi/YEU_CAU_APPKH_GUI_POS_<ngày>.md` để chủ quán chuyển (chủ quán dặn 30.10: tự giao tiếp, không hỏi lại).
 - Mọi cỡ màn KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), chữ to theo cài đặt máy không tràn, trình duyệt Zalo dùng được.
 - Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa. Quán KHÔNG có công nợ → app không bao giờ
   hiện chữ "nợ".
@@ -86,3 +88,10 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
 - Không bí mật trong `src/`, `index.html`, log, báo cáo. Không giá vốn, tồn thật, dữ liệu khách khác.
 - Mã trên link QR (`?ma=`) đọc xong thì xoá khỏi thanh địa chỉ (`history.replaceState`).
 - Không thêm thư viện nếu phiếu không cho (bộ kiểm K6 giữ danh sách).
+
+## 8. Dữ liệu lưu trên máy khách (chủ quán chốt 30.10: "theo đề nghị")
+- Dữ liệu của khách chỉ lưu TRÊN MÁY (localStorage): kết quả trắc nghiệm (`kh_tracnghiem`), Kế hoạch và nhắc việc (`kh_kehoach`, từ KH-UI-5b). Sức khoẻ không bao giờ gửi về POS / máy chủ nếu chưa có cửa + khách đồng ý.
+- Bản lưu trắc nghiệm giữ cả `khiHau` (chịu nóng / lạnh) và `anToan` (tình trạng đặc biệt, vd đang mang thai) để mở lại kết quả cũ vẫn thấy lời nhắc an toàn. Nút "Sao chép kết quả và góp ý" của demo GIỮ (khách tự dán đi đâu; app không tự gửi).
+- Hết phiên đăng nhập (401): KHÔNG xoá dữ liệu trên máy (khách dùng thường xuyên không được mất dữ liệu vì hết hạn), nhưng không hiện ra khi chưa đăng nhập.
+- XOÁ khi: khách bấm "Đăng xuất"; hoặc người đăng nhập sau là KHÁC khách (so dấu vết số điện thoại ở khoá `kh_chu`; số thô không lưu); hoặc khách bấm nút xoá của từng tính năng. Quy tắc làm ở một chỗ `src/luuMay.js` (KH-LUU-1); tính năng mới lưu trên máy phải thêm khoá của mình vào danh sách ở đó.
+- Kho bị chặn (cửa sổ riêng tư…): không vỡ, KHÔNG báo "đã lưu" khi chưa lưu.

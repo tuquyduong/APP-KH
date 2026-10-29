@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 5,
+  "phien_ban_so": 6,
   "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -51,11 +51,37 @@
       "ten": "Trac nghiem the trang theo demo: chep nguyen du lieu TQDQ + cach tinh, man tc / tcq / tcr (/tracnghiem...), goi y mon ghep ten voi menu POS, ket qua chi luu tren may, o Trac nghiem khoa khi chua dang nhap; doi khau hieu man mo thanh \"Dong Y Duong The\"",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-LINK-1"
       ],
       "han": "2026-10-31",
+      "ngay": "2026-10-30",
+      "ghi_chu": "may xong 14aeb16 (cong chay dat, thu_KHUI5a 357 ca); chat soat dat 30.10 (npm test, --day-du, cong chay lai, mo thang /tracnghiem khi chua dang nhap → /dangnhap, khong loi); chu quan chot 30.10 \"theo de nghi\" 3 cau hoi: giu khiHau/anToan, het phien khong mat ket qua (xoa khi dang xuat / doi khach), giu nut sao chep → KH-LUU-1"
+    },
+    {
+      "ma": "KH-SLOGAN-1",
+      "ten": "Khau hieu \"Dong Y Duong The\" kieu B2.3 o man mo (phong EB Garamond tu luu, mau #FBE3A2) + doi chu khau hieu o MOI cho tung ghi \"Suc khoe moi ngay\" (chu quan chot 30.10)",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-UI-5a"
+      ],
+      "han": "2026-11-01",
+      "ngay": "2026-10-30"
+    },
+    {
+      "ma": "KH-LUU-1",
+      "ten": "Quy tac luu tren may chung (src/luuMay.js): het phien khong mat ket qua, xoa khi bam dang xuat hoac doi khach; giu khiHau/anToan va nut sao chep (chu quan chot 30.10 \"theo de nghi\")",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-UI-5a",
+        "KH-SLOGAN-1 (lam lan luot, cung cham thu_KHUI5a.js)"
+      ],
+      "han": "2026-11-01",
       "ngay": "2026-10-30"
     },
     {
@@ -65,7 +91,8 @@
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-UI-5a (dung lai src/lich.js)"
+        "KH-UI-5a (dung lai src/lich.js)",
+        "KH-LUU-1 (dung src/luuMay.js)"
       ],
       "han": "2026-11-01"
     },
@@ -103,7 +130,7 @@
       "loai": "chu_quan",
       "trang_thai": "cho",
       "han": "2026-11-06",
-      "ghi_chu": "29.10: Cloudflare Pages app-kh (app-kh.pages.dev) da noi kho + VITE_POS_API; con gan ten mien 06.11"
+      "ghi_chu": "29.10: Cloudflare Pages app-kh (app-kh.pages.dev) da noi kho + VITE_POS_API; con gan ten mien 06.11 | 30.10: chu quan noi tuquyduong.com co the trien khai MOI (khong giu trang cu) → gan thang vao Pages app-kh"
     },
     {
       "ma": "KH-TACH-1",

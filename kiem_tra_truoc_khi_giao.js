@@ -77,6 +77,7 @@ if (hd && Array.isArray(hd.cua)) {
 }
 // K9 — CHUẨN THEO DEMO (chủ quán chốt 29.10): màu và phông trong app CHỈ được lấy từ thiet_ke/app_kh_demo.html.
 //       Màu so theo giá trị (#abc = #aabbcc = rgb(170,187,204)); phông: họ chữ đầu phải là họ demo dùng, sau đó chỉ phông hệ thống dự phòng.
+//       NGOẠI LỆ duy nhất: danh sách DUYET_NGOAI_DEMO bên dưới (chủ quán duyệt, từng token chỉ ở tệp ghi sẵn).
 const docMau = (txt) => {
   const ra = new Map();
   const them = (r, g, b, a, goc) => { const kh = [r, g, b, Math.round(a * 1000) / 1000].join(','); if (!ra.has(kh)) ra.set(kh, goc); };
@@ -91,6 +92,18 @@ const docMau = (txt) => {
   }
   return ra;
 };
+// Token thiết kế chủ quán DUYỆT NGOÀI demo (chỉ chat sửa danh sách này qua script; mỗi dòng có nguồn).
+// Mỗi token chỉ được xuất hiện trong ĐÚNG các tệp ghi ở `tep` — ở tệp khác vẫn đỏ.
+const DUYET_NGOAI_DEMO = [
+  { loai: 'mau', gia_tri: '#FBE3A2', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 — chủ quán chọn 30.10.2026' },
+  { loai: 'mau', gia_tri: 'rgba(60,10,5,.35)', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 — chủ quán chọn 30.10.2026' },
+  { loai: 'pho', gia_tri: 'EB Garamond', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 (SIL OFL) — chủ quán chọn 30.10.2026' },
+];
+const DUYET_MAU = new Map();
+for (const d of DUYET_NGOAI_DEMO.filter((x) => x.loai === 'mau')) for (const [kh] of docMau(d.gia_tri)) DUYET_MAU.set(kh, d.tep);
+const DUYET_PHO = new Map(DUYET_NGOAI_DEMO.filter((x) => x.loai === 'pho').map((d) => [d.gia_tri.toLowerCase(), d.tep]));
+const duyetMau = (kh, f) => (DUYET_MAU.get(kh) || []).includes(f);
+const duyetPho = (h, f) => (DUYET_PHO.get(h) || []).includes(f);
 let demo = '';
 try { demo = doc('thiet_ke/app_kh_demo.html').replace(/data:[^"')\s]{100,}/g, ''); } catch { /* thiếu demo */ }
 k('K9a đọc được demo chuẩn', demo.length > 1000);
@@ -98,7 +111,7 @@ if (demo) {
   const MAU_DEMO = docMau(demo);
   const tepGiaoDien = quet('src').concat(['index.html', 'public/manifest.webmanifest'].filter((f) => fs.existsSync(path.join(GOC, f))));
   const la = [];
-  for (const f of tepGiaoDien) for (const [kh, goc] of docMau(doc(f))) if (!MAU_DEMO.has(kh)) la.push(`${goc} (${f})`);
+  for (const f of tepGiaoDien) for (const [kh, goc] of docMau(doc(f))) if (!MAU_DEMO.has(kh) && !duyetMau(kh, f)) la.push(`${goc} (${f})`);
   const hsl = timDong(tepGiaoDien, /hsla?\(/);
   k('K9 màu chỉ lấy từ demo', la.length === 0 && hsl.length === 0, la.slice(0, 12).concat(hsl.length ? [`hsl ở ${hsl.slice(0, 3).join(', ')}`] : []).join(' · ') + (la.length > 12 ? ` · …(+${la.length - 12})` : ''));
   const chuan = (t) => t.trim().replace(/^['"]|['"]$/g, '').toLowerCase();
@@ -109,8 +122,8 @@ if (demo) {
   for (const f of quet('src', /\.(css|jsx?|mjs)$/)) {
     for (const m of doc(f).matchAll(/(?:font-family\s*:|--[\w-]+\s*:)\s*([^;{}\n]*\b(?:sans-serif|serif|monospace|system-ui)\b[^;{}\n]*)/g)) {
       const ho = m[1].split(',').map(chuan).filter(Boolean);
-      if (!HO_DEMO.has(ho[0]) && ho[0] !== 'inherit') sai.push(`${ho[0]} (${f})`);
-      for (const h of ho.slice(1)) if (!HO_DEMO.has(h) && !DU_PHONG.has(h)) sai.push(`${h} (${f})`);
+      if (!HO_DEMO.has(ho[0]) && ho[0] !== 'inherit' && !duyetPho(ho[0], f)) sai.push(`${ho[0]} (${f})`);
+      for (const h of ho.slice(1)) if (!HO_DEMO.has(h) && !DU_PHONG.has(h) && !duyetPho(h, f)) sai.push(`${h} (${f})`);
     }
   }
   k('K9b phông chỉ dùng họ chữ của demo (+ phông hệ thống dự phòng)', sai.length === 0, sai.join(' · '));
