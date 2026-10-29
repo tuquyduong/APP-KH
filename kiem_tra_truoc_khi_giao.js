@@ -75,6 +75,46 @@ if (hd && Array.isArray(hd.cua)) {
   if (tong !== n) lech.push(`${tong - n} lời gọi không viết thẳng`);
   k('K8 mọi lời gọi src/api.js có trong hợp đồng', n > 0 && lech.length === 0, lech.join(', '));
 }
+// K9 — CHUẨN THEO DEMO (chủ quán chốt 29.10): màu và phông trong app CHỈ được lấy từ thiet_ke/app_kh_demo.html.
+//       Màu so theo giá trị (#abc = #aabbcc = rgb(170,187,204)); phông: họ chữ đầu phải là họ demo dùng, sau đó chỉ phông hệ thống dự phòng.
+const docMau = (txt) => {
+  const ra = new Map();
+  const them = (r, g, b, a, goc) => { const kh = [r, g, b, Math.round(a * 1000) / 1000].join(','); if (!ra.has(kh)) ra.set(kh, goc); };
+  for (const m of txt.matchAll(/#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b/g)) {
+    let h = m[1].toLowerCase();
+    if (h.length <= 4) h = [...h].map((c) => c + c).join('');
+    them(parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16), h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : 1, m[0]);
+  }
+  for (const m of txt.matchAll(/rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:[\s,/]+([\d.]+%?))?\s*\)/g)) {
+    const a = m[4] === undefined ? 1 : m[4].endsWith('%') ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
+    them(+m[1], +m[2], +m[3], a, m[0]);
+  }
+  return ra;
+};
+let demo = '';
+try { demo = doc('thiet_ke/app_kh_demo.html').replace(/data:[^"')\s]{100,}/g, ''); } catch { /* thiếu demo */ }
+k('K9a đọc được demo chuẩn', demo.length > 1000);
+if (demo) {
+  const MAU_DEMO = docMau(demo);
+  const tepGiaoDien = quet('src').concat(['index.html', 'public/manifest.webmanifest'].filter((f) => fs.existsSync(path.join(GOC, f))));
+  const la = [];
+  for (const f of tepGiaoDien) for (const [kh, goc] of docMau(doc(f))) if (!MAU_DEMO.has(kh)) la.push(`${goc} (${f})`);
+  const hsl = timDong(tepGiaoDien, /hsla?\(/);
+  k('K9 màu chỉ lấy từ demo', la.length === 0 && hsl.length === 0, la.slice(0, 12).concat(hsl.length ? [`hsl ở ${hsl.slice(0, 3).join(', ')}`] : []).join(' · ') + (la.length > 12 ? ` · …(+${la.length - 12})` : ''));
+  const chuan = (t) => t.trim().replace(/^['"]|['"]$/g, '').toLowerCase();
+  const HO_DEMO = new Set([...demo.matchAll(/font-family\s*:\s*([^;{}"]+)/g)].flatMap((m) => m[1].split(',').map(chuan)));
+  const DU_PHONG = new Set(['system-ui', '-apple-system', 'blinkmacsystemfont', 'segoe ui', 'roboto', 'helvetica neue', 'helvetica', 'arial',
+    'sans-serif', 'serif', 'monospace', 'inherit']);
+  const sai = [];
+  for (const f of quet('src', /\.(css|jsx?|mjs)$/)) {
+    for (const m of doc(f).matchAll(/(?:font-family\s*:|--[\w-]+\s*:)\s*([^;{}\n]*\b(?:sans-serif|serif|monospace|system-ui)\b[^;{}\n]*)/g)) {
+      const ho = m[1].split(',').map(chuan).filter(Boolean);
+      if (!HO_DEMO.has(ho[0]) && ho[0] !== 'inherit') sai.push(`${ho[0]} (${f})`);
+      for (const h of ho.slice(1)) if (!HO_DEMO.has(h) && !DU_PHONG.has(h)) sai.push(`${h} (${f})`);
+    }
+  }
+  k('K9b phông chỉ dùng họ chữ của demo (+ phông hệ thống dự phòng)', sai.length === 0, sai.join(' · '));
+}
 
 console.log('— Bài thử cong_cu/thu_*.js');
 const baiThu = fs.existsSync(path.join(GOC, 'cong_cu')) ? fs.readdirSync(path.join(GOC, 'cong_cu')).filter((f) => /^thu_.*\.js$/.test(f)).sort() : [];

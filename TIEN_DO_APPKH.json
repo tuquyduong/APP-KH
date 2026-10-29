@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 1,
-  "cap_nhat": "2026-10-28",
+  "phien_ban_so": 2,
+  "cap_nhat": "2026-10-29",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -19,7 +19,32 @@
       "model": "Sonnet",
       "trang_thai": "dang_mo",
       "han": "2026-11-04",
-      "ngay": "2026-10-28"
+      "ngay": "2026-10-28",
+      "ghi_chu": "28-29.10 may lam xong vong 1 (c948e8e, cong chay dat); 29.10 chu quan duyet vong sua 2: khop demo 100% (so anh tu dong), K9 mau/phong, bo chu no, am thanh man mo, giu trang thai Menu"
+    },
+    {
+      "ma": "KH-UI-5",
+      "ten": "Tien ich chay tren may khach theo demo: Trac nghiem the trang 60 cau + ket qua (luu tren may; gui ban rut gon len POS khi co cua, D4), Ke hoach va nhac viec (lich am, tiet khi, viec cua toi luu tren may — chua thong bao day), 6 tien ich, the video huong dan (an toi khi chu quan gui video)",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-2"
+      ],
+      "han": "2026-10-30"
+    },
+    {
+      "ma": "KH-UI-4",
+      "ten": "Man rong >= 1024 px kieu A (giong website thuong hieu): thanh tren co logo + 4 muc, noi dung trai rong, Menu loc ben trai + luoi, mon / QR / don mo dang bang noi — dung NGUYEN thanh phan demo + lop bo cuc man rong, theo mau chu quan duyet (thiet_ke/mau_man_to/)",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-2",
+        "KH-UI-5",
+        "mau man to duoc duyet"
+      ],
+      "han": "2026-10-31"
     },
     {
       "ma": "KH-UI-3",
@@ -99,7 +124,7 @@
     },
     {
       "ma": "KH-SAU-1",
-      "ten": "Dot 4 gom: vi gia dinh, trac nghiem the trang (luu ban rut gon khi khach dong y, quan theo doi), lich & viec cua toi, che do sua noi dung, qua sinh nhat, the qua, moi ban",
+      "ten": "Dot 4 gom: vi gia dinh, nhac viec co thong bao day, luu ket qua trac nghiem len POS, che do sua noi dung, qua sinh nhat, the qua, moi ban",
       "loai": "tach_sau",
       "trang_thai": "cho"
     }
