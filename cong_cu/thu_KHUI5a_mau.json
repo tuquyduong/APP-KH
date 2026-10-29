@@ -1,0 +1,8327 @@
+{
+ "nguon": "thiet_ke/app_kh_demo.html (patch39) — hàm tcScore / tcFinish / tcPicks / ownSigns chạy trong Chromium",
+ "menu": [
+  {
+   "ma": "tra-duong-nhan",
+   "ten": "Trà Dưỡng Nhan"
+  },
+  {
+   "ma": "tra-ngoc-thanh",
+   "ten": "Trà Ngọc Thanh Thơm Người"
+  },
+  {
+   "ma": "tra-pho-nhi",
+   "ten": "Trà Phổ Nhĩ Minh mục"
+  },
+  {
+   "ma": "tra-luc-bao",
+   "ten": "Trà Lục Bảo"
+  },
+  {
+   "ma": "ep-hong-tan-sinh",
+   "ten": "Hồng Tân Sinh"
+  },
+  {
+   "ma": "ep-thanh-tan-duong",
+   "ten": "Thanh Tân Dưỡng"
+  },
+  {
+   "ma": "cf-den",
+   "ten": "Cà phê Đen"
+  },
+  {
+   "ma": "cf-nau",
+   "ten": "Cà phê Nâu"
+  },
+  {
+   "ma": "cf-muoi",
+   "ten": "Cà phê Muối"
+  },
+  {
+   "ma": "ds-tau-hu",
+   "ten": "Tàu hũ Mộc Quế Hoa"
+  },
+  {
+   "ma": "ds-nep-cam",
+   "ten": "Nếp Cẩm Xoài"
+  },
+  {
+   "ma": "ds-canh-dai-bo",
+   "ten": "Canh Đại Bổ"
+  },
+  {
+   "ma": "ds-sup-le",
+   "ten": "Súp lê Thanh Phế"
+  },
+  {
+   "ma": "ds-linh-chi",
+   "ten": "Linh Chi"
+  },
+  {
+   "ma": "hq-theo-ngay",
+   "ten": "Hoa quả theo ngày"
+  },
+  {
+   "ma": "combo-duong-nhan",
+   "ten": "Combo Dưỡng Nhan"
+  },
+  {
+   "ma": "combo-sang",
+   "ten": "Combo Sáng Tỉnh Táo"
+  },
+  {
+   "ma": "combo-ca-nha",
+   "ten": "Combo Cả Nhà 4 ly"
+  }
+ ],
+ "tracNghiem": [
+  {
+   "ten": "toàn A, nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 75 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和75có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "toàn D, nữ",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 25,
+    "kh": 100,
+    "dh": 100,
+    "ah": 100,
+    "dt": 100,
+    "tn": 100,
+    "hu": 100,
+    "ku": 100,
+    "db": 100
+   },
+   "raw": {
+    "bh": 16,
+    "kh": 40,
+    "dh": 35,
+    "ah": 40,
+    "dt": 40,
+    "tn": 30,
+    "hu": 35,
+    "ku": 35,
+    "db": 35
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "có",
+    "ah": "có",
+    "dt": "có",
+    "tn": "có",
+    "hu": "có",
+    "ku": "có",
+    "db": "có"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "tend": [],
+   "conflict": true,
+   "dropped": [],
+   "mainOk": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh",
+    "dh"
+   ],
+   "many": true,
+   "khoaChinh": "khi",
+   "khoaPhu": "duong",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư kèm Dương hư",
+     "h2": "氣虛 · 陽虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Khí hư (100 điểm), kèm xu hướng phụ Dương hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư, kèm Dương hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi.",
+    "ghiChu": [
+     "Hai xu hướng trái tính chất cùng cao (Dương hư cùng với Âm hư hoặc Thấp nhiệt). Trường hợp này nên dùng thức uống tính bình và trao đổi trực tiếp với người phụ trách chuyên môn trước khi chọn món ấm hay mát.Trao đổi với quán ›",
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d",
+     "Xu hướng phụThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn: T"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 4 món",
+    "diemThanh": [
+     "Bình hòa平和25không",
+     "Khí hư氣虛100có",
+     "Dương hư陽虛100có",
+     "Âm hư陰虛100có",
+     "Đàm thấp痰濕100có",
+     "Thấp nhiệt濕熱100có",
+     "Huyết ứ血瘀100có",
+     "Khí uất氣鬱100có",
+     "Đặc bẩm特稟100có"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 25; Khí hư 100; Dương hư 100; Âm hư 100; Đàm thấp 100; Thấp nhiệt 100; Huyết ứ 100; Khí uất 100; Đặc bẩm 100\nNhóm ≥40: Khí hư, Dương hư, Âm hư, Đàm thấp, Thấp nhiệt, Huyết ứ, Khí uất, Đặc bẩm | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư + Dương hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=5 2=5 3=5 4=5 5=5 6=5 7=5 8=5 9=5 10=5 11=5 12=5 13=5 14=5 15=5 16=5 17=5 18=5 19=5 20=5 21=5 22=5 23=5 24=5 25=5 26=5 27=5 28=5 29=5 30=5 31=5 32=5 33=5 34=5 35=5 36=5 37=5 38=5 39=5 40=5 41=5 42=5 43=5 44=5 45=5 46=5 47=5 48=5 49=5 50=5 51=5 52=5 53=5 54=5 55=5 56=5 57=5 58=5 59=5 60=5\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm",
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức",
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Tàu hũ Mộc Quế Hoa",
+     "Canh Đại Bổ",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Hồng Tân Sinh",
+     "Thanh Tân Dưỡng",
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Súp lê Thanh Phế"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "dễ bị cảm hơn người khác",
+     "thích yên tĩnh, ngại nói chuyện",
+     "Giọng nói của tôi nhỏ, yếu",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ],
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "sợ lạnh, thường mặc nhiều áo hơn người khác",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh",
+     "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy"
+    ]
+   }
+  },
+  {
+   "ten": "toàn A, nữ, sợ lạnh",
+   "sex": "nu",
+   "climate": "lanh",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 75 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和75có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: sợ lạnh\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Đồ uống đá, lạnh (vì bạn sợ lạnh)"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "ngẫu nhiên hạt 1000, nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    5,
+    5,
+    4,
+    5,
+    1,
+    2,
+    2,
+    1,
+    5,
+    4,
+    4,
+    1,
+    5,
+    4,
+    4,
+    1,
+    1,
+    2,
+    4,
+    5,
+    2,
+    2,
+    5,
+    2,
+    1,
+    1,
+    1,
+    5,
+    5,
+    4,
+    2,
+    5,
+    2,
+    5,
+    4,
+    1,
+    2,
+    4,
+    2,
+    1,
+    1,
+    1,
+    4,
+    4,
+    5,
+    4,
+    1,
+    5,
+    5,
+    1,
+    1,
+    4,
+    5,
+    4,
+    2,
+    4,
+    1,
+    5,
+    4,
+    4
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 81,
+    "dh": 57,
+    "ah": 69,
+    "dt": 50,
+    "tn": 42,
+    "hu": 43,
+    "ku": 21,
+    "db": 29
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 34,
+    "dh": 23,
+    "ah": 30,
+    "dt": 24,
+    "tn": 16,
+    "hu": 19,
+    "ku": 13,
+    "db": 15
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "có",
+    "ah": "có",
+    "dt": "có",
+    "tn": "có",
+    "hu": "có",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "ah",
+    "dh",
+    "dt",
+    "hu",
+    "tn",
+    "db",
+    "ku"
+   ],
+   "main": [
+    "kh",
+    "ah",
+    "dh",
+    "dt",
+    "hu",
+    "tn"
+   ],
+   "tend": [],
+   "conflict": true,
+   "dropped": [],
+   "mainOk": [
+    "kh",
+    "ah",
+    "dh",
+    "dt",
+    "hu",
+    "tn"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh",
+    "ah"
+   ],
+   "many": true,
+   "khoaChinh": "khi",
+   "khoaPhu": "am",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư kèm Âm hư",
+     "h2": "氣虛 · 陰虛",
+     "lvl": "Xu hướng rõ · 81 điểm",
+     "s": "Bạn có xu hướng Khí hư (81 điểm), kèm xu hướng phụ Âm hư (69 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư, kèm Âm hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Đặc bẩm, Khí uất đều ở mức thấp.",
+    "ghiChu": [
+     "Hai xu hướng trái tính chất cùng cao (Dương hư cùng với Âm hư hoặc Thấp nhiệt). Trường hợp này nên dùng thức uống tính bình và trao đổi trực tiếp với người phụ trách chuyên môn trước khi chọn món ấm hay mát.Trao đổi với quán ›",
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d",
+     "Xu hướng phụThể trạng Âm hư陰虛Dựa trên lựa chọn của bạn: Lòng"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 5 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Khí hư氣虛81có",
+     "Âm hư陰虛69có",
+     "Dương hư陽虛57có",
+     "Đàm thấp痰濕50có",
+     "Huyết ứ血瘀43có",
+     "Thấp nhiệt濕熱42có",
+     "Đặc bẩm特稟29không",
+     "Khí uất氣鬱21không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 50; Khí hư 81; Dương hư 57; Âm hư 69; Đàm thấp 50; Thấp nhiệt 42; Huyết ứ 43; Khí uất 21; Đặc bẩm 29\nNhóm ≥40: Khí hư, Âm hư, Dương hư, Đàm thấp, Huyết ứ, Thấp nhiệt | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư + Âm hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=5 2=5 3=4 4=5 5=1 6=2 7=2 8=1 9=5 10=4 11=4 12=1 13=5 14=4 15=4 16=1 17=1 18=2 19=4 20=5 21=2 22=2 23=5 24=2 25=1 26=1 27=1 28=5 29=5 30=4 31=2 32=5 33=2 34=5 35=4 36=1 37=2 38=4 39=2 40=1 41=1 42=1 43=4 44=4 45=5 46=4 47=1 48=5 49=5 50=1 51=1 52=4 53=5 54=4 55=2 56=4 57=1 58=5 59=4 60=4\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm",
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức",
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Canh Đại Bổ",
+     "Súp lê Thanh Phế",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "thích yên tĩnh, ngại nói chuyện",
+     "Giọng nói của tôi nhỏ, yếu",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ],
+    "ah": [
+     "Lòng bàn tay, lòng bàn chân tôi hay nóng",
+     "hay thấy người nóng, mặt nóng bừng",
+     "dễ bị táo bón hoặc phân khô",
+     "Hai gò má tôi hay ửng đỏ",
+     "hay thấy mắt khô, rát",
+     "hay khô miệng, khô họng, lúc nào cũng muốn uống nước"
+    ]
+   }
+  },
+  {
+   "ten": "ngẫu nhiên hạt 1001, nu",
+   "sex": "nu",
+   "climate": "lanh",
+   "safety": [],
+   "ans": [
+    1,
+    2,
+    1,
+    2,
+    4,
+    5,
+    4,
+    5,
+    4,
+    2,
+    1,
+    1,
+    4,
+    4,
+    5,
+    4,
+    4,
+    2,
+    5,
+    5,
+    4,
+    4,
+    2,
+    4,
+    4,
+    1,
+    2,
+    5,
+    4,
+    4,
+    4,
+    5,
+    5,
+    2,
+    5,
+    1,
+    4,
+    2,
+    1,
+    2,
+    2,
+    4,
+    1,
+    5,
+    2,
+    4,
+    5,
+    4,
+    5,
+    1,
+    4,
+    2,
+    2,
+    2,
+    5,
+    1,
+    5,
+    2,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 44,
+    "kh": 53,
+    "dh": 39,
+    "ah": 47,
+    "dt": 59,
+    "tn": 79,
+    "hu": 68,
+    "ku": 50,
+    "db": 43
+   },
+   "raw": {
+    "bh": 22,
+    "kh": 25,
+    "dh": 18,
+    "ah": 23,
+    "dt": 27,
+    "tn": 25,
+    "hu": 26,
+    "ku": 21,
+    "db": 19
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "thiên hướng",
+    "ah": "có",
+    "dt": "có",
+    "tn": "có",
+    "hu": "có",
+    "ku": "có",
+    "db": "có"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "tn",
+    "hu",
+    "dt",
+    "kh",
+    "ku",
+    "ah",
+    "db",
+    "dh"
+   ],
+   "main": [
+    "tn",
+    "hu",
+    "dt",
+    "kh",
+    "ku",
+    "ah",
+    "db"
+   ],
+   "tend": [
+    "dh"
+   ],
+   "conflict": false,
+   "dropped": [
+    "tn",
+    "ah"
+   ],
+   "mainOk": [
+    "hu",
+    "dt",
+    "kh",
+    "ku",
+    "db"
+   ],
+   "tendOk": [
+    "dh"
+   ],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "hu",
+    "dt"
+   ],
+   "many": true,
+   "khoaChinh": "huyet",
+   "khoaPhu": "dam",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Huyết ứ kèm Đàm thấp",
+     "h2": "血瘀 · 痰濕",
+     "lvl": "Xu hướng rõ · 68 điểm",
+     "s": "Bạn có xu hướng Huyết ứ (68 điểm), kèm xu hướng phụ Đàm thấp (59 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Huyết ứ, kèm Đàm thấp. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi.",
+    "ghiChu": [
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Huyết ứ血瘀Dựa trên lựa chọn của bạn: ",
+     "Xu hướng phụThể trạng Đàm thấp痰濕Dựa trên lựa chọn của bạn: h"
+    ],
+    "khoiRieng": [
+     "Đã để riêng: nhóm Thấp nhiệt, Âm hư có điểm khá cao, nhưng bạn cho biết mình chịu nóng tốt hơn, sợ lạnh, nên chưa đưa vào kết luận. Nếu muốn rõ hơn, bạn có thể trao đổi trực tiếp."
+    ],
+    "tieuMon": "Thức uống gợi ý tại quán · 5 món",
+    "diemThanh": [
+     "Bình hòa平和44không",
+     "Thấp nhiệt濕熱79có",
+     "Huyết ứ血瘀68có",
+     "Đàm thấp痰濕59có",
+     "Khí hư氣虛53có",
+     "Khí uất氣鬱50có",
+     "Âm hư陰虛47có",
+     "Đặc bẩm特稟43có",
+     "Dương hư陽虛39thiên hướng"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 44; Khí hư 53; Dương hư 39; Âm hư 47; Đàm thấp 59; Thấp nhiệt 79; Huyết ứ 68; Khí uất 50; Đặc bẩm 43\nNhóm ≥40: Thấp nhiệt, Huyết ứ, Đàm thấp, Khí hư, Khí uất, Âm hư, Đặc bẩm | Thiên hướng: Dương hư | Bình hòa: không\nKết luận: Huyết ứ + Đàm thấp\nChịu nóng/lạnh: sợ lạnh\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=2 3=1 4=2 5=4 6=5 7=4 8=5 9=4 10=2 11=1 12=1 13=4 14=4 15=5 16=4 17=4 18=2 19=5 20=5 21=4 22=4 23=2 24=4 25=4 26=1 27=2 28=5 29=4 30=4 31=4 32=5 33=5 34=2 35=5 36=1 37=4 38=2 39=1 40=2 41=2 42=4 43=1 44=5 45=2 46=4 47=5 48=4 49=5 50=1 51=4 52=2 53=2 54=2 55=5 56=1 57=5 58=2 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, giúp lưu thông: hoa hồng, sơn tra, quế hoa",
+     "Uống ấm, nhất là trước và trong kỳ kinh (nữ)",
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường"
+    ],
+    "tranh": [
+     "Nước đá, đồ lạnh",
+     "Ngồi lâu một chỗ, ít vận động",
+     "Thức khuya, ngủ thiếu",
+     "Để cơ thể nhiễm lạnh",
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Hồng Tân Sinh",
+     "Tàu hũ Mộc Quế Hoa",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "hu": [
+     "Trên da tôi tự xuất hiện vết bầm tím mà không biết từ lúc nào",
+     "Hai gò má tôi có các mạch máu đỏ li ti",
+     "hay quên",
+     "hay bị đau ở một chỗ nào đó trên cơ thể",
+     "Môi tôi có màu sẫm"
+    ],
+    "dt": [
+     "hay thấy tức ngực hoặc đầy bụng",
+     "hay thấy người nặng nề, không nhẹ nhõm",
+     "Trán tôi tiết nhiều dầu",
+     "Trong miệng tôi có cảm giác dính nhớt",
+     "hay có đờm, nhất là cảm giác đờm vướng ở cổ họng"
+    ]
+   }
+  },
+  {
+   "ten": "ngẫu nhiên hạt 1002, nam",
+   "sex": "nam",
+   "climate": "nong",
+   "safety": [],
+   "ans": [
+    2,
+    4,
+    2,
+    2,
+    2,
+    4,
+    2,
+    1,
+    5,
+    1,
+    5,
+    2,
+    1,
+    5,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    5,
+    4,
+    4,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    5,
+    2,
+    2,
+    4,
+    2,
+    5,
+    2,
+    4,
+    4,
+    4,
+    2,
+    4,
+    1,
+    4,
+    5,
+    5,
+    2,
+    1,
+    4,
+    2,
+    5,
+    1,
+    1,
+    1,
+    5,
+    4,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 38,
+    "dh": 32,
+    "ah": 50,
+    "dt": 53,
+    "tn": 46,
+    "hu": 39,
+    "ku": 32,
+    "db": 43
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 20,
+    "dh": 16,
+    "ah": 24,
+    "dt": 25,
+    "tn": 17,
+    "hu": 18,
+    "ku": 16,
+    "db": 19
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "thiên hướng",
+    "dh": "thiên hướng",
+    "ah": "có",
+    "dt": "có",
+    "tn": "có",
+    "hu": "thiên hướng",
+    "ku": "thiên hướng",
+    "db": "có"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dt",
+    "ah",
+    "tn",
+    "db",
+    "hu",
+    "kh",
+    "dh",
+    "ku"
+   ],
+   "main": [
+    "dt",
+    "ah",
+    "tn",
+    "db"
+   ],
+   "tend": [
+    "hu",
+    "kh",
+    "dh",
+    "ku"
+   ],
+   "conflict": false,
+   "dropped": [
+    "dh"
+   ],
+   "mainOk": [
+    "dt",
+    "ah",
+    "tn",
+    "db"
+   ],
+   "tendOk": [
+    "hu",
+    "kh",
+    "ku"
+   ],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dt",
+    "ah"
+   ],
+   "many": true,
+   "khoaChinh": "dam",
+   "khoaPhu": "am",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Đàm thấp kèm Âm hư",
+     "h2": "痰濕 · 陰虛",
+     "lvl": "Xu hướng rõ · 53 điểm",
+     "s": "Bạn có xu hướng Đàm thấp (53 điểm), kèm xu hướng phụ Âm hư (50 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Đàm thấp, kèm Âm hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi.",
+    "ghiChu": [
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Đàm thấp痰濕Dựa trên lựa chọn của bạn:",
+     "Xu hướng phụThể trạng Âm hư陰虛Dựa trên lựa chọn của bạn: Da h"
+    ],
+    "khoiRieng": [
+     "Đã để riêng: nhóm Dương hư có điểm khá cao, nhưng bạn cho biết mình chịu lạnh tốt hơn, sợ nóng, nên chưa đưa vào kết luận. Nếu muốn rõ hơn, bạn có thể trao đổi trực tiếp."
+    ],
+    "tieuMon": "Thức uống gợi ý tại quán · 4 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Đàm thấp痰濕53có",
+     "Âm hư陰虛50có",
+     "Thấp nhiệt濕熱46có",
+     "Đặc bẩm特稟43có",
+     "Huyết ứ血瘀39thiên hướng",
+     "Khí hư氣虛38thiên hướng",
+     "Dương hư陽虛32thiên hướng",
+     "Khí uất氣鬱32thiên hướng"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 63; Khí hư 38; Dương hư 32; Âm hư 50; Đàm thấp 53; Thấp nhiệt 46; Huyết ứ 39; Khí uất 32; Đặc bẩm 43\nNhóm ≥40: Đàm thấp, Âm hư, Thấp nhiệt, Đặc bẩm | Thiên hướng: Huyết ứ, Khí hư, Dương hư, Khí uất | Bình hòa: không\nKết luận: Đàm thấp + Âm hư\nChịu nóng/lạnh: sợ nóng\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=4 3=2 4=2 5=2 6=4 7=2 8=1 9=5 10=1 11=5 12=2 13=1 14=5 15=2 16=2 17=1 18=1 19=2 20=1 21=2 22=5 23=4 24=4 25=2 26=2 27=1 28=1 29=2 30=2 31=5 32=2 33=2 34=4 35=2 36=5 37=2 38=4 39=4 40=4 41=2 42=4 43=1 44=4 45=5 46=5 47=2 48=1 49=4 50=2 51=5 52=1 53=1 54=1 55=5 56=4 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường",
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp",
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Súp lê Thanh Phế",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Tàu hũ Mộc Quế Hoa",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "dt": [
+     "hay thấy người nặng nề, không nhẹ nhõm",
+     "Bụng tôi to, mỡ bụng mềm nhão",
+     "Mí mắt trên của tôi hơi sưng mọng hơn người khác",
+     "hay có đờm, nhất là cảm giác đờm vướng ở cổ họng"
+    ],
+    "ah": [
+     "Da hoặc môi tôi khô",
+     "Môi tôi đỏ hơn người bình thường",
+     "dễ bị táo bón hoặc phân khô",
+     "Hai gò má tôi hay ửng đỏ"
+    ]
+   }
+  },
+  {
+   "ten": "ngẫu nhiên hạt 1003, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    2,
+    1,
+    5,
+    5,
+    4,
+    5,
+    2,
+    5,
+    5,
+    1,
+    2,
+    5,
+    2,
+    1,
+    5,
+    5,
+    1,
+    2,
+    1,
+    2,
+    2,
+    5,
+    4,
+    5,
+    5,
+    1,
+    4,
+    4,
+    5,
+    5,
+    1,
+    5,
+    4,
+    2,
+    5,
+    2,
+    4,
+    2,
+    1,
+    2,
+    1,
+    5,
+    4,
+    2,
+    5,
+    5,
+    1,
+    1,
+    4,
+    2,
+    2,
+    5,
+    1,
+    2,
+    2,
+    5,
+    4,
+    5,
+    1,
+    5
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 56,
+    "dh": 71,
+    "ah": 47,
+    "dt": 47,
+    "tn": 67,
+    "hu": 46,
+    "ku": 61,
+    "db": 57
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 26,
+    "dh": 27,
+    "ah": 23,
+    "dt": 23,
+    "tn": 22,
+    "hu": 20,
+    "ku": 24,
+    "db": 23
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "có",
+    "ah": "có",
+    "dt": "có",
+    "tn": "có",
+    "hu": "có",
+    "ku": "có",
+    "db": "có"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "tn",
+    "ku",
+    "db",
+    "kh",
+    "ah",
+    "dt",
+    "hu"
+   ],
+   "main": [
+    "dh",
+    "tn",
+    "ku",
+    "db",
+    "kh",
+    "ah",
+    "dt",
+    "hu"
+   ],
+   "tend": [],
+   "conflict": true,
+   "dropped": [],
+   "mainOk": [
+    "dh",
+    "tn",
+    "ku",
+    "db",
+    "kh",
+    "ah",
+    "dt",
+    "hu"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dh",
+    "tn"
+   ],
+   "many": true,
+   "khoaChinh": "duong",
+   "khoaPhu": "thap",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Dương hư kèm Thấp nhiệt",
+     "h2": "陽虛 · 濕熱",
+     "lvl": "Xu hướng rõ · 71 điểm",
+     "s": "Bạn có xu hướng Dương hư (71 điểm), kèm xu hướng phụ Thấp nhiệt (67 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Dương hư, kèm Thấp nhiệt. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi.",
+    "ghiChu": [
+     "Hai xu hướng trái tính chất cùng cao (Dương hư cùng với Âm hư hoặc Thấp nhiệt). Trường hợp này nên dùng thức uống tính bình và trao đổi trực tiếp với người phụ trách chuyên môn trước khi chọn món ấm hay mát.Trao đổi với quán ›",
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn:",
+     "Xu hướng phụThể trạng Thấp nhiệt濕熱Dựa trên lựa chọn của bạn:"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 6 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Dương hư陽虛71có",
+     "Thấp nhiệt濕熱67có",
+     "Khí uất氣鬱61có",
+     "Đặc bẩm特稟57có",
+     "Khí hư氣虛56có",
+     "Âm hư陰虛47có",
+     "Đàm thấp痰濕47có",
+     "Huyết ứ血瘀46có"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 50; Khí hư 56; Dương hư 71; Âm hư 47; Đàm thấp 47; Thấp nhiệt 67; Huyết ứ 46; Khí uất 61; Đặc bẩm 57\nNhóm ≥40: Dương hư, Thấp nhiệt, Khí uất, Đặc bẩm, Khí hư, Âm hư, Đàm thấp, Huyết ứ | Thiên hướng: không | Bình hòa: không\nKết luận: Dương hư + Thấp nhiệt\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=1 3=5 4=5 5=4 6=5 7=2 8=5 9=5 10=1 11=2 12=5 13=2 14=1 15=5 16=5 17=1 18=2 19=1 20=2 21=2 22=5 23=4 24=5 25=5 26=1 27=4 28=4 29=5 30=5 31=1 32=5 33=4 34=2 35=5 36=2 37=4 38=2 39=1 40=2 41=1 42=5 43=4 44=2 45=5 46=5 47=1 48=1 49=4 50=2 51=2 52=5 53=1 54=2 55=2 56=5 57=4 58=5 59=1 60=5\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh",
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh",
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Trà Phổ Nhĩ Minh mục",
+     "Thanh Tân Dưỡng",
+     "Tàu hũ Mộc Quế Hoa",
+     "Canh Đại Bổ",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": [
+     "Hồng Tân Sinh",
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài",
+     "Súp lê Thanh Phế"
+    ]
+   },
+   "dauHieu": {
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh"
+    ],
+    "tn": [
+     "Mặt hoặc mũi tôi nhờn dầu, bóng dầu",
+     "dễ nổi mụn trứng cá hoặc mụn nhọt",
+     "hay đắng miệng hoặc miệng có mùi lạ",
+     "đi đại tiện phân dính, khó sạch, có cảm giác đi chưa hết"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm kh, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 100,
+    "dh": 14,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 40,
+    "dh": 11,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "kh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "kh"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh"
+   ],
+   "many": false,
+   "khoaChinh": "khi",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư",
+     "h2": "氣虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Khí hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Dương hư, Âm hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Khí hư氣虛100có",
+     "Dương hư陽虛14không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 50; Khí hư 100; Dương hư 14; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Khí hư | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=5 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=5 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=5 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=5 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=5 38=1 39=1 40=1 41=1 42=1 43=1 44=5 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=5 53=1 54=1 55=1 56=1 57=1 58=5 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Canh Đại Bổ",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "dễ bị cảm hơn người khác",
+     "thích yên tĩnh, ngại nói chuyện",
+     "Giọng nói của tôi nhỏ, yếu",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm dh, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 13,
+    "dh": 100,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 12,
+    "dh": 35,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "có",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "kh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "dh"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dh"
+   ],
+   "many": false,
+   "khoaChinh": "duong",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Dương hư",
+     "h2": "陽虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Dương hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Dương hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Âm hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn:"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Dương hư陽虛100có",
+     "Khí hư氣虛13không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 13; Dương hư 100; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Dương hư | Thiên hướng: không | Bình hòa: không\nKết luận: Dương hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=5 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=5 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=5 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=5 31=1 32=1 33=1 34=1 35=1 36=1 37=5 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=5 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=5 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh"
+    ],
+    "tranh": [
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Tàu hũ Mộc Quế Hoa",
+     "Canh Đại Bổ"
+    ],
+    "tranhMon": [
+     "Hồng Tân Sinh",
+     "Thanh Tân Dưỡng",
+     "Súp lê Thanh Phế"
+    ]
+   },
+   "dauHieu": {
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "sợ lạnh, thường mặc nhiều áo hơn người khác",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh",
+     "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm ah, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 100,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 40,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "có",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "ah",
+    "kh",
+    "dh",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "ah"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "ah"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "ah"
+   ],
+   "many": false,
+   "khoaChinh": "am",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Âm hư",
+     "h2": "陰虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Âm hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Âm hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Âm hư陰虛Dựa trên lựa chọn của bạn: Lò"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和75không",
+     "Âm hư陰虛100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 100; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Âm hư | Thiên hướng: không | Bình hòa: không\nKết luận: Âm hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=5 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=5 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=5 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=1 31=5 32=1 33=1 34=1 35=1 36=1 37=1 38=5 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=5 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=5 55=1 56=1 57=1 58=1 59=5 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Súp lê Thanh Phế"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "ah": [
+     "Lòng bàn tay, lòng bàn chân tôi hay nóng",
+     "hay thấy người nóng, mặt nóng bừng",
+     "Da hoặc môi tôi khô",
+     "Môi tôi đỏ hơn người bình thường",
+     "dễ bị táo bón hoặc phân khô",
+     "Hai gò má tôi hay ửng đỏ",
+     "hay thấy mắt khô, rát",
+     "hay khô miệng, khô họng, lúc nào cũng muốn uống nước"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm dt, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 100,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 40,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "có",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dt",
+    "kh",
+    "dh",
+    "ah",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dt"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "dt"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dt"
+   ],
+   "many": false,
+   "khoaChinh": "dam",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Đàm thấp",
+     "h2": "痰濕",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Đàm thấp (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Đàm thấp. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Đàm thấp痰濕Dựa trên lựa chọn của bạn:"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和75không",
+     "Đàm thấp痰濕100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 100; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Đàm thấp | Thiên hướng: không | Bình hòa: không\nKết luận: Đàm thấp\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=5 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=5 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=5 24=1 25=1 26=1 27=1 28=1 29=1 30=1 31=1 32=5 33=1 34=1 35=1 36=1 37=1 38=1 39=5 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=5 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=5 56=1 57=1 58=1 59=1 60=5\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường"
+    ],
+    "tranh": [
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Tàu hũ Mộc Quế Hoa",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "dt": [
+     "hay thấy tức ngực hoặc đầy bụng",
+     "hay thấy người nặng nề, không nhẹ nhõm",
+     "Bụng tôi to, mỡ bụng mềm nhão",
+     "Trán tôi tiết nhiều dầu",
+     "Mí mắt trên của tôi hơi sưng mọng hơn người khác",
+     "Trong miệng tôi có cảm giác dính nhớt",
+     "hay có đờm, nhất là cảm giác đờm vướng ở cổ họng",
+     "Rêu lưỡi của tôi dày, nhớt, hoặc tôi có cảm giác lưỡi bị phủ dày"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm tn, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 100,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 30,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "có",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "tn",
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "tn"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "tn"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "tn"
+   ],
+   "many": false,
+   "khoaChinh": "thap",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Thấp nhiệt",
+     "h2": "濕熱",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Thấp nhiệt (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Thấp nhiệt. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Đàm thấp… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Thấp nhiệt濕熱Dựa trên lựa chọn của bạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和75không",
+     "Thấp nhiệt濕熱100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 100; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Thấp nhiệt | Thiên hướng: không | Bình hòa: không\nKết luận: Thấp nhiệt\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=5 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=5 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=5 25=1 26=1 27=1 28=1 29=1 30=1 31=1 32=1 33=5 34=1 35=1 36=1 37=1 38=1 39=1 40=5 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=5 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Thanh Tân Dưỡng",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "tn": [
+     "Mặt hoặc mũi tôi nhờn dầu, bóng dầu",
+     "dễ nổi mụn trứng cá hoặc mụn nhọt",
+     "hay đắng miệng hoặc miệng có mùi lạ",
+     "đi đại tiện phân dính, khó sạch, có cảm giác đi chưa hết",
+     "Khi đi tiểu tôi thấy nóng rát, nước tiểu màu đậm",
+     "hay ra khí hư (huyết trắng) màu vàng"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm hu, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 100,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 35,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "có",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "hu",
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "hu"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "hu"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "hu"
+   ],
+   "many": false,
+   "khoaChinh": "huyet",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Huyết ứ",
+     "h2": "血瘀",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Huyết ứ (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Huyết ứ. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Đàm thấp… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Huyết ứ血瘀Dựa trên lựa chọn của bạn: "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Huyết ứ血瘀100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 100; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Huyết ứ | Thiên hướng: không | Bình hòa: không\nKết luận: Huyết ứ\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=5 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=5 17=1 18=1 19=5 20=1 21=1 22=1 23=1 24=1 25=5 26=1 27=1 28=1 29=1 30=1 31=1 32=1 33=1 34=5 35=1 36=1 37=1 38=1 39=1 40=1 41=5 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=5 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, giúp lưu thông: hoa hồng, sơn tra, quế hoa",
+     "Uống ấm, nhất là trước và trong kỳ kinh (nữ)"
+    ],
+    "tranh": [
+     "Nước đá, đồ lạnh",
+     "Ngồi lâu một chỗ, ít vận động",
+     "Thức khuya, ngủ thiếu",
+     "Để cơ thể nhiễm lạnh"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Hồng Tân Sinh",
+     "Tàu hũ Mộc Quế Hoa"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {
+    "hu": [
+     "Trên da tôi tự xuất hiện vết bầm tím mà không biết từ lúc nào",
+     "Hai gò má tôi có các mạch máu đỏ li ti",
+     "hay quên",
+     "hay bị đau ở một chỗ nào đó trên cơ thể",
+     "Sắc mặt tôi tối sạm, hoặc dễ nổi nám, đốm nâu",
+     "dễ bị quầng thâm mắt",
+     "Môi tôi có màu sẫm"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm ku, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 100,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 35,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "có",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "ku",
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "db"
+   ],
+   "main": [
+    "ku"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "ku"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "ku"
+   ],
+   "many": false,
+   "khoaChinh": "uat",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí uất",
+     "h2": "氣鬱",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Khí uất (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí uất. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Đàm thấp… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí uất氣鬱Dựa trên lựa chọn của bạn: "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Khí uất氣鬱100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 100; Đặc bẩm 0\nNhóm ≥40: Khí uất | Thiên hướng: không | Bình hòa: không\nKết luận: Khí uất\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=5 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=5 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=5 27=1 28=1 29=1 30=1 31=1 32=1 33=1 34=1 35=5 36=1 37=1 38=1 39=1 40=1 41=1 42=5 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=5 51=1 52=1 53=1 54=1 55=1 56=5 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống thơm, dịu: hoa hồng, hoa nhài, phật thủ, vỏ quýt",
+     "Buổi tối: trà hoa, lạc tiên thay cho cà phê"
+    ],
+    "tranh": [
+     "Cà phê đậm sau 14 giờ",
+     "Uống rượu để giải sầu",
+     "Ở một mình trong phòng kín, tối",
+     "Thức khuya lướt điện thoại"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Tàu hũ Mộc Quế Hoa"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "ku": [
+     "hay thấy buồn bực, tâm trạng chùng xuống",
+     "dễ căng thẳng, lo âu, bất an",
+     "đa sầu đa cảm, dễ xúc động",
+     "dễ cảm thấy sợ hãi hoặc dễ giật mình",
+     "hay bị căng tức vùng sườn hoặc ngực (vú)",
+     "hay thở dài vô cớ",
+     "hay có cảm giác vướng ở cổ họng, nuốt không trôi, khạc không ra"
+    ]
+   }
+  },
+  {
+   "ten": "nghiêng nhóm db, nữ, đều",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 100
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 35
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "có"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "db",
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku"
+   ],
+   "main": [
+    "db"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "db"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "db"
+   ],
+   "many": false,
+   "khoaChinh": "dac",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Đặc bẩm",
+     "h2": "特稟",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Đặc bẩm (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Đặc bẩm. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Đàm thấp… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Đặc bẩm特稟Dựa trên lựa chọn của bạn: "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 1 món",
+    "diemThanh": [
+     "Bình hòa平和75không",
+     "Đặc bẩm特稟100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 100\nNhóm ≥40: Đặc bẩm | Thiên hướng: không | Bình hòa: không\nKết luận: Đặc bẩm\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=5 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=5 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=5 28=1 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=5 37=1 38=1 39=1 40=1 41=1 42=1 43=5 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=5 52=1 53=1 54=1 55=1 56=1 57=5 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống đơn giản, ít thành phần: táo đỏ, kỷ tử, ô mai",
+     "Món mới chỉ thử với lượng nhỏ"
+    ],
+    "tranh": [
+     "Thức ăn, đồ uống từng gây dị ứng",
+     "Hải sản, đồ cay, rượu lúc đang nhạy cảm",
+     "Phấn hoa, bụi, mùi sơn mới",
+     "Thay đổi nóng lạnh đột ngột"
+    ],
+    "an": false,
+    "mon": [
+     "Linh Chi"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {
+    "db": [
+     "dù không bị cảm vẫn hay hắt hơi",
+     "dù không bị cảm vẫn hay nghẹt mũi, chảy nước mũi",
+     "hay bị ho, khò khè khi đổi mùa, đổi nhiệt độ hoặc ngửi mùi lạ",
+     "dễ bị dị ứng (thuốc, thức ăn, mùi, phấn hoa, lúc giao mùa, thời tiết thay đổi)",
+     "Da tôi dễ nổi mề đay (mẩn đỏ từng mảng, ngứa)",
+     "từng bị nổi các chấm, mảng tím bầm dưới da do dị ứng",
+     "Da tôi hễ gãi là đỏ lên và nổi vệt"
+    ]
+   }
+  },
+  {
+   "ten": "dh + ah cao (xung đột), nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 13,
+    "dh": 100,
+    "ah": 100,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 12,
+    "dh": 35,
+    "ah": 40,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "có",
+    "ah": "có",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "ah",
+    "kh",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dh",
+    "ah"
+   ],
+   "tend": [],
+   "conflict": true,
+   "dropped": [],
+   "mainOk": [
+    "dh",
+    "ah"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dh",
+    "ah"
+   ],
+   "many": false,
+   "khoaChinh": "duong",
+   "khoaPhu": "am",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Dương hư kèm Âm hư",
+     "h2": "陽虛 · 陰虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Dương hư (100 điểm), kèm xu hướng phụ Âm hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Dương hư, kèm Âm hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Đàm thấp, Thấp nhiệt, Huyết ứ… đều ở mức thấp.",
+    "ghiChu": [
+     "Hai xu hướng trái tính chất cùng cao (Dương hư cùng với Âm hư hoặc Thấp nhiệt). Trường hợp này nên dùng thức uống tính bình và trao đổi trực tiếp với người phụ trách chuyên môn trước khi chọn món ấm hay mát.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn:",
+     "Xu hướng phụThể trạng Âm hư陰虛Dựa trên lựa chọn của bạn: Lòng"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 5 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Dương hư陽虛100có",
+     "Âm hư陰虛100có",
+     "Khí hư氣虛13không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 63; Khí hư 13; Dương hư 100; Âm hư 100; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Dương hư, Âm hư | Thiên hướng: không | Bình hòa: không\nKết luận: Dương hư + Âm hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=5 4=5 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=5 13=5 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=5 22=5 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=5 31=5 32=1 33=1 34=1 35=1 36=1 37=5 38=5 39=1 40=1 41=1 42=1 43=1 44=1 45=5 46=5 47=1 48=1 49=1 50=1 51=1 52=1 53=5 54=5 55=1 56=1 57=1 58=1 59=5 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh",
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh",
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Tàu hũ Mộc Quế Hoa",
+     "Canh Đại Bổ",
+     "Súp lê Thanh Phế"
+    ],
+    "tranhMon": [
+     "Hồng Tân Sinh",
+     "Thanh Tân Dưỡng",
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "sợ lạnh, thường mặc nhiều áo hơn người khác",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh",
+     "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy"
+    ],
+    "ah": [
+     "Lòng bàn tay, lòng bàn chân tôi hay nóng",
+     "hay thấy người nóng, mặt nóng bừng",
+     "Da hoặc môi tôi khô",
+     "Môi tôi đỏ hơn người bình thường",
+     "dễ bị táo bón hoặc phân khô",
+     "Hai gò má tôi hay ửng đỏ",
+     "hay thấy mắt khô, rát",
+     "hay khô miệng, khô họng, lúc nào cũng muốn uống nước"
+    ]
+   }
+  },
+  {
+   "ten": "dh + tn cao (xung đột), nữ",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 13,
+    "dh": 100,
+    "ah": 0,
+    "dt": 0,
+    "tn": 100,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 12,
+    "dh": 35,
+    "ah": 8,
+    "dt": 8,
+    "tn": 30,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "có",
+    "ah": "không",
+    "dt": "không",
+    "tn": "có",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "tn",
+    "kh",
+    "ah",
+    "dt",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dh",
+    "tn"
+   ],
+   "tend": [],
+   "conflict": true,
+   "dropped": [],
+   "mainOk": [
+    "dh",
+    "tn"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dh",
+    "tn"
+   ],
+   "many": false,
+   "khoaChinh": "duong",
+   "khoaPhu": "thap",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Dương hư kèm Thấp nhiệt",
+     "h2": "陽虛 · 濕熱",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Dương hư (100 điểm), kèm xu hướng phụ Thấp nhiệt (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Dương hư, kèm Thấp nhiệt. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Âm hư, Đàm thấp, Huyết ứ… đều ở mức thấp.",
+    "ghiChu": [
+     "Hai xu hướng trái tính chất cùng cao (Dương hư cùng với Âm hư hoặc Thấp nhiệt). Trường hợp này nên dùng thức uống tính bình và trao đổi trực tiếp với người phụ trách chuyên môn trước khi chọn món ấm hay mát.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn:",
+     "Xu hướng phụThể trạng Thấp nhiệt濕熱Dựa trên lựa chọn của bạn:"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 6 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Dương hư陽虛100có",
+     "Thấp nhiệt濕熱100có",
+     "Khí hư氣虛13không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 13; Dương hư 100; Âm hư 0; Đàm thấp 0; Thấp nhiệt 100; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Dương hư, Thấp nhiệt | Thiên hướng: không | Bình hòa: không\nKết luận: Dương hư + Thấp nhiệt\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=5 4=1 5=1 6=5 7=1 8=1 9=1 10=1 11=1 12=5 13=1 14=1 15=5 16=1 17=1 18=1 19=1 20=1 21=5 22=1 23=1 24=5 25=1 26=1 27=1 28=1 29=1 30=5 31=1 32=1 33=5 34=1 35=1 36=1 37=5 38=1 39=1 40=5 41=1 42=1 43=1 44=1 45=5 46=1 47=1 48=5 49=1 50=1 51=1 52=1 53=5 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống nóng, ấm: gừng, quế, táo đỏ, long nhãn",
+     "Trà chín, trà lên men thay cho trà xanh",
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Nước đá, nước ép lạnh, sinh tố lạnh",
+     "Đồ ăn sống lạnh, dưa hấu, lê, kem",
+     "Tắm muộn, gội đầu buổi tối, ngủ phòng điều hòa quá lạnh",
+     "Đi chân trần trên nền lạnh",
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Trà Phổ Nhĩ Minh mục",
+     "Thanh Tân Dưỡng",
+     "Tàu hũ Mộc Quế Hoa",
+     "Canh Đại Bổ",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": [
+     "Hồng Tân Sinh",
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài",
+     "Súp lê Thanh Phế"
+    ]
+   },
+   "dauHieu": {
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "sợ lạnh, thường mặc nhiều áo hơn người khác",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh",
+     "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy"
+    ],
+    "tn": [
+     "Mặt hoặc mũi tôi nhờn dầu, bóng dầu",
+     "dễ nổi mụn trứng cá hoặc mụn nhọt",
+     "hay đắng miệng hoặc miệng có mùi lạ",
+     "đi đại tiện phân dính, khó sạch, có cảm giác đi chưa hết",
+     "Khi đi tiểu tôi thấy nóng rát, nước tiểu màu đậm",
+     "hay ra khí hư (huyết trắng) màu vàng"
+    ]
+   }
+  },
+  {
+   "ten": "ah cao nhưng chịu lạnh kém (sợ lạnh → bỏ nhóm)",
+   "sex": "nam",
+   "climate": "lanh",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 75,
+    "kh": 0,
+    "dh": 0,
+    "ah": 100,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 32,
+    "kh": 8,
+    "dh": 7,
+    "ah": 40,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "có",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "ah",
+    "kh",
+    "dh",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "ah"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [
+    "ah"
+   ],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 75 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [
+     "Đã để riêng: nhóm Âm hư có điểm khá cao, nhưng bạn cho biết mình chịu nóng tốt hơn, sợ lạnh, nên chưa đưa vào kết luận. Nếu muốn rõ hơn, bạn có thể trao đổi trực tiếp."
+    ],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和75không",
+     "Âm hư陰虛100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 75; Khí hư 0; Dương hư 0; Âm hư 100; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Âm hư | Thiên hướng: không | Bình hòa: không\nKết luận: Bình hòa\nChịu nóng/lạnh: sợ lạnh\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=5 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=5 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=5 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=1 31=5 32=1 33=1 34=1 35=1 36=1 37=1 38=5 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=5 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=5 55=1 56=1 57=1 58=1 59=5 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Đồ uống đá, lạnh (vì bạn sợ lạnh)"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "dh cao nhưng sợ nóng (bỏ nhóm)",
+   "sex": "nu",
+   "climate": "nong",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 13,
+    "dh": 100,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 12,
+    "dh": 35,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "có",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "kh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [
+    "dh"
+   ],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 63 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [
+     "Đã để riêng: nhóm Dương hư có điểm khá cao, nhưng bạn cho biết mình chịu lạnh tốt hơn, sợ nóng, nên chưa đưa vào kết luận. Nếu muốn rõ hơn, bạn có thể trao đổi trực tiếp."
+    ],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Dương hư陽虛100có",
+     "Khí hư氣虛13không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 13; Dương hư 100; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Dương hư | Thiên hướng: không | Bình hòa: không\nKết luận: Bình hòa\nChịu nóng/lạnh: sợ nóng\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=5 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=5 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=5 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=5 31=1 32=1 33=1 34=1 35=1 36=1 37=5 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=5 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=5 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Món cay ấm, nhiều quế gừng (vì bạn sợ nóng)"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "kh + dt + hu cao (≥ 3 thể), nữ",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    5,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    5
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 38,
+    "kh": 100,
+    "dh": 14,
+    "ah": 0,
+    "dt": 100,
+    "tn": 0,
+    "hu": 100,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 20,
+    "kh": 40,
+    "dh": 11,
+    "ah": 8,
+    "dt": 40,
+    "tn": 6,
+    "hu": 35,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "không",
+    "ah": "không",
+    "dt": "có",
+    "tn": "không",
+    "hu": "có",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "dt",
+    "hu",
+    "dh",
+    "ah",
+    "tn",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "kh",
+    "dt",
+    "hu"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "kh",
+    "dt",
+    "hu"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh",
+    "dt"
+   ],
+   "many": true,
+   "khoaChinh": "khi",
+   "khoaPhu": "dam",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư kèm Đàm thấp",
+     "h2": "氣虛 · 痰濕",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Khí hư (100 điểm), kèm xu hướng phụ Đàm thấp (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư, kèm Đàm thấp. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Dương hư, Âm hư, Thấp nhiệt, Khí uất… đều ở mức thấp.",
+    "ghiChu": [
+     "Có từ 3 nhóm trở lên vượt ngưỡng 40. Kết quả chỉ nên xem là định hướng; bạn nên được tư vấn trực tiếp.Trao đổi với quán ›"
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d",
+     "Xu hướng phụThể trạng Đàm thấp痰濕Dựa trên lựa chọn của bạn: h"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和38không",
+     "Khí hư氣虛100có",
+     "Đàm thấp痰濕100có",
+     "Huyết ứ血瘀100có",
+     "Dương hư陽虛14không",
+     "Âm hư陰虛0không",
+     "Thấp nhiệt濕熱0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 38; Khí hư 100; Dương hư 14; Âm hư 0; Đàm thấp 100; Thấp nhiệt 0; Huyết ứ 100; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Khí hư, Đàm thấp, Huyết ứ | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư + Đàm thấp\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=5 3=1 4=1 5=5 6=1 7=5 8=1 9=1 10=1 11=5 12=1 13=1 14=5 15=1 16=5 17=1 18=1 19=5 20=5 21=1 22=1 23=5 24=1 25=5 26=1 27=1 28=1 29=5 30=1 31=1 32=5 33=1 34=5 35=1 36=1 37=5 38=1 39=5 40=1 41=5 42=1 43=1 44=5 45=1 46=1 47=5 48=1 49=5 50=1 51=1 52=5 53=1 54=1 55=5 56=1 57=1 58=5 59=1 60=5\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm",
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức",
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Canh Đại Bổ",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Tàu hũ Mộc Quế Hoa",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "dễ bị cảm hơn người khác",
+     "thích yên tĩnh, ngại nói chuyện",
+     "Giọng nói của tôi nhỏ, yếu",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ],
+    "dt": [
+     "hay thấy tức ngực hoặc đầy bụng",
+     "hay thấy người nặng nề, không nhẹ nhõm",
+     "Bụng tôi to, mỡ bụng mềm nhão",
+     "Trán tôi tiết nhiều dầu",
+     "Mí mắt trên của tôi hơi sưng mọng hơn người khác",
+     "Trong miệng tôi có cảm giác dính nhớt",
+     "hay có đờm, nhất là cảm giác đờm vướng ở cổ họng",
+     "Rêu lưỡi của tôi dày, nhớt, hoặc tôi có cảm giác lưỡi bị phủ dày"
+    ]
+   }
+  },
+  {
+   "ten": "Bình hoà, nam, hôm nay 29/10/2026",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 100,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 40,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 100 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 100; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=5 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=5 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "Bình hoà, nữ, hôm nay 20/3/2026 (ranh Xuân phân)",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 20,
+    "m": 3,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 100,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 40,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 0,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 100 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 100; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=5 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=5 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Trà Lục Bảo"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "Bình hoà, nam, hôm nay 4/2/2026 (Lập xuân)",
+   "sex": "nam",
+   "climate": "lanh",
+   "safety": [],
+   "ans": [
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 4,
+    "m": 2,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 100,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 40,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 21,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 100 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 100; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: sợ lạnh\nTình trạng đặc biệt: không\nTrả lời: 1=5 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=5 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Đồ uống đá, lạnh (vì bạn sợ lạnh)"
+    ],
+    "an": false,
+    "mon": [
+     "Hồng Tân Sinh",
+     "Trà Ngọc Thanh Thơm Người"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "thiên hướng ku (≈30–39), nữ",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 43,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 19,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "có",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "ku",
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "db"
+   ],
+   "main": [
+    "ku"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "ku"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "ku"
+   ],
+   "many": false,
+   "khoaChinh": "uat",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí uất",
+     "h2": "氣鬱",
+     "lvl": "Xu hướng rõ · 43 điểm",
+     "s": "Bạn có xu hướng Khí uất (43 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí uất. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Dương hư, Âm hư, Đàm thấp… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí uất氣鬱Dựa trên lựa chọn của bạn: "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Khí uất氣鬱43có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 43; Đặc bẩm 0\nNhóm ≥40: Khí uất | Thiên hướng: không | Bình hòa: không\nKết luận: Khí uất\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=1 5=1 6=1 7=1 8=5 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=5 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=5 27=1 28=1 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống thơm, dịu: hoa hồng, hoa nhài, phật thủ, vỏ quýt",
+     "Buổi tối: trà hoa, lạc tiên thay cho cà phê"
+    ],
+    "tranh": [
+     "Cà phê đậm sau 14 giờ",
+     "Uống rượu để giải sầu",
+     "Ở một mình trong phòng kín, tối",
+     "Thức khuya lướt điện thoại"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Tàu hũ Mộc Quế Hoa"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "ku": [
+     "hay thấy buồn bực, tâm trạng chùng xuống",
+     "dễ căng thẳng, lo âu, bất an",
+     "đa sầu đa cảm, dễ xúc động"
+    ]
+   }
+  },
+  {
+   "ten": "thiên hướng kh (≈30–39), nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 50,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 24,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "kh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "kh"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh"
+   ],
+   "many": false,
+   "khoaChinh": "khi",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư",
+     "h2": "氣虛",
+     "lvl": "Xu hướng rõ · 50 điểm",
+     "s": "Bạn có xu hướng Khí hư (50 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Dương hư, Âm hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Khí hư氣虛50có",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 63; Khí hư 50; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Khí hư | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=5 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=5 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=5 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=5 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm"
+    ],
+    "tranh": [
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Canh Đại Bổ",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy"
+    ]
+   }
+  },
+  {
+   "ten": "có tình trạng đặc biệt, nữ (thai)",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [
+    "Đang mang thai"
+   ],
+   "ans": [
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 100,
+    "dh": 14,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 40,
+    "dh": 11,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "có",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "kh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "kh"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "kh"
+   ],
+   "many": false,
+   "khoaChinh": "khi",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Khí hư",
+     "h2": "氣虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Khí hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Khí hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Dương hư, Âm hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [
+     "Bạn đã chọn: Đang mang thai. Gợi ý chỉ nên dùng thức uống tính bình, nhẹ nhàng; tránh sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi. Hỏi ý kiến bác sĩ điều trị trước khi dùng thảo dược."
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: d"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Khí hư氣虛100có",
+     "Dương hư陽虛14không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 50; Khí hư 100; Dương hư 14; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Khí hư | Thiên hướng: không | Bình hòa: không\nKết luận: Khí hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: Đang mang thai\nTrả lời: 1=1 2=5 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=5 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=5 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=5 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=5 38=1 39=1 40=1 41=1 42=1 43=1 44=5 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=5 53=1 54=1 55=1 56=1 57=1 58=5 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống tính bình, nhẹ: nước ấm, trà nhạt, táo đỏ, kỷ tử",
+     "Hoa quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Thảo dược tác dụng mạnh (sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi) khi chưa hỏi bác sĩ",
+     "Cà phê, rượu bia"
+    ],
+    "an": true,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị mệt mỏi",
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị hồi hộp, tim đập nhanh",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "dễ bị cảm hơn người khác",
+     "thích yên tĩnh, ngại nói chuyện",
+     "Giọng nói của tôi nhỏ, yếu",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ]
+   }
+  },
+  {
+   "ten": "có tình trạng đặc biệt, nam",
+   "sex": "nam",
+   "climate": "lanh",
+   "safety": [
+    "Đang dùng thuốc huyết áp"
+   ],
+   "ans": [
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 13,
+    "dh": 100,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 12,
+    "dh": 35,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "có",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dh",
+    "kh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [
+    "dh"
+   ],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [
+    "dh"
+   ],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "main",
+   "picks": [
+    "dh"
+   ],
+   "many": false,
+   "khoaChinh": "duong",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Dương hư",
+     "h2": "陽虛",
+     "lvl": "Xu hướng rõ · 100 điểm",
+     "s": "Bạn có xu hướng Dương hư (100 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Dương hư. Đây là xu hướng rõ (từ 40 điểm trở lên), nên ưu tiên chọn thức uống và nếp sinh hoạt theo hướng này trong vài tháng tới, rồi làm lại bài để xem thay đổi. Các nhóm Khí hư, Âm hư, Đàm thấp, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [
+     "Bạn đã chọn: Đang dùng thuốc huyết áp. Gợi ý chỉ nên dùng thức uống tính bình, nhẹ nhàng; tránh sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi. Hỏi ý kiến bác sĩ điều trị trước khi dùng thảo dược."
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Dương hư陽虛Dựa trên lựa chọn của bạn:"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和63không",
+     "Dương hư陽虛100có",
+     "Khí hư氣虛13không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 63; Khí hư 13; Dương hư 100; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: Dương hư | Thiên hướng: không | Bình hòa: không\nKết luận: Dương hư\nChịu nóng/lạnh: sợ lạnh\nTình trạng đặc biệt: Đang dùng thuốc huyết áp\nTrả lời: 1=1 2=1 3=5 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=5 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=5 22=1 23=1 24=1 25=1 26=1 27=1 28=1 29=1 30=5 31=1 32=1 33=1 34=1 35=1 36=1 37=5 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=5 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=5 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống tính bình, nhẹ: nước ấm, trà nhạt, táo đỏ, kỷ tử",
+     "Hoa quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Thảo dược tác dụng mạnh (sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi) khi chưa hỏi bác sĩ",
+     "Cà phê, rượu bia"
+    ],
+    "an": true,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {
+    "dh": [
+     "Tay chân tôi lạnh",
+     "Vùng bụng trên, lưng hoặc thắt lưng, đầu gối của tôi sợ lạnh",
+     "sợ lạnh, thường mặc nhiều áo hơn người khác",
+     "chịu lạnh kém hơn người khác (lạnh mùa đông, điều hòa, quạt)",
+     "dễ bị cảm hơn người khác",
+     "Ăn uống đồ lạnh tôi thấy khó chịu, hoặc tôi ngại ăn uống đồ lạnh",
+     "Bị nhiễm lạnh hoặc ăn uống đồ lạnh, tôi dễ bị tiêu chảy"
+    ]
+   }
+  },
+  {
+   "ten": "hai tình trạng đặc biệt, nữ",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [
+    "Đang mang thai",
+    "Đang cho con bú"
+   ],
+   "ans": [
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 100,
+    "kh": 0,
+    "dh": 0,
+    "ah": 0,
+    "dt": 0,
+    "tn": 0,
+    "hu": 0,
+    "ku": 0,
+    "db": 0
+   },
+   "raw": {
+    "bh": 40,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 100 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [
+     "Bạn đã chọn: Đang mang thai; Đang cho con bú. Gợi ý chỉ nên dùng thức uống tính bình, nhẹ nhàng; tránh sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi. Hỏi ý kiến bác sĩ điều trị trước khi dùng thảo dược."
+    ],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和100có",
+     "Khí hư氣虛0không",
+     "Dương hư陽虛0không",
+     "Âm hư陰虛0không",
+     "Đàm thấp痰濕0không",
+     "Thấp nhiệt濕熱0không",
+     "Huyết ứ血瘀0không",
+     "Khí uất氣鬱0không",
+     "Đặc bẩm特稟0không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 100; Khí hư 0; Dương hư 0; Âm hư 0; Đàm thấp 0; Thấp nhiệt 0; Huyết ứ 0; Khí uất 0; Đặc bẩm 0\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: Đang mang thai; Đang cho con bú\nTrả lời: 1=5 2=1 3=1 4=1 5=1 6=1 7=1 8=1 9=1 10=1 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=1 24=1 25=1 26=1 27=1 28=5 29=1 30=1 31=1 32=1 33=1 34=1 35=1 36=1 37=1 38=1 39=1 40=1 41=1 42=1 43=1 44=1 45=1 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=1 54=1 55=1 56=1 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống tính bình, nhẹ: nước ấm, trà nhạt, táo đỏ, kỷ tử",
+     "Hoa quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Thảo dược tác dụng mạnh (sơn tra, hoa hồng, quế, cam thảo, ý dĩ, linh chi) khi chưa hỏi bác sĩ",
+     "Cà phê, rượu bia"
+    ],
+    "an": true,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "mọi câu mức giữa, nữ",
+   "sex": "nu",
+   "climate": "nong",
+   "safety": [],
+   "ans": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 25,
+    "dh": 25,
+    "ah": 25,
+    "dt": 25,
+    "tn": 25,
+    "hu": 25,
+    "ku": 25,
+    "db": 25
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 16,
+    "dh": 14,
+    "ah": 16,
+    "dt": 16,
+    "tn": 12,
+    "hu": 14,
+    "ku": 14,
+    "db": 14
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "có",
+   "ranked": [
+    "kh",
+    "dh",
+    "ah",
+    "dt",
+    "tn",
+    "hu",
+    "ku",
+    "db"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "có",
+   "kind": "binh",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa",
+     "h2": null,
+     "lvl": "Bình hòa · 63 điểm",
+     "s": "Thể trạng cân đối, không thấy xu hướng lệch rõ."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和63có",
+     "Khí hư氣虛25không",
+     "Dương hư陽虛25không",
+     "Âm hư陰虛25không",
+     "Đàm thấp痰濕25không",
+     "Thấp nhiệt濕熱25không",
+     "Huyết ứ血瘀25không",
+     "Khí uất氣鬱25không",
+     "Đặc bẩm特稟25không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 25; Dương hư 25; Âm hư 25; Đàm thấp 25; Thấp nhiệt 25; Huyết ứ 25; Khí uất 25; Đặc bẩm 25\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: có\nKết luận: Bình hòa\nChịu nóng/lạnh: sợ nóng\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=2 3=2 4=2 5=2 6=2 7=2 8=2 9=2 10=2 11=2 12=2 13=2 14=2 15=2 16=2 17=2 18=2 19=2 20=2 21=2 22=2 23=2 24=2 25=2 26=2 27=2 28=2 29=2 30=2 31=2 32=2 33=2 34=2 35=2 36=2 37=2 38=2 39=2 40=2 41=2 42=2 43=2 44=2 45=2 46=2 47=2 48=2 49=2 50=2 51=2 52=2 53=2 54=2 55=2 56=2 57=2 58=2 59=2 60=2\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Món cay ấm, nhiều quế gừng (vì bạn sợ nóng)"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "tìm theo hạt: tend #1, nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    5,
+    4,
+    2,
+    1,
+    5,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    5,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    4,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    4,
+    1,
+    1,
+    2
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 59,
+    "kh": 6,
+    "dh": 11,
+    "ah": 38,
+    "dt": 16,
+    "tn": 38,
+    "hu": 18,
+    "ku": 18,
+    "db": 39
+   },
+   "raw": {
+    "bh": 27,
+    "kh": 10,
+    "dh": 10,
+    "ah": 20,
+    "dt": 13,
+    "tn": 15,
+    "hu": 12,
+    "ku": 12,
+    "db": 18
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "thiên hướng",
+    "dt": "không",
+    "tn": "thiên hướng",
+    "hu": "không",
+    "ku": "không",
+    "db": "thiên hướng"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "db",
+    "ah",
+    "tn",
+    "hu",
+    "ku",
+    "dt",
+    "dh",
+    "kh"
+   ],
+   "main": [],
+   "tend": [
+    "db",
+    "ah",
+    "tn"
+   ],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [
+    "db",
+    "ah",
+    "tn"
+   ],
+   "bhOk": "không",
+   "kind": "tend",
+   "picks": [
+    "db",
+    "ah"
+   ],
+   "many": false,
+   "khoaChinh": "dac",
+   "khoaPhu": "am",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Đặc bẩm kèm Âm hư",
+     "h2": "特稟 · 陰虛",
+     "lvl": "Thiên hướng · 39 điểm",
+     "s": "Mới ở mức thiên hướng (30–39 điểm), chưa rõ rệt. Bạn có xu hướng Đặc bẩm (39 điểm), kèm xu hướng phụ Âm hư (38 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Đặc bẩm, kèm Âm hư. Mức độ còn nhẹ, chỉ cần lưu ý chọn thức uống phù hợp, chưa cần thay đổi gì lớn. Các nhóm Huyết ứ, Khí uất, Đàm thấp, Dương hư… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Đặc bẩm特稟Dựa trên lựa chọn của bạn: ",
+     "Xu hướng phụThể trạng Âm hư陰虛Dựa trên lựa chọn của bạn: hay "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 4 món",
+    "diemThanh": [
+     "Bình hòa平和59không",
+     "Đặc bẩm特稟39thiên hướng",
+     "Âm hư陰虛38thiên hướng",
+     "Thấp nhiệt濕熱38thiên hướng",
+     "Huyết ứ血瘀18không",
+     "Khí uất氣鬱18không",
+     "Đàm thấp痰濕16không",
+     "Dương hư陽虛11không",
+     "Khí hư氣虛6không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 59; Khí hư 6; Dương hư 11; Âm hư 38; Đàm thấp 16; Thấp nhiệt 38; Huyết ứ 18; Khí uất 18; Đặc bẩm 39\nNhóm ≥40: không | Thiên hướng: Đặc bẩm, Âm hư, Thấp nhiệt | Bình hòa: không\nKết luận: Đặc bẩm + Âm hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=2 3=2 4=1 5=2 6=2 7=2 8=1 9=5 10=4 11=2 12=1 13=5 14=1 15=2 16=2 17=2 18=1 19=2 20=1 21=1 22=1 23=2 24=5 25=1 26=2 27=2 28=1 29=1 30=2 31=5 32=2 33=2 34=1 35=1 36=2 37=1 38=4 39=1 40=2 41=2 42=2 43=2 44=1 45=1 46=2 47=1 48=2 49=2 50=2 51=2 52=1 53=2 54=1 55=2 56=2 57=4 58=1 59=1 60=2\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống đơn giản, ít thành phần: táo đỏ, kỷ tử, ô mai",
+     "Món mới chỉ thử với lượng nhỏ",
+     "Thức uống mát dịu, nhiều nước: nấm tuyết, bách hợp, lê, kỷ tử",
+     "Uống nước ấm vừa, chia đều trong ngày"
+    ],
+    "tranh": [
+     "Thức ăn, đồ uống từng gây dị ứng",
+     "Hải sản, đồ cay, rượu lúc đang nhạy cảm",
+     "Phấn hoa, bụi, mùi sơn mới",
+     "Thay đổi nóng lạnh đột ngột",
+     "Đồ cay nóng, chiên nướng, rượu",
+     "Cà phê đậm, trà quá đặc",
+     "Thức khuya sau 23 giờ",
+     "Xông hơi, vận động đến ra nhiều mồ hôi"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Dưỡng Nhan",
+     "Trà Phổ Nhĩ Minh mục",
+     "Súp lê Thanh Phế",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "db": [
+     "dù không bị cảm vẫn hay hắt hơi",
+     "Da tôi hễ gãi là đỏ lên và nổi vệt"
+    ],
+    "ah": [
+     "hay thấy người nóng, mặt nóng bừng",
+     "Môi tôi đỏ hơn người bình thường",
+     "dễ bị táo bón hoặc phân khô"
+    ]
+   }
+  },
+  {
+   "ten": "tìm theo hạt: binhTend #1, nam",
+   "sex": "nam",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    5,
+    4,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    5,
+    1,
+    2,
+    4,
+    4,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    5,
+    2,
+    5,
+    1,
+    4,
+    1,
+    2,
+    1,
+    1,
+    5,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    1,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 69,
+    "kh": 38,
+    "dh": 14,
+    "ah": 28,
+    "dt": 25,
+    "tn": 13,
+    "hu": 36,
+    "ku": 29,
+    "db": 14
+   },
+   "raw": {
+    "bh": 30,
+    "kh": 20,
+    "dh": 11,
+    "ah": 17,
+    "dt": 16,
+    "tn": 9,
+    "hu": 17,
+    "ku": 15,
+    "db": 11
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "thiên hướng",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "thiên hướng",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "cơ bản có",
+   "ranked": [
+    "kh",
+    "hu",
+    "ku",
+    "ah",
+    "dt",
+    "dh",
+    "db",
+    "tn"
+   ],
+   "main": [],
+   "tend": [
+    "kh",
+    "hu"
+   ],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [
+    "kh",
+    "hu"
+   ],
+   "bhOk": "cơ bản có",
+   "kind": "binh",
+   "picks": [
+    "bh",
+    "kh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": "khi",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa (cơ bản)",
+     "h2": null,
+     "lvl": "Bình hòa · 69 điểm",
+     "s": "Thể trạng khá cân đối, có chút thiên hướng Khí hư."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng, chỉ hơi thiên về Khí hư. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ",
+     "Thiên hướng nhẹThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 3 món",
+    "diemThanh": [
+     "Bình hòa平和69cơ bản có",
+     "Khí hư氣虛38thiên hướng",
+     "Huyết ứ血瘀36thiên hướng",
+     "Khí uất氣鬱29không",
+     "Âm hư陰虛28không",
+     "Đàm thấp痰濕25không",
+     "Dương hư陽虛14không",
+     "Đặc bẩm特稟14không",
+     "Thấp nhiệt濕熱13không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nam\nĐiểm quy đổi: Bình hòa 69; Khí hư 38; Dương hư 14; Âm hư 28; Đàm thấp 25; Thấp nhiệt 13; Huyết ứ 36; Khí uất 29; Đặc bẩm 14\nNhóm ≥40: không | Thiên hướng: Khí hư, Huyết ứ | Bình hòa: cơ bản có\nKết luận: Bình hòa + Khí hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=2 3=1 4=2 5=1 6=2 7=2 8=2 9=1 10=5 11=4 12=1 13=2 14=2 15=2 16=2 17=2 18=1 19=1 20=2 21=1 22=2 23=2 24=1 25=5 26=1 27=2 28=4 29=4 30=1 31=2 32=1 33=2 34=1 35=2 36=2 37=5 38=2 39=5 40=1 41=4 42=1 43=2 44=1 45=1 46=5 47=2 48=1 49=2 50=2 51=2 52=1 53=1 54=1 55=2 56=5 57=1 58=1 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt",
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Phổ Nhĩ Minh mục",
+     "Canh Đại Bổ",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối"
+    ]
+   },
+   "dauHieu": {
+    "kh": [
+     "dễ bị hụt hơi, thở ngắn, không đủ hơi",
+     "dễ bị chóng mặt, hoặc choáng váng khi đứng dậy",
+     "dễ bị cảm hơn người khác"
+    ]
+   }
+  },
+  {
+   "ten": "tìm theo hạt: tend #2, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    2,
+    4,
+    2,
+    4,
+    1,
+    1,
+    4,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    4,
+    1,
+    2,
+    4,
+    2,
+    2,
+    4,
+    2,
+    2,
+    1,
+    5,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    4,
+    4,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    5,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    4,
+    2
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 41,
+    "kh": 25,
+    "dh": 29,
+    "ah": 19,
+    "dt": 38,
+    "tn": 21,
+    "hu": 18,
+    "ku": 32,
+    "db": 29
+   },
+   "raw": {
+    "bh": 21,
+    "kh": 16,
+    "dh": 15,
+    "ah": 14,
+    "dt": 20,
+    "tn": 11,
+    "hu": 12,
+    "ku": 16,
+    "db": 15
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "thiên hướng",
+    "tn": "không",
+    "hu": "không",
+    "ku": "thiên hướng",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dt",
+    "ku",
+    "dh",
+    "db",
+    "kh",
+    "tn",
+    "ah",
+    "hu"
+   ],
+   "main": [],
+   "tend": [
+    "dt",
+    "ku"
+   ],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [
+    "dt",
+    "ku"
+   ],
+   "bhOk": "không",
+   "kind": "tend",
+   "picks": [
+    "dt",
+    "ku"
+   ],
+   "many": false,
+   "khoaChinh": "dam",
+   "khoaPhu": "uat",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Đàm thấp kèm Khí uất",
+     "h2": "痰濕 · 氣鬱",
+     "lvl": "Thiên hướng · 38 điểm",
+     "s": "Mới ở mức thiên hướng (30–39 điểm), chưa rõ rệt. Bạn có xu hướng Đàm thấp (38 điểm), kèm xu hướng phụ Khí uất (32 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Đàm thấp, kèm Khí uất. Mức độ còn nhẹ, chỉ cần lưu ý chọn thức uống phù hợp, chưa cần thay đổi gì lớn. Các nhóm Dương hư, Đặc bẩm, Khí hư, Thấp nhiệt… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Đàm thấp痰濕Dựa trên lựa chọn của bạn:",
+     "Xu hướng phụThể trạng Khí uất氣鬱Dựa trên lựa chọn của bạn: ha"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 4 món",
+    "diemThanh": [
+     "Bình hòa平和41không",
+     "Đàm thấp痰濕38thiên hướng",
+     "Khí uất氣鬱32thiên hướng",
+     "Dương hư陽虛29không",
+     "Đặc bẩm特稟29không",
+     "Khí hư氣虛25không",
+     "Thấp nhiệt濕熱21không",
+     "Âm hư陰虛19không",
+     "Huyết ứ血瘀18không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 41; Khí hư 25; Dương hư 29; Âm hư 19; Đàm thấp 38; Thấp nhiệt 21; Huyết ứ 18; Khí uất 32; Đặc bẩm 29\nNhóm ≥40: không | Thiên hướng: Đàm thấp, Khí uất | Bình hòa: không\nKết luận: Đàm thấp + Khí uất\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=2 3=4 4=2 5=4 6=1 7=1 8=4 9=1 10=5 11=1 12=1 13=1 14=1 15=2 16=2 17=4 18=1 19=2 20=4 21=2 22=2 23=4 24=2 25=2 26=1 27=5 28=1 29=2 30=2 31=1 32=2 33=1 34=2 35=1 36=1 37=2 38=1 39=4 40=4 41=2 42=2 43=1 44=2 45=2 46=1 47=2 48=1 49=1 50=2 51=5 52=2 53=2 54=2 55=1 56=2 57=1 58=1 59=4 60=2\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống ít ngọt, giúp tiêu dầu mỡ: trà chín, trần bì, ý dĩ, lá sen",
+     "Nước ấm, hạn chế đường",
+     "Thức uống thơm, dịu: hoa hồng, hoa nhài, phật thủ, vỏ quýt",
+     "Buổi tối: trà hoa, lạc tiên thay cho cà phê"
+    ],
+    "tranh": [
+     "Đồ ngọt, béo, dính; sữa đặc, kem",
+     "Ăn khuya, ăn quá no",
+     "Rượu bia",
+     "Ngồi nhiều, ít vận động; ở nơi ẩm thấp",
+     "Cà phê đậm sau 14 giờ",
+     "Uống rượu để giải sầu",
+     "Ở một mình trong phòng kín, tối",
+     "Thức khuya lướt điện thoại"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Trà Phổ Nhĩ Minh mục",
+     "Tàu hũ Mộc Quế Hoa",
+     "Linh Chi"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "dt": [
+     "hay thấy tức ngực hoặc đầy bụng",
+     "Bụng tôi to, mỡ bụng mềm nhão",
+     "Mí mắt trên của tôi hơi sưng mọng hơn người khác"
+    ],
+    "ku": [
+     "hay thấy buồn bực, tâm trạng chùng xuống",
+     "dễ căng thẳng, lo âu, bất an"
+    ]
+   }
+  },
+  {
+   "ten": "tìm theo hạt: tend #3, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    5,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    4,
+    2,
+    2,
+    2,
+    2,
+    1,
+    5,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    5,
+    2,
+    1,
+    2,
+    2,
+    4,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    4,
+    1,
+    1,
+    2,
+    5,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 31,
+    "dh": 29,
+    "ah": 28,
+    "dt": 6,
+    "tn": 33,
+    "hu": 29,
+    "ku": 11,
+    "db": 18
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 18,
+    "dh": 15,
+    "ah": 17,
+    "dt": 10,
+    "tn": 14,
+    "hu": 15,
+    "ku": 10,
+    "db": 12
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "thiên hướng",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "thiên hướng",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "tn",
+    "kh",
+    "dh",
+    "hu",
+    "ah",
+    "db",
+    "ku",
+    "dt"
+   ],
+   "main": [],
+   "tend": [
+    "tn",
+    "kh"
+   ],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [
+    "tn",
+    "kh"
+   ],
+   "bhOk": "không",
+   "kind": "tend",
+   "picks": [
+    "tn",
+    "kh"
+   ],
+   "many": false,
+   "khoaChinh": "thap",
+   "khoaPhu": "khi",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Thấp nhiệt kèm Khí hư",
+     "h2": "濕熱 · 氣虛",
+     "lvl": "Thiên hướng · 33 điểm",
+     "s": "Mới ở mức thiên hướng (30–39 điểm), chưa rõ rệt. Bạn có xu hướng Thấp nhiệt (33 điểm), kèm xu hướng phụ Khí hư (31 điểm)."
+    },
+    "tong": "Cơ thể bạn đang thiên về Thấp nhiệt, kèm Khí hư. Mức độ còn nhẹ, chỉ cần lưu ý chọn thức uống phù hợp, chưa cần thay đổi gì lớn. Các nhóm Dương hư, Huyết ứ, Âm hư, Đặc bẩm… đều ở mức thấp.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Thấp nhiệt濕熱Dựa trên lựa chọn của bạ",
+     "Xu hướng phụThể trạng Khí hư氣虛Dựa trên lựa chọn của bạn: dễ "
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 6 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Thấp nhiệt濕熱33thiên hướng",
+     "Khí hư氣虛31thiên hướng",
+     "Dương hư陽虛29không",
+     "Huyết ứ血瘀29không",
+     "Âm hư陰虛28không",
+     "Đặc bẩm特稟18không",
+     "Khí uất氣鬱11không",
+     "Đàm thấp痰濕6không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 50; Khí hư 31; Dương hư 29; Âm hư 28; Đàm thấp 6; Thấp nhiệt 33; Huyết ứ 29; Khí uất 11; Đặc bẩm 18\nNhóm ≥40: không | Thiên hướng: Thấp nhiệt, Khí hư | Bình hòa: không\nKết luận: Thấp nhiệt + Khí hư\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=5 3=1 4=2 5=1 6=2 7=1 8=2 9=1 10=2 11=1 12=1 13=2 14=1 15=4 16=2 17=2 18=2 19=2 20=1 21=5 22=1 23=1 24=1 25=5 26=1 27=2 28=1 29=2 30=2 31=2 32=2 33=5 34=2 35=1 36=2 37=2 38=4 39=2 40=1 41=2 42=2 43=2 44=1 45=2 46=1 47=1 48=1 49=1 50=1 51=1 52=1 53=2 54=4 55=1 56=1 57=2 58=5 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa",
+     "Thức uống ấm, vị ngọt nhẹ: táo đỏ, kỷ tử, hạt sen",
+     "Nước ấm, trà nhạt thay cho cà phê đậm"
+    ],
+    "tranh": [
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió",
+     "Đồ uống lạnh, nước đá",
+     "Cà phê đậm, nhất là lúc đói",
+     "Thức khuya, làm việc quá sức",
+     "Nhịn ăn, ăn kiêng quá mức"
+    ],
+    "an": false,
+    "mon": [
+     "Trà Ngọc Thanh Thơm Người",
+     "Trà Phổ Nhĩ Minh mục",
+     "Thanh Tân Dưỡng",
+     "Canh Đại Bổ",
+     "Linh Chi",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "tn": [
+     "dễ nổi mụn trứng cá hoặc mụn nhọt",
+     "đi đại tiện phân dính, khó sạch, có cảm giác đi chưa hết"
+    ],
+    "kh": [
+     "dễ bị mệt mỏi",
+     "Chỉ hoạt động nhiều hơn một chút là tôi dễ ra mồ hôi"
+    ]
+   }
+  },
+  {
+   "ten": "tìm theo hạt: binhTend #2, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    2,
+    2,
+    2,
+    5,
+    2,
+    2,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    5,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    4,
+    1,
+    2,
+    4,
+    2,
+    2,
+    1,
+    1,
+    4,
+    1,
+    5,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    5,
+    1,
+    1
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 63,
+    "kh": 28,
+    "dh": 14,
+    "ah": 19,
+    "dt": 19,
+    "tn": 33,
+    "hu": 7,
+    "ku": 25,
+    "db": 25
+   },
+   "raw": {
+    "bh": 28,
+    "kh": 17,
+    "dh": 11,
+    "ah": 14,
+    "dt": 14,
+    "tn": 14,
+    "hu": 9,
+    "ku": 14,
+    "db": 14
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "thiên hướng",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "cơ bản có",
+   "ranked": [
+    "tn",
+    "kh",
+    "ku",
+    "db",
+    "ah",
+    "dt",
+    "dh",
+    "hu"
+   ],
+   "main": [],
+   "tend": [
+    "tn"
+   ],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [
+    "tn"
+   ],
+   "bhOk": "cơ bản có",
+   "kind": "binh",
+   "picks": [
+    "bh",
+    "tn"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": "thap",
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Bạn có xu hướng",
+     "h": "Thể trạng Bình hòa (cơ bản)",
+     "h2": null,
+     "lvl": "Bình hòa · 63 điểm",
+     "s": "Thể trạng khá cân đối, có chút thiên hướng Thấp nhiệt."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng, chỉ hơi thiên về Thấp nhiệt. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Xu hướng chínhThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ",
+     "Thiên hướng nhẹThể trạng Thấp nhiệt濕熱Dựa trên lựa chọn của b"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 5 món",
+    "diemThanh": [
+     "Bình hòa平和63cơ bản có",
+     "Thấp nhiệt濕熱33thiên hướng",
+     "Khí hư氣虛28không",
+     "Khí uất氣鬱25không",
+     "Đặc bẩm特稟25không",
+     "Âm hư陰虛19không",
+     "Đàm thấp痰濕19không",
+     "Dương hư陽虛14không",
+     "Huyết ứ血瘀7không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 63; Khí hư 28; Dương hư 14; Âm hư 19; Đàm thấp 19; Thấp nhiệt 33; Huyết ứ 7; Khí uất 25; Đặc bẩm 25\nNhóm ≥40: không | Thiên hướng: Thấp nhiệt | Bình hòa: cơ bản có\nKết luận: Bình hòa + Thấp nhiệt\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=2 3=2 4=5 5=2 6=2 7=1 8=1 9=1 10=5 11=1 12=2 13=1 14=1 15=1 16=2 17=1 18=1 19=1 20=4 21=1 22=1 23=1 24=1 25=2 26=2 27=2 28=1 29=1 30=1 31=1 32=5 33=2 34=1 35=2 36=2 37=1 38=2 39=1 40=4 41=1 42=2 43=4 44=2 45=2 46=1 47=1 48=4 49=1 50=5 51=2 52=1 53=2 54=2 55=2 56=1 57=2 58=5 59=1 60=1\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt",
+     "Thức uống thanh mát: ý dĩ, đậu xanh, rễ tranh, actiso, trà xanh nhạt",
+     "Rau quả tươi theo mùa"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài",
+     "Đồ cay, nướng, chiên, lẩu",
+     "Rượu bia, cà phê đậm",
+     "Đồ ngọt béo",
+     "Thức khuya; nơi ở nóng ẩm, bí gió"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục",
+     "Trà Ngọc Thanh Thơm Người",
+     "Thanh Tân Dưỡng",
+     "Hoa quả theo ngày"
+    ],
+    "tranhMon": [
+     "Cà phê Đen",
+     "Cà phê Nâu",
+     "Cà phê Muối",
+     "Nếp Cẩm Xoài"
+    ]
+   },
+   "dauHieu": {
+    "tn": [
+     "Khi đi tiểu tôi thấy nóng rát, nước tiểu màu đậm",
+     "hay ra khí hư (huyết trắng) màu vàng"
+    ]
+   }
+  },
+  {
+   "ten": "tìm theo hạt: none #1, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    2,
+    1,
+    1,
+    4,
+    1,
+    2,
+    2,
+    5,
+    5,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    4,
+    1,
+    5,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    4,
+    2,
+    2,
+    2,
+    4,
+    1,
+    2
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 53,
+    "kh": 19,
+    "dh": 14,
+    "ah": 22,
+    "dt": 25,
+    "tn": 13,
+    "hu": 11,
+    "ku": 25,
+    "db": 21
+   },
+   "raw": {
+    "bh": 25,
+    "kh": 14,
+    "dh": 11,
+    "ah": 15,
+    "dt": 16,
+    "tn": 9,
+    "hu": 10,
+    "ku": 14,
+    "db": 13
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "dt",
+    "ku",
+    "ah",
+    "db",
+    "kh",
+    "dh",
+    "tn",
+    "hu"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "none",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Kết quả của bạn",
+     "h": "Chưa thấy xu hướng rõ",
+     "h2": null,
+     "lvl": "Chưa rõ",
+     "s": "Các câu trả lời chưa đủ để xếp vào một nhóm. Bạn có thể dùng thức uống theo mùa, hoặc trao đổi trực tiếp để được tư vấn kỹ hơn."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Gợi ý tạm thờiThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和53không",
+     "Đàm thấp痰濕25không",
+     "Khí uất氣鬱25không",
+     "Âm hư陰虛22không",
+     "Đặc bẩm特稟21không",
+     "Khí hư氣虛19không",
+     "Dương hư陽虛14không",
+     "Thấp nhiệt濕熱13không",
+     "Huyết ứ血瘀11không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 53; Khí hư 19; Dương hư 14; Âm hư 22; Đàm thấp 25; Thấp nhiệt 13; Huyết ứ 11; Khí uất 25; Đặc bẩm 21\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: không\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=2 2=1 3=1 4=4 5=1 6=2 7=2 8=5 9=5 10=5 11=1 12=1 13=1 14=1 15=1 16=1 17=1 18=1 19=1 20=1 21=1 22=1 23=2 24=1 25=1 26=2 27=1 28=2 29=2 30=1 31=1 32=1 33=1 34=2 35=2 36=1 37=2 38=2 39=2 40=2 41=2 42=1 43=2 44=1 45=4 46=1 47=5 48=2 49=1 50=1 51=1 52=2 53=1 54=4 55=2 56=2 57=2 58=4 59=1 60=2\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  },
+  {
+   "ten": "tìm theo hạt: none #2, nu",
+   "sex": "nu",
+   "climate": "deu",
+   "safety": [],
+   "ans": [
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    4,
+    1,
+    4,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    4,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    5,
+    4,
+    2,
+    2
+   ],
+   "homNay": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   },
+   "soCau": 60,
+   "diem": {
+    "bh": 50,
+    "kh": 19,
+    "dh": 25,
+    "ah": 19,
+    "dt": 9,
+    "tn": 17,
+    "hu": 18,
+    "ku": 14,
+    "db": 29
+   },
+   "raw": {
+    "bh": 24,
+    "kh": 14,
+    "dh": 14,
+    "ah": 14,
+    "dt": 11,
+    "tn": 10,
+    "hu": 12,
+    "ku": 11,
+    "db": 15
+   },
+   "n": {
+    "bh": 8,
+    "kh": 8,
+    "dh": 7,
+    "ah": 8,
+    "dt": 8,
+    "tn": 6,
+    "hu": 7,
+    "ku": 7,
+    "db": 7
+   },
+   "muc": {
+    "kh": "không",
+    "dh": "không",
+    "ah": "không",
+    "dt": "không",
+    "tn": "không",
+    "hu": "không",
+    "ku": "không",
+    "db": "không"
+   },
+   "bhLevel": "không",
+   "ranked": [
+    "db",
+    "dh",
+    "kh",
+    "ah",
+    "hu",
+    "tn",
+    "ku",
+    "dt"
+   ],
+   "main": [],
+   "tend": [],
+   "conflict": false,
+   "dropped": [],
+   "mainOk": [],
+   "tendOk": [],
+   "bhOk": "không",
+   "kind": "none",
+   "picks": [
+    "bh"
+   ],
+   "many": false,
+   "khoaChinh": "binh",
+   "khoaPhu": null,
+   "tietIdx": 14,
+   "chu": {
+    "hero": {
+     "k": "Kết quả của bạn",
+     "h": "Chưa thấy xu hướng rõ",
+     "h2": null,
+     "lvl": "Chưa rõ",
+     "s": "Các câu trả lời chưa đủ để xếp vào một nhóm. Bạn có thể dùng thức uống theo mùa, hoặc trao đổi trực tiếp để được tư vấn kỹ hơn."
+    },
+    "tong": "Cơ thể bạn đang khá cân bằng. Các nhóm lệch khác đều ở mức thấp, không cần điều chỉnh gì đặc biệt, chỉ cần duy trì nếp sinh hoạt tốt.",
+    "ghiChu": [],
+    "khoi": [
+     "Gợi ý tạm thờiThể trạng Bình hòa平和Đặc điểm thường gặpThể trạ"
+    ],
+    "khoiRieng": [],
+    "tieuMon": "Thức uống gợi ý tại quán · 2 món",
+    "diemThanh": [
+     "Bình hòa平和50không",
+     "Đặc bẩm特稟29không",
+     "Dương hư陽虛25không",
+     "Khí hư氣虛19không",
+     "Âm hư陰虛19không",
+     "Huyết ứ血瘀18không",
+     "Thấp nhiệt濕熱17không",
+     "Khí uất氣鬱14không",
+     "Đàm thấp痰濕9không"
+    ]
+   },
+   "gopY": "Trắc nghiệm thể trạng – Tứ Quý Đường (dữ liệu 2026-10-23)\nGiới tính: Nữ\nĐiểm quy đổi: Bình hòa 50; Khí hư 19; Dương hư 25; Âm hư 19; Đàm thấp 9; Thấp nhiệt 17; Huyết ứ 18; Khí uất 14; Đặc bẩm 29\nNhóm ≥40: không | Thiên hướng: không | Bình hòa: không\nKết luận: Bình hòa\nChịu nóng/lạnh: như nhau\nTình trạng đặc biệt: không\nTrả lời: 1=1 2=1 3=1 4=2 5=2 6=1 7=1 8=2 9=1 10=4 11=1 12=4 13=1 14=1 15=2 16=2 17=1 18=2 19=2 20=2 21=2 22=2 23=1 24=2 25=1 26=2 27=1 28=2 29=1 30=4 31=2 32=1 33=2 34=2 35=2 36=2 37=1 38=2 39=2 40=2 41=2 42=2 43=2 44=2 45=1 46=2 47=1 48=1 49=2 50=1 51=2 52=2 53=1 54=1 55=1 56=1 57=5 58=4 59=2 60=2\nGóp ý: (chưa ghi)",
+   "goiY": {
+    "nen": [
+     "Thức uống theo mùa, vị thanh nhẹ",
+     "Không cần bồi bổ đặc biệt"
+    ],
+    "tranh": [
+     "Ăn uống thất thường, thức khuya kéo dài"
+    ],
+    "an": false,
+    "mon": [
+     "Canh Đại Bổ",
+     "Trà Phổ Nhĩ Minh mục"
+    ],
+    "tranhMon": []
+   },
+   "dauHieu": {}
+  }
+ ],
+ "lich": [
+  {
+   "d": 17,
+   "m": 2,
+   "y": 2026,
+   "jd": 2461089,
+   "am": {
+    "d": 1,
+    "m": 1,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461089
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2461076,
+    "endJd": 2461089,
+    "nextName": "Vũ thủy",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Canh Dần",
+   "ngay": "Nhâm Tuất",
+   "ve": {
+    "d": 17,
+    "m": 2,
+    "y": 2026
+   }
+  },
+  {
+   "d": 16,
+   "m": 2,
+   "y": 2026,
+   "jd": 2461088,
+   "am": {
+    "d": 29,
+    "m": 12,
+    "y": 2025,
+    "nhuan": false,
+    "jd": 2461088
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2461076,
+    "endJd": 2461089,
+    "nextName": "Vũ thủy",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Kỷ Sửu",
+   "ngay": "Tân Dậu",
+   "ve": {
+    "d": 16,
+    "m": 2,
+    "y": 2026
+   }
+  },
+  {
+   "d": 29,
+   "m": 1,
+   "y": 2025,
+   "jd": 2460705,
+   "am": {
+    "d": 1,
+    "m": 1,
+    "y": 2025,
+    "nhuan": false,
+    "jd": 2460705
+   },
+   "tiet": {
+    "idx": 20,
+    "name": "Đại hàn",
+    "startJd": 2460696,
+    "endJd": 2460709,
+    "nextName": "Lập xuân",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Mậu Dần",
+   "ngay": "Mậu Tuất",
+   "ve": {
+    "d": 29,
+    "m": 1,
+    "y": 2025
+   }
+  },
+  {
+   "d": 1,
+   "m": 8,
+   "y": 2025,
+   "jd": 2460889,
+   "am": {
+    "d": 8,
+    "m": 6,
+    "y": 2025,
+    "nhuan": true,
+    "jd": 2460889
+   },
+   "tiet": {
+    "idx": 8,
+    "name": "Đại thử",
+    "startJd": 2460879,
+    "endJd": 2460894,
+    "nextName": "Lập thu",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Quý Mùi",
+   "ngay": "Nhâm Dần",
+   "ve": {
+    "d": 1,
+    "m": 8,
+    "y": 2025
+   }
+  },
+  {
+   "d": 25,
+   "m": 7,
+   "y": 2025,
+   "jd": 2460882,
+   "am": {
+    "d": 1,
+    "m": 6,
+    "y": 2025,
+    "nhuan": true,
+    "jd": 2460882
+   },
+   "tiet": {
+    "idx": 8,
+    "name": "Đại thử",
+    "startJd": 2460879,
+    "endJd": 2460894,
+    "nextName": "Lập thu",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Quý Mùi",
+   "ngay": "Ất Mùi",
+   "ve": {
+    "d": 25,
+    "m": 7,
+    "y": 2025
+   }
+  },
+  {
+   "d": 22,
+   "m": 8,
+   "y": 2025,
+   "jd": 2460910,
+   "am": {
+    "d": 29,
+    "m": 6,
+    "y": 2025,
+    "nhuan": true,
+    "jd": 2460910
+   },
+   "tiet": {
+    "idx": 9,
+    "name": "Lập thu",
+    "startJd": 2460895,
+    "endJd": 2460910,
+    "nextName": "Xử thử",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Quý Mùi",
+   "ngay": "Quý Hợi",
+   "ve": {
+    "d": 22,
+    "m": 8,
+    "y": 2025
+   }
+  },
+  {
+   "d": 20,
+   "m": 3,
+   "y": 2026,
+   "jd": 2461120,
+   "am": {
+    "d": 2,
+    "m": 2,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461120
+   },
+   "tiet": {
+    "idx": 0,
+    "name": "Xuân phân",
+    "startJd": 2461120,
+    "endJd": 2461135,
+    "nextName": "Thanh minh",
+    "startsToday": true
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Tân Mão",
+   "ngay": "Quý Tỵ",
+   "ve": {
+    "d": 20,
+    "m": 3,
+    "y": 2026
+   }
+  },
+  {
+   "d": 21,
+   "m": 3,
+   "y": 2026,
+   "jd": 2461121,
+   "am": {
+    "d": 3,
+    "m": 2,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461121
+   },
+   "tiet": {
+    "idx": 0,
+    "name": "Xuân phân",
+    "startJd": 2461120,
+    "endJd": 2461135,
+    "nextName": "Thanh minh",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Tân Mão",
+   "ngay": "Giáp Ngọ",
+   "ve": {
+    "d": 21,
+    "m": 3,
+    "y": 2026
+   }
+  },
+  {
+   "d": 4,
+   "m": 2,
+   "y": 2026,
+   "jd": 2461076,
+   "am": {
+    "d": 17,
+    "m": 12,
+    "y": 2025,
+    "nhuan": false,
+    "jd": 2461076
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2461076,
+    "endJd": 2461089,
+    "nextName": "Vũ thủy",
+    "startsToday": true
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Kỷ Sửu",
+   "ngay": "Kỷ Dậu",
+   "ve": {
+    "d": 4,
+    "m": 2,
+    "y": 2026
+   }
+  },
+  {
+   "d": 5,
+   "m": 2,
+   "y": 2026,
+   "jd": 2461077,
+   "am": {
+    "d": 18,
+    "m": 12,
+    "y": 2025,
+    "nhuan": false,
+    "jd": 2461077
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2461076,
+    "endJd": 2461089,
+    "nextName": "Vũ thủy",
+    "startsToday": false
+   },
+   "nam": "Ất Tỵ",
+   "thang": "Kỷ Sửu",
+   "ngay": "Canh Tuất",
+   "ve": {
+    "d": 5,
+    "m": 2,
+    "y": 2026
+   }
+  },
+  {
+   "d": 23,
+   "m": 10,
+   "y": 2026,
+   "jd": 2461337,
+   "am": {
+    "d": 14,
+    "m": 9,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461337
+   },
+   "tiet": {
+    "idx": 14,
+    "name": "Sương giáng",
+    "startJd": 2461337,
+    "endJd": 2461351,
+    "nextName": "Lập đông",
+    "startsToday": true
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Mậu Tuất",
+   "ngay": "Canh Ngọ",
+   "ve": {
+    "d": 23,
+    "m": 10,
+    "y": 2026
+   }
+  },
+  {
+   "d": 29,
+   "m": 10,
+   "y": 2026,
+   "jd": 2461343,
+   "am": {
+    "d": 20,
+    "m": 9,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461343
+   },
+   "tiet": {
+    "idx": 14,
+    "name": "Sương giáng",
+    "startJd": 2461337,
+    "endJd": 2461351,
+    "nextName": "Lập đông",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Mậu Tuất",
+   "ngay": "Bính Tý",
+   "ve": {
+    "d": 29,
+    "m": 10,
+    "y": 2026
+   }
+  },
+  {
+   "d": 22,
+   "m": 12,
+   "y": 2026,
+   "jd": 2461397,
+   "am": {
+    "d": 14,
+    "m": 11,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461397
+   },
+   "tiet": {
+    "idx": 18,
+    "name": "Đông chí",
+    "startJd": 2461397,
+    "endJd": 2461410,
+    "nextName": "Tiểu hàn",
+    "startsToday": true
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Canh Tý",
+   "ngay": "Canh Ngọ",
+   "ve": {
+    "d": 22,
+    "m": 12,
+    "y": 2026
+   }
+  },
+  {
+   "d": 21,
+   "m": 12,
+   "y": 2026,
+   "jd": 2461396,
+   "am": {
+    "d": 13,
+    "m": 11,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461396
+   },
+   "tiet": {
+    "idx": 17,
+    "name": "Đại tuyết",
+    "startJd": 2461382,
+    "endJd": 2461396,
+    "nextName": "Đông chí",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Canh Tý",
+   "ngay": "Kỷ Tỵ",
+   "ve": {
+    "d": 21,
+    "m": 12,
+    "y": 2026
+   }
+  },
+  {
+   "d": 31,
+   "m": 12,
+   "y": 2026,
+   "jd": 2461406,
+   "am": {
+    "d": 23,
+    "m": 11,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461406
+   },
+   "tiet": {
+    "idx": 18,
+    "name": "Đông chí",
+    "startJd": 2461397,
+    "endJd": 2461410,
+    "nextName": "Tiểu hàn",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Canh Tý",
+   "ngay": "Kỷ Mão",
+   "ve": {
+    "d": 31,
+    "m": 12,
+    "y": 2026
+   }
+  },
+  {
+   "d": 1,
+   "m": 1,
+   "y": 2027,
+   "jd": 2461407,
+   "am": {
+    "d": 24,
+    "m": 11,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461407
+   },
+   "tiet": {
+    "idx": 18,
+    "name": "Đông chí",
+    "startJd": 2461397,
+    "endJd": 2461410,
+    "nextName": "Tiểu hàn",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Canh Tý",
+   "ngay": "Canh Thìn",
+   "ve": {
+    "d": 1,
+    "m": 1,
+    "y": 2027
+   }
+  },
+  {
+   "d": 6,
+   "m": 2,
+   "y": 2027,
+   "jd": 2461443,
+   "am": {
+    "d": 1,
+    "m": 1,
+    "y": 2027,
+    "nhuan": false,
+    "jd": 2461443
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2461441,
+    "endJd": 2461455,
+    "nextName": "Vũ thủy",
+    "startsToday": false
+   },
+   "nam": "Đinh Mùi",
+   "thang": "Nhâm Dần",
+   "ngay": "Bính Thìn",
+   "ve": {
+    "d": 6,
+    "m": 2,
+    "y": 2027
+   }
+  },
+  {
+   "d": 10,
+   "m": 2,
+   "y": 2024,
+   "jd": 2460351,
+   "am": {
+    "d": 1,
+    "m": 1,
+    "y": 2024,
+    "nhuan": false,
+    "jd": 2460351
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2460345,
+    "endJd": 2460359,
+    "nextName": "Vũ thủy",
+    "startsToday": false
+   },
+   "nam": "Giáp Thìn",
+   "thang": "Bính Dần",
+   "ngay": "Giáp Thìn",
+   "ve": {
+    "d": 10,
+    "m": 2,
+    "y": 2024
+   }
+  },
+  {
+   "d": 4,
+   "m": 2,
+   "y": 2024,
+   "jd": 2460345,
+   "am": {
+    "d": 25,
+    "m": 12,
+    "y": 2023,
+    "nhuan": false,
+    "jd": 2460345
+   },
+   "tiet": {
+    "idx": 21,
+    "name": "Lập xuân",
+    "startJd": 2460345,
+    "endJd": 2460359,
+    "nextName": "Vũ thủy",
+    "startsToday": true
+   },
+   "nam": "Quý Mão",
+   "thang": "Ất Sửu",
+   "ngay": "Mậu Tuất",
+   "ve": {
+    "d": 4,
+    "m": 2,
+    "y": 2024
+   }
+  },
+  {
+   "d": 29,
+   "m": 2,
+   "y": 2024,
+   "jd": 2460370,
+   "am": {
+    "d": 20,
+    "m": 1,
+    "y": 2024,
+    "nhuan": false,
+    "jd": 2460370
+   },
+   "tiet": {
+    "idx": 22,
+    "name": "Vũ thủy",
+    "startJd": 2460360,
+    "endJd": 2460374,
+    "nextName": "Kinh trập",
+    "startsToday": false
+   },
+   "nam": "Giáp Thìn",
+   "thang": "Bính Dần",
+   "ngay": "Quý Hợi",
+   "ve": {
+    "d": 29,
+    "m": 2,
+    "y": 2024
+   }
+  },
+  {
+   "d": 15,
+   "m": 8,
+   "y": 2026,
+   "jd": 2461268,
+   "am": {
+    "d": 3,
+    "m": 7,
+    "y": 2026,
+    "nhuan": false,
+    "jd": 2461268
+   },
+   "tiet": {
+    "idx": 9,
+    "name": "Lập thu",
+    "startJd": 2461260,
+    "endJd": 2461275,
+    "nextName": "Xử thử",
+    "startsToday": false
+   },
+   "nam": "Bính Ngọ",
+   "thang": "Bính Thân",
+   "ngay": "Tân Dậu",
+   "ve": {
+    "d": 15,
+    "m": 8,
+    "y": 2026
+   }
+  },
+  {
+   "d": 1,
+   "m": 1,
+   "y": 2000,
+   "jd": 2451545,
+   "am": {
+    "d": 25,
+    "m": 11,
+    "y": 1999,
+    "nhuan": false,
+    "jd": 2451545
+   },
+   "tiet": {
+    "idx": 18,
+    "name": "Đông chí",
+    "startJd": 2451535,
+    "endJd": 2451549,
+    "nextName": "Tiểu hàn",
+    "startsToday": false
+   },
+   "nam": "Kỷ Mão",
+   "thang": "Bính Tý",
+   "ngay": "Mậu Ngọ",
+   "ve": {
+    "d": 1,
+    "m": 1,
+    "y": 2000
+   }
+  },
+  {
+   "d": 31,
+   "m": 12,
+   "y": 1999,
+   "jd": 2451544,
+   "am": {
+    "d": 24,
+    "m": 11,
+    "y": 1999,
+    "nhuan": false,
+    "jd": 2451544
+   },
+   "tiet": {
+    "idx": 18,
+    "name": "Đông chí",
+    "startJd": 2451535,
+    "endJd": 2451549,
+    "nextName": "Tiểu hàn",
+    "startsToday": false
+   },
+   "nam": "Kỷ Mão",
+   "thang": "Bính Tý",
+   "ngay": "Đinh Tỵ",
+   "ve": {
+    "d": 31,
+    "m": 12,
+    "y": 1999
+   }
+  }
+ ]
+}
