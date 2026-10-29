@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 4,
-  "cap_nhat": "2026-10-29",
+  "phien_ban_so": 5,
+  "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -41,20 +41,22 @@
       "ten": "Duong dan that cho moi trang (/trangchu, /menu, /mon/<ten>, /uudai, /taikhoan..., /dangnhap?tiep=), mo thang / tai lai / Back dung; Trang chu khach day du; KhoaTienIch (mo + 'Dang nhap de mo khoa chuc nang'); /admin chuyen ve /trangchu",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "han": "2026-10-30",
-      "ngay": "2026-10-29"
+      "ngay": "2026-10-29",
+      "ghi_chu": "may xong c2a728f (cong chay dat, 97 ca, trinh duyet 60/60); chat soat dat 30.10 (tu thu mo thang /menu/<nhom>, /Menu/, /mon/, /uudai, /abc, /admin, / — dung); gop PR #3"
     },
     {
       "ma": "KH-UI-5a",
-      "ten": "Trac nghiem the trang theo demo: chep nguyen du lieu TQDQ + cach tinh, man tc / tcq / tcr (/tracnghiem...), goi y mon ghep ten voi menu POS, ket qua chi luu tren may, o Trac nghiem khoa khi chua dang nhap",
+      "ten": "Trac nghiem the trang theo demo: chep nguyen du lieu TQDQ + cach tinh, man tc / tcq / tcr (/tracnghiem...), goi y mon ghep ten voi menu POS, ket qua chi luu tren may, o Trac nghiem khoa khi chua dang nhap; doi khau hieu man mo thanh \"Dong Y Duong The\"",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-LINK-1"
       ],
-      "han": "2026-10-31"
+      "han": "2026-10-31",
+      "ngay": "2026-10-30"
     },
     {
       "ma": "KH-UI-5b",

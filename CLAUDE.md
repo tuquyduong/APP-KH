@@ -73,6 +73,7 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
   — khai báo ở MỘT chỗ `src/duongDan.js`; màn mới phải thêm đường dẫn vào bảng đó; mở thẳng, tải lại, Back / Tiến đều đúng.
 - **Không có mục quản trị trong app khách.** Khu quản trị (chế độ sửa nội dung…) ở `/admin`, đăng nhập bằng TÀI KHOẢN POS (tên đăng nhập + mật khẩu,
   theo quyền POS) — việc KH-ADMIN-1 sau khai trương. Trước đó `/admin` chuyển về `/trangchu`.
+- Khẩu hiệu thương hiệu: **"Đông Y Dưỡng Thể"** (chủ quán chốt 29.10) — dòng dưới "TỨ QUÝ ĐƯỜNG" ở màn mở. Chữ thương hiệu đặt ở `src/noiDung/`.
 - Mọi cỡ màn KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), chữ to theo cài đặt máy không tràn, trình duyệt Zalo dùng được.
 - Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa. Quán KHÔNG có công nợ → app không bao giờ
   hiện chữ "nợ".
