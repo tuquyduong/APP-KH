@@ -9,4 +9,4 @@ $ node cong_cu/thu_KHUI2.js     (chép bài vào nháp cùng src/dinhDang.js c�
 Ca A2 (500 chỉ có { error }) đỏ riêng trên gốc: dinhDang.js cũ `loiTheoCode(code, error)` trả NGUYÊN `error` khi có chuỗi, kể cả khi không có `code`
 (dòng `if (typeof error === 'string' && error.trim()) return error;` đứng trước mọi kiểm `code`) → lời máy lọt ra màn.
 
-SỐ CA thu_KHUI2.js: 62
+SỐ CA thu_KHUI2.js: 63
