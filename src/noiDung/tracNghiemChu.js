@@ -14,7 +14,6 @@ export const GIOI_THIEU = {
   nam: ['Nam giới', 'Bộ câu hỏi dành cho nam'],
   nu: ['Nữ giới', 'Bộ câu hỏi dành cho nữ'],
   batDau: 'Bắt đầu làm bài',
-  thieuGioiTinh: 'Vui lòng chọn Nam giới hoặc Nữ giới trước',
   camKet: 'Thông tin bạn cung cấp chỉ dùng để gợi ý thức uống phù hợp và không được dùng vào mục đích khác.',
   daLuu: 'Kết quả đã lưu',
   chin: '9 thể chất',
@@ -82,6 +81,7 @@ export const KET_QUA = {
   dongYLuu: 'Đồng ý lưu',
   daLuu: 'Đã lưu trên máy này · bạn xem lại được ở Tài khoản → Thể trạng của tôi',
   daLuuToast: 'Đã lưu kết quả vào máy của bạn',
+  khongLuuDuoc: 'Trình duyệt không cho lưu trên máy này. Bạn vẫn xem được kết quả lúc này.',
   xoa: 'Xoá kết quả',
   nguon: 'Theo học thuyết 9 thể chất của Quốc y đại sư Vương Kỳ · Bộ 60 câu, bản tiếng Việt của Tứ Quý Đường cho tư vấn dưỡng sinh. Kết quả chỉ gợi ý xu hướng cơ thể và thức uống phù hợp, không thay thế việc thăm khám.',
 };

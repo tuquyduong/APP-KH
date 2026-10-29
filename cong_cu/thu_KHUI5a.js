@@ -272,6 +272,10 @@ function hangDemo(ten) {
   const hk = doc('src/dungTracNghiem.js');
   k('hook: xoá = xoá khoá trên máy + bỏ kết quả trong bộ nhớ; donSach cũng xoá khoá; lưu chỉ ghi bản rút gọn', /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk) && /const donSach = \(\) => \{ xoaKetQua\(\);/.test(hk) && /rutGon\(moi\.kl, moi\.ngay\)/.test(hk));
 
+  k('lưu thất bại (kho bị chặn) → hook không báo "đã lưu" mà trả false; màn kết quả báo "không lưu được"', /if \(!ghiKetQua\(ban\)\) return false;/.test(hk) && /tn\.luuLai\(\) \? CHU\.daLuuToast : CHU\.khongLuuDuoc/.test(doc('src/pages/TracNghiemKetQua.jsx')) && /khongLuuDuoc:/.test(chu));
+  k('mở thẻ / ô / dòng "đã lưu" luôn mở BẢN ĐÃ LƯU (bỏ kết quả làm lại chưa lưu): App gọi xemBanLuu', (app.match(/tn\.xemBanLuu\(\)/g) || []).length === 2 && /const xemBanLuu = \(\) => datMoi\(null\)/.test(hk));
+  k('THE_CHAT không giữ trường không ai đọc (khoa, chamSoc, tra, menu)', (() => { const t = chat.THE_CHAT.bh; return !('khoa' in t) && !('chamSoc' in t) && !('tra' in t) && !('menu' in t); })());
+
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.log('✗ ' + (e && e.stack || e)); console.log('\n0 đạt · 1 hỏng'); process.exit(1); });

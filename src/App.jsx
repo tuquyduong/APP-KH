@@ -100,7 +100,7 @@ export default function App() {
     di(taoDuongDan('mon', { slug: slugMon(mon, ds) }));
   };
   const moQR = () => di(taoDuongDan('qr'));
-  const moTracNghiem = () => di(taoDuongDan(tn.klLuu ? 'tracnghiemketqua' : 'tracnghiem'));
+  const moTracNghiem = () => { if (tn.klLuu) tn.xemBanLuu(); di(taoDuongDan(tn.klLuu ? 'tracnghiemketqua' : 'tracnghiem')); };
   const moUuDai = () => chonTab('uudai');
   const moMenu = () => chonTab('menu');
   const taiTab = (t) => trang === t;
@@ -112,7 +112,7 @@ export default function App() {
         {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={tn.klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
         {dangNhap && taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
         {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={tn.klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
-        {dangNhap && trang === 'tracnghiem' && <TracNghiem tn={tn} lui={luiVe} vaoLam={() => di(taoDuongDan('tracnghiemlam'))} moKetQua={() => di(taoDuongDan('tracnghiemketqua'))} />}
+        {dangNhap && trang === 'tracnghiem' && <TracNghiem tn={tn} lui={luiVe} vaoLam={() => di(taoDuongDan('tracnghiemlam'))} moKetQua={() => { tn.xemBanLuu(); di(taoDuongDan('tracnghiemketqua')); }} />}
         {dangNhap && trang === 'tracnghiemlam' && <TracNghiemLam tn={tn} thoat={() => { tn.bo(); thay(taoDuongDan('tracnghiem')); }} xemKetQua={() => thay(taoDuongDan('tracnghiemketqua'))} />}
         {dangNhap && trang === 'tracnghiemketqua' && <TracNghiemKetQua tn={tn} menu={menu} lui={luiVe} chonMon={chonMon} moHoTro={coLienHe(LIEN_HE) ? () => di(taoDuongDan('hotro')) : null} veGioiThieu={() => thay(taoDuongDan('tracnghiem'))} lamLai={() => { if (tn.batDau(tn.hien.kl.gioiTinh)) di(taoDuongDan('tracnghiemlam')); }} />}
         {trang === 'mon' && <MonTheoDuong mon={monLink} tai={menu} lui={luiVe} moQR={moQR} moMenu={moMenu} moDangNhap={() => moDangNhap(r.chuan)} />}

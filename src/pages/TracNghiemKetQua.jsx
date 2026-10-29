@@ -49,7 +49,7 @@ export default function TracNghiemKetQua({ tn, menu, lui, lamLai, chonMon, moHoT
   const the = THE_CHAT[picks[0]];
   const thu = kl.kind === 'main' || kl.kind === 'tend';
 
-  const luu = () => { tn.luuLai(); datThongBao(CHU.daLuuToast); };
+  const luu = () => datThongBao(tn.luuLai() ? CHU.daLuuToast : CHU.khongLuuDuoc);
   const xoa = () => { tn.xoa(); veGioiThieu(); };
   const saoChep = () => {
     const chu = soanGopY(DL, kl, tra, gopY);

@@ -43,17 +43,20 @@ export function dungTracNghiem() {
     datBai(null);
   };
   const luuLai = () => {
-    if (!moi) return;
+    if (!moi) return false;
     const ban = rutGon(moi.kl, moi.ngay);
-    ghiKetQua(ban); // kho bị chặn thì kết quả vẫn xem được trong phiên
+    if (!ghiKetQua(ban)) return false; // kho bị chặn (cửa sổ riêng tư…): KHÔNG báo đã lưu; kết quả vẫn xem được trong phiên
     datLuu({ gioiTinh: ban.gioiTinh, ngay: ban.ngay, diem: ban.diem, khiHau: ban.khiHau, anToan: ban.anToan });
     datMoi({ ...moi, daLuu: true });
+    return true;
   };
-  const xoa = () => { xoaKetQua(); datLuu(null); datMoi(null); };
+  const xoa = () => { xoaKetQua(); datLuu(null); datMoi(null); datGioiTinh(null); };
+  /** Mở lại BẢN ĐÃ LƯU: bỏ kết quả làm lại chưa lưu (nếu còn) để thẻ / ô / dòng "đã lưu" mở đúng bản đã lưu. */
+  const xemBanLuu = () => datMoi(null);
   /** Đăng xuất / hết phiên: bỏ hết, kể cả bản trên máy (thiết bị dùng chung không để lộ kết quả của người trước). */
   const donSach = () => { xoaKetQua(); datLuu(null); datMoi(null); datBai(null); datGioiTinh(null); };
 
   const klLuu = luu ? ketLuan(DL, luu.diem, luu) : null;
   const hien = moi || (luu ? { kl: klLuu, ds: null, tra: null, ngay: luu.ngay, daLuu: true } : null);
-  return { luu, klLuu, hien, gioiTinh, datGioiTinh, bai, batDau, chon, tiep, lui, datKhiHau, batTatAnToan, bo, xong, luuLai, xoa, donSach };
+  return { luu, klLuu, hien, gioiTinh, datGioiTinh, bai, batDau, chon, tiep, lui, datKhiHau, batTatAnToan, bo, xong, luuLai, xoa, xemBanLuu, donSach };
 }

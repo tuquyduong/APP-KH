@@ -33,10 +33,10 @@ const VIS = {
   db: ['gourd', '#C9B08A', '特稟'],
 };
 
-/** Một thể trạng để hiện: tên, đặc điểm, chăm sóc, thức uống, bảng món nên / tránh. Khoá = khoá nhóm của file dữ liệu. */
+/** Một thể trạng để hiện: tên, chữ Hán, màu, ảnh, đặc điểm (chăm sóc / thức uống / món đọc thẳng từ DL, MENU). Khoá = khoá nhóm của file dữ liệu. */
 export const THE_CHAT = Object.fromEntries(Object.entries(DL.groups).map(([k, g]) => [k, {
-  khoa: k, ten: g.name, phai: g.phai, han: VIS[k][2], anh: `/anh/the-chat-${VIS[k][0]}.svg`, mau: VIS[k][1],
-  dacDiem: TRAITS[k], chamSoc: g.care, tra: g.tea, menu: MENU.nhom[k],
+  ten: g.name, phai: g.phai, han: VIS[k][2], anh: `/anh/the-chat-${VIS[k][0]}.svg`, mau: VIS[k][1],
+  dacDiem: TRAITS[k],
 }]));
 
 /** Mã món demo → từ khoá trong tên món (demo PROD_KEY). Món POS ghép bằng từ khoá này (tracNghiem.js), không bằng mã demo. */
