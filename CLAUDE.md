@@ -67,6 +67,12 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
   Đăng ký 3 bước: SĐT → mã → (khách mới) màn "Thông tin của bạn": Tên + Cách xưng hô BẮT BUỘC, Địa chỉ nhận hàng KHÔNG bắt buộc (dùng làm
   địa chỉ giao mặc định; đặt online lần đầu mà chưa có thì bắt nhập và lưu làm mặc định, có ghi chú cho khách).
   App nhớ đăng nhập 30 ngày và TỰ GIA HẠN mỗi lần khách mở app (khi POS có cửa gia hạn) — dùng thường xuyên thì không phải đăng nhập lại.
+- **Trang chủ khi chưa đăng nhập hiện ĐẦY ĐỦ** như khi đã đăng nhập (trừ phần riêng của khách). Tiện ích cần tài khoản (Trắc nghiệm thể trạng, Kế hoạch
+  và nhắc việc…) hiện MỜ kèm "Đăng nhập để mở khoá chức năng" — dùng `src/components/KhoaTienIch.jsx` (chủ quán chốt 29.10).
+- **Đường dẫn thật cho mọi trang** (chủ quán chốt 29.10): tuquyduong.com/trangchu, /menu, /mon/<tên-món>, /uudai, /taikhoan, /mathanhvien, /dangnhap…
+  — khai báo ở MỘT chỗ `src/duongDan.js`; màn mới phải thêm đường dẫn vào bảng đó; mở thẳng, tải lại, Back / Tiến đều đúng.
+- **Không có mục quản trị trong app khách.** Khu quản trị (chế độ sửa nội dung…) ở `/admin`, đăng nhập bằng TÀI KHOẢN POS (tên đăng nhập + mật khẩu,
+  theo quyền POS) — việc KH-ADMIN-1 sau khai trương. Trước đó `/admin` chuyển về `/trangchu`.
 - Mọi cỡ màn KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), chữ to theo cài đặt máy không tràn, trình duyệt Zalo dùng được.
 - Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa. Quán KHÔNG có công nợ → app không bao giờ
   hiện chữ "nợ".

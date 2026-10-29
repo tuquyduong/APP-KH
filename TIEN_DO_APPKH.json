@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 3,
+  "phien_ban_so": 4,
   "cap_nhat": "2026-10-29",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -28,23 +28,44 @@
       "ten": "Khach chua dang nhap vao thang Trang chu sau man mo; xem Trang chu, Menu, Trang mon khong can dang nhap; dang nhap / dang ky chi khi can (Uu dai, Tai khoan, ma thanh vien, nhan diem) roi quay ve dung cho; dang nhap / dang ky 3 buoc: SDT → ma Zalo → (khach moi) Ten + Xung ho bat buoc, Dia chi tuy chon",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "han": "2026-10-30",
       "phu_thuoc": [
         "POS KH-API-2: /menu khong can token (yeu cau 29.10)"
       ],
+      "ngay": "2026-10-29",
+      "ghi_chu": "may xong d3a3003 (cong chay dat, 61 ca); chat soat dat 29.10; gop PR #2 (1c47df4)"
+    },
+    {
+      "ma": "KH-LINK-1",
+      "ten": "Duong dan that cho moi trang (/trangchu, /menu, /mon/<ten>, /uudai, /taikhoan..., /dangnhap?tiep=), mo thang / tai lai / Back dung; Trang chu khach day du; KhoaTienIch (mo + 'Dang nhap de mo khoa chuc nang'); /admin chuyen ve /trangchu",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "han": "2026-10-30",
       "ngay": "2026-10-29"
     },
     {
-      "ma": "KH-UI-5",
-      "ten": "Tien ich chay tren may khach theo demo: Trac nghiem the trang 60 cau + ket qua (luu tren may; gui ban rut gon len POS khi co cua, D4), Ke hoach va nhac viec (lich am, tiet khi, viec cua toi luu tren may — chua thong bao day), 6 tien ich, the video huong dan (an toi khi chu quan gui video)",
+      "ma": "KH-UI-5a",
+      "ten": "Trac nghiem the trang theo demo: chep nguyen du lieu TQDQ + cach tinh, man tc / tcq / tcr (/tracnghiem...), goi y mon ghep ten voi menu POS, ket qua chi luu tren may, o Trac nghiem khoa khi chua dang nhap",
       "loai": "Th",
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-UI-2"
+        "KH-LINK-1"
       ],
-      "han": "2026-10-30"
+      "han": "2026-10-31"
+    },
+    {
+      "ma": "KH-UI-5b",
+      "ten": "Ke hoach va nhac viec theo demo (/kehoach): lich am duong, tiet khi, viec cua toi (luu tren may), van khan, ngay can nho, xe co, uong thuoc, chu ky (suc khoe chi luu tren may), 6 tien ich, the video huong dan (an toi khi co video); o khoa khi chua dang nhap",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-5a (dung lai src/lich.js)"
+      ],
+      "han": "2026-11-01"
     },
     {
       "ma": "KH-UI-4",
@@ -53,9 +74,10 @@
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-UI-2",
-        "KH-UI-5",
-        "mau man to duoc duyet"
+        "KH-LINK-1",
+        "KH-UI-5a",
+        "KH-UI-5b",
+        "mau man to (da duyet)"
       ],
       "han": "2026-10-31"
     },
@@ -66,11 +88,12 @@
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-UI-2",
-        "POS KH-API-2 (hop dong v2)",
-        "POS TOPPING-1 (hop dong v3)"
+        "POS KH-API-2 (v2, 30-31.10)",
+        "POS KH-API-3 (v3: menu khong can dang nhap — xin lam som nhat, xac-minh xung_ho/dia_chi, PUT /toi, /gia-han; 31.10-01.11)",
+        "POS TOPPING-1 (v4)"
       ],
-      "han": "2026-11-04"
+      "han": "2026-11-04",
+      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1)"
     },
     {
       "ma": "KH-CF-1",
@@ -139,9 +162,21 @@
     },
     {
       "ma": "KH-SAU-1",
-      "ten": "Dot 4 gom: vi gia dinh, nhac viec co thong bao day, luu ket qua trac nghiem len POS, che do sua noi dung, qua sinh nhat, the qua, moi ban",
+      "ten": "Dot 4 gom: vi gia dinh, nhac viec co thong bao day, luu ket qua trac nghiem len POS, qua sinh nhat, the qua, moi ban",
       "loai": "tach_sau",
       "trang_thai": "cho"
+    },
+    {
+      "ma": "KH-ADMIN-1",
+      "ten": "Khu quan tri /admin: dang nhap bang tai khoan POS (ten dang nhap + mat khau, theo quyen POS, gioi han so lan thu), che do sua noi dung app (chu, anh, banner, an/hien khoi) luu kho nho App KH",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-TACH-1",
+        "POS: cua xac nhan tai khoan nhan vien (D9)"
+      ],
+      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach"
     }
   ]
 }
