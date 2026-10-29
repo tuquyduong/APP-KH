@@ -45,7 +45,8 @@ async function goi(phuongThuc, duong, than) {
 }
 
 export const xinMa = (sdt) => goi('POST', '/dang-nhap/xin-ma', { sdt });
-export const xacMinh = (sdt, ma, ten) => goi('POST', '/dang-nhap/xac-minh', { sdt, ma, ten });
+// `them` = { xung_ho, dia_chi? } ở bước 3 (luongDangNhap.truongThem).
+export const xacMinh = (sdt, ma, ten, them) => goi('POST', '/dang-nhap/xac-minh', { sdt, ma, ten, ...them });
 export const layToi = () => goi('GET', '/toi');
 export const doiTen = (ten) => goi('PUT', '/toi', { ten });
 export const layMenu = () => goi('GET', '/menu');

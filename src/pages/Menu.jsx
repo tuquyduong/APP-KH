@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { layMenu } from '../api.js';
-import { dungTai } from '../dungTai.js';
+import { dinhDangNgay } from '../dinhDang.js';
 import { timMon, locTheoNhuCau, nhomTheoTen, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import MonO from '../components/MonO.jsx';
+import TheMoi from '../components/TheMoi.jsx';
+import { THE_MOI_MENU } from '../noiDung/dangNhap.js';
 import { Ico, En } from '../components/BieuTuong.jsx';
 
 // Menu theo demo: ô tìm + lưới ô nhóm món (nhóm của POS) + lưới món theo nhóm. Màn này luôn được giữ nguyên khi vào một món rồi quay lại
@@ -13,9 +14,8 @@ import { Ico, En } from '../components/BieuTuong.jsx';
 const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
-export default function Menu({ hien, lanVao, nhuCau, boNhuCau, chonMon, moQR }) {
-  const tai = dungTai(layMenu);
-  // Menu được giữ trong cây nên tự làm mới "Hết hàng" / tồn mỗi lần khách BẤM tab Menu (lanVao tăng); quay lại từ màn con thì giữ nguyên.
+export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQR, moDangNhap }) {
+  // Menu được giữ trong cây nên hỏi lại menu mỗi lần khách BẤM tab Menu (lanVao tăng; menu lấy chưa quá 5 phút thì dungMenu bỏ qua); quay lại từ màn con thì giữ nguyên.
   const lanTruoc = useRef(lanVao);
   useEffect(() => {
     if (lanTruoc.current !== lanVao) { lanTruoc.current = lanVao; tai.taiLai(); }
@@ -57,7 +57,7 @@ export default function Menu({ hien, lanVao, nhuCau, boNhuCau, chonMon, moQR }) 
   return (
     <Man id="catalog" hien={hien}>
       <div className="topbar">
-        <div><h1>Menu</h1>{tai.dl && <div className="sub">{conHang} món đang có</div>}</div>
+        <div><h1>Menu</h1>{tai.dl && <div className="sub">{tai.cu ? `Giá cập nhật lúc ${dinhDangNgay(tai.luc)}` : `${conHang} món đang có`}</div>}</div>
         <NutQR moQR={moQR} />
       </div>
       <div className={`active-filter-bar${nhuCau ? ' show' : ''}`}>
@@ -68,7 +68,8 @@ export default function Menu({ hien, lanVao, nhuCau, boNhuCau, chonMon, moQR }) 
         <Ico ten="search" s={16} />
         <input type="text" enterKeyHint="search"aria-label="Tìm món" placeholder="Tìm món, ví dụ: phổ nhĩ…" value={tu} onChange={(e) => datTu(e.target.value)} />
       </div>
-      <TrangTai tai={tai}>
+      {tai.canDN && <div className="menu-moi"><TheMoi chu={THE_MOI_MENU} moDangNhap={moDangNhap} /></div>}
+      {!tai.canDN && <TrangTai tai={{ ...tai, taiLai: () => tai.taiLai(true) }}>
         {() => (
           <>
             <div className="cat-tiles" ref={oNhom}>
@@ -99,7 +100,7 @@ export default function Menu({ hien, lanVao, nhuCau, boNhuCau, chonMon, moQR }) 
             </div>
           </>
         )}
-      </TrangTai>
+      </TrangTai>}
     </Man>
   );
 }

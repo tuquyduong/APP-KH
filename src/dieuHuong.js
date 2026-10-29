@@ -26,9 +26,14 @@ export function dungNganXep() {
     history.pushState({ kh: sau.current }, '');
     datNgan((n) => [...n.slice(0, sau.current - 1), man]);
   }, []);
+  // Thay màn trên cùng bằng màn khác, cùng độ sâu (đăng nhập xong mở thẳng QR: không chạy đua giữa history.back và pushState).
+  const thay = useCallback((man) => {
+    history.replaceState({ kh: sau.current }, '');
+    datNgan((n) => [...n.slice(0, Math.max(sau.current - 1, 0)), man]);
+  }, []);
   const lui = useCallback(() => history.back(), []);
   // Đặt độ sâu về 0 NGAY (popstate tới sau): gọi lặp (401 dồn dập + bấm tab) không lùi quá tay, không thoát khỏi app.
   const veDau = useCallback(() => { const n = sau.current; if (n) { sau.current = 0; history.go(-n); } }, []);
 
-  return { man: ngan[ngan.length - 1] || null, mo, lui, veDau };
+  return { man: ngan[ngan.length - 1] || null, mo, thay, lui, veDau };
 }

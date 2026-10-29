@@ -2,6 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { docToken, xoaToken, datKhiHetPhien } from './api.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungNganXep, viTriCuonKhiDoiMan } from './dieuHuong.js';
+import { dungMenu } from './dungMenu.js';
+import { xoaMenuLuu } from './menuLuu.js';
+import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import ThanhTab from './components/ThanhTab.jsx';
 import ManDau from './components/ManDau.jsx';
 import DangNhap from './pages/DangNhap.jsx';
@@ -25,12 +28,14 @@ function docVaXoaMaTrenDiaChi() {
 }
 const MA_TU_LINK = docVaXoaMaTrenDiaChi();
 
-// Không router: một trạng thái `tab` + ngăn xếp màn con (dieuHuong.js). Hết phiên / 401 → api.js xoá phiên và gọi lại về màn đăng nhập.
+// Không router: một trạng thái `tab` + ngăn xếp màn con (dieuHuong.js). Khách chưa đăng nhập vẫn xem Trang chủ / Menu / Trang món; bấm Ưu đãi, Tài khoản,
+// mã QR thì mở màn Đăng nhập (màn con) và đăng nhập xong vào ĐÚNG chỗ đã bấm. Hết phiên / 401 → api.js xoá phiên và gọi `donPhien` → chế độ khách.
 // Khung `.phone` / `.screens` / `.screen` y demo. Menu được GIỮ trong cây (chỉ ẩn) từ lần vào đầu → vào một món rồi quay lại còn nguyên ô tìm, nhóm, vị trí cuộn.
 export default function App() {
   const [dangNhap, datDangNhap] = useState(() => !!docToken());
   const [maCho, datMaCho] = useState(MA_TU_LINK);
   const [tab, datTab] = useState(MA_TU_LINK && docToken() ? 'uudai' : 'trangchu');
+  const menu = dungMenu(dangNhap);
   const [daVaoMenu, datDaVaoMenu] = useState(false);
   const [lanVaoMenu, datLanVaoMenu] = useState(0);
   const [nhuCau, datNhuCau] = useState('');
@@ -39,9 +44,9 @@ export default function App() {
   const viTriMenu = useRef(0);
   const quayLaiMenu = useRef(false);
 
-  // 401 giữa phiên: về đăng nhập VÀ dọn màn con (người đăng nhập sau không thấy màn của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
-  // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau).
-  const donPhien = () => { nx.veDau(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datTab('trangchu'); };
+  // 401 giữa phiên / đăng xuất: về chế độ khách VÀ dọn màn con (người đăng nhập sau không thấy màn của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
+  // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau). Bản menu lưu trên máy cũng xoá (có thể mang giá theo hạng của khách trước).
+  const donPhien = () => { nx.veDau(); xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datTab('trangchu'); };
   useEffect(() => { datKhiHetPhien(donPhien); });
 
   useLayoutEffect(() => {
@@ -49,24 +54,38 @@ export default function App() {
   }, [tab, nx.man]);
 
   const vaoTab = (t) => { quayLaiMenu.current = false; nx.veDau(); datTab(t); if (t === 'menu') { datDaVaoMenu(true); datLanVaoMenu((n) => n + 1); } };
-  const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
+  // Mở Đăng nhập như một màn con; `dich` = chỗ khách định vào. Đang ở màn Đăng nhập thì chỉ đổi `dich` (giữ chữ đã gõ).
+  const moDangNhap = (dich) => (nx.man && nx.man.k === 'dangnhap' ? nx.thay({ k: 'dangnhap', dich }) : moManCon({ k: 'dangnhap', dich }));
+  const chonTab = (t) => { if (canDangNhap(t, dangNhap)) { moDangNhap(t); return; } datNhuCau(''); vaoTab(t); };
   const dangXuat = () => { xoaToken(); datMaCho(''); donPhien(); };
-  const khiDangNhapXong = () => { datDangNhap(true); datTab(maCho ? 'uudai' : 'trangchu'); };
+  const khiDangNhapXong = (dich) => {
+    datDangNhap(true);
+    const d = dichSauDangNhap(dich, maCho);
+    if (d === 'qr') nx.thay({ k: 'qr' }); else vaoTab(d);
+  };
 
   // Mở màn con: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
   const moManCon = (man) => {
     if (tab === 'menu' && !nx.man && khungCuon.current) { viTriMenu.current = khungCuon.current.scrollTop; quayLaiMenu.current = true; }
     nx.mo(man);
   };
-  const moQR = () => moManCon({ k: 'qr' });
+  const moQR = () => (canDangNhap('qr', dangNhap) ? moDangNhap('qr') : moManCon({ k: 'qr' }));
   const chonMon = (mon) => moManCon({ k: 'mon', mon });
   const moUuDai = () => chonTab('uudai');
+
+  // Link QR hoá đơn khi chưa đăng nhập: mở Đăng nhập NGAY (✕ về Trang chủ; mã vẫn giữ trong maCho).
+  const daMoTheoMa = useRef(false);
+  useEffect(() => {
+    if (MA_TU_LINK && !docToken() && !daMoTheoMa.current) { daMoTheoMa.current = true; nx.mo({ k: 'dangnhap', dich: 'uudai' }); }
+  }, []);
 
   let manCon = null;
   if (nx.man) {
     const { k } = nx.man;
+    const dichDN = nx.man.dich;
     manCon = (
       <>
+        {k === 'dangnhap' && <DangNhap khiXong={() => khiDangNhapXong(dichDN)} dong={nx.lui} coMaHoaDon={!!maCho} />}
         {k === 'qr' && <ManQR lui={nx.lui} />}
         {k === 'mon' && <TrangMon mon={nx.man.mon} lui={nx.lui} moQR={moQR} />}
         {k === 'donds' && <LichSuDon chonDon={(ma) => moManCon({ k: 'don', ma })} lui={nx.lui} />}
@@ -81,18 +100,13 @@ export default function App() {
   return (
     <div className="phone">
       <div className="screens" ref={khungCuon}>
-        {!dangNhap && <DangNhap khiXong={khiDangNhapXong} />}
-        {dangNhap && (
-          <>
-            {daVaoMenu && <Menu hien={taiTab('menu')} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} />}
-            {taiTab('trangchu') && <TrangChu moQR={moQR} moMenu={() => chonTab('menu')} moUuDai={moUuDai} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
-            {taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
-            {taiTab('taikhoan') && <TaiKhoan moQR={moQR} moDon={() => moManCon({ k: 'donds' })} moHoSo={() => moManCon({ k: 'hoso' })} moHoTro={() => moManCon({ k: 'hotro' })} moUuDai={moUuDai} dangXuat={dangXuat} />}
-            {manCon}
-          </>
-        )}
+        {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} moDangNhap={() => moDangNhap('menu')} />}
+        {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} moQR={moQR} moMenu={() => chonTab('menu')} moUuDai={moUuDai} moDangNhap={() => moDangNhap('uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
+        {dangNhap && taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
+        {dangNhap && taiTab('taikhoan') && <TaiKhoan moQR={moQR} moDon={() => moManCon({ k: 'donds' })} moHoSo={() => moManCon({ k: 'hoso' })} moHoTro={() => moManCon({ k: 'hotro' })} moUuDai={moUuDai} dangXuat={dangXuat} />}
+        {manCon}
       </div>
-      {dangNhap && <ThanhTab tab={tab} chon={chonTab} />}
+      <ThanhTab tab={tab} chon={chonTab} />
       <ManDau />
     </div>
   );
