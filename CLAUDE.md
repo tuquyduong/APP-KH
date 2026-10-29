@@ -61,6 +61,12 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
   công cụ so ảnh và API giả để ở nháp), cùng cỡ 390×844 (thêm 360 và 430), cùng dữ liệu mẫu như demo; sửa tới khi chỉ còn khác vì (a)–(d);
   (2) lưu cặp ảnh + ảnh tô chỗ lệch vào `viec/<MÃ>/so_anh/`; (3) lập `viec/<MÃ>/doi_chieu_demo.md` — mỗi màn một bảng: khối trong demo /
   đã làm / khác gì, lý do (a)–(d). Chat App KH so ảnh lại lần cuối trước khi gộp.
+- Khách CHƯA đăng nhập vẫn vào thẳng Trang chủ sau màn mở, LÚC NÀO cũng xem được Trang chủ, Menu, giá, Trang món (chủ quán chốt 29.10). Đăng nhập / đăng ký chỉ
+  hiện khi khách cần: Ưu đãi, Tài khoản, mã thành viên, nhận điểm — xong quay về đúng chỗ đang định vào.
+- Đăng nhập = mã gửi qua ZALO (POS gửi; POS chưa bật Zalo thì báo lấy mã ở quầy — app làm theo câu trả lời của POS, không ghi cứng).
+  Đăng ký 3 bước: SĐT → mã → (khách mới) màn "Thông tin của bạn": Tên + Cách xưng hô BẮT BUỘC, Địa chỉ nhận hàng KHÔNG bắt buộc (dùng làm
+  địa chỉ giao mặc định; đặt online lần đầu mà chưa có thì bắt nhập và lưu làm mặc định, có ghi chú cho khách).
+  App nhớ đăng nhập 30 ngày và TỰ GIA HẠN mỗi lần khách mở app (khi POS có cửa gia hạn) — dùng thường xuyên thì không phải đăng nhập lại.
 - Mọi cỡ màn KHÔNG vỡ, không méo: ảnh giữ tỉ lệ (`object-fit`), chữ to theo cài đặt máy không tràn, trình duyệt Zalo dùng được.
 - Ít nút, ít thao tác. Tiếng Việt có dấu. Dữ liệu POS chưa trả → ẨN mục đó, không hiện số bịa. Quán KHÔNG có công nợ → app không bao giờ
   hiện chữ "nợ".

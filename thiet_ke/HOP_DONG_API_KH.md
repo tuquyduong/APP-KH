@@ -1,8 +1,7 @@
-# Hợp đồng cổng `/api/kh` — POS ↔ App KH
+> **BẢN CHÉP NGUYÊN VĂN** `HOP_DONG_API_KH.md` ở kho POS (`pos-tuquyduong/pos-tuquyduong`, main `c23773a`, 29.10.2026). Máy KHÔNG sửa;
+> bản gốc đổi → chat App KH chép lại. Lệch → bản gốc thắng.
 
-> **BẢN CHÉP Ở KHO APP KH.** Bản gốc: `HOP_DONG_API_KH.md` ở gốc kho POS (`pos-tuquyduong/pos-tuquyduong`, main). Bản này chép theo
-> `thiet_ke/trao_doi/TRA_LOI_POS_28102026.md` (POS báo đã đặt v1 kèm 2 chỗ sửa) khi bản gốc chưa lên main; chat App KH thay bằng NGUYÊN VĂN
-> bản gốc ở script kế tiếp. Máy KHÔNG sửa file này; lệch với bản gốc → bản gốc thắng.
+# Hợp đồng cổng `/api/kh` — POS ↔ App KH
 
 PHIEN_BAN: 1
 NGAY: 2026-10-28
@@ -16,9 +15,10 @@ DOC_TU_CODE: POS main b1f8299 (server/routes/kh/index.js, loi.js, middleware/kha
 - Đăng nhập xong nhận `token`; các cửa "token: có" gửi `Authorization: Bearer <token>`. Thiếu / sai / hết hạn → 401 `KH_TOKEN_SAI`.
 - Lỗi luôn `{ error: '<lời tiếng Việt>', code: 'MA_IN_HOA' }` — App hiện nguyên `error`.
 - SĐT khách luôn lấy từ token, không bao giờ từ thân yêu cầu. Đơn / dữ liệu của khách khác → 404 như không có.
-- **Giờ:** mọi giờ POS trả là giờ Việt Nam (UTC+7), dạng `YYYY-MM-DDTHH:mm:ss`, KHÔNG hậu tố múi giờ. App KHÔNG đưa thẳng vào `new Date()`;
-  hiện đúng như chuỗi. Vài giờ cũ còn dạng có dấu cách (POS sửa trong GIO-VN-1) — cứ hiện, không tự cộng 7 giờ. "Bây giờ" lấy `bay_gio` của POS.
-- **Mã nhận điểm / mã bill:** chỉ `[A-Z0-9]`, hiện 6 ký tự, tối đa 32. App cắt khoảng trắng + đổi chữ hoa trước khi gửi (POS cũng làm).
+- **Giờ:** mọi trường giờ (`ngay`, `ngay_tao`, `ton_luc`…) là **giờ Việt Nam**, dạng `YYYY-MM-DDTHH:mm:ss`, KHÔNG có hậu tố múi giờ. App KHÔNG
+  đưa thẳng vào `new Date(...)` (trình duyệt sẽ hiểu là giờ máy khách) — đọc như giờ `Asia/Ho_Chi_Minh`. "Bây giờ" lấy từ máy chủ (cửa giờ
+  hoạt động, từ v2), không lấy đồng hồ điện thoại. Lỗi đã biết: một số giờ CŨ (vd ngày tạo của vài khách) còn lưu theo giờ quốc tế, có
+  dấu cách thay chữ `T` — GIO-VN-1 sửa trước khai trương.
 
 ## Các cửa (phiên bản 1)
 | Cửa | Token | Gửi | Trả (ngoài `success`) |
@@ -40,18 +40,18 @@ DOC_TU_CODE: POS main b1f8299 (server/routes/kh/index.js, loi.js, middleware/kha
 `KH_CHUA_CAU_HINH` 503 · `KH_TOKEN_SAI` 401 · `SDT_KHONG_HOP_LE` 400 · `QUA_NHIEU_LAN` 429 · `MA_SAI` 400 · `MA_HET_HAN` 400 · `CAN_TEN` 400 ·
 `TEN_KHONG_HOP_LE` 400 · `KHONG_THAY_DON` 404 · `KHONG_TIM_THAY` 404 · `YEU_CAU_KHONG_HOP_LE` 400 · `LOI_MAY_CHU` 500 · `KHO_BAN` 409 ·
 `PUT /pin`: `PIN_KHONG_HOP_LE` 400 · `PIN_KHONG_KHOP` 400 · `PIN_DA_CO` 409 · `KHACH_KHONG_TON_TAI` 404.
-`nhan-ma-bill` / `nhan-diem`: `THIEU_MA` · `MA_KHONG_TON_TAI` · `MA_DA_DUNG` · `UU_DAI_DANG_TAT` · `SDT_DA_NHAN` · `DON_FLASH_KHONG_DIEM` ·
-`CAU_HINH_DIEM_SAI` · `CHUA_CAU_HINH_NHOM` — App hiện nguyên `error`.
-
-**Lỗi đã biết (POS sửa trong KH-API-2):** hai cửa nhận mã khi lỗi máy bất ngờ trả 500 chỉ có `{ error }` (lời máy, không `code`) → App coi 500
-không `code` như `LOI_MAY_CHU`, hiện lời chung, KHÔNG hiện lời máy.
+`nhan-ma-bill` / `nhan-diem` dùng hàm quầy, thêm các mã: `THIEU_MA` 400 · `MA_KHONG_TON_TAI` 404 · `MA_DA_DUNG` 409 · `UU_DAI_DANG_TAT` 400 ·
+`SDT_DA_NHAN` 400 · `DON_FLASH_KHONG_DIEM` 400 · `CAU_HINH_DIEM_SAI` 400 · `CHUA_CAU_HINH_NHOM` 500 (cùng `MA_HET_HAN`, `SDT_KHONG_HOP_LE` ở trên).
+App hiện nguyên `error`.
+**Lỗi đã biết (sửa ở KH-API-2):** khi hai cửa này gặp lỗi máy bất ngờ, câu trả lời 500 hiện chỉ có `{ error }` (lời máy, KHÔNG có `code`) — App
+coi 500 không `code` như `LOI_MAY_CHU` và hiện lời chung, không hiện nguyên lời máy.
 
 ## Đã hẹn (chưa có — ghi vào khi xong, tăng PHIEN_BAN)
-- KH-API-2: `/toi` thêm hạng + số dư ví; cửa danh sách hạng; cửa Giờ vàng hôm nay; `/menu` thêm giá từng hạng.
+- KH-API-2: `/toi` thêm hạng + số dư ví; cửa danh sách hạng; cửa Giờ vàng hôm nay; `/menu` thêm giá từng hạng; **cửa giờ hoạt động**
+  `GET /gio-hoat-dong` (không cần token) → `bay_gio`, `dang_mo`, `hom_nay`, `mo_lai_luc`, `thong_bao`, `lich_tuan`, `ngay_nghi`.
+- KH-MUA-1: đặt đơn ngoài giờ hoạt động → máy chủ từ chối `NGOAI_GIO_HOAT_DONG`.
 - TOPPING-1: `/menu` thêm topping theo món + giá.
-- KH-API-2 (v2): `GET /gio-hoat-dong` KHÔNG cần token → `bay_gio, dang_mo, hom_nay, mo_lai_luc, thong_bao, lich_tuan, ngay_nghi`.
-- DG-GOOGLE-1 (sau khai trương — POS đã chốt tên): `GET /loi-moi-danh-gia`, `POST /loi-moi-danh-gia/:ma/su-kien { loai: mo | xong | luc_khac }`,
-  `/don` thêm `co_the_danh_gia`, `da_danh_gia`, `link_danh_gia`.
+- Đánh giá Google: `loi-moi-danh-gia`, `su-kien`, cờ trên `/don` (tên cuối do POS chốt).
 
 ## Phần máy đọc
 <!-- HOP_DONG_MAY_DOC -->
@@ -82,4 +82,5 @@ không `code` như `LOI_MAY_CHU`, hiện lời chung, KHÔNG hiện lời máy.
 <!-- HET HOP_DONG_MAY_DOC -->
 
 ## Nhật ký
-- v1 · 28.10.2026 · Bản đầu, ghi đúng code POS b1f8299 (chat App KH soạn, chat POS đặt vào kho). POS thêm 8 mã lỗi nhận mã, dòng "Lỗi đã biết", quy ước giờ VN.
+- v1 · 28.10.2026 · Bản đầu, ghi đúng code POS b1f8299 (chat App KH soạn, chat POS đặt vào kho). Chat POS đối chiếu code trước khi đặt:
+  thêm 8 mã lỗi có thật của `nhan-ma-bill` / `nhan-diem` và dòng "Lỗi đã biết" (500 không `code`).

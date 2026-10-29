@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 2,
+  "phien_ban_so": 3,
   "cap_nhat": "2026-10-29",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -17,10 +17,23 @@
       "ten": "Giao dien theo demo cho cac man xem duoc (dang nhap, trang chu, menu, trang mon, uu dai, QR thanh vien, tai khoan, lich su don), PWA, link QR hoa don ?ma=, dien thoai / may tinh bang / may tinh khong vo",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "han": "2026-11-04",
       "ngay": "2026-10-28",
-      "ghi_chu": "28-29.10 may lam xong vong 1 (c948e8e, cong chay dat); 29.10 chu quan duyet vong sua 2: khop demo 100% (so anh tu dong), K9 mau/phong, bo chu no, am thanh man mo, giu trang thai Menu"
+      "ghi_chu": "gop PR #1 29.10 (vong 2: khop demo, K9, so anh 72 anh); chat soat dat; chay that tren app-kh.pages.dev",
+      "commit": "daefe2d"
+    },
+    {
+      "ma": "KH-XEM-1",
+      "ten": "Khach chua dang nhap vao thang Trang chu sau man mo; xem Trang chu, Menu, Trang mon khong can dang nhap; dang nhap / dang ky chi khi can (Uu dai, Tai khoan, ma thanh vien, nhan diem) roi quay ve dung cho; dang nhap / dang ky 3 buoc: SDT → ma Zalo → (khach moi) Ten + Xung ho bat buoc, Dia chi tuy chon",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "han": "2026-10-30",
+      "phu_thuoc": [
+        "POS KH-API-2: /menu khong can token (yeu cau 29.10)"
+      ],
+      "ngay": "2026-10-29"
     },
     {
       "ma": "KH-UI-5",
@@ -48,7 +61,7 @@
     },
     {
       "ma": "KH-UI-3",
-      "ten": "Noi hop dong v2 (KH-API-2: hang, so du vi, gia tung hang, Gio vang, gio hoat dong + bay_gio) + v3 (TOPPING-1: topping theo mon) + lien he ho tro that",
+      "ten": "Noi hop dong v2 (KH-API-2: hang, so du vi, gia tung hang, Gio vang, gio hoat dong + bay_gio) + v3 (TOPPING-1: topping theo mon) + lien he ho tro that + bat o Xung ho / Dia chi o buoc dang ky 3 va Tai khoan (hop dong v2) + tu gia han dang nhap moi lan mo app (khi POS co cua gia han)",
       "loai": "Th",
       "model": "Sonnet",
       "trang_thai": "cho",
@@ -64,7 +77,8 @@
       "ten": "Cloudflare Pages noi kho + bien VITE_POS_API + ten mien tuquyduong.com; chu quan dan dia chi vao Cai dat POS (HD-1) ngay 06.11",
       "loai": "chu_quan",
       "trang_thai": "cho",
-      "han": "2026-11-06"
+      "han": "2026-11-06",
+      "ghi_chu": "29.10: Cloudflare Pages app-kh (app-kh.pages.dev) da noi kho + VITE_POS_API; con gan ten mien 06.11"
     },
     {
       "ma": "KH-TACH-1",
@@ -82,11 +96,12 @@
       "phu_thuoc": [
         "KH-TACH-1",
         "POS KH-MUA-1"
-      ]
+      ],
+      "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10)"
     },
     {
       "ma": "KH-HOSO-1",
-      "ten": "Man ho so day du (xung ho, email, gioi tinh, ngay sinh, thong tin hoa don) theo KH-HOSO-1 phia POS",
+      "ten": "Man ho so day du con lai (email, gioi tinh, ngay sinh, thong tin hoa don) — xung ho + dia chi da dua len truoc (dang ky 3 buoc, KH-UI-3)",
       "loai": "Th",
       "trang_thai": "cho"
     },
