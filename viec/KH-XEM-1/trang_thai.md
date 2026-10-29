@@ -9,7 +9,10 @@
   - `daefe2d Merge pull request #1 from tuquyduong/viec/KH-UI-2`
 
 ## Câu hỏi
-- Hợp đồng `thiet_ke/HOP_DONG_API_KH.md` mới là v1: chưa có (a) `/menu` không cần token, (b) trường Xưng hô / Địa chỉ ở `xac-minh`, (c) cửa gia hạn phiên.
-  Làm theo phiếu: (a) app gọi `/menu` không token, chưa mở thì hiện thẻ "Đăng nhập để xem menu và giá"; (b) hai ô dựng sẵn, TẮT bằng
-  `BAT_XUNG_HO_DIA_CHI = false` ở `src/noiDung/dangNhap.js`, KHÔNG gửi gì; (c) chưa làm (KH-UI-3).
-  Cần chat POS cho KH-UI-3: TÊN trường xưng hô / địa chỉ trong `xac-minh` (app tạm đặt `xung_ho`, `dia_chi` trong `truongThem()` — chỉ chạy khi bật hằng số, chưa bật).
+- (Đã giải quyết 29.10 theo dặn thêm của chủ quán, hợp đồng v3 POS chốt tên trường.) Bước 3 hiện đủ 3 ô, gửi `{ sdt, ma, ten, xung_ho, dia_chi? }`;
+  `xung_ho` là mã không dấu. Hợp đồng chép trong `thiet_ke/` vẫn là v1 (cấm sửa ở phiếu này) — chủ quán / chat chép v3 vào khi POS gộp.
+- Làm theo dặn: KHÔNG gọi PUT /toi (hồ sơ → KH-UI-3), KHÔNG làm POST /gia-han (→ KH-UI-3), /menu không gọi lại trong 5 phút (trừ làm mới chủ động).
+
+## Phát hiện
+- Khi hợp đồng v2/v3 cho `/menu` giá theo hạng: `dungMenu` hiện giữ `dl` cũ trong bộ nhớ khi đổi phiên (đăng xuất / 401) và dùng làm bản dự phòng nếu lấy hỏng — cần bỏ `dl` khi phiên đổi (KH-UI-3).
+- Bài cũ `thu_KHUI2.js` khớp nguyên chữ `<Menu hien=…` trong App.jsx — dòng đó là một ràng buộc thứ tự thuộc tính; nên đổi bài đó sang kiểm khác khi có dịp.

@@ -1,0 +1,8 @@
+Bài thử cong_cu/thu_KHXEM1.js chạy trên code GỐC (commit de0246d, trước khi có src/luongDangNhap.js, src/menuLuu.js, src/noiDung/dangNhap.js):
+
+  ✗ bài thử không chạy được — Cannot find module '/home/user/APP-KH/src/luongDangNhap.js' imported from /home/user/APP-KH/cong_cu/thu_KHXEM1.js
+
+0 đạt · 1 hỏng
+
+Sau khi vá (commit ac10045): 57 đạt · 0 hỏng.
+SỐ CA thu_KHXEM1: 57
