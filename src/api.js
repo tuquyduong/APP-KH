@@ -1,5 +1,5 @@
 // CHỖ DUY NHẤT App KH gọi máy chủ: chỉ /api/kh/*, gắn token khách, bắt { error, code }. Không fetch ở nơi khác.
-import { loiTheoCode } from './dinhDang.js';
+import { loiTheoCode, ghepDiaChi } from './dinhDang.js';
 
 const KHOA_TOKEN = 'kh_token';
 let tokenBoNho = '';
@@ -31,7 +31,7 @@ async function goi(phuongThuc, duong, than) {
   if (token) tieuDe.Authorization = `Bearer ${token}`;
   let res;
   try {
-    res = await fetch(`/api/kh${duong}`, { method: phuongThuc, headers: tieuDe, body: than === undefined ? undefined : JSON.stringify(than) });
+    res = await fetch(ghepDiaChi(import.meta.env.VITE_POS_API, duong), { method: phuongThuc, headers: tieuDe, body: than === undefined ? undefined : JSON.stringify(than) });
   } catch {
     throw loiApi(0, 'MANG_LOI');
   }
@@ -39,7 +39,7 @@ async function goi(phuongThuc, duong, than) {
   try { dl = await res.json(); } catch { /* không phải JSON */ }
   if (!res.ok || !dl) {
     if (res.status === 401 && token) { xoaToken(); khiHetPhien(); }
-    throw loiApi(res.status, (dl && dl.code) || 'LOI_MAY_CHU', dl && dl.error);
+    throw loiApi(res.status, dl && dl.code, dl && dl.error);
   }
   return dl;
 }
@@ -50,8 +50,9 @@ export const layToi = () => goi('GET', '/toi');
 export const doiTen = (ten) => goi('PUT', '/toi', { ten });
 export const layMenu = () => goi('GET', '/menu');
 export const layDiem = () => goi('GET', '/diem');
-export const layVoucher = () => goi('GET', '/voucher');
+export const layVoucher = (tatCa) => (tatCa ? goi('GET', '/voucher?all=1') : goi('GET', '/voucher'));
 export const layDon = (trang) => goi('GET', `/don?trang=${trang}`);
 export const layChiTietDon = (ma) => goi('GET', `/don/${encodeURIComponent(ma)}`);
 export const nhanMaBill = (ma) => goi('POST', '/nhan-ma-bill', { ma });
 export const nhanDiem = (ma) => goi('POST', '/nhan-diem', { ma });
+export const datPin = (pin, pinLai) => goi('PUT', '/pin', { pin, pin_lai: pinLai });

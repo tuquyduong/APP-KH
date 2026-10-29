@@ -2,50 +2,49 @@ import { useCallback, useEffect, useState } from 'react';
 import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
-import TrangTai from '../components/TrangTai.jsx';
+import Man, { DauManCon } from '../components/Man.jsx';
+import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 
-// Nhãn trạng thái suy từ trường máy chủ trả (trang_thai, thanh_toan, tong, da_tra) — không tự tính tiền.
-function nhanDon(d) {
-  if (d.trang_thai === 'cancelled') return <span className="nhan-xau">Đã huỷ</span>;
-  if (d.thanh_toan === 'paid') return <span className="nhan-tot">Đã thanh toán</span>;
-  return <span className="nhan-xau">Còn nợ {dinhDangGia(d.tong - d.da_tra)}</span>;
+// Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; chưa đặt hàng → không nút "Đặt lại";
+// ô lọc (Đang giao / Hoàn thành / Đã hủy) ẩn vì POS chưa ghi giá trị `trang_thai`. Chỉ hiện trạng thái POS trả — KHÔNG tính tiền chưa trả.
+function NhanDon({ don }) {
+  if (don.trang_thai === 'cancelled') return <div className="order-status cancelled">Đã hủy</div>;
+  if (don.thanh_toan === 'paid') return <div className="order-status done">Đã thanh toán</div>;
+  return null;
 }
 
-function ChiTiet({ ma, quayLai }) {
+export function ChiTietDon({ ma, lui }) {
   const tai = dungTai(useCallback(() => layChiTietDon(ma), [ma]));
   return (
-    <div>
-      <button className="nut chu" style={{ width: 'auto', marginTop: 0 }} onClick={quayLai}>‹ Quay lại</button>
+    <Man id="orderdetail">
+      <DauManCon tieuDe={`Đơn #${ma}`} lui={lui} />
       <TrangTai tai={tai}>
         {({ don }) => (
-          <div className="the">
-            <b>Đơn {don.ma}</b>
-            <div className="phu">{dinhDangNgay(don.ngay)}</div>
+          <div className="order-card">
+            <div className="top">
+              <div><div className="code">#{don.ma || ma}</div><div className="date">{dinhDangNgay(don.ngay)}</div></div>
+              <NhanDon don={don} />
+            </div>
             {don.mon.map((m, i) => (
-              <div className="dong" key={i}>
-                <div>
-                  <div>{m.so_luong} × {m.ten}</div>
-                  {m.ghi_chu && <div className="phu">{m.ghi_chu}</div>}
-                </div>
+              <div className="summary-row" key={i}>
+                <span>{m.so_luong} × {m.ten}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
                 <span>{dinhDangGia(m.thanh_tien)}</span>
               </div>
             ))}
-            <div className="dong"><b>Tổng</b><b>{dinhDangGia(don.tong)}</b></div>
-            <div>{nhanDon(don)}</div>
+            <div className="summary-row total"><span>Tổng</span><span>{dinhDangGia(don.tong)}</span></div>
           </div>
         )}
       </TrangTai>
-    </div>
+    </Man>
   );
 }
 
-export default function Don() {
+export default function LichSuDon({ chonDon, lui }) {
   const [ds, datDs] = useState([]);
   const [trang, datTrang] = useState(0);
   const [conNua, datConNua] = useState(false);
   const [dang, datDang] = useState(true);
   const [loi, datLoi] = useState('');
-  const [chon, datChon] = useState('');
 
   const tai = useCallback(async (t) => {
     datDang(true); datLoi('');
@@ -62,31 +61,22 @@ export default function Don() {
   }, []);
   useEffect(() => { tai(1); }, [tai]);
 
-  if (chon) return <ChiTiet ma={chon} quayLai={() => datChon('')} />;
   return (
-    <div>
-      <h2>Đơn của bạn</h2>
-      {ds.length === 0 && !dang && !loi && <div className="giua">Bạn chưa có đơn nào.</div>}
-      {ds.length > 0 && (
-        <div className="the">
-          {ds.map((d) => (
-            <div className="dong" key={d.ma} onClick={() => datChon(d.ma)} style={{ cursor: 'pointer' }}>
-              <div>
-                <div>Đơn {d.ma}</div>
-                <div className="phu">{dinhDangNgay(d.ngay)}</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div>{dinhDangGia(d.tong)}</div>
-                {nhanDon(d)}
-              </div>
-            </div>
-          ))}
+    <Man id="orderhistory">
+      <DauManCon tieuDe="Lịch sử đơn hàng" phu={ds.length > 0 && !conNua ? `${ds.length} đơn` : ''} lui={lui} />
+      {ds.length === 0 && !dang && !loi && <div className="empty-note">Bạn chưa có đơn nào.</div>}
+      {ds.map((d) => (
+        <div className="order-card" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d.ma)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d.ma); }}>
+          <div className="top">
+            <div><div className="code">#{d.ma}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
+            <NhanDon don={d} />
+          </div>
+          <div className="bottom"><div className="total">{dinhDangGia(d.tong)}</div></div>
         </div>
-      )}
-      {dang && <div className="giua">Đang tải…</div>}
-      {loi && <div className="loi">{loi}</div>}
-      {loi && <button className="nut" onClick={() => tai(trang + 1)}>Thử lại</button>}
-      {conNua && !dang && !loi && <button className="nut phu-nut" onClick={() => tai(trang + 1)}>Xem thêm</button>}
-    </div>
+      ))}
+      {dang && <div className="khung-tai" aria-busy="true" />}
+      {loi && <KhungLoi loi={loi} thuLai={() => tai(trang + 1)} />}
+      {conNua && !dang && !loi && <div className="more-l"><span role="button" tabIndex={0} onClick={() => tai(trang + 1)} onKeyDown={(e) => { if (e.key === 'Enter') tai(trang + 1); }}>Xem thêm</span></div>}
+    </Man>
   );
 }
