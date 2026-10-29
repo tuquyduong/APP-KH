@@ -1,0 +1,12 @@
+Bài thử KH-LINK-1 — bằng chứng ĐỎ trên code chưa sửa (HEAD 600bb32, chưa có src/duongDan.js)
+
+$ node cong_cu/thu_KHLINK1.js
+  ✗ bài thử không chạy được — Cannot find module '/home/user/APP-KH/src/duongDan.js' imported from /home/user/APP-KH/cong_cu/thu_KHLINK1.js
+
+0 đạt · 1 hỏng
+
+Bài cũ cong_cu/thu_KHXEM1.js: chỉ chỉnh chỗ khớp chữ cho cấu trúc mới (3 ca dichSauDangNhap nhận đường dẫn; 1 ca donPhien đọc thay('/trangchu')).
+Trên code gốc các ca đã chỉnh đỏ (gốc trả 'uudai' / 'trangchu' không có "/", App.jsx gốc có datTab('trangchu') không có thay('/trangchu')); không bớt ca nào (61 ca trước và sau).
+
+SỐ CA thu_KHLINK1.js: 96
+SỐ CA thu_KHXEM1.js: 61

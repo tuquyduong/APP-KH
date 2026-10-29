@@ -33,9 +33,9 @@ const khoGia = (dau = {}, nem = false) => {
   for (const d of ['uudai', 'taikhoan', 'qr']) k(`chưa đăng nhập bấm ${d} → mở Đăng nhập`, l.canDangNhap(d, false) === true);
   for (const d of ['trangchu', 'menu', 'mon']) k(`chưa đăng nhập bấm ${d} → vào thẳng`, l.canDangNhap(d, false) === false);
   for (const d of ['uudai', 'taikhoan', 'qr', 'menu']) k(`đã đăng nhập bấm ${d} → không chặn (K5)`, l.canDangNhap(d, true) === false);
-  k('đăng nhập xong → đúng chỗ đã bấm', l.dichSauDangNhap('taikhoan', '') === 'taikhoan' && l.dichSauDangNhap('qr', '') === 'qr' && l.dichSauDangNhap('uudai', '') === 'uudai');
-  k('có mã hoá đơn trong bộ nhớ → Ưu đãi', l.dichSauDangNhap('taikhoan', 'AB12') === 'uudai');
-  k('không rõ chỗ định vào → Trang chủ', l.dichSauDangNhap('', '') === 'trangchu' && l.dichSauDangNhap(undefined, '') === 'trangchu');
+  k('đăng nhập xong → đúng chỗ đã bấm', l.dichSauDangNhap('/taikhoan', '') === '/taikhoan' && l.dichSauDangNhap('/mathanhvien', '') === '/mathanhvien' && l.dichSauDangNhap('/uudai', '') === '/uudai');
+  k('có mã hoá đơn trong bộ nhớ → Ưu đãi', l.dichSauDangNhap('/taikhoan', 'AB12') === '/uudai');
+  k('không rõ chỗ định vào → Trang chủ', l.dichSauDangNhap('', '') === '/trangchu' && l.dichSauDangNhap(undefined, '') === '/trangchu');
 
   console.log('— A4 /menu không đăng nhập + bản lưu');
   const bd = { data: [{ ma: 'A', ten: 'Trà', nhom: 'Trà', gia: 25000, con_hang: null }] };
@@ -109,7 +109,7 @@ const khoGia = (dau = {}, nem = false) => {
   const app = doc('src/App.jsx'), api = doc('src/api.js');
   k('App không còn chặn cả app khi chưa đăng nhập', !/\{!dangNhap && <DangNhap/.test(app) && /<ThanhTab/.test(app) && !/\{dangNhap && <ThanhTab/.test(app));
   k('App hỏi canDangNhap trước khi mở tab / QR', /canDangNhap\(/.test(app));
-  k('đăng xuất và 401 cùng dọn ở donPhien, về Trang chủ', /const donPhien =/.test(app) && /datTab\('trangchu'\)/.test(app) && /const dangXuat = \(\) => \{[^}]*donPhien\(\)/.test(app));
+  k('đăng xuất và 401 cùng dọn ở donPhien, về Trang chủ', /const donPhien =/.test(app) && /thay\('\/trangchu'\)/.test(app) && /const dangXuat = \(\) => \{[^}]*donPhien\(\)/.test(app));
   k('401 / đăng xuất KHÔNG bật màn Đăng nhập tự động', !/donPhien = [^;]*moDangNhap/.test(app));
   k('/menu gọi không ép phiên (api.js chỉ gắn khi có)', /if \(token\) tieuDe\.Authorization/.test(api) && /goi\('GET', '\/menu'\)/.test(api));
   k('hết phiên chỉ khi ĐÃ có phiên (menu khách 401 không đá ai)', /res\.status === 401 && token/.test(api));

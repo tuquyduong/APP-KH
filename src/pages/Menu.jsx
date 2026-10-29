@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { dinhDangNgay } from '../dinhDang.js';
+import { slug } from '../duongDan.js';
 import { timMon, locTheoNhuCau, nhomTheoTen, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import Man, { NutQR } from '../components/Man.jsx';
@@ -14,13 +15,13 @@ import { Ico, En } from '../components/BieuTuong.jsx';
 const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
-export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQR, moDangNhap }) {
+// `nhomSlug` = nhóm đang chọn lấy từ đường dẫn (/menu/<nhom>); chọn nhóm khác → doiNhom(slug) thay đường dẫn, không thêm lịch sử.
+export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQR, moDangNhap, nhomSlug, doiNhom }) {
   // Menu được giữ trong cây nên hỏi lại menu mỗi lần khách BẤM tab Menu (lanVao tăng; menu lấy chưa quá 5 phút thì dungMenu bỏ qua); quay lại từ màn con thì giữ nguyên.
   const lanTruoc = useRef(lanVao);
   useEffect(() => {
     if (lanTruoc.current !== lanVao) { lanTruoc.current = lanVao; tai.taiLai(); }
   }, [lanVao, tai.taiLai]);
-  const [nhom, datNhom] = useState('');
   const [tu, datTu] = useState('');
   const [mini, datMini] = useState(false);
   const oNhom = useRef(null);
@@ -36,7 +37,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
   }, [tai.dl]);
 
   const chonNhom = (id) => {
-    datNhom(id);
+    doiNhom(id ? slug(id) : '');
     requestAnimationFrame(() => {
       const g = luoi.current; const sc = g && g.closest('.screens');
       if (!g || !sc) return;
@@ -47,6 +48,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
 
   const nhomCo = nhomTheoTen(ds).map(([ten]) => ({ id: ten, ten, ic: bieuTuongNhom(ten).ic }));
   const oChon = [...nhomCo, TAT_CA];
+  const nhom = (nhomCo.find((n) => slug(n.ten) === nhomSlug) || TAT_CA).id;
   const q = tu.trim();
   let loc = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
   loc = timMon(loc, tu);

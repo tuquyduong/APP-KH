@@ -74,3 +74,7 @@ button:disabled{ opacity:.45; cursor:default; }
 /* ===== Danh sách đơn / chi tiết đơn ===== */
 .order-card[role="button"]{ cursor:pointer; }
 .order-card .summary-row > span:first-child{ min-width:0; padding-right:8px; }
+/* Khoá tiện ích (KH-LINK-1): ô MỜ như .btn-disabled của demo (opacity .45); dòng khoá không mờ, không thêm màu */
+.khoa-tien-ich{ position:relative; cursor:pointer; }
+.khoa-tien-ich .khoa-ben-trong{ opacity:.45; pointer-events:none; }
+.khoa-nhan{ position:absolute; left:0; right:0; bottom:8px; text-align:center; font-size:11.5px; font-weight:600; color:var(--ink); }
