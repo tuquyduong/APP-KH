@@ -1,51 +1,62 @@
+import { useMemo, useState } from 'react';
 import { layMenu } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
+import { timMon, locTheoNhuCau, nhomTheoTen } from '../menuLoc.js';
+import { MON } from '../noiDung/mon.js';
 import TrangTai from '../components/TrangTai.jsx';
+import MonO from '../components/MonO.jsx';
+import BieuTuong from '../components/BieuTuong.jsx';
 
-// Món lấy tồn từ bản lưu (ton_cu) thì nói rõ "theo số lúc …" — không hiện tồn thật, không bịa (CLAUDE.md §5.8).
-function nhomTheoTen(ds) {
-  const ban = new Map();
-  for (const m of ds) {
-    const ten = m.nhom || 'Khác';
-    if (!ban.has(ten)) ban.set(ten, []);
-    ban.get(ten).push(m);
-  }
-  return [...ban];
-}
+// Menu theo nhóm của POS: ô tìm (không dấu cũng ra) + chip nhóm + (từ Trang chủ) lọc theo nhu cầu.
+export default function Menu({ nhuCau, boNhuCau, chonMon }) {
+  const tai = dungTai(layMenu);
+  const [nhom, datNhom] = useState('');
+  const [tu, datTu] = useState('');
 
-function Mon({ m }) {
   return (
-    <div className="dong">
-      <div>
-        <div>{m.ten}</div>
-        {m.ton_cu && m.ton_luc && <div className="phu">theo số lúc {dinhDangNgay(m.ton_luc)}</div>}
-      </div>
-      <div style={{ textAlign: 'right' }}>
-        <div>{dinhDangGia(m.gia)}</div>
-        {m.con_hang === true && <div className="nhan-tot">Còn hàng</div>}
-        {m.con_hang === false && <div className="nhan-xau">Hết hàng</div>}
-      </div>
+    <div>
+      <h2>Menu</h2>
+      <TrangTai tai={tai}>
+        {(dl) => <NoiDung ds={dl.data} nhom={nhom} datNhom={datNhom} tu={tu} datTu={datTu} nhuCau={nhuCau} boNhuCau={boNhuCau} chonMon={chonMon} />}
+      </TrangTai>
     </div>
   );
 }
 
-export default function Menu() {
-  const tai = dungTai(layMenu);
+function NoiDung({ ds, nhom, datNhom, tu, datTu, nhuCau, boNhuCau, chonMon }) {
+  const tenNhom = useMemo(() => nhomTheoTen(ds).map(([ten]) => ten), [ds]);
+  let hien = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
+  hien = timMon(hien, tu);
+  const phan = nhomTheoTen(locNhom(hien, nhom));
+
   return (
-    <TrangTai tai={tai}>
-      {(dl) => (
-        <div>
-          <h2>Menu</h2>
-          {dl.data.length === 0 && <div className="giua">Chưa có món nào.</div>}
-          {nhomTheoTen(dl.data).map(([nhom, mon]) => (
-            <div key={nhom}>
-              <div className="nhom">{nhom}</div>
-              <div className="the">{mon.map((m) => <Mon key={m.ma} m={m} />)}</div>
-            </div>
+    <>
+      <div className="tim">
+        <BieuTuong ten="tim" />
+        <input type="search" aria-label="Tìm món" placeholder="Tìm món…" value={tu} onChange={(e) => datTu(e.target.value)} />
+      </div>
+      {nhuCau && (
+        <div className="loc-nhom">
+          <button className="chip dang-chon" onClick={boNhuCau}>{nhuCau} ✕</button>
+        </div>
+      )}
+      {tenNhom.length > 1 && (
+        <div className="loc-nhom">
+          {['', ...tenNhom].map((t) => (
+            <button key={t} className={`chip${t === nhom ? ' dang-chon' : ''}`} onClick={() => datNhom(t)}>{t || 'Tất cả'}</button>
           ))}
         </div>
       )}
-    </TrangTai>
+      {ds.length === 0 && <div className="giua">Chưa có món nào.</div>}
+      {ds.length > 0 && hien.length === 0 && <div className="giua">Không tìm thấy món phù hợp.</div>}
+      {phan.map(([ten, mon]) => (
+        <div key={ten}>
+          <div className="tieu-de">{ten}</div>
+          <div className="luoi-mon">{mon.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
+        </div>
+      ))}
+    </>
   );
 }
+
+const locNhom = (ds, nhom) => (nhom ? ds.filter((m) => (m.nhom || 'Khác') === nhom) : ds);

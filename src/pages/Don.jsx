@@ -11,15 +11,14 @@ function nhanDon(d) {
   return <span className="nhan-xau">Còn nợ {dinhDangGia(d.tong - d.da_tra)}</span>;
 }
 
-function ChiTiet({ ma, quayLai }) {
+export function ChiTietDon({ ma }) {
   const tai = dungTai(useCallback(() => layChiTietDon(ma), [ma]));
   return (
     <div>
-      <button className="nut chu" style={{ width: 'auto', marginTop: 0 }} onClick={quayLai}>‹ Quay lại</button>
+      <h2>Đơn {ma}</h2>
       <TrangTai tai={tai}>
         {({ don }) => (
           <div className="the">
-            <b>Đơn {don.ma}</b>
             <div className="phu">{dinhDangNgay(don.ngay)}</div>
             {don.mon.map((m, i) => (
               <div className="dong" key={i}>
@@ -27,7 +26,7 @@ function ChiTiet({ ma, quayLai }) {
                   <div>{m.so_luong} × {m.ten}</div>
                   {m.ghi_chu && <div className="phu">{m.ghi_chu}</div>}
                 </div>
-                <span>{dinhDangGia(m.thanh_tien)}</span>
+                <span className="phai">{dinhDangGia(m.thanh_tien)}</span>
               </div>
             ))}
             <div className="dong"><b>Tổng</b><b>{dinhDangGia(don.tong)}</b></div>
@@ -39,13 +38,12 @@ function ChiTiet({ ma, quayLai }) {
   );
 }
 
-export default function Don() {
+export default function LichSuDon({ chonDon }) {
   const [ds, datDs] = useState([]);
   const [trang, datTrang] = useState(0);
   const [conNua, datConNua] = useState(false);
   const [dang, datDang] = useState(true);
   const [loi, datLoi] = useState('');
-  const [chon, datChon] = useState('');
 
   const tai = useCallback(async (t) => {
     datDang(true); datLoi('');
@@ -62,20 +60,19 @@ export default function Don() {
   }, []);
   useEffect(() => { tai(1); }, [tai]);
 
-  if (chon) return <ChiTiet ma={chon} quayLai={() => datChon('')} />;
   return (
     <div>
-      <h2>Đơn của bạn</h2>
+      <h2>Lịch sử đơn</h2>
       {ds.length === 0 && !dang && !loi && <div className="giua">Bạn chưa có đơn nào.</div>}
       {ds.length > 0 && (
         <div className="the">
           {ds.map((d) => (
-            <div className="dong" key={d.ma} onClick={() => datChon(d.ma)} style={{ cursor: 'pointer' }}>
+            <div className="dong bam" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d.ma)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d.ma); }}>
               <div>
                 <div>Đơn {d.ma}</div>
                 <div className="phu">{dinhDangNgay(d.ngay)}</div>
               </div>
-              <div style={{ textAlign: 'right' }}>
+              <div className="phai">
                 <div>{dinhDangGia(d.tong)}</div>
                 {nhanDon(d)}
               </div>
@@ -83,7 +80,7 @@ export default function Don() {
           ))}
         </div>
       )}
-      {dang && <div className="giua">Đang tải…</div>}
+      {dang && <div className="khung-tai" aria-busy="true" />}
       {loi && <div className="loi">{loi}</div>}
       {loi && <button className="nut" onClick={() => tai(trang + 1)}>Thử lại</button>}
       {conNua && !dang && !loi && <button className="nut phu-nut" onClick={() => tai(trang + 1)}>Xem thêm</button>}

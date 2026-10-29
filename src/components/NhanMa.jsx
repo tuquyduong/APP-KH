@@ -1,19 +1,25 @@
 import { useState } from 'react';
 import { nhanMaBill, nhanDiem } from '../api.js';
 import { moTaGiam } from '../dinhDang.js';
+import { chuanHoaMa } from '../maBill.js';
 
-// Một ô mã in trên bill, hai nút — khách tự chọn, máy KHÔNG tự gọi cả hai. Lỗi hiện đúng `error` máy chủ trả về.
+// Một ô mã in trên bill, khách tự bấm — máy KHÔNG tự gửi. Mã chuẩn hoá cùng một hàm với link QR (maBill.js).
+// `maSan`: mã điền sẵn từ link QR → chỉ có nút nhận điểm (mã trên link là mã nhận điểm).
+const LOI_DANG_MA = 'Mã chỉ gồm chữ và số (tối đa 32 ký tự). Kiểm tra lại mã trên hoá đơn.';
 
-export default function NhanMa({ khiXong }) {
-  const [ma, datMa] = useState('');
+export default function NhanMa({ maSan = '', khiXong }) {
+  const [ma, datMa] = useState(maSan);
   const [dang, datDang] = useState(false);
   const [loi, datLoi] = useState('');
   const [kq, datKq] = useState('');
 
   async function gui(ham, loiBaoOk) {
-    datDang(true); datLoi(''); datKq('');
+    const maGui = chuanHoaMa(ma);
+    datLoi(''); datKq('');
+    if (!maGui) { datLoi(LOI_DANG_MA); return; }
+    datDang(true);
     try {
-      const r = await ham(ma.trim());
+      const r = await ham(maGui);
       datKq(loiBaoOk(r));
       datMa('');
       khiXong();
@@ -27,17 +33,19 @@ export default function NhanMa({ khiXong }) {
   const trong = !ma.trim();
   return (
     <div className="the">
-      <b>Nhập mã trên bill</b>
+      <b>Nhập mã trên hoá đơn</b>
       <label htmlFor="ma-bill">Mã in trên hoá đơn (dán hoặc gõ)</label>
       <input id="ma-bill" value={ma} onChange={(e) => datMa(e.target.value)} autoCapitalize="characters" autoComplete="off" />
       <button className="nut" disabled={dang || trong} onClick={() => gui(nhanDiem, (r) => r.message || `Đã cộng ${r.diem_cong} điểm`)}>
-        Cộng điểm cho đơn này
+        {maSan ? 'Nhận điểm' : 'Cộng điểm cho đơn này'}
       </button>
-      <button className="nut phu-nut" disabled={dang || trong}
-        onClick={() => gui(nhanMaBill, (r) => `Đã nhận ưu đãi khách mới: mã ${r.data.voucher_code} ${moTaGiam(r.data.discount_type, r.data.discount_value)}`)}>
-        Nhận ưu đãi khách mới
-      </button>
-      {loi && <div className="loi">{loi}</div>}
+      {!maSan && (
+        <button className="nut phu-nut" disabled={dang || trong}
+          onClick={() => gui(nhanMaBill, (r) => `Đã nhận ưu đãi khách mới: mã ${r.data.voucher_code} ${moTaGiam(r.data.discount_type, r.data.discount_value)}`)}>
+          Nhận ưu đãi khách mới
+        </button>
+      )}
+      {loi && <div className="loi" role="alert">{loi}</div>}
       {kq && <div className="ok">{kq}</div>}
     </div>
   );

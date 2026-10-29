@@ -36,7 +36,9 @@ export default function DangNhap({ khiXong }) {
 
   return (
     <div className="dang-nhap">
+      <img className="logo" src="/anh/logo.webp" alt="Tứ Quý Đường" />
       <h2>Đăng nhập</h2>
+      <div className="the">
       {buoc === 'sdt' ? (
         <>
           <label htmlFor="sdt">Số điện thoại</label>
@@ -59,7 +61,8 @@ export default function DangNhap({ khiXong }) {
           <button className="nut chu" onClick={() => { datBuoc('sdt'); datMa(''); datLoi(''); datCanTen(false); }}>Đổi số điện thoại</button>
         </>
       )}
-      {loi && <div className="loi">{loi}</div>}
+      {loi && <div className="loi" role="alert">{loi}</div>}
+      </div>
     </div>
   );
 }
