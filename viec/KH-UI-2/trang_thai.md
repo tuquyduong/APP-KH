@@ -1,5 +1,53 @@
 # KH-UI-2 — trạng thái
 
+## VÒNG SỬA 2 (khớp demo 100 %, chủ quán duyệt 29.10) — đối chiếu bản chụp (bước 1)
+Nhánh `viec/KH-UI-2`; hook mở phiên kéo `29b830c → 056286f`; HEAD = FETCH_HEAD = `056286f`.
+```
+056286f PHIEU: KH-UI-2 vong sua 2 - khop demo 100% (chu quan duyet 29.10)
+bac62c1 TU-CHAY: gop main vao viec/KH-UI-2 (luat chuan theo demo, K9)
+43dabd4 TU-CHAY: chuan theo demo - K9 mau va phong chi tu demo, luat CLAUDE.md 5; so v2
+```
+(Các mục "Nghiệm thu" / "Báo cáo" cũ ở dưới là của vòng 1; vòng 2 ghi đè ở mục "Nghiệm thu vòng 2" và "Báo cáo vòng 2" ngay dưới đây.)
+
+### Nghiệm thu vòng 2 — từng mục một dòng bằng chứng
+- V1 K9 xanh: `npm test` → "K9 màu chỉ lấy từ demo", "K9b phông" ✓. Cách làm: CSS chép từ demo (`src/giaoDien/demo_1.css`, `demo_2.css`, sinh từ demo, giữ thứ tự cascade) → mọi màu là màu của demo; 7 màu cũ (`#8f6f7c`…) không còn; `grep -rn "8f6f7c\|b3261e\|e6f6ef" src` rỗng.
+- V2 so ảnh: `so_anh/` — 8 màn (màn mở, Trang chủ, Menu, Trang món, Ưu đãi, Tài khoản, Lịch sử đơn, Thông tin cá nhân) × 3 cỡ × {demo, app, lech}.png = 72 ảnh, 3,2 MB (≤ 6). Hai màn không có trong demo (Đăng nhập, QR) không có cặp. `so_anh/bao_cao.txt` = số lệch từng ảnh.
+- V3 `doi_chieu_demo.md` — mỗi màn một bảng, lý do (a)–(d).
+- V4 không chữ "nợ": `thu_KHUI2` ca "không chữ nợ" (đỏ trên gốc, xanh nay); kiểm khói: chi tiết đơn không có "nợ"; `src/pages/Don.jsx` chỉ nhãn "Đã hủy" / "Đã thanh toán".
+- V5 âm thanh: `public/am_thanh/man_dau.mp3` 80 KB (≤ 150) tách từ demo; `src/components/ManDau.jsx` nút "Bật âm thanh" mặc định TẮT, nhớ trong phiên (sessionStorage); kiểm khói: nút mặc định `muted`; ca thu_KHUI2 "âm thanh mặc định TẮT".
+- V6 Menu giữ trạng thái: `src/App.jsx` giữ `Menu` trong cây (chỉ ẩn), `viTriCuonKhiDoiMan` (`src/dieuHuong.js`) có 2 ca thử; kiểm khói bằng Chromium: tìm "ca phe" → vào món → Back còn nguyên ô tìm; cuộn 700 → món (về 0) → Back về 700.
+- V7 Trang chủ đúng thứ tự: lời chào → [thẻ xem cách dùng: trống, KH-UI-5] → hàng [thẻ hội viên vàng | ô kế hoạch: trống, KH-UI-5] → khối "Hôm nay" (banner thường / `BannerHomNay` khi có chữ; ô Giờ vàng + Trắc nghiệm: trống, KH-UI-3 / KH-UI-5) → Chăm sóc theo nhu cầu → Món nổi bật (thay Bán chạy / Ưu đãi: chưa có dữ liệu POS) → [Mời bạn bè: trống, sau khai trương]. Xem `doi_chieu_demo.md`.
+- V9 biểu tượng, họa tiết: sprite SVG của demo trong `index.html` (44 biểu tượng, 49 KB), thanh tab nền lụa + huy hiệu ngũ hành, ô nhóm món `cat-tiles`, tranh tròn theo nhóm trên nền màu nhóm, nền aurora, viền / họa tiết vàng thẻ hội viên (`public/anh/the-vang-hoa-van.webp` tách từ CSS demo); ca thu_KHUI2 "sprite đủ biểu tượng app dùng" (không biểu tượng nào thiếu).
+- V8 `npm test` 16 đạt · 0 hỏng; `--day-du` 18 đạt · 0 hỏng; `thu_KHUI2.js` 74 đạt · 0 hỏng (có K9, ca "không nợ", "âm thanh", "Menu giữ trạng thái"); cổng `chay`: xem cuối file.
+
+### Cấu hình Cloudflare (A3) — không đổi: `npm run build`, thư mục `dist`, biến `VITE_POS_API`, Node ≥ 20. Âm thanh / ảnh mới nằm ở `public/` nên tự lên theo bản dựng.
+
+### Câu hỏi (không chặn việc)
+- Chữ khuyến mãi thật cho khối "Hôm nay" (banner lớn đầu Trang chủ): tiêu đề, dòng phụ, nút (ví dụ demo "Ra mắt Combo mua kèm" là chữ mẫu, không dùng). Điền vào `src/noiDung/trangChu.js › HOM_NAY`; để trống thì hiện banner thường "Hôm nay bạn muốn uống gì?".
+- Mã POS của các món "nổi bật" (`MON_NOI_BAT`) và nội dung từng món (`mon.js`: ảnh, mô tả, thành phần, công dụng, nhu cầu) — chủ quán / chat điền sau bằng patch.
+- Số gọi / Zalo / email hỗ trợ (`lienHe.js`) — trống thì mục Hỗ trợ ẩn.
+
+### Phát hiện (ngoài phạm vi — không sửa)
+- Tên nhóm món của POS chưa biết: biểu tượng nhóm khớp theo TÊN (Trà / Ép / Cà phê / Dưỡng sinh / Hoa quả như demo); tên khác → biểu tượng mặc định (tủ). Nhờ chủ quán xác nhận tên nhóm thật.
+- `PUT /pin` đã có PIN → `PIN_DA_CO` 409: bảng PIN chỉ hiện lời POS; cách ĐỔI PIN (cần PIN cũ?) hợp đồng chưa ghi (như vòng 1).
+- Danh sách `/don` chưa có tên món; giá trị `trang_thai` chưa ghi → app ẩn ô lọc và chỉ hiện "Đã hủy" / "Đã thanh toán" khi POS trả `cancelled` / `paid`.
+- Nút QR ở màn "Ưu đãi" trong demo chỉ `return false`; app dùng nút QR mở màn mã thành viên ở mọi màn.
+
+### Báo cáo 7 mục — vòng 2
+- **VIỆC**: KH-UI-2 vòng 2 — app khớp demo patch39 trên điện thoại.
+- **ĐÃ SỬA**: `src/giaoDien/` (demo_1/2.css chép từ demo + giaoDien.css phần riêng), `index.html` (sprite SVG), `public/` (âm thanh, họa tiết thẻ vàng, manifest đổi màu theo demo), `src/App.jsx`, `components/` (Man, ManDau có âm thanh, ThanhTab nền lụa, BieuTuong men, MonO, NhanMa, PinSheet, BannerHomNay, TrangTai), `pages/` (TrangChu, Menu, TrangMon, UuDai, TaiKhoan, HoSo, HoTro, Don, ManQR, DangNhap), `menuLoc.js`, `dieuHuong.js`, `noiDung/`, `cong_cu/thu_KHUI2.js`, `viec/KH-UI-2/so_anh/`, `doi_chieu_demo.md`.
+- **BÀI THỬ**: `thu_KHUI2.js` 74 đạt (đỏ trên gốc 056286f, xem `bang_chung_do.txt`); `thu_KHUNG.js` 9 đạt; `npm test` 16 đạt; `--day-du` 18 đạt; kiểm khói Chromium 15/15 (màn mở + nút âm thanh, `?ma=` xoá khỏi địa chỉ + mã điền sẵn không tự gửi, Menu giữ ô tìm + cuộn, chi tiết đơn không "nợ", PIN gửi `{pin, pin_lai}` và báo lệch không gửi, QR vẽ, đăng xuất, không lỗi console); bề rộng đã chụp 360, 390, 430 (và 320 / 768 / 1280 ở vòng 1).
+- **ĐÃ RÀ K4**: `grep -rn "new Date(" src` rỗng; `fetch(` chỉ `src/api.js`; mọi `<use href="#…">` có trong sprite (ca thử); không còn chữ "nợ".
+- **CHƯA KIỂM**: điện thoại / Zalo thật; âm thanh thật trên điện thoại (trình duyệt chặn tự phát — chỉ phát khi chạm nút); khối "Hôm nay" mới kiểm bằng chữ thử ở nháp (đã khớp ảnh demo), chưa có chữ thật; chữ phóng 200 %; ảnh so là bản có nội dung thử cho `mon.js` (bản thật đang rỗng nên ô nhu cầu / nhãn món chưa hiện); chưa gọi POS thật (API giả), CORS giữa hai tên miền.
+- **GIT**: nhánh `viec/KH-UI-2`, không merge, không PR.
+- **BÀI HỌC**: dưới.
+
+### Bài học (vòng 2)
+- KHOÁ (đã làm, trong Phạm vi): ca thu_KHUI2 kiểm mọi biểu tượng app dùng có trong sprite `index.html` (sprite cắt từ demo, thiếu một biểu tượng = ô trống im lặng); ca "không chữ nợ"; ca "âm thanh mặc định TẮT".
+- NGUYÊN TẮC (đề xuất, K10): "Chuẩn theo demo" làm bằng CHÉP máy móc (CSS lọc theo lớp dùng + sprite cắt) rẻ hơn và khớp hơn viết lại bằng mắt — khuôn mới cho việc giao diện sau: ghi công cụ trích ở phiếu để chat khác dùng lại.
+- Sự cố: người gác chặn vòng `for`, `sed -i`, lệnh `node` nối `&&` / `;` → tách lệnh, dùng Edit; chỉ một lần mỗi loại.
+- Dọn: không lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm làm thay mà chưa xoá — K9 mới có từ 29.10.
+
 ## Đối chiếu bản chụp (bước 1)
 Nhánh `viec/KH-UI-2`. Hook mở phiên kéo `29b830c → f5b09f1`. HEAD = FETCH_HEAD = `f5b09f1`.
 ```
