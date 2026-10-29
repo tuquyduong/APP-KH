@@ -1,4 +1,4 @@
-import { layToi, layDiem, layMenu } from '../api.js';
+import { layToi, layDiem } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { loiChao, dinhDangSo } from '../dinhDang.js';
 import { nhuCauCoMon } from '../menuLoc.js';
@@ -8,13 +8,48 @@ import { BANNER, HOM_NAY, MON_NOI_BAT } from '../noiDung/trangChu.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import MonO from '../components/MonO.jsx';
 import BannerHomNay from '../components/BannerHomNay.jsx';
+import TheMoi from '../components/TheMoi.jsx';
+import { THE_MOI } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
 //   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc", ô Trắc nghiệm → KH-UI-5 · ô Giờ vàng, hạng trên thẻ, giá 3 hạng → KH-UI-3 · Mời bạn bè, combo → sau khai trương.
-export default function TrangChu({ moQR, moMenu, moUuDai, locNhuCau, chonMon }) {
+// Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
+function DauChung({ chao, moQR, the }) {
+  return (
+    <>
+      <div className="topbar">
+        <div>
+          <h1>{chao}</h1>
+          <div className="sub">Tứ Quý Đường — Sức khỏe mỗi ngày</div>
+        </div>
+        <div className="topbar-right"><NutQR moQR={moQR} /></div>
+      </div>
+      <div className="top-row mot">{the}</div>
+    </>
+  );
+}
+
+function DauHoiVien({ moQR, moUuDai }) {
   const toi = dungTai(layToi);
   const diem = dungTai(layDiem);
-  const menu = dungTai(layMenu);
+  return (
+    <DauChung
+      chao={loiChao(toi.dl && toi.dl.khach.ten)}
+      moQR={moQR}
+      the={(
+        <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
+          <div className="card-top">
+            <div className="hang-logo"><img className="tqd-logo tqd-mini" src="/anh/logo-nho.webp" alt="" /><div className="brand">TỨ QUÝ ĐƯỜNG<small>Thẻ hội viên</small></div></div>
+          </div>
+          <div className="card-bottom"><div><div className="num">{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <span>điểm</span></div></div></div>
+        </div>
+      )}
+    />
+  );
+}
+
+// `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
+export default function TrangChu({ menu, dangNhap, moQR, moMenu, moUuDai, moDangNhap, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
   const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
@@ -22,22 +57,9 @@ export default function TrangChu({ moQR, moMenu, moUuDai, locNhuCau, chonMon }) 
 
   return (
     <Man id="home">
-      <div className="topbar">
-        <div>
-          <h1>{loiChao(toi.dl && toi.dl.khach.ten)}</h1>
-          <div className="sub">Tứ Quý Đường — Sức khỏe mỗi ngày</div>
-        </div>
-        <div className="topbar-right"><NutQR moQR={moQR} /></div>
-      </div>
-
-      <div className="top-row mot">
-        <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
-          <div className="card-top">
-            <div className="hang-logo"><img className="tqd-logo tqd-mini" src="/anh/logo-nho.webp" alt="" /><div className="brand">TỨ QUÝ ĐƯỜNG<small>Thẻ hội viên</small></div></div>
-          </div>
-          <div className="card-bottom"><div><div className="num">{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <span>điểm</span></div></div></div>
-        </div>
-      </div>
+      {dangNhap
+        ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} />
+        : <DauChung chao={loiChao('')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} />}
 
       <div className="hb-one">
         {coHomNay ? (
