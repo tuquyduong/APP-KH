@@ -26,6 +26,22 @@ export function nhuCauCoMon(dsNhuCau, ds, bang) {
   return dsNhuCau.filter((n) => locTheoNhuCau(ds, bang, n.ten).length > 0);
 }
 
+// Biểu tượng + màu nền ô món theo nhóm (demo CATS: gaiwan / drop / phin / jar / fruit). Khớp theo TÊN nhóm POS; nhóm lạ → mặc định (không bịa).
+const NHOM_DEMO = [
+  { khop: /\btra\b/, ic: 'gaiwan', bg: '#FCD7E5' },
+  { khop: /\bep\b|rau cu qua/, ic: 'drop', bg: '#CDEFE0' },
+  { khop: /ca phe|\bcf\b/, ic: 'phin', bg: '#FCE0C8' },
+  { khop: /duong sinh|duong the/, ic: 'jar', bg: '#E5D9FA' },
+  { khop: /hoa qua|trai cay/, ic: 'fruit', bg: '#FFE3C4' },
+];
+export const NHOM_MAC_DINH = { ic: 'cabinet', bg: '#FBE7EC' };
+
+/** { ic, bg } của một nhóm món POS; thiếu / lạ → NHOM_MAC_DINH. */
+export function bieuTuongNhom(nhom) {
+  const ten = boDau(nhom);
+  return NHOM_DEMO.find((n) => n.khop.test(ten)) || NHOM_MAC_DINH;
+}
+
 /** Nhóm món theo `nhom` POS, giữ thứ tự xuất hiện; thiếu nhóm → "Khác". */
 export function nhomTheoTen(ds) {
   const ban = new Map();

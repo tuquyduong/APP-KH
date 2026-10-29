@@ -1,62 +1,100 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { layMenu } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { timMon, locTheoNhuCau, nhomTheoTen } from '../menuLoc.js';
+import { timMon, locTheoNhuCau, nhomTheoTen, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
+import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import MonO from '../components/MonO.jsx';
-import BieuTuong from '../components/BieuTuong.jsx';
+import { Ico, En } from '../components/BieuTuong.jsx';
 
-// Menu theo nhóm của POS: ô tìm (không dấu cũng ra) + chip nhóm + (từ Trang chủ) lọc theo nhu cầu.
-export default function Menu({ nhuCau, boNhuCau, chonMon }) {
+// Menu theo demo: ô tìm + lưới ô nhóm món (nhóm của POS) + lưới món theo nhóm. Màn này luôn được giữ nguyên khi vào một món rồi quay lại
+// (App giữ nó trong cây, chỉ ẩn) nên ô tìm, nhóm đang chọn và vị trí cuộn còn nguyên. Giờ vàng / Topping của demo → KH-UI-3 / TOPPING-1.
+const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
+const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
+
+export default function Menu({ hien, nhuCau, boNhuCau, chonMon, moQR }) {
   const tai = dungTai(layMenu);
   const [nhom, datNhom] = useState('');
   const [tu, datTu] = useState('');
+  const [mini, datMini] = useState(false);
+  const oNhom = useRef(null);
+  const luoi = useRef(null);
+  const ds = tai.dl ? tai.dl.data : [];
+
+  useEffect(() => {
+    const el = oNhom.current;
+    if (!el || typeof IntersectionObserver !== 'function') return undefined;
+    const io = new IntersectionObserver((es) => es.forEach((e) => datMini(!e.isIntersecting && e.boundingClientRect.top < 0)), { root: el.closest('.screens'), threshold: 0 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [tai.dl]);
+
+  const chonNhom = (id) => {
+    datNhom(id);
+    requestAnimationFrame(() => {
+      const g = luoi.current; const sc = g && g.closest('.screens');
+      if (!g || !sc) return;
+      const lech = g.getBoundingClientRect().top - sc.getBoundingClientRect().top;
+      if (lech < LECH_CUON_NHOM) sc.scrollTop += lech - LECH_CUON_NHOM;
+    });
+  };
+
+  const nhomCo = nhomTheoTen(ds).map(([ten]) => ({ id: ten, ten, ic: bieuTuongNhom(ten).ic }));
+  const oChon = [...nhomCo, TAT_CA];
+  const q = tu.trim();
+  let loc = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
+  loc = timMon(loc, tu);
+  if (nhom && !q) loc = loc.filter((m) => (m.nhom || 'Khác') === nhom);
+  const phan = q ? [[null, loc]] : nhomTheoTen(loc);
+  const conHang = ds.filter((m) => m.con_hang !== false).length;
 
   return (
-    <div>
-      <h2>Menu</h2>
-      <TrangTai tai={tai}>
-        {(dl) => <NoiDung ds={dl.data} nhom={nhom} datNhom={datNhom} tu={tu} datTu={datTu} nhuCau={nhuCau} boNhuCau={boNhuCau} chonMon={chonMon} />}
-      </TrangTai>
-    </div>
-  );
-}
-
-function NoiDung({ ds, nhom, datNhom, tu, datTu, nhuCau, boNhuCau, chonMon }) {
-  const tenNhom = useMemo(() => nhomTheoTen(ds).map(([ten]) => ten), [ds]);
-  let hien = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
-  hien = timMon(hien, tu);
-  const phan = nhomTheoTen(locNhom(hien, nhom));
-
-  return (
-    <>
-      <div className="tim">
-        <BieuTuong ten="tim" />
-        <input type="search" aria-label="Tìm món" placeholder="Tìm món…" value={tu} onChange={(e) => datTu(e.target.value)} />
+    <Man id="catalog" hien={hien}>
+      <div className="topbar">
+        <div><h1>Menu</h1>{tai.dl && <div className="sub">{conHang} món đang có</div>}</div>
+        <NutQR moQR={moQR} />
       </div>
-      {nhuCau && (
-        <div className="loc-nhom">
-          <button className="chip dang-chon" onClick={boNhuCau}>{nhuCau} ✕</button>
-        </div>
-      )}
-      {tenNhom.length > 1 && (
-        <div className="loc-nhom">
-          {['', ...tenNhom].map((t) => (
-            <button key={t} className={`chip${t === nhom ? ' dang-chon' : ''}`} onClick={() => datNhom(t)}>{t || 'Tất cả'}</button>
-          ))}
-        </div>
-      )}
-      {ds.length === 0 && <div className="giua">Chưa có món nào.</div>}
-      {ds.length > 0 && hien.length === 0 && <div className="giua">Không tìm thấy món phù hợp.</div>}
-      {phan.map(([ten, mon]) => (
-        <div key={ten}>
-          <div className="tieu-de">{ten}</div>
-          <div className="luoi-mon">{mon.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
-        </div>
-      ))}
-    </>
+      <div className={`active-filter-bar${nhuCau ? ' show' : ''}`}>
+        <span>Đang lọc theo: {nhuCau}</span>
+        <span className="x" role="button" tabIndex={0} onClick={boNhuCau} onKeyDown={(e) => { if (e.key === 'Enter') boNhuCau(); }}>Xóa lọc <Ico ten="close" s={12} /></span>
+      </div>
+      <div className="search-box">
+        <Ico ten="search" s={16} />
+        <input type="text" enterKeyHint="search"aria-label="Tìm món" placeholder="Tìm món, ví dụ: phổ nhĩ…" value={tu} onChange={(e) => datTu(e.target.value)} />
+      </div>
+      <TrangTai tai={tai}>
+        {() => (
+          <>
+            <div className="cat-tiles" ref={oNhom}>
+              {oChon.map((o) => (
+                <div key={o.id || 'tat-ca'} className={`ct${nhom === o.id ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => chonNhom(o.id)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(o.id); }}>
+                  <En ten={o.ic} s={34} /><b>{o.ten}</b>
+                </div>
+              ))}
+            </div>
+            <div className="cat-mini-wrap">
+              <div className={`cat-mini${mini ? ' show' : ''}`}>
+                {oChon.map((o) => (
+                  <div key={o.id || 'tat-ca'} className={`cm${nhom === o.id ? ' on' : ''}`} role="button" tabIndex={0} title={o.ten} aria-label={o.ten} onClick={() => chonNhom(o.id)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(o.id); }}>
+                    <En ten={o.ic} s={26} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div id="catGrid" ref={luoi}>
+              {ds.length === 0 && <div className="empty-note">Chưa có món nào.</div>}
+              {ds.length > 0 && loc.length === 0 && <div className="empty-note">Chưa có món phù hợp. Thử bỏ bớt bộ lọc nhé.</div>}
+              {phan.map(([ten, mon]) => (
+                <div key={ten || 'tim'}>
+                  {ten && <div className="cat-title"><En ten={bieuTuongNhom(ten).ic} s={22} /> {ten}<span>{mon.length} món</span></div>}
+                  <div className="grid2">{mon.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </TrangTai>
+    </Man>
   );
 }
-
-const locNhom = (ds, nhom) => (nhom ? ds.filter((m) => (m.nhom || 'Khác') === nhom) : ds);

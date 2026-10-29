@@ -1,102 +1,59 @@
-import { useState } from 'react';
-import { layToi, layDiem, doiTen, datPin } from '../api.js';
+import { layToi, layDiem, layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { cheSdt, dinhDangSo } from '../dinhDang.js';
-import { LIEN_HE } from '../noiDung/lienHe.js';
+import { LIEN_HE, coLienHe } from '../noiDung/lienHe.js';
+import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
+import { Med } from '../components/BieuTuong.jsx';
 
-const DANG_PIN = /^\d{4}$/;
+// Tài khoản theo demo (account): thẻ tên + 3 ô nhanh, nhóm "Của tôi" / "Cài đặt", đăng xuất.
+// Bỏ: Ví & Thẻ quà tặng, Gia đình (KH-UI-3 / sau khai trương), Thể trạng (KH-UI-5), Thông báo & âm thanh, Quản trị (không thuộc app khách).
+// Ô nhanh chỉ có Điểm và Voucher (Ví → KH-UI-3); hạng cạnh số điện thoại → KH-UI-3.
+const bam = (f) => ({ role: 'button', tabIndex: 0, onClick: f, onKeyDown: (e) => { if (e.key === 'Enter') f(e); } });
 
-// Một khối "nhập → gửi → báo kết quả" dùng cho tên và PIN.
-function useGui(viec) {
-  const [dang, datDang] = useState(false);
-  const [loi, datLoi] = useState('');
-  const [xong, datXong] = useState(false);
-  async function gui() {
-    datDang(true); datLoi(''); datXong(false);
-    try { await viec(); datXong(true); } catch (e) { datLoi(e.message); } finally { datDang(false); }
-  }
-  return { dang, loi, xong, gui, xoa: () => datXong(false) };
-}
-
-function SuaTen({ khach }) {
-  const [ten, datTen] = useState(khach.ten || '');
-  const g = useGui(async () => { const r = await doiTen(ten.trim()); datTen(r.khach?.ten ?? ten.trim()); });
+function DongMenu({ bieuTuong, ten, phu, chon }) {
   return (
-    <div className="the">
-      <b>Tên hiển thị</b>
-      <label htmlFor="ten-toi">Tên</label>
-      <input id="ten-toi" value={ten} onChange={(e) => { datTen(e.target.value); g.xoa(); }} />
-      <button className="nut" disabled={g.dang || !ten.trim()} onClick={g.gui}>Lưu tên</button>
-      {g.loi && <div className="loi" role="alert">{g.loi}</div>}
-      {g.xong && <div className="ok">Đã lưu tên.</div>}
+    <div className="menu-item acc-it" {...bam(chon)}>
+      <div className="ic"><Med ten={bieuTuong} s={44} /></div>
+      <div className="t">{ten}<small>{phu}</small></div>
+      <div className="chev">›</div>
     </div>
   );
 }
 
-function DatPin() {
-  const [pin, datPinNhap] = useState('');
-  const [lai, datLai] = useState('');
-  const g = useGui(async () => { await datPin(pin, lai); datPinNhap(''); datLai(''); });
-  const hopLe = DANG_PIN.test(pin) && DANG_PIN.test(lai);
-  const o = (id, nhan, gt, dat) => (
-    <div>
-      <label htmlFor={id}>{nhan}</label>
-      <input id={id} type="password" inputMode="numeric" maxLength={4} autoComplete="off" value={gt} onChange={(e) => { dat(e.target.value.replace(/\D/g, '')); g.xoa(); }} />
-    </div>
-  );
-  return (
-    <div className="the">
-      <b>Đặt / đổi PIN (4 số)</b>
-      <div className="hai-cot">{o('pin', 'PIN', pin, datPinNhap)}{o('pin-lai', 'Nhập lại PIN', lai, datLai)}</div>
-      <button className="nut" disabled={g.dang || !hopLe} onClick={g.gui}>Lưu PIN</button>
-      {g.loi && <div className="loi" role="alert">{g.loi}</div>}
-      {g.xong && <div className="ok">Đã lưu PIN.</div>}
-    </div>
-  );
-}
-
-function HoTro() {
-  const { dienThoai, zalo, email } = LIEN_HE;
-  if (!dienThoai && !zalo && !email) return null;
-  const so = dienThoai.replace(/\D/g, '');
-  return (
-    <div className="the">
-      <b>Hỗ trợ</b>
-      {dienThoai && <a className="nut phu-nut" href={`tel:${so}`}>Gọi {dienThoai}</a>}
-      {zalo && <a className="nut phu-nut" href={`https://zalo.me/${zalo.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">Nhắn Zalo</a>}
-      {email && <a className="nut phu-nut" href={`mailto:${email}`}>{email}</a>}
-    </div>
-  );
-}
-
-export default function TaiKhoan({ moDon, moQR, dangXuat }) {
+export default function TaiKhoan({ moDon, moQR, moHoSo, moHoTro, moUuDai, dangXuat }) {
   const tai = dungTai(layToi);
   const diem = dungTai(layDiem);
+  const voucher = dungTai(layVoucher);
+  const soVoucher = voucher.dl ? voucher.dl.ma_khach_moi.length + voucher.dl.data.filter((v) => v.status === 'available').length : null;
   return (
-    <div>
-      <h2>Tài khoản</h2>
+    <Man id="account">
+      <div className="topbar"><div><h1>Tài khoản</h1></div><NutQR moQR={moQR} /></div>
       <TrangTai tai={tai}>
         {({ khach }) => (
           <>
-            <div className="the the-tk">
-              <div className="avatar" aria-hidden="true">{(khach.ten || '?').trim().charAt(0).toUpperCase()}</div>
-              <div>
-                <b>{khach.ten}</b>
-                <div className="phu">{cheSdt(khach.sdt)}</div>
-                {diem.dl && <div className="nhan-tot">{dinhDangSo(diem.dl.points)} điểm</div>}
+            <div className="acc-card" {...bam(moHoSo)}>
+              <div className="acc-top">
+                <div className="avatar">{(khach.ten || '?').trim().charAt(0).toUpperCase()}</div>
+                <div className="acc-n"><b>{khach.ten}</b><small>{cheSdt(khach.sdt)}</small></div>
+                <span className="acc-edit">Sửa ›</span>
               </div>
+              {(diem.dl || soVoucher !== null) && (
+                <div className="acc-q" onClick={(e) => e.stopPropagation()}>
+                  {diem.dl && <div {...bam(moUuDai)}><b>{dinhDangSo(diem.dl.points)}</b><small>Điểm</small></div>}
+                  {soVoucher !== null && <div {...bam(moUuDai)}><b>{soVoucher}</b><small>Voucher</small></div>}
+                </div>
+              )}
             </div>
-            <button className="nut phu-nut" onClick={moQR}>Mã QR thành viên</button>
-            <button className="nut phu-nut" onClick={moDon}>Lịch sử đơn</button>
-            <div className="tieu-de">Thông tin</div>
-            <SuaTen khach={khach} />
-            <DatPin />
-            <HoTro />
-            <button className="nut chu" onClick={dangXuat}>Đăng xuất</button>
+            <div className="acc-g">Của tôi</div>
+            <DongMenu bieuTuong="package" ten="Đơn hàng" phu="Lịch sử các đơn đã mua" chon={moDon} />
+            <div className="acc-g">Cài đặt</div>
+            <DongMenu bieuTuong="name" ten="Thông tin cá nhân" phu="Tên hiển thị, mã PIN" chon={moHoSo} />
+            {coLienHe(LIEN_HE) && <DongMenu bieuTuong="chat" ten="Hỗ trợ" phu="Gọi, nhắn Zalo cho quán" chon={moHoTro} />}
+            <div className="acc-out" {...bam(dangXuat)}>Đăng xuất</div>
           </>
         )}
       </TrangTai>
-    </div>
+    </Man>
   );
 }

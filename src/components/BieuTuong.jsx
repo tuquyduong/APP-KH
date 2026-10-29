@@ -1,18 +1,15 @@
-// Biểu tượng nét đơn giản (viền theo màu chữ hiện tại). Một chỗ, dùng lại ở thanh tab, nút tròn, ô tìm.
-const NET = {
-  nha: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
-  menu: 'M5 4h14l-1.5 12a3 3 0 0 1-3 2.5h-5a3 3 0 0 1-3-2.5L5 4zM6 9h12M9 21h6',
-  qua: 'M4 9h16v4H4zM6 13v8h12v-8M12 9v12M12 9c-3 0-4-4-1-4 2 0 1 4 1 4zM12 9c3 0 4-4 1-4-2 0-1 4-1 4z',
-  nguoi: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4 3.5-6 8-6s8 2 8 6',
-  qr: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z',
-  tim: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4',
-  lui: 'M15 5l-7 7 7 7',
-};
+// Bộ biểu tượng của demo: các <symbol> SVG nằm trong index.html (chép từ demo, chỉ giữ cái app dùng).
+//   Ico = nét đơn (i-…), Med = huy hiệu tròn (m-…), En = men / tranh tròn (p-…). Không vẽ biểu tượng mới.
+const bien = (lop, ten) => `#${lop}-${ten}`;
 
-export default function BieuTuong({ ten }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d={NET[ten]} />
-    </svg>
-  );
+export function Ico({ ten, s = 18, lop = '' }) {
+  return <svg className={`ico ${lop}`} width={s} height={s} viewBox="0 0 24 24" aria-hidden="true"><use href={bien('i', ten)} /></svg>;
+}
+
+export function Med({ ten, s = 24, lop = '' }) {
+  return <svg className={`med ${lop}`} width={s} height={s} viewBox="0 0 64 64" aria-hidden="true"><use href={bien('m', ten)} /></svg>;
+}
+
+export function En({ ten, s = 44, lop = '' }) {
+  return <svg className={`en ${lop}`} width={s} height={s} viewBox="0 0 64 64" aria-hidden="true"><use href={bien('p', ten)} /></svg>;
 }

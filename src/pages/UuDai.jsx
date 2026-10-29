@@ -2,29 +2,31 @@ import { useCallback, useState } from 'react';
 import { layDiem, layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dinhDangGia, dinhDangNgay, dinhDangSo, moTaGiam } from '../dinhDang.js';
+import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import NhanMa from '../components/NhanMa.jsx';
+import { Med } from '../components/BieuTuong.jsx';
 
+// Ưu đãi theo demo (rewards): điểm, ví voucher, + ô nhập mã trên hoá đơn và lịch sử điểm. Khối của VIỆC SAU để trống:
+//   banner Giờ vàng, thẻ hạng → KH-UI-3 · sưu tập Tứ Quý, kho quà đổi điểm → chưa có dữ liệu POS · số dư ví → KH-UI-3.
 const LOAI_DIEM = { earn: 'Tích điểm', redeem: 'Đổi điểm' };
 const TRANG_THAI_VOUCHER = { used: 'Đã dùng', expired: 'Hết hạn' };
 const dau = (n) => (n > 0 ? `+${n}` : String(n));
 
-function The({ ten, ma, loai, giaTri, toiThieu, han, nhan }) {
+function TheVoucher({ ten, ma, loai, giaTri, toiThieu, han, nhan }) {
+  const phu = [ma, moTaGiam(loai, giaTri), toiThieu > 0 && `đơn từ ${dinhDangGia(toiThieu)}`, han && `hạn dùng đến ${dinhDangNgay(han)}`].filter(Boolean).join(' · ');
   return (
-    <div className="the the-voucher">
-      <div className="dong">
-        <b>{ten || 'Mã giảm giá'}</b>
-        <span>{moTaGiam(loai, giaTri)}</span>
+    <div className="voucher">
+      <div className="strip" />
+      <div className="body">
+        <div><div className="t">{ten || 'Mã giảm giá'}</div><div className="s">{phu}</div></div>
+        {nhan && <div className="use">{nhan}</div>}
       </div>
-      <div className="ma-voucher">{ma}</div>
-      {toiThieu > 0 && <div className="phu">Đơn từ {dinhDangGia(toiThieu)}</div>}
-      {han && <div className="phu">Hạn dùng đến {dinhDangNgay(han)}</div>}
-      {nhan && <div className="nhan-xau">{nhan}</div>}
     </div>
   );
 }
 
-function Voucher({ tatCa }) {
+function DanhSachVoucher({ tatCa }) {
   const ham = useCallback(() => layVoucher(tatCa), [tatCa]);
   const tai = dungTai(ham);
   return (
@@ -33,12 +35,12 @@ function Voucher({ tatCa }) {
         const dung = tatCa ? dl.data : dl.data.filter((v) => v.status === 'available');
         return (
           <>
-            {dl.ma_khach_moi.length === 0 && dung.length === 0 && <div className="giua">Bạn chưa có voucher nào.</div>}
+            {dl.ma_khach_moi.length === 0 && dung.length === 0 && <div className="empty-note">Bạn chưa có voucher nào.</div>}
             {dl.ma_khach_moi.map((v) => (
-              <The key={v.code} ten="Ưu đãi khách mới" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} />
+              <TheVoucher key={v.code} ten="Ưu đãi khách mới" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} />
             ))}
             {dung.map((v) => (
-              <The key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status]} />
+              <TheVoucher key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status]} />
             ))}
           </>
         );
@@ -47,40 +49,39 @@ function Voucher({ tatCa }) {
   );
 }
 
-// Ưu đãi: điểm + lịch sử, voucher (+ xem tất cả), ô nhập mã trên hoá đơn. `maSan` = mã từ link QR hoá đơn.
-export default function UuDai({ maSan, khiNhanXong }) {
+// `maSan` = mã từ link QR hoá đơn (điền sẵn, khách bấm nhận).
+export default function UuDai({ maSan, khiNhanXong, moQR }) {
   const tai = dungTai(layDiem);
   const [tatCa, datTatCa] = useState(false);
   return (
-    <div>
-      <h2>Ưu đãi</h2>
-      <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={tai.taiLai} />
+    <Man id="rewards">
+      <div className="topbar"><div><h1>Ưu đãi của tôi</h1></div><NutQR moQR={moQR} /></div>
+
       <TrangTai tai={tai}>
         {(dl) => (
-          <>
-            <div className="the">
-              <div className="phu">Điểm của bạn</div>
-              <div className="so-lon">{dinhDangSo(dl.points)}</div>
-            </div>
-            <div className="tieu-de">Voucher</div>
-            <Voucher tatCa={tatCa} />
-            <button className="nut phu-nut" onClick={() => datTatCa(!tatCa)}>{tatCa ? 'Chỉ xem mã còn dùng' : 'Xem tất cả'}</button>
-            <div className="tieu-de">Lịch sử điểm</div>
-            <div className="the">
-              {dl.history.length === 0 && <div className="phu">Chưa có điểm nào.</div>}
-              {dl.history.map((h) => (
-                <div className="dong" key={h.id}>
-                  <div>
-                    <div>{h.reason || LOAI_DIEM[h.type] || 'Giao dịch điểm'}</div>
-                    <div className="phu">{dinhDangNgay(h.created_at)}</div>
-                  </div>
-                  <b>{dau(h.points)}</b>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="wallet-row">
+            <div className="wallet-box"><div className="n">{dinhDangSo(dl.points)}</div><div className="l">Điểm tích lũy</div></div>
+          </div>
         )}
       </TrangTai>
-    </div>
+
+      <div className="sec-head"><h2>Nhập mã trên hoá đơn</h2></div>
+      <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={tai.taiLai} />
+
+      <div className="sec-head"><h2>Ví voucher</h2></div>
+      <DanhSachVoucher tatCa={tatCa} />
+      <div className="more-l"><span role="button" tabIndex={0} onClick={() => datTatCa(!tatCa)} onKeyDown={(e) => { if (e.key === 'Enter') datTatCa(!tatCa); }}>{tatCa ? 'Chỉ xem mã còn dùng' : 'Xem tất cả'}</span></div>
+
+      <div className="sec-head"><h2>Lịch sử điểm</h2></div>
+      {tai.dl && (tai.dl.history.length === 0
+        ? <div className="empty-note">Chưa có điểm nào.</div>
+        : tai.dl.history.map((h) => (
+          <div className="tx-item" key={h.id}>
+            <div className="ic"><Med ten="ticket" s={44} /></div>
+            <div className="info"><div className="t">{h.reason || LOAI_DIEM[h.type] || 'Giao dịch điểm'}</div><div className="d">{dinhDangNgay(h.created_at)}</div></div>
+            {typeof h.points === 'number' && <div className={`amt ${h.points > 0 ? 'plus' : 'minus'}`}>{dau(h.points)}</div>}
+          </div>
+        )))}
+    </Man>
   );
 }

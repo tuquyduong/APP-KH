@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+/** Vị trí cuộn khi đổi màn: quay LẠI Menu từ màn con (món…) → vị trí đã lưu; mọi trường hợp khác (đổi tab, mở màn con) → về đầu. */
+export function viTriCuonKhiDoiMan({ tab, coManCon, quayLaiMenu, daLuu }) {
+  return tab === 'menu' && !coManCon && quayLaiMenu ? daLuu : 0;
+}
+
 // Ngăn xếp "màn con" (trang món, QR, đơn…) không router: mỗi màn con đẩy một mục vào lịch sử trình duyệt
 // để nút Back của điện thoại quay về màn trước thay vì thoát app. `history.state.kh` = độ sâu ngăn xếp.
 export function dungNganXep() {

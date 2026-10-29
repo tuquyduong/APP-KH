@@ -3,9 +3,10 @@ import qrcode from 'qrcode-generator';
 import { layToi } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { cheSdt } from '../dinhDang.js';
+import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 
-// QR thành viên: vẽ từ `qr` của GET /toi. Không có `qr` → không vẽ (không bịa mã).
+// QR thành viên: vẽ từ `qr` của GET /toi. Không có `qr` → không vẽ (không bịa mã). Demo chỉ có nút QR (chưa vẽ màn này): dựng bằng khối của demo.
 function VeQR({ noiDung }) {
   const o = useMemo(() => {
     const q = qrcode(0, 'M');
@@ -24,20 +25,20 @@ function VeQR({ noiDung }) {
   );
 }
 
-export default function ManQR() {
+export default function ManQR({ lui }) {
   const tai = dungTai(layToi);
   return (
-    <div className="man-qr">
-      <h2>Mã thành viên</h2>
+    <Man id="member">
+      <DauManCon tieuDe="Mã thành viên" lui={lui} />
       <TrangTai tai={tai}>
         {({ khach }) => (
           <>
-            {khach.qr ? <div className="khung-qr"><VeQR noiDung={String(khach.qr)} /></div> : <div className="giua">Chưa có mã QR. Thử lại sau.</div>}
-            {cheSdt(khach.sdt) && <div><b>{cheSdt(khach.sdt)}</b></div>}
-            <div className="phu">Đưa mã này cho nhân viên quầy</div>
+            {khach.qr ? <div className="khung-qr"><VeQR noiDung={String(khach.qr)} /></div> : <div className="empty-note">Chưa có mã QR. Thử lại sau.</div>}
+            {cheSdt(khach.sdt) && <div className="qr-sdt">{cheSdt(khach.sdt)}</div>}
+            <div className="care-disclaimer qr-chu">Đưa mã này cho nhân viên quầy</div>
           </>
         )}
       </TrangTai>
-    </div>
+    </Man>
   );
 }
