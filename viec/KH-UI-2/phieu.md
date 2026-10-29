@@ -123,3 +123,36 @@ chỉ `qrcode-generator` đúng bản `2.0.4` (dependencies, MIT, không phụ t
 - KHÔNG gọi gì ngoài `/api/kh/*` qua `src/api.js`; không giả lập dữ liệu POS trong bản dựng thật; trường không có trong hợp đồng → ẩn.
 - KHÔNG service worker, không router, không thư viện UI / CSS, phông chữ: được dùng ĐÚNG link Google Fonts Inter như demo (`display=swap`) kèm phông hệ thống dự phòng — không nguồn ngoài nào khác.
 - Không bí mật trong code / log. Chỉ push `git push -u origin viec/KH-UI-2`. Không đụng `main`, không merge, không tạo PR.
+
+---
+
+## Vòng sửa 2 — chủ quán duyệt 29.10.2026: KHỚP DEMO 100% (điện thoại)
+
+<!-- Chat App KH thêm sau khi máy xong vòng 1 (c948e8e). Luật mới ở CLAUDE.md §5 (đã gộp main vào nhánh) — đọc lại trước khi làm.
+     Việc thường [Th], chạy thẳng tới hết. Màn rộng ≥ 1024 px kiểu "website thương hiệu" là việc KH-UI-4 riêng — vòng này GIỮ khung giữa màn. -->
+
+### Nghiệm thu vòng 2
+- V1 **Bộ kiểm K9 xanh**: mọi màu và phông lấy từ demo. Vòng 1 có 7 màu không có trong demo (`#8f6f7c`, `#e6f6ef`, `#b3261e`, `#fdecea`,
+  `#f3e6ea`, `#fbf1f4`, `rgba(0,0,0,.28)`) — thay bằng đúng màu demo dùng cho đúng chỗ đó (chữ phụ = `--muted` của demo; trạng thái tốt / lỗi =
+  màu demo dùng cho thẻ trạng thái tương ứng…). Ghi chú cạnh từng biến: lấy từ lớp CSS nào của demo.
+- V2 **Tự so ảnh demo ↔ app** (CLAUDE.md §5): các màn Trang chủ, Menu, Trang món, Ưu đãi, Tài khoản, Lịch sử đơn, QR thành viên, màn mở —
+  cỡ 390×844, thêm 360×780 và 430×932; API giả trong nháp trả dữ liệu GIỐNG demo (tên, điểm, món như demo hiện) để so đúng nghĩa. Sửa tới khi
+  chỉ còn khác vì lý do (a)–(d). Lưu `viec/KH-UI-2/so_anh/<màn>_<cỡ>_{demo,app,lech}.png` (nén, tổng ≤ 6 MB).
+- V3 `viec/KH-UI-2/doi_chieu_demo.md`: mỗi màn một bảng (khối trong demo / đã làm / khác gì / lý do a–d).
+- V4 **Không chữ "nợ"**: bỏ nhãn "Còn nợ" và mọi số nợ (quán không công nợ). Đơn chưa trả đủ: chỉ hiện trạng thái thanh toán POS trả, không tính nợ.
+- V5 **Âm thanh màn mở như demo**: nút "Bật âm thanh" + âm thanh lấy từ demo (≈ 80 KB, tách thành file trong `public/`), mặc định TẮT, nhớ lựa chọn
+  trong phiên; `prefers-reduced-motion` vẫn bỏ chuyển động.
+- V6 **Menu giữ trạng thái**: vào một món rồi quay lại → còn nguyên ô tìm, nhóm đang chọn, vị trí cuộn.
+- V7 **Trang chủ đủ khối như demo, đúng thứ tự**: lời chào → thẻ "Xem cách dùng app" → hàng [thẻ hội viên vàng | ô "Kế hoạch và nhắc việc"] →
+  khối khuyến mãi "Hôm nay" (banner + hàng ô nhỏ) → Chăm sóc theo nhu cầu → Bán chạy / Ưu đãi nhiều nhất → Mời bạn bè. Khối nào thuộc VIỆC SAU
+  (ghi rõ việc nào): ô Giờ vàng, hạng trên thẻ, giá 3 hạng → KH-UI-3 (POS v2); ô Trắc nghiệm, ô Kế hoạch và nhắc việc, thẻ video hướng dẫn →
+  KH-UI-5; Mời bạn bè, combo → sau khai trương — vòng này để TRỐNG chỗ đó (không thay bằng khối tự nghĩ, không chữ thay thế). Banner khuyến mãi:
+  bố cục y demo, chữ + ảnh lấy từ `src/noiDung/trangChu.js` (chữ khuyến mãi thật: `## Câu hỏi` cho chủ quán — không dừng việc).
+- V9 **Biểu tượng, hoạ tiết y demo**: dùng đúng bộ biểu tượng của demo — các `<symbol>` SVG (q-sun, q-lotus, q-leaf…), biểu tượng 5 tab, ô nhóm món
+  (cat-tiles), ô nhu cầu, ảnh tròn viền vàng của món theo nhóm, nền "aurora" mờ, viền / gradient vàng của thẻ hội viên và thẻ hạng. KHÔNG vẽ
+  biểu tượng mới, không dùng biểu tượng chung chung. Thanh tab: biểu tượng + nhãn y demo (bỏ Giỏ hàng tới KH-MUA-1).
+- V8 `npm test`, `--day-du` (có K9) xanh; `node tu_chay/cong.js chay` ĐẠT; `thu_KHUI2.js` thêm ca: không chữ "nợ" trong `src/`, file âm thanh
+  tồn tại và ≤ 150 KB, Menu giữ trạng thái (hàm thuần nếu tách được).
+
+### Phạm vi vòng 2
+Như mục Phạm vi ở trên (không thêm). Ảnh so sánh nằm trong `viec/KH-UI-2/**`.
