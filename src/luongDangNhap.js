@@ -1,13 +1,13 @@
 // Luồng đăng nhập (hàm thuần, không đụng DOM / mạng — bài thử cong_cu/thu_KHXEM1.js nạp thẳng).
 
-// Chỗ khách chưa đăng nhập bấm vào thì phải đăng nhập: Ưu đãi, Tài khoản, mã thành viên (QR). Trang chủ, Menu, Trang món: ai cũng xem.
-const CHO_CAN_DANG_NHAP = new Set(['uudai', 'taikhoan', 'qr']);
+// Chỗ khách chưa đăng nhập bấm vào thì phải đăng nhập: Ưu đãi, Tài khoản (và trang con), mã thành viên (QR) — bảng ở duongDan.js. Trang chủ, Menu, Trang món: ai cũng xem.
+import { tiepHopLe, trangCanDangNhap } from './duongDan.js';
 
-/** Bấm vào `dich` có phải mở màn Đăng nhập trước không? Đã đăng nhập thì không bao giờ chặn. */
-export const canDangNhap = (dich, daDangNhap) => !daDangNhap && CHO_CAN_DANG_NHAP.has(dich);
+/** Vào trang `trang` (mã trang trong bảng đường dẫn) có phải mở màn Đăng nhập trước không? Đã đăng nhập thì không bao giờ chặn. */
+export const canDangNhap = (trang, daDangNhap) => !daDangNhap && trangCanDangNhap(trang);
 
-/** Đăng nhập xong đi đâu: còn mã hoá đơn (link QR) → Ưu đãi để nhận; không thì đúng chỗ đã bấm; không rõ → Trang chủ. */
-export const dichSauDangNhap = (dich, maCho) => (maCho ? 'uudai' : dich || 'trangchu');
+/** Đăng nhập xong đi đâu (đường dẫn): còn mã hoá đơn (link QR) → Ưu đãi để nhận; không thì trang `tiep` đã bấm; tiep lạ / thiếu → Trang chủ. */
+export const dichSauDangNhap = (tiep, maCho) => (maCho ? '/uudai' : tiepHopLe(tiep) || '/trangchu');
 
 /** Xin mã xong → sang bước "Mã"; nhớ POS bảo lấy mã ở quầy hay gửi Zalo. */
 export const buocSauXinMa = (r) => ({ buoc: 'ma', taiQuay: !!(r && r.lay_ma_tai_quay) });
