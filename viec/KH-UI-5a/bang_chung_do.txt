@@ -1,0 +1,17 @@
+Bài thử KH-UI-5a — bằng chứng ĐỎ trên code chưa sửa (HEAD 6b4b6b0: chưa có src/tracNghiem.js, src/lich.js, src/tracNghiemLuu.js…)
+
+$ node cong_cu/thu_KHUI5a.js        (chạy trong bản sao chỉ có bài thử + bảng mẫu + demo, src/ rỗng)
+✗ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../src/tracNghiem.js' imported from .../cong_cu/thu_KHUI5a.js
+
+0 đạt · 1 hỏng
+
+Phiếu miễn "Bài thử đỏ" (tính năng mới chạy trên máy khách, không tiền): đúng sai đối chiếu với hàm của demo. Để chứng minh bài thử BẮT lỗi (không xanh vô giá trị), đã sửa cố ý code đã vá rồi chạy lại, mỗi lần đều ĐỎ, rồi khôi phục:
+  VS-NGUONG-CO (ngưỡng "có" 40 → 42):               351 đạt · 3 hỏng
+  VS-NGUONG-THIEN-HUONG (ngưỡng thiên hướng 30 → 32): 345 đạt · 9 hỏng
+  VS-NGUONG-BINH-HOA (ngưỡng Bình hòa 60 → 64):       343 đạt · 11 hỏng
+(ngưỡng 40 / 30 / 60 chính xác không thể xảy ra với số câu mỗi nhóm — điểm làm tròn chỉ nhận 39, 41…; bảng mẫu có ca 29, 39, 59 sát ngưỡng.)
+
+Bài cũ cong_cu/thu_KHLINK1.js: sửa 1 ca (dòng "/tracnghiem/… giữ chỗ" → "/tracnghiem là trang thật; /kehoach vẫn giữ chỗ"). Trên code gốc ca mới ĐỎ (gốc để /tracnghiem giuCho = true và chưa có /tracnghiem/lam, /ketqua); không bớt ca nào (97 trước và sau).
+
+SỐ CA thu_KHUI5a.js: 354
+SỐ CA thu_KHLINK1.js: 97

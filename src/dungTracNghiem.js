@@ -11,7 +11,7 @@ import { gioVn } from './menuLuu.js';
 
 export function dungTracNghiem() {
   const [luu, datLuu] = useState(() => docKetQua(DL));
-  const [gioiTinh, datGioiTinh] = useState(null);
+  const [gioiTinh, datGioiTinh] = useState(() => (luu ? luu.gioiTinh : null)); // điền sẵn giới tính từ kết quả đã lưu (demo: giới tính điền sẵn)
   const [bai, datBai] = useState(null);
   const [moi, datMoi] = useState(null);
 
