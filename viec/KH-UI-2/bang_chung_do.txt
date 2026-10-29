@@ -1,0 +1,12 @@
+Phiếu ghi "Bài thử đỏ: không — giao diện mới, không tiền, không dữ liệu". Bài thử cong_cu/thu_KHUI2.js là bài MỚI.
+Trên code gốc (commit f5b09f1: dinhDang.js cũ, chưa có maBill.js / menuLoc.js / noiDung/ / public/) bài thử ĐỎ:
+
+$ node cong_cu/thu_KHUI2.js     (chép bài vào nháp cùng src/dinhDang.js của f5b09f1)
+✗ Cannot find module '…/src/maBill.js' imported from '…/cong_cu/thu_KHUI2.js'
+
+0 đạt · 1 hỏng
+
+Ca A2 (500 chỉ có { error }) đỏ riêng trên gốc: dinhDang.js cũ `loiTheoCode(code, error)` trả NGUYÊN `error` khi có chuỗi, kể cả khi không có `code`
+(dòng `if (typeof error === 'string' && error.trim()) return error;` đứng trước mọi kiểm `code`) → lời máy lọt ra màn.
+
+SỐ CA thu_KHUI2.js: 62
