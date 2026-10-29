@@ -72,7 +72,12 @@ export default function App() {
     if (khungCuon.current) khungCuon.current.scrollTop = viTriCuonKhiDoiMan({ tab: trang, coManCon: false, quayLaiMenu: quayLaiMenu.current, daLuu: viTriMenu.current });
   }, [trang]);
 
-  const vaoTab = (t) => { quayLaiMenu.current = false; di(taoDuongDan(t)); if (t === 'menu') datLanVaoMenu((n) => n + 1); };
+  // Bấm tab Menu khi đang ở Menu (kể cả /menu/<nhom>): không đổi địa chỉ, giữ nhóm đang chọn, chỉ làm mới menu.
+  const vaoTab = (t) => {
+    quayLaiMenu.current = false;
+    if (t === 'menu') datLanVaoMenu((n) => n + 1);
+    if (!(t === 'menu' && trang === 'menu')) di(taoDuongDan(t));
+  };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
   const dangXuat = () => { xoaToken(); datMaCho(''); donPhien(); };
