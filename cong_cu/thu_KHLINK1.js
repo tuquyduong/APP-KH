@@ -106,7 +106,7 @@ function dungThanhPhan(tep) {
   k('đã đăng nhập: hiện đúng ô, không dòng khoá, không bọc thêm', hoiVien === 'Ô-TIEN-ICH', hoiVien);
   k('khách: vẫn giữ nguyên nội dung ô (hình, chữ, vị trí)', khach.includes('Ô-TIEN-ICH'));
   k('khách: có biểu tượng khoá và dòng "Đăng nhập để mở khoá chức năng"', khach.includes('🔒') && khach.includes('Đăng nhập để mở khoá chức năng'));
-  k('khách: ô MỜ, không thao tác được bên trong (inert / aria-hidden)', /khoa-tien-ich/.test(khach) && /inert|aria-hidden="true"/.test(khach));
+  k('khách: ô MỜ, không thao tác được bên trong (inert / aria-hidden)', /khoa-tien-ich/.test(khach) && /\binert=""/.test(khach) && /aria-hidden="true"/.test(khach));
   k('khách: bấm được (role=button) để đi đăng nhập', /role="button"/.test(khach) && /tabindex="0"/.test(khach));
   const css = doc('src/giaoDien/giaoDien.css');
   k('độ mờ của ô khoá lấy từ demo (opacity .45 như .btn-disabled), không thêm màu', /\.khoa-tien-ich[^}]*opacity:\s*\.45/.test(css) && !/\.khoa-tien-ich[^}]*(#[0-9a-f]{3,8}|rgb|hsl)/i.test(css));
@@ -120,6 +120,7 @@ function dungThanhPhan(tep) {
   k('trang cần đăng nhập → thay bằng /dangnhap?tiep= (App hỏi canDangNhap)', /canDangNhap\(trang, dangNhap\)/.test(app) && /taoDuongDan\('dangnhap', \{ tiep:/.test(app));
   k('đăng nhập xong rời /dangnhap tới tiep (dichSauDangNhap)', /dichSauDangNhap\(r\.tham\.tiep, maCho\)/.test(app));
   k('chuẩn hoá địa chỉ ngay trong bộ định tuyến (/ → /trangchu, /admin → /trangchu)', /duong\.chuan/.test(dh));
+  k('bấm tab Menu khi đang ở Menu không đổi địa chỉ (giữ nhóm /menu/<nhom>)', /!\(t === 'menu' && trang === 'menu'\)\) di\(/.test(app));
   k('tiêu đề tab theo trang', /document\.title = tieuDeTrang\(/.test(app));
   k('?ma= vẫn xoá khỏi thanh địa chỉ và chạy trên mọi đường dẫn (về Ưu đãi)', /replaceState/.test(app) && /'\/uudai'/.test(app) && /boMaKhoiDiaChi/.test(app));
   k('trang lạ có nút "Về Trang chủ"; món lạ có nút "Xem Menu"', /Về Trang chủ/.test(doc('src/pages/KhongTimThay.jsx')) && /Xem Menu/.test(doc('src/pages/MonTheoDuong.jsx')) && /Không tìm thấy món/.test(doc('src/pages/MonTheoDuong.jsx')));
