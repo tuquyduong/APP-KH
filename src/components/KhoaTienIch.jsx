@@ -7,7 +7,7 @@ export default function KhoaTienIch({ dangNhap, tiep, moDangNhap, children }) {
   if (dangNhap) return children;
   return (
     <div className="khoa-tien-ich" {...bam(() => moDangNhap(tiep))}>
-      <div className="khoa-ben-trong" aria-hidden="true" inert="">{children}</div>
+      <div className="khoa-ben-trong" aria-hidden="true" inert={true}>{children}</div>
       <div className="khoa-nhan"><span aria-hidden="true">🔒</span> Đăng nhập để mở khoá chức năng</div>
     </div>
   );
