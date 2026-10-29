@@ -54,8 +54,8 @@ export default function App() {
   }, [tab, nx.man]);
 
   const vaoTab = (t) => { quayLaiMenu.current = false; nx.veDau(); datTab(t); if (t === 'menu') { datDaVaoMenu(true); datLanVaoMenu((n) => n + 1); } };
-  // Mở Đăng nhập như một màn con; `dich` = chỗ khách định vào. Đang ở màn Đăng nhập thì không mở thêm.
-  const moDangNhap = (dich) => { if (!(nx.man && nx.man.k === 'dangnhap')) moManCon({ k: 'dangnhap', dich }); };
+  // Mở Đăng nhập như một màn con; `dich` = chỗ khách định vào. Đang ở màn Đăng nhập thì chỉ đổi `dich` (giữ chữ đã gõ).
+  const moDangNhap = (dich) => (nx.man && nx.man.k === 'dangnhap' ? nx.thay({ k: 'dangnhap', dich }) : moManCon({ k: 'dangnhap', dich }));
   const chonTab = (t) => { if (canDangNhap(t, dangNhap)) { moDangNhap(t); return; } datNhuCau(''); vaoTab(t); };
   const dangXuat = () => { xoaToken(); datMaCho(''); donPhien(); };
   const khiDangNhapXong = (dich) => {

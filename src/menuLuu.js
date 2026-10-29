@@ -25,9 +25,9 @@ export function xoaMenuLuu(k = kho) {
   try { (typeof k === 'function' ? k() : k).removeItem(KHOA_MENU); } catch { /* không có gì để xoá */ }
 }
 
-/** Giờ VN "YYYY-MM-DD HH:mm:ss" từ đồng hồ máy (dinhDangNgay đọc được), không phụ thuộc múi giờ của máy. */
+/** Giờ VN "YYYY-MM-DD HH:mm:ss" từ đồng hồ máy (dinhDangNgay đọc được), không phụ thuộc múi giờ của máy: UTC + 7 giờ (VN không đổi giờ mùa hè). */
 export function gioVn(bay = new Date()) {
-  return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Ho_Chi_Minh', dateStyle: 'short', timeStyle: 'medium' }).format(bay);
+  return new Date(bay.getTime() + 7 * 3600000).toISOString().slice(0, 19).replace('T', ' ');
 }
 
 /**

@@ -121,6 +121,13 @@ const khoGia = (dau = {}, nem = false) => {
     return dung.length > 0 && dung.every((x) => /KHOA|kh_/.test(x));
   })());
 
+  console.log('— Soát: khách chưa đăng nhập không gọi dữ liệu riêng; menu chỉ lưu bản công khai');
+  const tc = doc('src/pages/TrangChu.jsx'), dm = doc('src/dungMenu.js');
+  k('Trang chủ khách: /toi, /diem chỉ nằm trong DauHoiVien', !/export default function TrangChu[\s\S]*dungTai\(/.test(tc) && /function DauHoiVien[\s\S]*dungTai\(layToi\)/.test(tc));
+  k('menu chỉ ghi lên máy khi lấy lúc chưa có phiên', /if \(!coPhien\) ghiMenuLuu/.test(dm) && /phien\.current !== dangNhap/.test(dm));
+  k('giờ VN không dùng Intl (WebView cũ)', !/Intl/.test(doc('src/menuLuu.js')));
+  k('đổi phiên → hỏi lại menu dù còn mới', /taiLai\(doiPhien\)/.test(dm));
+
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.log('  ✗ bài thử không chạy được — ' + (e && e.message)); console.log('\n0 đạt · 1 hỏng'); process.exit(1); });
