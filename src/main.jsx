@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import './giaoDien/demo.css'
+import './giaoDien/demo_tracnghiem.css'
 import './giaoDien/giaoDien.css'
 import App from './App.jsx'
 

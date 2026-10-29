@@ -9,10 +9,11 @@ import Man, { NutQR } from '../components/Man.jsx';
 import MonO from '../components/MonO.jsx';
 import BannerHomNay from '../components/BannerHomNay.jsx';
 import TheMoi from '../components/TheMoi.jsx';
+import OTracNghiem from '../components/OTracNghiem.jsx';
 import { THE_MOI } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
-//   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc", ô Trắc nghiệm → KH-UI-5 · ô Giờ vàng, hạng trên thẻ, giá 3 hạng → KH-UI-3 · Mời bạn bè, combo → sau khai trương.
+//   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc" → KH-UI-5b · ô Giờ vàng (cạnh ô Trắc nghiệm, nên ô Trắc nghiệm đang rộng hết hàng), hạng trên thẻ, giá 3 hạng → KH-UI-3 · Mời bạn bè, combo → sau khai trương.
 // Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
 function DauChung({ chao, moQR, the }) {
   return (
@@ -49,7 +50,7 @@ function DauHoiVien({ moQR, moUuDai }) {
 }
 
 // `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
-export default function TrangChu({ menu, dangNhap, moQR, moMenu, moUuDai, moDangNhap, locNhuCau, chonMon }) {
+export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
   const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
@@ -74,6 +75,7 @@ export default function TrangChu({ menu, dangNhap, moQR, moMenu, moUuDai, moDang
             </div>
           </div>
         )}
+        <div className="hb-tiles"><OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} /></div>
       </div>
 
       {nhuCau.length > 0 && (

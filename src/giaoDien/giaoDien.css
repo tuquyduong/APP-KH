@@ -32,6 +32,7 @@ button:disabled{ opacity:.45; cursor:default; }
 .top-row.mot{ grid-template-columns:1fr; }
 .acc-q:has(> div:only-child){ grid-template-columns:1fr; }
 .acc-q:has(> div:nth-child(2):last-child){ grid-template-columns:1fr 1fr; }
+.hb-tiles{ grid-template-columns:1fr; } /* ô Giờ vàng (KH-UI-3) chưa có → ô Trắc nghiệm giãn hết hàng (demo: body:not(.cms-on) .hb-tiles:has(> .sec-off)) */
 
 /* ===== F2: banner có chữ + nút dùng tỉ lệ 2:1 của demo nhưng KHÔNG thấp hơn 10,5rem (chữ phóng theo cài đặt máy không bị cắt) ===== */
 .hb-one .hero-banner{ min-height:10.5rem; }

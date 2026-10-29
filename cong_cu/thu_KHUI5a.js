@@ -165,6 +165,113 @@ function hangDemo(ten) {
   k('không gửi gì về máy chủ: api.js không có cửa trắc nghiệm; mã trắc nghiệm không gọi mạng', !/tracnghiem|trac-nghiem|the-chat|thechat/i.test(doc('src/api.js'))
     && ['src/tracNghiem.js', 'src/tracNghiemLuu.js', 'src/lich.js', 'src/dungTracNghiem.js'].filter((f) => fs.existsSync(path.join(GOC, f))).every((f) => !/fetch\(|XMLHttpRequest|sendBeacon|api\.js|console\./.test(doc(f))));
 
+  console.log('— B5 đường dẫn');
+  const dd = await nap('src/duongDan.js');
+  const ra = (p) => dd.docDuongDan(p);
+  k('/tracnghiem, /tracnghiem/lam, /tracnghiem/ketqua: trang thật, cần đăng nhập, không giữ chỗ, chuẩn hoá đúng', [['/tracnghiem', 'tracnghiem'], ['/tracnghiem/lam', 'tracnghiemlam'], ['/tracnghiem/ketqua', 'tracnghiemketqua']]
+    .every(([p, t]) => ra(p).trang === t && ra(p).canDN === true && ra(p).giuCho === false && ra(p).chuan === p && dd.taoDuongDan(t) === p && dd.trangCanDangNhap(t)));
+  k('chữ hoa / "/" thừa vẫn ra đúng: /TracNghiem/Lam/ → /tracnghiem/lam', ra('/TracNghiem/Lam/').chuan === '/tracnghiem/lam');
+  k('nút quay lại: /lam về /tracnghiem; /tracnghiem và /ketqua về Trang chủ', ra('/tracnghiem/lam').cha === '/tracnghiem' && ra('/tracnghiem').cha === '/trangchu' && ra('/tracnghiem/ketqua').cha === '/trangchu');
+  k('/kehoach vẫn chỉ giữ chỗ (việc KH-UI-5b)', ra('/kehoach').giuCho === true);
+  k('tiêu đề tab: "Trắc nghiệm · Tứ Quý Đường", "Kết quả thể trạng · Tứ Quý Đường"', dd.tieuDeTrang('tracnghiem') === 'Trắc nghiệm · Tứ Quý Đường' && dd.tieuDeTrang('tracnghiemketqua') === 'Kết quả thể trạng · Tứ Quý Đường');
+  k('chưa đăng nhập vào /tracnghiem/lam → /dangnhap?tiep=/tracnghiem/lam', dd.taoDuongDan('dangnhap', { tiep: '/tracnghiem/lam' }) === '/dangnhap?tiep=%2Ftracnghiem%2Flam');
+
+  console.log('— B5 ô Trắc nghiệm ở Trang chủ (khoá khi chưa đăng nhập) + Tài khoản + màn mở');
+  const nho = (h) => h.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/\s+/g, ' ').trim();
+  const vb = (h) => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/\s+/g, ' ').trim(); // như textContent của trình duyệt (so với bảng lấy từ demo)
+  const ve = (tep) => thanhPhan(tep);
+  const O = ve('components/OTracNghiem.jsx');
+  const khachO = O({ dangNhap: false, klLuu: null, mo() {}, moDangNhap() {} });
+  const hoiVienO = O({ dangNhap: true, klLuu: null, mo() {}, moDangNhap() {} });
+  k('khách chưa đăng nhập: ô MỜ + khoá + "Đăng nhập để mở khoá chức năng", ô bên trong inert', /khoa-tien-ich/.test(khachO) && /Đăng nhập để mở khoá chức năng/.test(khachO) && /inert/.test(khachO) && /Bạn thuộc thể chất nào\?/.test(khachO));
+  k('đã đăng nhập: ô thường (không khoá), đúng chữ demo "Trắc nghiệm · Bạn thuộc thể chất nào?"', !/khoa-tien-ich/.test(hoiVienO) && /hb-tile hb-t-quiz/.test(hoiVienO) && nho(hoiVienO) === 'Trắc nghiệm Bạn thuộc thể chất nào?');
+  const kl_ = (c) => tn.ketLuan(DL, c.diem, { gioiTinh: c.sex, khiHau: c.climate, anToan: c.safety });
+  const klKhi = kl_(mau.tracNghiem.find((c) => c.picks[0] === 'kh' && c.kind === 'main'));
+  k('đã có kết quả lưu: ô đổi thành "Thể trạng · <tên> · Xem kết quả ›"', nho(O({ dangNhap: true, klLuu: klKhi, mo() {}, moDangNhap() {} })) === 'Thể trạng Khí hư Xem kết quả ›');
+  const tc = doc('src/pages/TrangChu.jsx');
+  k('Trang chủ: ô nằm trong khối Hôm nay (.hb-one > .hb-tiles), bọc KhoaTienIch qua OTracNghiem', /<div className="hb-tiles"><OTracNghiem /.test(tc) && /OTracNghiem dangNhap=\{dangNhap\}/.test(tc) && /KhoaTienIch/.test(doc('src/components/OTracNghiem.jsx')));
+  const tk = doc('src/pages/TaiKhoan.jsx'), chu = doc('src/noiDung/tracNghiemChu.js');
+  k('Tài khoản: nhóm "Sức khỏe" nằm giữa "Của tôi" và "Cài đặt", dòng "Thể trạng của tôi"', /DONG_TAI_KHOAN = \{ ten: 'Thể trạng của tôi'.*nhom: 'Sức khỏe'/.test(chu)
+    && tk.indexOf('Của tôi') < tk.indexOf('DONG_TAI_KHOAN.nhom') && tk.indexOf('DONG_TAI_KHOAN.nhom') < tk.indexOf('>Cài đặt<') && /moTracNghiem/.test(tk));
+  const manDau = ve('components/ManDau.jsx')({});
+  k('S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở', /<div class="e3-tg">Đông Y Dưỡng Thể<\/div>/.test(manDau) && !/Sức khỏe mỗi ngày/.test(manDau));
+  k('S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); chỗ khác còn "Sức khỏe mỗi ngày" GIỮ NGUYÊN (Trang chủ)', doc('src/noiDung/thuongHieu.js').includes("KHAU_HIEU = 'Đông Y Dưỡng Thể'") && /Sức khỏe mỗi ngày/.test(tc) && !/Đông Y Dưỡng Thể/.test(tc));
+
+  console.log('— B1/B2 màn giới thiệu và màn câu hỏi (dựng thật)');
+  const TNg = ve('pages/TracNghiem.jsx'), TNl = ve('pages/TracNghiemLam.jsx'), TNk = ve('pages/TracNghiemKetQua.jsx');
+  const ds_nam = tn.locCau(DL, 'nam');
+  const gioiThieu = (o) => TNg({ tn: { luu: null, klLuu: null, gioiTinh: null, ...o }, lui() {}, vaoLam() {}, moKetQua() {} });
+  const gt0 = gioiThieu({});
+  const t0 = nho(gt0);
+  k('giới thiệu: đủ chữ demo (tiêu đề, 60 câu · 7–8 phút, cơ sở lý luận, Nam / Nữ, Bắt đầu, cam kết riêng tư)', ['Trắc nghiệm thể trạng', 'Tư vấn dưỡng sinh theo 9 thể chất', 'Phiếu trắc nghiệm thể trạng', '60 câu', 'khoảng 7–8 phút', 'có kết quả ngay', 'Cơ sở lý luận', 'Quốc y đại sư Vương Kỳ', 'Bước 1 Bạn là', 'Nam giới', 'Bộ câu hỏi dành cho nam', 'Nữ giới', 'Bộ câu hỏi dành cho nữ', 'Bắt đầu làm bài', 'Thông tin bạn cung cấp chỉ dùng để gợi ý thức uống phù hợp và không được dùng vào mục đích khác.', '9 thể chất'].every((x) => t0.includes(x)));
+  k('giới thiệu: chưa chọn giới tính → nút Bắt đầu mờ (btn-disabled), chưa có thẻ "Kết quả đã lưu"', /checkout-btn btn-disabled/.test(gt0) && !/tc-prev/.test(gt0));
+  k('giới thiệu: chọn Nam → nút Nam sáng (on), nút Bắt đầu hết mờ', (() => { const h = gioiThieu({ gioiTinh: 'nam' }); return /class="sex on"[^>]*aria-pressed="true"/.test(h) && !/checkout-btn btn-disabled/.test(h); })());
+  k('giới thiệu: 9 thể chất đủ tên + chữ Hán, thứ tự Bình hòa trước; ảnh là file /anh/the-chat-*.svg', (() => { const ts = [...gt0.matchAll(/<div class="tc-type">([\s\S]*?)<\/div>/g)].map((m) => nho(m[1])); return ts.length === 9 && ts[0] === 'Bình hòa 平和' && ts[8] === 'Đặc bẩm 特稟' && (gt0.match(/src="\/anh\/the-chat-[a-z]+\.svg"/g) || []).length >= 11; })());
+  const luuMau = { gioiTinh: 'nu', ngay: '2026-10-29 08:15:00', diem: mau.tracNghiem[1].diem, khiHau: 'deu', anToan: [] };
+  const gtLuu = nho(gioiThieu({ luu: luuMau, klLuu: klKhi, gioiTinh: 'nu' }));
+  k('giới thiệu: có kết quả lưu → thẻ "Kết quả đã lưu · 29/10/2026" + tên thể trạng + chữ Hán', gtLuu.includes('Kết quả đã lưu · 29/10/2026') && gtLuu.includes('Thể trạng Khí hư 氣虛'));
+  const bai = (o) => ({ gioiTinh: 'nam', ds: ds_nam, tra: ds_nam.map(() => null), i: 0, cuoi: false, khiHau: 'deu', anToan: [], ...o });
+  const quiz = (b) => TNl({ tn: { bai: b }, thoat() {}, xemKetQua() {} });
+  const lam1 = quiz(bai({}));
+  k('câu hỏi: tiêu đề "Câu 1/60", thanh tiến độ, câu thứ nhất, 4 mức A–D đúng chữ, dòng nhắc cuối', (() => { const t = nho(lam1); const q = ds_nam[0]; return t.includes('Câu 1/60') && t.includes(q.text) && t.includes('Trong 3 tháng gần đây') && q.options.every((o) => t.includes(`${o.label} ${o.text}`)) && t.includes('Chọn mô tả giống bạn nhất trong 3 tháng gần đây. Không có đúng sai.') && /class="tcq-bar"/.test(lam1) && (lam1.match(/class="tc-opt abcd/g) || []).length === 4; })());
+  k('câu hỏi: đã chọn mức → nút sáng (on); câu giữa hiện đúng số câu và tiến độ %', (() => { const h = quiz(bai({ i: 29, tra: ds_nam.map((_, j) => (j === 29 ? 4 : null)) })); return h.includes('Câu 30/60') && /style="width:48%"/.test(h) && (h.match(/tc-opt abcd on/g) || []).length === 1; })());
+  k('câu riêng cho nữ có nhãn "Dành cho nữ"; câu riêng cho nam có "Dành cho nam"', (() => {
+    const dsNu = tn.locCau(DL, 'nu');
+    const h = quiz(bai({ gioiTinh: 'nu', ds: dsNu, tra: dsNu.map(() => null), i: dsNu.findIndex((q) => q.only === 'nu') }));
+    const hn = quiz(bai({ i: ds_nam.findIndex((q) => q.only === 'nam') }));
+    return /tag-sex">Dành cho nữ</.test(h) && /tag-sex">Dành cho nam</.test(hn) && !ds_nam.some((q) => q.only === 'nu');
+  })());
+  const cuoiNu = nho(quiz(bai({ gioiTinh: 'nu', cuoi: true, khiHau: 'lanh', anToan: [DL.safetyChecklist.nu[0]] })));
+  const cuoiNamH = quiz(bai({ cuoi: true }));
+  k('hai câu cuối: kiểm tra chéo nóng / lạnh (3 lựa chọn) + câu an toàn + nút Xem kết quả', ['Hai câu cuối', 'Kiểm tra chéo · không tính điểm', 'Bạn chịu lạnh hay chịu nóng tốt hơn?', 'Chịu nóng tốt hơn, sợ lạnh', 'Chịu lạnh tốt hơn, sợ nóng', 'Như nhau, không rõ bên nào hơn', 'Câu an toàn', 'Bạn có đang ở tình trạng nào dưới đây không?', 'Xem kết quả'].every((x) => cuoiNu.includes(x)));
+  k('checklist tình trạng đặc biệt theo giới: nữ đủ ô (có "Đang mang thai"), nam 4 ô (không có thai); ô đã chọn có dấu ✓', DL.safetyChecklist.nu.every((x) => cuoiNu.includes(x)) && cuoiNu.includes('✓ Đang mang thai') && (cuoiNamH.match(/chkopt/g) || []).length === 4 && !/mang thai/.test(cuoiNamH));
+  k('hai câu cuối: thanh tiến độ 100%, đúng ô "sợ lạnh" đang chọn', (() => { const h = quiz(bai({ cuoi: true, khiHau: 'lanh' })); return /style="width:100%"/.test(h) && /tc-opt on" aria-pressed="true"><i class="rd"><\/i>Chịu nóng tốt hơn, sợ lạnh/.test(h); })());
+  k('không có bài đang làm → màn câu hỏi không dựng gì (App đưa về /tracnghiem)', quiz(null) === '');
+  k('thoát giữa chừng: quay lại ở câu đầu mà đã có câu trả lời → hỏi xác nhận (đọc nguồn)', /Thoát bài trắc nghiệm\?/.test(chu) && /b\.tra\.some\(\(x\) => x !== null\)\) datHoi\(true\)/.test(doc('src/pages/TracNghiemLam.jsx')));
+
+  console.log('— B3/B4 màn kết quả — chữ khớp CHÍNH DEMO');
+  const lienKet = / ?Trao đổi với quán ›$/;
+  const menuGia = { dl: { data: mau.menu.map((m) => ({ ma: m.ma, ten: m.ten, nhom: 'Trà', gia: 39000 })) } };
+  const ketQua = (c, hien, menu = menuGia, moHoTro = null) => TNk({ tn: { hien }, menu, lui() {}, lamLai() {}, chonMon() {}, moHoTro, veGioiThieu() {} });
+  const hienTu = (c, ex = {}) => ({ kl: kl_(c), ds: tn.locCau(DL, c.sex), tra: c.ans, ngay: '2026-10-29 08:15:00', daLuu: false, ...ex });
+  const lay = (h, lop) => { const m = new RegExp(`<div class="${lop}">([\\s\\S]*?)</div>`).exec(h); return m ? vb(m[1]) : null; };
+  for (const c of mau.tracNghiem) {
+    const h = ketQua(c, hienTu(c));
+    const hero = h.slice(h.indexOf('class="tcr-hero"'), h.indexOf('class="card tcr-sec"'));
+    const ghi = [...h.matchAll(/<div class="tc-note[^"]*">([\s\S]*?)<\/div><\/div>/g)].map((m) => vb(m[1]));
+    const diem = [...h.matchAll(/<div class="sbar[^"]*">([\s\S]*?)<\/div><\/div>/g)].map((m) => vb(m[1]));
+    const khoi = h.split('class="card tcr-sec tblock"').slice(1).map((x) => vb(x.replace(/^>/, '')).slice(0, 50));
+    const demoGhi = c.chu.ghiChu.concat(c.chu.khoiRieng).map((x) => x.replace(lienKet, ''));
+    const tongDau = h.indexOf('Kết luận tổng thể');
+    k(`[${c.ten}] kết quả: tiêu đề, chữ Hán, mức, mô tả, kết luận tổng thể`, lay(hero, 'k') === c.chu.hero.k && lay(hero, 'h') === c.chu.hero.h && lay(hero, 'h2') === c.chu.hero.h2
+      && lay(hero, 'lvl') === c.chu.hero.lvl && lay(hero, 's') === c.chu.hero.s && vb(h.slice(tongDau, h.indexOf('</div></div>', tongDau))) === 'Kết luận tổng thể' + c.chu.tong,
+      JSON.stringify({ h: lay(hero, 'h'), lvl: lay(hero, 'lvl'), tong: vb(h.slice(tongDau, h.indexOf('</div></div>', tongDau))) }));
+    k(`[${c.ten}] ghi chú (xung đột / ≥ 3 thể / an toàn / đã để riêng) + khối thể trạng + điểm 9 nhóm`, bang(ghi, demoGhi.map((x) => x.trim())) && bang(diem, c.chu.diemThanh) && khoi.length === c.chu.khoi.length && khoi.every((x, i) => x === c.chu.khoi[i].slice(0, 50)),
+      JSON.stringify({ ghi, demo: demoGhi, diem: diem[0], khoi, demoKhoi: c.chu.khoi }));
+    if (!c.picks.includes('bh') && !c.goiY.an) {
+      const nenH = nho(h.slice(h.indexOf('Thức uống gợi ý tại quán'), h.indexOf('Điểm từng nhóm')));
+      k(`[${c.ten}] gợi ý tại quán: đủ số món + tên món + nên chọn / hạn chế`, nenH.startsWith(`Thức uống gợi ý tại quán · ${c.goiY.mon.length} món`) && c.goiY.mon.every((x) => nenH.includes(x)) && c.goiY.nen.every((x) => nenH.includes(x)) && c.goiY.tranh.every((x) => nenH.includes(x)));
+    }
+  }
+  const cMain = mau.tracNghiem.find((c) => c.kind === 'main' && !c.safety.length);
+  const hMain = ketQua(cMain, hienTu(cMain)), hLuu = ketQua(cMain, hienTu(cMain, { ds: null, tra: null, daLuu: true }));
+  k('chưa lưu: hộp "Đồng ý lưu" + nút Làm lại + nguồn; có "Xem lại từng câu trả lời" (câu trả lời còn trong bộ nhớ) + ô góp ý', ['Đồng ý lưu', 'Làm lại trắc nghiệm', 'Xem lại từng câu trả lời', 'Gửi góp ý cho quán', 'Sao chép kết quả và góp ý', 'Quốc y đại sư Vương Kỳ', 'không thay thế việc thăm khám'].every((x) => nho(hMain).includes(x)) && !/Xoá kết quả/.test(hMain));
+  k('đã lưu (mở lại từ máy): "Đã lưu trên máy này" + nút Xoá kết quả; KHÔNG còn câu trả lời (không có "Xem lại từng câu", không có "Dựa trên lựa chọn")', nho(hLuu).includes('Đã lưu trên máy này') && /Xoá kết quả/.test(hLuu) && !/Xem lại từng câu/.test(hLuu) && !/Dựa trên lựa chọn/.test(hLuu) && !/Đồng ý lưu/.test(hLuu));
+  k('bảng "Xem lại" có đủ 60 dòng', (hMain.match(/<tr>/g) || []).length === 60);
+  k('không lấy được menu (chưa đăng nhập POS / lỗi): chỉ phần chữ nên / hạn chế, KHÔNG có tiêu đề "Thức uống gợi ý tại quán" và không món giả', (() => { const h = ketQua(cMain, hienTu(cMain), { dl: null }); return !/Thức uống gợi ý tại quán/.test(h) && !/prod-card/.test(h) && /Nên chọn/.test(h); })());
+  k('menu có nhưng không món nào hợp: "Hỏi nhân viên để chọn món phù hợp." (như demo)', (() => { const h = ketQua(cMain, hienTu(cMain), { dl: { data: [{ ma: 'x', ten: 'Món lạ', nhom: 'Trà', gia: 1000 }] } }); return /Hỏi nhân viên để chọn món phù hợp\./.test(h) && /· 0 món/.test(nho(h)); })());
+  k('"Trao đổi với quán ›" chỉ hiện khi quán đã khai cách liên hệ (moHoTro)', (() => { const c = mau.tracNghiem.find((x) => x.conflict); return !/Trao đổi với quán/.test(ketQua(c, hienTu(c), menuGia, null)) && /Trao đổi với quán ›/.test(ketQua(c, hienTu(c), menuGia, () => {})); })());
+  k('sao chép góp ý = đúng văn bản của demo (tcCopy); mở lại bản đã lưu thì không có dòng "Trả lời"', mau.tracNghiem.every((c) => tn.soanGopY(DL, kl_(c), c.ans, '') === c.gopY)
+    && !/Trả lời:/.test(tn.soanGopY(DL, klKhi, null, 'abc')) && /Góp ý: abc$/.test(tn.soanGopY(DL, klKhi, null, 'abc')));
+
+  console.log('— nối vào App (đọc nguồn)');
+  const app = doc('src/App.jsx');
+  k('App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn khi đăng xuất / hết phiên (donPhien gọi donSach)', /const tn = dungTracNghiem\(\)/.test(app) && /const donPhien = \(\) => \{[^\n]*tn\.donSach\(\)/.test(app));
+  k('App: mở thẳng /lam không có bài, /ketqua không có kết quả → về /tracnghiem', /trang === 'tracnghiemlam' && !tn\.bai/.test(app) && /trang === 'tracnghiemketqua' && !tn\.hien/.test(app));
+  k('App: 3 màn chỉ dựng khi đã đăng nhập; Làm lại dùng giới tính của kết quả', /dangNhap && trang === 'tracnghiem' &&/.test(app) && /dangNhap && trang === 'tracnghiemlam' &&/.test(app) && /dangNhap && trang === 'tracnghiemketqua' &&/.test(app) && /tn\.batDau\(tn\.hien\.kl\.gioiTinh\)/.test(app));
+  const hk = doc('src/dungTracNghiem.js');
+  k('hook: xoá = xoá khoá trên máy + bỏ kết quả trong bộ nhớ; donSach cũng xoá khoá; lưu chỉ ghi bản rút gọn', /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk) && /const donSach = \(\) => \{ xoaKetQua\(\);/.test(hk) && /rutGon\(moi\.kl, moi\.ngay\)/.test(hk));
+
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.log('✗ ' + (e && e.stack || e)); console.log('\n0 đạt · 1 hỏng'); process.exit(1); });

@@ -1,7 +1,7 @@
 // Bảng đường dẫn của app — MỘT chỗ khai báo (hàm thuần, không đụng DOM; bài thử cong_cu/thu_KHLINK1.js nạp thẳng).
 // Đường dẫn theo TRANG, không theo thiết bị. Màn mới phải thêm một dòng vào BANG.
 //   mau = mẫu đường dẫn (":ten" = tham số) · tab = tab sáng trên thanh tab (null = giữ tab trước) · canDN = khách phải đăng nhập
-//   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau (KH-UI-5a / 5b)
+//   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau (KH-UI-5b)
 import { boDau } from './menuLoc.js';
 
 const HAU_TO_TIEU_DE = ' · Tứ Quý Đường';
@@ -20,7 +20,9 @@ const BANG = [
   { trang: 'hotro', mau: '/taikhoan/hotro', tab: 'taikhoan', tieuDe: 'Hỗ trợ', cha: '/taikhoan' },
   { trang: 'qr', mau: '/mathanhvien', tab: null, canDN: true, tieuDe: 'Mã thành viên' },
   { trang: 'dangnhap', mau: '/dangnhap', tab: null, tieuDe: 'Đăng nhập' },
-  { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, tieuDe: 'Trắc nghiệm', giuCho: true },
+  { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, canDN: true, tieuDe: 'Trắc nghiệm' },
+  { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'Trắc nghiệm', cha: '/tracnghiem' },
+  { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'Kết quả thể trạng' },
   { trang: 'kehoach', mau: '/kehoach', tab: null, tieuDe: 'Kế hoạch và nhắc việc', giuCho: true },
 ];
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);

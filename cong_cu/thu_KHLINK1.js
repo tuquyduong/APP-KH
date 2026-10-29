@@ -62,7 +62,8 @@ function dungThanhPhan(tep) {
   k('đường dẫn lạ → khongthay, không đổi địa chỉ', (() => { const r = d.docDuongDan('/khong-co-trang-nay'); return r.trang === 'khongthay' && r.chuan === '/khong-co-trang-nay'; })());
   k('thiếu / thừa phần: /mon, /taikhoan/xyz, /menu/a/b → khongthay', ['/mon', '/taikhoan/xyz', '/menu/a/b', '/taikhoan/donhang/x/y'].every((p) => d.docDuongDan(p).trang === 'khongthay'));
   k('/admin và /admin/… → Trang chủ, không hiện gì về quản trị', ['/admin', '/admin/', '/Admin/san-pham'].every((p) => { const r = d.docDuongDan(p); return r.trang === 'trangchu' && r.chuan === '/trangchu'; }));
-  k('/tracnghiem/…, /kehoach/… chỉ giữ chỗ (giuCho), không rơi vào khongthay', d.docDuongDan('/tracnghiem/ket-qua').giuCho === true && d.docDuongDan('/kehoach/x').trang === 'kehoach' && d.docDuongDan('/menu').giuCho === false);
+  k('/kehoach/… chỉ giữ chỗ (giuCho), không rơi vào khongthay; /tracnghiem/… là trang thật (KH-UI-5a), đường lạ dưới nó → khongthay', d.docDuongDan('/kehoach/x').giuCho === true && d.docDuongDan('/kehoach/x').trang === 'kehoach' && d.docDuongDan('/menu').giuCho === false
+    && ['/tracnghiem', '/tracnghiem/lam', '/tracnghiem/ketqua'].every((p) => d.docDuongDan(p).giuCho === false && d.docDuongDan(p).chuan === p) && d.docDuongDan('/tracnghiem/ket-qua').trang === 'khongthay');
   k('địa chỉ có #… hoặc ?x=1 lạ thì bỏ phần thừa khi chuẩn hoá', d.docDuongDan('/menu?x=1#a').chuan === '/menu' && d.docDuongDan('/uudai#top').chuan === '/uudai');
 
   console.log('— A3 trang cần đăng nhập');
