@@ -1,39 +1,38 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { docDuongDan } from './duongDan.js';
 
 /** Vị trí cuộn khi đổi màn: quay LẠI Menu từ màn con (món…) → vị trí đã lưu; mọi trường hợp khác (đổi tab, mở màn con) → về đầu. */
 export function viTriCuonKhiDoiMan({ tab, coManCon, quayLaiMenu, daLuu }) {
   return tab === 'menu' && !coManCon && quayLaiMenu ? daLuu : 0;
 }
 
-// Ngăn xếp "màn con" (trang món, QR, đơn…) không router: mỗi màn con đẩy một mục vào lịch sử trình duyệt
-// để nút Back của điện thoại quay về màn trước thay vì thoát app. `history.state.kh` = độ sâu ngăn xếp.
-export function dungNganXep() {
-  const [ngan, datNgan] = useState([]);
-  const sau = useRef(0); // độ sâu thật — chạm đúp nhanh không đẩy hai mục cùng độ sâu
+// Bộ định tuyến gọn bằng History API (không thư viện): địa chỉ trên thanh trình duyệt LÀ trạng thái điều hướng. Bảng đường dẫn ở duongDan.js.
+// `history.state.kh` = số bước đã đẩy trong app: > 0 thì Back quay về trang trước của app, = 0 (mở thẳng) thì Back về trang cha, không thoát app.
+const diaChiHienTai = () => window.location.pathname + window.location.search;
+const soBuoc = () => (window.history.state && window.history.state.kh) || 0;
 
+export function dungDuongDan() {
+  const [diaChi, datDiaChi] = useState(diaChiHienTai);
   useEffect(() => {
-    if (history.state && history.state.kh) history.replaceState(null, '');
-    const khiLui = (e) => {
-      sau.current = (e.state && e.state.kh) || 0;
-      datNgan((n) => (sau.current < n.length ? n.slice(0, sau.current) : n));
-    };
+    const khiLui = () => datDiaChi(diaChiHienTai());
     window.addEventListener('popstate', khiLui);
     return () => window.removeEventListener('popstate', khiLui);
   }, []);
 
-  const mo = useCallback((man) => {
-    sau.current += 1;
-    history.pushState({ kh: sau.current }, '');
-    datNgan((n) => [...n.slice(0, sau.current - 1), man]);
+  const di = useCallback((p) => {
+    if (p === diaChiHienTai()) return;
+    window.history.pushState({ kh: soBuoc() + 1 }, '', p);
+    datDiaChi(diaChiHienTai());
   }, []);
-  // Thay màn trên cùng bằng màn khác, cùng độ sâu (đăng nhập xong mở thẳng QR: không chạy đua giữa history.back và pushState).
-  const thay = useCallback((man) => {
-    history.replaceState({ kh: sau.current }, '');
-    datNgan((n) => [...n.slice(0, Math.max(sau.current - 1, 0)), man]);
+  const thay = useCallback((p) => {
+    window.history.replaceState({ kh: soBuoc() }, '', p);
+    datDiaChi(diaChiHienTai());
   }, []);
-  const lui = useCallback(() => history.back(), []);
-  // Đặt độ sâu về 0 NGAY (popstate tới sau): gọi lặp (401 dồn dập + bấm tab) không lùi quá tay, không thoát khỏi app.
-  const veDau = useCallback(() => { const n = sau.current; if (n) { sau.current = 0; history.go(-n); } }, []);
+  const lui = useCallback((veNeuHet) => (soBuoc() > 0 ? window.history.back() : thay(veNeuHet)), [thay]);
 
-  return { man: ngan[ngan.length - 1] || null, mo, thay, lui, veDau };
+  const duong = useMemo(() => docDuongDan(diaChi), [diaChi]);
+  // Địa chỉ chưa chuẩn ("/", "/Menu/", "/admin") → thay bằng dạng chuẩn, không thêm lịch sử.
+  useLayoutEffect(() => { if (duong.chuan !== diaChi) thay(duong.chuan); }, [duong, diaChi, thay]);
+
+  return { duong, di, thay, lui };
 }
