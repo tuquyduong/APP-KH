@@ -21,4 +21,4 @@ VÒNG SỬA 2 — bài thử thu_KHUI2.js đã SỬA (thêm ca V4 V5 V6 V9, đ�
   ✗ Cannot find package 'react' … src/dieuHuong.js           (gốc chưa có viTriCuonKhiDoiMan; ở nháp thiếu node_modules nên báo thiếu react)
   → 0 đạt · 1 hỏng khi chạy tới khối V6. Trên code đã vá: 74 đạt · 0 hỏng.
 
-SỐ CA thu_KHUI2.js: 74
+SỐ CA thu_KHUI2.js: 78

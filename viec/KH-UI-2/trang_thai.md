@@ -147,3 +147,25 @@ Chưa soát lại vòng 2 (còn 2 vòng, không dùng vì các sửa là cục b
 
 ✓ CỔNG CHẠY ĐẠT (`node tu_chay/cong.js chay . 29b830c^ HEAD viec/KH-UI-2` tại `c9d9278`, cây sạch)
 HEAD ĐÃ KIỂM: c9d9278
+
+## Soát độc lập vòng vá 2 (/ra-soat) — KHÔNG ĐẠT → đã sửa ở `09a5739`
+Báo cáo agent soát (nguyên ý, đã đọc đủ): KHÔNG ĐẠT; không lỗi chặn nhưng 3 lỗi thật + nghi ngờ nhẹ; nghiệm thu 8/9 có bằng chứng (V8 thiếu kết quả cổng vòng 2).
+Xử lý từng mục:
+1. Menu giữ trong cây → số "Hết hàng" / tồn cũ: ĐÃ SỬA — `Menu.jsx` làm mới khi khách BẤM tab Menu (`lanVao` từ `App.jsx`), quay lại từ màn con thì giữ nguyên.
+2. Số Voucher dựa trường ngoài hợp đồng: ĐÃ SỬA — `TaiKhoan.jsx` / `UuDai.jsx` đếm thẳng `/voucher` (không `?all` chỉ trả mã còn dùng).
+3. Enter nổi bọt ở thẻ Tài khoản: ĐÃ SỬA — `src/components/bam.js` (Enter + Space, chặn nổi bọt), ca thu_KHUI2.
+4. "Đổi số điện thoại" thiếu phím: ĐÃ SỬA (dùng `bam`). Các chỗ khác còn Enter-only (Menu, MonO, TrangChu…): GHI NHẬN, chưa chuyển hết sang `bam` (đề xuất việc nhỏ sau).
+5. `veDau` gọi lặp: ĐÃ SỬA — đặt độ sâu về 0 ngay (`dieuHuong.js`).
+6. Giá trị `cancelled` / `paid` đoán: giữ, đã ở Phát hiện (chờ hợp đồng).
+7. Âm thanh: ĐÃ SỬA `preload="none"`, vùng bấm nút màn mở ≥ 44 px (CSS). Nút hiện "Bật âm thanh" khi 'on' đã lưu mà bị chặn tự phát: để nguyên (đúng demo, chạm là phát).
+8. PinSheet: ĐÃ SỬA bỏ qua phím có Ctrl/Meta/Alt, không đóng khi đang gửi. Focus trap: chưa làm (ghi nhận).
+9. BannerHomNay chưa chạy trong bản thật (chữ trống): đã kiểm bằng chữ thử ở nháp; `document.fonts.ready`: chưa làm (ghi nhận).
+10. Dọn phiên hai đường: ĐÃ SỬA — `donPhien()` dùng chung cho đăng xuất và 401 (`App.jsx`).
+Nghi ngờ bài thử V5/V6 chỉ là regex: đã thêm ca HÀNH VI (`bam`) và kiểm khói Chromium 15/15 (cuộn giữ vị trí, ô tìm giữ) ở nháp; ghi nhận: bằng chứng đỏ riêng cho V6/V9 chưa có (bài đỏ chung vì thiếu module trên gốc).
+Lệch ảnh %: doi_chieu_demo.md nói đọc theo bảng khối, không theo %; chưa có ảnh lệch từng khối — ghi nhận.
+Kết quả sau sửa: `thu_KHUI2.js` 78 đạt · 0 hỏng; `npm test` xanh; `--day-du` 18 đạt · 0 hỏng.
+
+SỐ CA thu_KHUI2.js đã ghi ở bang_chung_do.txt là 74 (trước vòng vá); sau vá 78 — bài đỏ trên gốc vẫn đỏ (các ca mới `bam.js` chưa có trên gốc).
+
+✓ CỔNG CHẠY ĐẠT (`node tu_chay/cong.js chay . 29b830c^ HEAD viec/KH-UI-2` tại `09a5739`, cây sạch)
+HEAD ĐÃ KIỂM: 09a5739
