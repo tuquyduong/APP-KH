@@ -32,7 +32,7 @@ function DanhSachVoucher({ tatCa }) {
   return (
     <TrangTai tai={tai}>
       {(dl) => {
-        const dung = tatCa ? dl.data : dl.data.filter((v) => v.status === 'available');
+        const dung = dl.data; // không `?all`: POS chỉ trả mã còn dùng (hợp đồng)
         return (
           <>
             {dl.ma_khach_moi.length === 0 && dung.length === 0 && <div className="empty-note">Bạn chưa có voucher nào.</div>}

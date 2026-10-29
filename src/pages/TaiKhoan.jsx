@@ -5,11 +5,11 @@ import { LIEN_HE, coLienHe } from '../noiDung/lienHe.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import { Med } from '../components/BieuTuong.jsx';
+import { bam } from '../components/bam.js';
 
 // Tài khoản theo demo (account): thẻ tên + 3 ô nhanh, nhóm "Của tôi" / "Cài đặt", đăng xuất.
 // Bỏ: Ví & Thẻ quà tặng, Gia đình (KH-UI-3 / sau khai trương), Thể trạng (KH-UI-5), Thông báo & âm thanh, Quản trị (không thuộc app khách).
 // Ô nhanh chỉ có Điểm và Voucher (Ví → KH-UI-3); hạng cạnh số điện thoại → KH-UI-3.
-const bam = (f) => ({ role: 'button', tabIndex: 0, onClick: f, onKeyDown: (e) => { if (e.key === 'Enter') f(e); } });
 
 function DongMenu({ bieuTuong, ten, phu, chon }) {
   return (
@@ -25,7 +25,8 @@ export default function TaiKhoan({ moDon, moQR, moHoSo, moHoTro, moUuDai, dangXu
   const tai = dungTai(layToi);
   const diem = dungTai(layDiem);
   const voucher = dungTai(layVoucher);
-  const soVoucher = voucher.dl ? voucher.dl.ma_khach_moi.length + voucher.dl.data.filter((v) => v.status === 'available').length : null;
+  // `/voucher` không `?all` chỉ trả mã còn dùng (hợp đồng) → đếm thẳng, không dựa trường trạng thái ngoài hợp đồng.
+  const soVoucher = voucher.dl ? voucher.dl.ma_khach_moi.length + voucher.dl.data.length : null;
   return (
     <Man id="account">
       <div className="topbar"><div><h1>Tài khoản</h1></div><NutQR moQR={moQR} /></div>

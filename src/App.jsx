@@ -32,6 +32,7 @@ export default function App() {
   const [maCho, datMaCho] = useState(MA_TU_LINK);
   const [tab, datTab] = useState(MA_TU_LINK && docToken() ? 'uudai' : 'trangchu');
   const [daVaoMenu, datDaVaoMenu] = useState(false);
+  const [lanVaoMenu, datLanVaoMenu] = useState(0);
   const [nhuCau, datNhuCau] = useState('');
   const nx = dungNganXep();
   const khungCuon = useRef(null);
@@ -39,17 +40,17 @@ export default function App() {
   const quayLaiMenu = useRef(false);
 
   // 401 giữa phiên: về đăng nhập VÀ dọn màn con (người đăng nhập sau không thấy màn của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
-  useEffect(() => {
-    datKhiHetPhien(() => { nx.veDau(); datDangNhap(false); datDaVaoMenu(false); });
-  }, [nx.veDau]);
+  // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau).
+  const donPhien = () => { nx.veDau(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datTab('trangchu'); };
+  useEffect(() => { datKhiHetPhien(donPhien); });
 
   useLayoutEffect(() => {
     if (khungCuon.current) khungCuon.current.scrollTop = viTriCuonKhiDoiMan({ tab, coManCon: !!nx.man, quayLaiMenu: quayLaiMenu.current, daLuu: viTriMenu.current });
   }, [tab, nx.man]);
 
-  const vaoTab = (t) => { quayLaiMenu.current = false; nx.veDau(); datTab(t); if (t === 'menu') datDaVaoMenu(true); };
+  const vaoTab = (t) => { quayLaiMenu.current = false; nx.veDau(); datTab(t); if (t === 'menu') { datDaVaoMenu(true); datLanVaoMenu((n) => n + 1); } };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
-  const dangXuat = () => { xoaToken(); nx.veDau(); datMaCho(''); datDangNhap(false); datDaVaoMenu(false); datTab('trangchu'); };
+  const dangXuat = () => { xoaToken(); datMaCho(''); donPhien(); };
   const khiDangNhapXong = () => { datDangNhap(true); datTab(maCho ? 'uudai' : 'trangchu'); };
 
   // Mở màn con: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
@@ -83,7 +84,7 @@ export default function App() {
         {!dangNhap && <DangNhap khiXong={khiDangNhapXong} />}
         {dangNhap && (
           <>
-            {daVaoMenu && <Menu hien={taiTab('menu')} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} />}
+            {daVaoMenu && <Menu hien={taiTab('menu')} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} />}
             {taiTab('trangchu') && <TrangChu moQR={moQR} moMenu={() => chonTab('menu')} moUuDai={moUuDai} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
             {taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
             {taiTab('taikhoan') && <TaiKhoan moQR={moQR} moDon={() => moManCon({ k: 'donds' })} moHoSo={() => moManCon({ k: 'hoso' })} moHoTro={() => moManCon({ k: 'hotro' })} moUuDai={moUuDai} dangXuat={dangXuat} />}

@@ -158,6 +158,17 @@ function kichThuocPng(f) {
   const app = doc('src/App.jsx');
   k('Menu giữ trong cây (daVaoMenu), chỉ ẩn khi sang màn con', /daVaoMenu && <Menu hien=\{taiTab\('menu'\)\}/.test(app));
 
+  console.log('— Nút giả trên div (bam): Enter + Space, không nổi bọt lên thẻ cha');
+  const { bam } = await nap('src/components/bam.js');
+  const gia = (key) => { const s = { goi: 0, chan: 0, boMacDinh: 0, key, preventDefault() { this.boMacDinh++; }, stopPropagation() { this.chan++; } }; return s; };
+  let goi = 0; const b = bam(() => { goi++; });
+  const e1 = gia('Enter'); b.onKeyDown(e1); const e2 = gia(' '); b.onKeyDown(e2); const e3 = gia('a'); b.onKeyDown(e3);
+  k('Enter và Space bấm được, chặn nổi bọt; phím khác bỏ qua', goi === 2 && e1.chan === 1 && e2.chan === 1 && e2.boMacDinh === 1 && e3.chan === 0 && b.role === 'button' && b.tabIndex === 0);
+  const tk = doc('src/pages/TaiKhoan.jsx');
+  k('số Voucher không dựa trường `status` ngoài hợp đồng', !/status/.test(tk) && !/status === 'available'/.test(doc('src/pages/UuDai.jsx')));
+  k('Menu tự làm mới khi bấm tab (lanVao), không khi quay lại từ màn con', /lanTruoc\.current !== lanVao/.test(doc('src/pages/Menu.jsx')) && /datLanVaoMenu/.test(app));
+  k('đăng xuất và 401 dùng chung donPhien', /datKhiHetPhien\(donPhien\)/.test(app) && /donPhien\(\);\s*\};/.test(app.replace(/\n/g, ' ')));
+
   console.log('— V9 biểu tượng, nhóm món');
   k('nhóm món theo tên: Trà / Ép / Cà phê / Dưỡng sinh / Hoa quả → biểu tượng demo', [['Trà Đông Y', 'gaiwan'], ['Nước ép Rau Củ Quả Thực Dưỡng', 'drop'], ['Cà phê', 'phin'], ['Dưỡng Sinh – Dưỡng Thể', 'jar'], ['Hoa quả', 'fruit']].every(([n, ic]) => l.bieuTuongNhom(n).ic === ic));
   k('nhóm lạ / thiếu → mặc định (không bịa)', l.bieuTuongNhom('Combo').ic === 'cabinet' && l.bieuTuongNhom(undefined).ic === 'cabinet' && l.bieuTuongNhom('Trạm').ic === 'cabinet');

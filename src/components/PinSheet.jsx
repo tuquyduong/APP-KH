@@ -18,10 +18,12 @@ export default function PinSheet({ dong }) {
 
   const nhan = (c) => { if (!dang && so.length < DO_DAI) datSo(so + c); };
   const xoa = () => { if (!dang) datSo(so.slice(0, -1)); };
+  const dongNeuRanh = () => { if (!dang) dong(); }; // đang gửi thì không đóng (mất báo kết quả)
 
   useEffect(() => {
     const phim = (e) => {
-      if (/^\d$/.test(e.key)) nhan(e.key); else if (e.key === 'Backspace') xoa(); else if (e.key === 'Escape') dong();
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (/^\d$/.test(e.key)) nhan(e.key); else if (e.key === 'Backspace') xoa(); else if (e.key === 'Escape') dongNeuRanh();
     };
     window.addEventListener('keydown', phim);
     return () => window.removeEventListener('keydown', phim);
@@ -40,7 +42,7 @@ export default function PinSheet({ dong }) {
 
   const [tieuDe, phu] = LOI_TEXT[buoc];
   const noi = (
-    <div className="sheet pin-sheet show" role="presentation" onClick={(e) => { if (e.target === e.currentTarget) dong(); }}>
+    <div className="sheet pin-sheet show" role="presentation" onClick={(e) => { if (e.target === e.currentTarget) dongNeuRanh(); }}>
       <div className="panel" role="dialog" aria-modal="true" aria-label="Mã PIN">
         {xong ? (
           <>

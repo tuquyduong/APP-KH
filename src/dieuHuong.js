@@ -27,7 +27,8 @@ export function dungNganXep() {
     datNgan((n) => [...n.slice(0, sau.current - 1), man]);
   }, []);
   const lui = useCallback(() => history.back(), []);
-  const veDau = useCallback(() => { if (sau.current) history.go(-sau.current); }, []);
+  // Đặt độ sâu về 0 NGAY (popstate tới sau): gọi lặp (401 dồn dập + bấm tab) không lùi quá tay, không thoát khỏi app.
+  const veDau = useCallback(() => { const n = sau.current; if (n) { sau.current = 0; history.go(-n); } }, []);
 
   return { man: ngan[ngan.length - 1] || null, mo, lui, veDau };
 }

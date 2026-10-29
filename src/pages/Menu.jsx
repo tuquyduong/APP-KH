@@ -13,8 +13,13 @@ import { Ico, En } from '../components/BieuTuong.jsx';
 const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
-export default function Menu({ hien, nhuCau, boNhuCau, chonMon, moQR }) {
+export default function Menu({ hien, lanVao, nhuCau, boNhuCau, chonMon, moQR }) {
   const tai = dungTai(layMenu);
+  // Menu được giữ trong cây nên tự làm mới "Hết hàng" / tồn mỗi lần khách BẤM tab Menu (lanVao tăng); quay lại từ màn con thì giữ nguyên.
+  const lanTruoc = useRef(lanVao);
+  useEffect(() => {
+    if (lanTruoc.current !== lanVao) { lanTruoc.current = lanVao; tai.taiLai(); }
+  }, [lanVao, tai.taiLai]);
   const [nhom, datNhom] = useState('');
   const [tu, datTu] = useState('');
   const [mini, datMini] = useState(false);

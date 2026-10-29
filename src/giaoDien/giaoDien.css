@@ -20,6 +20,7 @@ button:disabled{ opacity:.45; cursor:default; }
 .back-btn, .qr-header-btn, .icon-btn{ position:relative; flex-shrink:0; }
 .back-btn::after, .qr-header-btn::after, .icon-btn::after, .more-l span::after{ content:""; position:absolute; inset:-4px; }
 .more-l span::after{ inset:-14px -12px; }
+.e3-skip::after, .e3-snd::after{ content:""; position:absolute; inset:-8px; } /* nút của màn mở cao ~30px → vùng bấm ≥ 44px */
 
 /* ===== Chỗ demo viết inline ===== */
 .hang-logo{ display:flex; align-items:center; gap:7px; }

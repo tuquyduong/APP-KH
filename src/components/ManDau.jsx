@@ -94,7 +94,7 @@ export default function ManDau() {
         <svg className="off" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fillOpacity=".25" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></g></svg>
         <span>Bật âm thanh</span>
       </div>
-      <audio ref={amThanh} preload="auto" src="/am_thanh/man_dau.mp3" />
+      <audio ref={amThanh} preload="none" src="/am_thanh/man_dau.mp3" />
       <div className="e3-brand">
         <div className="e3-em"><img src="/anh/logo-bieu-tuong.webp" alt="" /></div>
         <div className="e3-tw" role="img" aria-label="Tứ Quý Đường">{chu('w1')}{chu('w2')}{chu('w3')}</div>

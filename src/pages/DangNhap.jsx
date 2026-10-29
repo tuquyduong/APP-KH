@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { xinMa, xacMinh, luuToken } from '../api.js';
 import Man from '../components/Man.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
+import { bam } from '../components/bam.js';
 
 // SĐT → mã → (tên nếu khách mới) → vào App. Mã lấy tại quầy khi máy chủ báo lay_ma_tai_quay. Demo chưa có màn đăng nhập riêng:
 // dựng bằng khối của demo (pf-card, otp-in, checkout-btn, nt-state).
@@ -65,7 +66,7 @@ export default function DangNhap({ khiXong }) {
               </div>
             )}
             <button type="button" className="checkout-btn giua" disabled={dang || !ma.trim()} onClick={guiMa}>Đăng nhập</button>
-            <div className="otp-re"><b role="button" tabIndex={0} onClick={() => { datBuoc('sdt'); datMa(''); datLoi(''); datCanTen(false); }}>Đổi số điện thoại</b></div>
+            <div className="otp-re"><b {...bam(() => { datBuoc('sdt'); datMa(''); datLoi(''); datCanTen(false); })}>Đổi số điện thoại</b></div>
           </>
         )}
         {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>}
