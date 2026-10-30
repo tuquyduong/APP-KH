@@ -49,7 +49,7 @@ const CHU = 'ĐÔNG Y DƯỠNG THỂ';
   console.log('— B3. Chromium: phông EB Garamond vẽ thật, dấu tiếng Việt đủ');
   let pw = null;
   try { pw = require('playwright'); } catch { /* không có */ }
-  k('B3 có Playwright để đo', !!pw);
+  if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này — ca B3 (phông vẽ thật) CHƯA chạy (GitHub không có Chromium; máy có Chromium thì chạy)');
   if (pw) {
     const lay = {};
     const may = http.createServer((q, r) => {
