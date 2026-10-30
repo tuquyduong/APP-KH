@@ -95,3 +95,10 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
 - Hết phiên đăng nhập (401): KHÔNG xoá dữ liệu trên máy (khách dùng thường xuyên không được mất dữ liệu vì hết hạn), nhưng không hiện ra khi chưa đăng nhập.
 - XOÁ khi: khách bấm "Đăng xuất"; hoặc người đăng nhập sau là KHÁC khách (so dấu vết số điện thoại ở khoá `kh_chu`; số thô không lưu); hoặc khách bấm nút xoá của từng tính năng. Quy tắc làm ở một chỗ `src/luuMay.js` (KH-LUU-1); tính năng mới lưu trên máy phải thêm khoá của mình vào danh sách ở đó.
 - Kho bị chặn (cửa sổ riêng tư…): không vỡ, KHÔNG báo "đã lưu" khi chưa lưu.
+
+
+## 9. Bài thử cần trình duyệt thật (bài học KH-LUU-1, KH-SLOGAN-1, KH-UI-3a — cổng GitHub đỏ ba lần)
+GitHub chạy cổng KHÔNG có trình duyệt (Playwright). Máy làm việc có. Hai nơi đếm số ca khác nhau → cổng A16 đỏ nếu `SỐ CA` trong `bang_chung_do.txt` ghi số của máy.
+- Bài thử có phần chạy trong trình duyệt: không có Playwright thì in "BỎ QUA" (KHÔNG tính hỏng, KHÔNG đếm ca "có Playwright để đo"); đọc biến `KHONG_TRINH_DUYET=1` để bỏ phần đó có chủ ý.
+- Dòng `SỐ CA <bài>: N` ghi N đếm được khi chạy VỚI `KHONG_TRINH_DUYET=1` (đúng số GitHub đếm). Phần trình duyệt vẫn phải chạy thật ở máy và ghi kết quả vào `trang_thai.md`.
+- Chủ quán KHÔNG sửa tay số này trên GitHub khi đã chạy file script của chat (script tự ghi số đúng).
