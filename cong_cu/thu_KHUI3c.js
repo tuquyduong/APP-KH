@@ -168,7 +168,7 @@ async function trinhDuyet(pw) {
         k(`C1a ${tag}: KHÔNG phần tử nào phủ chồng lên chữ nhãn / dòng khoá; không phần tử nổi trong ô; chữ không tràn ô`, !!o.tn && !!o.gv && o.tn.chu.concat(o.gv.chu).every((c) => !c.bi && !c.tran) && o.tn.noi === 0 && o.gv.noi === 0, JSON.stringify(o));
         k(`C1a ${tag}: ô Giờ vàng không "suất", không số %, không đếm ngược`, !/suất|\d/.test(await t.locator('.hb-t-flash').innerText()));
         k(`C1a ${tag}: Lỗi JS = 0`, loi.length === 0, loi.join('|'));
-        if (luuAnh && rong === 390) await t.screenshot({ path: path.join(luuAnh, `chua_dn_${rong}_${co.replace('%', '')}.png`) });
+        if (luuAnh) await t.locator('.hb-one').screenshot({ path: path.join(luuAnh, `app_chua_dn_${rong}_chu${co.replace('%', '')}.png`) });
       });
     }
   }
