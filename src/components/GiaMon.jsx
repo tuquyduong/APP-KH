@@ -11,7 +11,7 @@ const boDong = (gia) => dinhDangGia(gia).replace('đ', '');
 export function BacGia({ bac }) {
   return (
     <div className="lad" style={{ gridTemplateColumns: `repeat(${bac.length},1fr)` }}>
-      {bac.map((c, i) => <div key={c.ten} className={c.laToi ? `me ${lopMau(i)}` : ''}><small>{c.ten}</small><b>{boDong(c.gia)}</b></div>)}
+      {bac.map((c, i) => <div key={i} className={c.laToi ? `me ${lopMau(i)}` : ''}><small>{c.ten}</small><b>{boDong(c.gia)}</b></div>)}
     </div>
   );
 }
@@ -20,7 +20,7 @@ export function BacGiaChiTiet({ bac }) {
   return (
     <div className="ladd" style={{ gridTemplateColumns: bac.map((c) => (c.laToi ? '1.25fr' : '1fr')).join(' ') }}>
       {bac.map((c, i) => (
-        <div key={c.ten} className={c.laToi ? `me ${lopMau(i)}` : ''}>
+        <div key={i} className={c.laToi ? `me ${lopMau(i)}` : ''}>
           <small>{c.laToi && <span className="gem" />}{c.ten}</small><b>{dinhDangGia(c.gia)}</b><span className="tag">{c.laToi ? 'Giá của bạn' : ' '}</span>
         </div>
       ))}

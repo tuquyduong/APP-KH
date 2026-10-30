@@ -95,6 +95,8 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
       const gioNgan = { ...GV_CHAY, bat_dau: '20:00', ket_thuc: '22:00' };
       k('E2 bộ đọc nhận cả dạng "HH:mm" (hợp đồng chưa ghi dạng): còn 5400 giây lúc 20:30', (T(gioNgan, '2026-10-30 20:30:00') || {}).conLai === 5400);
       k('E2 đếm ngược định dạng h:mm:ss', gv.chuDemNguoc(5400) === '1:30:00' && gv.chuDemNguoc(59) === '0:00:59' && gv.chuDemNguoc(3725) === '1:02:05');
+      k('E2 nhãn món theo pha: đang "Giờ vàng −50%" · chưa tới "… từ 20:00" · chờ POS "… sắp bắt đầu" · hết khung "Giờ vàng đã kết thúc" (không còn "từ 20:00")',
+        gv.chuNhanMon(a) === 'Giờ vàng −50%' && gv.chuNhanMon(b2) === 'Giờ vàng −50% từ 20:00' && gv.chuNhanMon(T(GV_CHUA, '2026-10-30 20:30:00')) === 'Giờ vàng −50% sắp bắt đầu' && gv.chuNhanMon(c) === 'Giờ vàng đã kết thúc');
       k('E3 mọi chữ Giờ vàng không có "suất"', ['tile', 'short', 'long'].every((kieu) => [a, b2, c].every((t) => !/suất/i.test(gv.chuGioVang(t, kieu)))));
       k('E2 chữ: đang → "Còn 1:30:00"; chưa tới → "Mở lúc 20:00"; hết khung → "Đã kết thúc"', gv.chuGioVang(a, 'short') === 'Còn 1:30:00' && /Mở lúc 20:00/.test(gv.chuGioVang(b2, 'short')) && gv.chuGioVang(c, 'short') === 'Đã kết thúc');
       const ds = MENU.data;
@@ -118,7 +120,6 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
       k('D2 bậc thang: Thường + từng hạng POS trả, đúng giá, đánh dấu hạng của khách', bac.length === 3 && bac[0].ten === 'Thường' && bac[0].gia === 28000 && bac[1].gia === 25200 && bac[1].laToi === true && bac[2].gia === 23800 && !bac[0].laToi, JSON.stringify(bac));
       k('D2 khách không hạng → "Thường" là của mình', gh.bacThang(HANG.data, tpn, null).find((x) => x.laToi).ten === 'Thường');
       k('D2 hạng POS không trả giá cho món → cột đó không hiện; không có bậc nào → null (ẩn)', gh.bacThang(HANG.data, cfs, HANG_VANG) === null && gh.bacThang(HANG.data, { ...tpn, gia_hang: [{ hang_id: 3, gia: 23800 }] }, HANG_VANG).length === 3 - 1);
-      k('D3 phần trăm lớn nhất của /hang = 15; không có /hang → null', gh.phanTramToiDa(HANG.data) === 15 && gh.phanTramToiDa([]) === null && gh.phanTramToiDa(null) === null);
       const sach = gh.boGiaHang(MENU);
       k('D4 boGiaHang bỏ mọi gia_hang, giữ phần còn lại, không sửa bản gốc', sach.data.length === 4 && sach.data.every((m) => !('gia_hang' in m)) && sach.data[0].gia === 30000 && 'gia_hang' in MENU.data[0]);
     } catch (e) { baoLoi('D giaHang', e); }

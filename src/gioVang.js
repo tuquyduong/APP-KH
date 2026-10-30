@@ -52,8 +52,12 @@ export function chuGioVang(tt, kieu) {
   return 'Đã kết thúc';
 }
 
-/** Nhãn trên ô món (demo gvTag, bỏ "còn N suất"): đang → "Giờ vàng −50%"; ngoài giờ → "Giờ vàng −50% từ 20:00". */
-export const chuNhanMon = (tt) => (tt.pha === 'dang' ? `Giờ vàng −${tt.phanTram}%` : `Giờ vàng −${tt.phanTram}% từ ${tt.batDau}`);
+/** Nhãn trên ô món (demo gvTag, bỏ "còn N suất"): đang → "Giờ vàng −50%"; chưa tới → "… từ 20:00"; tới giờ chờ POS → "… sắp bắt đầu"; hết khung → "Giờ vàng đã kết thúc". */
+export function chuNhanMon(tt) {
+  if (tt.pha === 'dang') return `Giờ vàng −${tt.phanTram}%`;
+  if (tt.pha === 'sau') return 'Giờ vàng đã kết thúc';
+  return tt.pha === 'cho' ? `Giờ vàng −${tt.phanTram}% sắp bắt đầu` : `Giờ vàng −${tt.phanTram}% từ ${tt.batDau}`;
+}
 
 /** Mã món Giờ vàng CÓ trong menu (E4: mã không có trong menu → bỏ qua, không lỗi). */
 export function maGioVang(gv, ds) {

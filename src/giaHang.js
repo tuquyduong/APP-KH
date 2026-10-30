@@ -21,11 +21,5 @@ export function bacThang(dsHang, mon, hangToi) {
   return [{ ten: 'Thường', gia: mon.gia, laToi: !cot.some((c) => c.id === toi) }, ...cot.map((c) => ({ ten: c.ten, gia: c.gia, laToi: c.id === toi }))];
 }
 
-/** Số % giảm lớn nhất trong /hang (dòng mời "Hội viên giảm đến X%"); không có → null. */
-export function phanTramToiDa(dsHang) {
-  const so = (Array.isArray(dsHang) ? dsHang : []).map((h) => h.phan_tram).filter((p) => typeof p === 'number' && p > 0);
-  return so.length ? Math.max(...so) : null;
-}
-
 /** Menu không còn giá hạng của khách (bản công khai): bỏ `gia_hang` khỏi mọi món, không sửa bản gốc. */
 export const boGiaHang = (dl) => (dl && Array.isArray(dl.data) ? { ...dl, data: dl.data.map(({ gia_hang: _bo, ...mon }) => mon) } : dl);

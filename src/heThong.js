@@ -25,7 +25,7 @@ export function napGioVang() {
 /** Gọi ở App: nạp khi mở app, hỏi lại mỗi phút (và khi khách quay lại tab). */
 export function dungHeThong() {
   useEffect(() => {
-    const nap = () => { napGioHoatDong().then(() => napHang()); lanGvCuoi = 0; napGioVang(); };
+    const nap = () => { napGioHoatDong(); napHang(); lanGvCuoi = 0; napGioVang(); }; // ba cửa độc lập: cửa nào chậm chỉ ẩn phần của nó (A3)
     nap();
     const id = setInterval(() => { if (!document.hidden) nap(); }, PHUT_HOI_LAI * 60000);
     const khiHien = () => { if (!document.hidden) nap(); };
