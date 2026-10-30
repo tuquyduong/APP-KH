@@ -266,11 +266,11 @@ function hangDemo(ten) {
 
   console.log('— nối vào App (đọc nguồn)');
   const app = doc('src/App.jsx');
-  k('App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn khi đăng xuất / hết phiên (donPhien gọi donSach)', /const tn = dungTracNghiem\(\)/.test(app) && /const donPhien = \(\) => \{[^\n]*tn\.donSach\(\)/.test(app));
+  k('App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn bộ nhớ khi đăng xuất / hết phiên (donPhien gọi donBoNho; KH-LUU-1)', /const tnGoc = dungTracNghiem\(\)/.test(app) && /const donPhien = \(\) => \{[^\n]*tnGoc\.donBoNho\(\)/.test(app));
   k('App: mở thẳng /lam không có bài, /ketqua không có kết quả → về /tracnghiem', /trang === 'tracnghiemlam' && !tn\.bai/.test(app) && /trang === 'tracnghiemketqua' && !tn\.hien/.test(app));
   k('App: 3 màn chỉ dựng khi đã đăng nhập; Làm lại dùng giới tính của kết quả', /dangNhap && trang === 'tracnghiem' &&/.test(app) && /dangNhap && trang === 'tracnghiemlam' &&/.test(app) && /dangNhap && trang === 'tracnghiemketqua' &&/.test(app) && /tn\.batDau\(tn\.hien\.kl\.gioiTinh\)/.test(app));
   const hk = doc('src/dungTracNghiem.js');
-  k('hook: xoá = xoá khoá trên máy + bỏ kết quả trong bộ nhớ; donSach cũng xoá khoá; lưu chỉ ghi bản rút gọn', /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk) && /const donSach = \(\) => \{ xoaKetQua\(\);/.test(hk) && /rutGon\(moi\.kl, moi\.ngay\)/.test(hk));
+  k('hook: xoá = xoá khoá trên máy + bỏ kết quả trong bộ nhớ; donBoNho chỉ dọn bộ nhớ, KHÔNG xoá khoá (hết phiên không mất kết quả — KH-LUU-1); lưu chỉ ghi bản rút gọn', /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk) && /const donBoNho = \(\) => \{(?![^\n]*xoaKetQua)/.test(hk) &&/rutGon\(moi\.kl, moi\.ngay\)/.test(hk));
 
   k('lưu thất bại (kho bị chặn) → hook không báo "đã lưu" mà trả false; màn kết quả báo "không lưu được"', /if \(!ghiKetQua\(ban\)\) return false;/.test(hk) && /tn\.luuLai\(\) \? CHU\.daLuuToast : CHU\.khongLuuDuoc/.test(doc('src/pages/TracNghiemKetQua.jsx')) && /khongLuuDuoc:/.test(chu));
   k('mở thẻ / ô / dòng "đã lưu" luôn mở BẢN ĐÃ LƯU (bỏ kết quả làm lại chưa lưu): App gọi xemBanLuu', (app.match(/tn\.xemBanLuu\(\)/g) || []).length === 2 && /const xemBanLuu = \(\) => datMoi\(null\)/.test(hk));

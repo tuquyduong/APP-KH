@@ -53,10 +53,12 @@ export function dungTracNghiem() {
   const xoa = () => { xoaKetQua(); datLuu(null); datMoi(null); datGioiTinh(null); };
   /** Mở lại BẢN ĐÃ LƯU: bỏ kết quả làm lại chưa lưu (nếu còn) để thẻ / ô / dòng "đã lưu" mở đúng bản đã lưu. */
   const xemBanLuu = () => datMoi(null);
-  /** Đăng xuất / hết phiên: bỏ hết, kể cả bản trên máy (thiết bị dùng chung không để lộ kết quả của người trước). */
-  const donSach = () => { xoaKetQua(); datLuu(null); datMoi(null); datBai(null); datGioiTinh(null); };
+  /** Đăng xuất / hết phiên: bỏ hết trong BỘ NHỚ trang. Bản trên máy giữ nguyên (hết phiên không mất kết quả); đăng xuất thì App gọi luuMay.xoaTatCa(). */
+  const donBoNho = () => { datLuu(null); datMoi(null); datBai(null); datGioiTinh(null); };
+  /** Đã biết khách là ai (luuMay.doiKhach xong): đọc lại bản lưu trên máy — sau hết phiên + đăng nhập lại cùng khách thì kết quả hiện lại. */
+  const nap = () => { const l = docKetQua(DL); datLuu(l); datGioiTinh((g) => (l ? l.gioiTinh : g)); };
 
   const klLuu = luu ? ketLuan(DL, luu.diem, luu) : null;
   const hien = moi || (luu ? { kl: klLuu, ds: null, tra: null, ngay: luu.ngay, daLuu: true } : null);
-  return { luu, klLuu, hien, gioiTinh, datGioiTinh, bai, batDau, chon, tiep, lui, datKhiHau, batTatAnToan, bo, xong, luuLai, xoa, xemBanLuu, donSach };
+  return { luu, klLuu, hien, gioiTinh, datGioiTinh, bai, batDau, chon, tiep, lui, datKhiHau, batTatAnToan, bo, xong, luuLai, xoa, xemBanLuu, donBoNho, nap };
 }
