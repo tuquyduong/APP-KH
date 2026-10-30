@@ -55,3 +55,18 @@ Ghi chú: lượt chạy đủ 15 đột biến diễn ra trước khi bài th�
 - Đột biến D4 sống lần đầu vì ca thử kiểm sai màn (Trang chủ thay vì Menu) → **KHOÁ** (đã sửa ca): ca "không lộ" phải kiểm đúng màn có chỗ lộ.
 - Hợp đồng v2 thiếu giá Giờ vàng từng món → ghi `## Câu hỏi`, không tự tính (K1, luật "không đoán").
 - Người gác chặn: `git checkout -- <file>` (đã khôi phục bằng Edit), file thử có cụm bí mật (đã đổi chữ), `$VAR` trong đích ghi.
+- Soát độc lập tìm ra: nhãn món ở pha "hết khung" vẫn ghi "từ 20:00" (bài thử chỉ kiểm pha "chưa tới") → **KHOÁ**: ca E2 kiểm nhãn món ở MỌI pha (đã thêm). Hàm `phanTramToiDa` chết → xoá (D3 không làm vì demo không có dòng "Hội viên giảm đến X %").
+
+## Thao tác chủ quán thử tay (G4, ≤ 3 bước, tài khoản có hạng)
+1. Mở Trang chủ: thẻ hội viên có dòng "Hạng …", cạnh ô Trắc nghiệm có ô Giờ vàng (khi POS bật Giờ vàng) và dưới lời chào có dòng quán đang mở / thông báo đóng cửa.
+2. Menu → ô món: bậc thang Thường / Vàng / … có số bằng giá quầy hiện cho hạng đó; món đang Giờ vàng chỉ có nhãn "Giờ vàng −X %" (chưa số giảm — `## Câu hỏi` 1).
+3. Tài khoản: ô "Ví" đúng số quầy hiện (0 hiện "0đ"). Chưa đăng nhập: ô Trắc nghiệm có nhãn khoá nằm gọn giữa ô, đọc được.
+
+## Soát độc lập (/ra-soat) — vòng 1: KHÔNG ĐẠT → đã sửa → cổng ĐẠT
+Báo cáo (tóm tắt, người soát là agent khác): thiếu dòng cổng PR / thao tác thử tay (đã bổ sung ở đây) · nhãn món pha "sau" sai (đã sửa + ca thử) · `phanTramToiDa` chết (đã xoá) · /hang chờ /gio-hoat-dong (đã song song) · key bậc thang (đã sửa). Nghi ngờ còn lại, ghi để chủ quán biết: (1) `hangToi` chỉ nạp lúc đăng nhập, hạng hết hạn giữa phiên thì giá bậc thang theo hạng cũ tới khi mở lại app; /toi lỗi mạng thì cột "Thường" mang nhãn "Giá của bạn" (chỉ hiển thị, không tính tiền); (2) bản menu công khai lưu máy mà POS sau này mở `/menu` không token (KH-UI-3b) sẽ không có `gia_hang` trong 5 phút đầu sau đăng nhập; (3) thẻ hạng Trang chủ chỉ hiện "Hạng X" như demo (`.js-tier`), chưa hiện % giảm / `het_han` mà phiếu C1 nhắc — chủ quán quyết có thêm không; (4) `visibilitychange` hỏi lại cả ba cửa mỗi lần tab hiện.
+
+## Cổng
+✓ CỔNG CHẠY ĐẠT
+(cảnh báo A16 trên gốc: `thu_KHUI3a.js` dừng sớm ở 54 ca vì thiếu mô-đun — bình thường)
+
+HEAD ĐÃ KIỂM: dab18c4
