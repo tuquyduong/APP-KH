@@ -1,7 +1,8 @@
 // Kết quả trắc nghiệm lưu TRÊN MÁY khách (localStorage, khoá `kh_tracnghiem`) — không gửi đi đâu (chủ quán chốt 27.10).
 // Chỉ lưu bản rút gọn: giới tính, ngày giờ VN, điểm 9 nhóm, nhóm chính / phụ, kèm câu trả lời "chịu lạnh / nóng" và tình trạng đặc biệt
 // (cần để mở lại ĐÚNG kết quả: nhóm bị loại vì nóng / lạnh, gợi ý an toàn). KHÔNG lưu từng câu trả lời. Kho tiêm vào để thử (như menuLuu.js).
-const KHOA = 'kh_tracnghiem';
+export const KHOA_TRAC_NGHIEM = 'kh_tracnghiem';
+const KHOA = KHOA_TRAC_NGHIEM;
 const kho = () => localStorage;
 
 const GIOI_TINH = ['nam', 'nu'];

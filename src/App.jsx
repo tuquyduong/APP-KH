@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { docToken, xoaToken, datKhiHetPhien } from './api.js';
+import { docToken, xoaToken, datKhiHetPhien, layToi } from './api.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungDuongDan, viTriCuonKhiDoiMan } from './dieuHuong.js';
 import { taoDuongDan, slugMon, timMonTheoSlug, tieuDeTrang } from './duongDan.js';
@@ -7,6 +7,7 @@ import { dungMenu } from './dungMenu.js';
 import { dungTracNghiem } from './dungTracNghiem.js';
 import { LIEN_HE, coLienHe } from './noiDung/lienHe.js';
 import { xoaMenuLuu } from './menuLuu.js';
+import { doiKhach, xoaTatCa } from './luuMay.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import ThanhTab from './components/ThanhTab.jsx';
 import ManDau from './components/ManDau.jsx';
@@ -47,6 +48,7 @@ export default function App() {
   const trang = r.trang;
   const menu = dungMenu(dangNhap);
   const tn = dungTracNghiem();
+  const klLuu = dangNhap ? tn.klLuu : null; // chưa đăng nhập (kể cả hết phiên) thì bản lưu trên máy không hiện ra
   const ds = menu.dl ? menu.dl.data : [];
   const [daVaoMenu, datDaVaoMenu] = useState(false);
   const [lanVaoMenu, datLanVaoMenu] = useState(0);
@@ -63,8 +65,16 @@ export default function App() {
 
   // 401 giữa phiên / đăng xuất: về chế độ khách VÀ về Trang chủ (không giữ trang của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
   // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau). Bản menu lưu trên máy cũng xoá (có thể mang giá theo hạng của khách trước).
-  const donPhien = () => { thay('/trangchu'); xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; tn.donSach(); };
+  const donPhien = () => { thay('/trangchu'); xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; tn.donBoNho(); };
   useEffect(() => { datKhiHetPhien(donPhien); });
+
+  // Mỗi lần có phiên (mở app khi còn token, hoặc vừa đăng nhập): biết khách là ai → khác khách trước thì xoá dữ liệu trên máy (luuMay.js), rồi nạp bản lưu.
+  useEffect(() => {
+    if (!dangNhap) return undefined;
+    let huy = false;
+    layToi().then((r) => { if (!huy && r.khach) { doiKhach(r.khach.sdt); tn.nap(); } }).catch(() => { /* 401: api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm */ });
+    return () => { huy = true; };
+  }, [dangNhap]);
 
   // Trang cần đăng nhập mà chưa đăng nhập → /dangnhap?tiep=<trang> (thay, không thêm lịch sử). Đăng nhập xong → rời /dangnhap tới tiep.
   useLayoutEffect(() => {
@@ -91,7 +101,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
@@ -100,7 +110,7 @@ export default function App() {
     di(taoDuongDan('mon', { slug: slugMon(mon, ds) }));
   };
   const moQR = () => di(taoDuongDan('qr'));
-  const moTracNghiem = () => { if (tn.klLuu) tn.xemBanLuu(); di(taoDuongDan(tn.klLuu ? 'tracnghiemketqua' : 'tracnghiem')); };
+  const moTracNghiem = () => { if (klLuu) tn.xemBanLuu(); di(taoDuongDan(klLuu ? 'tracnghiemketqua' : 'tracnghiem')); };
   const moUuDai = () => chonTab('uudai');
   const moMenu = () => chonTab('menu');
   const taiTab = (t) => trang === t;
@@ -109,9 +119,9 @@ export default function App() {
     <div className="phone">
       <div className="screens" ref={khungCuon}>
         {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} moDangNhap={() => moDangNhap(r.chuan)} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
-        {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={tn.klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
+        {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
         {dangNhap && taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
-        {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={tn.klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
+        {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={klLuu}moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
         {dangNhap && trang === 'tracnghiem' && <TracNghiem tn={tn} lui={luiVe} vaoLam={() => di(taoDuongDan('tracnghiemlam'))} moKetQua={() => { tn.xemBanLuu(); di(taoDuongDan('tracnghiemketqua')); }} />}
         {dangNhap && trang === 'tracnghiemlam' && <TracNghiemLam tn={tn} thoat={() => { tn.bo(); thay(taoDuongDan('tracnghiem')); }} xemKetQua={() => thay(taoDuongDan('tracnghiemketqua'))} />}
         {dangNhap && trang === 'tracnghiemketqua' && <TracNghiemKetQua tn={tn} menu={menu} lui={luiVe} chonMon={chonMon} moHoTro={coLienHe(LIEN_HE) ? () => di(taoDuongDan('hotro')) : null} veGioiThieu={() => thay(taoDuongDan('tracnghiem'))} lamLai={() => { if (tn.batDau(tn.hien.kl.gioiTinh)) di(taoDuongDan('tracnghiemlam')); }} />}
