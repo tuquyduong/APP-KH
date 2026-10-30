@@ -52,3 +52,9 @@ BÀI HỌC: bài đo phông nên nạp màn mở thật; khi luật K9 có sẵn
 - NGUYÊN TẮC: không có mục mới — K1 (đọc code thật) đã đủ: phiếu nói "mỗi chỗ có thể ở DangNhap" nhưng grep cho thấy không có.
 - BỎ: bài thử chạy bộ kiểm trong thư mục tạm vì chạy ở cây thật sẽ đệ quy (một lần, đã chú thích trong bài thử); người gác chặn `for`/`npx`/gộp lệnh — chỉ cản trở, không lỗi.
 - Đề xuất ngoài Phạm vi: bài đo phông nên nạp màn mở thật (nâng cấp sau nếu muốn).
+- Cổng (lần đầu đỏ A16 vì dòng `SỐ CA` thiếu đường dẫn `cong_cu/…` — đã sửa ở `bang_chung_do.txt`).
+
+## Cổng
+`node tu_chay/cong.js chay . d01f6cd^ HEAD viec/KH-SLOGAN-1` → ✓ CỔNG CHẠY ĐẠT
+
+HEAD ĐÃ KIỂM: d02b306
