@@ -194,8 +194,8 @@ function hangDemo(ten) {
   k('Tài khoản: nhóm "Sức khỏe" nằm giữa "Của tôi" và "Cài đặt", dòng "Thể trạng của tôi"', /DONG_TAI_KHOAN = \{ ten: 'Thể trạng của tôi'.*nhom: 'Sức khỏe'/.test(chu)
     && tk.indexOf('Của tôi') < tk.indexOf('DONG_TAI_KHOAN.nhom') && tk.indexOf('DONG_TAI_KHOAN.nhom') < tk.indexOf('>Cài đặt<') && /moTracNghiem/.test(tk));
   const manDau = ve('components/ManDau.jsx')({});
-  k('S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở', /<div class="e3-tg">Đông Y Dưỡng Thể<\/div>/.test(manDau) && !/Sức khỏe mỗi ngày/.test(manDau));
-  k('S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); chỗ khác còn "Sức khỏe mỗi ngày" GIỮ NGUYÊN (Trang chủ)', doc('src/noiDung/thuongHieu.js').includes("KHAU_HIEU = 'Đông Y Dưỡng Thể'") && /Sức khỏe mỗi ngày/.test(tc) && !/Đông Y Dưỡng Thể/.test(tc));
+  k('S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở', /<div class="e3-tg khau-hieu">Đông Y Dưỡng Thể<\/div>/.test(manDau) && !/Sức khỏe mỗi ngày/.test(manDau));
+  k('S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); Trang chủ cũng lấy KHAU_HIEU, không còn "Sức khỏe mỗi ngày" (KH-SLOGAN-1)', doc('src/noiDung/thuongHieu.js').includes("KHAU_HIEU = 'Đông Y Dưỡng Thể'") && /Tứ Quý Đường — \{KHAU_HIEU\}/.test(tc) && !/Sức khỏe mỗi ngày/.test(tc));
 
   console.log('— B1/B2 màn giới thiệu và màn câu hỏi (dựng thật)');
   const TNg = ve('pages/TracNghiem.jsx'), TNl = ve('pages/TracNghiemLam.jsx'), TNk = ve('pages/TracNghiemKetQua.jsx');

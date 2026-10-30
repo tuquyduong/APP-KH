@@ -1,2 +1,2 @@
-// Chữ thương hiệu (chủ quán chốt 29.10): khẩu hiệu dưới "TỨ QUÝ ĐƯỜNG" ở màn mở. Các chỗ khác còn "Sức khỏe mỗi ngày" giữ nguyên tới khi chủ quán chốt.
+// Chữ thương hiệu (chủ quán chốt 29.10, 30.10 đổi hết các chỗ cũ): khẩu hiệu ở màn mở (kiểu B2.3, khau_hieu.css) và dưới lời chào ở Trang chủ — một chỗ này.
 export const KHAU_HIEU = 'Đông Y Dưỡng Thể';

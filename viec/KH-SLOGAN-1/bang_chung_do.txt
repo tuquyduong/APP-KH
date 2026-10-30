@@ -1,0 +1,27 @@
+KH-SLOGAN-1 — bằng chứng ĐỎ trên code gốc (HEAD d01f6cd, chưa chép phông / CSS, chưa thêm lớp, còn "Sức khỏe mỗi ngày")
+Bài thử mới cong_cu/thu_KHSLOGAN1.js và hai ca S1 đã sửa ở cong_cu/thu_KHUI5a.js (chạy trên cây chưa sửa src/).
+
+$ node cong_cu/thu_KHSLOGAN1.js
+  ✗ A1/A2 public/fonts/eb-garamond-600-latin.woff2 đúng SHA-256 của mẫu  — thiếu tệp
+  ✗ A1/A2 public/fonts/eb-garamond-600-vietnamese.woff2 đúng SHA-256 của mẫu  — thiếu tệp
+  ✗ A1/A2 src/giaoDien/khau_hieu.css đúng SHA-256 của mẫu  — thiếu tệp
+  ✗ A3 index.html preload cả 2 phông (type woff2, crossorigin, đường /fonts/…)
+  ✗ B1 phần tử khẩu hiệu có lớp khau-hieu
+  ✗ B1 main.jsx nạp khau_hieu.css SAU mọi demo*.css và giaoDien.css
+  ✗ B2 chú thích đầu thuongHieu.js không còn "giữ nguyên"
+  ✗ B3 cả 2 tệp phông (latin + tiếng Việt) được tải, trạng thái loaded  — loaded=0
+  ✗ B3 hai tệp phông trả 200 từ /fonts/…  — {"/khau_hieu.css":404}
+  ✗ B3 lớp khau-hieu in hoa
+  ✗ C1/C2 src, public, index.html không còn "Sức khỏe / khoẻ mỗi ngày", "Suc khoe moi ngay"  — src/noiDung/thuongHieu.js, src/pages/TrangChu.jsx
+  ✗ C1 Trang chủ: "Tứ Quý Đường — " + KHAU_HIEU (import từ thuongHieu.js)
+9 đạt · 12 hỏng (bản chạy lại sau khi chỉnh bài thử, trên cây gốc giải nén từ HEAD d01f6cd; 3 ca K9 xanh ngay vì luật K9 đã có sẵn — là ca giữ, không phải ca đỏ)
+
+$ node cong_cu/thu_KHUI5a.js   (chỉ các dòng ✗)
+  ✗ S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở
+  ✗ S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); Trang chủ cũng lấy KHAU_HIEU, không còn "Sức khỏe mỗi ngày" (KH-SLOGAN-1)
+355 đạt · 2 hỏng
+
+(Hai ca S1 đỏ vì đổi hành vi có chủ ý — phiếu B1b, không ghi "Bài thử cũ sửa". Ca S1 thứ hai phải đổi cùng C1: nó đang đòi Trang chủ GIỮ "Sức khỏe mỗi ngày".)
+
+SỐ CA cong_cu/thu_KHSLOGAN1.js: 16
+SỐ CA cong_cu/thu_KHUI5a.js: 357
