@@ -23,6 +23,6 @@ Phần 2 — App thật trong Chromium
 Dòng tổng trên code gốc: 15 đạt · 38 hỏng   (ca xanh sẵn là ca canh hồi quy: không "suất", lỗi JS = 0, D4 không lưu gia_hang, A3 cửa lỗi)
 
 Bài cũ sửa đúng một ca, ĐỎ trên code gốc ở ca đã sửa (độ mờ ô khoá .3 / ô Giờ vàng chung hàng); số ca là dòng tổng khi chạy trên code đã vá:
-SỐ CA cong_cu/thu_KHUI3a.js: 95
+SỐ CA cong_cu/thu_KHUI3a.js: 41
 SỐ CA cong_cu/thu_KHLINK1.js: 97
 SỐ CA cong_cu/thu_KHUI5a.js: 357
