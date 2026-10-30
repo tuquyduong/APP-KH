@@ -266,7 +266,7 @@ function hangDemo(ten) {
 
   console.log('— nối vào App (đọc nguồn)');
   const app = doc('src/App.jsx');
-  k('App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn bộ nhớ khi đăng xuất / hết phiên (donPhien gọi donBoNho; KH-LUU-1)', /const tn = dungTracNghiem\(\)/.test(app) && /const donPhien = \(\) => \{[^\n]*tn\.donBoNho\(\)/.test(app));
+  k('App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn bộ nhớ khi đăng xuất / hết phiên (donPhien gọi donBoNho; KH-LUU-1)', /const tnGoc = dungTracNghiem\(\)/.test(app) && /const donPhien = \(\) => \{[^\n]*tnGoc\.donBoNho\(\)/.test(app));
   k('App: mở thẳng /lam không có bài, /ketqua không có kết quả → về /tracnghiem', /trang === 'tracnghiemlam' && !tn\.bai/.test(app) && /trang === 'tracnghiemketqua' && !tn\.hien/.test(app));
   k('App: 3 màn chỉ dựng khi đã đăng nhập; Làm lại dùng giới tính của kết quả', /dangNhap && trang === 'tracnghiem' &&/.test(app) && /dangNhap && trang === 'tracnghiemlam' &&/.test(app) && /dangNhap && trang === 'tracnghiemketqua' &&/.test(app) && /tn\.batDau\(tn\.hien\.kl\.gioiTinh\)/.test(app));
   const hk = doc('src/dungTracNghiem.js');

@@ -74,11 +74,11 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
   console.log('Nối vào App (đọc nguồn)');
   const app = doc('src/App.jsx'), hk = doc('src/dungTracNghiem.js');
   k('B1 dangXuat gọi xoaTatCa()', /const dangXuat = \(\) => \{[^\n]*xoaTatCa\(\)/.test(app));
-  k('B2 donPhien (hết phiên / 401) chỉ dọn bộ nhớ: gọi tn.donBoNho(), KHÔNG xoá khoá', /const donPhien = \(\) => \{[^\n]*tn\.donBoNho\(\)/.test(app) && !/const donPhien = \(\) => \{[^\n]*(xoaTatCa|xoaKetQua|donSach)/.test(app) && /const donBoNho = \(\) => \{(?![^\n]*xoaKetQua)[^\n]*datLuu\(null\)/.test(hk));
-  k('B3 App gọi layToi → doiKhach(khach.sdt) → tn.nap()', /layToi\(\)/.test(app) && /doiKhach\(/.test(app) && /tn\.nap\(\)/.test(app) && /const nap = /.test(hk));
+  k('B2 donPhien (hết phiên / 401) chỉ dọn bộ nhớ: gọi tn.donBoNho(), KHÔNG xoá khoá', /const donPhien = \(\) => \{[^\n]*tnGoc\.donBoNho\(\)/.test(app) && !/const donPhien = \(\) => \{[^\n]*(xoaTatCa|xoaKetQua|donSach)/.test(app) && /const donBoNho = \(\) => \{(?![^\n]*xoaKetQua)[^\n]*datLuu\(null\)/.test(hk));
+  k('B3 App gọi layToi → doiKhach(khach.sdt) → tn.nap()', /layToi\(\)/.test(app) && /doiKhach\(/.test(app) && /doiKhach\([^;]*; tnGoc\.nap\(\); datDaBiet\(true\)/.test(app) && /const nap = /.test(hk));
   k('B4 hook không còn donSach (không code chết); nút Xoá kết quả vẫn xoá khoá', !/donSach/.test(hk + app) && /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk));
   k('B4 hook vẫn giữ khiHau / anToan trong bản lưu', /khiHau: ban\.khiHau, anToan: ban\.anToan/.test(hk));
-  k('B5 Trang chủ chỉ nhận kết quả đã lưu khi đã đăng nhập (chưa đăng nhập không lộ)', /dangNhap \? tn\.klLuu : null/.test(app));
+  k('B5 Bản lưu chỉ hiện khi đã đăng nhập VÀ đã biết khách (chưa đăng nhập / chờ /toi không lộ)', /dangNhap \? tn\.klLuu : null/.test(app) && /const tn = daBiet \? tnGoc : \{ \.\.\.tnGoc, luu: null, klLuu: null, hien: null \}/.test(app));
   k('B5 số điện thoại thô không vào localStorage ở luuMay.js', (doc('src/luuMay.js').match(/setItem\(/g) || []).length === 1 && /setItem\(KHOA_CHU, dauVet\(sdt\)\)/.test(doc('src/luuMay.js')));
 
   console.log('Phần 2 — App thật trong Chromium');
@@ -120,6 +120,7 @@ async function trinhDuyet(pw, dauVet, BAN) {
       if (duong === '/dang-nhap/xin-ma') return json(200, {});
       if (duong === '/dang-nhap/xac-minh') { const sdt = JSON.parse(r.request().postData()).sdt; P.sdt = sdt; return json(200, { token: 'tok-' + sdt, khach: { sdt, ten: 'Khách thử' } }); }
       if (auth && (P.het || auth !== 'Bearer tok-' + P.sdt)) return json(401, { error: 'Hết phiên', code: 'PHIEN_HET_HAN' });
+      if (duong === '/toi' && auth) await new Promise((x) => setTimeout(x, P.giu || 0)); // giữ /toi treo để bắt cửa sổ "đã đăng nhập, chưa biết khách"
       if (duong === '/toi' && auth) return json(200, { khach: { sdt: P.sdt, ten: 'Khách thử', ngay_tao: '2026-01-01 00:00:00', qr: 'QR' } });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
@@ -174,7 +175,14 @@ async function trinhDuyet(pw, dauVet, BAN) {
     k('C1(e) chưa từng đăng nhập mà máy có bản lưu: ô Trắc nghiệm mờ + khoá, không lộ kết quả, bản lưu không bị xoá', !(await chu(t)).includes(XEM) && (await chu(t)).includes('Đăng nhập để mở khoá chức năng') && (await doc_(t, 'kh_tracnghiem')) === BAN);
   });
 
-  await ca('f', { luu: gieo(SDT_A), chan: true, pos: { sdt: SDT_A } }, async (t, P, loi) => {
+  await ca('h', { luu: gieo(SDT_A, { token: false }), pos: { giu: 1500 } }, async (t) => {
+    await mo(t, '/dangnhap'); await dangNhapUi(t, SDT_B); await cho(t, 400);
+    k('C1(h) khách B vừa đăng nhập, /toi chưa về: KHÔNG thấy kết quả của khách A (trên màn lẫn ô Trang chủ)', !(await chu(t)).includes(XEM) && (await doc_(t, 'kh_tracnghiem')) === BAN);
+    await cho(t, 1500);
+    k('C1(h) /toi về → bản của A bị xoá, chủ = B, vẫn không hiện', (await doc_(t, 'kh_tracnghiem')) === null && (await doc_(t, 'kh_chu')) === dauVet(SDT_B) && !(await chu(t)).includes(XEM));
+  });
+
+  await ca('f', { luu: gieo(SDT_A, { chu: false }), chan: true, pos: { sdt: SDT_A } }, async (t, P, loi) => {
     await mo(t, '/trangchu'); await cho(t, 900);
     k('C1(f) kho chặn ghi: App không vỡ, Trang chủ vẫn hiện', loi.length === 0 && (await chu(t)).includes('Chào Khách thử'), loi.join('|'));
   });

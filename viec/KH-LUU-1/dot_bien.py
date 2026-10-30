@@ -15,10 +15,11 @@ DOT_BIEN = [
     ('BV-BO-CA-BAN-CU', LUU, "(cung === 'chuaBiet' && coDuLieu(k))", "false"),
     ('VS-XOA-TAT-CA-GIU-CHU', LUU, "  try { lay(k).removeItem(KHOA_CHU); } catch { /* kho chặn */ }\n", ''),
     ('BV-BO-DOI-KHACH', APP, "doiKhach(r.khach.sdt); ", ''),
-    ('BV-BO-NAP', APP, " tn.nap();", ''),
+    ('BV-BO-NAP', APP, " tnGoc.nap();", ''),
+    ('VS-HIEN-KHI-CHUA-BIET-KHACH', APP, "const tn = daBiet ? tnGoc :", "const tn = true ? tnGoc :"),
     ('BV-BO-XOA-DANG-XUAT', APP, "xoaToken(); xoaTatCa();", "xoaToken();"),
     ('VS-HET-PHIEN-XOA-KHOA', HOOK, "const donBoNho = () => { datLuu(null);", "const donBoNho = () => { xoaKetQua(); datLuu(null);"),
-    ('VS-LO-KET-QUA-KHI-CHUA-DANG-NHAP', APP, "const klLuu = dangNhap ? tn.klLuu : null;", "const klLuu = tn.klLuu;"),
+    ('VS-LO-KET-QUA-KHI-CHUA-DANG-NHAP', APP, "const klLuu = dangNhap ? tn.klLuu : null;", "const klLuu = tnGoc.klLuu;"),
 ]
 
 
