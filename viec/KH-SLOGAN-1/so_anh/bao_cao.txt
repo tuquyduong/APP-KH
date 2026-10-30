@@ -1,0 +1,12 @@
+KH-SLOGAN-1 — so ảnh màn mở (Chromium + Playwright có sẵn; app chạy `npm run dev`, API giả trả 401; chụp sau 5,5 giây khi hiệu ứng xong)
+Tệp: man_mo_<cỡ>_app.png (app), man_mo_390_demo.png (demo, chụp 5,0 giây), man_mo_390_mau_B2_3.jpg (ảnh mẫu chủ quán duyệt),
+     man_mo_390_lech.png (app ↔ mẫu B2.3), man_mo_390_lech_demo.png (app ↔ demo). Đỏ = lệch > 28/255 mỗi kênh.
+
+Đo phần tử khẩu hiệu (.e3-tg.khau-hieu) — l/r/w/h = toạ độ, sw/cw = scrollWidth/clientWidth, tu = scrollWidth trang:
+360 {"w":360,"h":19,"sw":360,"cw":360,"tu":360,"font":"EB Garamond, serif","color":"rgb(251, 227, 162)","size":"14.94px","ls":"3.2868px","fonts.check":true}
+390 {"w":390,"h":21,"sw":390,"cw":390,"tu":390,"font":"EB Garamond, serif","color":"rgb(251, 227, 162)","size":"16.185px","ls":"3.5607px","fonts.check":true}
+430 {"w":430,"h":23,"sw":430,"cw":430,"tu":430,"font":"EB Garamond, serif","color":"rgb(251, 227, 162)","size":"17.845px","ls":"3.9259px","fonts.check":true}
+→ một dòng (h ≈ 1 dòng chữ), không tràn (sw = cw, không cuộn ngang), cỡ chữ co theo khung (4,15 cqw), màu #FBE3A2 đúng mẫu.
+
+So ảnh mẫu B2.3 (390): lệch toàn màn 0,58 % · vùng khẩu hiệu (x 70–320, y 525–565) 5,93 % — chỉ là viền chữ khác nhau do ảnh mẫu là JPEG.
+So ảnh demo (390): lệch toàn màn 3,51 % · ngoài vùng khẩu hiệu 3,20 % — nằm ở logo / chữ TỨ QUÝ ĐƯỜNG (ánh kim chuyển động, hai ảnh chụp lệch pha) và dòng khẩu hiệu (khác có chủ ý, lý do (e)).
