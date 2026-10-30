@@ -31,7 +31,7 @@ chép nguyên vào `src/noiDung/bieuTuongMua.js`, vẽ một lần.
 | topbar "Giỏ hàng" + "n món" | y demo | — |
 | `cart-item`: ảnh món, tên, dòng tuỳ chọn, giá hội viên + giá thường gạch, `qty-ctrl` | ảnh / tên / `qty-ctrl` y demo; dòng `cart-opt` chỉ có ghi chú (và "Hết hàng" / "Không còn trong menu") | (a) chưa có cỡ / đường / topping; giá: MỘT số = giá một ly theo hạng × số lượng (phiếu A5 — không tự tính giá giảm) |
 | `gv-note warn` "Giờ vàng đã kết thúc…" | không làm | (a) giỏ không lưu giá nên không biết món từng ở Giờ vàng; POS báo giá thật |
-| `promo-box` ô mã + "Áp dụng" (bấm → "✓ Đã áp dụng") | y demo; mã gửi trong báo giá (phiếu B4) | (b) không chữ mã mẫu "TQD8ZU6L5" |
+| `promo-box` ô mã + "Áp dụng" (bấm → "✓ Đã áp dụng") | ô + nút như demo; mã gửi trong báo giá; "✓ Đã áp dụng" CHỈ khi báo giá POS có dòng giảm (soát vòng 1) — demo đổi chữ ngay khi bấm | phiếu B4 (kết quả lấy từ bao-gia); | (b) không chữ mã mẫu "TQD8ZU6L5" |
 | `card` Tiền hàng / Ưu đãi hạng / Giảm voucher / Phí giao / Tạm tính | các dòng lấy NGUYÊN từ báo giá POS (Tiền hàng · Giảm giá · Phí giao khi > 0 · Tổng cộng); chưa có báo giá → "Tổng tiền sẽ hiện khi quán xác nhận" | phiếu A5 / E2 (App không tính tiền); cờ DAT_ONLINE tắt → luôn dòng chờ |
 | `checkout-btn` "Tiếp tục · chọn cách nhận hàng" + số tiền → | y demo; số = tổng POS; giỏ có món hết → mờ, không bấm | — |
 | `empty-cart` (p-basket, "Giỏ hàng đang trống", "Chọn một món trà hợp tiết trời hôm nay nhé", "Xem Menu") | y demo | — |
@@ -66,4 +66,4 @@ chép nguyên vào `src/noiDung/bieuTuongMua.js`, vẽ một lần.
 ## Lịch sử đơn (orderhistory)
 | Khối trong demo | Đã làm | Khác gì · lý do |
 |---|---|---|
-| nút `reorder-btn` "Đặt lại" ở mỗi thẻ đơn | y demo; đọc chi tiết đơn, bỏ món theo `ma` vào giỏ, món không còn → thông báo "… không còn bán, đã bỏ qua" | `mon[].ma` chưa có trong hợp đồng v2 — `## Câu hỏi` Q5 |
+| nút `reorder-btn` "Đặt lại" ở mỗi thẻ đơn | như demo nhưng CHỈ khi cờ DAT_ONLINE bật (soát vòng 1: hợp đồng v2 chưa có `mon[].ma`, bật sớm thì báo sai "không còn bán"); đọc chi tiết đơn, bỏ món theo `ma` vào giỏ, món không còn → thông báo "… không còn bán, đã bỏ qua" | `mon[].ma` chưa có trong hợp đồng v2 — `## Câu hỏi` Q5 |

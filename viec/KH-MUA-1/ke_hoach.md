@@ -37,13 +37,13 @@ Phần 1 (không trình duyệt — số GitHub đếm):
 - A3: gio.js thêm (gộp cùng mã + cùng ghi chú), bớt về 0 thì xoá, đổi số lượng (1–99), xoá, dọn; lưu `kh_gio` chỉ `ma, so_luong, ghi_chu` (có `gia` trong đầu vào → không vào kho); đọc hỏng → []; kho chặn → không vỡ, trả false;
   ghi chú cắt 100 ký tự; `kh_gio` nằm trong danh sách khoá của `luuMay.js` (xoaTatCa xoá, doiKhach khác khách xoá); `trangThaiDong`: món không còn / `con_hang === false` → cờ, `duocThanhToan` false.
 - A4: `canDangNhap('giohang', false) === false`, `canDangNhap('thanhtoan', false) === true`; `/dangnhap?tiep=/thanhtoan` giữ `tiep`.
-- A5/E2: `giaHinhDung` = giá tra `gia_hang` × số lượng (không cộng dòng nào); `bangTien(baoGia)` lấy NGUYÊN `tam_tinh`, `giam[]`, `phi_giao`, `tong` — số POS khác phép nhân vẫn ra đúng số POS; báo giá null → null.
+- A5/E2: `giaHinhDung` = giá tra `gia_hang` × số lượng (không cộng dòng nào); `docBaoGia(trả lời)` (vẽ bằng `BangTien` ở GioHang.jsx) lấy NGUYÊN `tam_tinh`, `giam[]`, `phi_giao`, `tong` — số POS khác phép nhân vẫn ra đúng số POS; báo giá null → null.
 - D1/D3: `thanBaoGia`, `thanDatDon` đúng tên trường (mon[] {ma, so_luong, ghi_chu}, ma_giam, cach_nhan, dia_chi chỉ khi giao, cach_tra, pin chỉ khi ví); không trường giá; đọc trả lời `docDatDon`; đường dẫn `/gio/bao-gia`, `/don`, `/don/:ma`, `/don/:ma/huy`.
 - D1: `src/datDon.js` không `fetch`; `src/api.js` không thêm cửa (K8 giữ nguyên); cổng chưa tiêm → từ chối `CHUA_MO`, không ném lỗi lạ.
 - D2: `DAT_ONLINE === false` ở `caiDat.js`; cờ tắt → `goiCong` không gọi `fn`.
 - B3: `viThieu(tong, soDu)`: đủ → 0; thiếu → số thiếu; thiếu số → null (không cho chọn).
 - B5: `taoGop(600)` gộp nhiều lần gọi thành 1.
-- B6: `loiDatDon` trả nguyên `error` POS; `chanDat(gioHoatDong)` → `nhan_don === false` / `dang_mo === false` khoá + `thong_bao`.
+- B6: lời lỗi = nguyên `error` POS (api.js `loiTheoCode`, cổng chuyển nguyên `e.message`; thử ở phần 2 — PIN_SAI, HET_HANG); `chanDat(gioHoatDong)` → `nhan_don === false` / `dang_mo === false` khoá + `thong_bao`.
 - B7: `conLaiQR(het_han, bay_gio)` giây còn lại theo giờ VN (không `new Date(chuỗi)`); hết → 0.
 - B8: `khoaGui()` — lần bấm thứ hai khi đang gửi không gọi cổng (1 lần `POST /don`); lỗi mạng không tự gửi lại.
 - C1: `buocTienTrinh('dang_lam')` → bước hiện tại đúng; `da_huy`; `xongChua` (xong / da_giao / da_huy dừng hỏi lại).
