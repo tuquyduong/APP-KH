@@ -263,3 +263,8 @@ khoá chống lặp ở POS); danh sách trắng mã lỗi phải kèm câu hỏ
 - **GIT:** nhánh viec/KH-MUA-1, push sau mỗi bước; không merge, không PR.
 - **BÀI HỌC:** bảng trên — 2 KHOÁ (POS giả từ hợp đồng; đột biến chạy trong bản sao) và 3 NGUYÊN TẮC (danh sách trắng lỗi đường tiền; chữ trạng thái theo POS; số POS giả
   khác mọi phép tính) — đều ngoài Phạm vi, chờ chat soát duyệt.
+
+## Kiểm cuối
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 58277e2^ HEAD viec/KH-MUA-1` ở HEAD 3e48043, cây sạch → ✓ CỔNG CHẠY ĐẠT (· CẢNH BÁO A16 bài dừng sớm trên gốc 19 ≠ 55, dự kiến).
+
+HEAD ĐÃ KIỂM: 3e48043
