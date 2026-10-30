@@ -76,6 +76,7 @@ export default function App() {
   const [thongBao, datThongBao] = useState('');
   const donMoi = useRef(null);
   const doiGio = (g) => { datGio(g); ghiGio(g); };
+  const docLaiGio = () => { datGio(docGio()); datMaGiam(''); }; // luuMay.doiKhach vừa xoá dữ liệu của khách trước
   const khungCuon = useRef(null);
   const viTriMenu = useRef(0);
   const quayLaiMenu = useRef(false);
@@ -96,7 +97,7 @@ export default function App() {
   useEffect(() => {
     if (!dangNhap) return undefined;
     let huy = false;
-    layToi().then((r) => { if (!huy && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) { datGio(docGio()); datMaGiam(''); } tnGoc.nap(); datDaBiet(true); } }).catch(() => { /* 401: api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm */ });
+    layToi().then((r) => { if (!huy && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) docLaiGio(); tnGoc.nap(); datDaBiet(true); } }).catch(() => { /* 401: api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm */ });
     return () => { huy = true; };
   }, [dangNhap]);
 
