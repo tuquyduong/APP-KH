@@ -23,5 +23,5 @@ $ node cong_cu/thu_KHUI5a.js   (chỉ các dòng ✗)
 
 (Hai ca S1 đỏ vì đổi hành vi có chủ ý — phiếu B1b, không ghi "Bài thử cũ sửa". Ca S1 thứ hai phải đổi cùng C1: nó đang đòi Trang chủ GIỮ "Sức khỏe mỗi ngày".)
 
-SỐ CA thu_KHSLOGAN1: 21
-SỐ CA thu_KHUI5a: 357
+SỐ CA cong_cu/thu_KHSLOGAN1.js: 21
+SỐ CA cong_cu/thu_KHUI5a.js: 357
