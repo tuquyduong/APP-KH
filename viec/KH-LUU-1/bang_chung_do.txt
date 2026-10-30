@@ -15,5 +15,5 @@ Sau khi vá (HEAD dfa6ff4): thu_KHLUU1.js 31 đạt · 0 hỏng. Chống xanh v�
   VS-XOA-TAT-CA-GIU-CHU 29·2 · BV-BO-DOI-KHACH 27·4 · BV-BO-NAP 27·4 · VS-HIEN-KHI-CHUA-BIET-KHACH 29·2 · BV-BO-XOA-DANG-XUAT 29·2
   VS-HET-PHIEN-XOA-KHOA 20·3 · VS-LO-KET-QUA-KHI-CHUA-DANG-NHAP 24·2
 
-SỐ CA cong_cu/thu_KHLUU1.js: 31
+SỐ CA cong_cu/thu_KHLUU1.js: 19
 SỐ CA cong_cu/thu_KHUI5a.js: 357
