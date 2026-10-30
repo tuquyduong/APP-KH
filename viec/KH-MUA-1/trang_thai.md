@@ -131,3 +131,52 @@ TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
 - Sự cố: hook dừng phiên chạy `npm test` ĐÚNG lúc script đột biến đang sửa tạm `src/` → đỏ giả (thu_KHMUA1 119·1). Chạy lại trên cây sạch: thật sự đỏ chỉ
   `thu_KHLUU1.js` B3 (regex `doiKhach\([^;]*; tnGoc\.nap\(\)` — bản sửa vòng 1 chèn khối `{ …; … }`). Sửa App cho đúng dạng cũ (`docLaiGio()`, commit 5f2d6a1),
   không đụng bài cũ. `--day-du` lại: 26 đạt · 0 hỏng; thu_KHMUA1.js có Chromium 120 đạt · 0 hỏng.
+
+## Soát độc lập vòng 2 — báo cáo chép nguyên (rút gọn phần trích dòng code, giữ mọi kết luận)
+```
+KHÔNG ĐẠT
+Đã chạy KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1.js → 54 đạt · 0 hỏng (khớp SỐ CA lúc đó). Đọc git diff 4f8a724 5f2d6a1 + toàn bộ ThanhToan, PinSheet, datDon,
+dungDatDon, GioHang, App (40–200), TheoDoiDon, luuMay, api.js:22–66. Chưa chạy Chromium / dot_bien / cổng.
+Bảy lỗi vòng 1: 1 sửa (nhánh "không có món để đặt lại" chưa có ca); 2 sửa một phần (LỖI 4); 3 chỉ vá đúng MANG_LOI (LỖI 1, 2, 3); 4 sửa; 5 sửa (không còn đường
+dọn phiên sót); 6 sửa (chưa có ca); 7 sửa một phần (chưa ghi cổng chạy sau sửa). PinSheet nhận promise undefined: không kẹt. Lỗi QR không mất mạng: đúng. Không K5 mới.
+LỖI TÌM ĐƯỢC:
+1. src/pages/ThanhToan.jsx:51–52 + src/api.js:43–45 — đường song song lỗi 3: chỉ bắt MANG_LOI; goi gặp 502/504 hay trả lời không JSON ném lỗi code undefined → đơn có thể
+   đã tạo + ví đã trừ mà PinSheet mời nhập PIN lại → POST /don lần hai, trừ ví hai lần. Cổng giả không bao giờ trả 5xx không JSON. Nên đảo: chỉ mời nhập lại khi POS
+   trả code biết chắc (PIN_SAI, VI_KHONG_DU…), còn lại coi "có thể đã tạo" — K4.
+2. src/pages/ThanhToan.jsx:41,53–56 — sau MANG_LOI khi trả ví, dang về false → nút Xác nhận mở lại → bấm lại là PIN mở, POST /don lần hai. Ca vi-mat-mang không thử bấm
+   lần hai. Nên khoá nút / bắt xem Lịch sử đơn — K4 / đường tiền.
+3. src/pages/ThanhToan.jsx:48 + src/datDon.js:58–59 — POST /don thành công mà thiếu ma_don (tên DỰ KIẾN) → docDatDon null → `if (don) xong(don)` im lặng, nút mở lại; với
+   ví PinSheet còn mở 4 chấm, Xoá là nhập lại được → đơn thứ hai. Coi don null là "có thể đã tạo" — K3 / K4.
+4. src/pages/GioHang.jsx:61 — "✓ Đã áp dụng" khi bg.giam có BẤT KỲ dòng nào; giam[] có `loai` (giảm hạng / Giờ vàng…) → mã sai vẫn "Đã áp dụng". So theo loai của mã;
+   tên loai chưa có trong hợp đồng → Câu hỏi cho POS — K3.
+5. src/App.jsx:155 — taoMaMoi nuốt lỗi huyDon rồi vẫn sang /thanhtoan, giỏ còn nguyên: khách trả sát giờ hết hạn, POS từ chối huỷ vì đã trả → app đưa đi tạo đơn thứ hai,
+   khách trả hai lần. Chỉ sang Thanh toán khi huỷ thành công; lỗi thì taiLai + hiện lời POS. Nút "Tạo mã mới" không khoá bấm đôi. Bài thử chưa bấm nút này — K4 / tiền.
+NGHI NGỜ: App.jsx:146–147 datLai dùng ds lúc bấm (menu chưa tải → mọi món "không còn bán", sau cờ); luuMay.js:57–61 sau 401 của A, khách vãng lai B thêm món rồi đăng nhập
+→ doiKhach xoá cả món B vừa thêm (ghi chung Q8); GioHang.jsx:43 chưa có menu thì tên dòng là mã nội bộ; trả ví gặp HET_HANG / NGOAI_GIO cũng mời nhập lại PIN (thừa);
+dang_mo đã ghi Q7.
+Bốn ca mới: đều kiểm hành vi thật (ma-khong-giam, vi-mat-mang, khach-menu-can-dn, co-tat-dat-lai có 1 đơn + 0 nút). Thiếu: bấm Xác nhận lần hai sau mất mạng; 5xx /
+không JSON; dòng giảm không của mã; nhánh "không có món đặt lại", lỗi Đặt lại.
+Đường tiền: không tự tính tổng (docBaoGia lấy nguyên tong), không gửi giá, PIN chỉ trong thân khi trả ví, không lưu / log. Còn đường hai đơn / trừ ví hai lần: LỖI 1, 2, 3, 5.
+NGHIỆM THU: 20/25 · thiếu: B4 (LỖI 4) · B8 (LỖI 1–3) · B7 "Tạo mã mới" (LỖI 5) · E4 (chưa ghi cổng sau sửa) · B2 → Q3, trả một phần ví → Q4 (không tính thiếu).
+CHƯA SOÁT ĐƯỢC: Chromium, dot_bien, cổng chay, ảnh so demo, trình duyệt Zalo thật.
+BÀI HỌC: đường tiền xét lỗi theo danh sách TRẮNG (chỉ thử lại khi POS trả code biết chắc chưa tạo đơn; mọi lỗi khác "có thể đã tạo": khoá nút, đưa tới Lịch sử đơn);
+cổng giả của bài thử có 5xx không JSON và trả lời thiếu trường; "huỷ rồi làm lại" trên đơn có tiền chỉ đi tiếp khi huỷ THÀNH CÔNG (không .catch(() => {})); chữ báo trạng
+thái gắn đúng dòng POS trả (lọc theo loai), không suy từ "có dòng nào đó".
+```
+
+## Sửa vòng 2 (commit trước 42d2119)
+| Lỗi | Sửa | Ca thử (thu_KHMUA1.js) |
+|---|---|---|
+| 1, 2, 3 | `datDon.chuaTaoDon(e)` — danh sách TRẮNG mã lỗi POS báo chắc chưa tạo đơn (PIN_SAI, VI_KHONG_DU, HET_HANG, NGOAI_GIO, NGOAI_GIO_HOAT_DONG, QUA_GIO_NHAN_DON, CHUA_MO). ThanhToan: PIN_SAI → bảng PIN nhập lại; mã trong danh sách → đóng PIN, hiện lời, gửi lại được; MỌI lỗi khác (mất mạng, 502 không JSON, thiếu ma_don) → đóng PIN, "Đơn có thể đã tạo — xem Lịch sử đơn…", KHOÁ nút, nút "Xem Lịch sử đơn" | phần 1 "B8 chỉ lỗi POS báo chắc…"; phần 2 `vi-mat-mang` (bấm lần hai: khoá, 1 POST, sang Lịch sử đơn), `vi-502 không JSON`, `vi-trả lời thiếu ma_don`, `loi-biet-khong-khoa` (K5) |
+| 4 | bỏ chữ "✓ Đã áp dụng" (POS chưa nói `loai` nào là của mã) — kết quả chỉ là dòng "Giảm giá" trong bảng tiền POS | `ma-khong-giam`, `bam-doi-gop` |
+| 5 | "Tạo mã mới" chuyển vào TheoDoiDon: huỷ → THÀNH CÔNG mới về Thanh toán; lỗi → hiện lời POS + hỏi lại trạng thái; nút khoá khi đang huỷ | `tao-ma-moi`, `tao-ma-moi-loi` |
+| nghi ngờ datLai | menu chưa tải → "Menu chưa tải xong, thử lại sau ít giây", không đếm "không còn bán" | (đọc code App.jsx `datLai`) |
+- Đột biến mới: VS-MAT-MANG-CHO-GUI-LAI (hàm thuần); ở màn: VS-MOI-LOI-MOI-NHAP-PIN, BV-LOI-LA-KHONG-KHOA, VS-THIEU-MA-DON-IM-LANG, BV-TAO-MA-MOI-NUOT-LOI-HUY
+  (bỏ VS-DA-AP-DUNG-THEO-O-NHAP vì đã bỏ chữ "Đã áp dụng", VS-VI-MAT-MANG-MOI-NHAP-PIN thay bằng VS-MOI-LOI-MOI-NHAP-PIN).
+- `KHONG_TRINH_DUYET=1 python3 viec/KH-MUA-1/dot_bien.py` (chạy ở bản sao HEAD trong nháp): 10/10 ĐỎ — TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT.
+- `--day-du`: 26 đạt · 0 hỏng. thu_KHMUA1.js có Chromium: 128 đạt · 0 hỏng. SỐ CA (không trình duyệt) 55.
+
+## Câu hỏi (thêm sau soát vòng 2)
+- Q9 (B4): `giam[] { loai }` — POS cho biết giá trị `loai` của dòng giảm do mã sinh ra (vd "ma_giam") để app ghi "✓ Đã áp dụng" như demo; chưa có thì app không ghi.
+- Q10 (B8, gửi POS): danh sách mã lỗi của `POST /don` mà POS BẢO ĐẢM chưa tạo đơn / chưa trừ ví (app chỉ cho gửi lại với các mã này — `datDon.LOI_CHUA_TAO`).
+  Và POS chặn đơn trùng (cùng khách, cùng giỏ, vài giây) — vì app khoá trong một tab, không khoá được hai tab / hai máy.
