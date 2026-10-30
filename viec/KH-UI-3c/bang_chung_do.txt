@@ -1,0 +1,31 @@
+KH-UI-3c — BẰNG CHỨNG ĐỎ trên code gốc (HEAD 3167941: bài thử thu_KHUI3c.js đã commit, src/ CHƯA sửa)
+Lệnh: KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI3c.js   (số GitHub đếm: không trình duyệt)
+
+Phần 1 — dựng ô, đọc nguồn
+  ✗ B1 OGioVang không còn `return null`
+  ✗ B1 Giờ vàng chưa có: vẫn vẽ ô hb-tile hb-t-flash, mờ
+  ✗ B1 ô mờ: nhãn "Giờ vàng", dòng phụ "Hiện chưa có", viên đỏ "−%"
+  ✗ B1 có chương trình nhưng không món ghép được trong menu → cũng ô mờ
+  ✗ A1 khách: giữ hình ô demo (biểu tượng cái cân, nhãn "TRẮC NGHIỆM")   (còn bọc .khoa-tien-ich, chưa có .hb-mo)
+  ✗ A2 khách: dòng phụ được THAY bằng dòng khoá  (ra "Trắc nghiệm Bạn thuộc thể chất nào? 🔒 Đăng nhập…": dòng cũ + viên nổi)
+  ✗ A3 khách: không còn viên nổi .khoa-nhan, không bọc khoa-tien-ich / inert
+  ✗ A2 khách mà máy còn kết quả cũ: vẫn là ô khoá, không lộ thể trạng  (ra "Thể trạng Khí hư Xem kết quả › 🔒 …")
+  ✗ A1/B1 độ mờ ô: một chỗ trong CSS, quanh .55, dòng khoá không mờ
+  ✗ B4 .hb-tiles luôn hai cột: luật "giãn hết hàng khi chỉ một ô" đã bỏ
+  ✗ A3 KhoaTienIch còn nguyên viên nhãn cho việc sau; OTracNghiem không dùng nó
+Phần 2 — App thật trong Chromium
+  BỎ QUA: KHONG_TRINH_DUYET=1
+
+Dòng tổng trên code gốc (không trình duyệt): 5 đạt · 11 hỏng
+
+Lần chạy ĐẦY ĐỦ có Chromium trên code gốc (bản bài thử ở commit 0cee79f, trước khi bỏ 4 ca SSR ô sáng và thêm ca "cao bằng ô thường"): 9 đạt · 46 hỏng.
+Đỏ trong trình duyệt: ô Giờ vàng không có (gv: null) ở 6 cỡ × (360/390/430, chữ 100%/130%); ô Trắc nghiệm khoá mờ .3 cả dòng "Bạn thuộc thể chất nào?", viên .khoa-nhan phủ lên chữ
+(elementFromPoint ra viên, "bi": true); lỗi /gio-vang → không ô; chạm ô Giờ vàng mờ → không có ô để chạm.
+
+Bài cũ sửa (theo phiếu C3, không ghi "Bài thử cũ sửa"): thu_KHUI3a.js (E2 Giờ vàng tắt, H1b, A3 cửa /gioVang lỗi; bỏ 12 ca H2 của viên nổi),
+thu_KHUI5a.js (ca ô khoá + DongKhoa). Đỏ trên bản có `return null` của ô Giờ vàng: thu_KHUI3a.js 82 đạt · 2 hỏng (E2 Giờ vàng tắt; A3 cửa /gioVang lỗi 500).
+
+Số ca là dòng tổng khi chạy trên code đã vá, VỚI KHONG_TRINH_DUYET=1 (số GitHub đếm):
+SỐ CA cong_cu/thu_KHUI3c.js: 16
+SỐ CA cong_cu/thu_KHUI3a.js: 42
+SỐ CA cong_cu/thu_KHUI5a.js: 357
