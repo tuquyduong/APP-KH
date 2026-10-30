@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 7,
+  "phien_ban_so": 8,
   "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -115,13 +115,14 @@
       "ten": "Noi hop dong v2: hang, so du vi, gia theo hang (gia_hang), Gio vang (khong co suat), gio hoat dong + bay_gio (src/bayGio.js), phu thuoc POS KH-API-2 da gop",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-SLOGAN-1",
         "KH-LUU-1"
       ],
       "han": "2026-11-02",
-      "ghi_chu": "hop dong v2 da chep nguyen van vao thiet_ke/ (30.10); mo nhanh sau khi 2 viec truoc gop"
+      "ghi_chu": "hop dong v2 da chep nguyen van vao thiet_ke/ (30.10); mo nhanh sau khi 2 viec truoc gop",
+      "ngay": "2026-10-30"
     },
     {
       "ma": "KH-UI-3",
