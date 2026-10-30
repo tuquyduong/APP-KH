@@ -79,8 +79,8 @@ function kichThuocPng(f) {
   const mon = (await nap('src/noiDung/mon.js')).MON;
   const nc = (await nap('src/noiDung/nhuCau.js')).NHU_CAU;
   const bang = { A1: { nhuCau: ['Ngủ ngon', 'Ấm bụng'] }, A2: { nhuCau: ['Tỉnh táo'] } };
-  k('bảng nội dung thật đang RỖNG (máy không biết mã món)', Object.keys(mon).length === 0);
-  k('bảng rỗng → không món nào, mọi ô nhu cầu ẩn', l.locTheoNhuCau(ds, mon, 'Ngủ ngon').length === 0 && l.nhuCauCoMon(nc, ds, mon).length === 0);
+  k('bảng nội dung thật: mã dạng unique_id POS, mọi nhu cầu thuộc 6 nhóm (KH-ND-1)', Object.entries(mon).every(([ma, v]) => /^[a-z]+_\d+$/.test(ma) && Array.isArray(v.nhuCau) && v.nhuCau.length > 0 && v.nhuCau.every((t) => nc.some((n) => n.ten === t))));
+  k('bảng rỗng → không món nào, mọi ô nhu cầu ẩn', l.locTheoNhuCau(ds, {}, 'Ngủ ngon').length === 0 && l.nhuCauCoMon(nc, ds, {}).length === 0);
   k('bảng có món → lọc đúng', l.locTheoNhuCau(ds, bang, 'Ngủ ngon').map((x) => x.ma).join() === 'A1' && l.locTheoNhuCau(ds, bang, 'Tỉnh táo').map((x) => x.ma).join() === 'A2');
   k('chỉ giữ ô có món', l.nhuCauCoMon(nc, ds, bang).map((x) => x.ten).join() === 'Ngủ ngon,Ấm bụng,Tỉnh táo');
   k('mã món lạ / "constructor" không nổ', l.noiDungMon(bang, 'constructor') === null && l.noiDungMon(bang, 'ZZ') === null);

@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 9,
+  "phien_ban_so": 10,
   "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -233,6 +233,13 @@
         "POS: cua xac nhan tai khoan nhan vien (D9)"
       ],
       "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach"
+    },
+    {
+      "ma": "KH-ND-1",
+      "ten": "Noi dung: nhu cau 10 mon that vao src/noiDung/mon.js (CT1, CT5 theo demo; con lai theo ten mon) - chu quan duyet 30.10, sua sau duoc",
+      "loai": "chat",
+      "trang_thai": "xong",
+      "ngay": "2026-10-30"
     }
   ]
 }
