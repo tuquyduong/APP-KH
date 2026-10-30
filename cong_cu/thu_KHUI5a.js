@@ -183,13 +183,13 @@ function hangDemo(ten) {
   const O = ve('components/OTracNghiem.jsx');
   const khachO = O({ dangNhap: false, klLuu: null, mo() {}, moDangNhap() {} });
   const hoiVienO = O({ dangNhap: true, klLuu: null, mo() {}, moDangNhap() {} });
-  k('khách chưa đăng nhập: ô MỜ + khoá + "Đăng nhập để mở khoá chức năng", ô bên trong inert', /khoa-tien-ich/.test(khachO) && /Đăng nhập để mở khoá chức năng/.test(khachO) && /inert/.test(khachO) && /Bạn thuộc thể chất nào\?/.test(khachO));
+  k('khách chưa đăng nhập: ô MỜ + dòng khoá "Đăng nhập để mở khoá chức năng" thay dòng phụ (KH-UI-3c, không viên nổi, không inert)', /hb-mo/.test(khachO) && /Đăng nhập để mở khoá chức năng/.test(khachO) && !/khoa-nhan|inert/.test(khachO) && !/Bạn thuộc thể chất nào\?/.test(khachO));
   k('đã đăng nhập: ô thường (không khoá), đúng chữ demo "Trắc nghiệm · Bạn thuộc thể chất nào?"', !/khoa-tien-ich/.test(hoiVienO) && /hb-tile hb-t-quiz/.test(hoiVienO) && nho(hoiVienO) === 'Trắc nghiệm Bạn thuộc thể chất nào?');
   const kl_ = (c) => tn.ketLuan(DL, c.diem, { gioiTinh: c.sex, khiHau: c.climate, anToan: c.safety });
   const klKhi = kl_(mau.tracNghiem.find((c) => c.picks[0] === 'kh' && c.kind === 'main'));
   k('đã có kết quả lưu: ô đổi thành "Thể trạng · <tên> · Xem kết quả ›"', nho(O({ dangNhap: true, klLuu: klKhi, mo() {}, moDangNhap() {} })) === 'Thể trạng Khí hư Xem kết quả ›');
   const tc = doc('src/pages/TrangChu.jsx');
-  k('Trang chủ: ô nằm trong khối Hôm nay (.hb-one > .hb-tiles), bọc KhoaTienIch qua OTracNghiem', /<div className="hb-tiles"><OGioVang mo=\{moGioVang\} \/><OTracNghiem /.test(tc) && /OTracNghiem dangNhap=\{dangNhap\}/.test(tc) && /KhoaTienIch/.test(doc('src/components/OTracNghiem.jsx')));
+  k('Trang chủ: ô nằm trong khối Hôm nay (.hb-one > .hb-tiles), bọc KhoaTienIch qua OTracNghiem', /<div className="hb-tiles"><OGioVang mo=\{moGioVang\} \/><OTracNghiem /.test(tc) && /OTracNghiem dangNhap=\{dangNhap\}/.test(tc) && /DongKhoa/.test(doc('src/components/OTracNghiem.jsx')));
   const tk = doc('src/pages/TaiKhoan.jsx'), chu = doc('src/noiDung/tracNghiemChu.js');
   k('Tài khoản: nhóm "Sức khỏe" nằm giữa "Của tôi" và "Cài đặt", dòng "Thể trạng của tôi"', /DONG_TAI_KHOAN = \{ ten: 'Thể trạng của tôi'.*nhom: 'Sức khỏe'/.test(chu)
     && tk.indexOf('Của tôi') < tk.indexOf('DONG_TAI_KHOAN.nhom') && tk.indexOf('DONG_TAI_KHOAN.nhom') < tk.indexOf('>Cài đặt<') && /moTracNghiem/.test(tk));

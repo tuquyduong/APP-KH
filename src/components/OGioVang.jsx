@@ -2,10 +2,20 @@ import { dungGia } from '../heThong.js';
 import GvDem from './GvDem.jsx';
 import { bam } from './bam.js';
 
-/** Ô "Giờ vàng" ở Trang chủ (demo hb-t-flash, hbFlash): −X%, số món, đếm ngược. POS tắt Giờ vàng / không món ghép được → không có ô. Không chữ về suất. */
+/** Ô "Giờ vàng" ở Trang chủ (demo hb-t-flash, hbFlash): −X%, số món, đếm ngược. LUÔN có mặt (hai ô một hàng như demo): POS tắt Giờ vàng / không món ghép được / chưa tải được → ô MỜ "Hiện chưa có", không bấm. Không chữ về suất. */
 export default function OGioVang({ mo }) {
   const { tt, maGv, coMenu, soMon } = dungGia();
-  if (!tt || (coMenu && maGv.size === 0)) return null;
+  if (!tt || (coMenu && maGv.size === 0)) {
+    return (
+      <div className="hb-tile hb-t-flash hb-mo">
+        <div className="hb-ic"><b className="hb-off">−%</b></div>
+        <div className="hb-tx">
+          <div className="hb-k">Giờ vàng</div>
+          <div className="hb-h">Hiện chưa có</div>
+        </div>
+      </div>
+    );
+  }
   const dang = tt.pha === 'dang';
   const n = coMenu ? maGv.size : soMon;
   return (
