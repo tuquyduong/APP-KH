@@ -166,7 +166,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
 async function trinhDuyet(pw) {
   const esbuild = require('esbuild');
   // Bài thử bật cờ và tiêm cổng bằng fetch thẳng tới /api/kh (CHỈ trong gói của bài thử — app thật chưa có cửa).
-  const dung = (batCo) => esbuild.buildSync({
+  const dung = async (batCo) => (await esbuild.build({
     stdin: { contents: batCo ? `import { datCongDatDon } from './datDon.js'; import { docToken } from './api.js';
       datCongDatDon(async (pt, duong, than) => { const r = await fetch('/api/kh' + duong, { method: pt, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + docToken() }, body: than === undefined ? undefined : JSON.stringify(than) });
         const dl = await r.json(); if (!r.ok) { const e = new Error(dl.error); e.code = dl.code; throw e; } return dl; });
@@ -174,8 +174,8 @@ async function trinhDuyet(pw) {
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
     plugins: batCo ? [{ name: 'bat-co', setup(b) { b.onLoad({ filter: /caiDat\.js$/ }, () => ({ contents: 'export const DAT_ONLINE = true;', loader: 'js' })); } }] : [],
-  }).outputFiles[0].text;
-  const goiBat = dung(true), goiTat = dung(false);
+  })).outputFiles[0].text;
+  const goiBat = await dung(true), goiTat = await dung(false);
   const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
   const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
