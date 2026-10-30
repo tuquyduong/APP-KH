@@ -70,3 +70,9 @@ Báo cáo (tóm tắt, người soát là agent khác): thiếu dòng cổng PR 
 (cảnh báo A16 trên gốc: `thu_KHUI3a.js` dừng sớm ở 54 ca vì thiếu mô-đun — bình thường)
 
 HEAD ĐÃ KIỂM: dab18c4
+
+## Sửa sau khi chủ quán xem bản xem thử (chat App KH, 30.10)
+- Chưa đăng nhập + Giờ vàng tắt: ô Trắc nghiệm khoá chỉ chiếm nửa hàng (luật giãn hết hàng chỉ bắt .hb-tile là con duy nhất; ô khoá bọc ngoài). Đổi sang .hb-tiles:has(> :only-child) + thêm ca H1b (đọc CSS, chạy được trên GitHub).
+- Dòng SỐ CA ghi theo số GitHub đếm được (không có trình duyệt): 42.
+
+HEAD ĐÃ KIỂM: 4f7a1594a3fe1634878517cf8151fc6963bf918e
