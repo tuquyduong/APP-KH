@@ -175,7 +175,8 @@ function kichThuocPng(f) {
   const lienHe = await nap('src/noiDung/lienHe.js');
   k('mục Hỗ trợ ẩn khi liên hệ trống, hiện khi có', lienHe.coLienHe({ dienThoai: '', zalo: '', email: '' }) === false && lienHe.coLienHe({ dienThoai: '', zalo: '0900', email: '' }) === true);
   // mọi biểu tượng app gọi đều có trong sprite của index.html hoặc bộ sprite mua hàng src/noiDung/bieuTuongMua.js (cả hai chép từ demo)
-  const sprite = doc('index.html') + doc('src/noiDung/bieuTuongMua.js').replace(/\\"/g, '"');
+  const spriteMua = fs.existsSync(path.join(GOC, 'src/noiDung/bieuTuongMua.js')) ? doc('src/noiDung/bieuTuongMua.js').replace(/\\"/g, '"') : '';
+  const sprite = doc('index.html') + spriteMua;
   const id = [...sprite.matchAll(/<symbol\b[^>]*\bid="([^"]+)"/g)].map((m) => m[1]);
   const can = new Set();
   for (const m of tepSrc.map(doc).join('\n').matchAll(/<(Ico|Med|En)\b[^>]*\bten="([^"]+)"/g)) can.add(`${{ Ico: 'i', Med: 'm', En: 'p' }[m[1]]}-${m[2]}`);

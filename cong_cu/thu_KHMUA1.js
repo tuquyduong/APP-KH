@@ -22,7 +22,7 @@ const MENU_DS = [
   { ma: 'CFM', ten: 'Cà phê Muối', nhom: 'Cà phê', gia: 39000, con_hang: null, gia_hang: [] },
   { ma: 'HET', ten: 'Trà Hết', nhom: 'Trà Đông Y', gia: 25000, con_hang: false, gia_hang: [] },
 ];
-const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, thanh_tien: 54000 }], tam_tinh: 99999, giam: [{ loai: 'voucher', so_tien: 12345 }], phi_giao: 0, tong: 87654 };
+const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, thanh_tien: 54000 }], tam_tinh: 99000, giam: [{ loai: 'voucher', so_tien: 12345 }], phi_giao: 0, tong: 87654 };
 
 (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
@@ -94,7 +94,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     k('D1 thân POST /don: cach_tra; pin CHỈ khi trả ví', tdQ.cach_tra === 'qr' && !('pin' in tdQ) && tdV.cach_tra === 'vi' && tdV.pin === '1357');
     k('A3/D1 thân gửi POS không có trường giá nào', !/"(gia|don_gia|thanh_tien|tam_tinh|phi_giao|tong)"/.test(JSON.stringify([tb, tbG, tdQ, tdV])), JSON.stringify(tdV));
     const b = D.docBaoGia(BG);
-    k('E2 bảng tiền lấy NGUYÊN số POS (tạm tính 99.999, giảm 12.345, tổng 87.654) dù khác phép nhân / phép trừ', !!b && b.tamTinh === 99999 && b.giam.length === 1 && b.giam[0].soTien === 12345 && b.phiGiao === 0 && b.tong === 87654, JSON.stringify(b));
+    k('E2 bảng tiền lấy NGUYÊN số POS (tạm tính 99.000, giảm 12.345, tổng 87.654) dù khác phép nhân / phép trừ', !!b && b.tamTinh === 99000 && b.giam.length === 1 && b.giam[0].soTien === 12345 && b.phiGiao === 0 && b.tong === 87654, JSON.stringify(b));
     const b2 = D.docBaoGia({ ...BG, tong: 1, tam_tinh: 5 });
     k('E2 đổi số POS → bảng đổi theo', !!b2 && b2.tong === 1 && b2.tamTinh === 5);
     k('A5 báo giá thiếu tổng / không phải số → null (không hiện tổng)', D.docBaoGia({ success: true, tam_tinh: 1 }) === null && D.docBaoGia({ ...BG, tong: '87654' }) === null && D.docBaoGia(null) === null);
@@ -245,7 +245,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/dangnhap?tiep=%2Fthanhtoan'); await t.waitForTimeout(700);
     k('A4 đăng nhập xong → đúng màn Thanh toán, giỏ còn nguyên', /\/thanhtoan$/.test(t.url()) && (await chu(t, '.tab .tab-so')) === '2', t.url());
     const tien = await chu(t, '#checkout .card.bang-tien');
-    k('E2/B5 bảng tiền = đúng số POS giả (99.999 / −12.345 / 87.654), không phải phép nhân 54.000', /99\.999đ/.test(tien) && /−12\.345đ/.test(tien) && /87\.654đ/.test(tien) && !/54\.000đ/.test(tien), tien);
+    k('E2/B5 bảng tiền = đúng số POS giả (99.000 / −12.345 / 87.654), không phải phép nhân 54.000 / phép trừ 86.655', /99\.000đ/.test(tien) && /−12\.345đ/.test(tien) && /87\.654đ/.test(tien) && !/54\.000đ/.test(tien), tien);
     const trang = await chu(t, '#checkout');
     k('B1 Lấy tại quầy (mặc định) + "Giao qua Ahamove" "Sắp có"; không GHN; dòng đọc số đơn', /Giao qua Ahamove/.test(trang) && /Sắp có/.test(trang) && !/GHN/.test(trang) && /đọc số đơn/.test(trang) && /Lấy tại quầy/.test(await chu(t, '.mode-opt.active')));
     await t.locator('.mode-opt', { hasText: 'Giao tận nơi' }).click({ force: true }); await t.waitForTimeout(200);
