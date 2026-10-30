@@ -168,7 +168,7 @@ async function trinhDuyet(pw) {
   // Bài thử bật cờ và tiêm cổng bằng fetch thẳng tới /api/kh (CHỈ trong gói của bài thử — app thật chưa có cửa).
   const dung = async (batCo) => (await esbuild.build({
     stdin: { contents: batCo ? `import { datCongDatDon } from './datDon.js'; import { docToken } from './api.js';
-      datCongDatDon(async (pt, duong, than) => { const r = await fetch('/api/kh' + duong, { method: pt, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + docToken() }, body: than === undefined ? undefined : JSON.stringify(than) });
+      datCongDatDon(async (pt, duong, than) => { let r; try { r = await fetch('/api/kh' + duong, { method: pt, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + docToken() }, body: than === undefined ? undefined : JSON.stringify(than) }); } catch { const e = new Error('Không kết nối được. Kiểm tra mạng rồi thử lại.'); e.code = 'MANG_LOI'; throw e; }
         const dl = await r.json(); if (!r.ok) { const e = new Error(dl.error); e.code = dl.code; throw e; } return dl; });
       import './main.jsx';` : `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
@@ -207,6 +207,7 @@ async function trinhDuyet(pw) {
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [{ id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('20:30:00'), hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, lich_tuan: [], ngay_nghi: [], ...P.gh });
+      if (duong === '/menu' && P.menuCanDN && !/tok-A/.test(req.headers().authorization || '')) return json(401, { error: 'Cần đăng nhập', code: 'KH_PHIEN_SAI' });
       if (duong === '/menu') return json(200, { success: true, data: MENU_DS.map((m) => ({ ...m, ton_cu: false, ton_luc: null })) });
       const auth = req.headers().authorization || '';
       if (!/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_PHIEN_SAI' });
@@ -215,6 +216,7 @@ async function trinhDuyet(pw) {
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
       if (duong === '/gio/bao-gia') return P.loiBg ? json(409, P.loiBg) : json(200, P.bg);
       if (duong === '/don' && pt === 'POST') {
+        if (P.matMangDon) return r.abort('internetdisconnected');
         if (than.cach_tra === 'vi' && than.pin !== '1357') return json(400, { error: 'Mã PIN không đúng, còn 4 lần thử', code: 'PIN_SAI' });
         if (than.cach_tra === 'vi') P.tt = 'da_tra';
         return json(200, { success: true, ma_don: 'TQD42', tong: P.bg.tong, trang_thai: P.tt, qr: than.cach_tra === 'qr' ? P.qr : null });
@@ -330,7 +332,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/giohang');
     await t.locator('.promo-box input').fill('GIAM10'); await t.locator('.promo-box button').click(); await t.waitForTimeout(900);
     const bg = P.goi.filter((g) => g.duong === '/gio/bao-gia');
-    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')));
+    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; POS có dòng giảm → "✓ Đã áp dụng"', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Đã áp dụng/.test(await chu(t, '.promo-box button')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
     const cong = t.locator('.cart-item .qty-ctrl button').nth(1);
     await cong.click(); await cong.click(); await cong.click(); await t.waitForTimeout(1000);
@@ -338,6 +340,32 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan');
     await t.locator('#checkout .checkout-btn').dblclick(); await t.waitForTimeout(900);
     k('B8 bấm đôi Xác nhận → đúng 1 POST /don', dem(P, 'POST', '/don') === 1, String(dem(P, 'POST', '/don')));
+  });
+
+  await ca('ma-khong-giam', { gio: GIO2, pos: { bg: { ...BG, giam: [] } } }, async (t) => {
+    await mo(t, '/giohang');
+    await t.locator('.promo-box input').fill('SAIMA'); await t.locator('.promo-box button').click(); await t.waitForTimeout(900);
+    k('B4 POS không giảm cho mã → KHÔNG hiện "Đã áp dụng"', (await chu(t, '.promo-box button')) === 'Áp dụng', await chu(t, '.promo-box button'));
+  });
+
+  await ca('vi-mat-mang', { gio: GIO2, pos: { matMangDon: true } }, async (t, loi, P) => {
+    await mo(t, '/thanhtoan');
+    await t.locator('.opt-row', { hasText: 'Ví nội bộ' }).click();
+    await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(300);
+    await t.keyboard.type('1357'); await t.waitForTimeout(900);
+    k('B8 trả ví mà mất mạng: đóng bảng PIN (không mời nhập lại), nhắc xem Lịch sử đơn, không tự gửi lại', (await t.locator('.pin-sheet').count()) === 0 && /Lịch sử đơn/.test(await chu(t, '#checkout')) && dem(P, 'POST', '/don') === 1, String(dem(P, 'POST', '/don')));
+  });
+
+  await ca('khach-menu-can-dn', { dn: false, gio: GIO2, pos: { menuCanDN: true } }, async (t) => {
+    await mo(t, '/giohang');
+    k('A4 POS đòi đăng nhập mới cho xem menu: giỏ không báo "ngừng bán", Tiếp tục vẫn bấm được', !/ngừng bán|Không còn trong menu/.test(await chu(t, '#cart')) && !/btn-disabled/.test(await t.locator('#cart .checkout-btn').getAttribute('class')));
+    await t.locator('#cart .checkout-btn').click(); await t.waitForTimeout(400);
+    k('A4 … → /dangnhap?tiep=%2Fthanhtoan', /\/dangnhap\?tiep=%2Fthanhtoan$/.test(t.url()), t.url());
+  });
+
+  await ca('co-tat-dat-lai', { batCo: false }, async (t) => {
+    await mo(t, '/taikhoan/donhang');
+    k('C3 cờ tắt: Lịch sử đơn KHÔNG có nút "Đặt lại" (đọc mon[].ma — trường dự kiến)', (await t.locator('.order-card').count()) === 1 && (await t.locator('.reorder-btn').count()) === 0);
   });
 
   await ca('co-tat', { dn: false, batCo: false }, async (t, loi, P) => {
