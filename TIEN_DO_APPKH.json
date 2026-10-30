@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 6,
+  "phien_ban_so": 7,
   "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -111,18 +111,31 @@
       "han": "2026-10-31"
     },
     {
-      "ma": "KH-UI-3",
-      "ten": "Noi hop dong v2 (KH-API-2: hang, so du vi, gia tung hang, Gio vang, gio hoat dong + bay_gio) + v3 (TOPPING-1: topping theo mon) + lien he ho tro that + bat o Xung ho / Dia chi o buoc dang ky 3 va Tai khoan (hop dong v2) + tu gia han dang nhap moi lan mo app (khi POS co cua gia han)",
+      "ma": "KH-UI-3a",
+      "ten": "Noi hop dong v2: hang, so du vi, gia theo hang (gia_hang), Gio vang (khong co suat), gio hoat dong + bay_gio (src/bayGio.js), phu thuoc POS KH-API-2 da gop",
       "loai": "Th",
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "POS KH-API-2 (v2, 30-31.10)",
-        "POS KH-API-3 (v3: menu khong can dang nhap — xin lam som nhat, xac-minh xung_ho/dia_chi, PUT /toi, /gia-han; 31.10-01.11)",
+        "KH-SLOGAN-1",
+        "KH-LUU-1"
+      ],
+      "han": "2026-11-02",
+      "ghi_chu": "hop dong v2 da chep nguyen van vao thiet_ke/ (30.10); mo nhanh sau khi 2 viec truoc gop"
+    },
+    {
+      "ma": "KH-UI-3",
+      "ten": "(3b) Phan v3: dang ky 3 buoc co Xung ho / Dia chi, sua ho so tung truong (PUT /toi), /menu khong can dang nhap (bo man moi dang nhap o Menu), tu gia han dang nhap moi lan mo app, loi chao theo xung ho, bo du lieu menu cu khi doi phien; topping (v4, TOPPING-1). Phan v2 da tach sang KH-UI-3a.",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-3a",
+        "POS KH-API-3 (v3: POS mo viec 30.10, chua gop)",
         "POS TOPPING-1 (v4)"
       ],
       "han": "2026-11-04",
-      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1)"
+      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1) | 30.10: POS bao KH-API-2 (v2) DA GOP (main POS 6f2c30b); v3 POS mo ngay sau do"
     },
     {
       "ma": "KH-CF-1",
