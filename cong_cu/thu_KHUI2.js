@@ -135,7 +135,7 @@ function kichThuocPng(f) {
   k('F3 nút chạm ≥ 44px (nới vùng bấm nút tròn 36px) + safe-area', /\.back-btn::after[^{]*\{[^}]*inset:-4px/.test(riengApp) && /env\(safe-area-inset-bottom/.test(css));
   k('F4 100dvh có dự phòng 100vh', /height:\s*100vh;\s*height:\s*100dvh/.test(css));
   k('B1 tôn trọng prefers-reduced-motion', /prefers-reduced-motion:\s*reduce/.test(css));
-  k('B3 thanh tab đúng 4 mục, không Giỏ hàng', (() => { const t = doc('src/components/ThanhTab.jsx'); return (t.match(/\['[a-z]+', '/g) || []).length === 4 && !/Giỏ/.test(t); })());
+  k('B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1)', (() => { const t = doc('src/components/ThanhTab.jsx'); return (t.match(/\['[a-z]+', '/g) || []).length === 5 && /'Giỏ hàng'/.test(t); })());
   k('B11 không new Date(chuỗi giờ POS) trong src/', !/new Date\(/.test(tepSrc.map(doc).join('\n')));
   k('C1 mã ?ma= xoá khỏi địa chỉ, không lưu localStorage', /replaceState/.test(doc('src/App.jsx')) && !/localStorage[^\n]*(ma|MA)\b/.test(doc('src/App.jsx')));
 
@@ -174,8 +174,8 @@ function kichThuocPng(f) {
   k('nhóm lạ / thiếu → mặc định (không bịa)', l.bieuTuongNhom('Combo').ic === 'cabinet' && l.bieuTuongNhom(undefined).ic === 'cabinet' && l.bieuTuongNhom('Trạm').ic === 'cabinet');
   const lienHe = await nap('src/noiDung/lienHe.js');
   k('mục Hỗ trợ ẩn khi liên hệ trống, hiện khi có', lienHe.coLienHe({ dienThoai: '', zalo: '', email: '' }) === false && lienHe.coLienHe({ dienThoai: '', zalo: '0900', email: '' }) === true);
-  // mọi biểu tượng app gọi đều có trong sprite của index.html (chép từ demo)
-  const sprite = doc('index.html');
+  // mọi biểu tượng app gọi đều có trong sprite của index.html hoặc bộ sprite mua hàng src/noiDung/bieuTuongMua.js (cả hai chép từ demo)
+  const sprite = doc('index.html') + doc('src/noiDung/bieuTuongMua.js').replace(/\\"/g, '"');
   const id = [...sprite.matchAll(/<symbol\b[^>]*\bid="([^"]+)"/g)].map((m) => m[1]);
   const can = new Set();
   for (const m of tepSrc.map(doc).join('\n').matchAll(/<(Ico|Med|En)\b[^>]*\bten="([^"]+)"/g)) can.add(`${{ Ico: 'i', Med: 'm', En: 'p' }[m[1]]}-${m[2]}`);

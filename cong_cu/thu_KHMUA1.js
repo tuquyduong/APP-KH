@@ -92,7 +92,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     k('D1 giao tận nơi gửi dia_chi; không mã thì không gửi ma_giam', tbG.dia_chi === '12 Lê Lợi' && !('ma_giam' in tbG) && tbG.cach_nhan === 'giao');
     const tdQ = D.thanDatDon(gio, { cachNhan: 'tai_quan' }, { cachTra: 'qr', pin: '1234' }), tdV = D.thanDatDon(gio, { cachNhan: 'tai_quan' }, { cachTra: 'vi', pin: '1357' });
     k('D1 thân POST /don: cach_tra; pin CHỈ khi trả ví', tdQ.cach_tra === 'qr' && !('pin' in tdQ) && tdV.cach_tra === 'vi' && tdV.pin === '1357');
-    k('A3/D1 thân gửi POS không có trường giá nào', !/gia|tien|tong/.test(JSON.stringify([tb, tbG, tdQ, tdV])), JSON.stringify(tdV));
+    k('A3/D1 thân gửi POS không có trường giá nào', !/"(gia|don_gia|thanh_tien|tam_tinh|phi_giao|tong)"/.test(JSON.stringify([tb, tbG, tdQ, tdV])), JSON.stringify(tdV));
     const b = D.docBaoGia(BG);
     k('E2 bảng tiền lấy NGUYÊN số POS (tạm tính 99.999, giảm 12.345, tổng 87.654) dù khác phép nhân / phép trừ', !!b && b.tamTinh === 99999 && b.giam.length === 1 && b.giam[0].soTien === 12345 && b.phiGiao === 0 && b.tong === 87654, JSON.stringify(b));
     const b2 = D.docBaoGia({ ...BG, tong: 1, tam_tinh: 5 });
@@ -209,7 +209,7 @@ async function trinhDuyet(pw) {
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('20:30:00'), hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, lich_tuan: [], ngay_nghi: [], ...P.gh });
       if (duong === '/menu') return json(200, { success: true, data: MENU_DS.map((m) => ({ ...m, ton_cu: false, ton_luc: null })) });
       const auth = req.headers().authorization || '';
-      if (!/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_TOKEN_SAI' });
+      if (!/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_PHIEN_SAI' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), qr: 'QR', hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-15T23:59:59' }, so_du_vi: P.vi } });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
@@ -221,7 +221,7 @@ async function trinhDuyet(pw) {
       }
       if (duong === '/don/TQD42/huy') { P.tt = 'da_huy'; return json(200, { success: true }); }
       if (duong === '/don/TQD42') return json(200, { success: true, don: { ma: 'TQD42', ngay: BAY('20:31:00'), tong: P.bg.tong, tien_trinh: P.tt, mon: [{ ma: 'TLB', ten: 'Trà Lục Bảo', so_luong: 2, don_gia: 27000, thanh_tien: 54000, ghi_chu: '' }] } });
-      if (duong.startsWith('/don?')) return json(200, { success: true, trang: 1, con_nua: false, data: [{ ma: 'TQD41', ngay: BAY('19:00:00'), tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
+      if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [{ ma: 'TQD41', ngay: BAY('19:00:00'), tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
       if (duong === '/don/TQD41') return json(200, { success: true, don: { ma: 'TQD41', ngay: BAY('19:00:00'), tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid', mon: [{ ma: 'TLB', ten: 'Trà Lục Bảo', so_luong: 3, don_gia: 27000, thanh_tien: 81000, ghi_chu: '' }, { ma: 'CU', ten: 'Món cũ', so_luong: 1, don_gia: 0, thanh_tien: 0, ghi_chu: '' }] } });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
@@ -296,6 +296,7 @@ async function trinhDuyet(pw) {
   await ca('het-hang', { gio: [{ ma: 'TLB', so_luong: 1, ghi_chu: '' }, { ma: 'HET', so_luong: 1, ghi_chu: '' }], pos: { loiBg: { error: 'Trà Hết đã hết hàng hôm nay', code: 'HET_HANG' } } }, async (t) => {
     await mo(t, '/giohang');
     k('A3 giỏ: món hết hàng được đánh dấu; Tiếp tục khoá', /Hết hàng/.test(await t.locator('.cart-item', { hasText: 'Trà Hết' }).innerText()) && /btn-disabled/.test(await t.locator('#cart .checkout-btn').getAttribute('class')));
+    await t.evaluate(() => localStorage.setItem('kh_gio', '[{"ma":"TLB","so_luong":1,"ghi_chu":""}]')); // trên máy món còn bán, POS báo hết
     await mo(t, '/thanhtoan');
     k('B6 POS trả HET_HANG → hiện nguyên câu error, nút Xác nhận khoá, không hiện tổng', /Trà Hết đã hết hàng hôm nay/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .checkout-btn').getAttribute('class')) && /Tổng tiền sẽ hiện khi quán xác nhận/.test(await chu(t, '#checkout')));
   });
