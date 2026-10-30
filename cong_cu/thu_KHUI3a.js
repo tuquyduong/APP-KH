@@ -139,6 +139,11 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
     } catch (e) { baoLoi('F gioHoatDong', e); }
   }
 
+  { // H1b (sửa sau khi chủ quán xem bản xem thử): ô khoá bọc ô Trắc nghiệm nên con duy nhất của .hb-tiles là ô khoá, không phải .hb-tile
+    const cssGd = doc('src/giaoDien/giaoDien.css');
+    k('H1b chưa đăng nhập + Giờ vàng tắt: ô khoá là con duy nhất của .hb-tiles cũng giãn hết hàng', /\.hb-tiles:has\(> :only-child\)\s*\{\s*grid-template-columns:\s*1fr/.test(cssGd));
+  }
+
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
   try { pw = require('playwright'); } catch { /* không có */ }
