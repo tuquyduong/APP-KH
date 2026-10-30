@@ -176,6 +176,7 @@ async function trinhDuyet(pw) {
       const duong = p.slice('/api/kh'.length);
       const cua = { '/hang': 'hang', '/gio-vang': 'gioVang', '/gio-hoat-dong': 'gioHoatDong' }[duong];
       if (cua) return P.hong[cua] ? json(500, { error: 'lỗi', code: 'LOI_MAY_CHU' }) : json(200, P[cua]);
+      if (duong === '/menu' && P.menuKhongToken) return json(200, P.menu);
       if (!auth) return json(401, { error: 'Cần đăng nhập', code: 'KH_PHIEN_SAI' });
       if (duong === '/toi') return json(200, P.toi);
       if (duong === '/menu') return json(200, P.menu);
@@ -259,6 +260,14 @@ async function trinhDuyet(pw) {
     await cho(t, 4200);
     const sau = await t.locator('.hb-t-flash .hb-s').innerText();
     k('E2 hết khung: tự đổi sang "Đã kết thúc", không tải lại', /^Còn 0:00:0\d$/.test(truoc) && sau === 'Đã kết thúc', `${truoc} → ${sau}`);
+    k('E2 hết khung: ô Trang chủ bỏ trạng thái "đang giảm" (không còn "món đang giảm", hết màu live)', /cuối ngày/.test(await t.locator('.hb-t-flash .hb-h').innerText()) && (await t.locator('.hb-t-flash .hb-s.live').count()) === 0);
+  });
+
+  // D4 — nếu POS (v3) trả menu cả khi chưa đăng nhập kèm gia_hang, bản lưu trên máy vẫn KHÔNG chứa gia_hang
+  await ca('m-menu-cong-khai', { dn: false, pos: { menuKhongToken: true } }, async (t) => {
+    await mo(t, '/menu');
+    const luu = await khoaLuu(t);
+    k('D4 menu công khai (không token) có gia_hang: có lưu bản menu trên máy nhưng KHÔNG chứa gia_hang', /kh_menu/.test(luu) && !/gia_hang/.test(luu), luu.slice(0, 160));
   });
 
   await ca('f-quan-dong', { pos: { gioHoatDong: GHD_DONG, gioVang: GV_TAT } }, async (t) => {
