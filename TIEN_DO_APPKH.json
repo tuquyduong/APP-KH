@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 11,
-  "cap_nhat": "2026-10-30",
+  "phien_ban_so": 12,
+  "cap_nhat": "2026-10-31",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -129,12 +129,12 @@
       "ten": "Trang chu: o Trac nghiem khoa khong che chu (dong khoa thay dong phu); o Gio vang luon co mat, mo khi chua co (\"Hien chua co\"); bai thu co so ca cho GitHub (KHONG_TRINH_DUYET)",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-3a"
       ],
       "han": "2026-11-02",
-      "ngay": "2026-10-30",
+      "ngay": "2026-10-31",
       "ghi_chu": "chu quan chot 30.10 sau khi xem ban xem thu 3a: o khoa khong che chu; o Gio vang mo khi chua co"
     },
     {
@@ -200,15 +200,47 @@
     },
     {
       "ma": "KH-MUA-1",
-      "ten": "Phan man hinh dat don: gio, gia that, tra QR payOS / vi + PIN, theo doi don, giao Ahamove, nap vi, mua the hang, doi diem",
+      "ten": "Dat don online phia App: gio hang (tab 5 nhu demo), thanh toan (tai quay; giao \"Sap co\"), QR payOS / vi + PIN, theo doi don, dat lai - dung san voi cong tiem vao + co DAT_ONLINE tat (hop dong chua co cua)",
       "loai": "T",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
-        "KH-TACH-1",
-        "POS KH-MUA-1"
+        "POS KH-MUA-1 (ten cua du kien: TRA_LOI_POS_31102026.md muc 3)"
       ],
       "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10) | 30.10: CHU QUAN CHOT dat don online TU KHAI TRUONG 07.11 (gio, tra tien, theo doi don, giao hang); uu tien: nhan tai quan + payOS -> Ahamove -> vi + PIN -> topping/combo -> doi diem; da xin POS (YEU_CAU_APPKH_GUI_POS_30102026_d.md), cho POS bao phan nao kip",
-      "han": "2026-11-05"
+      "han": "2026-11-03",
+      "ngay": "2026-10-31",
+      "model": "Opus"
+    },
+    {
+      "ma": "KH-MUA-1b",
+      "ten": "Noi that dat don: them cua dat don vao api.js theo hop dong moi, tiem vao cong, bat co DAT_ONLINE",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1",
+        "POS KH-MUA-1 gop + hop dong co cua dat don"
+      ],
+      "han": "2026-11-04"
+    },
+    {
+      "ma": "KH-MUA-2",
+      "ten": "Giao hang Ahamove phia App: phi giao, dia chi giao (dia_chi v3), tien trinh co tai xe",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1b",
+        "POS KH-MUA-2"
+      ],
+      "han": "2026-11-06"
+    },
+    {
+      "ma": "KHUNG-1.8.1",
+      "ten": "Bo khung tu-chay 1.8.1 chep tu POS (KHUNG-KEO-1: unshallow khi kho nong)",
+      "loai": "chat",
+      "trang_thai": "xong",
+      "ngay": "2026-10-31"
     },
     {
       "ma": "KH-HOSO-1",

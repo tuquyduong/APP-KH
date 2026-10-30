@@ -3,6 +3,10 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 31.10.2026
+- **Đặt đơn online: đủ 5 mục TRƯỚC khai trương; không kịp thì LÙI khai trương**, không mở với phần làm dở (chủ quán chốt 30.10 tối với POS, TRA_LOI_POS_31102026.md). POS: KH-MUA-1 (tại quán + QR payOS + ví/PIN) ~02–03.11, KH-MUA-2 (Ahamove) ~05–06.11. Quyết giữ / lùi ngày: tối 31.10 và tối 03.11.
+- Giỏ hàng: khách vãng lai thêm món và xem giỏ được; đặt đơn cần đăng nhập (đơn gắn tài khoản). Tab Giỏ hàng thứ 5 như demo.
+
 ## 30.10.2026
 - **Chỉ 3 thứ cần đăng nhập:** tiện ích Kế hoạch, trắc nghiệm thể chất, tích điểm (điểm, voucher, nhận mã bill / nhận điểm). Mọi thứ khác mở cho khách vãng lai: toàn bộ menu, combo, ưu đãi, Giờ vàng, giá của từng hạng. (Thay phần "Ưu đãi cần đăng nhập" của KH-XEM-1.)
 - **Đặt đơn online từ khai trương 07.11** (giỏ, đặt trong giờ, trả tiền, theo dõi đơn, giao hàng). Đã xin POS báo phần nào kịp (YEU_CAU_APPKH_GUI_POS_30102026_d.md). Thứ tự ưu tiên: nhận tại quán + trả trước payOS → giao Ahamove → ví + PIN → topping / combo → đổi điểm.
