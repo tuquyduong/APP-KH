@@ -75,7 +75,7 @@ export default function TheoDoiDon({ ma, qr, lui, daTra, taoMaMoi }) {
               <div className="cart-info"><div className="cart-name">{m.ten} ×{m.so_luong}</div>{m.ghi_chu && <div className="cart-opt">“{m.ghi_chu}”</div>}<div className="cart-price">{dinhDangGia(m.thanh_tien)}</div></div>
             </div>
           ))}
-          {don.tong !== null && <div className="card"><div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(don.tong)}</span></div></div>}
+          {don.tong !== null && <div className="card the-tong"><div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(don.tong)}</span></div></div>}
           {loiHuy && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loiHuy}</div></div>}
           {choTra && <button type="button" className={`ghost-btn nut-huy${dangHuy ? ' btn-disabled' : ''}`} onClick={dangHuy ? undefined : huy}>Huỷ đơn</button>}
           {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai}`}>Gọi quán để huỷ</a>}

@@ -103,6 +103,7 @@ button:disabled{ opacity:.45; cursor:default; }
 .tl-chu.giua{ padding-bottom:6px; }
 .nut-huy{ display:block; text-align:center; text-decoration:none; color:var(--coral); border-color:var(--line); }
 .cart-info{ min-width:0; overflow-wrap:anywhere; }
+.the-tong .summary-row.total{ border-top:none; margin-top:0; padding-top:6px; } /* thẻ chỉ có dòng tổng (POS chưa trả từng dòng tiền của đơn) */
 /* Số món trên tab Giỏ hàng — phiếu KH-MUA-1 A1 (demo không vẽ số: viec/KH-MUA-1/doi_chieu_demo.md); màu biến của demo như .badge-dot. */
 .tab-so{ position:absolute; top:0; left:50%; margin-left:6px; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--coral); color:var(--white);
   border:1.5px solid var(--white); font-size:10.5px; font-weight:700; line-height:15px; text-align:center; z-index:2; }
