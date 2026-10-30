@@ -154,10 +154,13 @@ async function trinhDuyet(pw) {
     entryPoints: [path.join(GOC, 'src/main.jsx')], bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
   }).outputFiles[0].text;
-  const css = [...doc('src/main.jsx').matchAll(/import '(\.\/giaoDien\/[^']+\.css)'/g)].map((m) => doc('src/' + m[1].slice(2))).join('\n');
+  // CSS đúng như Vite dựng: theo thứ tự import của main.jsx, `@import './x.css'` (demo.css → demo_1 / demo_2) bung tại chỗ.
+  const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
+  const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
   const URL0 = 'http://kh.test';
-  const CHUA_DN = '<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script src="/bundle.js"></script></body></html>';
+  // Trang gốc = index.html thật (có bộ biểu tượng <symbol>), chỉ đổi dòng nạp mã sang bản dựng sẵn.
+  const CHUA_DN = doc('index.html').replace(/<script type="module"[^>]*><\/script>/, '<script src="/bundle.js"></script>');
 
   // Một ca: context mới + POS giả đọc từ P (đổi P giữa ca được). P.hong = { hang:true, … } → cửa đó trả 500.
   async function ca(ten, { rong = 390, tz = 'Asia/Ho_Chi_Minh', dn = true, may = null, pos = {} } = {}, chay) {
@@ -166,6 +169,7 @@ async function trinhDuyet(pw) {
     const loi = [];
     t.on('pageerror', (e) => loi.push(e.message));
     if (may) { await t.clock.install({ time: new Date(may) }); await t.clock.resume(); }
+    await t.addInitScript(() => { try { sessionStorage.setItem('kh_da_xem_man_dau', '1'); } catch { /* bỏ qua */ } }); // đã xem màn mở: không che trang (CSS thật có màn mở)
     await t.addInitScript(({ dn }) => { if (dn && !sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); localStorage.setItem('kh_token', 'tok-A'); } }, { dn });
     const P = { toi: TOI(HANG_VANG, 85000), hang: HANG, menu: MENU, gioVang: GV_CHAY, gioHoatDong: GHD(), hong: {}, ...pos };
     await t.route(`${URL0}/**`, async (r) => {
@@ -304,7 +308,8 @@ async function trinhDuyet(pw) {
     k('D4 đang đăng nhập: localStorage KHÔNG chứa gia_hang của khách', !/gia_hang/.test(luu1), luu1.slice(0, 200));
     await mo(t, '/taikhoan'); await t.getByText('Đăng xuất').click(); await cho(t, 700);
     const luu2 = await khoaLuu(t);
-    k('D4 đăng xuất: không còn gia_hang trên máy; Menu không còn bậc thang giá hạng của người trước', !/gia_hang/.test(luu2) && (await t.locator('.lad').count()) === 0);
+    await t.locator('.tab', { hasText: 'Menu' }).dispatchEvent('click'); await cho(t, 900); // vào Menu bằng thao tác trong app: bộ nhớ trang còn menu của người trước
+    k('D4 đăng xuất: không còn gia_hang trên máy; Menu không còn bậc thang giá hạng của người trước', !/gia_hang/.test(luu2) && (await t.locator('.prod-card').count()) > 0 && (await t.locator('.lad').count()) === 0);
     P.toi = TOI(null, 0);
     await t.goto(URL0 + '/dangnhap'); await t.waitForSelector('.phone'); await cho(t);
     await t.evaluate(() => localStorage.setItem('kh_token', 'tok-B')); await t.goto(URL0 + '/menu'); await t.waitForSelector('.phone'); await cho(t, 900);

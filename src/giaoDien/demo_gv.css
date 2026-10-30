@@ -1,5 +1,5 @@
 /* KH-UI-3a — khối CSS của demo (thiet_ke/app_kh_demo.html) cho Giờ vàng + giá các hạng, CHÉP NGUYÊN, KHÔNG sửa tay:
-   dòng 101 (flashGlow) · 701–702, 704, 707, 712 (ô Giờ vàng ở Trang chủ) · 1366–1370, 1378 (ô nhóm Giờ vàng ở Menu) · 1381–1394 (nhãn món, đầu khối, ghi chú; bỏ .gv-demo) · 1737–1743 (.lad) · 1744–1749 (.ladd). */
+   dòng 101 (flashGlow) · 701–702, 704, 707, 712 (ô Giờ vàng ở Trang chủ) · 1366–1370, 1378 (ô nhóm Giờ vàng ở Menu) · 1381–1394 (nhãn món, đầu khối, ghi chú; bỏ .gv-demo) · 1737–1743 (.lad) · 1744–1749 (.ladd) · 178, 197, 1170 (.prod-tag, .detail-hero .tag). */
   @keyframes flashGlow{ 0%,100%{ box-shadow:0 0 0 rgba(201,76,76,0); } 50%{ box-shadow:0 0 18px rgba(201,76,76,.45); } }
   .hb-t-flash .hb-ic{ background:radial-gradient(circle at 35% 30%,#FF9A8B,#D9534F 70%); box-shadow:0 0 0 1.5px #E8CF9C, 0 3px 6px rgba(201,76,76,.3);
     color:#fff; --ic-soft:#FFD6CC; --ic-gold:#FFE6A8; animation:flashGlow 3s ease-in-out infinite; }
@@ -39,3 +39,6 @@
   .ladd .me small{ font-weight:800; } .ladd .me b{ font-size:24px; font-weight:800; letter-spacing:-.02em; line-height:1.15; }
   .ladd .gem{ display:inline-block; width:6px; height:6px; transform:rotate(45deg); background:currentColor; margin-right:5px; vertical-align:2px; }
   .ladd .tag{ display:block; font-size:9px; letter-spacing:.14em; text-transform:uppercase; margin-top:4px; font-weight:700; opacity:.85; }
+  .prod-tag{ position:absolute; top:6px; left:6px; background:var(--coral); color:var(--white); font-size:9px; font-weight:600; padding:2px 6px; border-radius:6px; }
+  .detail-hero .tag{ position:absolute; top:12px; left:12px; background:var(--coral); color:#fff; font-size:11px; font-weight:600; padding:4px 10px; border-radius:8px; }
+  .prod-img .prod-tag{ position:absolute; z-index:2; }

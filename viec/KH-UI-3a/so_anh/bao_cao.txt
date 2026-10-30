@@ -1,0 +1,39 @@
+trangchu_o_gio_vang_va_trac_nghiem_390: lệch 15.18% (app 354x79 · demo 354x80)
+trangchu_the_hang_390: lệch 20.32% (app 354x122 · demo 172x137)
+menu_o_gio_vang_390: lệch 0.00% (app 113x80 · demo 113x80)
+menu_o_mon_gia_hang_390: lệch 16.13% (app 171x182 · demo 171x203)
+menu_dau_khoi_gio_vang_390: lệch 16.12% (app 354x86 · demo 354x101)
+menu_o_mon_gio_vang_390: lệch 7.51% (app 171x179 · demo 171x198)
+trang_mon_gia_hang_390: lệch 0.23% (app 354x81 · demo 354x81)
+trang_mon_ghi_chu_gio_vang_390: lệch 12.45% (app 354x53 · demo 354x53)
+taikhoan_the_dau_390: lệch 1.37% (app 354x157 · demo 354x157)
+trangchu_o_trac_nghiem_khoa_nua_hang_chu100_390: chỉ có ảnh app (demo không có khối này) 7791 byte
+trangchu_o_trac_nghiem_khoa_nua_hang_chu130_390: chỉ có ảnh app (demo không có khối này) 8879 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu100_390: chỉ có ảnh app (demo không có khối này) 4462 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu130_390: chỉ có ảnh app (demo không có khối này) 4891 byte
+trangchu_o_gio_vang_va_trac_nghiem_360: chỉ có ảnh app (demo không có khối này) 7467 byte
+trangchu_the_hang_360: chỉ có ảnh app (demo không có khối này) 7586 byte
+menu_o_gio_vang_360: chỉ có ảnh app (demo không có khối này) 2228 byte
+menu_o_mon_gia_hang_360: chỉ có ảnh app (demo không có khối này) 6617 byte
+menu_dau_khoi_gio_vang_360: chỉ có ảnh app (demo không có khối này) 6431 byte
+menu_o_mon_gio_vang_360: chỉ có ảnh app (demo không có khối này) 6446 byte
+trang_mon_gia_hang_360: chỉ có ảnh app (demo không có khối này) 5643 byte
+trang_mon_ghi_chu_gio_vang_360: chỉ có ảnh app (demo không có khối này) 5808 byte
+taikhoan_the_dau_360: chỉ có ảnh app (demo không có khối này) 8122 byte
+trangchu_o_trac_nghiem_khoa_nua_hang_chu100_360: chỉ có ảnh app (demo không có khối này) 6990 byte
+trangchu_o_trac_nghiem_khoa_nua_hang_chu130_360: chỉ có ảnh app (demo không có khối này) 8422 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu100_360: chỉ có ảnh app (demo không có khối này) 3971 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu130_360: chỉ có ảnh app (demo không có khối này) 4707 byte
+trangchu_o_gio_vang_va_trac_nghiem_430: chỉ có ảnh app (demo không có khối này) 8518 byte
+trangchu_the_hang_430: chỉ có ảnh app (demo không có khối này) 8146 byte
+menu_o_gio_vang_430: chỉ có ảnh app (demo không có khối này) 2220 byte
+menu_o_mon_gia_hang_430: chỉ có ảnh app (demo không có khối này) 6809 byte
+menu_dau_khoi_gio_vang_430: chỉ có ảnh app (demo không có khối này) 6501 byte
+menu_o_mon_gio_vang_430: chỉ có ảnh app (demo không có khối này) 6587 byte
+trang_mon_gia_hang_430: chỉ có ảnh app (demo không có khối này) 5777 byte
+trang_mon_ghi_chu_gio_vang_430: chỉ có ảnh app (demo không có khối này) 5906 byte
+taikhoan_the_dau_430: chỉ có ảnh app (demo không có khối này) 8406 byte
+trangchu_o_trac_nghiem_khoa_nua_hang_chu100_430: chỉ có ảnh app (demo không có khối này) 7930 byte
+trangchu_o_trac_nghiem_khoa_nua_hang_chu130_430: chỉ có ảnh app (demo không có khối này) 9416 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu100_430: chỉ có ảnh app (demo không có khối này) 4604 byte
+trangchu_o_trac_nghiem_khoa_ca_hang_chu130_430: chỉ có ảnh app (demo không có khối này) 5108 byte
