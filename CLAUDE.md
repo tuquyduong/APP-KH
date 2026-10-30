@@ -102,3 +102,11 @@ GitHub chạy cổng KHÔNG có trình duyệt (Playwright). Máy làm việc c�
 - Bài thử có phần chạy trong trình duyệt: không có Playwright thì in "BỎ QUA" (KHÔNG tính hỏng, KHÔNG đếm ca "có Playwright để đo"); đọc biến `KHONG_TRINH_DUYET=1` để bỏ phần đó có chủ ý.
 - Dòng `SỐ CA <bài>: N` ghi N đếm được khi chạy VỚI `KHONG_TRINH_DUYET=1` (đúng số GitHub đếm). Phần trình duyệt vẫn phải chạy thật ở máy và ghi kết quả vào `trang_thai.md`.
 - Chủ quán KHÔNG sửa tay số này trên GitHub khi đã chạy file script của chat (script tự ghi số đúng).
+
+
+## 10. Sổ quyết định của chủ quán — đọc TRƯỚC khi làm (chủ quán chốt 30.10)
+- `thiet_ke/QUYET_DINH_APPKH.md` là nơi ghi mọi điều chủ quán đã chốt cho App KH; quyết định ở đó THẮNG ghi chú cũ trong phiếu / đặc tả / mục khác của file này.
+  Phiếu nào trái với sổ → dừng, ghi `## Câu hỏi`, không tự chọn.
+- Bảng tính năng App KH ↔ POS: `thiet_ke/DOI_CHIEU_TINH_NANG.md`. Trao đổi với POS: `thiet_ke/trao_doi/`.
+- Sửa §8 theo quyết định 30.10: kết quả trắc nghiệm gửi về POS KHI khách đồng ý ở màn hỏi chia sẻ (sau bài, trước kết quả); không đồng ý → chỉ trên máy như §8.
+- Chỉ 3 thứ cần đăng nhập: Kế hoạch, trắc nghiệm, tích điểm. Mọi thứ khác mở cho khách vãng lai (menu, combo, ưu đãi, Giờ vàng, giá từng hạng).

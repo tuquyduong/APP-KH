@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 10,
+  "phien_ban_so": 11,
   "cap_nhat": "2026-10-30",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -149,7 +149,38 @@
         "POS TOPPING-1 (v4)"
       ],
       "han": "2026-11-04",
-      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1) | 30.10: POS bao KH-API-2 (v2) DA GOP (main POS 6f2c30b); v3 POS mo ngay sau do"
+      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1) | 30.10: POS bao KH-API-2 (v2) DA GOP (main POS 6f2c30b); v3 POS mo ngay sau do | 30.10: them vao 3b: gia moi hang cho khach vang lai; mo trang Uu dai cho vang lai (chi khoa diem/voucher) - chi 3 thu can dang nhap: Ke hoach, trac nghiem, tich diem"
+    },
+    {
+      "ma": "KH-KHOP-1",
+      "ten": "Trang Kiem khop POS (an, chu quan biet link): goi thu tung cua trong hop dong + thiet_ke/CAN_TU_POS.json (App KH can gi tu POS), bao dung/thieu",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "han": "2026-11-03",
+      "ghi_chu": "chu quan 30.10: can 2 ben khop, canh bao chuc nang App KH can ma POS chua co"
+    },
+    {
+      "ma": "KH-TN-1",
+      "ten": "Trac nghiem: man hoi chia se ngay sau bai (truoc ket qua), dong y -> gui ket qua rut gon ve POS; o rut lai trong Ho so; ket qua + mon goi y hien nhu nhau du dong y hay khong",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS: cua trac nghiem (YEU_CAU_APPKH_GUI_POS_30102026_c.md muc 3)"
+      ],
+      "ghi_chu": "chu quan chot 30.10; o dong y khong tich san"
+    },
+    {
+      "ma": "KH-ND-2",
+      "ten": "Doc anh, nhom nhu cau, hop the chat, mo ta ngan, cong dung, thanh phan tu /menu (POS); bo ban tam src/noiDung/mon.js; muc Ban chay (chu quan tu chon) + Uu dai nhieu nhat",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS: thong tin ngan cua mon (YEU_CAU_APPKH_GUI_POS_30102026_c.md muc 2)"
+      ],
+      "ghi_chu": "chu quan chot 30.10: noi dung sua trong cai dat, khong sua code"
     },
     {
       "ma": "KH-CF-1",
@@ -176,7 +207,8 @@
         "KH-TACH-1",
         "POS KH-MUA-1"
       ],
-      "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10)"
+      "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10) | 30.10: CHU QUAN CHOT dat don online TU KHAI TRUONG 07.11 (gio, tra tien, theo doi don, giao hang); uu tien: nhan tai quan + payOS -> Ahamove -> vi + PIN -> topping/combo -> doi diem; da xin POS (YEU_CAU_APPKH_GUI_POS_30102026_d.md), cho POS bao phan nao kip",
+      "han": "2026-11-05"
     },
     {
       "ma": "KH-HOSO-1",
