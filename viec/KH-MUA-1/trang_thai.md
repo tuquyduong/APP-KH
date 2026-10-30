@@ -183,3 +183,83 @@ thái gắn đúng dòng POS trả (lọc theo loai), không suy từ "có dòng
 - `python3 viec/KH-MUA-1/dot_bien.py man` (bản sao HEAD 42d2119 ở nháp, có Chromium): VS-MOI-LOI-MOI-NHAP-PIN ĐỎ 123·5 · BV-LOI-LA-KHONG-KHOA ĐỎ 124·4 ·
   VS-THIEU-MA-DON-IM-LANG ĐỎ 127·1 · BV-TAO-MA-MOI-NUOT-LOI-HUY ĐỎ 127·1 · BV-DAT-LAI-KHONG-QUA-CO ĐỎ 127·1 · BV-KHOA-GIO-KHI-CHUA-CO-MENU ĐỎ 126·2 —
   TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT.
+
+## Soát độc lập vòng 3 (vòng cuối) — báo cáo chép nguyên (rút gọn trích dòng)
+```
+KHÔNG ĐẠT. Code đường tiền đạt. Chặn duy nhất là một dòng giấy tờ lệch code (LỖI 1), sửa một dòng, không cần thêm vòng sửa code.
+Đã chạy KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1.js → 55 · 0 (khớp SỐ CA 55). Đọc diff 2d81ffa..HEAD + toàn bộ datDon, ThanhToan, PinSheet, TheoDoiDon, dungDatDon,
+api.js:22-49, App.jsx:100-175, Don.jsx:43-80, dot_bien.py, ca phần 2 thu_KHMUA1.js:255-425.
+Năm lỗi vòng 2: 1–3 sửa đúng (LOI_CHUA_TAO danh sách trắng; thiếu mã đơn → nghiNgo; chỉ PIN_SAI ném lại cho bảng PIN; lỗi lạ khoá nút + "Xem Lịch sử đơn");
+4 bỏ chữ "Đã áp dụng" (chờ Q9); 5 sửa đúng (chỉ về Thanh toán khi huỷ thành công, nút khoá khi đang huỷ). Không thấy lỗi mới do bản sửa (PinSheet, đường QR,
+K5 lỗi đã biết không khoá, nghiNgo chỉ sống một lần mở màn, datLai trả Promise cả hai nhánh).
+LỖI TÌM ĐƯỢC:
+1. viec/KH-MUA-1/doi_chieu_demo.md:34 vẫn ghi "✓ Đã áp dụng CHỈ khi báo giá POS có dòng giảm (soát vòng 1)" — code vòng 2 đã bỏ hẳn chữ này. Phải ghi: khác demo, chờ Q9 — K1, hỏng E5.
+NGHI NGỜ:
+- Khoá nghiNgo vượt được dễ (ThanhToan.jsx:178,190): state một lần mở màn — lui về Giỏ rồi "Tiếp tục" / tải lại → trả ví lần hai được. Khách đã được nhắc nên chưa tính lỗi.
+  Chắc hơn: đưa cờ lên App (như donMoi), xoá khi khách đã mở Lịch sử đơn; hoặc POS nhận khoá chống lặp (idempotency key) ở POST /don — bổ sung Q10.
+- Back trình duyệt từ màn QR: lịch sử còn /thanhtoan, giỏ còn nguyên (chỉ dọn ở daTra) → tạo được đơn cho_tra thứ hai. Có thể dọn giỏ ở xongDatDon khi trangThai === 'da_tra'.
+- Mã lỗi ngoài danh sách bị coi "Đơn có thể đã tạo" dù chắc chưa tạo: QUA_NHIEU_LAN (429), PIN bị khoá sau nhiều lần sai, mã giảm hết lượt — chặn oan hướng an toàn; đưa vào Q10.
+- Đường QR gặp PIN_SAI (ThanhToan.jsx:201): ném lại không ai bắt → im lặng. POS gần như không trả; nên chỉ ném lại khi cachTra === 'vi'.
+- Từ Lịch sử đơn không tới Theo dõi đơn: thẻ ở Don.jsx:59 đi /taikhoan/donhang/<ma>, không /don/<ma> → sau "Xem Lịch sử đơn", đơn cho_tra không thấy QR / nút Huỷ.
+- Tên ca lỗi thời thu_KHMUA1.js:339 ("✓ Đã áp dụng").
+- Thiếu ca: trả ví gặp lỗi đã biết (VI_KHONG_DU / HET_HANG) — bảng PIN đóng, nút không khoá (ca loi-biet-khong-khoa chỉ đường QR).
+Ca mới kiểm hành vi thật (vi-mat-mang, vi-502, vi-thiếu ma_don, loi-biet-khong-khoa, tao-ma-moi, tao-ma-moi-loi, phần 1 chuaTaoDon).
+Đường tiền: không tự tính tổng, không gửi giá, pin chỉ trong thân khi trả ví, không console / kho ghi PIN; hai lần bấm chặn bởi khoaGui + dang; huỷ rồi làm lại chỉ
+khi huỷ thành công. Còn hai đường tạo đơn thứ hai đều cần khách cố ý (vượt nghiNgo, Back từ QR); hai tab / hai máy đã ghi Q10.
+NGHIỆM THU: 22/25 · B2 lùi (Q3); E4 chờ phiên chính ghi cổng; thiếu E5 (doi_chieu_demo.md:34 lệch code). B4 tính đạt. Trả một phần ví lùi (Q4).
+CHƯA SOÁT ĐƯỢC: Chromium, dot_bien, cổng chay, ảnh so_anh sau sửa vòng 2, trình duyệt Zalo thật.
+BÀI HỌC: đổi hành vi giao diện thì sửa luôn dòng doi_chieu_demo.md + tên ca thử cùng commit; khoá "đơn có thể đã tạo" phải sống lâu hơn một lần mở màn (App hoặc
+khoá chống lặp ở POS); danh sách trắng mã lỗi phải kèm câu hỏi POS về mọi mã của POST /don, kể cả 429.
+```
+- Sửa sau vòng 3 (commit 2159eff): doi_chieu_demo.md dòng mã giảm ghi đúng "khác demo — Q9"; tên ca B4 trong thu_KHMUA1.js (chỉ nhãn). KHÔNG sửa thêm code sau vòng
+  soát cuối (đã 3 vòng soát / 2 vòng sửa code; `so_vong_sua_toi_da`) — các NGHI NGỜ chuyển thành Câu hỏi Q11–Q12 cho KH-MUA-1b (cờ còn TẮT nên chưa chạm khách).
+- Sau sửa: `--day-du` 26 đạt · 0 hỏng.
+
+## Câu hỏi (sau soát vòng 3 — đề xuất gom vào KH-MUA-1b, trước khi bật cờ)
+- Q10 (bổ sung): xin POS nhận khoá chống lặp (idempotency key, app sinh một lần mỗi lượt Xác nhận) ở `POST /don`; và cho biết mã 429 `QUA_NHIEU_LAN`, PIN bị khoá, mã
+  giảm hết lượt có thuộc nhóm "chắc chưa tạo đơn" không.
+- Q11 (B8): khoá "đơn có thể đã tạo" hiện chỉ sống trong màn Thanh toán (lui / tải lại là mất) — KH-MUA-1b đưa lên App (như `donMoi`) hoặc dựa vào khoá chống lặp của POS.
+  Cùng việc: Back trình duyệt từ màn QR còn tạo được đơn `cho_tra` thứ hai; thẻ Lịch sử đơn mở `/taikhoan/donhang/<ma>` (không thấy QR / Huỷ) — nên mở `/don/<ma>` cho
+  đơn `cho_tra` khi có `tien_trinh`.
+- Q12 (nhỏ): đường QR nếu POS trả `PIN_SAI` thì im lặng (`ThanhToan.jsx` chỉ nên ném lại khi trả ví); thêm ca trả ví gặp `VI_KHONG_DU` / `HET_HANG`.
+
+## Cổng
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 58277e2^ HEAD viec/KH-MUA-1` (HEAD cf89d62, trước khi sửa giấy tờ vòng 3) → `✓ CỔNG CHẠY ĐẠT`
+  (· CẢNH BÁO A16: thu_KHMUA1.js trên gốc in 19 ca ≠ 55 ở head — bài dừng sớm trên gốc vì thiếu src/gio.js / datDon.js, đúng dự kiến).
+- Chạy KHÔNG có `KHONG_TRINH_DUYET=1` ở máy này (có Playwright) thì A16 đỏ 55 ≠ 128 — đúng CLAUDE.md §9 (số ca GitHub là số không trình duyệt).
+
+## Bài học (bước 11)
+| Sự cố | Ngăn | Đề xuất |
+|---|---|---|
+| POS giả của bài thử mở `/menu` không cần đăng nhập, `mon[]` có `ma` — lệch hợp đồng v2 → soát vòng 1 bắt lỗi 1, 4 mà bài thử không bắt | **KHOÁ** (ngoài Phạm vi: khung chung) | `cong_cu/` thêm hàm dựng POS giả từ khối `HOP_DONG_MAY_DOC` (auth + trường từng cửa; cửa "dự kiến" đánh dấu riêng); ca đỏ: POS giả trả `/menu` không đăng nhập khi hợp đồng ghi cần → phép kiểm báo |
+| Đường tiền xét lỗi theo danh sách ĐEN (chỉ MANG_LOI) → 502 / thiếu mã đơn mời nhập PIN lại (soát vòng 2) | **NGUYÊN TẮC** — KHUON_LOI.md (ngoài Phạm vi) | K4: "Đã gây: KH-MUA-1 vòng 2 — trả ví lỗi 502 mời nhập PIN lại. Dấu hiệu: `if (e.code === 'MANG_LOI')` ở đường tạo đơn / trừ tiền. Chặn: danh sách TRẮNG mã POS bảo đảm chưa tạo; còn lại khoá + Lịch sử đơn" |
+| Chữ trạng thái suy từ thao tác khách ("Đã áp dụng") thay vì trả lời POS | **NGUYÊN TẮC** — gộp vào K3 (hiện số / trạng thái bịa) | thêm dòng "Dấu hiệu: chữ trạng thái đổi theo bấm, không theo trả lời POS" |
+| Hook dừng phiên chạy `npm test` lúc script đột biến đang sửa tạm `src/` → đỏ giả | **KHOÁ** (ngoài Phạm vi: `tu_chay/`) | đột biến chạy trong bản sao (git archive vào nháp) — `dot_bien.py` mẫu của khung nên có cờ thư mục làm việc; đã làm tay ở vòng 2 |
+| Người gác chặn chạy bài thử có mã lỗi 401 giả mang chữ bị cấm | **BỎ** | đổi mã giả sang `KH_PHIEN_SAI` (như thu_KHUI3c) — một lần |
+| Số POS giả trùng đúng phép trừ (99.999 − 12.345 = 87.654) → ca "không tự tính" vô giá trị tới khi viết đột biến | **NGUYÊN TẮC** — K3 bài thử | ca "không tự tính tiền" dùng số POS khác MỌI phép tính đơn giản (nhân, cộng, trừ) — tự soát khi viết đột biến VS-TU-CONG-TONG |
+- Dọn KHUON_LOI.md / CLAUDE.md: không thấy lời dặn nào đã có phép kiểm làm thay. Không đổi file ngoài `viec/KH-MUA-1/` ở bước 11.
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-MUA-1 — Giỏ hàng, Thanh toán, Theo dõi đơn dựng sẵn theo tên cửa POS dự kiến, cổng đặt đơn tiêm vào, cờ `DAT_ONLINE = false`.
+- **ĐÃ SỬA:** `src/gio.js` (giỏ `kh_gio`, chỉ ma/so_luong/ghi_chu), `src/datDon.js` (thân / trả lời / lỗi / bước — một chỗ tên trường, `datCongDatDon`), `src/dungDatDon.js`
+  (báo giá gộp 600 ms, theo dõi 3 s / 10 s), `src/noiDung/caiDat.js`, `src/luuMay.js` (kh_gio; giữ giỏ vãng lai khi đăng nhập lần đầu), `src/duongDan.js` (/giohang,
+  /thanhtoan, /don/:ma), màn `GioHang.jsx`, `ThanhToan.jsx`, `TheoDoiDon.jsx`; `TrangMon.jsx` (ghi chú, số lượng, Thêm vào giỏ), `Don.jsx` (Đặt lại — sau cờ),
+  `ThanhTab.jsx` (tab 5 + số món), `PinSheet.jsx` (nhập PIN trả ví), `ManQR.jsx` (export VeQR), `App.jsx`; CSS `demo_mua.css` (60 luật chép demo) + `giaoDien.css`;
+  biểu tượng `noiDung/bieuTuongMua.js` (chép demo). Bài thử `cong_cu/thu_KHMUA1.js` mới; `thu_KHUI2.js` sửa B3 + đọc sprite mua hàng (E3).
+- **BÀI THỬ:** thu_KHMUA1.js đỏ trên gốc 3 · 16 → xanh 55 · 0 (không trình duyệt), 128 · 0 có Chromium; thu_KHUI2.js gốc 77 · 1 → 78 · 0. `--day-du` 26 · 0.
+  Đột biến: `dot_bien.py` 10/10, `dot_bien.py man` 6/6 bị bắt. Cổng chạy ĐẠT.
+- **NGHIỆM THU (đếm từng mục):** A1 ✓ (phần 1 thanh tab / đường dẫn; luong-qr tab "2") · A2 ✓ (luong-qr thêm 2 món ở Trang món; ghi chú 100 ký tự phần 1; ô món
+  không nút — Q2) · A3 ✓ (phần 1 gio.js + luuMay; het-hang) · A4 ✓ (luong-qr, khach-menu-can-dn) · A5 ✓ (luong-qr giá hình dung + chữ chờ) · B1 ✓ (luong-qr B1) ·
+  B2 — lùi (Q3) · B3 ✓ (vi-pin, vi-thieu; một phần ví → Q4) · B4 ✓ (bam-doi-gop, ma-khong-giam; "Đã áp dụng" → Q9) · B5 ✓ (phần 1 taoGop; bam-doi-gop) ·
+  B6 ✓ (vi-pin PIN_SAI, het-hang, ngoai-gio, loi-biet-khong-khoa) · B7 ✓ (luong-qr QR + đếm ngược + 3 s + da_tra; qr-het-han; tao-ma-moi; tao-ma-moi-loi) ·
+  B8 ✓ (phần 1 khoaGui, chuaTaoDon; bam-doi-gop; vi-mat-mang; vi-502; vi-thiếu ma_don) · C1 ✓ (phần 1 bước; da-tra-goi-quan 10 s, dừng khi xong) ·
+  C2 ✓ (qr-het-han huỷ; da-tra-goi-quan ẩn nút gọi khi chưa có số) · C3 ✓ (dat-lai; co-tat-dat-lai; mon[].ma → Q5) · D1 ✓ (phần 1 thân / đọc / không fetch / api.js
+  không thêm cửa; K8 xanh) · D2 ✓ (phần 1 cờ; co-tat 0 lời gọi) · D3 ✓ (phần 1 DUONG_DAT_DON) · E1 ✓ (hai phần như trên) · E2 ✓ (phần 1 + luong-qr số khác nhân / trừ)
+  · E3 ✓ (thu_KHUI2 chỉ B3 + đọc sprite) · E4 ✓ (npm test, --day-du, cổng ĐẠT, VS- 10 + màn 6) · E5 ✓ (so_anh 27 ảnh + doi_chieu_demo.md) · E6 ✓ (3 bước thử tay ở trên).
+- **ĐÃ RÀ K4:** gọi mạng chỉ api.js (K1 xanh; datDon qua cổng); mọi chỗ hiện tiền qua dinhDangGia + số POS; mọi chỗ dọn phiên (đăng xuất / 401 / đổi khách) dọn
+  maGiam + donMoi; kh_gio trong danh sách luuMay; chữ "GHN" / "suất" không có trong src (phần 1 B1).
+- **CHƯA KIỂM:** POS thật (cửa đặt đơn chưa có — mọi ca dùng POS giả theo tên DỰ KIẾN); 401 qua cổng (cổng bài thử gọi fetch thẳng — KH-MUA-1b tiêm `goi`); trình duyệt
+  Zalo thật; màn rộng ≥ 1024 px (chưa có mẫu màn to cho các màn này); thử tay trên điện thoại; các NGHI NGỜ vòng 3 (Q10–Q12) chưa sửa.
+- **GIT:** nhánh viec/KH-MUA-1, push sau mỗi bước; không merge, không PR.
+- **BÀI HỌC:** bảng trên — 2 KHOÁ (POS giả từ hợp đồng; đột biến chạy trong bản sao) và 3 NGUYÊN TẮC (danh sách trắng lỗi đường tiền; chữ trạng thái theo POS; số POS giả
+  khác mọi phép tính) — đều ngoài Phạm vi, chờ chat soát duyệt.
