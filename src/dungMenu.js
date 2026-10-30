@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { layMenu, docToken } from './api.js';
-import { docMenuLuu, ghiMenuLuu, gioVn, chonMenu, menuConMoi } from './menuLuu.js';
+import { docMenuLuu, ghiMenuLuu, chonMenu, menuConMoi } from './menuLuu.js';
+import { bayGio } from './bayGio.js';
+import { boGiaHang } from './giaHang.js';
 
 /**
  * Menu cho cả app, tải MỘT chỗ: mở app là hiện ngay bản đã lưu trên máy (nếu có), rồi lấy bản mới thay vào.
@@ -22,14 +24,18 @@ export function dungMenu(dangNhap) {
     layMenu().then(
       (dl) => {
         if (phien.current !== dangNhap) return; // phiên đã đổi trong lúc chờ
-        const luc = gioVn(); lanLay.current = Date.now();
-        if (!coPhien) ghiMenuLuu(dl, luc, lanLay.current);
+        const luc = bayGio(); lanLay.current = Date.now();
+        if (!coPhien) ghiMenuLuu(boGiaHang(dl), luc, lanLay.current);
         datTt({ ...chonMenu(null, dl, null, luc), dangTai: false });
       },
       (e) => { if (phien.current === dangNhap) datTt((t) => ({ ...chonMenu(e, null, t.dl ? { dl: t.dl, luc: t.luc } : docMenuLuu()), dangTai: false })); },
     );
   }, [dangNhap]);
   const truoc = useRef(dangNhap);
-  useEffect(() => { const doiPhien = truoc.current !== dangNhap; truoc.current = dangNhap; taiLai(doiPhien); }, [taiLai]);
+  useEffect(() => {
+    const doiPhien = truoc.current !== dangNhap; truoc.current = dangNhap;
+    if (doiPhien) datTt((t) => ({ ...t, dl: boGiaHang(t.dl) })); // đổi / hết phiên: giá theo hạng của khách trước không còn hiện trong lúc chờ menu mới
+    taiLai(doiPhien);
+  }, [taiLai]);
   return { ...tt, taiLai };
 }

@@ -1,0 +1,28 @@
+KH-UI-3a — BẰNG CHỨNG ĐỎ trên code gốc (HEAD 5699386, chưa có src/bayGio.js, gioVang.js, giaHang.js, gioHoatDong.js; api.js chưa có /hang /gio-vang /gio-hoat-dong)
+Lệnh: node cong_cu/thu_KHUI3a.js   (Chromium + POS giả đúng hình dạng hợp đồng v2)
+
+Phần 1 — hàm thuần
+  ✗ nạp src/bayGio.js  — Cannot find module
+  ✗ nạp src/gioVang.js  — Cannot find module
+  ✗ nạp src/giaHang.js  — Cannot find module
+  ✗ nạp src/gioHoatDong.js  — Cannot find module
+  ✗ A1 api.js có goi('GET', '/hang') · '/gio-vang' · '/gio-hoat-dong'
+  ✗ B2 ba chỗ từng dùng gioVn() làm "bây giờ" đã đổi sang bayGio()
+Phần 2 — App thật trong Chromium
+  ✗ C1 Trang chủ đã đăng nhập: thẻ hội viên hiện "Hạng Vàng"
+  ✗ E1 ô Giờ vàng ở Trang chủ cạnh ô Trắc nghiệm (chỉ có 1 ô Trắc nghiệm)
+  ✗ F1 Trang chủ: quán đang mở · quán đóng nguyên văn thong_bao · chưa cài lịch
+  ✗ E1 Menu có ô "Giờ vàng" · nhãn món "Giờ vàng −50%"
+  ✗ D2 bậc thang giá các hạng (chỉ thấy 28.000đ)
+  ✗ C2 Tài khoản: Ví 85.000đ / "Hạng Vàng" (chỉ có Điểm + Voucher)
+  ✗ B3 TZ=UTC / Asia/Ho_Chi_Minh / America/Los_Angeles, đồng hồ máy lệch: đếm ngược theo POS (không có)
+  ✗ E1 chưa đăng nhập vẫn thấy ô Giờ vàng
+  ✗ H2 nhãn khoá: 12 ca (360/390/430 × nửa hàng/cả hàng × chữ 100%/130%) — nhãn đè lên chữ của ô, nền trong suốt
+  ✗ ca a-hang-gv-chay / b / d / e / h-* dừng giữa chừng (không có phần tử cần thấy)
+
+Dòng tổng trên code gốc: 15 đạt · 38 hỏng   (ca xanh sẵn là ca canh hồi quy: không "suất", lỗi JS = 0, D4 không lưu gia_hang, A3 cửa lỗi)
+
+Bài cũ sửa đúng một ca, ĐỎ trên code gốc ở ca đã sửa (độ mờ ô khoá .3 / ô Giờ vàng chung hàng); số ca là dòng tổng khi chạy trên code đã vá:
+SỐ CA cong_cu/thu_KHUI3a.js: 42
+SỐ CA cong_cu/thu_KHLINK1.js: 97
+SỐ CA cong_cu/thu_KHUI5a.js: 357

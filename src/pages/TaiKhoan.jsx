@@ -1,6 +1,6 @@
 import { layToi, layDiem, layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { cheSdt, dinhDangSo, dinhDangNgay } from '../dinhDang.js';
+import { cheSdt, dinhDangSo, dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { THE_CHAT } from '../noiDung/theChat.js';
 import { DONG_TAI_KHOAN } from '../noiDung/tracNghiemChu.js';
 import { LIEN_HE, coLienHe } from '../noiDung/lienHe.js';
@@ -10,8 +10,8 @@ import { Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 
 // Tài khoản theo demo (account): thẻ tên + 3 ô nhanh, nhóm "Của tôi" / "Cài đặt", đăng xuất.
-// Bỏ: Ví & Thẻ quà tặng, Gia đình (KH-UI-3 / sau khai trương), Thông báo & âm thanh, Quản trị (không thuộc app khách).
-// Ô nhanh chỉ có Điểm và Voucher (Ví → KH-UI-3); hạng cạnh số điện thoại → KH-UI-3.
+// Bỏ: Ví & Thẻ quà tặng (nạp / tặng thẻ → KH-MUA-1), Gia đình (sau khai trương), Thông báo & âm thanh, Quản trị (không thuộc app khách).
+// Ô nhanh Ví · Điểm · Voucher; hạng cạnh số điện thoại. Ví = `so_du_vi` của /toi, lấy mới mỗi lần mở màn (không lưu trên máy); chưa có số thì ẩn ô.
 
 function DongMenu({ bieuTuong, ten, phu, chon }) {
   return (
@@ -38,11 +38,12 @@ export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moT
             <div className="acc-card" {...bam(moHoSo)}>
               <div className="acc-top">
                 <div className="avatar">{(khach.ten || '?').trim().charAt(0).toUpperCase()}</div>
-                <div className="acc-n"><b>{khach.ten}</b><small>{cheSdt(khach.sdt)}</small></div>
+                <div className="acc-n"><b>{khach.ten}</b><small>{cheSdt(khach.sdt)}{khach.hang ? ` · Hạng ${khach.hang.ten}` : ''}</small></div>
                 <span className="acc-edit">Sửa ›</span>
               </div>
-              {(diem.dl || soVoucher !== null) && (
+              {(typeof khach.so_du_vi === 'number' || diem.dl || soVoucher !== null) && (
                 <div className="acc-q" onClick={(e) => e.stopPropagation()}>
+                  {typeof khach.so_du_vi === 'number' && <div><b>{dinhDangGia(khach.so_du_vi)}</b><small>Ví</small></div>}
                   {diem.dl && <div {...bam(moUuDai)}><b>{dinhDangSo(diem.dl.points)}</b><small>Điểm</small></div>}
                   {soVoucher !== null && <div {...bam(moUuDai)}><b>{soVoucher}</b><small>Voucher</small></div>}
                 </div>

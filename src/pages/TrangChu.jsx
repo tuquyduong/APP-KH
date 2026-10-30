@@ -11,18 +11,25 @@ import MonO from '../components/MonO.jsx';
 import BannerHomNay from '../components/BannerHomNay.jsx';
 import TheMoi from '../components/TheMoi.jsx';
 import OTracNghiem from '../components/OTracNghiem.jsx';
+import OGioVang from '../components/OGioVang.jsx';
+import { IcoVe } from '../components/BieuTuong.jsx';
+import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
+import { dungKho } from '../kho.js';
 import { THE_MOI } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
-//   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc" → KH-UI-5b · ô Giờ vàng (cạnh ô Trắc nghiệm, nên ô Trắc nghiệm đang rộng hết hàng), hạng trên thẻ, giá 3 hạng → KH-UI-3 · Mời bạn bè, combo → sau khai trương.
+//   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc" → KH-UI-5b · Mời bạn bè, combo → sau khai trương.
+// Demo không có dòng "quán đang mở / đóng": thêm MỘT dòng nhỏ (kiểu `.sub`) dưới lời chào, chữ lấy từ `/gio-hoat-dong` (xem `## Phát hiện` của KH-UI-3a).
 // Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
 function DauChung({ chao, moQR, the }) {
+  const quan = trangThaiQuan(dungKho(khoGioHoatDong));
   return (
     <>
       <div className="topbar">
         <div>
           <h1>{chao}</h1>
           <div className="sub">Tứ Quý Đường — {KHAU_HIEU}</div>
+          {quan && <div className="sub">{quan.dangMo ? 'Quán đang mở cửa' : quan.thongBao}</div>}
         </div>
         <div className="topbar-right"><NutQR moQR={moQR} /></div>
       </div>
@@ -34,6 +41,7 @@ function DauChung({ chao, moQR, the }) {
 function DauHoiVien({ moQR, moUuDai }) {
   const toi = dungTai(layToi);
   const diem = dungTai(layDiem);
+  const hang = toi.dl && toi.dl.khach.hang; // null = chưa có hạng → không hiện nhãn hạng
   return (
     <DauChung
       chao={loiChao(toi.dl && toi.dl.khach.ten)}
@@ -43,7 +51,12 @@ function DauHoiVien({ moQR, moUuDai }) {
           <div className="card-top">
             <div className="hang-logo"><img className="tqd-logo tqd-mini" src="/anh/logo-nho.webp" alt="" /><div className="brand">TỨ QUÝ ĐƯỜNG<small>Thẻ hội viên</small></div></div>
           </div>
-          <div className="card-bottom"><div><div className="num">{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <span>điểm</span></div></div></div>
+          <div className="card-bottom">
+            <div>
+              {hang && <div className="tier"><IcoVe ten="crown" s={12} /> Hạng {hang.ten}</div>}
+              <div className="num">{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <span>điểm</span></div>
+            </div>
+          </div>
         </div>
       )}
     />
@@ -51,7 +64,7 @@ function DauHoiVien({ moQR, moUuDai }) {
 }
 
 // `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
-export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, locNhuCau, chonMon }) {
+export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
   const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
@@ -76,7 +89,7 @@ export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moUuDai,
             </div>
           </div>
         )}
-        <div className="hb-tiles"><OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} /></div>
+        <div className="hb-tiles"><OGioVang mo={moGioVang} /><OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} /></div>
       </div>
 
       {nhuCau.length > 0 && (

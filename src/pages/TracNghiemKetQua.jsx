@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DL, MENU, THE_CHAT, TU_KHOA_MON } from '../noiDung/theChat.js';
 import { KET_QUA as CHU } from '../noiDung/tracNghiemChu.js';
 import { moTaKetQua, goiYMon, soanGopY } from '../tracNghiem.js';
-import { gioVn } from '../menuLuu.js';
+import { bayGio } from '../bayGio.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import MonO from '../components/MonO.jsx';
 import KhoiTheChat from '../components/KhoiTheChat.jsx';
@@ -45,7 +45,7 @@ export default function TracNghiemKetQua({ tn, menu, lui, lamLai, chonMon, moHoT
   const { t, picks } = kl, G = DL.groups;
   const mo = moTaKetQua(DL, kl);
   const dsMenu = menu.dl ? menu.dl.data : null;
-  const gy = goiYMon(DL, MENU, TU_KHOA_MON, kl, dsMenu, gioVn());
+  const gy = goiYMon(DL, MENU, TU_KHOA_MON, kl, dsMenu, bayGio());
   const the = THE_CHAT[picks[0]];
   const thu = kl.kind === 'main' || kl.kind === 'tend';
 

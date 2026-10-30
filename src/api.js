@@ -25,8 +25,11 @@ function loiApi(status, code, error) {
   return e;
 }
 
+// Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
+const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong'];
+
 async function goi(phuongThuc, duong, than) {
-  const token = docToken();
+  const token = CUA_CONG_KHAI.includes(duong) ? '' : docToken();
   const tieuDe = { 'Content-Type': 'application/json' };
   if (token) tieuDe.Authorization = `Bearer ${token}`;
   let res;
@@ -47,6 +50,9 @@ async function goi(phuongThuc, duong, than) {
 export const xinMa = (sdt) => goi('POST', '/dang-nhap/xin-ma', { sdt });
 // `them` = { xung_ho, dia_chi? } ở bước 3 (luongDangNhap.truongThem).
 export const xacMinh = (sdt, ma, ten, them) => goi('POST', '/dang-nhap/xac-minh', { sdt, ma, ten, ...them });
+export const layHang = () => goi('GET', '/hang');
+export const layGioVang = () => goi('GET', '/gio-vang');
+export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
 export const doiTen = (ten) => goi('PUT', '/toi', { ten });
 export const layMenu = () => goi('GET', '/menu');

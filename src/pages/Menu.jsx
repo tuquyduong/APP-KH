@@ -8,10 +8,14 @@ import TrangTai from '../components/TrangTai.jsx';
 import MonO from '../components/MonO.jsx';
 import TheMoi from '../components/TheMoi.jsx';
 import { THE_MOI_MENU } from '../noiDung/dangNhap.js';
-import { Ico, En } from '../components/BieuTuong.jsx';
+import { Ico, En, DenLong } from '../components/BieuTuong.jsx';
+import GvDem from '../components/GvDem.jsx';
+import { dungGia } from '../heThong.js';
 
 // Menu theo demo: ô tìm + lưới ô nhóm món (nhóm của POS) + lưới món theo nhóm. Màn này luôn được giữ nguyên khi vào một món rồi quay lại
-// (App giữ nó trong cây, chỉ ẩn) nên ô tìm, nhóm đang chọn và vị trí cuộn còn nguyên. Giờ vàng / Topping của demo → KH-UI-3 / TOPPING-1.
+// (App giữ nó trong cây, chỉ ẩn) nên ô tìm, nhóm đang chọn và vị trí cuộn còn nguyên. Topping của demo → TOPPING-1.
+// Ô "Giờ vàng" (đường dẫn /menu/gio-vang) chỉ có khi POS báo Giờ vàng bật và có món ghép được với menu.
+const GV_SLUG = 'gio-vang';
 const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
@@ -46,14 +50,18 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
     });
   };
 
+  const { tt, maGv, coMenu } = dungGia();
+  const coGv = !!tt && (!coMenu || maGv.size > 0); // Giờ vàng tắt / không món ghép được → ẩn mọi chỗ
+  const chonGv = coGv && nhomSlug === GV_SLUG;
   const nhomCo = nhomTheoTen(ds).map(([ten]) => ({ id: ten, ten, ic: bieuTuongNhom(ten).ic }));
   const oChon = [...nhomCo, TAT_CA];
-  const nhom = (nhomCo.find((n) => slug(n.ten) === nhomSlug) || TAT_CA).id;
+  const nhom = chonGv ? GV_SLUG : (nhomCo.find((n) => slug(n.ten) === nhomSlug) || TAT_CA).id;
   const q = tu.trim();
   let loc = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
   loc = timMon(loc, tu);
-  if (nhom && !q) loc = loc.filter((m) => (m.nhom || 'Khác') === nhom);
-  const phan = q ? [[null, loc]] : nhomTheoTen(loc);
+  if (chonGv && !q) loc = loc.filter((m) => maGv.has(m.ma));
+  else if (nhom && !q) loc = loc.filter((m) => (m.nhom || 'Khác') === nhom);
+  const phan = q ? [[null, loc]] : chonGv ? [[GV_SLUG, loc]] : nhomTheoTen(loc);
   const conHang = ds.filter((m) => m.con_hang !== false).length;
 
   return (
@@ -75,6 +83,11 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
         {() => (
           <>
             <div className="cat-tiles" ref={oNhom}>
+              {coGv && (
+                <div className={`ct gv${tt.pha === 'dang' ? ' live' : ''}${chonGv ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => chonNhom(GV_SLUG)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(GV_SLUG); }}>
+                  <DenLong s={34} /><b>Giờ vàng</b><small><GvDem kieu="tile" /></small>
+                </div>
+              )}
               {oChon.map((o) => (
                 <div key={o.id || 'tat-ca'} className={`ct${nhom === o.id ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => chonNhom(o.id)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(o.id); }}>
                   <En ten={o.ic} s={34} /><b>{o.ten}</b>
@@ -83,6 +96,11 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
             </div>
             <div className="cat-mini-wrap">
               <div className={`cat-mini${mini ? ' show' : ''}`}>
+                {coGv && (
+                  <div className={`cm${chonGv ? ' on' : ''}${tt.pha === 'dang' ? ' live' : ''}`} role="button" tabIndex={0} title="Giờ vàng" aria-label="Giờ vàng" onClick={() => chonNhom(GV_SLUG)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(GV_SLUG); }}>
+                    <DenLong s={26} />
+                  </div>
+                )}
                 {oChon.map((o) => (
                   <div key={o.id || 'tat-ca'} className={`cm${nhom === o.id ? ' on' : ''}`} role="button" tabIndex={0} title={o.ten} aria-label={o.ten} onClick={() => chonNhom(o.id)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(o.id); }}>
                     <En ten={o.ic} s={26} />
@@ -95,8 +113,19 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
               {ds.length > 0 && loc.length === 0 && <div className="empty-note">Chưa có món phù hợp. Thử bỏ bớt bộ lọc nhé.</div>}
               {phan.map(([ten, mon]) => (
                 <div key={ten || 'tim'}>
-                  {ten && <div className="cat-title"><En ten={bieuTuongNhom(ten).ic} s={22} /> {ten}<span>{mon.length} món</span></div>}
+                  {ten === GV_SLUG && (
+                    <div className={`gv-head${tt.pha === 'dang' ? ' live' : ''}`}>
+                      <DenLong s={46} />
+                      <div className="gv-ht">
+                        <b>Giờ vàng cuối ngày</b>
+                        <small>Hôm nay {tt.batDau}–{tt.ketThuc} · giảm {tt.phanTram}%</small>
+                        <span className="gv-st"><i /><span><GvDem kieu="long" /></span></span>
+                      </div>
+                    </div>
+                  )}
+                  {ten && ten !== GV_SLUG && <div className="cat-title"><En ten={bieuTuongNhom(ten).ic} s={22} /> {ten}<span>{mon.length} món</span></div>}
                   <div className="grid2">{mon.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
+                  {ten === GV_SLUG && <div className="care-disclaimer" style={{ marginTop: 10 }}>Giá Giờ vàng là giá khuyến mãi cuối cùng: không cộng thêm giá hội viên hay voucher. Hết giờ, món trở về giá thường.</div>}
                 </div>
               ))}
             </div>
