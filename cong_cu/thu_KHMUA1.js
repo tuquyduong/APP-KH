@@ -338,7 +338,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/giohang');
     await t.locator('.promo-box input').fill('GIAM10'); await t.locator('.promo-box button').click(); await t.waitForTimeout(900);
     const bg = P.goi.filter((g) => g.duong === '/gio/bao-gia');
-    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; POS có dòng giảm → "✓ Đã áp dụng"', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
+    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; bảng tiền có dòng "Giảm giá" của POS', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
     const cong = t.locator('.cart-item .qty-ctrl button').nth(1);
     await cong.click(); await cong.click(); await cong.click(); await t.waitForTimeout(1000);
