@@ -7,8 +7,8 @@ import { THE_MOI_MENU } from '../noiDung/dangNhap.js';
 
 // Trang món mở bằng đường dẫn /mon/<ten-mon>: `mon` đã tìm sẵn trong menu (null nếu chưa thấy). Chưa có menu → như Menu
 // (khách mà POS còn đòi đăng nhập: thẻ mời; đang tải; lỗi mạng); có menu mà không có món → "Không tìm thấy món" + "Xem Menu".
-export default function MonTheoDuong({ mon, tai, lui, moQR, moMenu, moDangNhap }) {
-  if (mon) return <TrangMon mon={mon} lui={lui} moQR={moQR} />;
+export default function MonTheoDuong({ mon, tai, lui, moQR, moMenu, moDangNhap, them }) {
+  if (mon) return <TrangMon mon={mon} lui={lui} moQR={moQR} them={them} />;
   if (tai.canDN && !tai.dl) {
     return <Man id="detail"><DauManCon tieuDe="Món" lui={lui} /><TheMoi chu={THE_MOI_MENU} moDangNhap={moDangNhap} /></Man>;
   }
