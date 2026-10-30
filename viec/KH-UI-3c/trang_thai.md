@@ -57,3 +57,10 @@ Nghi ngờ: (1) chưa đo tương phản chữ nhãn ở độ mờ .55 (chỉ k
 - Ô mờ bằng `opacity` cha không cho con sáng lại → mờ từng phần con, chừa dòng khoá. **BỎ** (một lần, đã có ca đo `opacity` hiệu dụng).
 - Đề xuất ngoài Phạm vi: thêm đo tương phản chữ mờ + ca bàn phím cho ô khoá ở việc giao diện sau (**KHOÁ** — `thu_KHUI3c.js`, ca đỏ khi dòng khoá mất `role=button`/Enter).
 - Máy không có `git worktree`, `sed -i`, `npm root` (người gác chặn) → dùng Edit/Write và thư mục nháp.
+
+## Cổng
+Chạy như GitHub (không trình duyệt): `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 82b9772^ HEAD viec/KH-UI-3c`
+✓ CỔNG CHẠY ĐẠT
+(Chạy KHÔNG đặt biến, máy có Chromium: ✗ [A16] chỉ vì máy đếm 68/84 ca thay 16/42 — đúng như CLAUDE.md §9, số ghi là số GitHub.)
+
+HEAD ĐÃ KIỂM: 89638ac
