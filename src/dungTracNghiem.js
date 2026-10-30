@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DL } from './noiDung/theChat.js';
 import { locCau, chamDiem, ketLuan } from './tracNghiem.js';
 import { rutGon, ghiKetQua, docKetQua, xoaKetQua } from './tracNghiemLuu.js';
-import { gioVn } from './menuLuu.js';
+import { bayGio } from './bayGio.js';
 
 // Trạng thái trắc nghiệm của cả app (giữ ở App để đổi tab / bấm Back không mất bài đang làm). Mọi thứ chỉ nằm trên máy khách.
 //   bai  = bài đang làm { gioiTinh, ds, tra[], i, cuoi, khiHau, anToan[] }
@@ -39,7 +39,7 @@ export function dungTracNghiem() {
   const bo = () => datBai(null);
   const xong = () => {
     if (!bai) return;
-    datMoi({ kl: ketLuan(DL, chamDiem(DL, bai.ds, bai.tra).t, bai), ds: bai.ds, tra: bai.tra, ngay: gioVn(), daLuu: false });
+    datMoi({ kl: ketLuan(DL, chamDiem(DL, bai.ds, bai.tra).t, bai), ds: bai.ds, tra: bai.tra, ngay: bayGio(), daLuu: false });
     datBai(null);
   };
   const luuLai = () => {
