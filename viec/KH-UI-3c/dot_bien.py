@@ -17,7 +17,7 @@ DOT_BIEN = [
     ('VS-O-KHOA-MAT-DO-MO', CSS, '.hb-mo > .hb-ic, .hb-mo .hb-tx > :not(.hb-khoa){ opacity:.55; }', '.hb-mo > .hb-ic, .hb-mo .hb-tx > :not(.hb-khoa){ opacity:1; }'),
     ('VS-DONG-KHOA-CAO-HON-O-THUONG', CSS, 'line-height:15px; min-height:30px;', 'line-height:15px; min-height:45px;'),
     ('VS-KHACH-LO-THE-TRANG-DA-LUU', TN, 'const the = dangNhap && klLuu ?', 'const the = klLuu ?'),
-    ('VS-CHAM-O-KHOA-KHONG-DEN-DANG-NHAP', TN, "{...bam(dangNhap ? mo : () => moDangNhap(taoDuongDan('tracnghiem')))}", '{...bam(mo)}'),
+    ('VS-CHAM-O-KHOA-SAI-TRANG-TIEP', TN, "{...bam(dangNhap ? mo : () => moDangNhap(taoDuongDan('tracnghiem')))}", "{...bam(dangNhap ? mo : () => moDangNhap('/uudai'))}"),
     ('BV-LUAT-GIAN-HET-HANG-QUAY-LAI', CSS, '.hb-mo:not([role="button"]){ cursor:default; }', '.hb-tiles:has(> :only-child){ grid-template-columns:1fr; }\n.hb-mo:not([role="button"]){ cursor:default; }'),
 ]
 
