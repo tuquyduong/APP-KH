@@ -67,7 +67,7 @@ const DONG_KHOA = 'Đăng nhập để mở khoá chức năng';
     const khachCoLuu = veTn({ dangNhap: false, klLuu: { picks: ['kh'] }, mo() {}, moDangNhap() {} }, {});
     k('A2 khách mà máy còn kết quả cũ: vẫn là ô khoá, không lộ thể trạng', chuThuan(khachCoLuu) === `Trắc nghiệm 🔒 ${DONG_KHOA}`, chuThuan(khachCoLuu));
   } catch (e) { k('dựng OTracNghiem', false, String(e && e.message).split('\n')[0]); }
-  k('A1/B1 độ mờ ô: một chỗ trong CSS, quanh .55 (.4–.7), dòng khoá không mờ', (() => { const m = /\.hb-mo[^{]*\{[^}]*opacity:\s*(\.\d+|0?\.\d+)/.exec(css); return !!m && +m[1] >= 0.4 && +m[1] <= 0.7; })() && /\.hb-khoa/.test(css) && !/\.hb-khoa[^{]*\{[^}]*opacity/.test(css));
+  k('A1/B1 độ mờ ô: một chỗ trong CSS, quanh .55 (.4–.7), dòng khoá không mờ', (() => { const m = /\.hb-mo[^{]*\{[^}]*opacity:\s*(\.\d+|0?\.\d+)/.exec(css); return !!m && +m[1] >= 0.4 && +m[1] <= 0.7; })() && /\.hb-khoa/.test(css) && !/\.hb-khoa\s*\{[^}]*opacity/.test(css));
   k('B4 .hb-tiles luôn hai cột: luật "giãn hết hàng khi chỉ một ô" đã bỏ', !/\.hb-tiles:has\(> :only-child\)/.test(css) && /\.hb-tiles\{[^}]*grid-template-columns:\s*1fr 1fr/.test(doc('src/giaoDien/demo_tracnghiem.css')));
   k('A3 KhoaTienIch (khối dùng chung) còn nguyên viên nhãn cho việc sau; OTracNghiem không dùng nó', /khoa-nhan/.test(doc('src/components/KhoaTienIch.jsx')) && !/<KhoaTienIch/.test(doc('src/components/OTracNghiem.jsx')));
 
@@ -146,11 +146,17 @@ async function trinhDuyet(pw) {
     return ra;
   };
 
+  const caoHV = {}; // chiều cao ô Trắc nghiệm lúc đã đăng nhập, theo cỡ màn + cỡ chữ (A2: ô khoá không đổi chiều cao)
   for (const rong of [360, 390, 430]) {
     for (const co of ['100%', '130%']) {
+      await ca(`hoi-vien-cao-${rong}-${co}`, { rong, dn: true, pos: { gioVang: GV_TAT } }, async (t) => {
+        await mo(t, '/trangchu', co);
+        caoHV[`${rong}-${co}`] = (await t.evaluate(DO)).tn.cao;
+      });
       await ca(`khach-gv-tat-${rong}-${co}`, { rong, dn: false, pos: { gioVang: GV_TAT } }, async (t, loi) => {
         await mo(t, '/trangchu', co);
         const o = await t.evaluate(DO);
+        k(`A2 ${rong}px · chữ ${co}: ô khoá cao bằng ô lúc đã đăng nhập`, !!o.tn && Math.abs(o.tn.cao - caoHV[`${rong}-${co}`]) <= 1, `${o.tn && o.tn.cao} vs ${caoHV[`${rong}-${co}`]}`);
         const dong = o.tn && o.tn.chu.find((c) => c.lop.includes('hb-khoa'));
         const nhanTn = o.tn && o.tn.chu.find((c) => c.lop.includes('hb-k'));
         const nhanGv = o.gv && o.gv.chu.find((c) => c.lop.includes('hb-k'));

@@ -139,14 +139,14 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
     } catch (e) { baoLoi('F gioHoatDong', e); }
   }
 
-  { // H1b (sửa sau khi chủ quán xem bản xem thử): ô khoá bọc ô Trắc nghiệm nên con duy nhất của .hb-tiles là ô khoá, không phải .hb-tile
+  { // H1b → KH-UI-3c: Giờ vàng tắt thì ô Giờ vàng vẫn có mặt (mờ), nên luật "giãn hết hàng khi chỉ một ô" không còn dùng
     const cssGd = doc('src/giaoDien/giaoDien.css');
-    k('H1b chưa đăng nhập + Giờ vàng tắt: ô khoá là con duy nhất của .hb-tiles cũng giãn hết hàng', /\.hb-tiles:has\(> :only-child\)\s*\{\s*grid-template-columns:\s*1fr/.test(cssGd));
+    k('H1b (KH-UI-3c) .hb-tiles luôn hai cột: không còn luật giãn hết hàng khi chỉ một ô', !/\.hb-tiles:has\(> :only-child\)/.test(cssGd));
   }
 
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
-  try { pw = require('playwright'); } catch { /* không có */ }
+  if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } }
   if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này — các ca trong trình duyệt CHƯA chạy');
   else await trinhDuyet(pw);
 
@@ -251,7 +251,7 @@ async function trinhDuyet(pw) {
 
   await ca('c-gv-tat', { pos: { gioVang: GV_TAT } }, async (t) => {
     await mo(t, '/trangchu');
-    k('E2 Giờ vàng tắt: Trang chủ ẩn ô Giờ vàng, ô Trắc nghiệm giãn hết hàng', (await t.locator('.hb-t-flash').count()) === 0 && (await t.locator('.hb-tiles .hb-tile').count()) === 1 && !/Giờ vàng/.test(await chu(t)));
+    k('E2 Giờ vàng tắt: Trang chủ vẫn hai ô một hàng, ô Giờ vàng MỜ "Hiện chưa có" (KH-UI-3c), không đếm ngược', (await t.locator('.hb-t-flash.hb-mo').count()) === 1 && (await t.locator('.hb-tiles .hb-tile').count()) === 2 && /Hiện chưa có/.test(await t.locator('.hb-t-flash').innerText()) && (await t.locator('.hb-t-flash .hb-s').count()) === 0);
     await mo(t, '/menu');
     k('E2 Giờ vàng tắt: Menu không có ô / nhãn Giờ vàng', (await t.locator('.ct.gv').count()) === 0 && !/Giờ vàng/.test(await chu(t)));
   });
@@ -299,7 +299,7 @@ async function trinhDuyet(pw) {
 
   for (const [cua, kiemTra] of [
     ['hang', async (t, loi) => { await mo(t, '/menu'); return loi.length === 0 && (await t.locator('.prod-card').count()) === 4 && !/NaN|undefined/.test(await chu(t)) && /25\.200/.test(await t.locator('.prod-card', { hasText: 'Trà Phổ Nhĩ' }).innerText()) && !/23\.800/.test(await chu(t)); }],
-    ['gioVang', async (t, loi) => { await mo(t, '/trangchu'); return loi.length === 0 && (await t.locator('.hb-t-flash').count()) === 0 && (await t.locator('.points-card').count()) === 1; }],
+    ['gioVang', async (t, loi) => { await mo(t, '/trangchu'); return loi.length === 0 && (await t.locator('.hb-t-flash.hb-mo').count()) === 1 && !/lỗi/i.test(await t.locator('.hb-tiles').innerText()) && (await t.locator('.points-card').count()) === 1; }], // KH-UI-3c: ô Giờ vàng luôn có mặt, lỗi → ô mờ
     ['gioHoatDong', async (t, loi) => { await mo(t, '/trangchu'); return loi.length === 0 && !/Quán đang mở cửa|Quán đã/.test(await chu(t)) && (await t.locator('.points-card').count()) === 1; }],
   ]) {
     await ca('i-loi-' + cua, { pos: { hong: { [cua]: true } } }, async (t, P, loi) => {
@@ -330,33 +330,6 @@ async function trinhDuyet(pw) {
     await mo(t, '/trangchu');
     k('E1 chưa đăng nhập vẫn thấy ô Giờ vàng (cửa không cần token)', (await t.locator('.hb-t-flash').count()) === 1 && /Còn 1:(29|30)/.test(await t.locator('.hb-t-flash .hb-s').innerText()));
   });
-
-  // H — nhãn khoá tiện ích: trọn trong ô, nền đặc, ô không đổi kích thước; ô nửa hàng (có Giờ vàng) + cả hàng (Giờ vàng tắt)
-  for (const rong of [360, 390, 430]) {
-    for (const [ten, gvDuLieu] of [['nửa hàng', GV_CHAY], ['cả hàng', GV_TAT]]) {
-      for (const co of ['100%', '130%']) {
-        await ca(`l-khoa-${rong}-${ten}-${co}`, { rong, dn: false, pos: { gioVang: gvDuLieu } }, async (t) => {
-          await t.addInitScript(() => {});
-          await mo(t, '/trangchu');
-          if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' });
-          await cho(t, 200);
-          const o = await t.evaluate((phongTo) => {
-            const kh = document.querySelector('.khoa-tien-ich'), nh = document.querySelector('.khoa-nhan'), trong = document.querySelector('.khoa-ben-trong');
-            if (!kh || !nh) return null;
-            // Chữ hệ thống 130%: phóng MỌI chữ trong ô khoá (cỡ px của demo không theo rem) bằng 1,3 lần cỡ thật.
-            if (phongTo) for (const e of kh.querySelectorAll('*')) { const c = parseFloat(getComputedStyle(e).fontSize); if (c) e.style.fontSize = c * 1.3 + 'px'; }
-            const a = kh.getBoundingClientRect(), b = nh.getBoundingClientRect(), c = trong.getBoundingClientRect();
-            const m = /rgba?\(([^)]+)\)/.exec(getComputedStyle(nh).backgroundColor);
-            const phan = m ? m[1].split(',').map(Number) : [0, 0, 0, 0];
-            return { a: [a.left, a.top, a.right, a.bottom, a.width, a.height], b: [b.left, b.top, b.right, b.bottom, b.width, b.height], cao: c.height, alpha: phan.length === 4 ? phan[3] : 1, nenTrong: m ? m[1] : '' };
-          }, co === '130%');
-          const trongO = o && o.b[0] >= o.a[0] - 0.5 && o.b[2] <= o.a[2] + 0.5 && o.b[1] >= o.a[1] - 0.5 && o.b[3] <= o.a[3] + 0.5;
-          k(`H2 ${rong}px · ô ${ten} · chữ ${co}: nhãn nằm trọn trong ô, rộng ≤ 90% ô, nền đặc, ô không đổi kích thước`,
-            !!o && trongO && o.b[4] <= o.a[4] * 0.9 + 1 && o.alpha === 1 && o.nenTrong !== '' && Math.abs(o.cao - o.a[5]) <= 1, JSON.stringify(o));
-        });
-      }
-    }
-  }
 
   await trinh.close();
 }
