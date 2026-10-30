@@ -4,13 +4,16 @@ $ node cong_cu/thu_KHLUU1.js
 Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/APP-KH/src/luuMay.js' imported from cong_cu/thu_KHLUU1.js
 0 đạt · 1 hỏng
 
-Sau khi vá (HEAD 6bb12f9): 29 đạt · 0 hỏng. Chống xanh vô giá trị: 10 đột biến (viec/KH-LUU-1/dot_bien.py) sửa cố ý code đã vá — mỗi lần bài thử ĐỎ:
-  VS-SO-CHU-NGUOC 16 đạt · 4 hỏng · VS-DAU-VET-KHONG-CHUAN-HOA 28·1 · VS-KHONG-XOA-KHI-KHAC 27·2 · BV-BO-CA-BAN-CU 27·2
-  VS-XOA-TAT-CA-GIU-CHU 27·2 · BV-BO-DOI-KHACH 26·3 · BV-BO-NAP 26·3 · BV-BO-XOA-DANG-XUAT 27·2 · VS-HET-PHIEN-XOA-KHOA 20·3
-  VS-LO-KET-QUA-KHI-CHUA-DANG-NHAP 27·2
+Bài cũ cong_cu/thu_KHUI5a.js (phiếu mục C2): sửa 2 ca (donPhien gọi donBoNho; donBoNho KHÔNG xoá khoá). Chạy bản bài thử MỚI trên src/ + public/ của fe13962
+(git archive vào thư mục nháp, node_modules nối vào) — log thật:
+  ✗ App: trạng thái trắc nghiệm giữ ở App (dungTracNghiem), dọn bộ nhớ khi đăng xuất / hết phiên (donPhien gọi donBoNho; KH-LUU-1)
+  ✗ hook: xoá = xoá khoá trên máy + bỏ kết quả trong bộ nhớ; donBoNho chỉ dọn bộ nhớ, KHÔNG xoá khoá (hết phiên không mất kết quả — KH-LUU-1); lưu chỉ ghi bản rút gọn
+  355 đạt · 2 hỏng        (trên code đã vá: 357 đạt · 0 hỏng; tổng số ca 357 cả hai bên, không bớt ca)
 
-Bài cũ cong_cu/thu_KHUI5a.js (phiếu mục C2): sửa 2 ca (dòng "App: trạng thái trắc nghiệm giữ ở App…" và "hook: xoá = …"): từ "donPhien gọi donSach / donSach xoá khoá"
-sang "donPhien gọi donBoNho / donBoNho KHÔNG xoá khoá". Hai ca mới đòi hàm donBoNho mà code gốc không có (gốc chỉ có donSach) → ĐỎ trên gốc; không bớt ca (357 đạt trước và sau).
+Sau khi vá (HEAD dfa6ff4): thu_KHLUU1.js 31 đạt · 0 hỏng. Chống xanh vô giá trị: 11 đột biến (viec/KH-LUU-1/dot_bien.py) — mỗi lần bài thử ĐỎ (log do dot_bien.py in):
+  VS-SO-CHU-NGUOC 16 đạt · 4 hỏng · VS-DAU-VET-KHONG-CHUAN-HOA 30·1 · VS-KHONG-XOA-KHI-KHAC 28·3 · BV-BO-CA-BAN-CU 29·2
+  VS-XOA-TAT-CA-GIU-CHU 29·2 · BV-BO-DOI-KHACH 27·4 · BV-BO-NAP 27·4 · VS-HIEN-KHI-CHUA-BIET-KHACH 29·2 · BV-BO-XOA-DANG-XUAT 29·2
+  VS-HET-PHIEN-XOA-KHOA 20·3 · VS-LO-KET-QUA-KHI-CHUA-DANG-NHAP 24·2
 
-SỐ CA thu_KHLUU1.js: 29
+SỐ CA thu_KHLUU1.js: 31
 SỐ CA thu_KHUI5a.js: 357
