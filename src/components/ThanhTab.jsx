@@ -1,12 +1,14 @@
-// Thanh tab như demo: nền lụa + huy hiệu ngũ hành, mục mua hàng thêm ở KH-MUA-1 (đúng 4 mục). Màu chữ khi chọn lấy từ demo (--c).
+// Thanh tab như demo: nền lụa + huy hiệu ngũ hành, 5 mục (Giỏ hàng từ KH-MUA-1). Màu chữ khi chọn lấy từ demo (--c).
+// `soMon` > 0 → số món trên tab Giỏ hàng (phiếu KH-MUA-1 A1; demo không vẽ — xem viec/KH-MUA-1/doi_chieu_demo.md).
 const CAC_TAB = [
   ['trangchu', 'Trang chủ', 'nhA-tho', '#C98712'],
   ['menu', 'Menu', 'nhA-moc', '#23804A'],
+  ['giohang', 'Giỏ hàng', 'nhA-kim', '#7C8696'],
   ['uudai', 'Ưu đãi', 'nhA-hoa', '#C22A2A'],
   ['taikhoan', 'Tài khoản', 'nhA-thuy', '#1E3F86'],
 ];
 
-export default function ThanhTab({ tab, chon }) {
+export default function ThanhTab({ tab, chon, soMon = 0 }) {
   return (
     <nav className="tabbar" aria-label="Điều hướng chính">
       <svg className="tab-silk" viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true">
@@ -24,6 +26,7 @@ export default function ThanhTab({ tab, chon }) {
         <button key={ma} type="button" className={`tab${ma === tab ? ' active' : ''}`} style={{ '--c': mau }} aria-current={ma === tab ? 'page' : undefined} onClick={() => chon(ma)}>
           <svg className="med tabmed" width="32" height="32" viewBox="0 0 64 64" aria-hidden="true"><use href={`#${bt}`} /></svg>
           {ten}
+          {ma === 'giohang' && soMon > 0 && <span className="tab-so" aria-label={`${soMon} món trong giỏ`}>{soMon}</span>}
         </button>
       ))}
     </nav>
