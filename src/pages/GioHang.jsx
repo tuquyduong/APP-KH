@@ -34,12 +34,13 @@ function DongGio({ dong, i, gio, ds, doi }) {
   const { mon, conBan } = trangThaiDong(dong, ds);
   const dangGv = !!mon && !!tt && tt.pha === 'dang' && maGv.has(mon.ma); // như Menu: món đang Giờ vàng hiện giá gốc, không giá hạng
   const gia = mon ? giaHinhDung(mon, dangGv ? null : hangToi, dong.so_luong) : null;
-  const canhBao = ds.length > 0 && !conBan ? (mon ? 'Hết hàng' : 'Không còn trong menu') : '';
+  const coMenu = ds.length > 0; // chưa có menu (đang tải / POS đòi đăng nhập) → chưa biết món còn bán không: không cảnh báo, không giá
+  const canhBao = coMenu && !conBan ? (mon ? 'Hết hàng' : 'Không còn trong menu') : '';
   return (
     <div className="cart-item">
       <div className="cart-thumb" style={mon ? { background: bieuTuongNhom(mon.nhom).bg } : undefined}>{mon ? <AnhMon mon={mon} s={40} /> : <Ico ten="package" s={28} />}</div>
       <div className="cart-info">
-        <div className="cart-name">{mon ? mon.ten : 'Món đã ngừng bán'}</div>
+        <div className="cart-name">{mon ? mon.ten : coMenu ? 'Món đã ngừng bán' : dong.ma}</div>
         {(canhBao || dong.ghi_chu) && <div className="cart-opt">{canhBao && <b>{canhBao}</b>}{canhBao && dong.ghi_chu && ' · '}{dong.ghi_chu && `“${dong.ghi_chu}”`}</div>}
         {gia !== null && <div className="cart-price">{dinhDangGia(gia)}</div>}
       </div>
@@ -54,9 +55,10 @@ function DongGio({ dong, i, gio, ds, doi }) {
 
 export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tiepTuc, moMenu }) {
   const [o, datO] = useState(maGiam);
-  const coThe = duocThanhToan(gio, ds);
-  const { bg, loi } = dungBaoGia(gio, { maGiam, cachNhan: 'tai_quan' }, dangNhap && coThe);
-  const daApDung = !!maGiam && maGiam === o.trim();
+  const coMenu = ds.length > 0;
+  const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
+  const { bg, loi } = dungBaoGia(gio, { maGiam, cachNhan: 'tai_quan' }, dangNhap && coMenu && coThe);
+  const daApDung = !!maGiam && maGiam === o.trim() && !!bg && bg.giam.length > 0; // "Đã áp dụng" chỉ khi POS báo có giảm
   return (
     <Man id="cart">
       <div className="topbar"><div><h1>Giỏ hàng</h1>{gio.length > 0 && <div className="sub">{demMon(gio)} món</div>}</div></div>

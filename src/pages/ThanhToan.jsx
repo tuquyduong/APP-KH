@@ -46,7 +46,15 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong }) {
     datDang(true); datLoiGui('');
     return p.then(
       (don) => { datDang(false); if (don) xong(don); },
-      (e) => { datDang(false); if (cachTra !== 'vi') datLoiGui(e.message + (e.code === 'MANG_LOI' ? NHAC_MAT_MANG : '')); throw e; },
+      (e) => {
+        datDang(false);
+        const matMang = e.code === 'MANG_LOI';
+        if (cachTra === 'vi' && !matMang) throw e; // PIN sai / ví không đủ…: bảng PIN hiện nguyên lời POS, khách nhập lại
+        datMoPin(false); // mất mạng khi trả ví: KHÔNG mời nhập PIN lại (đơn có thể đã trừ ví) — đóng bảng, nhắc xem Lịch sử đơn
+        datLoiGui(e.message + (matMang ? NHAC_MAT_MANG : ''));
+        if (!matMang) throw e;
+        return undefined;
+      },
     );
   };
   const xacNhan = () => {

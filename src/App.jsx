@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { docToken, xoaToken, datKhiHetPhien, layToi } from './api.js';
+import { docToken, xoaToken, datKhiHetPhien, layToi, layChiTietDon } from './api.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungDuongDan, viTriCuonKhiDoiMan } from './dieuHuong.js';
 import { taoDuongDan, slugMon, timMonTheoSlug, tieuDeTrang } from './duongDan.js';
@@ -12,6 +12,7 @@ import { doiKhach, xoaTatCa } from './luuMay.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon } from './gio.js';
 import { huyDon, monDatLai } from './datDon.js';
+import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
 import GioHang from './pages/GioHang.jsx';
@@ -87,14 +88,15 @@ export default function App() {
 
   // 401 giữa phiên / đăng xuất: về chế độ khách VÀ về Trang chủ (không giữ trang của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
   // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau). Bản menu lưu trên máy cũng xoá (có thể mang giá theo hạng của khách trước).
-  const donPhien = () => { thay('/trangchu'); xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datDaBiet(false); datHangToi(null); tnGoc.donBoNho(); };
+  // Giỏ GIỮ khi hết phiên (như dữ liệu trên máy, §8); mã giảm và đơn vừa tạo (QR) thuộc phiên → dọn cùng chỗ.
+  const donPhien = () => { thay('/trangchu'); datMaGiam(''); donMoi.current = null; xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datDaBiet(false); datHangToi(null); tnGoc.donBoNho(); };
   useEffect(() => { datKhiHetPhien(donPhien); });
 
   // Mỗi lần có phiên (mở app khi còn token, hoặc vừa đăng nhập): biết khách là ai → khác khách trước thì xoá dữ liệu trên máy (luuMay.js), rồi nạp bản lưu.
   useEffect(() => {
     if (!dangNhap) return undefined;
     let huy = false;
-    layToi().then((r) => { if (!huy && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) datGio(docGio()); tnGoc.nap(); datDaBiet(true); } }).catch(() => { /* 401: api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm */ });
+    layToi().then((r) => { if (!huy && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) { datGio(docGio()); datMaGiam(''); } tnGoc.nap(); datDaBiet(true); } }).catch(() => { /* 401: api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm */ });
     return () => { huy = true; };
   }, [dangNhap]);
 
@@ -123,7 +125,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); xoaTatCa(); datGio([]); datMaGiam(''); donMoi.current = null; datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
@@ -139,12 +141,14 @@ export default function App() {
   const taiTab = (t) => trang === t;
   const vaoGio = (chu) => { datThongBao(chu); di(taoDuongDan('giohang')); };
   const themVaoGio = (mon, so, ghiChu) => { doiGio(themMon(gio, mon.ma, so, ghiChu)); vaoGio(`Đã thêm ${mon.ten} vào giỏ`); };
-  const datLai = (don) => {
-    const { them, boQua } = monDatLai(don, ds);
-    doiGio(them.reduce((g, d) => themMon(g, d.ma, d.so_luong, d.ghi_chu), gio));
+  // "Đặt lại" đọc `mon[].ma` — trường DỰ KIẾN (hợp đồng v2 chưa có) → chỉ mở cùng cờ DAT_ONLINE (KH-MUA-1b), không thì báo sai "không còn bán".
+  const datLai = (ma) => layChiTietDon(ma).then((r) => {
+    const { them, boQua } = monDatLai(r.don, ds);
     const boChu = boQua ? `${boQua} món không còn bán, đã bỏ qua` : '';
-    vaoGio(them.length ? `Đã thêm ${demMon(them)} món vào giỏ${boChu ? ' · ' + boChu : ''}` : boChu);
-  };
+    if (!them.length) { datThongBao(boChu || 'Đơn này không có món để đặt lại'); return; }
+    doiGio(them.reduce((g, d) => themMon(g, d.ma, d.so_luong, d.ghi_chu), gio));
+    vaoGio(`Đã thêm ${demMon(them)} món vào giỏ${boChu ? ' · ' + boChu : ''}`);
+  }, (e) => datThongBao(e.message));
   const xongDatDon = (don) => { donMoi.current = don; di(taoDuongDan('theodoi', { ma: don.ma })); };
   const daTra = (ma) => { if (donMoi.current && donMoi.current.ma === ma) { donMoi.current = null; doiGio([]); datMaGiam(''); } };
   const taoMaMoi = (ma) => { huyDon(ma).catch(() => { /* POS tự huỷ đơn chờ trả quá hạn */ }).finally(() => di(taoDuongDan('thanhtoan'))); };
@@ -166,7 +170,7 @@ export default function App() {
         {trang === 'mon' && <MonTheoDuong mon={monLink} tai={menu} lui={luiVe} moQR={moQR} moMenu={moMenu} moDangNhap={() => moDangNhap(r.chuan)} them={themVaoGio} />}
         {!dangNhap && trang === 'dangnhap' && <DangNhap khiXong={() => datDangNhap(true)} dong={luiVe} coMaHoaDon={!!maCho} />}
         {dangNhap && trang === 'qr' && <ManQR lui={luiVe} />}
-        {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(ma) => di(taoDuongDan('don', { ma }))} lui={luiVe} datLai={datLai} />}
+        {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(ma) => di(taoDuongDan('don', { ma }))} lui={luiVe} datLai={DAT_ONLINE ? datLai : null} />}
         {dangNhap && trang === 'don' && <ChiTietDon ma={r.tham.ma} lui={luiVe} />}
         {dangNhap && trang === 'thongtin' && <HoSo lui={luiVe} />}
         {trang === 'hotro' && <HoTro lui={luiVe} />}
