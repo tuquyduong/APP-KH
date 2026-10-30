@@ -1,0 +1,62 @@
+/* CHÉP từ thiet_ke/app_kh_demo.html (patch39), đã lọc: luật của màn Giỏ hàng / Thanh toán / Theo dõi đơn / Trang món (thêm giỏ) mà demo_1.css chưa có,
+   giữ nguyên thứ tự (cascade); nhóm chọn chỉ giữ phần thuộc các lớp này. Không sửa tay — đổi gì thì ghi ở giaoDien.css. (KH-MUA-1) */
+.detail-qty-row{display:flex; align-items:center; justify-content:space-between; background:var(--white); border-radius:14px; padding:14px 16px; margin:16px 0; box-shadow:0 1px 4px rgba(26,54,93,.08);}
+.detail-addcart{width:100%; background:var(--forest); color:#fff; border:none; border-radius:14px; padding:15px; font-size:14px; font-weight:600; font-family:inherit; cursor:pointer; display:flex; justify-content:space-between; align-items:center; padding-left:20px; padding-right:20px;}
+.cart-item{display:flex; gap:12px; background:var(--white); border-radius:14px; padding:12px; margin-bottom:10px; box-shadow:0 1px 4px rgba(26,54,93,.08); align-items:center;}
+.cart-thumb{width:52px; height:52px; border-radius:10px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;}
+.cart-info{flex:1;}
+.cart-name{font-size:13px; font-weight:500; margin-bottom:3px;}
+.cart-price{font-size:12px; color:var(--forest); font-weight:600;}
+.qty-ctrl{display:flex; align-items:center; gap:8px; background:var(--cream); border-radius:20px; padding:4px 8px;}
+.qty-ctrl button{width:20px;height:20px;border-radius:50%;border:none;background:var(--white);color:var(--forest);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.qty-ctrl span{font-size:12px; font-weight:600; min-width:14px; text-align:center;}
+.reorder-btn{font-size:11.5px; font-weight:600; color:#fff; background:var(--pink-dark); padding:7px 14px; border-radius:10px; border:none; font-family:inherit;}
+.mode-row{display:flex; gap:10px; margin-bottom:6px;}
+.mode-opt{flex:1; background:var(--white); border:2px solid transparent; border-radius:14px; padding:12px 8px; text-align:center; box-shadow:0 1px 4px rgba(26,54,93,.08); cursor:pointer;}
+.mode-opt.active{border-color:var(--pink-dark);}
+.mode-opt .e{font-size:22px;}
+.mode-opt b{display:block; font-size:13px; color:var(--navy); margin-top:2px;}
+.mode-opt span{font-size:10.5px; color:var(--muted);}
+.opt-row{display:flex; gap:10px; align-items:flex-start; background:var(--white); border:2px solid transparent; border-radius:14px; padding:11px 12px; margin-bottom:8px; box-shadow:0 1px 4px rgba(26,54,93,.08); cursor:pointer;}
+.opt-row.active{border-color:var(--pink-dark);}
+.opt-row .tt{font-size:12.5px; font-weight:700; color:var(--navy);}
+.opt-row .ss{font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4;}
+.opt-row .km{margin-left:auto; font-size:10.5px; font-weight:600; color:var(--pink-dark); white-space:nowrap;}
+.rdo{width:18px; height:18px; border-radius:50%; border:2px solid var(--line); flex-shrink:0; margin-top:1px; position:relative;}
+.opt-row.active .rdo{border-color:var(--pink-dark);}
+.opt-row.active .rdo::after{content:""; position:absolute; inset:3px; border-radius:50%; background:var(--pink-dark);}
+.opt-row.active .chk{border-color:var(--pink-dark); background:var(--pink-dark);}
+.opt-row.active .chk::after{content:"✓"; position:absolute; inset:0; color:#fff; font-size:11px; line-height:14px; text-align:center; font-weight:700;}
+.tl-step{display:flex; gap:12px; align-items:flex-start;}
+.tl-dot{width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; background:var(--line); color:var(--muted); flex-shrink:0;}
+.tl-line{width:2px; height:30px; background:var(--line); margin:0 auto;}
+.tl-step.done .tl-dot{background:var(--forest); color:#fff;}
+.tl-step.done .tl-line{background:var(--forest);}
+.tl-step.cur .tl-dot{background:var(--peach-dark); color:#fff; box-shadow:0 0 0 4px rgba(178,94,30,.18);}
+.tl-step .t{font-size:12.5px; font-weight:500; color:var(--muted);}
+.tl-step.done .t{color:var(--ink); font-weight:600;}
+.tl-step.cur .t{color:var(--peach-dark); font-weight:700;}
+.tl-step .s{font-size:10.5px; color:var(--muted); margin-top:1px; line-height:1.4;}
+.pick-num{background:var(--white); border:2px dashed var(--pink-dark); border-radius:16px; padding:14px; text-align:center; margin-bottom:14px;}
+.pick-num .n{font-size:34px; font-weight:800; color:var(--pink-deep); letter-spacing:.04em;}
+.mode-opt .e .ico{width:30px; height:30px; color:var(--pink-deep);}
+.cart-thumb .ico{color:var(--pink-deep); --ic-soft:#fff; opacity:.95;}
+.cart-thumb .ico{width:28px; height:28px;}
+.tl-dot .ico{width:12px; height:12px;}
+.tl-step.done .tl-dot .ico, .tl-step.cur .tl-dot .ico{color:#fff; --ic-soft:rgba(255,255,255,.35);}
+.opt-row .tt .med{width:24px; height:24px; margin:-6px 6px 0 0;}
+.opt-row .tt .ico{width:16px; height:16px; margin:-3px 4px 0 0; color:var(--pink-deep);}
+.mode-opt .e{width:50px; height:50px; margin:0 auto 2px;}
+.mode-opt .e .med{width:100%; height:100%; filter:drop-shadow(0 2px 4px rgba(122,38,71,.18));}
+.opt-title{font-size:13px; font-weight:700; color:var(--navy); margin:18px 0 8px; display:flex; align-items:center; gap:6px;}
+.opt-title small{font-size:11px; font-weight:500; color:var(--muted);}
+.note-in{width:100%; border:1px solid var(--line); border-radius:12px; padding:11px 12px; font-family:inherit; font-size:12.5px; background:var(--white); outline:none;}
+.cart-thumb{overflow:hidden;}
+.cart-opt{font-size:10.5px; color:var(--muted); line-height:1.4; margin-bottom:4px;}
+.empty-cart{text-align:center; padding:28px 16px 8px;}
+.empty-cart .en{margin:0 auto 10px;}
+.empty-cart .t{font-size:15px; font-weight:700; color:var(--navy);}
+.empty-cart .s{font-size:12px; color:var(--muted); margin-top:4px;}
+.cart-price .reg-s{font-size:10.5px; color:var(--muted); font-weight:400; text-decoration:line-through; margin-left:5px;}
+.cart-price .mem-c{color:#C62828; font-weight:800;}
+.cart-item{box-shadow:0 2px 10px rgba(142,27,76,.08);}
