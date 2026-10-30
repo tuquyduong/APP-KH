@@ -67,3 +67,7 @@ A1 `thu_KHLUU1.js` 4 ca đầu · A2 5 ca · A3 1 ca · A4 2 ca · B1 ca đọc 
 - NGUYÊN TẮC (đề xuất K10, ngoài Phạm vi): "Chủ dữ liệu cá nhân xác định bất đồng bộ → mọi chỗ hiện dữ liệu cá nhân phải chờ tới khi biết chủ" (đã gây: L1 — lộ bản lưu khách trước trong lúc chờ `/toi`). Dấu hiệu: ca thử chờ cố định rồi mới kiểm. Chặn: ca giữ yêu cầu treo (C1(h)).
 - KHOÁ (đã làm): ca C1(h) + đột biến VS-HIEN-KHI-CHUA-BIET-KHACH.
 - BỎ: người gác chặn `sed -i`, `worktree`, biến trong đích ghi (lỗi dùng lệnh, chỉ một lần).
+
+## Cổng
+✓ CỔNG CHẠY ĐẠT (`node tu_chay/cong.js chay . fe13962^ HEAD viec/KH-LUU-1`; kèm cảnh báo A16 không chặn: bài thử chạy trên gốc dừng sớm vì thiếu `luuMay.js` nên in 1 ca ≠ 31 — đúng bằng chứng đỏ).
+HEAD ĐÃ KIỂM: a2d04eb
