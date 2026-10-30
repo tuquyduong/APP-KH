@@ -11,7 +11,7 @@ import { xoaMenuLuu } from './menuLuu.js';
 import { doiKhach, xoaTatCa } from './luuMay.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon } from './gio.js';
-import { huyDon, monDatLai } from './datDon.js';
+import { monDatLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
@@ -143,16 +143,15 @@ export default function App() {
   const vaoGio = (chu) => { datThongBao(chu); di(taoDuongDan('giohang')); };
   const themVaoGio = (mon, so, ghiChu) => { doiGio(themMon(gio, mon.ma, so, ghiChu)); vaoGio(`Đã thêm ${mon.ten} vào giỏ`); };
   // "Đặt lại" đọc `mon[].ma` — trường DỰ KIẾN (hợp đồng v2 chưa có) → chỉ mở cùng cờ DAT_ONLINE (KH-MUA-1b), không thì báo sai "không còn bán".
-  const datLai = (ma) => layChiTietDon(ma).then((r) => {
+  const datLai = (ma) => (!ds.length ? Promise.resolve(datThongBao('Menu chưa tải xong, thử lại sau ít giây')) : layChiTietDon(ma).then((r) => {
     const { them, boQua } = monDatLai(r.don, ds);
     const boChu = boQua ? `${boQua} món không còn bán, đã bỏ qua` : '';
     if (!them.length) { datThongBao(boChu || 'Đơn này không có món để đặt lại'); return; }
     doiGio(them.reduce((g, d) => themMon(g, d.ma, d.so_luong, d.ghi_chu), gio));
     vaoGio(`Đã thêm ${demMon(them)} món vào giỏ${boChu ? ' · ' + boChu : ''}`);
-  }, (e) => datThongBao(e.message));
+  }, (e) => datThongBao(e.message)));
   const xongDatDon = (don) => { donMoi.current = don; di(taoDuongDan('theodoi', { ma: don.ma })); };
   const daTra = (ma) => { if (donMoi.current && donMoi.current.ma === ma) { donMoi.current = null; doiGio([]); datMaGiam(''); } };
-  const taoMaMoi = (ma) => { huyDon(ma).catch(() => { /* POS tự huỷ đơn chờ trả quá hạn */ }).finally(() => di(taoDuongDan('thanhtoan'))); };
 
   return (
     <NguCanhGia.Provider value={nguCanhGia}>
@@ -160,8 +159,8 @@ export default function App() {
       <div className="screens" ref={khungCuon}>
         {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} moDangNhap={() => moDangNhap(r.chuan)} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
         {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} />}
-        {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} />}
-        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} qr={donMoi.current && donMoi.current.ma === r.tham.ma ? donMoi.current.qr : null} lui={luiVe} daTra={daTra} taoMaMoi={taoMaMoi} />}
+        {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} />}
+        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} qr={donMoi.current && donMoi.current.ma === r.tham.ma ? donMoi.current.qr : null} lui={luiVe} daTra={daTra} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
         {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moGioVang={moGioVang} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
         {dangNhap && taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
         {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}

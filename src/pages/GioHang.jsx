@@ -9,6 +9,7 @@ import { AnhMon } from '../components/MonO.jsx';
 import { Ico, En } from '../components/BieuTuong.jsx';
 
 // Giỏ hàng theo demo (cart). Khách chưa đăng nhập vẫn thêm / xem giỏ; "Tiếp tục" → Thanh toán (cần đăng nhập, App tự đưa qua /dangnhap?tiep=).
+// Mã giảm: nút luôn "Áp dụng" — kết quả là dòng giảm trong bảng tiền của POS (chưa biết `loai` nào là của mã → không ghi "Đã áp dụng").
 // App KHÔNG tính tiền: giá trên dòng = giá một ly (như Menu) × số lượng, chỉ để hình dung; tạm tính / giảm / phí / tổng CHỈ từ báo giá POS.
 const CHU_CHUA_TONG = 'Tổng tiền sẽ hiện khi quán xác nhận';
 
@@ -58,7 +59,6 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const coMenu = ds.length > 0;
   const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
   const { bg, loi } = dungBaoGia(gio, { maGiam, cachNhan: 'tai_quan' }, dangNhap && coMenu && coThe);
-  const daApDung = !!maGiam && maGiam === o.trim() && !!bg && bg.giam.length > 0; // "Đã áp dụng" chỉ khi POS báo có giảm
   return (
     <Man id="cart">
       <div className="topbar"><div><h1>Giỏ hàng</h1>{gio.length > 0 && <div className="sub">{demMon(gio)} món</div>}</div></div>
@@ -74,7 +74,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
           {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} />)}
           <div className="promo-box">
             <input placeholder="Nhập mã giảm giá" aria-label="Mã giảm giá" maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
-            <button type="button" onClick={() => datMaGiam(o.trim())}>{daApDung ? '✓ Đã áp dụng' : 'Áp dụng'}</button>
+            <button type="button" onClick={() => datMaGiam(o.trim())}>Áp dụng</button>
           </div>
           <BangTien bg={bg} loi={loi} />
           <button type="button" className={`checkout-btn${coThe ? '' : ' btn-disabled'}`} aria-disabled={!coThe} onClick={coThe ? tiepTuc : undefined}>

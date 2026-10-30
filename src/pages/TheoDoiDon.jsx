@@ -14,7 +14,7 @@ import { VeQR } from './ManQR.jsx';
 // Đã trả: số đơn to để đọc cho nhân viên + các bước tien_trinh, hỏi lại mỗi 10 giây tới khi xong. Bản đồ / tài xế: KH-MUA-2.
 const dongHo = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
-function TraQR({ qr, tong, taoMaMoi }) {
+function TraQR({ qr, tong, taoMaMoi, dang }) {
   const [, ve] = useState(0);
   useEffect(() => { const id = setInterval(() => ve((x) => x + 1), 1000); return () => clearInterval(id); }, []);
   const con = conLaiQR(qr.hetHan, bayGio());
@@ -22,7 +22,7 @@ function TraQR({ qr, tong, taoMaMoi }) {
     return (
       <>
         <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Mã QR đã hết hạn, đơn chưa được trả.</div></div>
-        <button type="button" className="checkout-btn" onClick={taoMaMoi}><span>Tạo mã mới</span><span>→</span></button>
+        <button type="button" className={`checkout-btn${dang ? ' btn-disabled' : ''}`} onClick={dang ? undefined : taoMaMoi}><span>Tạo mã mới</span><span>→</span></button>
       </>
     );
   }
@@ -48,13 +48,18 @@ function CacBuoc({ tt }) {
   });
 }
 
-export default function TheoDoiDon({ ma, qr, lui, daTra, taoMaMoi }) {
+export default function TheoDoiDon({ ma, qr, lui, daTra, veThanhToan }) {
   const { don, loi, taiLai } = dungTheoDoi(ma, !!qr);
   const [loiHuy, datLoiHuy] = useState('');
   const [dangHuy, datDangHuy] = useState(false);
   const tt = don ? don.tienTrinh : '';
   const choTra = tt === 'cho_tra';
   useEffect(() => { if (tt && tt !== 'cho_tra' && tt !== 'da_huy') daTra(ma); }, [tt]);
+  // "Tạo mã mới" = huỷ đơn chờ trả rồi về Thanh toán — CHỈ khi huỷ thành công (POS từ chối, vd đơn vừa được trả → hiện lời POS, hỏi lại trạng thái).
+  const taoMoi = () => {
+    datDangHuy(true); datLoiHuy('');
+    huyDon(ma).then(veThanhToan, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
+  };
   const huy = () => {
     datDangHuy(true); datLoiHuy('');
     huyDon(ma).then(() => { datDangHuy(false); taiLai(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); });
@@ -65,7 +70,7 @@ export default function TheoDoiDon({ ma, qr, lui, daTra, taoMaMoi }) {
       {!don && (loi ? <KhungLoi loi={loi} thuLai={taiLai} /> : <div className="khung-tai" aria-busy="true" />)}
       {don && (
         <>
-          {choTra && qr && <TraQR qr={qr} tong={don.tong} taoMaMoi={() => taoMaMoi(ma)} />}
+          {choTra && qr && <TraQR qr={qr} tong={don.tong} taoMaMoi={taoMoi} dang={dangHuy} />}
           {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">#{don.ma}</div></div>}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>
           {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><h2>Chi tiết đơn</h2></div>}

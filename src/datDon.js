@@ -74,6 +74,11 @@ export const taoDon = (than) => goiCong('POST', DUONG_DAT_DON.don, than).then(do
 export const xemDon = (ma) => goiCong('GET', DUONG_DAT_DON.xem(ma)).then(docDon);
 export const huyDon = (ma) => goiCong('POST', DUONG_DAT_DON.huy(ma));
 
+// Lỗi POS báo CHẮC CHẮN chưa tạo đơn (tên dự kiến, mục 3 TRA_LOI_POS_31102026 + hợp đồng v2): chỉ những lỗi này cho khách sửa rồi gửi lại.
+// Mọi lỗi khác (mất mạng, 5xx, trả lời không đọc được / thiếu mã đơn) = đơn CÓ THỂ đã tạo, ví có thể đã trừ → không cho gửi lại.
+const LOI_CHUA_TAO = ['PIN_SAI', 'VI_KHONG_DU', 'HET_HANG', 'NGOAI_GIO', 'NGOAI_GIO_HOAT_DONG', 'QUA_GIO_NHAN_DON', 'CHUA_MO'];
+export const chuaTaoDon = (e) => !!e && LOI_CHUA_TAO.includes(e.code);
+
 /** Ví còn thiếu bao nhiêu so với tổng POS báo (0 = đủ). Thiếu số → null (không cho chọn ví). */
 export const viThieu = (tong, soDu) => (so(tong) && so(soDu) ? Math.max(0, tong - soDu) : null);
 
