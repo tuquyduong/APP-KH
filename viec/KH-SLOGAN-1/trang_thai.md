@@ -58,3 +58,9 @@ BÀI HỌC: bài đo phông nên nạp màn mở thật; khi luật K9 có sẵn
 `node tu_chay/cong.js chay . d01f6cd^ HEAD viec/KH-SLOGAN-1` → ✓ CỔNG CHẠY ĐẠT
 
 HEAD ĐÃ KIỂM: d02b306
+
+## Sửa sau khi PR đỏ trên GitHub (chat App KH, 30.10)
+- GitHub không có Playwright: ca "B3 có Playwright để đo" bị tính hỏng -> cổng đỏ. Đã đổi thành BỎ QUA (không tính hỏng) như thu_KHLUU1.js; ca B3 vẫn chạy thật ở máy có Chromium.
+- Dòng SỐ CA ghi theo số GitHub đếm được (16, không có ca B3); máy có Chromium sẽ đếm nhiều hơn.
+
+HEAD ĐÃ KIỂM: 526aad68a7fab6527b4de171469ab44b767e2dd2
