@@ -180,3 +180,6 @@ thái gắn đúng dòng POS trả (lọc theo loai), không suy từ "có dòng
 - Q9 (B4): `giam[] { loai }` — POS cho biết giá trị `loai` của dòng giảm do mã sinh ra (vd "ma_giam") để app ghi "✓ Đã áp dụng" như demo; chưa có thì app không ghi.
 - Q10 (B8, gửi POS): danh sách mã lỗi của `POST /don` mà POS BẢO ĐẢM chưa tạo đơn / chưa trừ ví (app chỉ cho gửi lại với các mã này — `datDon.LOI_CHUA_TAO`).
   Và POS chặn đơn trùng (cùng khách, cùng giỏ, vài giây) — vì app khoá trong một tab, không khoá được hai tab / hai máy.
+- `python3 viec/KH-MUA-1/dot_bien.py man` (bản sao HEAD 42d2119 ở nháp, có Chromium): VS-MOI-LOI-MOI-NHAP-PIN ĐỎ 123·5 · BV-LOI-LA-KHONG-KHOA ĐỎ 124·4 ·
+  VS-THIEU-MA-DON-IM-LANG ĐỎ 127·1 · BV-TAO-MA-MOI-NUOT-LOI-HUY ĐỎ 127·1 · BV-DAT-LAI-KHONG-QUA-CO ĐỎ 127·1 · BV-KHOA-GIO-KHI-CHUA-CO-MENU ĐỎ 126·2 —
+  TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT.
