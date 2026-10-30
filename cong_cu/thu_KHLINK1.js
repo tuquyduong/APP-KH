@@ -110,7 +110,7 @@ function dungThanhPhan(tep) {
   k('khách: ô MỜ, không thao tác được bên trong (inert / aria-hidden)', /khoa-tien-ich/.test(khach) && /\binert=""/.test(khach) && /aria-hidden="true"/.test(khach));
   k('khách: bấm được (role=button) để đi đăng nhập', /role="button"/.test(khach) && /tabindex="0"/.test(khach));
   const css = doc('src/giaoDien/giaoDien.css');
-  k('độ mờ của ô khoá lấy từ demo (opacity .45 như .btn-disabled), không thêm màu', /\.khoa-tien-ich[^}]*opacity:\s*\.45/.test(css) && !/\.khoa-tien-ich[^}]*(#[0-9a-f]{3,8}|rgb|hsl)/i.test(css));
+  k('độ mờ của ô khoá mờ hơn .btn-disabled của demo một chút (opacity .3 — KH-UI-3a H1, để chữ của ô không lộ chồng lên nhãn), không thêm màu', /\.khoa-tien-ich[^}]*opacity:\s*\.3[;\s}]/.test(css) && !/\.khoa-tien-ich[^}]*(#[0-9a-f]{3,8}|rgb|hsl)/i.test(css));
   const kt = doc('src/components/KhoaTienIch.jsx');
   k('bấm gọi moDangNhap(tiep) — đi /dangnhap?tiep=<trang tiện ích>', /moDangNhap\(tiep\)/.test(kt));
 
