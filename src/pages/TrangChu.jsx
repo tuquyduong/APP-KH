@@ -4,6 +4,7 @@ import { loiChao, dinhDangSo } from '../dinhDang.js';
 import { nhuCauCoMon } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import { NHU_CAU } from '../noiDung/nhuCau.js';
+import { KHAU_HIEU } from '../noiDung/thuongHieu.js';
 import { BANNER, HOM_NAY, MON_NOI_BAT } from '../noiDung/trangChu.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import MonO from '../components/MonO.jsx';
@@ -21,7 +22,7 @@ function DauChung({ chao, moQR, the }) {
       <div className="topbar">
         <div>
           <h1>{chao}</h1>
-          <div className="sub">Tứ Quý Đường — Sức khỏe mỗi ngày</div>
+          <div className="sub">Tứ Quý Đường — {KHAU_HIEU}</div>
         </div>
         <div className="topbar-right"><NutQR moQR={moQR} /></div>
       </div>
