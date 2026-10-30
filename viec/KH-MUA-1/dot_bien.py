@@ -19,12 +19,15 @@ DOT_BIEN = [
     ('VS-GOP-KHONG-GOP', DAT, "  const gop = (f) => { clearTimeout(h); h = setTimeout(f, ms); };", "  const gop = (f) => { h = setTimeout(f, ms); };"),
     ('BV-BO-KH-GIO-KHOI-LUU-MAY', LUU, "const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO];", "const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM];"),
     ('BV-BO-GIU-GIO-VANG-LAI', LUU, "!KHOA_VANG_LAI.includes(x) && ", ''),
+    ('VS-MAT-MANG-CHO-GUI-LAI', DAT, "'PIN_SAI', 'VI_KHONG_DU',", "'MANG_LOI', 'PIN_SAI', 'VI_KHONG_DU',"),
 ]
 # Chỗ vá ở màn (vòng soát 1): chỉ phần 2 (Chromium) bắt → chạy riêng: python3 viec/KH-MUA-1/dot_bien.py man (KHÔNG đặt KHONG_TRINH_DUYET).
 DOT_BIEN_MAN = [
-    ('VS-VI-MAT-MANG-MOI-NHAP-PIN', 'src/pages/ThanhToan.jsx', "if (cachTra === 'vi' && !matMang) throw e;", "if (cachTra === 'vi') throw e;"),
+    ('VS-MOI-LOI-MOI-NHAP-PIN', 'src/pages/ThanhToan.jsx', "      if (e.code === 'PIN_SAI') throw e;", "      if (cachTra === 'vi') throw e;"),
+    ('BV-LOI-LA-KHONG-KHOA', 'src/pages/ThanhToan.jsx', "      datNghiNgo(true); ", "      "),
+    ('VS-THIEU-MA-DON-IM-LANG', 'src/pages/ThanhToan.jsx', "      if (!don) throw new Error(LOI_TRA_LOI_LA);", "      if (!don) return;"),
+    ('BV-TAO-MA-MOI-NUOT-LOI-HUY', 'src/pages/TheoDoiDon.jsx', "huyDon(ma).then(veThanhToan, (e) =>", "huyDon(ma).catch(() => {}).then(veThanhToan, (e) =>"),
     ('BV-DAT-LAI-KHONG-QUA-CO', 'src/App.jsx', "datLai={DAT_ONLINE ? datLai : null}", "datLai={datLai}"),
-    ('VS-DA-AP-DUNG-THEO-O-NHAP', 'src/pages/GioHang.jsx', " && !!bg && bg.giam.length > 0; //", "; //"),
     ('BV-KHOA-GIO-KHI-CHUA-CO-MENU', 'src/pages/GioHang.jsx', "const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0;", "const coThe = duocThanhToan(gio, ds);"),
 ]
 

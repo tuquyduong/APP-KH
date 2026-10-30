@@ -31,7 +31,8 @@ Bài cũ sửa (phiếu E3 — đổi có chủ ý: thanh tab 5 mục; biểu t�
 cong_cu/thu_KHUI2.js trên code gốc: 77 đạt · 1 hỏng — ✗ B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1).
 
 Số ca là dòng tổng khi chạy trên code đã vá, VỚI KHONG_TRINH_DUYET=1 (số GitHub đếm):
-SỐ CA cong_cu/thu_KHMUA1.js: 54
+SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHUI2.js: 78
 
-Có Chromium trên code đã vá: thu_KHMUA1.js 115 đạt · 0 hỏng (61 ca trình duyệt).
+Có Chromium trên code đã vá (sau soát vòng 2): thu_KHMUA1.js 128 đạt · 0 hỏng (73 ca trình duyệt).
+Bài sau soát vòng 1–2 chạy lại trên gốc: KHONG_TRINH_DUYET=1 → 3 đạt · 17 hỏng (thêm ca B8 chuaTaoDon — đỏ vì datDon.js chưa có).

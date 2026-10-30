@@ -117,6 +117,8 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     D.datCongDatDon(null);
     // B3 ví
     k('B3 ví đủ → thiếu 0; thiếu → số thiếu theo số POS; thiếu số → null', D.viThieu(87654, 100000) === 0 && D.viThieu(87654, 50000) === 37654 && D.viThieu(null, 5) === null && D.viThieu(5, undefined) === null);
+    // B8 lỗi theo danh sách trắng
+    k('B8 chỉ lỗi POS báo chắc chưa tạo đơn mới cho gửi lại; mất mạng / không mã / lạ → có thể đã tạo', D.chuaTaoDon({ code: 'PIN_SAI' }) && D.chuaTaoDon({ code: 'VI_KHONG_DU' }) && D.chuaTaoDon({ code: 'HET_HANG' }) && !D.chuaTaoDon({ code: 'MANG_LOI' }) && !D.chuaTaoDon({}) && !D.chuaTaoDon(new Error('x')) && !D.chuaTaoDon(null));
     // B6 ngoài giờ, lỗi
     k('B6 nhan_don false / dang_mo false → khoá + câu thong_bao; trong giờ / chưa biết → ""', D.chanDat({ nhan_don: false, dang_mo: true, thong_bao: 'Quán ngừng nhận đơn' }) === 'Quán ngừng nhận đơn' && !!D.chanDat({ nhan_don: true, dang_mo: false, thong_bao: '' }) && D.chanDat({ nhan_don: true, dang_mo: true }) === '' && D.chanDat(null) === '');
     // B7 đếm ngược QR theo giờ VN
@@ -217,10 +219,14 @@ async function trinhDuyet(pw) {
       if (duong === '/gio/bao-gia') return P.loiBg ? json(409, P.loiBg) : json(200, P.bg);
       if (duong === '/don' && pt === 'POST') {
         if (P.matMangDon) return r.abort('internetdisconnected');
+        if (P.don502) return r.fulfill({ status: 502, contentType: 'text/html', body: '<html>Bad gateway</html>' });
+        if (P.thieuMa) return json(200, { success: true, ma: 'TQD42', tong: P.bg.tong, trang_thai: 'cho_tra', qr: null });
+        if (P.loiDon) return json(409, P.loiDon);
         if (than.cach_tra === 'vi' && than.pin !== '1357') return json(400, { error: 'Mã PIN không đúng, còn 4 lần thử', code: 'PIN_SAI' });
         if (than.cach_tra === 'vi') P.tt = 'da_tra';
         return json(200, { success: true, ma_don: 'TQD42', tong: P.bg.tong, trang_thai: P.tt, qr: than.cach_tra === 'qr' ? P.qr : null });
       }
+      if (duong === '/don/TQD42/huy' && P.huyLoi) return json(409, P.huyLoi);
       if (duong === '/don/TQD42/huy') { P.tt = 'da_huy'; return json(200, { success: true }); }
       if (duong === '/don/TQD42') return json(200, { success: true, don: { ma: 'TQD42', ngay: BAY('20:31:00'), tong: P.bg.tong, tien_trinh: P.tt, mon: [{ ma: 'TLB', ten: 'Trà Lục Bảo', so_luong: 2, don_gia: 27000, thanh_tien: 54000, ghi_chu: '' }] } });
       if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [{ ma: 'TQD41', ngay: BAY('19:00:00'), tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
@@ -332,7 +338,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/giohang');
     await t.locator('.promo-box input').fill('GIAM10'); await t.locator('.promo-box button').click(); await t.waitForTimeout(900);
     const bg = P.goi.filter((g) => g.duong === '/gio/bao-gia');
-    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; POS có dòng giảm → "✓ Đã áp dụng"', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Đã áp dụng/.test(await chu(t, '.promo-box button')));
+    k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; POS có dòng giảm → "✓ Đã áp dụng"', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
     const cong = t.locator('.cart-item .qty-ctrl button').nth(1);
     await cong.click(); await cong.click(); await cong.click(); await t.waitForTimeout(1000);
@@ -345,7 +351,7 @@ async function trinhDuyet(pw) {
   await ca('ma-khong-giam', { gio: GIO2, pos: { bg: { ...BG, giam: [] } } }, async (t) => {
     await mo(t, '/giohang');
     await t.locator('.promo-box input').fill('SAIMA'); await t.locator('.promo-box button').click(); await t.waitForTimeout(900);
-    k('B4 POS không giảm cho mã → KHÔNG hiện "Đã áp dụng"', (await chu(t, '.promo-box button')) === 'Áp dụng', await chu(t, '.promo-box button'));
+    k('B4 POS không giảm cho mã → không dòng giảm, không chữ "Đã áp dụng" (kết quả chỉ từ báo giá)', (await chu(t, '.promo-box button')) === 'Áp dụng' && !/Giảm giá|Đã áp dụng/.test(await chu(t, '#cart')), await chu(t, '#cart'));
   });
 
   await ca('vi-mat-mang', { gio: GIO2, pos: { matMangDon: true } }, async (t, loi, P) => {
@@ -354,6 +360,41 @@ async function trinhDuyet(pw) {
     await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(300);
     await t.keyboard.type('1357'); await t.waitForTimeout(900);
     k('B8 trả ví mà mất mạng: đóng bảng PIN (không mời nhập lại), nhắc xem Lịch sử đơn, không tự gửi lại', (await t.locator('.pin-sheet').count()) === 0 && /Lịch sử đơn/.test(await chu(t, '#checkout')) && dem(P, 'POST', '/don') === 1, String(dem(P, 'POST', '/don')));
+    await t.locator('#checkout .checkout-btn').click({ force: true }); await t.waitForTimeout(400);
+    k('B8 … nút Xác nhận KHOÁ (bấm lại không mở PIN, không gửi đơn thứ hai); có nút "Xem Lịch sử đơn"', /btn-disabled/.test(await t.locator('#checkout .checkout-btn').getAttribute('class')) && (await t.locator('.pin-sheet').count()) === 0 && dem(P, 'POST', '/don') === 1 && (await t.locator('#checkout button', { hasText: 'Xem Lịch sử đơn' }).count()) === 1);
+    await t.locator('#checkout button', { hasText: 'Xem Lịch sử đơn' }).click(); await t.waitForTimeout(400);
+    k('B8 … "Xem Lịch sử đơn" → /taikhoan/donhang', /\/taikhoan\/donhang$/.test(t.url()), t.url());
+  });
+
+  for (const [ten, pos] of [['502 không JSON', { don502: true }], ['trả lời thiếu ma_don', { thieuMa: true }]]) {
+    await ca(`vi-${ten}`, { gio: GIO2, pos }, async (t, loi, P) => {
+      await mo(t, '/thanhtoan');
+      await t.locator('.opt-row', { hasText: 'Ví nội bộ' }).click();
+      await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(300);
+      await t.keyboard.type('1357'); await t.waitForTimeout(900);
+      await t.locator('#checkout .checkout-btn').click({ force: true }); await t.waitForTimeout(400);
+      k(`B8 trả ví, POS ${ten}: coi như có thể đã tạo — đóng PIN, khoá nút, đúng 1 POST /don`, (await t.locator('.pin-sheet').count()) === 0 && /Đơn có thể đã tạo/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .checkout-btn').getAttribute('class')) && dem(P, 'POST', '/don') === 1, String(dem(P, 'POST', '/don')));
+    });
+  }
+
+  await ca('loi-biet-khong-khoa', { gio: GIO2, pos: { loiDon: { error: 'Quán vừa ngừng nhận đơn, mở lại 07:00', code: 'QUA_GIO_NHAN_DON' } } }, async (t, loi, P) => {
+    await mo(t, '/thanhtoan');
+    await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(700);
+    k('B6/K5 POS báo lỗi chắc chưa tạo đơn (QUA_GIO_NHAN_DON) → hiện nguyên câu, nút KHÔNG bị khoá', /Quán vừa ngừng nhận đơn, mở lại 07:00/.test(await chu(t, '#checkout')) && !/Đơn có thể đã tạo/.test(await chu(t, '#checkout')) && !/btn-disabled/.test(await t.locator('#checkout .checkout-btn').getAttribute('class')) && dem(P, 'POST', '/don') === 1);
+  });
+
+  await ca('tao-ma-moi', { gio: GIO2, pos: { qr: { chuoi: '0002', het_han: BAY('20:29:00') } } }, async (t, loi, P) => {
+    await mo(t, '/thanhtoan');
+    await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(900);
+    await t.locator('#tracking button', { hasText: 'Tạo mã mới' }).click(); await t.waitForTimeout(800);
+    k('B7 "Tạo mã mới": huỷ đơn cũ (1 lần) rồi về Thanh toán, giỏ còn nguyên', dem(P, 'POST', '/don/TQD42/huy') === 1 && /\/thanhtoan$/.test(t.url()) && (await chu(t, '.tab .tab-so')) === '2', t.url());
+  });
+
+  await ca('tao-ma-moi-loi', { gio: GIO2, pos: { qr: { chuoi: '0002', het_han: BAY('20:29:00') }, huyLoi: { error: 'Đơn đã được thanh toán, không huỷ được', code: 'DON_DA_TRA' } } }, async (t, loi, P) => {
+    await mo(t, '/thanhtoan');
+    await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(900);
+    await t.locator('#tracking button', { hasText: 'Tạo mã mới' }).click(); await t.waitForTimeout(800);
+    k('B7 "Tạo mã mới" mà POS từ chối huỷ → ở lại Theo dõi đơn, hiện nguyên lời POS (không tạo đơn thứ hai)', /\/don\/TQD42$/.test(t.url()) && /Đơn đã được thanh toán, không huỷ được/.test(await chu(t, '#tracking')) && dem(P, 'POST', '/don') === 1, t.url());
   });
 
   await ca('khach-menu-can-dn', { dn: false, gio: GIO2, pos: { menuCanDN: true } }, async (t) => {
