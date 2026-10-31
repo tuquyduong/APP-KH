@@ -1,0 +1,15 @@
+== ĐỎ trên code gốc (c2f1982 + chỉ bài thử, chưa có src/kiemKhop/, chưa có /kiemkhop) — node cong_cu/thu_KHKHOP1.js ==
+  ✗ nạp src/kiemKhop/canTuPos.js  — Cannot find module '/home/user/APP-KH/src/kiemKhop/canTuPos.js'
+  ✗ nạp src/kiemKhop/kiemKhop.js  — Cannot find module '/home/user/APP-KH/src/kiemKhop/kiemKhop.js'
+  ✗ A1 có ≥ 20 mục, mã không trùng  — 0
+  ✗ B1 /kiemkhop là trang riêng trong bảng đường dẫn, không cần đăng nhập, không thuộc tab nào
+  ✗ B1/B4 main.jsx chọn trang KiemKhop riêng cho /kiemkhop
+  ✗ B6 đầu tệp trang ghi: TẠM công khai tới KH-ADMIN-1 …
+  ✗ ca thong-vang-lai dừng giữa chừng  — page.waitForSelector: Timeout 4000ms exceeded. (và 14 ca trình duyệt khác cùng lỗi)
+2 đạt · 31 hỏng
+
+== XANH trên code đã làm — node cong_cu/thu_KHKHOP1.js (có Chromium) ==
+83 đạt · 0 hỏng
+
+== SỐ CA (đếm với KHONG_TRINH_DUYET=1, đúng số GitHub đếm) ==
+SỐ CA thu_KHKHOP1.js: 47
