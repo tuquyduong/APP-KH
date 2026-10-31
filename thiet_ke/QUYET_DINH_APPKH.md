@@ -4,6 +4,16 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 31.10.2026
+- **Chốt 5 câu giỏ hàng (chủ quán 31.10, "theo đề nghị", riêng câu 2 chủ quán SỬA):**
+  1. Giữ viên số món trên tab Giỏ hàng (demo không có).
+  2. Nút "Thêm vào giỏ" chỉ ở Trang món (đúng demo), NHƯNG thêm xong KHÔNG nhảy vào giỏ: hiện thông báo "Đã thêm … vào giỏ" và quay lại
+     đúng trang khách đã đứng trước khi bấm vào món (Menu, Trang chủ, gợi ý trắc nghiệm…) để khách thêm tiếp món khác. Mở thẳng Trang món bằng
+     link (không có trang trước trong App) → về Menu. (Sửa `themVaoGio` ở `src/App.jsx`, làm trong KH-MUA-1b.)
+  3. Ô địa chỉ giao hàng làm ở KH-MUA-2.
+  4. Quán đóng (`dang_mo` false) thì khoá đặt. POS xác nhận 31.10: `dang_mo` false thì `nhan_don` luôn false — hai cờ không mâu thuẫn.
+  5. Hết phiên đăng nhập, giỏ cũ vẫn hiện (giỏ chỉ có tên món, giá lấy mới từ POS); đổi khách thì xoá giỏ.
+- Trả lời POS 31.10 (b) — `thiet_ke/trao_doi/TRA_LOI_POS_31102026_b.md`: khoá chống gửi lặp `khoa_gui` (UUID, bắt buộc, gửi lại giữ khoá cũ); mọi 4xx của
+  `POST /don` = chưa tạo đơn, chưa giữ ví; `cach_tra` `qr` / `vi` / `vi_qr`; `GET /don/:ma` có `mon[].ma` và `qr`; `giam[].loai` = `ma_giam` / `hang` / `gio_vang`.
 - Trang Kiểm khớp POS `/kiemkhop` TẠM công khai (chỉ đọc, không dữ liệu khách) tới khi có `/admin` (KH-ADMIN-1); khi đó chuyển vào `/admin` và xoá đường dẫn công khai.
 - **Đặt đơn online: đủ 5 mục TRƯỚC khai trương; không kịp thì LÙI khai trương**, không mở với phần làm dở (chủ quán chốt 30.10 tối với POS, TRA_LOI_POS_31102026.md). POS: KH-MUA-1 (tại quán + QR payOS + ví/PIN) ~02–03.11, KH-MUA-2 (Ahamove) ~05–06.11. Quyết giữ / lùi ngày: tối 31.10 và tối 03.11.
 - Giỏ hàng: khách vãng lai thêm món và xem giỏ được; đặt đơn cần đăng nhập (đơn gắn tài khoản). Tab Giỏ hàng thứ 5 như demo.

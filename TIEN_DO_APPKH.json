@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 13,
+  "phien_ban_so": 14,
   "cap_nhat": "2026-10-31",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -207,10 +207,11 @@
       "phu_thuoc": [
         "POS KH-MUA-1 (ten cua du kien: TRA_LOI_POS_31102026.md muc 3)"
       ],
-      "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10) | 30.10: CHU QUAN CHOT dat don online TU KHAI TRUONG 07.11 (gio, tra tien, theo doi don, giao hang); uu tien: nhan tai quan + payOS -> Ahamove -> vi + PIN -> topping/combo -> doi diem; da xin POS (YEU_CAU_APPKH_GUI_POS_30102026_d.md), cho POS bao phan nao kip",
+      "ghi_chu": "dat don giao ma khach chua co dia chi → bat nhap, luu lam dia chi MAC DINH (PUT /toi), co ghi chu cho khach (chu quan chot 29.10) | 30.10: CHU QUAN CHOT dat don online TU KHAI TRUONG 07.11 (gio, tra tien, theo doi don, giao hang); uu tien: nhan tai quan + payOS -> Ahamove -> vi + PIN -> topping/combo -> doi diem; da xin POS (YEU_CAU_APPKH_GUI_POS_30102026_d.md), cho POS bao phan nao kip | 31.10: gop PR #9 (7d11fce); POS tra loi cau hoi 31.10 (b): khoa_gui, 4xx = chua tao don, vi_qr, mon[].ma + qr trong GET /don/:ma, giam[].loai",
       "han": "2026-11-03",
       "ngay": "2026-10-31",
-      "model": "Opus"
+      "model": "Opus",
+      "commit": "7d11fce"
     },
     {
       "ma": "KH-MUA-1b",
@@ -222,7 +223,8 @@
         "KH-MUA-1",
         "POS KH-MUA-1 gop + hop dong co cua dat don"
       ],
-      "han": "2026-11-04"
+      "han": "2026-11-04",
+      "ghi_chu": "31.10 chu quan chot: them mon xong KHONG nhay vao gio, quay lai trang khach dung truoc khi bam vao mon (Trang mon mo thang bang link → ve Menu); sua themVaoGio o src/App.jsx. Theo TRA_LOI_POS_31102026_b.md: khoa_gui moi lan bam Dat hang (giu khi gui lai do loi mang), cach_tra qr/vi/vi_qr (giu_vi, con_lai), ma_giam_loi duoi o ma, mon[].ma + qr tu GET /don/:ma, giam[].loai la → cong vao tong. Truoc khi bat co DAT_ONLINE: Back tu man QR, khoa don co the da tao, the Lich su don."
     },
     {
       "ma": "KH-MUA-2",
