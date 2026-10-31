@@ -107,10 +107,9 @@ button:disabled{ opacity:.45; cursor:default; }
 .tab-so{ position:absolute; top:0; left:50%; margin-left:6px; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--coral); color:var(--white);
   border:1.5px solid var(--white); font-size:10.5px; font-weight:700; line-height:15px; text-align:center; z-index:2; }
 
-/* ===== Thông tin cá nhân: chọn cách xưng hô + dòng xem trước (KH-UI-3b B1) — CHÉP NGUYÊN từ demo (app_kh_demo.html dòng 1414–1418, 1702). ===== */
+/* ===== Thông tin cá nhân: chọn cách xưng hô + dòng xem trước (KH-UI-3b B1) — CHÉP NGUYÊN từ demo (app_kh_demo.html dòng 1414–1418, 1702; bỏ `.pf-chips.sm` vì app không dùng). ===== */
 .pf-chips{ display:flex; flex-wrap:wrap; gap:6px; }
 .pf-chips button{ border:none; font:inherit; font-size:13.5px; font-weight:700; padding:8px 16px; border-radius:20px; background:#fff; color:var(--ink); cursor:pointer; box-shadow:0 0 0 1px rgba(215,185,129,.7); }
-.pf-chips.sm button{ font-size:12px; padding:6px 12px; }
 .pf-chips button.on{ background:var(--pink-dark); color:#fff; box-shadow:none; }
 .pf-prev{ margin-top:10px; font-size:13px; color:var(--ink); background:#FFF6E8; border-radius:12px; padding:9px 12px; display:flex; gap:6px; align-items:center; }
 .pf-chips button:disabled{ opacity:.45; }

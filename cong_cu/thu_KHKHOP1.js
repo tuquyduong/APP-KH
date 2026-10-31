@@ -106,7 +106,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
   const kk = doc('src/pages/KiemKhop.jsx');
   k('B6 đầu tệp trang ghi: TẠM công khai tới KH-ADMIN-1, việc đó chuyển vào /admin và XOÁ đường dẫn công khai', /KH-ADMIN-1/.test(kk.split('\n').slice(0, 8).join('\n')) && /công khai/i.test(kk.split('\n').slice(0, 8).join('\n')) && /\/admin/.test(kk.split('\n').slice(0, 8).join('\n')));
   k('B3 trang chỉ gọi mạng qua src/api.js (không fetch trực tiếp, không XMLHttpRequest)', kk.length > 0 && !/\bfetch\(|XMLHttpRequest|sendBeacon/.test(kk + doc('src/kiemKhop/kiemKhop.js')));
-  k('B3 không gọi hàm POST/PUT của api.js (xinMa, xacMinh, doiTen, nhanMaBill, nhanDiem, datPin)', kk.length > 0 && !/\b(xinMa|xacMinh|doiTen|nhanMaBill|nhanDiem|datPin)\b/.test(kk));
+  k('B3 không gọi hàm POST/PUT của api.js (xinMa, xacMinh, suaHoSo, giaHan, nhanMaBill, nhanDiem, datPin)', kk.length > 0 && !/\b(xinMa|xacMinh|suaHoSo|giaHan|nhanMaBill|nhanDiem|datPin)\b/.test(kk));
   k('B4 không setInterval / visibilitychange / gọi nền trong trang', kk.length > 0 && !/setInterval|visibilitychange/.test(kk));
   k('B5 trang không ghi bộ nhớ máy (localStorage / sessionStorage / luuToken)', kk.length > 0 && !/localStorage|sessionStorage|luuToken|ghiGio|ghiMenuLuu/.test(kk));
   k('B2 hiện địa chỉ POS đầy đủ từ VITE_POS_API', /VITE_POS_API/.test(kk));

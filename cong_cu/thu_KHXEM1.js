@@ -102,7 +102,7 @@ const khoGia = (dau = {}, nem = false) => {
   k('địa chỉ có chữ → gửi đã cắt khoảng trắng', l.truongThem('anh', ' Số 1 ').dia_chi === 'Số 1');
   const dnSrc = doc('src/pages/DangNhap.jsx');
   k('cả 3 ô luôn hiện (không điều kiện bật/tắt) + địa chỉ giới hạn ký tự', !/BAT_XUNG_HO/.test(dnSrc) && /DIA_CHI_TOI_DA/.test(dnSrc) && /XUNG_HO\.map/.test(dnSrc));
-  k('không gọi PUT /toi trong việc này', !/doiTen/.test(dnSrc + doc('src/App.jsx')));
+  k('không gọi PUT /toi trong việc này', !/suaHoSo/.test(dnSrc + doc('src/App.jsx')));
   k('cửa gia hạn có đúng một chỗ trong api.js (KH-UI-3b D)', (doc('src/api.js').match(/'\/gia-han'/g) || []).length === 1);
 
   console.log('— A1/A2/A7/A8 nối vào App (đọc nguồn)');

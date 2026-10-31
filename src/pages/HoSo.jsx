@@ -31,14 +31,14 @@ const Bao = ({ s, chu }) => (
 
 function XungHo({ ho, doi }) {
   const s = dungLuu(doi);
-  const { dau, ten } = chiaLoiChao(coBayGio() ? bayGio() : '', ho.xung_ho, ho.ten);
+  const { dau, xung, ten } = chiaLoiChao(coBayGio() ? bayGio() : '', tenXungHo(ho.xung_ho), ho.ten);
   return (
     <div className="card pf-card">
       <div className="tt">Quán gọi bạn là</div>
       <div className="pf-chips">
         {XUNG_HO.map((x) => <button key={x.ma} type="button" className={ho.xung_ho === x.ma ? 'on' : ''} disabled={s.dang} onClick={() => ho.xung_ho !== x.ma && s.luu({ xung_ho: x.ma })}>{x.ten}</button>)}
       </div>
-      <div className="pf-prev"><Ico ten="chat" s={14} /> “{dau}{dau === 'Chào' ? '' : ','} {tenXungHo(ho.xung_ho) && <b>{tenXungHo(ho.xung_ho)}</b>} {ten}”</div>
+      <div className="pf-prev"><Ico ten="chat" s={14} /> “{dau}{dau === 'Chào' ? '' : ','} {xung && <b>{xung}</b>} {ten}”</div>
       <Bao s={s} chu="Đã lưu cách xưng hô" />
     </div>
   );
