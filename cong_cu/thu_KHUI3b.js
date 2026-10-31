@@ -97,16 +97,16 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
     const M = dungModule(['dinhDang.js', 'bayGio.js']);
     const c = (gio, xh, ten) => M.loiChao(gio, xh, ten);
     const T = 'Nguyễn Thị Linh';
-    k('C1 sáng 07:00 → "Chào buổi sáng, Chị Linh" (xưng hô viết hoa chữ đầu, tên ngắn = từ cuối)', c('2026-10-30 07:00:00', 'chị', T) === 'Chào buổi sáng, Chị Linh', c('2026-10-30 07:00:00', 'chị', T));
+    k('C1 sáng 07:00 → "Chào buổi sáng, chị Linh!" (xưng hô chữ thường, tên ngắn = từ cuối)', c('2026-10-30 07:00:00', 'chị', T) === 'Chào buổi sáng, chị Linh!', c('2026-10-30 07:00:00', 'chị', T));
     const moc = [['05:00:00', 'sáng'], ['10:59:59', 'sáng'], ['11:00:00', 'trưa'], ['12:59:59', 'trưa'], ['13:00:00', 'chiều'], ['17:59:59', 'chiều'], ['18:00:00', 'tối'], ['23:30:00', 'tối'], ['00:15:00', 'tối'], ['04:59:59', 'tối']];
-    const sai = moc.filter(([g, b]) => c(`2026-10-30 ${g}`, 'anh', 'Nam') !== `Chào buổi ${b}, Anh Nam`).map(([g]) => g);
+    const sai = moc.filter(([g, b]) => c(`2026-10-30 ${g}`, 'anh', 'Nam') !== `Chào buổi ${b}, anh Nam!`).map(([g]) => g);
     k('C1 mốc giờ: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối', sai.length === 0, sai.join(','));
-    k('C2 giờ POS dạng "T" cũng đọc đúng', c('2026-10-30T13:00:00', 'cô', 'Hoa') === 'Chào buổi chiều, Cô Hoa');
-    k('C2 chưa có bay_gio → "Chào Chị Linh", không có buổi', c('', 'chị', T) === 'Chào Chị Linh' && c(null, 'chị', T) === 'Chào Chị Linh' && c('hỏng', 'chị', T) === 'Chào Chị Linh');
-    k('C2 khách chưa có xưng hô (null / rỗng) → bỏ phần xưng hô', c('2026-10-30 07:00:00', null, T) === 'Chào buổi sáng, Linh' && c('2026-10-30 07:00:00', '', T) === 'Chào buổi sáng, Linh' && c('', undefined, T) === 'Chào Linh');
-    k('C2 chưa có tên → "bạn" (có xưng hô: chỉ xưng hô, không "Chị bạn")', c('2026-10-30 07:00:00', null, '') === 'Chào buổi sáng, bạn' && c('', null, '   ') === 'Chào bạn' && c('2026-10-30 07:00:00', 'chị', null) === 'Chào buổi sáng, Chị');
-    k('C3 chưa đăng nhập: loiChao rỗng cả ba → "Chào bạn"', c('', '', '') === 'Chào bạn');
-    k('C1 tên ngắn: nhiều khoảng trắng, một từ', c('', null, '  Trần   Văn  Nam ') === 'Chào Nam' && c('', null, 'Linh') === 'Chào Linh');
+    k('C2 giờ POS dạng "T" cũng đọc đúng', c('2026-10-30T13:00:00', 'cô', 'Hoa') === 'Chào buổi chiều, cô Hoa!');
+    k('C2 chưa có bay_gio → "Chào chị Linh!", không có buổi', c('', 'chị', T) === 'Chào chị Linh!' && c(null, 'chị', T) === 'Chào chị Linh!' && c('hỏng', 'chị', T) === 'Chào chị Linh!');
+    k('C2 khách chưa có xưng hô (null / rỗng) → bỏ phần xưng hô', c('2026-10-30 07:00:00', null, T) === 'Chào buổi sáng, Linh!' && c('2026-10-30 07:00:00', '', T) === 'Chào buổi sáng, Linh!' && c('', undefined, T) === 'Chào Linh!');
+    k('C2 chưa có tên → "bạn" (có xưng hô: chỉ xưng hô, không "chị bạn")', c('2026-10-30 07:00:00', null, '') === 'Chào buổi sáng, bạn!' && c('', null, '   ') === 'Chào bạn!' && c('2026-10-30 07:00:00', 'chị', null) === 'Chào buổi sáng, chị!');
+    k('C3 chưa đăng nhập: loiChao rỗng cả ba → "Chào bạn!"', c('', '', '') === 'Chào bạn!');
+    k('C1 tên ngắn: nhiều khoảng trắng, một từ', c('', null, '  Trần   Văn  Nam ') === 'Chào Nam!' && c('', null, 'Linh') === 'Chào Linh!');
     k('C2 coBayGio: chưa nhận → false; nhận "bay_gio" → true; hỏng không đổi; xoaLech → false', typeof M.coBayGio === 'function' && (() => { const a = M.coBayGio(); M.datBayGio('x'); const b = M.coBayGio(); M.datBayGio('2026-10-30T20:30:00'); const d = M.coBayGio(); M.xoaLech(); return a === false && b === false && d === true && M.coBayGio() === false; })());
     const tc = doc('src/pages/TrangChu.jsx');
     k('C2 Trang chủ lấy giờ từ bayGio() của POS, không dùng đồng hồ máy', /bayGio\(\)/.test(tc) && !/new Date|Date\.now|gioVn/.test(tc));
@@ -293,19 +293,19 @@ async function trinhDuyet(pw) {
         const nhan = `${rong}/${co}`;
         await mo(t, '/taikhoan/thongtin', co);
         const chips = await t.locator('.pf-chips button').allInnerTexts();
-        k(`B1 [${nhan}] thẻ "Quán gọi bạn là" đầu màn, 7 nút theo XUNG_HO`, JSON.stringify(chips) === JSON.stringify(['Anh', 'Chị', 'Cô', 'Chú', 'Bác', 'Em', 'Bạn']) && /Quán gọi bạn là/.test(await t.locator('.pf-card').first().innerText()), JSON.stringify(chips));
-        k(`B1 [${nhan}] nút đang chọn = xưng hô hiện tại (Chị)`, await t.locator('.pf-chips button.on').innerText() === 'Chị');
-        k(`B1 [${nhan}] xem trước kiểu demo theo giờ POS (không theo đồng hồ máy)`, /Chào buổi tối,\s*Chị\s*Linh/.test(await t.locator('.pf-prev').innerText()), await t.locator('.pf-prev').innerText());
+        k(`B1 [${nhan}] thẻ "Quán gọi bạn là" đầu màn, 7 nút theo XUNG_HO`, JSON.stringify(chips) === JSON.stringify(['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']) && /Quán gọi bạn là/.test(await t.locator('.pf-card').first().innerText()), JSON.stringify(chips));
+        k(`B1 [${nhan}] nút đang chọn = xưng hô hiện tại (chị)`, await t.locator('.pf-chips button.on').innerText() === 'chị');
+        k(`B1 [${nhan}] xem trước kiểu demo theo giờ POS (không theo đồng hồ máy)`, /Chào buổi tối,\s*chị\s*Linh!/.test(await t.locator('.pf-prev').innerText()), await t.locator('.pf-prev').innerText());
         if (rong === 360 && co === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
         await t.locator('.pf-chips button', { hasText: 'Anh' }).click();
         await t.waitForSelector('.save-ok');
         const pu = them(S, 'PUT', '/toi');
         k(`B1 [${nhan}] chạm "Anh" → PUT /toi chỉ { xung_ho: "anh" }, hiện "Đã lưu"`, pu.length === 1 && JSON.stringify(pu[0].than) === '{"xung_ho":"anh"}' && /Đã lưu/.test(await t.locator('.save-ok').first().innerText()), JSON.stringify(pu));
-        k(`B1 [${nhan}] xem trước đổi theo: "Anh Linh"`, /Anh\s*Linh/.test(await t.locator('.pf-prev').innerText()) && await t.locator('.pf-chips button.on').innerText() === 'Anh');
+        k(`B1 [${nhan}] xem trước đổi theo: "anh Linh"`, /anh\s*Linh/.test(await t.locator('.pf-prev').innerText()) && await t.locator('.pf-chips button.on').innerText() === 'anh');
         await t.locator('#ten-toi').fill('Trần Minh'); await t.getByRole('button', { name: 'Lưu tên' }).click(); await t.waitForTimeout(300);
         const pu2 = them(S, 'PUT', '/toi');
         k(`B2 [${nhan}] Lưu tên → PUT /toi chỉ { ten }`, pu2.length === 2 && JSON.stringify(pu2[1].than) === '{"ten":"Trần Minh"}', JSON.stringify(pu2));
-        k(`B1 [${nhan}] xem trước dùng tên mới (Minh)`, /Anh\s*Minh/.test(await t.locator('.pf-prev').innerText()));
+        k(`B1 [${nhan}] xem trước dùng tên mới (Minh)`, /anh\s*Minh/.test(await t.locator('.pf-prev').innerText()));
         await t.locator('#dia-chi-toi').fill('12 Lê Lợi, Q.1'); await t.getByRole('button', { name: 'Lưu địa chỉ' }).click(); await t.waitForTimeout(300);
         const pu3 = them(S, 'PUT', '/toi');
         k(`B3 [${nhan}] Lưu địa chỉ → PUT /toi chỉ { dia_chi }`, pu3.length === 3 && JSON.stringify(pu3[2].than) === '{"dia_chi":"12 Lê Lợi, Q.1"}', JSON.stringify(pu3));
@@ -324,7 +324,7 @@ async function trinhDuyet(pw) {
   await ca('hoso-loi-xung-ho', { pos: { loiXungHo: true } }, async (t, S) => {
     await mo(t, '/taikhoan/thongtin');
     await t.locator('.pf-chips button', { hasText: 'Cô' }).click(); await t.waitForTimeout(400);
-    k('B1 lỗi XUNG_HO_SAI → hiện lời thường, nút giữ lựa chọn cũ (Chị)', /không hợp lệ/.test(await t.locator('[role=alert]').first().innerText()) && await t.locator('.pf-chips button.on').innerText() === 'Chị');
+    k('B1 lỗi XUNG_HO_SAI → hiện lời thường, nút giữ lựa chọn cũ (chị)', /không hợp lệ/.test(await t.locator('[role=alert]').first().innerText()) && await t.locator('.pf-chips button.on').innerText() === 'chị');
   });
 
   await ca('hoso-chua-xung-ho', { pos: { khach: { xung_ho: null } } }, async (t) => {
@@ -346,7 +346,7 @@ async function trinhDuyet(pw) {
     await ca(`chao-${rong}`, { rong }, async (t) => {
       await mo(t, '/trangchu');
       const h1 = await t.locator('#home h1').innerText();
-      k(`C1 [${rong}] đã đăng nhập: giờ POS 20:30 (đồng hồ máy 07:00) → "Chào buổi tối, Chị Linh"`, h1 === 'Chào buổi tối, Chị Linh', h1);
+      k(`C1 [${rong}] đã đăng nhập: giờ POS 20:30 (đồng hồ máy 07:00) → "Chào buổi tối, chị Linh!"`, h1 === 'Chào buổi tối, chị Linh!', h1);
       k(`C [${rong}] lời chào không tràn ngang`, await khongTran(t));
       if (rong === 360) await chup(t, 'ung-dung_trang-chu-dau_360');
     });
@@ -355,16 +355,16 @@ async function trinhDuyet(pw) {
     await mo(t, '/taikhoan/thongtin');
     await t.locator('.pf-chips button', { hasText: 'Cô' }).click(); await t.waitForSelector('.save-ok');
     await t.locator('.tabbar .tab', { hasText: 'Trang chủ' }).click(); await t.waitForTimeout(600);
-    k('C4 đổi xưng hô rồi về Trang chủ → lời chào mới ngay, không tải lại trang', await t.locator('#home h1').innerText() === 'Chào buổi tối, Cô Linh', await t.locator('#home h1').innerText());
+    k('C4 đổi xưng hô rồi về Trang chủ → lời chào mới ngay, không tải lại trang', await t.locator('#home h1').innerText() === 'Chào buổi tối, cô Linh!',await t.locator('#home h1').innerText());
   });
   await ca('chao-khach', { token: '' }, async (t, S) => {
     await mo(t, '/trangchu');
-    k('C3 chưa đăng nhập: "Chào bạn"', await t.locator('#home h1').innerText() === 'Chào bạn');
+    k('C3 chưa đăng nhập: "Chào bạn!"', await t.locator('#home h1').innerText() === 'Chào bạn!');
     k('D4 khách vãng lai không gọi /gia-han, /toi', them(S, 'POST', '/gia-han').length === 0 && S.goi.every((g) => g.duong !== '/toi'));
   });
   await ca('chao-chua-bay-gio', { gio: 'hỏng', pos: { khach: { xung_ho: 'anh' } } }, async (t) => {
     await mo(t, '/trangchu');
-    k('C2 POS không trả bay_gio hợp lệ → "Chào Anh Linh", không buổi', await t.locator('#home h1').innerText() === 'Chào Anh Linh', await t.locator('#home h1').innerText());
+    k('C2 POS không trả bay_gio hợp lệ → "Chào anh Linh!", không buổi', await t.locator('#home h1').innerText() === 'Chào anh Linh!',await t.locator('#home h1').innerText());
   });
 
   // D — tự gia hạn
@@ -381,7 +381,7 @@ async function trinhDuyet(pw) {
   await ca('gia-han-429', { pos: { giaHan429: true } }, async (t, S) => {
     await mo(t, '/trangchu');
     const luu = await t.evaluate(() => ({ tk: localStorage.getItem('kh_token'), ngay: localStorage.getItem('kh_gia_han') }));
-    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, Chị Linh');
+    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, chị Linh!');
   });
 
   // E3 — menu công khai
@@ -390,7 +390,7 @@ async function trinhDuyet(pw) {
     await t.waitForTimeout(500);
     const menus = S.goi.filter((g) => g.duong === '/menu');
     k('E3 token sai: /menu 401 KH_TOKEN_SAI → api.js xoá token → hết phiên → gọi lại KHÔNG Authorization', menus.length === 2 && menus[0].auth === 'Bearer tok-hong' && menus[1].auth === '' && await t.evaluate(() => localStorage.getItem('kh_token')) === null, JSON.stringify(menus));
-    k('E3 đã ở trạng thái chưa đăng nhập ("Chào bạn"), không chữ lỗi / thẻ mời menu', await t.locator('#home h1').innerText() === 'Chào bạn' && !/Phiên đăng nhập đã hết|Đăng nhập để xem menu|Không kết nối|Có lỗi/.test(await t.locator('body').innerText()));
+    k('E3 đã ở trạng thái chưa đăng nhập ("Chào bạn!"), không chữ lỗi / thẻ mời menu', await t.locator('#home h1').innerText() === 'Chào bạn!' && !/Phiên đăng nhập đã hết|Đăng nhập để xem menu|Không kết nối|Có lỗi/.test(await t.locator('body').innerText()));
     await t.locator('.tabbar .tab', { hasText: 'Menu' }).click(); await t.waitForTimeout(500);
     const m = await t.locator('#catalog').innerText();
     k('E3 vào Menu: khách thấy menu, không chữ lỗi, không thẻ mời đăng nhập', /Trà Lục Bảo/.test(m) && !/Đăng nhập để xem menu|Phiên đăng nhập đã hết|Không kết nối|Có lỗi/.test(m), m.slice(0, 200));
@@ -476,7 +476,7 @@ async function trinhDuyet(pw) {
       await t.waitForSelector('#ten');
       await t.locator('#ten').fill('Lê Hoa'); await t.locator('.xh', { hasText: 'Chị' }).click(); await t.locator('#dia-chi').fill('12 Lê Lợi');
       await t.getByRole('button', { name: 'Hoàn tất' }).click(); await t.waitForTimeout(500);
-      k(`G1 ${code} ở bước 3 → hiện lời của POS, GIỮ chữ đã nhập`, (await t.locator('[role=alert]').first().innerText()).includes(error) && await t.locator('#ten').inputValue() === 'Lê Hoa' && await t.locator('#dia-chi').inputValue() === '12 Lê Lợi' && await t.locator('.xh.on').innerText() === 'Chị');
+      k(`G1 ${code} ở bước 3 → hiện lời của POS, GIỮ chữ đã nhập`, (await t.locator('[role=alert]').first().innerText()).includes(error) && await t.locator('#ten').inputValue() === 'Lê Hoa' && await t.locator('#dia-chi').inputValue() === '12 Lê Lợi' && await t.locator('.xh.on').innerText() === 'chị');
     });
   }
   await ca('dang-nhap-khach-cu', { token: '' }, async (t) => {

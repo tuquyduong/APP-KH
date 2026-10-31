@@ -30,7 +30,8 @@ const khoGia = (dau = {}, nem = false) => {
   const nd = await nap('src/noiDung/dangNhap.js');
 
   console.log('— A3 bấm chỗ cần đăng nhập');
-  for (const d of ['uudai', 'taikhoan', 'qr']) k(`chưa đăng nhập bấm ${d} → mở Đăng nhập`, l.canDangNhap(d, false) === true);
+  for (const d of ['taikhoan', 'qr']) k(`chưa đăng nhập bấm ${d} → mở Đăng nhập`, l.canDangNhap(d, false) === true);
+  k('chưa đăng nhập bấm uudai → xem được (KH-UI-3d B1)', l.canDangNhap('uudai', false) === false);
   for (const d of ['trangchu', 'menu', 'mon']) k(`chưa đăng nhập bấm ${d} → vào thẳng`, l.canDangNhap(d, false) === false);
   for (const d of ['uudai', 'taikhoan', 'qr', 'menu']) k(`đã đăng nhập bấm ${d} → không chặn (K5)`, l.canDangNhap(d, true) === false);
   k('đăng nhập xong → đúng chỗ đã bấm', l.dichSauDangNhap('/taikhoan', '') === '/taikhoan' && l.dichSauDangNhap('/mathanhvien', '') === '/mathanhvien' && l.dichSauDangNhap('/uudai', '') === '/uudai');
@@ -79,7 +80,7 @@ const khoGia = (dau = {}, nem = false) => {
   k('quầy: hỏi nhân viên quầy, không nói đã gửi qua Zalo', /nhân viên quầy/.test(q) && !/Zalo/.test(q));
   k('SĐT ngắn → không bịa số', !/xxx/.test(nd.loiMa(false, '09')) && /Zalo/.test(nd.loiMa(false, '09')));
   k('chữ bước 1: một dòng nhỏ Zalo, không nhắc quầy', /Zalo/.test(nd.BUOC_SDT.phu) && !/quầy/.test(nd.BUOC_SDT.phu));
-  k('xưng hô đủ 7 lựa chọn, GỬI mã không dấu', JSON.stringify(nd.XUNG_HO.map((x) => x.ten)) === JSON.stringify(['Anh', 'Chị', 'Cô', 'Chú', 'Bác', 'Em', 'Bạn']) && nd.XUNG_HO.map((x) => x.ma).join() === 'anh,chi,co,chu,bac,em,ban');
+  k('xưng hô đủ 7 lựa chọn, GỬI mã không dấu', JSON.stringify(nd.XUNG_HO.map((x) => x.ten)) === JSON.stringify(['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']) && nd.XUNG_HO.map((x) => x.ma).join() === 'anh,chi,co,chu,bac,em,ban');
   k('địa chỉ tối đa 300 ký tự', nd.DIA_CHI_TOI_DA === 300);
   k('thẻ mời có đủ chữ', nd.THE_MOI.tieuDe === 'Thành viên Tứ Quý Đường' && /Đăng nhập \/ Đăng ký/.test(nd.THE_MOI.phu) && nd.THE_MOI.nut === 'Đăng nhập');
   k('không hề có chữ "nợ" trong nội dung đăng nhập', !/\bnợ\b/i.test(JSON.stringify(nd)));
