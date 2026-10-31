@@ -9,6 +9,10 @@ import { dungHeThong, dungNguCanhGia, NguCanhGia } from './heThong.js';
 import { LIEN_HE, coLienHe } from './noiDung/lienHe.js';
 import { xoaMenuLuu } from './menuLuu.js';
 import { doiKhach, xoaTatCa } from './luuMay.js';
+import { giaHanNeuCan } from './giaHan.js';
+import { bayGio, coBayGio } from './bayGio.js';
+import { khoGioHoatDong } from './gioHoatDong.js';
+import { dungKho } from './kho.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon } from './gio.js';
 import { monDatLai } from './datDon.js';
@@ -59,6 +63,9 @@ export default function App() {
   const menu = dungMenu(dangNhap);
   const tnGoc = dungTracNghiem();
   dungHeThong(); // hạng, Giờ vàng, giờ hoạt động + "bây giờ" của POS: nạp một lần ở đây, các màn chỉ đọc
+  const coGioPos = dungKho(khoGioHoatDong) !== null && coBayGio();
+  // Tự gia hạn đăng nhập (KH-UI-3b D): có phiên + đã biết giờ POS → giaHan.js tự giữ "tối đa một lần mỗi ngày"; không chặn màn nào.
+  useEffect(() => { if (dangNhap && coGioPos) giaHanNeuCan(bayGio()); }, [dangNhap, coGioPos]);
   const [hangToi, datHangToi] = useState(null); // { id, ten } của khách đang đăng nhập (từ /toi); không lưu trên máy
   // Bản lưu trên máy chỉ hiện khi đã đăng nhập VÀ đã biết khách là ai (luuMay.doiKhach xong): chưa đăng nhập, hết phiên, hoặc đang chờ GET /toi thì
   // bản của khách trước không hiện ra. Lỗi mạng khi hỏi /toi → vẫn ẩn (an toàn hơn hiện nhầm).
@@ -157,7 +164,7 @@ export default function App() {
     <NguCanhGia.Provider value={nguCanhGia}>
     <div className="phone">
       <div className="screens" ref={khungCuon}>
-        {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} moDangNhap={() => moDangNhap(r.chuan)} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
+        {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
         {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} />}
         {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} />}
         {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} qr={donMoi.current && donMoi.current.ma === r.tham.ma ? donMoi.current.qr : null} lui={luiVe} daTra={daTra} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
@@ -167,7 +174,7 @@ export default function App() {
         {dangNhap && trang === 'tracnghiem' && <TracNghiem tn={tn} lui={luiVe} vaoLam={() => di(taoDuongDan('tracnghiemlam'))} moKetQua={() => { tn.xemBanLuu(); di(taoDuongDan('tracnghiemketqua')); }} />}
         {dangNhap && trang === 'tracnghiemlam' && <TracNghiemLam tn={tn} thoat={() => { tn.bo(); thay(taoDuongDan('tracnghiem')); }} xemKetQua={() => thay(taoDuongDan('tracnghiemketqua'))} />}
         {dangNhap && trang === 'tracnghiemketqua' && <TracNghiemKetQua tn={tn} menu={menu} lui={luiVe} chonMon={chonMon} moHoTro={coLienHe(LIEN_HE) ? () => di(taoDuongDan('hotro')) : null} veGioiThieu={() => thay(taoDuongDan('tracnghiem'))} lamLai={() => { if (tn.batDau(tn.hien.kl.gioiTinh)) di(taoDuongDan('tracnghiemlam')); }} />}
-        {trang === 'mon' && <MonTheoDuong mon={monLink} tai={menu} lui={luiVe} moQR={moQR} moMenu={moMenu} moDangNhap={() => moDangNhap(r.chuan)} them={themVaoGio} />}
+        {trang === 'mon' && <MonTheoDuong mon={monLink} tai={menu} lui={luiVe} moQR={moQR} moMenu={moMenu} them={themVaoGio} />}
         {!dangNhap && trang === 'dangnhap' && <DangNhap khiXong={() => datDangNhap(true)} dong={luiVe} coMaHoaDon={!!maCho} />}
         {dangNhap && trang === 'qr' && <ManQR lui={luiVe} />}
         {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(ma) => di(taoDuongDan('don', { ma }))} lui={luiVe} datLai={DAT_ONLINE ? datLai : null} />}

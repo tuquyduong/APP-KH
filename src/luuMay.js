@@ -1,5 +1,6 @@
 import { KHOA_TRAC_NGHIEM } from './tracNghiemLuu.js';
 import { KHOA_GIO } from './gio.js';
+import { KHOA_GIA_HAN } from './giaHan.js';
 
 // Dữ liệu của khách lưu TRÊN MÁY (localStorage) — quy tắc giữ / xoá ở MỘT chỗ (KH-LUU-1, chủ quán chốt 30.10):
 //   hết phiên (401) → GIỮ; bấm "Đăng xuất" → XOÁ hết; người đăng nhập sau KHÁC người trước → XOÁ.
@@ -7,9 +8,9 @@ import { KHOA_GIO } from './gio.js';
 // số điện thoại có ít số nên đoán ngược được — chỉ dùng để so, không dùng để chứng thực. Kho tiêm vào để thử (như tracNghiemLuu.js).
 const KHOA_CHU = 'kh_chu';
 /** Mọi khoá dữ liệu khách. Tính năng mới lưu trên máy (kế hoạch và nhắc việc `kh_kehoach`…) thêm khoá của mình vào đây. */
-const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO];
-/** Khoá không tính là "dữ liệu chưa biết của ai": giỏ của khách vãng lai phải còn khi khách đăng nhập lần đầu (KH-MUA-1 A4). */
-const KHOA_VANG_LAI = [KHOA_GIO];
+const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO, KHOA_GIA_HAN];
+/** Khoá không tính là "dữ liệu chưa biết của ai": giỏ của khách vãng lai phải còn khi khách đăng nhập lần đầu (KH-MUA-1 A4); ngày gia hạn không phải dữ liệu của khách (KH-UI-3b D3). */
+const KHOA_VANG_LAI = [KHOA_GIO, KHOA_GIA_HAN];
 const kho = () => localStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 
