@@ -143,6 +143,7 @@ async function trinhDuyet(pw) {
       if (duong === '/dang-nhap/xac-minh') return json(200, { success: true, token: 'tok-N', khach: { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-10-30T08:00:00', xung_ho: 'chi', dia_chi: null } });
       if (!hopLe(auth)) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-11-29T08:00:00' });
+      if (duong === '/toi' && r.request().method() === 'PUT') Object.assign(S.khach, than);
       if (duong === '/toi') return json(200, { success: true, khach: S.khach });
       if (duong === '/diem') return pos.het401 ? json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' }) : json(200, { success: true, points: 1250, history: [] });
       if (duong === '/voucher') return json(200, pos.voucher || { success: true, data: [], ma_khach_moi: [] });
