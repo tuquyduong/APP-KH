@@ -97,7 +97,7 @@ function UuDaiToi({ maSan, khiNhanXong }) {
   const khach = toi.dl && toi.dl.khach;
   return (
     <>
-      <TheHang hang={khach ? khach.hang : null} />
+      {khach && <TheHang hang={khach.hang} />}
 
       <TrangTai tai={tai}>
         {(dl) => (

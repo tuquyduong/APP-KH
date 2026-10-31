@@ -87,7 +87,8 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     k('B2 đầu trang: "Ưu đãi của tôi" chỉ khi đã đăng nhập, vãng lai "Ưu đãi"', /dangNhap \? 'Ưu đãi của tôi' : 'Ưu đãi'/.test(uu));
     k('B2 không chữ / số mẫu của demo ("Ưu đãi tháng này", "đến 50%")', !/tháng này|đến 50%|Quyền lợi/.test(uu));
     k('B4 không gọi thêm cửa mới: chỉ layToi / layDiem / layVoucher', !/goi\(/.test(uu) && !/fetch\(/.test(uu) && [...uu.matchAll(/\blay[A-Z][A-Za-z]*/g)].every((m) => ['layToi', 'layDiem', 'layVoucher'].includes(m[0])));
-    k('B2 phần riêng khách (nhập mã, voucher, lịch sử) không ngoài nhánh đăng nhập', (uu.match(/<NhanMa/g) || []).length === 1 && (uu.match(/<DanhSachVoucher/g) || []).length === 1);
+    k('B2 phần riêng khách (nhập mã, voucher, lịch sử) chỉ nằm trong UuDaiToi', (uu.match(/<NhanMa/g) || []).length === 1 && (uu.match(/<DanhSachVoucher/g) || []).length === 1 && /function UuDaiToi[\s\S]*<NhanMa[\s\S]*<DanhSachVoucher[\s\S]*export default function UuDai\(/.test(uu));
+    k('B2 UuDaiToi chỉ được vẽ ở nhánh `dangNhap ?` (vãng lai không thấy điểm / voucher)', /\{dangNhap\s*\?\s*<UuDaiToi/.test(uu) && (uu.match(/<UuDaiToi/g) || []).length === 1);
   });
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');

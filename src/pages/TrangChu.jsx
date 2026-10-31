@@ -66,7 +66,7 @@ function DauHoiVien({ moQR, moUuDai }) {
   );
 }
 
-// `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
+// `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn!" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
 export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
