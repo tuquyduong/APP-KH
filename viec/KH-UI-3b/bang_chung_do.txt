@@ -22,10 +22,10 @@ Chống xanh vô giá trị: 10 đột biến (viec/KH-UI-3b/dot_bien.py) — m�
   VS-CHAO-DUNG-DONG-HO-MAY 55·1 · VS-CHAO-MOC-SANG-SAI 55·1 · VS-PUT-GUI-CA-KHOA-KHONG-DOI 167·6 (Chromium) · VS-MENU-401-HIEN-LOI 55·1
   VS-MENU-LUU-BO-GIA-HANG 55·1 · BV-KIEMKHOP-DOC-LAI-DANG-NHAP 55·1
 
-SỐ CA cong_cu/thu_KHUI3b.js: 173
-SỐ CA cong_cu/thu_KHKHOP1.js: 84
+SỐ CA cong_cu/thu_KHUI3b.js: 56
+SỐ CA cong_cu/thu_KHKHOP1.js: 47
 SỐ CA cong_cu/thu_KHXEM1.js: 61
 SỐ CA cong_cu/thu_KHLINK1.js: 97
 SỐ CA cong_cu/thu_KHUI2.js: 78
-SỐ CA cong_cu/thu_KHUI3a.js: 84
+SỐ CA cong_cu/thu_KHUI3a.js: 42
 SỐ CA cong_cu/thu_KHLUU1.js: 31

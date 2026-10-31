@@ -86,3 +86,14 @@ BÀI HỌC của agent: xoá hàm API thì grep `cong_cu/` và cập nhật các
 - Nguyên nhân: `kiem_tra_truoc_khi_giao.js:136` chạy mỗi bài với `timeout: 120000`; `thu_KHMUA1.js` (không đổi ở việc này) tự mất ~121 giây trên máy này — đo trên code GỐC 9ee865b trong thư mục nháp cũng ~120 giây — nên bị cắt giữa chừng. Chạy riêng: `128 đạt · 0 hỏng`; `npm test` khi máy rảnh: `26 đạt · 0 hỏng`. Không phải hồi quy của việc này; không nới bộ kiểm (K8). Đề xuất (ngoài Phạm vi, khung đóng băng): tăng timeout hoặc cắt bớt ca của `thu_KHMUA1.js`.
 
 HEAD ĐÃ KIỂM: cb3f39c
+
+## Chat soát cuối (31.10.2026)
+- Kết luận: **ĐẠT** sau khi chat sửa giấy tờ (không đổi code app, không đổi bài thử):
+  - commit "PHIEU: KH-UI-3b …" — thêm `cong_cu/thu_KHUI3a.js` vào Phạm vi (sửa đúng theo E2 nhưng phiếu quên ghi → cổng A6) và mục `## Bài thử cũ sửa`
+    cho `thu_KHUI3a.js`, `thu_KHLUU1.js` (ca đổi chỉ chạy trong Chromium → GitHub thấy xanh trên gốc → cổng A11).
+  - `bang_chung_do.txt`: `SỐ CA` theo `KHONG_TRINH_DUYET=1` (CLAUDE.md §9 — GitHub không có Playwright): thu_KHUI3b 56, thu_KHKHOP1 47, thu_KHUI3a 42.
+- Chat chạy lại KIỂU GITHUB (ẩn Playwright) trên bản cuối: cổng tĩnh ĐẠT, cổng chạy ĐẠT. Có Chromium: thu_KHUI3b 173/0, thu_KHUI3a 84/0, thu_KHLUU1 31/0,
+  thu_KHXEM1 61/0, thu_KHKHOP1 84/0, thu_KHLINK1 97/0, thu_KHUI3c 68/0, thu_KHMUA1 128/0. 10 đột biến đều bị bắt. Đọc code: giaHan.js, api.js, dungMenu.js,
+  HoSo.jsx, TrangChu.jsx, dinhDang.js — đúng phiếu; ảnh Thông tin cá nhân 360 khớp demo.
+- Ghi nhận (không chặn gộp): (1) demo viết xưng hô CHỮ THƯỜNG ("Chào buổi chiều, chị Linh"; nút "chị"), phiếu ghi "viết hoa chữ đầu" → hỏi chủ quán;
+  (2) `thu_KHMUA1.js` có Chromium chạy ~116 giây, sát trần 120 giây của `kiem_tra_truoc_khi_giao.js` → việc riêng sau (GitHub không bị vì không trình duyệt).
