@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 31.10.2026
+- **Văn phong lời chào (chủ quán chốt 31.10 tối, xem app thật thấy "Chào buổi chiều, Anh Linh"):** xưng hô GIỮA câu viết chữ thường, lời chào LUÔN có "!" cuối câu: "Chào buổi chiều, anh Linh!" · chưa có giờ POS "Chào anh Linh!" · chưa có xưng hô "Chào buổi chiều, Linh!" · chưa có tên "Chào buổi chiều, anh!" · chưa đăng nhập "Chào bạn!". Tên ngắn viết hoa chữ đầu. Nút chọn xưng hô chữ thường như demo (anh · chị · cô · chú · bác · em · bạn). Xưng hô đứng đầu dòng thì viết hoa theo chính tả. (Thay mục C1 phiếu KH-UI-3b "viết hoa chữ đầu"; làm trong KH-UI-3d.)
 - **Chốt 5 câu giỏ hàng (chủ quán 31.10, "theo đề nghị", riêng câu 2 chủ quán SỬA):**
   1. Giữ viên số món trên tab Giỏ hàng (demo không có).
   2. Nút "Thêm vào giỏ" chỉ ở Trang món (đúng demo), NHƯNG thêm xong KHÔNG nhảy vào giỏ: hiện thông báo "Đã thêm … vào giỏ" và quay lại

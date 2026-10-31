@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 16,
+  "phien_ban_so": 17,
   "cap_nhat": "2026-10-31",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -142,25 +142,35 @@
       "ten": "Phan v3 con lai: Thong tin ca nhan sua xung ho + 1 dia chi (PUT /toi), loi chao theo xung ho + buoi theo bay_gio POS, tu gia han dang nhap (POST /gia-han, 1 lan/ngay), menu cong khai (bo the moi dang nhap, luu ca gia_hang), chep hop dong v3 + canTuPos; sua /kiemkhop Kiem lai doc lai dang nhap, .hb-k mat dau o 360; kiem dang ky 3 buoc voi v3",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "POS KH-API-3 (v3: gop main POS 31.10, Render da chay)"
       ],
       "han": "2026-11-02",
-      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1) | 30.10: POS bao KH-API-2 (v2) DA GOP (main POS 6f2c30b); v3 POS mo ngay sau do | 30.10: them vao 3b: gia moi hang cho khach vang lai; mo trang Uu dai cho vang lai (chi khoa diem/voucher) - chi 3 thu can dang nhap: Ke hoach, trac nghiem, tich diem | 31.10: POS v3 CHAY THAT tren Render (gop main POS, Render tu cap nhat) — o xung ho DA CO tu KH-XEM-1 (ma khop v3: anh chi co chu bac em ban; dia_chi ≤ 300) nen khach moi dang ky duoc. 3b lam NGAY: PUT /toi, loi chao theo xung ho, POST /gia-han, /menu 401 KH_TOKEN_SAI → bo token goi lai; chep hop dong v3 vao thiet_ke/ + sua canTuPos.js (A2 do co y); /kiemkhop Kiem lai doc lai dang nhap | 31.10: mo phieu KH-UI-3b (Sonnet, Th); hop dong v3 chep nguyen van tu POS 97d1de2 vao viec/KH-UI-3b/hop_dong_v3.md; Uu dai cho vang lai tach sang KH-UI-3d",
-      "ngay": "2026-10-31"
+      "ghi_chu": "ten truong v3 da chot: thiet_ke/trao_doi/TRA_LOI_POS_29102026.md; bo dl menu cu khi doi phien (phat hien KH-XEM-1) | 30.10: POS bao KH-API-2 (v2) DA GOP (main POS 6f2c30b); v3 POS mo ngay sau do | 30.10: them vao 3b: gia moi hang cho khach vang lai; mo trang Uu dai cho vang lai (chi khoa diem/voucher) - chi 3 thu can dang nhap: Ke hoach, trac nghiem, tich diem | 31.10: POS v3 CHAY THAT tren Render (gop main POS, Render tu cap nhat) — o xung ho DA CO tu KH-XEM-1 (ma khop v3: anh chi co chu bac em ban; dia_chi ≤ 300) nen khach moi dang ky duoc. 3b lam NGAY: PUT /toi, loi chao theo xung ho, POST /gia-han, /menu 401 KH_TOKEN_SAI → bo token goi lai; chep hop dong v3 vao thiet_ke/ + sua canTuPos.js (A2 do co y); /kiemkhop Kiem lai doc lai dang nhap | 31.10: mo phieu KH-UI-3b (Sonnet, Th); hop dong v3 chep nguyen van tu POS 97d1de2 vao viec/KH-UI-3b/hop_dong_v3.md; Uu dai cho vang lai tach sang KH-UI-3d | 31.10: chat soat cuoi DAT (code dung phieu; chat sua giay to: pham vi thu_KHUI3a, ## Bai thu cu sua thu_KHUI3a + thu_KHLUU1, SO CA theo KHONG_TRINH_DUYET=1); gop PR #11 (f5c13fb); chu quan thu tay 3 buoc DAT. Loi chao viet hoa xung ho → sua o KH-UI-3d (QUYET_DINH 31.10)",
+      "ngay": "2026-10-31",
+      "commit": "f5c13fb"
     },
     {
       "ma": "KH-UI-3d",
-      "ten": "Trang Uu dai cho khach vang lai (chu quan chot 30.10: chi 3 thu can dang nhap): mo /uudai khong can dang nhap; hien banner Gio vang, the hang + % giam (/hang); chi khoa diem / voucher / nhan ma bang KhoaTienIch; so du vi + the hang cua khach khi da dang nhap",
+      "ten": "Trang Uu dai mo cho khach vang lai (banner Gio vang theo POS, bang hang /hang, khoa diem / vi / voucher; ?ma= QR hoa don van ve dang nhap) + van phong loi chao: xung ho chu thuong giua cau, \"!\" cuoi cau, ten ngan viet hoa chu dau, nut xung ho chu thuong nhu demo",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
-      "han": "2026-11-04",
+      "trang_thai": "dang_mo",
+      "han": "2026-11-03",
       "phu_thuoc": [
         "KH-UI-3b"
       ],
-      "ghi_chu": "31.10 tach tu KH-UI-3 (3b) cho gon; QUYET_DINH 30.10 \"chi 3 thu can dang nhap\""
+      "ghi_chu": "31.10 tach tu KH-UI-3 (3b) cho gon; QUYET_DINH 30.10 \"chi 3 thu can dang nhap\" | 31.10: mo phieu KH-UI-3d (Sonnet, Th); chu quan chot van phong 31.10 toi (thay C1 cua KH-UI-3b)",
+      "ngay": "2026-10-31"
+    },
+    {
+      "ma": "KH-THU-1",
+      "ten": "Bai thu thu_KHMUA1.js co Chromium chay ~116 giay, sat tran 120 giay cua kiem_tra_truoc_khi_giao.js → tach / rut ca de duoi ~60 giay (khong doi hanh vi canh)",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "ghi_chu": "31.10 chat soat KH-UI-3b phat hien: may co trinh duyet bao do oan khi chay song song; GitHub khong bi (khong Playwright)"
     },
     {
       "ma": "KH-KHOP-1",
