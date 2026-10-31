@@ -5,6 +5,7 @@ import { gioVn } from './menuLuu.js';
 
 const GIO_VN_LECH = 7 * 3600000;
 let lech = 0; // ms
+let co = false; // đã nhận `bay_gio` hợp lệ của POS chưa (chưa có thì bayGio() chỉ là đồng hồ máy + 7)
 
 /** "2026-10-30T20:30:00" hoặc "2026-10-30 20:30:00" (giờ VN) → ms của giờ đó đọc như UTC; không đọc được → NaN. */
 export function mocTuChuoi(chuoi) {
@@ -16,11 +17,14 @@ export function mocTuChuoi(chuoi) {
 export function datBayGio(chuoi, mayMs = Date.now()) {
   const moc = mocTuChuoi(chuoi);
   if (!Number.isFinite(moc)) return false;
-  lech = moc - GIO_VN_LECH - mayMs;
+  lech = moc - GIO_VN_LECH - mayMs; co = true;
   return true;
 }
 
-export const xoaLech = () => { lech = 0; };
+export const xoaLech = () => { lech = 0; co = false; };
+
+/** POS đã báo `bay_gio` hợp lệ chưa. */
+export const coBayGio = () => co;
 
 /** Giờ VN hiện tại theo POS, dạng "YYYY-MM-DD HH:mm:ss". */
 export const bayGio = (mayMs = Date.now()) => gioVn(new Date(mayMs + lech));

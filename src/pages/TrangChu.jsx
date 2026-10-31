@@ -1,6 +1,7 @@
 import { layToi, layDiem } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { loiChao, dinhDangSo } from '../dinhDang.js';
+import { bayGio, coBayGio } from '../bayGio.js';
 import { nhuCauCoMon } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import { NHU_CAU } from '../noiDung/nhuCau.js';
@@ -15,7 +16,7 @@ import OGioVang from '../components/OGioVang.jsx';
 import { IcoVe } from '../components/BieuTuong.jsx';
 import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
 import { dungKho } from '../kho.js';
-import { THE_MOI } from '../noiDung/dangNhap.js';
+import { THE_MOI, tenXungHo } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
 //   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc" → KH-UI-5b · Mời bạn bè, combo → sau khai trương.
@@ -42,9 +43,11 @@ function DauHoiVien({ moQR, moUuDai }) {
   const toi = dungTai(layToi);
   const diem = dungTai(layDiem);
   const hang = toi.dl && toi.dl.khach.hang; // null = chưa có hạng → không hiện nhãn hạng
+  dungKho(khoGioHoatDong); // vẽ lại mỗi khi POS báo giờ (bayGio() đổi theo `bay_gio` của POS, KHÔNG theo đồng hồ máy)
+  const k = toi.dl && toi.dl.khach;
   return (
     <DauChung
-      chao={loiChao(toi.dl && toi.dl.khach.ten)}
+      chao={loiChao(coBayGio() ? bayGio() : '', tenXungHo(k && k.xung_ho), k && k.ten)}
       moQR={moQR}
       the={(
         <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
@@ -74,7 +77,7 @@ export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moGioVan
     <Man id="home">
       {dangNhap
         ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} />
-        : <DauChung chao={loiChao('')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} />}
+        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} />}
 
       <div className="hb-one">
         {coHomNay ? (
