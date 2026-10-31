@@ -185,6 +185,7 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
     const tatCa = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f)).map((f) => doc('src/' + f)).join('\n');
     k('E1 không còn THE_MOI_MENU, không còn `.menu-moi`', !/THE_MOI_MENU|menu-moi/.test(tatCa));
     k('E2 bản menu công khai lưu trên máy giữ gia_hang (không boGiaHang khi lưu)', /ghiMenuLuu\(dl,/.test(doc('src/dungMenu.js')) && !/ghiMenuLuu\(boGiaHang/.test(doc('src/dungMenu.js')));
+    k('E1 /menu 401 khi đang có token → không đặt trạng thái lỗi (chờ gọi lại không token)', /e\.status === 401 && coPhien\) \{ if \(!dangNhap\) taiLai\(true\); return; \}/.test(doc('src/dungMenu.js')));
     k('E2 đổi phiên vẫn bỏ gia_hang trong lúc chờ menu mới', /doiPhien\) datTt\(\(t\) => \(\{ \.\.\.t, dl: boGiaHang\(t\.dl\)/.test(doc('src/dungMenu.js')));
   });
 
