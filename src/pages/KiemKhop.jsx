@@ -17,7 +17,7 @@ const LOP = { ok: ' done', thieu: ' cancelled', loi: ' cancelled' };
 const bao = (lenh) => lenh.then((dl) => ({ ok: true, dl }), (e) => ({ ok: false, loi: { status: e.status, code: e.code, message: e.message } }));
 
 export default function KiemKhop() {
-  const [dangNhap] = useState(() => !!docToken());
+  const [dangNhap, datDangNhap] = useState(() => !!docToken());
   const [kq, datKq] = useState({});
   const [lan, datLan] = useState(0);
   const [khoa, datKhoa] = useState(true);
@@ -42,7 +42,8 @@ export default function KiemKhop() {
     return () => { huy = true; clearTimeout(id); khongChiMuc.remove(); };
   }, [lan, dangNhap]);
 
-  const kiemLai = () => { if (khoa) return; datKq({}); datKhoa(true); datLan((n) => n + 1); };
+  // Đọc lại đăng nhập MỖI lần kiểm: chủ quán có thể vừa đăng nhập (hoặc hết phiên) ở tab khác.
+  const kiemLai = () => { if (khoa) return; datKq({}); datDangNhap(!!docToken()); datKhoa(true); datLan((n) => n + 1); };
   const gh = kq['GET /gio-hoat-dong'];
   const kn = phanLoaiKetNoi(gh);
 
