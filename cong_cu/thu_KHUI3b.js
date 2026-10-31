@@ -296,6 +296,7 @@ async function trinhDuyet(pw) {
         k(`B1 [${nhan}] thẻ "Quán gọi bạn là" đầu màn, 7 nút theo XUNG_HO`, JSON.stringify(chips) === JSON.stringify(['Anh', 'Chị', 'Cô', 'Chú', 'Bác', 'Em', 'Bạn']) && /Quán gọi bạn là/.test(await t.locator('.pf-card').first().innerText()), JSON.stringify(chips));
         k(`B1 [${nhan}] nút đang chọn = xưng hô hiện tại (Chị)`, await t.locator('.pf-chips button.on').innerText() === 'Chị');
         k(`B1 [${nhan}] xem trước kiểu demo theo giờ POS (không theo đồng hồ máy)`, /Chào buổi tối,\s*Chị\s*Linh/.test(await t.locator('.pf-prev').innerText()), await t.locator('.pf-prev').innerText());
+        if (rong === 360 && co === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
         await t.locator('.pf-chips button', { hasText: 'Anh' }).click();
         await t.waitForSelector('.save-ok');
         const pu = them(S, 'PUT', '/toi');
@@ -316,7 +317,6 @@ async function trinhDuyet(pw) {
         await t.locator('#dia-chi-toi').fill('y'.repeat(301)); await t.getByRole('button', { name: 'Lưu địa chỉ' }).click(); await t.waitForTimeout(300);
         k(`B3 [${nhan}] DIA_CHI_QUA_DAI → hiện lời của POS, giữ chữ đã nhập`, /tối đa 300/.test(await t.locator('[role=alert]').first().innerText()) && (await t.locator('#dia-chi-toi').inputValue()).length === 301);
         k(`B6 [${nhan}] không tràn ngang`, await khongTran(t));
-        if (rong === 360 && co === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
       });
     }
   }
