@@ -1,7 +1,7 @@
 Bài thử KH-UI-3d — bằng chứng ĐỎ trên code chưa sửa (HEAD gốc 7e1be30 = commit PHIEU; src/ chưa đổi).
 Cách chạy: `git archive 7e1be30` vào thư mục nháp, chép BÀI THỬ MỚI / ĐÃ SỬA đè lên, node_modules nối vào; chạy với KHONG_TRINH_DUYET=1 (cùng điều kiện GitHub).
 
-thu_KHUI3d.js (bài mới)  : 12 đạt · 18 hỏng  — ✗ A1 ×8 (lời chào cũ "Chào buổi chiều, Anh Linh", thiếu "!"), ✗ A2 ×2, ✗ A3 ×2 (XUNG_HO viết hoa, tenXungHo),
+thu_KHUI3d.js (bài mới, trước khi thêm ca nguồn vị trí UuDaiToi — ca thêm cũng đỏ trên gốc vì gốc chưa có UuDaiToi) : 12 đạt · 18 hỏng  — ✗ A1 ×8 (lời chào cũ "Chào buổi chiều, Anh Linh", thiếu "!"), ✗ A2 ×2, ✗ A3 ×2 (XUNG_HO viết hoa, tenXungHo),
                            ✗ A4 (HoSo không có "!"), ✗ B1 ×2 (uudai còn canDN), ✗ B2 ×2 (App còn `dangNhap && taiTab('uudai')`), ✗ B3 (App chưa truyền maCho)
 Bài cũ sửa theo quyết định mới (cùng bản nháp gốc, KHONG_TRINH_DUYET=1) — đều ĐỎ trên code gốc, XANH sau vá:
   cong_cu/thu_KHUI3b.js : 48 đạt · 8 hỏng   (đã vá: 56 đạt · 0 hỏng)   ca C1/C2/C3 lời chào
@@ -16,7 +16,7 @@ Chống xanh vô giá trị: 9 đột biến (viec/KH-UI-3d/dot_bien.py) — m�
   VS-VANGLAI-THAY-DIEM-VOUCHER 126·8 (Chromium) · VS-BANNER-GIO-VANG-KHI-POS-KHONG-CO 164·6 (Chromium) · VS-MA-HOA-DON-MAT-KHI-VANG-LAI 29·1
   VS-APP-KHONG-TRUYEN-MA-CHO 29·1 · BV-CANDN-UU-DAI 28·2
 
-SỐ CA cong_cu/thu_KHUI3d.js: 30
+SỐ CA cong_cu/thu_KHUI3d.js: 31
 SỐ CA cong_cu/thu_KHUI3b.js: 56
 SỐ CA cong_cu/thu_KHXEM1.js: 61
 SỐ CA cong_cu/thu_KHLINK1.js: 97
