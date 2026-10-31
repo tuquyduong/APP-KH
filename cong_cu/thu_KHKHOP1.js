@@ -169,7 +169,7 @@ async function trinhDuyet(pw) {
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: SDT, ten: TEN, ngay_tao: BAY, qr: 'QR', so_du_vi: 100000, hang: null } });
       if (duong === '/diem') return json(200, { success: true, points: 12, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
-      if (duong.startsWith('/don?')) return json(200, { success: true, trang: 1, con_nua: false, data: P.khongDon ? [] : [{ ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
+      if (duong === '/don') return json(200, { success: true, trang: 1, con_nua: false, data: P.khongDon ? [] : [{ ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
       if (duong === `/don/${MA_DON}`) return json(200, { success: true, don: { ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid', mon: [{ ten: 'Trà', so_luong: 1, don_gia: 1, thanh_tien: 1, ghi_chu: '' }] } });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
@@ -205,7 +205,7 @@ async function trinhDuyet(pw) {
   await ca('dang-nhap', { dn: true, pos: { menuMoi: true, gvMoi: true } }, async (t, loi, P) => {
     await mo(t);
     const nd = await chu(t);
-    k('B3 đã đăng nhập: gọi MỘT lần mỗi cửa kể cả /toi /diem /voucher /don và /don/:ma', [...CUA_GET, '/toi', '/diem', '/voucher', `/don/${MA_DON}`].every((d) => dem(P, 'GET', d) === 1) && P.goi.filter((g) => g.duong.startsWith('/don?')).length === 1, JSON.stringify(P.goi.map((g) => g.duong)));
+    k('B3 đã đăng nhập: gọi MỘT lần mỗi cửa kể cả /toi /diem /voucher /don và /don/:ma', [...CUA_GET, '/toi', '/diem', '/voucher', '/don', `/don/${MA_DON}`].every((d) => dem(P, 'GET', d) === 1), JSON.stringify(P.goi.map((g) => g.duong)));
     k('B3 không còn "Đăng nhập để kiểm"', !/Đăng nhập để kiểm/.test(nd));
     k('B3 trường mới POS đã trả (nhu_cau, mo_ta, gia_mon) → ✓', (await Promise.all(['KH-SP-1', 'GIOVANG-1'].map(async (v) => /✓/.test(await t.locator('#kiemkhop .muc', { hasText: v }).first().innerText())))).every(Boolean));
     k('B3 cửa menu khi đã có token vẫn gọi 1 lần', dem(P, 'GET', '/menu') === 1);
