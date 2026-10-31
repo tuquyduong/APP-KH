@@ -58,7 +58,7 @@ export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moT
               <div className="chev">›</div>
             </div>
             <div className="acc-g">Cài đặt</div>
-            <DongMenu bieuTuong="name" ten="Thông tin cá nhân" phu="Tên hiển thị, mã PIN" chon={moHoSo} />
+            <DongMenu bieuTuong="name" ten="Thông tin cá nhân" phu="Xưng hô, mã PIN, địa chỉ" chon={moHoSo} />
             {coLienHe(LIEN_HE) && <DongMenu bieuTuong="chat" ten="Hỗ trợ" phu="Gọi, nhắn Zalo cho quán" chon={moHoTro} />}
             <div className="acc-out" {...bam(dangXuat)}>Đăng xuất</div>
           </>

@@ -54,7 +54,9 @@ export const layHang = () => goi('GET', '/hang');
 export const layGioVang = () => goi('GET', '/gio-vang');
 export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
-export const doiTen = (ten) => goi('PUT', '/toi', { ten });
+// `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
+export const suaHoSo = (truong) => goi('PUT', '/toi', truong);
+export const giaHan = () => goi('POST', '/gia-han');
 export const layMenu = () => goi('GET', '/menu');
 export const layDiem = () => goi('GET', '/diem');
 export const layVoucher = (tatCa) => (tatCa ? goi('GET', '/voucher?all=1') : goi('GET', '/voucher'));
