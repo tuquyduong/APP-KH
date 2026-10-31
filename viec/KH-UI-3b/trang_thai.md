@@ -71,3 +71,18 @@
 - **NGUYÊN TẮC** — Lỗi có sẵn trong demo: demo cũng đo ra dòng 10.8px, nên "chép nguyên demo" không bảo đảm đúng. Ghi `## Đối chiếu` lỗi demo (lý do (f)) khi đo ra; đề xuất mở K4 trong `KHUON_LOI.md` ("chép demo vẫn phải đo bằng máy ở 360/130%") — ngoài Phạm vi, chờ chủ quán duyệt.
 - **BỎ** — Người gác chặn lệnh dùng biến/`for`/`&&` sau lệnh chạy script (B-PHANTICH, B-DICHCHU, GIT-ADD -A, SED-I): đã tuân thủ (mỗi lệnh một dòng); chỉ xảy ra do cách viết lệnh, không có bài học mới.
 - Dọn: không có lời dặn nào của `KHUON_LOI.md` / `CLAUDE.md` cần xoá ở việc này.
+
+## Báo cáo soát độc lập (/ra-soat, agent phụ) — chép tóm tắt, đã xử lý
+KHÔNG ĐẠT (nhẹ), 28/29 mục nghiệm thu có bằng chứng (thiếu H3: cổng `chay` lúc đó chưa chạy). Lỗi và cách xử lý (commit 709e6c4):
+- `thu_KHKHOP1.js:109`, `thu_KHXEM1.js:105` còn canh `doiTen` (đã xoá), thiếu `suaHoSo`/`giaHan` → ĐÃ thêm. (K4)
+- `giaoDien.css` `.pf-chips.sm` chép từ demo nhưng không dùng → ĐÃ xoá. (code chết)
+- `HoSo.jsx` truyền mã thô vào `chiaLoiChao`, lệch Trang chủ ở mã lạ → ĐÃ gọi `chiaLoiChao(gio, tenXungHo(..), ten)`.
+Nghi ngờ còn mở (không sửa, ghi lại): ca E1-401 và F1 ở Phần 1 là regex nguyên văn (hành vi thật do Phần 2 Chromium canh); vừa đăng nhập xong app gọi `/gia-han` một lần thừa; `HoSo.jsx` `DiaChi` dùng `|| ''` (SuaTen dùng `??`) — phòng thủ, hợp đồng bảo đảm `khach` đủ.
+BÀI HỌC của agent: xoá hàm API thì grep `cong_cu/` và cập nhật các ca "không gọi hàm X"; ca nguồn regex nên có thêm ca hành vi; lọc lớp CSS không dùng trước khi chép demo.
+
+## Cổng chạy
+- `node tu_chay/cong.js chay . 9ee865b^ HEAD viec/KH-UI-3b` (HEAD cb3f39c): hết lỗi A16 (SỐ CA đã sửa theo số cổng đếm: KHUI3b 173, KHKHOP1 84, KHUI3a 84). Còn:
+  `✗ [A13] npm test đỏ: thu_KHMUA1.js xanh (…)` và `✗ [A13] --day-du đỏ: thu_KHMUA1.js xanh (…)` — CỔNG ĐỎ (CHẠY) — 2 lý do.
+- Nguyên nhân: `kiem_tra_truoc_khi_giao.js:136` chạy mỗi bài với `timeout: 120000`; `thu_KHMUA1.js` (không đổi ở việc này) tự mất ~121 giây trên máy này — đo trên code GỐC 9ee865b trong thư mục nháp cũng ~120 giây — nên bị cắt giữa chừng. Chạy riêng: `128 đạt · 0 hỏng`; `npm test` khi máy rảnh: `26 đạt · 0 hỏng`. Không phải hồi quy của việc này; không nới bộ kiểm (K8). Đề xuất (ngoài Phạm vi, khung đóng băng): tăng timeout hoặc cắt bớt ca của `thu_KHMUA1.js`.
+
+HEAD ĐÃ KIỂM: cb3f39c
