@@ -30,6 +30,10 @@ const LOI_DU_PHONG = {
   KH_CHUA_CAU_HINH: 'App khách chưa sẵn sàng. Vui lòng quay lại sau.',
   KH_TOKEN_SAI: 'Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.',
   LOI_MAY_CHU: 'Máy chủ đang bận. Thử lại sau ít phút.',
+  XUNG_HO_SAI: 'Cách xưng hô chưa hợp lệ. Hãy chọn lại.',
+  DIA_CHI_QUA_DAI: 'Địa chỉ quá dài (tối đa 300 ký tự).',
+  TEN_KHONG_HOP_LE: 'Tên chưa hợp lệ. Hãy nhập lại.',
+  YEU_CAU_KHONG_HOP_LE: 'Thông tin gửi đi chưa hợp lệ. Thử lại.',
 };
 const LOI_CHUNG = 'Có lỗi xảy ra. Thử lại sau.';
 
@@ -53,5 +57,24 @@ export function cheSdt(sdt) {
   return `${so.slice(0, 3)} xxx ${so.slice(-4)}`;
 }
 
-/** "Chào <tên>" — chưa có tên thì "Chào bạn". */
-export const loiChao = (ten) => `Chào ${String(ten || '').trim() || 'bạn'}`;
+/** Từ cuối của họ tên ("Nguyễn Thị Linh" → "Linh"); không có tên → "". */
+export const tenNgan = (ten) => String(ten || '').trim().split(/\s+/).pop() || '';
+
+/**
+ * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "Chị" | "", ten: "Linh" | "bạn" | "" }.
+ * `gio` = giờ VN của POS ("YYYY-MM-DD HH:mm:ss" hoặc "…THH:mm:ss"); không đọc được → không có buổi. Mốc: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối.
+ */
+export function chiaLoiChao(gio, xungHo, ten) {
+  const m = /[T ](\d{2}):\d{2}/.exec(String(gio || ''));
+  const h = m ? +m[1] : -1;
+  const buoi = h < 0 ? '' : h >= 5 && h < 11 ? ' buổi sáng' : h >= 11 && h < 13 ? ' buổi trưa' : h >= 13 && h < 18 ? ' buổi chiều' : ' buổi tối';
+  const xh = String(xungHo || '').trim();
+  const xung = xh.charAt(0).toUpperCase() + xh.slice(1);
+  return { dau: `Chào${buoi}`, xung, ten: tenNgan(ten) || (xung ? '' : 'bạn') };
+}
+
+/** "Chào buổi sáng, Chị Linh" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào Chị Linh"; chưa có gì: "Chào bạn"). */
+export function loiChao(gio, xungHo, ten) {
+  const { dau, xung, ten: t } = chiaLoiChao(gio, xungHo, ten);
+  return `${dau}${dau === 'Chào' ? ' ' : ', '}${[xung, t].filter(Boolean).join(' ')}`;
+}

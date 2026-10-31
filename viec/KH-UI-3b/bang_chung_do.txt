@@ -1,0 +1,31 @@
+Bài thử KH-UI-3b — bằng chứng ĐỎ trên code chưa sửa (HEAD gốc 9ee865b = commit PHIEU; src/ + thiet_ke/ chưa đổi).
+Cách chạy: `git archive 9ee865b` vào thư mục nháp, chép BÀI THỬ MỚI (cong_cu/thu_KHUI3b.js + 6 bài cũ đã sửa) đè lên, node_modules nối vào; chạy với KHONG_TRINH_DUYET=1 (cùng điều kiện GitHub). Log thật:
+
+$ node cong_cu/thu_KHUI3b.js        (bài mới; src chưa có giaHan.js, suaHoSo, coBayGio, loiChao 3 tham số…)
+  ✗ A1 hợp đồng · ✗ A2 ×3 (gia_han co:true, toi_v3 bỏ moi, menu bỏ viec_pos) · ✗ B4 ×4 (4 mã lỗi v3 chưa có lời) · ✗ B5 (doiTen, không có suaHoSo)
+  ✗ C1/C2 ×8 (lời chào cũ "Chào <tên>") · ✗ D (không có src/giaHan.js) · ✗ E1 ×3 (còn canDN, THE_MOI_MENU, .menu-moi) · ✗ E2 (lưu menu qua boGiaHang) · ✗ F1
+  6 đạt · 26 hỏng
+  Chạy ĐỦ (cả Chromium) trên cùng code gốc: 22 đạt · 63 hỏng — thêm: ✗ B1/B2/B3 (chưa có thẻ xưng hô, địa chỉ) · ✗ C1 ×3 ("Chào Nguyễn Linh") · ✗ D1/D2 (không POST /gia-han)
+  ✗ E3 (token sai) · ✗ F1 (Kiểm lại vẫn "Đăng nhập để kiểm") · ✗ F2 ×6: dấu Ắ Ệ Ờ bị cắt, khoảng trống trên −1.1px (360), −1.8px (390/430), dòng 10.8px ở cỡ 9px — lỗi có thật, cả trong demo.
+
+Bài cũ sửa theo hợp đồng v3 (cùng bản nháp gốc, KHONG_TRINH_DUYET=1) — đều ĐỎ trên code gốc, XANH sau vá:
+  cong_cu/thu_KHKHOP1.js : ✗ trangThaiMuc: 401 ở mọi cửa → loi                                   46 đạt · 1 hỏng  (đã vá: 47 đạt · 0 hỏng)
+  cong_cu/thu_KHXEM1.js  : ✗ ×6 (chonMenu còn canDN; cửa gia hạn có đúng một chỗ trong api.js)     55 đạt · 6 hỏng  (đã vá: 61 đạt · 0 hỏng)
+  cong_cu/thu_KHLINK1.js : ✗ món chưa có menu → không còn thẻ "Đăng nhập để xem menu và giá"       96 đạt · 1 hỏng  (đã vá: 97 đạt · 0 hỏng)
+  cong_cu/thu_KHUI2.js   : ✗ chào theo (giờ, xưng hô, tên)                                        77 đạt · 1 hỏng  (đã vá: 78 đạt · 0 hỏng)
+  cong_cu/thu_KHLUU1.js  : ✗ C1(f) lời chào dùng tên ngắn ("Chào thử")                             30 đạt · 1 hỏng  (đã vá: 31 đạt · 0 hỏng)
+  cong_cu/thu_KHUI3a.js  : ca D4 chạy trong Chromium: ✗ bản menu công khai GIỮ gia_hang            83 đạt · 1 hỏng  (chạy đủ; đã vá: 84 đạt · 0 hỏng)
+
+Sau khi vá (HEAD 193bcd0 + bài thử): thu_KHUI3b.js 173 đạt · 0 hỏng (đủ Chromium) / 56 đạt · 0 hỏng (KHONG_TRINH_DUYET=1).
+Chống xanh vô giá trị: 10 đột biến (viec/KH-UI-3b/dot_bien.py) — mỗi lần bài thử ĐỎ:
+  VS-GIA-HAN-HAI-LAN-MOT-NGAY 53·3 · VS-GIA-HAN-GHI-NGAY-KHI-LOI 47·9 · VS-GIA-HAN-SONG-LAI-PHIEN 55·1 · BV-KHOA-GIA-HAN-NGOAI-LUU-MAY 54·2
+  VS-CHAO-DUNG-DONG-HO-MAY 55·1 · VS-CHAO-MOC-SANG-SAI 55·1 · VS-PUT-GUI-CA-KHOA-KHONG-DOI 167·6 (Chromium) · VS-MENU-401-HIEN-LOI 55·1
+  VS-MENU-LUU-BO-GIA-HANG 55·1 · BV-KIEMKHOP-DOC-LAI-DANG-NHAP 55·1
+
+SỐ CA cong_cu/thu_KHUI3b.js: 56
+SỐ CA cong_cu/thu_KHKHOP1.js: 47
+SỐ CA cong_cu/thu_KHXEM1.js: 61
+SỐ CA cong_cu/thu_KHLINK1.js: 97
+SỐ CA cong_cu/thu_KHUI2.js: 78
+SỐ CA cong_cu/thu_KHUI3a.js: 42
+SỐ CA cong_cu/thu_KHLUU1.js: 31

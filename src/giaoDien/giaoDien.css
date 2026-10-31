@@ -70,7 +70,6 @@ button:disabled{ opacity:.45; cursor:default; }
 .the-moi .card-bottom{ gap:10px; }
 .the-moi .phu{ flex:1; min-width:0; font-size:12.5px; font-weight:600; line-height:1.4; color:#3F2412; }
 .the-moi .nut{ flex-shrink:0; background:var(--pink-dark); color:#fff; border-radius:11px; padding:10px 14px; min-height:44px; display:inline-flex; align-items:center; font-size:12px; font-weight:700; }
-.menu-moi{ margin:6px 0 14px; }
 
 /* ===== Mã thành viên (demo chưa có màn này; dùng viền vàng + thẻ ngà của demo) ===== */
 .khung-qr{ width:min(100%, 18rem); margin:8px auto 14px; padding:14px; background:var(--tq-card); border-radius:var(--tq-r); box-shadow:0 0 0 1px var(--tq-line), var(--tq-shadow); }
@@ -107,3 +106,14 @@ button:disabled{ opacity:.45; cursor:default; }
 /* Số món trên tab Giỏ hàng — phiếu KH-MUA-1 A1 (demo không vẽ số: viec/KH-MUA-1/doi_chieu_demo.md); màu biến của demo như .badge-dot. */
 .tab-so{ position:absolute; top:0; left:50%; margin-left:6px; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--coral); color:var(--white);
   border:1.5px solid var(--white); font-size:10.5px; font-weight:700; line-height:15px; text-align:center; z-index:2; }
+
+/* ===== Thông tin cá nhân: chọn cách xưng hô + dòng xem trước (KH-UI-3b B1) — CHÉP NGUYÊN từ demo (app_kh_demo.html dòng 1414–1418, 1702; bỏ `.pf-chips.sm` vì app không dùng). ===== */
+.pf-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.pf-chips button{ border:none; font:inherit; font-size:13.5px; font-weight:700; padding:8px 16px; border-radius:20px; background:#fff; color:var(--ink); cursor:pointer; box-shadow:0 0 0 1px rgba(215,185,129,.7); }
+.pf-chips button.on{ background:var(--pink-dark); color:#fff; box-shadow:none; }
+.pf-prev{ margin-top:10px; font-size:13px; color:var(--ink); background:#FFF6E8; border-radius:12px; padding:9px 12px; display:flex; gap:6px; align-items:center; }
+.pf-chips button:disabled{ opacity:.45; }
+
+/* ===== Nhãn nhỏ in hoa ở ô Giờ vàng / Trắc nghiệm (KH-UI-3b F2): lỗi CÓ SẴN trong demo — overflow:hidden + dòng quá thấp ở cỡ ~9px cắt dấu tiếng Việt (Ắ Ệ Ờ…).
+   Chỉ nới chiều cao dòng; KHÔNG đổi màu / phông / cỡ chữ. ===== */
+.hb-k{ line-height:1.7; }

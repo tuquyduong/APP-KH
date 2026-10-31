@@ -125,7 +125,7 @@ function dungThanhPhan(tep) {
   k('tiêu đề tab theo trang', /document\.title = tieuDeTrang\(/.test(app));
   k('?ma= vẫn xoá khỏi thanh địa chỉ và chạy trên mọi đường dẫn (về Ưu đãi)', /replaceState/.test(app) && /'\/uudai'/.test(app) && /boMaKhoiDiaChi/.test(app));
   k('trang lạ có nút "Về Trang chủ"; món lạ có nút "Xem Menu"', /Về Trang chủ/.test(doc('src/pages/KhongTimThay.jsx')) && /Xem Menu/.test(doc('src/pages/MonTheoDuong.jsx')) && /Không tìm thấy món/.test(doc('src/pages/MonTheoDuong.jsx')));
-  k('món chưa có menu (khách) → thẻ "Đăng nhập để xem menu và giá" như Menu', /THE_MOI_MENU/.test(doc('src/pages/MonTheoDuong.jsx')) && /canDN/.test(doc('src/pages/MonTheoDuong.jsx')));
+  k('món chưa có menu (khách) → như Menu (v3: menu công khai), không còn thẻ "Đăng nhập để xem menu và giá"', !/THE_MOI_MENU|canDN/.test(doc('src/pages/MonTheoDuong.jsx')));
   k('không có mục quản trị trong app khách', !/AdminTrang|<Admin|quan-tri|quản trị/i.test(app + doc('src/duongDan.js').replace(/\/\/[^\n]*/g, '')));
   const thuMuc = (p, re) => fs.readdirSync(path.join(GOC, p)).filter((f) => re.test(f));
   k('A4 không có 404.html / _redirects nào ở public/ và gốc', !fs.existsSync(path.join(GOC, 'public', '404.html')) && !fs.existsSync(path.join(GOC, '404.html')) && thuMuc('public', /^404|^_redirects$/).length === 0);

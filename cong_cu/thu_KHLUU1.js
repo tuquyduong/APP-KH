@@ -184,7 +184,7 @@ async function trinhDuyet(pw, dauVet, BAN) {
 
   await ca('f', { luu: gieo(SDT_A, { chu: false }), chan: true, pos: { sdt: SDT_A } }, async (t, P, loi) => {
     await mo(t, '/trangchu'); await cho(t, 900);
-    k('C1(f) kho chặn ghi: App không vỡ, Trang chủ vẫn hiện', loi.length === 0 && (await chu(t)).includes('Chào Khách thử'), loi.join('|'));
+    k('C1(f) kho chặn ghi: App không vỡ, Trang chủ vẫn hiện', loi.length === 0 && (await chu(t)).includes('Chào thử'), loi.join('|')); // KH-UI-3b: lời chào dùng tên ngắn (từ cuối của "Khách thử")
   });
 
   await trinh.close();

@@ -277,7 +277,7 @@ async function trinhDuyet(pw) {
   await ca('m-menu-cong-khai', { dn: false, pos: { menuKhongToken: true } }, async (t) => {
     await mo(t, '/menu');
     const luu = await khoaLuu(t);
-    k('D4 menu công khai (không token) có gia_hang: có lưu bản menu trên máy nhưng KHÔNG chứa gia_hang', /kh_menu/.test(luu) && !/gia_hang/.test(luu), luu.slice(0, 160));
+    k('D4 menu công khai (không token) có gia_hang: lưu bản menu trên máy và GIỮ gia_hang các hạng (v3, KH-UI-3b E2)', /kh_menu/.test(luu) && /gia_hang/.test(luu), luu.slice(0, 160));
   });
 
   await ca('f-quan-dong', { pos: { gioHoatDong: GHD_DONG, gioVang: GV_TAT } }, async (t) => {

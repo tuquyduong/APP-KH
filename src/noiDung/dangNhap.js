@@ -6,6 +6,8 @@ export const XUNG_HO = [
   { ma: 'anh', ten: 'Anh' }, { ma: 'chi', ten: 'Chị' }, { ma: 'co', ten: 'Cô' }, { ma: 'chu', ten: 'Chú' },
   { ma: 'bac', ten: 'Bác' }, { ma: 'em', ten: 'Em' }, { ma: 'ban', ten: 'Bạn' },
 ];
+/** Mã hợp đồng ("chi") → chữ hiện ("Chị"); mã lạ hoặc null → "" (bỏ phần xưng hô, không bịa). */
+export const tenXungHo = (ma) => (XUNG_HO.find((x) => x.ma === ma) || { ten: '' }).ten;
 export const DIA_CHI_TOI_DA = 300;
 export const GIAY_CHO_GUI_LAI = 60; // "Gửi lại mã" mở sau ngần này giây
 
@@ -19,9 +21,8 @@ export const BUOC_THONG_TIN = {
 };
 export const DONG_MA_HOA_DON = 'Đăng nhập để nhận điểm cho hoá đơn này';
 
-// Thẻ mời (dáng thẻ vàng points-card) cho khách chưa đăng nhập ở Trang chủ; khung "xem menu" khi POS còn đòi đăng nhập mới cho xem menu.
+// Thẻ mời (dáng thẻ vàng points-card) cho khách chưa đăng nhập ở Trang chủ.
 export const THE_MOI = { tieuDe: 'Thành viên Tứ Quý Đường', phu: 'Đăng nhập / Đăng ký để tích điểm, nhận ưu đãi', nut: 'Đăng nhập' };
-export const THE_MOI_MENU = { tieuDe: 'Menu và giá', phu: 'Đăng nhập để xem menu và giá', nut: 'Đăng nhập' };
 
 /** Dòng trên ô nhập mã: POS bật Zalo → "đã gửi qua Zalo tới số …"; POS báo lấy mã ở quầy → hỏi nhân viên. SĐT quá ngắn thì không hiện số (không bịa). */
 export function loiMa(taiQuay, sdt) {

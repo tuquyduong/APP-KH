@@ -32,7 +32,7 @@ export function trangThaiMuc(m, kq, dangNhap) {
   if (m.token === true && !dangNhap) return { tt: 'dn', chu: 'Đăng nhập để kiểm' };
   if (!kq) return { tt: 'dang', chu: 'Đang kiểm…' };
   if (kq.trong) return { tt: 'rong', chu: 'Chưa kiểm được: chưa có dữ liệu để xem (vd chưa có đơn nào)' };
-  if (!kq.ok) return kq.loi.status === 401 && m.token === 'tuy_chon' ? cho(`POS còn đòi đăng nhập ở cửa này — chờ ${m.viec_pos}`) : { tt: 'loi', chu: kq.loi.message };
+  if (!kq.ok) return { tt: 'loi', chu: kq.loi.message };
   const xet = m.truong.map((t) => [t, kiemTruong(kq.dl, t)]);
   const thieu = xet.filter(([, r]) => r === 'thieu').map(([t]) => t);
   if (thieu.length) return m.moi ? cho(`POS chưa trả: ${thieu.join(', ')} — chờ ${m.viec_pos}`) : { tt: 'thieu', chu: `Thiếu: ${thieu.join(', ')}` };

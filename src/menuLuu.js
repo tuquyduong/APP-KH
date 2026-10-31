@@ -32,11 +32,10 @@ export function gioVn(bay = new Date()) {
 
 /**
  * Kết quả lấy menu → trạng thái hiện. `loi` null = lấy được `dl`.
- * Lấy hỏng mà có bản lưu → hiện bản lưu (cu = true, kèm giờ). Hỏng + 401 + không bản lưu (POS chưa mở /menu cho khách) → canDN, không báo lỗi.
+ * Lấy hỏng mà có bản lưu → hiện bản lưu (cu = true, kèm giờ). (v3: /menu mở cho khách vãng lai; 401 chỉ khi gửi token sai — dungMenu.js xử lý riêng.)
  */
 export function chonMenu(loi, dl, banLuu, luc = '') {
-  if (!loi) return { dl, luc, cu: false, canDN: false, loi: '' };
-  if (banLuu) return { dl: banLuu.dl, luc: banLuu.luc, cu: true, canDN: false, loi: '' };
-  if (loi.status === 401) return { dl: null, luc: '', cu: false, canDN: true, loi: '' };
-  return { dl: null, luc: '', cu: false, canDN: false, loi: loi.message };
+  if (!loi) return { dl, luc, cu: false, loi: '' };
+  if (banLuu) return { dl: banLuu.dl, luc: banLuu.luc, cu: true, loi: '' };
+  return { dl: null, luc: '', cu: false, loi: loi.message };
 }
