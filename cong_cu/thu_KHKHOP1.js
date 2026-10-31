@@ -14,6 +14,8 @@ const k = (ten, dung, them = '') => {
 };
 const doc = (f) => { try { return fs.readFileSync(path.join(GOC, f), 'utf8'); } catch { return ''; } };
 const nap = (f) => import(pathToFileURL(path.join(GOC, f)).href);
+const iAnh = process.argv.indexOf('--anh'); // node cong_cu/thu_KHKHOP1.js --anh <thư mục>: lưu ảnh trang ở 360/390/430
+const DIR_ANH = iAnh > 0 ? process.argv[iAnh + 1] : '';
 const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
 
 (async () => {
@@ -269,7 +271,7 @@ async function trinhDuyet(pw) {
       await ca(`man-${rong}-${co}`, { rong, dn: true, pos: { menuMoi: true } }, async (t, loi) => {
         await mo(t, co);
         const tran = await t.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-        if (process.env.LUU_ANH_DIR && co === '100%') await t.screenshot({ path: path.join(process.env.LUU_ANH_DIR, `kiemkhop_${rong}.png`), fullPage: true });
+        if (DIR_ANH && co === '100%') await t.screenshot({ path: path.join(DIR_ANH, `kiemkhop_${rong}.png`), fullPage: true });
         k(`C1 ${rong}px chữ ${co}: không tràn ngang, không lỗi JS`, tran <= 1 && loi.length === 0, `tràn ${tran}px ${loi.join('|')}`);
       });
     }
