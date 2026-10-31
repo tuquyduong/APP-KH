@@ -53,5 +53,27 @@ Nghi ngờ còn lại: hạng 0%, trợ năng banner (mục Phát hiện). Khôn
 Nghiệm thu soát đếm: 11/15 đủ bằng chứng lúc soát; A5 + C2 đã bổ sung ở đây; C3 một phần (thiếu 430 + ảnh tô lệch); C4 cổng chờ chạy; C5 chủ quán.
 
 ## Kết quả kiểm
-- `npm test`: xanh (chạy lại sau sửa soát ở bước cổng). `--day-du`: 29 đạt · 0 hỏng (trước sửa soát).
-- Chromium: `thu_KHUI3d.js` 170 đạt (trước thêm ca nguồn), `thu_KHUI3b.js` 173 đạt.
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 29 đạt · 0 hỏng (sau sửa soát; có Chromium: `thu_KHUI3d.js` 171, `thu_KHUI3b.js` 173).
+- Cổng `node tu_chay/cong.js chay . 7e1be30^ HEAD viec/KH-UI-3d`:
+  - chạy ở máy có Playwright (không ẩn trình duyệt): ✗ [A16] ×2 vì máy đếm 173 / 171 ca ≠ `SỐ CA` 56 / 31 — đúng như CLAUDE.md §9 (SỐ CA ghi theo `KHONG_TRINH_DUYET=1`, số GitHub đếm), không phải lỗi bài thử;
+  - chạy `KHONG_TRINH_DUYET=1` (như GitHub): `✓ CỔNG CHẠY ĐẠT`.
+- Bước 11: không đổi file ngoài `viec/KH-UI-3d/` sau lần kiểm cuối → không KHOÁ / NGUYÊN TẮC mới ngoài Phạm vi. Bài học ghi dưới.
+
+## Bài học
+- KHOÁ (đã làm, trong Phạm vi): ca nguồn kiểm VỊ TRÍ `UuDaiToi` trong nhánh `dangNhap ?` — ca "đếm số lần xuất hiện" không bảo vệ nhánh, mà cổng GitHub không có trình duyệt.
+- NGUYÊN TẮC (đề xuất, ngoài Phạm vi): việc đổi bài cũ chỉ ở phần trình duyệt phải ghi `## Câu hỏi` (C2) ngay lúc sửa; tạo `trang_thai.md` từ đầu việc. Chỉ xảy ra khi phiếu bắt ghi vào file đó → không mở K mới, ghi lại để chat soát cân nhắc.
+- BỎ: người gác chặn nhiều lệnh (xargs, sed -i, chạy bài thử có TOKEN chưa commit) — mỗi lần một lần, làm theo hướng dẫn.
+
+## Báo cáo 7 mục
+- VIỆC: KH-UI-3d — Ưu đãi mở cho khách vãng lai + văn phong lời chào.
+- ĐÃ SỬA: `dinhDang.js` (lời chào, tên ngắn), `noiDung/dangNhap.js` (XUNG_HO thường + `THE_MOI_UU_DAI`), `HoSo.jsx`, `duongDan.js` (bỏ canDN uudai), `luongDangNhap.js` (maCho), `App.jsx`, `UuDai.jsx` (banner Giờ vàng, thẻ hạng, điểm + ví, khối khoá), `demo_1.css` / `demo_2.css` (CSS chép của demo), 5 bài cũ.
+- BÀI THỬ: `thu_KHUI3d.js` mới (31 ca ẩn trình duyệt / 171 đủ), 9 đột biến đều ĐỎ, 5 bài cũ sửa đỏ trên gốc.
+- ĐÃ RÀ K4: mọi chỗ xưng hô / lời chào (bảng A5), `canDangNhap` một đường.
+- CHƯA KIỂM: thử tay trên điện thoại (C5); ảnh 430 + ảnh tô chỗ lệch (C3); trợ năng banner; `thu_KHLUU1` (C2, xem Câu hỏi); ảnh tĩnh trong ảnh so là POS giả nên logo không hiện.
+- GIT: nhánh `viec/KH-UI-3d`, push từng bước; không PR, không merge.
+- BÀI HỌC: như trên.
+
+## Mục nghiệm thu — bằng chứng
+A1–A4: `thu_KHUI3d.js` phần 1 + ca Chromium · A5: bảng trên · B1–B5: `thu_KHUI3d.js` (nguồn + Chromium: vanglai-*, dangnhap-*, qr-ma, qr-ma-dong-dn, het-phien) · C1: `thu_KHUI3d.js` ba cỡ × 100/130% · C2: Câu hỏi 1 · C3: `so_anh/` + `doi_chieu_demo.md` (thiếu 430 + ảnh tô lệch) · C4: `--day-du` + cổng ĐẠT + 9 đột biến · C5: chủ quán.
+
+HEAD ĐÃ KIỂM: dfc6939
