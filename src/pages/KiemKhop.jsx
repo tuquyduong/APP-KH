@@ -24,6 +24,8 @@ export default function KiemKhop() {
 
   useEffect(() => {
     document.title = 'Kiểm khớp POS · Tứ Quý Đường';
+    const khongChiMuc = Object.assign(document.createElement('meta'), { name: 'robots', content: 'noindex' });
+    document.head.appendChild(khongChiMuc);
     let huy = false;
     const ghi = (cua, r) => { if (!huy) datKq((c) => ({ ...c, [cua]: r })); };
     const cuaGoi = cuaCanGoi(CAN_TU_POS, dangNhap);
@@ -32,12 +34,12 @@ export default function KiemKhop() {
         ghi(cua, cua === 'GET /gio-hoat-dong' && r.ok ? { ...r, lech: doLechGiay(r.dl.bay_gio, Date.now()) } : r);
         if (cua === 'GET /don' && cuaGoi.includes(CUA_CHI_TIET)) {
           const ma = r.ok && Array.isArray(r.dl.data) && r.dl.data[0] && r.dl.data[0].ma;
-          if (ma) bao(layChiTietDon(ma)).then((x) => ghi(CUA_CHI_TIET, x)); else ghi(CUA_CHI_TIET, { trong: true });
+          if (!r.ok) ghi(CUA_CHI_TIET, r); else if (ma && !huy) bao(layChiTietDon(ma)).then((x) => ghi(CUA_CHI_TIET, x)); else ghi(CUA_CHI_TIET, { trong: true });
         }
       });
     }
     const id = setTimeout(() => datKhoa(false), MS_CHONG_DON);
-    return () => { huy = true; clearTimeout(id); };
+    return () => { huy = true; clearTimeout(id); khongChiMuc.remove(); };
   }, [lan, dangNhap]);
 
   const kiemLai = () => { if (khoa) return; datKq({}); datKhoa(true); datLan((n) => n + 1); };

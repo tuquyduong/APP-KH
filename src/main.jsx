@@ -8,6 +8,6 @@ import './giaoDien/khau_hieu.css'
 import App from './App.jsx'
 import KiemKhop from './pages/KiemKhop.jsx'
 
-// /kiemkhop (KH-KHOP-1) là trang riêng, chạy KHÔNG qua vỏ App: vỏ tự gọi /hang, /gio-vang, /menu… và hỏi lại mỗi phút, trái "mỗi cửa một lần".
+// /kiemkhop (KH-KHOP-1) là trang riêng, dựng riêng, không mount vỏ App: vỏ (khi mount) tự gọi /hang, /gio-vang, /menu… và hỏi lại mỗi phút, trái "mỗi cửa một lần".
 const laKiemKhop = window.location.pathname.toLowerCase().replace(/\/+$/, '') === '/kiemkhop'
 createRoot(document.getElementById('root')).render(laKiemKhop ? <KiemKhop /> : <App />)

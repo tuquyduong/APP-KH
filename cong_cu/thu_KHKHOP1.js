@@ -93,7 +93,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
 
   // B1 — đường dẫn, không có lối vào
   const r = D.docDuongDan('/kiemkhop');
-  k('B1 /kiemkhop là trang riêng trong bảng đường dẫn, không cần đăng nhập, không thuộc tab nào', r.trang === 'kiemkhop' && !r.canDN && r.tab === null && r.chuan === '/kiemkhop' && D.taoDuongDan('kiemkhop') === '/kiemkhop', JSON.stringify(r));
+  k('B1 /kiemkhop là trang riêng trong bảng đường dẫn, không cần đăng nhập, không thuộc tab nào', r.trang === 'kiemkhop' && !r.canDN && r.tab === null && r.giuCho === true && r.chuan === '/kiemkhop' && D.taoDuongDan('kiemkhop') === '/kiemkhop', JSON.stringify(r));
   k('B1 /Kiemkhop/ chuẩn hoá về /kiemkhop; tiêu đề tab có tên trang', D.docDuongDan('/Kiemkhop/').chuan === '/kiemkhop' && /Kiểm khớp/.test(D.tieuDeTrang('kiemkhop')));
   const loiVao = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f) && !/^kiemKhop[\\/]|KiemKhop\.jsx$|duongDan\.js$|^main\.jsx$/.test(f)).filter((f) => /kiemkhop/i.test(doc('src/' + f)));
   k('B1 không file nào khác của app nhắc /kiemkhop (không lối vào từ tab, menu, tài khoản)', loiVao.length === 0, loiVao.join(','));
@@ -199,6 +199,7 @@ async function trinhDuyet(pw) {
     k('B4 mỗi cửa công khai đúng MỘT lần (kể cả /gio-hoat-dong dùng chung phần Kết nối)', CUA_GET.every((d) => dem(P, 'GET', d) === 1), JSON.stringify(P.goi.map((g) => g.duong)));
     k('B3 chỉ gọi cửa có trong hợp đồng', P.goi.every((g) => ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu'].includes(g.duong)), JSON.stringify(P.goi));
     k('B1 trang mở không cần đăng nhập, không thấy thanh tab chứa lối vào', !/dangnhap/.test(t.url()));
+    k('B1 trang tự đặt <meta name="robots" content="noindex">', (await t.locator('meta[name="robots"]').getAttribute('content')) === 'noindex');
     k('thong-vang-lai: Lỗi JS = 0', loi.length === 0, loi.join('|'));
   });
 
@@ -268,6 +269,7 @@ async function trinhDuyet(pw) {
       await ca(`man-${rong}-${co}`, { rong, dn: true, pos: { menuMoi: true } }, async (t, loi) => {
         await mo(t, co);
         const tran = await t.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        if (process.env.LUU_ANH_DIR && co === '100%') await t.screenshot({ path: path.join(process.env.LUU_ANH_DIR, `kiemkhop_${rong}.png`), fullPage: true });
         k(`C1 ${rong}px chữ ${co}: không tràn ngang, không lỗi JS`, tran <= 1 && loi.length === 0, `tràn ${tran}px ${loi.join('|')}`);
       });
     }

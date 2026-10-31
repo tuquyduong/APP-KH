@@ -26,7 +26,7 @@ const BANG = [
   { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, canDN: true, tieuDe: 'Trắc nghiệm' },
   { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'Trắc nghiệm', cha: '/tracnghiem' },
   { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'Kết quả thể trạng' },
-  { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'Kiểm khớp POS' },
+  { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'Kiểm khớp POS', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
   { trang: 'kehoach', mau: '/kehoach', tab: null, tieuDe: 'Kế hoạch và nhắc việc', giuCho: true },
 ];
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);
