@@ -387,11 +387,12 @@ async function trinhDuyet(pw) {
   await ca('menu-token-sai', { token: 'tok-hong' }, async (t, S) => {
     await mo(t, '/menu');
     await t.waitForTimeout(500);
-    const m = await t.locator('#catalog').innerText();
-    k('E3 token sai: /menu 401 KH_TOKEN_SAI → gọi lại KHÔNG token → khách thấy menu', /Trà Lục Bảo/.test(m) && !/Đăng nhập để xem menu|Phiên đăng nhập đã hết|Không kết nối|Có lỗi/.test(m), m.slice(0, 200));
     const menus = S.goi.filter((g) => g.duong === '/menu');
-    k('E3 lần đầu có Authorization (token sai), lần sau không có; token đã bị xoá', menus.length === 2 && menus[0].auth === 'Bearer tok-hong' && menus[1].auth === '' && await t.evaluate(() => localStorage.getItem('kh_token')) === null, JSON.stringify(menus));
-    k('E3 đã ở trạng thái chưa đăng nhập (Tài khoản chuyển sang đăng nhập)', await t.evaluate(() => !localStorage.getItem('kh_token')) && (await t.locator('#home h1').count()) === 0);
+    k('E3 token sai: /menu 401 KH_TOKEN_SAI → api.js xoá token → hết phiên → gọi lại KHÔNG Authorization', menus.length === 2 && menus[0].auth === 'Bearer tok-hong' && menus[1].auth === '' && await t.evaluate(() => localStorage.getItem('kh_token')) === null, JSON.stringify(menus));
+    k('E3 đã ở trạng thái chưa đăng nhập ("Chào bạn"), không chữ lỗi / thẻ mời menu', await t.locator('#home h1').innerText() === 'Chào bạn' && !/Phiên đăng nhập đã hết|Đăng nhập để xem menu|Không kết nối|Có lỗi/.test(await t.locator('body').innerText()));
+    await t.locator('.tabbar .tab', { hasText: 'Menu' }).click(); await t.waitForTimeout(500);
+    const m = await t.locator('#catalog').innerText();
+    k('E3 vào Menu: khách thấy menu, không chữ lỗi, không thẻ mời đăng nhập', /Trà Lục Bảo/.test(m) && !/Đăng nhập để xem menu|Phiên đăng nhập đã hết|Không kết nối|Có lỗi/.test(m), m.slice(0, 200));
     await chup(t, 'ung-dung_menu-khach_390');
   });
   await ca('menu-khach-bac-gia', { token: '' }, async (t, S) => {
