@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 12,
+  "phien_ban_so": 13,
   "cap_nhat": "2026-10-31",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -156,9 +156,10 @@
       "ten": "Trang Kiem khop POS (an, chu quan biet link): goi thu tung cua trong hop dong + thiet_ke/CAN_TU_POS.json (App KH can gi tu POS), bao dung/thieu",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "han": "2026-11-03",
-      "ghi_chu": "chu quan 30.10: can 2 ben khop, canh bao chuc nang App KH can ma POS chua co"
+      "ghi_chu": "chu quan 30.10: can 2 ben khop, canh bao chuc nang App KH can ma POS chua co",
+      "ngay": "2026-10-31"
     },
     {
       "ma": "KH-TN-1",
@@ -202,7 +203,7 @@
       "ma": "KH-MUA-1",
       "ten": "Dat don online phia App: gio hang (tab 5 nhu demo), thanh toan (tai quay; giao \"Sap co\"), QR payOS / vi + PIN, theo doi don, dat lai - dung san voi cong tiem vao + co DAT_ONLINE tat (hop dong chua co cua)",
       "loai": "T",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "POS KH-MUA-1 (ten cua du kien: TRA_LOI_POS_31102026.md muc 3)"
       ],
@@ -296,7 +297,7 @@
         "KH-TACH-1",
         "POS: cua xac nhan tai khoan nhan vien (D9)"
       ],
-      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach"
+      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai"
     },
     {
       "ma": "KH-ND-1",
