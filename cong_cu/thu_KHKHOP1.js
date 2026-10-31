@@ -131,7 +131,9 @@ async function trinhDuyet(pw) {
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '"http://kh.test"' },
   })).outputFiles[0].text;
-  const KHUNG = doc('index.html').replace(/<script type="module"[^>]*><\/script>/, '<script src="/bundle.js"></script>');
+  const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
+  const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
+  const KHUNG = doc('index.html').replace(/<script type="module"[^>]*><\/script>/, '<script src="/bundle.js"></script>').replace('</head>', `<style>${css}</style></head>`);
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
   const URL0 = 'http://kh.test';
   const BAY = '2026-10-30T20:30:05';
