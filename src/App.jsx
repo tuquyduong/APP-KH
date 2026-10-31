@@ -110,9 +110,9 @@ export default function App() {
 
   // Trang cần đăng nhập mà chưa đăng nhập → /dangnhap?tiep=<trang> (thay, không thêm lịch sử). Đăng nhập xong → rời /dangnhap tới tiep.
   useLayoutEffect(() => {
-    if (canDangNhap(trang, dangNhap)) thay(taoDuongDan('dangnhap', { tiep: r.chuan }));
+    if (canDangNhap(trang, dangNhap, maCho)) thay(taoDuongDan('dangnhap', { tiep: r.chuan }));
     else if (dangNhap && trang === 'dangnhap') thay(dichSauDangNhap(r.tham.tiep, maCho));
-  }, [trang, dangNhap, r.chuan]);
+  }, [trang, dangNhap, r.chuan, maCho]);
 
   // Trắc nghiệm: mở thẳng /lam khi không có bài đang làm, hoặc /ketqua khi chưa có kết quả → về màn giới thiệu.
   useLayoutEffect(() => {
@@ -169,7 +169,7 @@ export default function App() {
         {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} />}
         {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} qr={donMoi.current && donMoi.current.ma === r.tham.ma ? donMoi.current.qr : null} lui={luiVe} daTra={daTra} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
         {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moGioVang={moGioVang} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
-        {dangNhap && taiTab('uudai') && <UuDai maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} />}
+        {taiTab('uudai') && <UuDai dangNhap={dangNhap} maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} moGioVang={moGioVang} moDangNhap={() => moDangNhap('/uudai')} />}
         {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
         {dangNhap && trang === 'tracnghiem' && <TracNghiem tn={tn} lui={luiVe} vaoLam={() => di(taoDuongDan('tracnghiemlam'))} moKetQua={() => { tn.xemBanLuu(); di(taoDuongDan('tracnghiemketqua')); }} />}
         {dangNhap && trang === 'tracnghiemlam' && <TracNghiemLam tn={tn} thoat={() => { tn.bo(); thay(taoDuongDan('tracnghiem')); }} xemKetQua={() => thay(taoDuongDan('tracnghiemketqua'))} />}

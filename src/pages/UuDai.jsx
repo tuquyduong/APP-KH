@@ -1,14 +1,19 @@
 import { useCallback, useState } from 'react';
-import { layDiem, layVoucher } from '../api.js';
+import { layDiem, layToi, layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
+import { dungGia } from '../heThong.js';
 import { dinhDangGia, dinhDangNgay, dinhDangSo, moTaGiam } from '../dinhDang.js';
+import { THE_MOI_UU_DAI } from '../noiDung/dangNhap.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import NhanMa from '../components/NhanMa.jsx';
+import TheMoi from '../components/TheMoi.jsx';
+import GvDem from '../components/GvDem.jsx';
+import { bam } from '../components/bam.js';
 import { Med } from '../components/BieuTuong.jsx';
 
-// Ưu đãi theo demo (rewards): điểm, ví voucher, + ô nhập mã trên hoá đơn và lịch sử điểm. Khối của VIỆC SAU để trống:
-//   banner Giờ vàng, thẻ hạng → KH-UI-3 · sưu tập Tứ Quý, kho quà đổi điểm → chưa có dữ liệu POS · số dư ví → KH-UI-3.
+// Ưu đãi theo demo (rewards): banner Giờ vàng, thẻ hạng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
+//   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
 const LOAI_DIEM = { earn: 'Tích điểm', redeem: 'Đổi điểm' };
 const TRANG_THAI_VOUCHER = { used: 'Đã dùng', expired: 'Hết hạn' };
 const dau = (n) => (n > 0 ? `+${n}` : String(n));
@@ -49,18 +54,56 @@ function DanhSachVoucher({ tatCa }) {
   );
 }
 
-// `maSan` = mã từ link QR hoá đơn (điền sẵn, khách bấm nhận).
-export default function UuDai({ maSan, khiNhanXong, moQR }) {
-  const tai = dungTai(layDiem);
-  const [tatCa, datTatCa] = useState(false);
+// Banner Giờ vàng (demo rw-ban): chỉ khi POS có Giờ vàng chưa kết thúc (đang / chưa tới / chờ POS báo) và có món ghép được; chữ lấy từ POS.
+function BannerGioVang({ mo }) {
+  const { tt, maGv, coMenu } = dungGia();
+  if (!tt || tt.pha === 'sau' || (coMenu && maGv.size === 0)) return null;
   return (
-    <Man id="rewards">
-      <div className="topbar"><div><h1>Ưu đãi của tôi</h1></div><NutQR moQR={moQR} /></div>
+    <div className="rw-ban" {...bam(mo)}>
+      <div className="rw-in">
+        <div className="rw-k">Giờ vàng · <GvDem kieu="short" /></div>
+        <div className="rw-h">{tt.batDau} – {tt.ketThuc}<br />giảm {tt.phanTram}%</div>
+        <button className="rw-b" type="button">Xem món Giờ vàng →</button>
+      </div>
+    </div>
+  );
+}
+
+// Thẻ hạng (demo tier-card). `hang` = hạng của khách (/toi); không có → bảng các hạng của POS (/hang); POS không trả → ẩn, không bịa.
+function TheHang({ hang }) {
+  const { dsHang } = dungGia();
+  if (hang) {
+    const db = hang.phan_tram_nhom_dac_biet > 0 ? ` · nhóm đặc biệt ${hang.phan_tram_nhom_dac_biet}%` : '';
+    return (
+      <div className="tier-card">
+        <div className="top"><div><div className="name">Hạng {hang.ten}</div><div className="pct">Giảm {hang.phan_tram}% món thường{db}</div></div></div>
+        {hang.het_han && <div className="prog-lbl">Thẻ hết hạn: {dinhDangNgay(hang.het_han)}</div>}
+      </div>
+    );
+  }
+  if (!Array.isArray(dsHang) || dsHang.length === 0) return null;
+  return (
+    <div className="tier-card">
+      <div className="top"><div><div className="name">Hạng thành viên</div>{dsHang.map((h) => <div className="pct" key={h.id}>{h.ten} — giảm {h.phan_tram}%</div>)}</div></div>
+    </div>
+  );
+}
+
+// Phần riêng của khách đã đăng nhập: thẻ hạng + điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
+function UuDaiToi({ maSan, khiNhanXong }) {
+  const tai = dungTai(layDiem);
+  const toi = dungTai(layToi);
+  const [tatCa, datTatCa] = useState(false);
+  const khach = toi.dl && toi.dl.khach;
+  return (
+    <>
+      <TheHang hang={khach ? khach.hang : null} />
 
       <TrangTai tai={tai}>
         {(dl) => (
           <div className="wallet-row">
             <div className="wallet-box"><div className="n">{dinhDangSo(dl.points)}</div><div className="l">Điểm tích lũy</div></div>
+            {khach && dinhDangGia(khach.so_du_vi) && <div className="wallet-box"><div className="n">{dinhDangGia(khach.so_du_vi)}</div><div className="l">Số dư ví</div></div>}
           </div>
         )}
       </TrangTai>
@@ -82,6 +125,19 @@ export default function UuDai({ maSan, khiNhanXong, moQR }) {
             {typeof h.points === 'number' && <div className={`amt ${h.points > 0 ? 'plus' : 'minus'}`}>{dau(h.points)}</div>}
           </div>
         )))}
+    </>
+  );
+}
+
+// Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap }) {
+  return (
+    <Man id="rewards">
+      <div className="topbar"><div><h1>{dangNhap ? 'Ưu đãi của tôi' : 'Ưu đãi'}</h1></div><NutQR moQR={moQR} /></div>
+      <BannerGioVang mo={moGioVang} />
+      {dangNhap
+        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} />
+        : <><TheHang hang={null} /><div className="top-row mot"><TheMoi chu={THE_MOI_UU_DAI} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );
 }

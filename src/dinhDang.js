@@ -57,24 +57,23 @@ export function cheSdt(sdt) {
   return `${so.slice(0, 3)} xxx ${so.slice(-4)}`;
 }
 
-/** Từ cuối của họ tên ("Nguyễn Thị Linh" → "Linh"); không có tên → "". */
-export const tenNgan = (ten) => String(ten || '').trim().split(/\s+/).pop() || '';
+/** Từ cuối của họ tên, viết hoa chữ đầu ("nguyễn thị linh" → "Linh"); không có tên → "". */
+export const tenNgan = (ten) => { const t = String(ten || '').trim().split(/\s+/).pop() || ''; return t.charAt(0).toUpperCase() + t.slice(1); };
 
 /**
- * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "Chị" | "", ten: "Linh" | "bạn" | "" }.
+ * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "chị" | "" (chữ thường, đứng giữa câu), ten: "Linh" | "bạn" | "" }.
  * `gio` = giờ VN của POS ("YYYY-MM-DD HH:mm:ss" hoặc "…THH:mm:ss"); không đọc được → không có buổi. Mốc: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối.
  */
 export function chiaLoiChao(gio, xungHo, ten) {
   const m = /[T ](\d{2}):\d{2}/.exec(String(gio || ''));
   const h = m ? +m[1] : -1;
   const buoi = h < 0 ? '' : h >= 5 && h < 11 ? ' buổi sáng' : h >= 11 && h < 13 ? ' buổi trưa' : h >= 13 && h < 18 ? ' buổi chiều' : ' buổi tối';
-  const xh = String(xungHo || '').trim();
-  const xung = xh.charAt(0).toUpperCase() + xh.slice(1);
+  const xung = String(xungHo || '').trim().toLowerCase();
   return { dau: `Chào${buoi}`, xung, ten: tenNgan(ten) || (xung ? '' : 'bạn') };
 }
 
-/** "Chào buổi sáng, Chị Linh" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào Chị Linh"; chưa có gì: "Chào bạn"). */
+/** "Chào buổi sáng, chị Linh!" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào chị Linh!"; chưa có gì: "Chào bạn!"). */
 export function loiChao(gio, xungHo, ten) {
   const { dau, xung, ten: t } = chiaLoiChao(gio, xungHo, ten);
-  return `${dau}${dau === 'Chào' ? ' ' : ', '}${[xung, t].filter(Boolean).join(' ')}`;
+  return `${dau}${dau === 'Chào' ? ' ' : ', '}${[xung, t].filter(Boolean).join(' ')}!`;
 }

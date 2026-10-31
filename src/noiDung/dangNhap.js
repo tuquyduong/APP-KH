@@ -3,10 +3,10 @@ import { cheSdt } from '../dinhDang.js';
 
 // Cách xưng hô: hiện chữ có dấu, GỬI mã không dấu (hợp đồng v3). Địa chỉ nhận hàng tối đa DIA_CHI_TOI_DA ký tự.
 export const XUNG_HO = [
-  { ma: 'anh', ten: 'Anh' }, { ma: 'chi', ten: 'Chị' }, { ma: 'co', ten: 'Cô' }, { ma: 'chu', ten: 'Chú' },
-  { ma: 'bac', ten: 'Bác' }, { ma: 'em', ten: 'Em' }, { ma: 'ban', ten: 'Bạn' },
+  { ma: 'anh', ten: 'anh' }, { ma: 'chi', ten: 'chị' }, { ma: 'co', ten: 'cô' }, { ma: 'chu', ten: 'chú' },
+  { ma: 'bac', ten: 'bác' }, { ma: 'em', ten: 'em' }, { ma: 'ban', ten: 'bạn' },
 ];
-/** Mã hợp đồng ("chi") → chữ hiện ("Chị"); mã lạ hoặc null → "" (bỏ phần xưng hô, không bịa). */
+/** Mã hợp đồng ("chi") → chữ hiện ("chị", chữ thường như demo); mã lạ hoặc null → "" (bỏ phần xưng hô, không bịa). */
 export const tenXungHo = (ma) => (XUNG_HO.find((x) => x.ma === ma) || { ten: '' }).ten;
 export const DIA_CHI_TOI_DA = 300;
 export const GIAY_CHO_GUI_LAI = 60; // "Gửi lại mã" mở sau ngần này giây
@@ -23,6 +23,8 @@ export const DONG_MA_HOA_DON = 'Đăng nhập để nhận điểm cho hoá đơ
 
 // Thẻ mời (dáng thẻ vàng points-card) cho khách chưa đăng nhập ở Trang chủ.
 export const THE_MOI = { tieuDe: 'Thành viên Tứ Quý Đường', phu: 'Đăng nhập / Đăng ký để tích điểm, nhận ưu đãi', nut: 'Đăng nhập' };
+// Khối khoá ở Ưu đãi cho khách vãng lai (điểm, ví, voucher là của riêng khách).
+export const THE_MOI_UU_DAI = { tieuDe: 'Điểm, ví và voucher', phu: 'Đăng nhập để xem điểm, ví và voucher', nut: 'Đăng nhập' };
 
 /** Dòng trên ô nhập mã: POS bật Zalo → "đã gửi qua Zalo tới số …"; POS báo lấy mã ở quầy → hỏi nhân viên. SĐT quá ngắn thì không hiện số (không bịa). */
 export function loiMa(taiQuay, sdt) {

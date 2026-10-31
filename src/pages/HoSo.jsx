@@ -38,7 +38,7 @@ function XungHo({ ho, doi }) {
       <div className="pf-chips">
         {XUNG_HO.map((x) => <button key={x.ma} type="button" className={ho.xung_ho === x.ma ? 'on' : ''} disabled={s.dang} onClick={() => ho.xung_ho !== x.ma && s.luu({ xung_ho: x.ma })}>{x.ten}</button>)}
       </div>
-      <div className="pf-prev"><Ico ten="chat" s={14} /> “{dau}{dau === 'Chào' ? '' : ','} {xung && <b>{xung}</b>} {ten}”</div>
+      <div className="pf-prev"><Ico ten="chat" s={14} /> <span>“{dau}{dau === 'Chào' ? '' : ','} {xung && <b>{xung}</b>}{xung && ten ? ' ' : ''}{ten}!”</span></div>
       <Bao s={s} chu="Đã lưu cách xưng hô" />
     </div>
   );

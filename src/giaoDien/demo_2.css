@@ -16,3 +16,9 @@
 .today.photo .t-cta{ z-index:2; }
 .today.photo::before{ z-index:1; }
 .today.photo b{ text-shadow:none; }
+.rw-ban{ position:relative; overflow:hidden; border-radius:18px; margin:0 0 14px; min-height:132px; display:flex; align-items:center; cursor:pointer;
+  background:linear-gradient(120deg,#FFE9D6 0%,#FBD3DF 60%,#F5C6A5 100%); box-shadow:0 0 0 1px rgba(215,185,129,.5); }
+.rw-in{ position:relative; z-index:2; padding:16px 18px; max-width:72%; }
+.rw-k{ font-size:10.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#B0782E; }
+.rw-h{ font-size:18px; font-weight:800; color:var(--pink-deep); line-height:1.25; margin:4px 0 10px; }
+.rw-b{ border:none; font:inherit; font-size:12.5px; font-weight:800; padding:8px 14px; border-radius:16px; background:var(--pink-deep); color:#fff; }

@@ -15,7 +15,7 @@ const BANG = [
   { trang: 'giohang', mau: '/giohang', tab: 'giohang', tieuDe: 'Giỏ hàng' },
   { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'Thanh toán', cha: '/giohang' },
   { trang: 'theodoi', mau: '/don/:ma', tab: 'giohang', canDN: true, tieuDe: 'Theo dõi đơn', cha: '/taikhoan/donhang' },
-  { trang: 'uudai', mau: '/uudai', tab: 'uudai', canDN: true, tieuDe: 'Ưu đãi' },
+  { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'Ưu đãi' },
   { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'Tài khoản' },
   { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'Thông tin cá nhân', cha: '/taikhoan' },
   { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'Đơn hàng', cha: '/taikhoan' },
