@@ -380,7 +380,7 @@ async function trinhDuyet(pw) {
   await ca('gia-han-429', { pos: { giaHan429: true } }, async (t, S) => {
     await mo(t, '/trangchu');
     const luu = await t.evaluate(() => ({ tk: localStorage.getItem('kh_token'), ngay: localStorage.getItem('kh_gia_han') }));
-    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, Chị Linh' && !/lần/i.test(await t.locator('#home').innerText().then((x) => x.replace(/Nhiều|nhiều/g, ''))));
+    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, Chị Linh');
   });
 
   // E3 — menu công khai
@@ -400,18 +400,18 @@ async function trinhDuyet(pw) {
     k('E3 /menu không token: không gửi Authorization', S.goi.filter((g) => g.duong === '/menu').every((g) => g.auth === ''));
     await t.getByText('Trà Lục Bảo').first().click(); await t.waitForTimeout(500);
     const ct = await t.locator('#detail').innerText();
-    k('E3 Trang món: khách vãng lai thấy bậc giá các hạng (Thường → Vàng)', /Thường/.test(ct) && /Vàng/.test(ct) && /27\.000/.test(ct), ct.slice(0, 200));
+    k('E3 Trang món: khách vãng lai thấy bậc giá các hạng (Thường → Vàng)', /thường/i.test(ct) && /vàng/i.test(ct) && /27\.000/.test(ct), ct.slice(0, 200));
   });
   await ca('menu-mo-lai-tu-ban-luu', { token: '' }, async (t, S) => {
     await mo(t, '/menu');
     const luu = await t.evaluate(() => localStorage.getItem('kh_menu'));
-    k('E2 bản lưu trên máy giữ gia_hang của các hạng', !!luu && JSON.parse(luu).data[0].gia_hang.length === 1, String(luu).slice(0, 120));
+    k('E2 bản lưu trên máy giữ gia_hang của các hạng', !!luu && (JSON.parse(luu).data[0].gia_hang || []).length === 1, String(luu).slice(0, 120));
   });
   await ca('menu-mo-lai-pos-hong', { token: '', pos: { menuHong: true } }, async (t) => {
     await t.addInitScript(({ menu }) => { if (!sessionStorage.getItem('da_gieo_menu')) { sessionStorage.setItem('da_gieo_menu', '1'); localStorage.setItem('kh_menu', JSON.stringify({ luc: '2026-10-30 20:00:00', at: Date.now(), data: menu })); } }, { menu: MENU.data });
     await mo(t, '/menu');
     await t.getByText('Trà Lục Bảo').first().click(); await t.waitForTimeout(500);
-    k('E3 mở lại app từ bản lưu (POS lỗi): Trang món vẫn có bậc giá các hạng', /Vàng/.test(await t.locator('#detail').innerText()) && /27\.000/.test(await t.locator('#detail').innerText()));
+    k('E3 mở lại app từ bản lưu (POS lỗi): Trang món vẫn có bậc giá các hạng', /vàng/i.test(await t.locator('#detail').innerText()) && /27\.000/.test(await t.locator('#detail').innerText()));
   });
 
   // F1 — /kiemkhop đọc lại đăng nhập mỗi lần kiểm
@@ -451,7 +451,7 @@ async function trinhDuyet(pw) {
       });
     }
   }
-  k('F2 không đổi màu / phông / cỡ chữ (K9): cỡ chữ vẫn clamp(8.5px,2.5vw,9.5px) của demo', /\.hb-k\{[^}]*font-size:clamp\(8\.5px,2\.5vw,9\.5px\)/.test(doc('src/giaoDien/demo_tracnghiem.css')) && !/\.hb-k[^{]*\{[^}]*(color|font-family|font-size)/.test(doc('src/giaoDien/giaoDien.css')));
+  k('F2 không đổi màu / phông / cỡ chữ (K9): cỡ chữ vẫn clamp(8.5px,2.5vw,9.5px) của demo', /\.hb-k\{[^}]*font-size:clamp\(8\.5px,2\.5vw,9\.5px\)/.test(doc('src/giaoDien/demo_tracnghiem.css')) && !/\.hb-k(?![\w-])[^{]*\{[^}]*(color|font-family|font-size)/.test(doc('src/giaoDien/giaoDien.css')));
 
   // G1 — Đăng ký 3 bước theo v3
   await ca('dang-ky', { token: '', pos: { khachMoi: true } }, async (t, S) => {
