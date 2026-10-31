@@ -6,8 +6,6 @@ import { MON } from '../noiDung/mon.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import MonO from '../components/MonO.jsx';
-import TheMoi from '../components/TheMoi.jsx';
-import { THE_MOI_MENU } from '../noiDung/dangNhap.js';
 import { Ico, En, DenLong } from '../components/BieuTuong.jsx';
 import GvDem from '../components/GvDem.jsx';
 import { dungGia } from '../heThong.js';
@@ -20,7 +18,7 @@ const TAT_CA = { id: '', ten: 'Tất cả', ic: NHOM_MAC_DINH.ic };
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
 // `nhomSlug` = nhóm đang chọn lấy từ đường dẫn (/menu/<nhom>); chọn nhóm khác → doiNhom(slug) thay đường dẫn, không thêm lịch sử.
-export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQR, moDangNhap, nhomSlug, doiNhom }) {
+export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQR, nhomSlug, doiNhom }) {
   // Menu được giữ trong cây nên hỏi lại menu mỗi lần khách BẤM tab Menu (lanVao tăng; menu lấy chưa quá 5 phút thì dungMenu bỏ qua); quay lại từ màn con thì giữ nguyên.
   const lanTruoc = useRef(lanVao);
   useEffect(() => {
@@ -78,8 +76,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
         <Ico ten="search" s={16} />
         <input type="text" enterKeyHint="search"aria-label="Tìm món" placeholder="Tìm món, ví dụ: phổ nhĩ…" value={tu} onChange={(e) => datTu(e.target.value)} />
       </div>
-      {tai.canDN && <div className="menu-moi"><TheMoi chu={THE_MOI_MENU} moDangNhap={moDangNhap} /></div>}
-      {!tai.canDN && <TrangTai tai={{ ...tai, taiLai: () => tai.taiLai(true) }}>
+      <TrangTai tai={{ ...tai, taiLai: () => tai.taiLai(true) }}>
         {() => (
           <>
             <div className="cat-tiles" ref={oNhom}>
@@ -131,7 +128,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
             </div>
           </>
         )}
-      </TrangTai>}
+      </TrangTai>
     </Man>
   );
 }

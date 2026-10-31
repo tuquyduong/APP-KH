@@ -8,7 +8,8 @@ import { boGiaHang } from './giaHang.js';
  * Menu cho cả app, tải MỘT chỗ: mở app là hiện ngay bản đã lưu trên máy (nếu có), rồi lấy bản mới thay vào.
  * Bản lấy chưa quá 5 phút thì KHÔNG gọi lại /menu, trừ khi khách chủ động làm mới (taiLai(true)) hoặc phiên đổi (đăng nhập / đăng xuất / 401).
  * Chỉ LƯU lên máy bản lấy lúc chưa đăng nhập (menu công khai); kết quả của lệnh bay từ phiên cũ bị bỏ.
- * { dl, luc, cu, canDN, loi, dangTai, taiLai } — `cu` = đang hiện bản đã lưu; `canDN` = POS còn đòi đăng nhập mới cho xem menu.
+ * { dl, luc, cu, loi, dangTai, taiLai } — `cu` = đang hiện bản đã lưu.
+ * Token sai / hết hạn: /menu trả 401 → api.js xoá token và báo hết phiên → phiên đổi → menu tự gọi lại KHÔNG token (v3 cho xem công khai). Không báo lỗi ở lần 401 đó.
  */
 export function dungMenu(dangNhap) {
   const ban = useRef(undefined);
@@ -16,7 +17,7 @@ export function dungMenu(dangNhap) {
   const lanLay = useRef(ban.current ? ban.current.at : 0); // lúc (ms) lấy gần nhất
   const phien = useRef(dangNhap);
   phien.current = dangNhap;
-  const [tt, datTt] = useState(() => ({ dl: ban.current ? ban.current.dl : null, luc: ban.current ? ban.current.luc : '', cu: !!ban.current, canDN: false, loi: '', dangTai: true }));
+  const [tt, datTt] = useState(() => ({ dl: ban.current ? ban.current.dl : null, luc: ban.current ? ban.current.luc : '', cu: !!ban.current, loi: '', dangTai: true }));
   const taiLai = useCallback((ep) => {
     if (ep !== true && menuConMoi(lanLay.current, Date.now())) { datTt((t) => ({ ...t, dangTai: false })); return; }
     datTt((t) => ({ ...t, dangTai: true }));
@@ -25,10 +26,13 @@ export function dungMenu(dangNhap) {
       (dl) => {
         if (phien.current !== dangNhap) return; // phiên đã đổi trong lúc chờ
         const luc = bayGio(); lanLay.current = Date.now();
-        if (!coPhien) ghiMenuLuu(boGiaHang(dl), luc, lanLay.current);
+        if (!coPhien) ghiMenuLuu(dl, luc, lanLay.current); // bản công khai giữ cả `gia_hang` các hạng (v3)
         datTt({ ...chonMenu(null, dl, null, luc), dangTai: false });
       },
-      (e) => { if (phien.current === dangNhap) datTt((t) => ({ ...chonMenu(e, null, t.dl ? { dl: t.dl, luc: t.luc } : docMenuLuu()), dangTai: false })); },
+      (e) => {
+        if (e.status === 401 && coPhien) { if (!dangNhap) taiLai(true); return; } // api.js vừa xoá token: đang đăng nhập thì hết phiên → effect gọi lại không token; không thì tự gọi lại
+        if (phien.current === dangNhap) datTt((t) => ({ ...chonMenu(e, null, t.dl ? { dl: t.dl, luc: t.luc } : docMenuLuu()), dangTai: false }));
+      },
     );
   }, [dangNhap]);
   const truoc = useRef(dangNhap);
