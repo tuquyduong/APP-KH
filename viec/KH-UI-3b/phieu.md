@@ -110,6 +110,11 @@ App dùng đủ phần v3 POS đã chạy: khách sửa được cách xưng hô
 - cong_cu/thu_KHLUU1.js
 - cong_cu/thu_KHMUA1.js
 - cong_cu/thu_KHUI5a.js
+- cong_cu/thu_KHUI3a.js
+
+## Bài thử cũ sửa
+- cong_cu/thu_KHUI3a.js — ca D4 (chỉ chạy trong Chromium) đổi từ "menu công khai lưu KHÔNG có gia_hang" (v2) sang "GIỮ gia_hang" (v3, mục E2); GitHub không có trình duyệt nên bản gốc và bản sửa đều xanh ở đó
+- cong_cu/thu_KHLUU1.js — ca C1(f) (chỉ chạy trong Chromium) đổi lời chào mong đợi sang tên ngắn ("Chào thử", mục C1); như trên
 
 ## Ngân sách
 ~220 dòng app + ~320 dòng thử.
