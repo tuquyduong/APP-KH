@@ -12,4 +12,4 @@
 83 đạt · 0 hỏng
 
 == SỐ CA (đếm với KHONG_TRINH_DUYET=1, đúng số GitHub đếm) ==
-SỐ CA thu_KHKHOP1.js: 47
+SỐ CA cong_cu/thu_KHKHOP1.js: 47
