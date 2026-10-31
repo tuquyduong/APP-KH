@@ -43,17 +43,17 @@ const khoGia = (dau = {}, nem = false) => {
   const eMang = Object.assign(new Error('Không kết nối được.'), { status: 0, code: 'MANG_LOI' });
   const ban = { dl: bd, luc: '2026-10-29 14:05:00' };
   const a = ml.chonMenu(null, bd, null, '2026-10-29 15:00:00');
-  k('có dữ liệu mới → dùng, không phải bản cũ', a.dl === bd && a.cu === false && a.canDN === false && a.loi === '');
+  k('có dữ liệu mới → dùng, không phải bản cũ', a.dl === bd && a.cu === false && !('canDN' in a) && a.loi === '');
   const b = ml.chonMenu(e401, null, null);
-  k('401, chưa có bản lưu → thẻ mời đăng nhập, KHÔNG lỗi', b.canDN === true && b.loi === '' && b.dl === null);
+  k('401, chưa có bản lưu → lời lỗi, không còn thẻ mời (v3: /menu mở công khai, 401 chỉ khi token sai và dungMenu bỏ qua)', !('canDN' in b) && b.loi === 'x' && b.dl === null);
   const c = ml.chonMenu(e401, null, ban);
-  k('401, có bản lưu → hiện bản lưu + giờ', c.dl === bd && c.cu === true && c.luc === ban.luc && c.canDN === false && c.loi === '');
+  k('401, có bản lưu → hiện bản lưu + giờ', c.dl === bd && c.cu === true && c.luc === ban.luc && !('canDN' in c) && c.loi === '');
   const d = ml.chonMenu(eMang, null, ban);
   k('mạng hỏng, có bản lưu → bản lưu', d.dl === bd && d.cu === true && d.loi === '');
   const e = ml.chonMenu(eMang, null, null);
-  k('mạng hỏng, không bản lưu → lời lỗi, không thẻ mời', e.dl === null && e.canDN === false && /kết nối/.test(e.loi));
+  k('mạng hỏng, không bản lưu → lời lỗi, không thẻ mời', e.dl === null && !('canDN' in e) && /kết nối/.test(e.loi));
   const f = ml.chonMenu(Object.assign(new Error('Máy chủ bận'), { status: 500, code: 'LOI_MAY_CHU' }), null, null);
-  k('500 không bản lưu → lời lỗi', f.canDN === false && f.loi === 'Máy chủ bận');
+  k('500 không bản lưu → lời lỗi', !('canDN' in f) && f.loi === 'Máy chủ bận');
 
   console.log('— A4 đọc / ghi kh_menu');
   const kho = khoGia();
@@ -103,7 +103,7 @@ const khoGia = (dau = {}, nem = false) => {
   const dnSrc = doc('src/pages/DangNhap.jsx');
   k('cả 3 ô luôn hiện (không điều kiện bật/tắt) + địa chỉ giới hạn ký tự', !/BAT_XUNG_HO/.test(dnSrc) && /DIA_CHI_TOI_DA/.test(dnSrc) && /XUNG_HO\.map/.test(dnSrc));
   k('không gọi PUT /toi trong việc này', !/doiTen/.test(dnSrc + doc('src/App.jsx')));
-  k('không có cửa gia hạn trong việc này', !/gia-han/.test(doc('src/api.js')));
+  k('cửa gia hạn có đúng một chỗ trong api.js (KH-UI-3b D)', (doc('src/api.js').match(/'\/gia-han'/g) || []).length === 1);
 
   console.log('— A1/A2/A7/A8 nối vào App (đọc nguồn)');
   const app = doc('src/App.jsx'), api = doc('src/api.js');

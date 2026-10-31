@@ -32,7 +32,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
   k('A1 mỗi mục đủ khoá ma/ten/cua/token/truong/khi/co; khi ∈ {truoc_kt, sau_kt}; token ∈ {true,false,"tuy_chon"}',
     ds.length > 0 && ds.every((m) => KHOA.every((x) => x in m) && ['truoc_kt', 'sau_kt'].includes(m.khi) && [true, false, 'tuy_chon'].includes(m.token) && Array.isArray(m.truong)));
   k('A1 có cả hai nhóm trước / sau khai trương', ds.some((m) => m.khi === 'truoc_kt') && ds.some((m) => m.khi === 'sau_kt'));
-  k('A1 có đủ các việc POS đã chốt: KH-API-3, GIOVANG-1, KH-SP-1, KH-MUA-1', ['KH-API-3', 'GIOVANG-1', 'KH-SP-1', 'KH-MUA-1'].every((v) => ds.some((m) => m.viec_pos === v)));
+  k('A1 có đủ các việc POS còn chờ: GIOVANG-1, KH-SP-1, KH-MUA-1 (KH-API-3 đã gộp ở hợp đồng v3)', ['GIOVANG-1', 'KH-SP-1', 'KH-MUA-1'].every((v) => ds.some((m) => m.viec_pos === v)));
   k('A1 có trường mới của GIOVANG-1 (gia_mon) và KH-SP-1 (nhu_cau, the_chat, mo_ta, cong_dung, thanh_phan, anh)',
     ['gia_mon', 'nhu_cau', 'the_chat', 'mo_ta', 'cong_dung', 'thanh_phan', 'anh'].every((t) => ds.some((m) => m.truong.some((x) => x.includes(t)))));
 
@@ -76,7 +76,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
     k('trangThaiMuc: POST/PUT → hd "có trong hợp đồng", không đòi kết quả', tm({ ...mCu, cua: 'POST /pin', truong: [] }, undefined, true).tt === 'hd');
     k('trangThaiMuc: cửa token, chưa đăng nhập → dn; đã đăng nhập chưa có kết quả → dang', tm({ ...mCu, token: true }, undefined, false).tt === 'dn' && tm({ ...mCu, token: true }, undefined, true).tt === 'dang');
     k('trangThaiMuc: lỗi gọi → loi, hiện nguyên lời lỗi', (() => { const r = tm(mCu, { ok: false, loi: { status: 500, code: 'LOI_MAY_CHU', message: 'Máy bận' } }, false); return r.tt === 'loi' && /Máy bận/.test(r.chu); })());
-    k('trangThaiMuc: 401 ở cửa tuy_chon → cho (POS còn đòi đăng nhập), 401 ở cửa công khai → loi', (() => { const e = { ok: false, loi: { status: 401, code: 'KH_TOKEN_SAI', message: 'x' } }; return tm({ ...mCu, token: 'tuy_chon', viec_pos: 'KH-API-3' }, e, false).tt === 'cho' && tm(mCu, e, false).tt === 'loi'; })());
+    k('trangThaiMuc: 401 ở mọi cửa (kể cả tuy_chon, v3) → loi, không còn "chờ POS"', (() => { const e = { ok: false, loi: { status: 401, code: 'KH_TOKEN_SAI', message: 'x' } }; return tm({ ...mCu, token: 'tuy_chon' }, e, false).tt === 'loi' && tm(mCu, e, false).tt === 'loi'; })());
     k('trangThaiMuc: đơn chưa có đơn nào để kiểm (trong:true) → rong', tm({ ...mCu, token: true }, { trong: true }, true).tt === 'rong');
 
     const ng = H.xepNhom([{ khi: 'sau_kt', ma: 'b' }, { khi: 'truoc_kt', ma: 'a' }, { khi: 'truoc_kt', ma: 'c' }]);
@@ -248,10 +248,10 @@ async function trinhDuyet(pw) {
     k('B2 lỗi khác → hiện nguyên error của POS', /Máy chủ bận lắm/.test(await t.locator('#kiemkhop .ket-noi').innerText()));
   });
 
-  await ca('menu-con-doi-dn', { pos: { menuCanDN: true } }, async (t) => {
+  await ca('menu-401', { pos: { menuCanDN: true } }, async (t) => {
     await mo(t);
     const m = await hang(t, 'Menu').innerText();
-    k('B3 POS còn đòi đăng nhập ở /menu (chờ KH-API-3) → ⏳ chứ không ✗', /⏳/.test(m) && /KH-API-3/.test(m) && !/✗/.test(m), m);
+    k('B3 /menu trả 401 (v3: chỉ khi token sai) → ✗ như lỗi thật, không còn ⏳ "chờ KH-API-3"', /✗/.test(m) && !/⏳/.test(m) && !/KH-API-3/.test(m), m);
   });
 
   await ca('kiem-lai', { dongHo: true }, async (t, loi, P) => {
