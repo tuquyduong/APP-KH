@@ -1,0 +1,38 @@
+KH-MUA-1 — BẰNG CHỨNG ĐỎ trên code gốc (mốc 58277e2 "PHIEU: KH-MUA-1": git archive ra nháp + bài thử bản cuối của nhánh; src/ CHƯA sửa)
+Lệnh: KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1.js   (số GitHub đếm: không trình duyệt)
+
+Phần 1 — hàm thuần, đọc nguồn
+  ✗ nạp src/gio.js  — Cannot find module '…/src/gio.js'
+  ✗ nạp src/datDon.js  — Cannot find module '…/src/datDon.js'
+  ✗ nạp src/noiDung/caiDat.js  — Cannot find module '…/src/noiDung/caiDat.js'
+  ✗ A1 thanh tab đủ 5 mục đúng thứ tự demo  — trangchu,menu,uudai,taikhoan
+  ✗ A1 tab Giỏ hàng: huy hiệu nhA-kim, màu demo #7C8696
+  ✗ A1 tab hiện số món khi giỏ có hàng (tab-so)
+  ✗ A1 /giohang: trang giohang, tab giohang, KHÔNG cần đăng nhập  — {"trang":"khongthay",…}
+  ✗ C1 /don/<ma>: trang theodoi, cần đăng nhập, giữ nguyên mã  — {"trang":"khongthay",…}
+  ✓ C1 /taikhoan/donhang/<ma> vẫn là chi tiết đơn cũ
+  ✗ A4 khách chưa đăng nhập vào giỏ được, vào thanh toán phải đăng nhập
+  ✗ A4 /dangnhap?tiep=/thanhtoan giữ tiep, đăng nhập xong về /thanhtoan
+  ✗ A3 đăng xuất (xoaTatCa) xoá kh_gio
+  ✗ A3 người đăng nhập sau là KHÁC khách → xoá kh_gio
+  ✓ A4 khách vãng lai thêm giỏ rồi đăng nhập lần đầu (chưa có kh_chu) → GIỮ giỏ
+  ✗ A3 kh_gio khai trong danh sách khoá của luuMay.js
+  ✗ B1 chữ "Giao qua Ahamove", "Sắp có", "đọc số đơn"; không "GHN"; không "suất"
+  ✓ B3 PIN không lưu: datDon / ThanhToan / PinSheet không ghi PIN vào kho / log
+  ✗ B7 vẽ QR dùng lại VeQR của ManQR.jsx
+  ✗ C2 số gọi quán lấy ở noiDung/lienHe.js
+Phần 2 — App thật trong Chromium
+  BỎ QUA: KHONG_TRINH_DUYET=1
+
+Dòng tổng trên code gốc (không trình duyệt): 3 đạt · 16 hỏng
+Có Chromium trên code gốc: 3 đạt · 17 hỏng (gói bài thử không dựng được: thiếu src/datDon.js — phần 2 không chạy được ca nào).
+
+Bài cũ sửa (phiếu E3 — đổi có chủ ý: thanh tab 5 mục; biểu tượng mua hàng ở src/noiDung/bieuTuongMua.js):
+cong_cu/thu_KHUI2.js trên code gốc: 77 đạt · 1 hỏng — ✗ B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1).
+
+Số ca là dòng tổng khi chạy trên code đã vá, VỚI KHONG_TRINH_DUYET=1 (số GitHub đếm):
+SỐ CA cong_cu/thu_KHMUA1.js: 55
+SỐ CA cong_cu/thu_KHUI2.js: 78
+
+Có Chromium trên code đã vá (sau soát vòng 2): thu_KHMUA1.js 128 đạt · 0 hỏng (73 ca trình duyệt).
+Bài sau soát vòng 1–2 chạy lại trên gốc: KHONG_TRINH_DUYET=1 → 3 đạt · 16 hỏng (ca mới B8 chuaTaoDon nằm trong khối chỉ chạy khi nạp được datDon.js — trên gốc dừng ở "✗ nạp src/datDon.js").

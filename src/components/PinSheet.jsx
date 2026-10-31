@@ -4,12 +4,13 @@ import { datPin } from '../api.js';
 
 // Bảng đặt / đổi mã PIN 4 số theo demo (PATCH29): chấm tròn + bàn phím số, nhập hai lần. Gửi `PUT /pin { pin, pin_lai }`;
 // POS tự kiểm số dễ đoán / đã có PIN — app chỉ hiện nguyên lời POS (máy chủ mới là nơi giữ quy tắc).
+// `gui(pin)` có → chế độ NHẬP PIN để trả ví (KH-MUA-1): nhập MỘT lần, gọi gui(pin); POS từ chối → hiện nguyên lời, nhập lại. PIN không lưu ở đâu.
 const DO_DAI = 4;
 const LOI_KHONG_KHOP = 'Hai lần nhập không khớp, đặt lại nhé';
-const LOI_TEXT = { moi: ['Đặt mã PIN mới', '4 số, không dùng số dễ đoán'], lai: ['Nhập lại mã PIN mới', 'Để chắc chắn bạn nhớ'] };
+const LOI_TEXT = { moi: ['Đặt mã PIN mới', '4 số, không dùng số dễ đoán'], lai: ['Nhập lại mã PIN mới', 'Để chắc chắn bạn nhớ'], tra: ['Nhập mã PIN', 'Để trả bằng Ví nội bộ'] };
 
-export default function PinSheet({ dong }) {
-  const [buoc, datBuoc] = useState('moi');
+export default function PinSheet({ dong, gui }) {
+  const [buoc, datBuoc] = useState(gui ? 'tra' : 'moi');
   const [dau, datDau] = useState('');
   const [so, datSo] = useState('');
   const [thongBao, datThongBao] = useState('');
@@ -31,6 +32,11 @@ export default function PinSheet({ dong }) {
 
   useEffect(() => {
     if (so.length < DO_DAI) return;
+    if (gui) {
+      datDang(true);
+      gui(so).then(() => datDang(false), (e) => { datDang(false); datSo(''); datThongBao(e.message); });
+      return;
+    }
     if (buoc === 'moi') { datDau(so); datSo(''); datBuoc('lai'); datThongBao(''); return; }
     if (so !== dau) { datSo(''); datDau(''); datBuoc('moi'); datThongBao(LOI_KHONG_KHOP); return; }
     datDang(true);

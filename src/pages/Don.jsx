@@ -5,7 +5,8 @@ import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 
-// Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; chưa đặt hàng → không nút "Đặt lại";
+// Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
+// `datLai` — cùng cờ DAT_ONLINE) để App đọc chi tiết đơn rồi bỏ món vào giỏ theo `ma`;
 // ô lọc (Đang giao / Hoàn thành / Đã hủy) ẩn vì POS chưa ghi giá trị `trang_thai`. Chỉ hiện trạng thái POS trả — KHÔNG tính tiền chưa trả.
 function NhanDon({ don }) {
   if (don.trang_thai === 'cancelled') return <div className="order-status cancelled">Đã hủy</div>;
@@ -39,7 +40,7 @@ export function ChiTietDon({ ma, lui }) {
   );
 }
 
-export default function LichSuDon({ chonDon, lui }) {
+export default function LichSuDon({ chonDon, lui, datLai }) {
   const [ds, datDs] = useState([]);
   const [trang, datTrang] = useState(0);
   const [conNua, datConNua] = useState(false);
@@ -71,7 +72,7 @@ export default function LichSuDon({ chonDon, lui }) {
             <div><div className="code">#{d.ma}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
             <NhanDon don={d} />
           </div>
-          <div className="bottom"><div className="total">{dinhDangGia(d.tong)}</div></div>
+          <div className="bottom"><div className="total">{dinhDangGia(d.tong)}</div>{datLai && <button type="button" className="reorder-btn" onClick={(e) => { e.stopPropagation(); datLai(d.ma); }}>Đặt lại</button>}</div>
         </div>
       ))}
       {dang && <div className="khung-tai" aria-busy="true" />}
