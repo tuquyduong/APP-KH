@@ -114,7 +114,7 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
 
   await thu('D', async () => {
     const ds = ['api.js', 'giaHan.js', 'luuMay.js'];
-    const moi = (chan) => { globalThis.localStorage = khoGia(chan); globalThis.localStorage.setItem('kh_token', 'tok-A'); return dungModule(ds); };
+    const moi = (chan) => { globalThis.localStorage = khoGia(chan); globalThis.localStorage.mp.set('kh_token', 'tok-A'); return dungModule(ds); };
     let M = moi();
     k('D1 có hàm giaHanNeuCan', typeof M.giaHanNeuCan === 'function' && M.KHOA_GIA_HAN === 'kh_gia_han');
     // D4 / chờ bay_gio
@@ -190,7 +190,7 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
 
   await thu('F1', async () => {
     const kkh = doc('src/pages/KiemKhop.jsx');
-    k('F1 /kiemkhop không đóng băng đăng nhập lúc mở trang (đọc docToken() mỗi lần kiểm)', !/useState\(\(\) => !!docToken\(\)\)/.test(kkh) && /docToken\(\)/.test(kkh));
+    k('F1 /kiemkhop không đóng băng đăng nhập lúc mở trang (đọc docToken() mỗi lần kiểm)', /const kiemLai = [^\n]*datDangNhap\(!!docToken\(\)\)/.test(kkh));
   });
 
   await thu('G', async () => {
