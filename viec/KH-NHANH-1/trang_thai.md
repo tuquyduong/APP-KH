@@ -212,3 +212,66 @@ BÀI HỌC: KHOÁ (bộ kiểm) — "ghi ở mục X" phải grep ra tiêu đề
 Sau lần soát này (không đổi src): bộ kiểm cắt mỗi bài ở 120 giây (`kiem_tra_truoc_khi_giao.js:136`) — bài mới sau vòng sửa 3 chạy quá giờ nên bị cắt.
 Sửa ở bài thử (7e830f3): các ca không đo thời gian chặt chạy ba cỡ màn song song; ca chuyển tab (< 300 ms) vẫn lần lượt → 51 giây, 223 đạt · 0 hỏng.
 Đột biến chạy lại trên bản bài này: 22/22 ĐỎ ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT").
+
+## Kết quả kiểm (HEAD cc0a2f2, cây sạch)
+- `node kiem_tra_truoc_khi_giao.js --day-du` (gồm npm test + vite build): **30 đạt · 0 hỏng** — thu_KHNHANH1 223 đạt · 0 hỏng, thu_KHLUU1 33, thu_KHUI3d 172, thu_KHXEM1 61, mọi bài khác xanh; "vite build thành công", "dist/index.html trỏ tới file có thật".
+- Phần Chromium của bài mới (CLAUDE.md §9, chạy thật ở máy): `node cong_cu/thu_KHNHANH1.js` → 223 đạt · 0 hỏng, 51 giây; với KHONG_TRINH_DUYET=1 → 79 đạt · 0 hỏng (= SỐ CA).
+- Đột biến: 22/22 ĐỎ (bảng ở mục "Kết quả chạy đột biến sau vòng sửa 3"; chạy lại sau 7e830f3 cũng 22/22).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 7d07931^ HEAD viec/KH-NHANH-1`:
+  · CẢNH BÁO A16: `cong_cu/thu_KHNHANH1.js` chạy trên gốc in 11 ca ≠ 79 ca ở head — bài dừng sớm trên gốc (thiếu mô-đun duLieuKhach / tomTatLuu / ngayManDau) — đúng bằng chứng đỏ.
+  ✓ CỔNG CHẠY ĐẠT
+  (lần chạy trước đó ✗ [A16] ×4: dòng SỐ CA thiếu đường dẫn `cong_cu/…js` — đã sửa ở cc0a2f2.)
+
+## Bài học (bước 11)
+| Sự cố | Ngăn | Lý do / đề xuất |
+|---|---|---|
+| Giấy tờ hứa "đã ghi X" mà không có X — lặp 4 vòng soát (Phát hiện, CHƯA KIỂM, Kết quả kiểm) | KHOÁ (ngoài Phạm vi) | Đề xuất `kiem_tra_truoc_khi_giao.js` hoặc cổng: trong `viec/<MÃ>/trang_thai.md`, mỗi cụm "ghi `## X`" / "ở mục \"X\"" phải có tiêu đề `## X`; ca đỏ: trang_thai.md của vòng soát 2 bản 1fa233d~1 (hứa CHƯA KIỂM, không có). |
+| Bài thử vượt 120 giây bị bộ kiểm cắt, báo đỏ khó hiểu ("xanh (✓ ca …)") | KHOÁ (ngoài Phạm vi) + NGUYÊN TẮC | Đề xuất bộ kiểm in "QUÁ 120 GIÂY" khi `r.signal`/`r.error` là ETIMEDOUT; khuôn mới K4 "Bài thử Chromium dài": mỗi bài < 120 giây, cỡ màn chạy song song ở ca không đo giờ. |
+| Đặt lại state theo tham chiếu dữ liệu làm mới ngầm (Don.jsx vòng 2) xoá trang khách đang xem | NGUYÊN TẮC | Khuôn mới K5 (đề xuất cho KHUON_LOI.md): "Làm mới ngầm luôn tạo đối tượng mới — so NỘI DUNG (danh sách mã), không so tham chiếu"; ví dụ thật: VS-DON-SO-THAM-CHIEU. |
+| Ghi vào kho chung sau `await` không qua chốt phiên (gopToi vòng 1) | NGUYÊN TẮC | Đề xuất K6: "mọi `kho.dat` sau lệnh bất đồng bộ phải qua chốt phiên / so chủ (sdt qua dauVet)"; ví dụ: VS-GOP-HO-SO-PHIEN-CU. |
+| Ca đọc nguồn khớp marker trong chú thích | KHOÁ (đã làm trong Phạm vi) | `boChuThich` ở thu_KHNHANH1.js; đề xuất dời hàm này vào một chỗ dùng chung cho mọi `thu_*.js` (việc sau). |
+| Stop hook chạy bộ kiểm đúng lúc dot_bien.py đang sửa src → báo đỏ giả (3 lần) | BỎ? → KHOÁ (ngoài Phạm vi) | Đề xuất dot_bien.py chạy trên bản chép ở nháp thay vì sửa tại chỗ (khung tu_chay, sau khai trương). |
+| Người gác chặn: B-PHANTICH ×4 (lệnh chạy script ghép `&&`, `$'…'`), B-CHUONGTRINH ×4 (`until`, `while`, `for`, `pgrep`, `time`), B-DICHCHU, SED-I, GIT-LENH (`worktree`) | BỎ | Luật đã rõ; làm lại theo hướng dẫn, không lách. |
+| Ca E3 "hiện ngay" chập chờn khi hai Chromium chạy cùng lúc | BỎ | Đã nới khoảng đo (POS giả 1500 ms ở lần mở thứ hai). |
+Vượt ngân sách: app ~280 dòng thêm (ngân sách ~250), thử ~520 dòng (ngân sách ~350) — do ba vòng sửa sau soát (ca hàm thuần E3 / gopToi, ca Lịch sử đơn, 3 cỡ màn cho mọi ca).
+
+## Báo cáo 7 mục
+1. **VIỆC** — KH-NHANH-1: kho dữ liệu khách dùng chung, tải trước khi mở app, cập nhật ngầm, bản tóm tắt trên máy, màn mở một lần mỗi ngày, Thanh toán luôn lấy số dư mới, ẩn hạng 0%.
+2. **ĐÃ SỬA** — mới: `src/duLieuKhach.js` (taoCua / dungCua / lamMoi / xoaKhoKhach / gopToi / napTomTat / luuTomTat / dungLamMoiNgam), `src/tomTatLuu.js`, `src/ngayManDau.js`;
+   đổi: App.jsx (tải trước, xoá kho khi đổi phiên, doiKhach lúc đăng nhập, làm mới sau đặt đơn), TaiKhoan / TrangChu / UuDai / HoSo / ManQR / Don (đọc kho), ThanhToan ("Đang cập nhật số dư…"),
+   DangNhap (trả hồ sơ), ManDau (quy tắc ngày), luuMay (`kh_tom_tat` + `docChu`), giaHang (`hangCoGiam`).
+3. **BÀI THỬ** — thu_KHNHANH1.js mới (đỏ trên gốc 4 đạt · 7 hỏng; xanh 79 / 223); sửa thu_KHLUU1 (+ đọc KHONG_TRINH_DUYET), thu_KHXEM1, thu_KHUI3d (đỏ trên gốc, bang_chung_do.txt). Đột biến 22/22.
+   Nghiệm thu từng mục (thu_KHNHANH1.js):
+   - A1 kho chung 4 cửa, màn đọc kho — ca "A1 bốn kho chung…", "A1 các màn đọc kho…", "A1 kho mới…"
+   - A2 không gọi trùng — "A2 hai lệnh khi cửa đang chờ…" + Chromium "B1 … mỗi cửa đúng MỘT lần"
+   - A3 hiện ngay, cập nhật sau, lỗi giữ bản cũ — "A3 có dl mà đang lấy ngầm…", "A3 lỗi khi đã có dữ liệu…", "A3 chưa từng có…", "A3 napNeuCu…", Chromium "A3 [rong] … 3 vòng → KHÔNG gọi thêm", "< 300 ms"
+   - A4 voucher ?all, /don trang ≥ 2 gọi khi bấm — "A4 …layVoucher(true)", Chromium "A4 [rong] Xem thêm…" ×3 ca
+   - A5 không đổi cửa / thư viện, api.js duy nhất — "A5 api.js vẫn là chỗ DUY NHẤT gọi mạng", bộ kiểm K1/K6
+   - B1 tải trước 4 cửa + công khai — Chromium "B1 [rong] … mỗi cửa đúng MỘT lần", "B1 /don tải trước là trang 1"
+   - B2 vừa đăng nhập → tải trước — Chromium "B2 vừa đăng nhập → tải trước…" ×3
+   - B3 vãng lai không gọi cửa token — Chromium "B3 [rong] chưa đăng nhập…"
+   - C1 màn mở lần đầu mỗi ngày — "C1 chưa xem → hiện…", Chromium "C1 lần mở đầu tiên…", "C1 mở lần 2 cùng ngày → KHÔNG…", "C1 đổi ngày → có màn mở"
+   - C2 ngày giờ VN theo máy + ghi chú ngoại lệ — "C2 ngày theo giờ VN…", "C2 ghi chú ngoại lệ §6…"
+   - C3 kho chặn → hiện — "C3 kho bị chặn → không vỡ…"
+   - D1 quay lại sau 60 giây — "D1 quay lại sau 10 / 61 giây", Chromium "D1 ẩn 10 / 61 giây"
+   - D2 mỗi 5 phút — Chromium "D2 app đang hiện → làm mới… mỗi 5 phút"
+   - D3 sau thao tác — nhận mã: Chromium "D3 nhận mã hoá đơn → /diem, /voucher, /toi"; hồ sơ: "D3 lưu hồ sơ…", Chromium "D3 lưu xưng hô → PUT, không GET lại"; đặt đơn: chỉ đọc nguồn (`## Chưa kiểm`)
+   - D4 đổi phiên xoá kho — "D4 xoá…", "D4 kết quả của phiên cũ về muộn → bị bỏ", "D4 … gopToi", Chromium "D4 đăng nhập khách B … không lúc nào thấy số của A"
+   - E1 chỉ lưu đủ trường — "E1 chỉ giữ…", "E1 KHÔNG có sdt / qr…", Chromium "E1 có bản tóm tắt…"
+   - E2 xoá khi đăng xuất / khác khách, giữ khi 401 — "E2 bấm Đăng xuất…", "E2 người đăng nhập sau là khách khác…", Chromium "E2 đăng xuất → không còn kh_tom_tat", "E2 hết phiên (401) → GIỮ…"
+   - E3 chỉ hiện bản của đúng khách — "E3 bản lưu của khách A, máy đang giữ khách B → KHÔNG gieo", "E3 đúng chủ → gieo…", Chromium "E3 điểm + tên hiện NGAY…", "E3/D4 sau 401, khách B…"
+   - E4 chỉ hiển thị — "E4/F1 Thanh toán không đọc kho / bản lưu", "E4 bản lưu chỉ đọc ở duLieuKhach"
+   - E5 kho chặn — "E5 kho bị chặn → không vỡ, ghi trả false…"
+   - F1 Thanh toán lấy /toi mới, ví khoá khi chờ — "F1 trong lúc chờ…", Chromium "F1 [rong] …" ×3 ca × 3 cỡ
+   - F2 Theo dõi / Chi tiết đơn không đọc kho — "F2 Theo dõi đơn, Chi tiết đơn không đọc kho"
+   - G1 ẩn hạng 0% — "G1 bỏ hạng phan_tram = 0…", Chromium "G1 [rong] bảng hạng vãng lai không hiện hạng 0%"
+   - G2 không còn hạng → ẩn thẻ — "G2 không còn hạng nào → []"
+   - H1 bài hai phần, 360/390/430 — thu_KHNHANH1.js (mọi ca Chromium chạy 3 cỡ)
+   - H2 SỐ CA theo KHONG_TRINH_DUYET — "H2 bài đọc KHONG_TRINH_DUYET", bang_chung_do.txt (79 / 21 / 61 / 32)
+   - H3 npm test, --day-du, cổng; đột biến VS- ≥ 5 (đủ 6 loại phiếu đòi) — mục "Kết quả kiểm", 22/22
+   - H4 chủ quán thử tay — chưa làm (xem dưới)
+4. **ĐÃ RÀ K4** — grep `layToi|layDiem|layVoucher|layDon|dungTai(` ngoài api.js: còn ThanhToan.jsx (F1 cố ý), Don.jsx trang ≥ 2 + Chi tiết đơn (A4, F2), UuDai.jsx `?all` (A4), KiemKhop.jsx (trang kiểm cửa, KH-KHOP-1). `hangToi` (App.jsx) ghi `## Phát hiện`.
+5. **CHƯA KIỂM** — xem `## Chưa kiểm`: D3 đặt đơn (cờ DAT_ONLINE tắt), marker trong chuỗi trên GitHub, điện thoại / Zalo / mạng thật, đồng hồ máy sai giờ.
+   **Chủ quán thử tay (H4):** (1) mở app lần đầu trong ngày → có màn mở → bấm qua lại Trang chủ / Ưu đãi / Tài khoản: không còn khung xám; (2) đóng hẳn app, mở lại → vào thẳng, tên + điểm + ví hiện ngay; (3) ra quầy nhận điểm, mở lại app → trong ~1–2 giây số điểm tự đổi.
+6. **GIT** — nhánh viec/KH-NHANH-1, từ 7d07931 (PHIEU) tới HEAD dưới đây; đã push `git push -u origin viec/KH-NHANH-1`. Không merge, không PR.
+7. **BÀI HỌC** — xem `## Bài học`: 2 đề xuất KHOÁ ngoài Phạm vi (bộ kiểm: "ghi mục X" phải có X; báo rõ khi bài quá 120 giây), 2 đề xuất NGUYÊN TẮC cho KHUON_LOI.md (so nội dung không so tham chiếu; chốt phiên khi ghi kho sau await). Máy không tự sửa file ngoài Phạm vi.
