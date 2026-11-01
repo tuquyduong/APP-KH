@@ -31,8 +31,9 @@
 | UuDai.jsx nhận mã → lamMoi diem, voucher, toi (D3) | BV-NHAN-MA-LAM-MOI |
 | duLieuKhach.gopToi: bỏ hồ sơ của phiên trước (sdt khác) (D4, vòng sửa 1) | VS-GOP-HO-SO-PHIEN-CU |
 | duLieuKhach.luuTomTat: giữ điểm cũ khi /diem chưa về (E3, vòng sửa 1) | VS-TOMTAT-MAT-DIEM |
+| Don.jsx: trang 1 làm mới → bỏ trang sau (A4, vòng sửa 2) | VS-DON-GIU-TRANG-SAU |
 
-Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-GOP-HO-SO-PHIEN-CU, VS-TOMTAT-MAT-DIEM, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
+Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-GOP-HO-SO-PHIEN-CU, VS-TOMTAT-MAT-DIEM, VS-DON-GIU-TRANG-SAU, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
 VS-KHONG-DUNG-CHUNG-LENH, VS-KET-QUA-PHIEN-CU, VS-LOI-XOA-BAN-CU, VS-QUAY-LAI-KHONG-SO-GIO, VS-HANG-0-CON-HIEN, BV-TAI-TRUOC,
 BV-XOA-KHO-KHI-DOI-PHIEN, BV-DOIKHACH-KHI-DANG-NHAP, BV-LAM-MOI-NGAM, BV-NHAN-MA-LAM-MOI, BV-SO-DU-DANG-CAP-NHAT, BV-HANG-0
 
@@ -122,3 +123,29 @@ BÀI HỌC: (1) NGUYÊN TẮC — báo "đã ghi X" phải trỏ được tới 
 - Mở app với token đã hết hạn: bản tóm tắt (đúng chủ máy) hiện ~0,4–1,4 giây tới khi 401 về rồi ẩn. App chưa thể biết token hết hạn trước khi hỏi POS; cùng khách, cùng máy. Chủ quán biết để quyết có cần POS cửa kiểm token nhanh hơn không.
 - Ưu đãi "Xem tất cả" (`?all=1`): nhận mã xong danh sách này không tự lấy lại (bản gốc cũng không); khách bấm "Chỉ xem mã còn dùng" là thấy mã mới (kho chung đã lấy lại).
 - `thu_KHLUU1.js` trước việc này không đọc `KHONG_TRINH_DUYET` (CLAUDE.md §9) — đã thêm trong Phạm vi `cong_cu/thu_KH*.js`.
+
+## Kết quả chạy đột biến sau vòng sửa 2 (HEAD 4591cc8) — 21/21 bị bắt
+```
+VS-TT-DUNG-SO-DU-KHO: ĐỎ — 204 đạt · 7 hỏng
+VS-TOMTAT-KHACH-KHAC: ĐỎ — 77 đạt · 2 hỏng
+VS-GOP-HO-SO-PHIEN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-TOMTAT-MAT-DIEM: ĐỎ — 78 đạt · 1 hỏng
+VS-TAB-GOI-LAI: ĐỎ — 78 đạt · 1 hỏng
+VS-DON-GIU-TRANG-SAU: ĐỎ — 78 đạt · 1 hỏng
+VS-DANGXUAT-GIU-TOMTAT: ĐỎ — 206 đạt · 5 hỏng
+VS-MANDAU-LAN-HAI: ĐỎ — 198 đạt · 10 hỏng
+VS-TOMTAT-CO-QR: ĐỎ — 205 đạt · 6 hỏng
+VS-KHONG-DUNG-CHUNG-LENH: ĐỎ — 77 đạt · 2 hỏng
+VS-KET-QUA-PHIEN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-LOI-XOA-BAN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-QUAY-LAI-KHONG-SO-GIO: ĐỎ — 78 đạt · 1 hỏng
+VS-HANG-0-CON-HIEN: ĐỎ — 206 đạt · 5 hỏng
+BV-TAI-TRUOC: ĐỎ — 192 đạt · 19 hỏng
+BV-XOA-KHO-KHI-DOI-PHIEN: ĐỎ — 78 đạt · 1 hỏng
+BV-DOIKHACH-KHI-DANG-NHAP: ĐỎ — 207 đạt · 4 hỏng
+BV-LAM-MOI-NGAM: ĐỎ — 204 đạt · 7 hỏng
+BV-NHAN-MA-LAM-MOI: ĐỎ — 207 đạt · 4 hỏng
+BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 207 đạt · 4 hỏng
+BV-HANG-0: ĐỎ — 207 đạt · 4 hỏng
+TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
+```
