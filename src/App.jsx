@@ -109,7 +109,7 @@ export default function App() {
     let huy = false;
     napTomTat();
     lamMoi(CUA_KHACH);
-    cuaToi.lay().then((r) => { if (!huy && r && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) docLaiGio(); luuTomTat(); tnGoc.nap(); datDaBiet(true); } }); // lỗi → null: 401 api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm
+    cuaToi.lay().then((r) => { if (!huy && r && r.khach) { datHangToi(r.khach.hang ? { id: r.khach.hang.id, ten: r.khach.hang.ten } : null); if (doiKhach(r.khach.sdt)) docLaiGio(); luuTomTat() /* gọi tay SAU doiKhach: người nghe kho đã bỏ qua khi chủ máy chưa đúng */; tnGoc.nap(); datDaBiet(true); } }); // lỗi → null: 401 api.js đã dọn phiên; mạng lỗi: lần mở sau sẽ kiểm
     return () => { huy = true; };
   }, [dangNhap]);
 

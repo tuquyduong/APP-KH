@@ -58,7 +58,7 @@ export function gopToi(cua, khach) {
   const s = cua.kho.lay();
   const cu = s.dl && !s.dl.tuMay && s.dl.khach;
   if (!cu) return; // kho trống (đã đổi / hết phiên): không có gì để gộp, mở màn sau sẽ lấy mới
-  if (khach && khach.sdt && cu.sdt && khach.sdt !== cu.sdt) return; // trả lời của phiên trước về muộn: không gộp hồ sơ người khác
+  if (khach && khach.sdt && cu.sdt && dauVet(khach.sdt) !== dauVet(cu.sdt)) return; // trả lời của phiên trước về muộn: không gộp hồ sơ người khác
   if (!khach || !Object.keys(khach).length) { cua.lay(); return; }
   cua.kho.dat({ ...s, dl: { ...s.dl, khach: { ...cu, ...khach } } });
 }

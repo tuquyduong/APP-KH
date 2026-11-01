@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDon } from '../duLieuKhach.js';
@@ -41,9 +41,13 @@ export function ChiTietDon({ ma, lui }) {
   );
 }
 
+const TRANG_SAU_RONG = { ds: [], trang: 1, conNua: null, dang: false, loi: '' };
+
 export default function LichSuDon({ chonDon, lui, datLai }) {
   const dau = dungCua(cuaDon); // trang 1 ở kho chung (tải trước khi mở app); trang 2 trở đi gọi khi khách bấm "Xem thêm" (không giữ)
-  const [sau, datSau] = useState({ ds: [], trang: 1, conNua: null, dang: false, loi: '' });
+  const [sau, datSau] = useState(TRANG_SAU_RONG);
+  // Trang 1 vừa làm mới (đơn mới đẩy đơn cũ sang trang sau — phân trang OFFSET): bỏ các trang sau đã xem, tránh hụt dòng; khách bấm "Xem thêm" lại.
+  useEffect(() => { datSau(TRANG_SAU_RONG); }, [dau.dl]);
   const conNua = sau.conNua === null ? !!(dau.dl && dau.dl.con_nua) : sau.conNua;
   // Phân trang theo OFFSET: đơn mới làm trang sau lặp lại đơn cuối trang trước → bỏ đơn đã có (key trùng).
   const ds = (dau.dl ? dau.dl.data : []).concat(sau.ds).filter((d, i, a) => a.findIndex((c) => c.ma === d.ma) === i);

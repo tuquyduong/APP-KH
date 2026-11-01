@@ -105,6 +105,11 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('D3 POS không trả hồ sơ → lấy lại /toi', g5 === 2, String(g5));
     await cho(5); D.gopToi(c5, { sdt: '0911222333', ten: 'Người khác' }); await cho(5);
     k('D4 trả lời PUT /toi của phiên trước (sdt khác) về muộn → không gộp vào kho của khách hiện tại', c5.kho.lay().dl.khach.ten !== 'Người khác' && g5 === 2, JSON.stringify(c5.kho.lay().dl.khach));
+    D.gopToi(c5, { sdt: '+84 909', ten: 'Cùng khách' });
+    k('K5 cùng số điện thoại khác định dạng (+84… / 0…) → vẫn gộp (không chặn oan)', c5.kho.lay().dl.khach.ten === 'Cùng khách' && g5 === 2, JSON.stringify(c5.kho.lay().dl.khach));
+    const dlk0 = doc('src/duLieuKhach.js');
+    k('A3 mở màn: dungCua chỉ lấy khi bản quá 5 phút (napNeuCu), không gọi thẳng lay', /export function dungCua[\s\S]*?useEffect\(\(\) => \{ cua\.napNeuCu\(\); \}, \[cua\]\)/.test(dlk0) && !/export function dungCua[\s\S]*?useEffect\(\(\) => \{ cua\.lay\(\)/.test(dlk0));
+    k('A4 Lịch sử đơn: trang 1 làm mới → bỏ các trang sau đã xem (không hụt dòng do OFFSET)', /useEffect\(\(\) => \{ datSau\(TRANG_SAU_RONG\); \}, \[dau\.dl\]\)/.test(doc('src/pages/Don.jsx')));
     let g6 = 0; const c6 = D.taoCua(() => { g6++; return Promise.resolve({}); });
     D.gopToi(c6, { ten: 'X' });
     k('D4 kho trống (đã đổi / hết phiên) → gopToi không ghi, không gọi', c6.kho.lay().dl === null && g6 === 0);
@@ -406,7 +411,8 @@ async function trinhDuyet(pw) {
     await t.waitForTimeout(3100);
     return t.evaluate(() => window.__thayA);
   };
-  await may('dang-xuat', {}, async ({ S, trang }) => {
+  for (const rong of [360, 390, 430]) {
+  await may(`dang-xuat-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/taikhoan'); await doiHet(t, '#account .acc-q', /1\.250/); await t.waitForTimeout(300);
     k('E2 trước đăng xuất có kh_tom_tat', !!(await t.evaluate(() => localStorage.getItem('kh_tom_tat'))));
@@ -418,7 +424,7 @@ async function trinhDuyet(pw) {
     k('B2 vừa đăng nhập → tải trước /toi, /diem, /voucher, /don', KHUNG_CUA.every((d) => S.goi.some((g) => g.duong === d && g.auth === 'tok-B')), `${n0} → ${demHet(S)}`);
     k('B2 thấy điểm của B', /40/.test(await chu(t, '#home .points-card .num')), await chu(t, '#home .points-card .num'));
   });
-  await may('het-phien-roi-B', {}, async ({ S, trang }) => {
+  await may(`het-phien-roi-B-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(300);
     S.chet['tok-A'] = true;
@@ -431,7 +437,7 @@ async function trinhDuyet(pw) {
   });
 
   // D3 nhận mã; D1 ẩn / hiện; D2 mỗi 5 phút
-  await may('nhan-ma-an-hien', {}, async ({ ctx, S, trang }) => {
+  await may(`nhan-ma-an-hien-${rong}`, { rong }, async ({ ctx, S, trang }) => {
     const t = await trang();
     await mo(t, '/uudai'); await doiHet(t, '#rewards .wallet-row', /1\.250/); await t.waitForTimeout(TRE + 300);
     const d0 = [dem(S, '/diem'), dem(S, '/voucher'), dem(S, '/toi')];
@@ -453,7 +459,7 @@ async function trinhDuyet(pw) {
   });
 
   // D3 lưu hồ sơ: POS trả hồ sơ → không gọi lại /toi; Trang chủ đổi lời chào theo
-  await may('ho-so', {}, async ({ S, trang }) => {
+  await may(`ho-so-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/taikhoan/thongtin'); await t.waitForSelector('#ten-toi'); await t.waitForTimeout(TRE + 300);
     k('E3 Thông tin cá nhân hiện số điện thoại thật (không lấy bản lưu)', /0909/.test(await chu(t, '#profile .pf-lock')) || /090 xxx/.test(await chu(t, '#profile .pf-lock')), await chu(t, '#profile .pf-lock'));
@@ -463,6 +469,8 @@ async function trinhDuyet(pw) {
     await sang(t, '/trangchu'); await t.waitForTimeout(100);
     k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Linh/.test(await chu(t, '#home h1')), await chu(t, '#home h1'));
   });
+
+  }
 
   await trinh.close();
 }
