@@ -83,14 +83,14 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('D1 quay lại sau 61 giây → lấy lại kho đã có', ga === 2 && gb === 0, `${ga}/${gb}`);
 
     // D4 — đổi phiên
-    h = hua(); let g4 = 0; const c4 = D.taoCua(() => { g4++; return h.p; });
+    const h4 = [hua(), hua()]; let g4 = 0; const c4 = D.taoCua(() => h4[g4++].p);
     const cu = c4.lay(); c4.xoa();
     k('D4 xoá: dl null ngay', c4.kho.lay().dl === null && c4.kho.lay().luc === 0);
     const moi = c4.lay();
     k('D4 sau xoá, lệnh mới không dùng lại lệnh của phiên cũ', g4 === 2 && moi !== cu, String(g4));
-    h.xong({ cua: 'phien-cu' }); await cu; await cho(5);
+    h4[0].xong({ cua: 'phien-cu' }); await cu; await cho(5);
     k('D4 kết quả của phiên cũ về muộn → bị bỏ', c4.kho.lay().dl === null, JSON.stringify(c4.kho.lay().dl));
-    k('D4 xoaKhoKhach xoá đủ bốn kho', /export function xoaKhoKhach/.test(doc('src/duLieuKhach.js')) && D.CUA_KHACH.length === 4 && [D.cuaToi, D.cuaDiem, D.cuaVoucher, D.cuaDon].every((x) => D.CUA_KHACH.includes(x)));
+    k('D4 xoaKhoKhach xoá đủ bốn kho', /export (function|const) xoaKhoKhach/.test(doc('src/duLieuKhach.js')) && D.CUA_KHACH.length === 4 && [D.cuaToi, D.cuaDiem, D.cuaVoucher, D.cuaDon].every((x) => D.CUA_KHACH.includes(x)));
     k('D4 App dọn phiên (đăng xuất / 401) gọi xoaKhoKhach NGAY trong donPhien', /const donPhien = \(\) => \{[^\n]*xoaKhoKhach\(\)/.test(ap));
 
     // D3 — sau thao tác đổi dữ liệu
@@ -304,6 +304,7 @@ async function trinhDuyet(pw) {
       const them = S.goi.slice(truoc).filter((g) => KHUNG_CUA.includes(g.duong) || g.duong === '/menu');
       k(`A3 [${rong}] qua lại Trang chủ ↔ Tài khoản ↔ Ưu đãi 3 vòng → KHÔNG gọi thêm cửa nào`, them.length === 0, them.map((g) => g.duong).join(','));
       k(`A3 [${rong}] mỗi lần chuyển tab nội dung có trong < 300 ms, không khung xám`, Math.max(...cham) < 300, cham.join(','));
+      await t.locator('.tabbar .tab:nth-child(5)').click();
       const the = await chu(t, '#rewards .tier-card');
       k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng)`, /Hạng Vàng/.test(the), the);
       const tran = await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
@@ -421,7 +422,7 @@ async function trinhDuyet(pw) {
   // D3 lưu hồ sơ: POS trả hồ sơ → không gọi lại /toi; Trang chủ đổi lời chào theo
   await may('ho-so', {}, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/thongtin'); await t.waitForSelector('#ten-toi'); await t.waitForTimeout(TRE + 300);
+    await mo(t, '/taikhoan/thongtin'); await t.waitForSelector('#ten-toi'); await t.waitForTimeout(TRE + 300);
     k('E3 Thông tin cá nhân hiện số điện thoại thật (không lấy bản lưu)', /0909/.test(await chu(t, '#profile .pf-lock')) || /090 xxx/.test(await chu(t, '#profile .pf-lock')), await chu(t, '#profile .pf-lock'));
     const n0 = dem(S, '/toi');
     await t.locator('#profile .pf-chips button', { hasText: 'cô' }).click(); await t.waitForTimeout(TRE + 300);
