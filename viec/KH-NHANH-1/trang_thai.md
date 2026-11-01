@@ -200,3 +200,15 @@ BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 219 đạt · 4 hỏng
 BV-HANG-0: ĐỎ — 219 đạt · 4 hỏng
 TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
 ```
+
+## Soát độc lập /ra-soat — sau vòng sửa 3 (lần soát cuối) — báo cáo (giữ nguyên ý, gọn dòng)
+ĐẠT (có điều kiện) — "Code không còn lỗi hành vi… lỗi giấy tờ tự đóng khi phiên chính ghi kết quả vào trang_thai.md đúng tên mục đã hứa, kèm số Chromium. Không cần thêm vòng sửa code."
+LỖI TÌM ĐƯỢC: trang_thai.md hứa mục "Kết quả kiểm" (Chromium sau vòng sửa 3 = 223 đạt) nhưng chưa có — K1 (đóng bằng mục `## Kết quả kiểm` dưới đây).
+NGHI NGỜ (không làm trượt): Don.jsx `xemThem` đang chờ trang 2 mà trang 1 đổi mã → trang 2 cũ vẫn nối vào (hiếm, chỉ hiển thị); TaiKhoan.jsx:40 bản lưu có hạng mà `ten` lạ → "Hạng null" (gốc cũng vậy); VS-DON-* ghi cột True dù ca đọc nguồn có thể đã bắt; D3 đặt đơn chỉ đọc nguồn (đã ghi `## Chưa kiểm`). Đã soát `khoaTrang1` + `useRef` theo 5 tình huống: đúng.
+NGHIỆM THU: 26/28 · thiếu: H3 (chờ phiên chính — xem `## Kết quả kiểm`), H4 (thử tay chủ quán).
+CHƯA SOÁT ĐƯỢC: không chạy Chromium / dot_bien / npm test / --day-du / cong.js; không xem ảnh; không thử điện thoại / Zalo.
+BÀI HỌC: KHOÁ (bộ kiểm) — "ghi ở mục X" phải grep ra tiêu đề X (lặp bốn vòng). NGUYÊN TẮC — lệnh bất đồng bộ do màn tự gửi phải bị bỏ khi trạng thái nền đổi (chốt `phien`).
+
+Sau lần soát này (không đổi src): bộ kiểm cắt mỗi bài ở 120 giây (`kiem_tra_truoc_khi_giao.js:136`) — bài mới sau vòng sửa 3 chạy quá giờ nên bị cắt.
+Sửa ở bài thử (7e830f3): các ca không đo thời gian chặt chạy ba cỡ màn song song; ca chuyển tab (< 300 ms) vẫn lần lượt → 51 giây, 223 đạt · 0 hỏng.
+Đột biến chạy lại trên bản bài này: 22/22 ĐỎ ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT").
