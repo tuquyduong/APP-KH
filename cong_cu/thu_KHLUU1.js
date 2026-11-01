@@ -89,8 +89,8 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
 
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
-  try { pw = require('playwright'); } catch { /* không có */ }
-  if (!pw) { console.log('  BỎ QUA: không có Playwright ở máy này — các ca C1 (a)–(g) CHƯA chạy'); }
+  if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } } // CLAUDE.md §9: KHONG_TRINH_DUYET=1 → bỏ phần trình duyệt có chủ ý
+  if (!pw) { console.log('  BỎ QUA: không có Playwright ở máy này (hoặc KHONG_TRINH_DUYET=1) — các ca C1 (a)–(g) CHƯA chạy'); }
   else await trinhDuyet(pw, lm.dauVet, BAN);
 
   console.log(`\n${dat} đạt · ${hong} hỏng`);
