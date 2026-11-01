@@ -1,10 +1,11 @@
 // Luồng đăng nhập (hàm thuần, không đụng DOM / mạng — bài thử cong_cu/thu_KHXEM1.js nạp thẳng).
 
-// Chỗ khách chưa đăng nhập bấm vào thì phải đăng nhập: Ưu đãi, Tài khoản (và trang con), mã thành viên (QR) — bảng ở duongDan.js. Trang chủ, Menu, Trang món: ai cũng xem.
+// Chỗ khách chưa đăng nhập bấm vào thì phải đăng nhập: Tài khoản (và trang con), mã thành viên (QR), trắc nghiệm, thanh toán — bảng ở duongDan.js.
+// Trang chủ, Menu, Trang món, Ưu đãi: ai cũng xem. Riêng Ưu đãi khi còn mã hoá đơn (link QR) thì phải đăng nhập để nhận điểm, không để mất mã (KH-UI-3d B3).
 import { tiepHopLe, trangCanDangNhap } from './duongDan.js';
 
-/** Vào trang `trang` (mã trang trong bảng đường dẫn) có phải mở màn Đăng nhập trước không? Đã đăng nhập thì không bao giờ chặn. */
-export const canDangNhap = (trang, daDangNhap) => !daDangNhap && trangCanDangNhap(trang);
+/** Vào trang `trang` (mã trang trong bảng đường dẫn) có phải mở màn Đăng nhập trước không? Đã đăng nhập thì không bao giờ chặn. `maCho` = mã hoá đơn đang giữ. */
+export const canDangNhap = (trang, daDangNhap, maCho = '') => !daDangNhap && (trangCanDangNhap(trang) || (trang === 'uudai' && !!maCho));
 
 /** Đăng nhập xong đi đâu (đường dẫn): còn mã hoá đơn (link QR) → Ưu đãi để nhận; không thì trang `tiep` đã bấm; tiep lạ / thiếu → Trang chủ. */
 export const dichSauDangNhap = (tiep, maCho) => (maCho ? '/uudai' : tiepHopLe(tiep) || '/trangchu');

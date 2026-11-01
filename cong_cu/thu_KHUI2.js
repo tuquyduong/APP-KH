@@ -59,7 +59,7 @@ function kichThuocPng(f) {
   k('che giữa', d.cheSdt('0901234567') === '090 xxx 4567');
   k('SĐT có dấu cách / +84 vẫn che', d.cheSdt('090 123 4567') === '090 xxx 4567');
   k('SĐT thiếu → rỗng (không bịa)', d.cheSdt('') === '' && d.cheSdt(null) === '' && d.cheSdt('123') === '');
-  k('chào theo (giờ, xưng hô, tên) — KH-UI-3b; chi tiết ở thu_KHUI3b.js', d.loiChao('', null, 'Nguyễn Linh') === 'Chào Linh' && d.loiChao('', '', '') === 'Chào bạn' && d.loiChao(null, null, null) === 'Chào bạn');
+  k('chào theo (giờ, xưng hô, tên) — KH-UI-3b; chi tiết ở thu_KHUI3b.js', d.loiChao('', null, 'Nguyễn Linh') === 'Chào Linh!' && d.loiChao('', '', '') === 'Chào bạn!' && d.loiChao(null, null, null) === 'Chào bạn!');
 
   console.log('— B6 tìm món');
   const ds = [

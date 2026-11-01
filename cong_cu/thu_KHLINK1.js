@@ -67,9 +67,9 @@ function dungThanhPhan(tep) {
   k('địa chỉ có #… hoặc ?x=1 lạ thì bỏ phần thừa khi chuẩn hoá', d.docDuongDan('/menu?x=1#a').chuan === '/menu' && d.docDuongDan('/uudai#top').chuan === '/uudai');
 
   console.log('— A3 trang cần đăng nhập');
-  const can = { uudai: 1, taikhoan: 1, thongtin: 1, donhang: 1, don: 1, qr: 1 };
-  const khong = ['trangchu', 'menu', 'mon', 'hotro', 'dangnhap', 'khongthay'];
-  k('Ưu đãi, Tài khoản + trang con (trừ Hỗ trợ), Mã thành viên cần đăng nhập', Object.keys(can).every((t) => l.canDangNhap(t, false) === true && d.docDuongDan(d.taoDuongDan(t, { ma: 'x' })).canDN === true));
+  const can = { taikhoan: 1, thongtin: 1, donhang: 1, don: 1, qr: 1 };
+  const khong = ['trangchu', 'menu', 'mon', 'hotro', 'dangnhap', 'khongthay', 'uudai']; // Ưu đãi mở cho khách vãng lai (KH-UI-3d B1)
+  k('Tài khoản + trang con (trừ Hỗ trợ), Mã thành viên cần đăng nhập; Ưu đãi thì không (KH-UI-3d)', Object.keys(can).every((t) => l.canDangNhap(t, false) === true && d.docDuongDan(d.taoDuongDan(t, { ma: 'x' })).canDN === true));
   k('Trang chủ, Menu, Món, Hỗ trợ, Đăng nhập: khách vào thẳng', khong.every((t) => l.canDangNhap(t, false) === false));
   k('đã đăng nhập thì không bao giờ chặn (K5)', [...Object.keys(can), ...khong].every((t) => l.canDangNhap(t, true) === false));
   k('chặn xong → /dangnhap?tiep=<trang>', d.taoDuongDan('dangnhap', { tiep: '/uudai' }) === '/dangnhap?tiep=%2Fuudai' && d.taoDuongDan('dangnhap', { tiep: '/taikhoan/donhang/AB12' }) === '/dangnhap?tiep=%2Ftaikhoan%2Fdonhang%2FAB12');
@@ -118,7 +118,7 @@ function dungThanhPhan(tep) {
   const app = doc('src/App.jsx'), dh = doc('src/dieuHuong.js');
   k('dùng History API: pushState / replaceState / popstate, không thư viện', /pushState/.test(dh) && /replaceState/.test(dh) && /popstate/.test(dh) && !/react-router|wouter|navigo/i.test(app + dh));
   k('thanh địa chỉ không còn kẹt ở "/": không còn ngăn xếp màn con', !/dungNganXep|nx\./.test(app));
-  k('trang cần đăng nhập → thay bằng /dangnhap?tiep= (App hỏi canDangNhap)', /canDangNhap\(trang, dangNhap\)/.test(app) && /taoDuongDan\('dangnhap', \{ tiep:/.test(app));
+  k('trang cần đăng nhập → thay bằng /dangnhap?tiep= (App hỏi canDangNhap)', /canDangNhap\(trang, dangNhap, maCho\)/.test(app) && /taoDuongDan\('dangnhap', \{ tiep:/.test(app));
   k('đăng nhập xong rời /dangnhap tới tiep (dichSauDangNhap)', /dichSauDangNhap\(r\.tham\.tiep, maCho\)/.test(app));
   k('chuẩn hoá địa chỉ ngay trong bộ định tuyến (/ → /trangchu, /admin → /trangchu)', /duong\.chuan/.test(dh));
   k('bấm tab Menu khi đang ở Menu không đổi địa chỉ (giữ nhóm /menu/<nhom>)', /!\(t === 'menu' && trang === 'menu'\)\) di\(/.test(app));
