@@ -275,3 +275,6 @@ Vượt ngân sách: app ~280 dòng thêm (ngân sách ~250), thử ~520 dòng (
    **Chủ quán thử tay (H4):** (1) mở app lần đầu trong ngày → có màn mở → bấm qua lại Trang chủ / Ưu đãi / Tài khoản: không còn khung xám; (2) đóng hẳn app, mở lại → vào thẳng, tên + điểm + ví hiện ngay; (3) ra quầy nhận điểm, mở lại app → trong ~1–2 giây số điểm tự đổi.
 6. **GIT** — nhánh viec/KH-NHANH-1, từ 7d07931 (PHIEU) tới HEAD dưới đây; đã push `git push -u origin viec/KH-NHANH-1`. Không merge, không PR.
 7. **BÀI HỌC** — xem `## Bài học`: 2 đề xuất KHOÁ ngoài Phạm vi (bộ kiểm: "ghi mục X" phải có X; báo rõ khi bài quá 120 giây), 2 đề xuất NGUYÊN TẮC cho KHUON_LOI.md (so nội dung không so tham chiếu; chốt phiên khi ghi kho sau await). Máy không tự sửa file ngoài Phạm vi.
+
+Cổng chạy lại ở 2771c84 (sau khi ghi báo cáo): ✓ CỔNG CHẠY ĐẠT
+HEAD ĐÃ KIỂM: 2771c84
