@@ -43,7 +43,7 @@ export default function DangNhap({ khiXong, dong, coMaHoaDon }) {
     try {
       const r = await xacMinh(sdt.trim(), ma.trim(), buoc === 'thongtin' ? ten.trim() : undefined, buoc === 'thongtin' ? truongThem(xungHo, diaChi) : undefined);
       luuToken(r.token);
-      khiXong();
+      khiXong(r.khach); // hồ sơ POS trả (có sdt) → App biết khách là ai TRƯỚC khi bật phiên
     } catch (e) {
       const kq = buocSauLoiXacMinh(e, buoc);
       datBuoc(kq.buoc); datHetHan(kq.hetHan);
