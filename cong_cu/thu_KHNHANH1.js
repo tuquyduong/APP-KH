@@ -231,6 +231,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     else await trinhDuyet(pw);
   }
 
+  console.log(`  (chạy hết ${Math.round(process.uptime())} giây — bộ kiểm cắt ở 120 giây)`);
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
@@ -315,7 +316,8 @@ async function trinhDuyet(pw) {
   const sang = (t, duong) => t.evaluate((d) => { history.pushState(history.state, '', d); dispatchEvent(new PopStateEvent('popstate', { state: history.state })); }, duong);
 
   // B1 + A3: mở app → mỗi cửa một lần; chuyển tab 3 vòng → không gọi thêm, nội dung có ngay.
-  for (const rong of [360, 390, 430]) {
+  const CO_MAN = [360, 390, 430];
+  for (const rong of CO_MAN) {
     await may(`tab-${rong}`, { rong }, async ({ S, trang }) => {
       const t = await trang();
       await mo(t, '/trangchu');
@@ -348,7 +350,8 @@ async function trinhDuyet(pw) {
     });
   }
 
-  for (const rong of [360, 390, 430]) {
+  // Các ca dưới đây không đo thời gian chặt: ba cỡ màn chạy SONG SONG (mỗi cỡ một ngữ cảnh riêng) để cả bài < 120 giây (giới hạn của bộ kiểm).
+  await Promise.all(CO_MAN.map(async (rong) => {
   // B3 + G — vãng lai
   await may(`vanglai-${rong}`, { rong, token: '' }, async ({ S, trang }) => {
     const t = await trang();
@@ -403,7 +406,7 @@ async function trinhDuyet(pw) {
     k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/btn-disabled/.test(await vi.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
     k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
   });
-  }
+  }));
 
   // E2 + D4 + B2 — đăng xuất xoá; 401 giữ nhưng không hiện; khách B không bao giờ thấy số của A
   const dangNhapB = async (t) => {
@@ -415,7 +418,7 @@ async function trinhDuyet(pw) {
     await t.waitForTimeout(3100);
     return t.evaluate(() => window.__thayA);
   };
-  for (const rong of [360, 390, 430]) {
+  await Promise.all(CO_MAN.map(async (rong) => {
   await may(`dang-xuat-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/taikhoan'); await doiHet(t, '#account .acc-q', /1\.250/); await t.waitForTimeout(300);
@@ -491,8 +494,7 @@ async function trinhDuyet(pw) {
     await sang(t, '/trangchu'); await t.waitForTimeout(100);
     k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Linh/.test(await chu(t, '#home h1')), await chu(t, '#home h1'));
   });
-
-  }
+  }));
 
   await trinh.close();
 }
