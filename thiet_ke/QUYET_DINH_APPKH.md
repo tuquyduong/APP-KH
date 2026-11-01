@@ -3,6 +3,11 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 01.11.2026
+- **Tốc độ App (chủ quán chốt 01.11, "theo đề nghị"):** màn mở đầu ĐẦY ĐỦ chỉ lần đầu mỗi ngày (các lần sau vào thẳng); trong màn mở App tải trước MỌI dữ liệu (menu, giá, Giờ vàng, giờ mở cửa, hạng; đã đăng nhập: hồ sơ, điểm, ví, voucher, đơn). Sau đó cập nhật NGẦM, khách không thấy chờ: khi quay lại app, mỗi 5 phút, ngay sau thao tác (nhận điểm, lưu hồ sơ, đặt đơn); chuyển tab không hỏi lại POS trong 5 phút. Không dùng "1 ngày cập nhật 1 lần" (điểm vừa cộng ở quầy, hết hàng, Giờ vàng phải hiện đúng). **Thanh toán luôn lấy số dư ví mới** trước khi cho trả. (KH-NHANH-1)
+- **Lưu bản tóm tắt của khách trên máy** (chủ quán đồng ý 01.11): tên, xưng hô, hạng, điểm, số dư ví — chỉ để HIỆN ngay khi mở app; xoá khi Đăng xuất / người khác đăng nhập; không lưu SĐT, mã thành viên (QR), địa chỉ, lịch sử. (Bổ sung CLAUDE.md §8.)
+- **Hạng:** ẩn hạng giảm 0% trên App. Chủ quán đã bỏ hạng thử "Test0d", đổi tên GOLD → **Vàng** (BÁN, muốn gói 1 tháng và 3 tháng), VIP → **Kim Cương** (CHỈ CẤP, không bán) — phần cài đặt / bán thẻ là việc POS (YEU_CAU_APPKH_GUI_POS_01112026_b.md). App hiện tên + % giảm, không hiện giá cho tới khi POS có `chi_cap`.
+
 ## 31.10.2026
 - **Văn phong lời chào (chủ quán chốt 31.10 tối, xem app thật thấy "Chào buổi chiều, Anh Linh"):** xưng hô GIỮA câu viết chữ thường, lời chào LUÔN có "!" cuối câu: "Chào buổi chiều, anh Linh!" · chưa có giờ POS "Chào anh Linh!" · chưa có xưng hô "Chào buổi chiều, Linh!" · chưa có tên "Chào buổi chiều, anh!" · chưa đăng nhập "Chào bạn!". Tên ngắn viết hoa chữ đầu. Nút chọn xưng hô chữ thường như demo (anh · chị · cô · chú · bác · em · bạn). Xưng hô đứng đầu dòng thì viết hoa theo chính tả. (Thay mục C1 phiếu KH-UI-3b "viết hoa chữ đầu"; làm trong KH-UI-3d.)
 - **Chốt 5 câu giỏ hàng (chủ quán 31.10, "theo đề nghị", riêng câu 2 chủ quán SỬA):**

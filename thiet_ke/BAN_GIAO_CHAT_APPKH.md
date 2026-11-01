@@ -19,7 +19,7 @@
 - Bài học: cổng GitHub không có trình duyệt (CLAUDE.md §9, `SỐ CA` theo `KHONG_TRINH_DUYET=1`); script tự xoá sau khi chạy — giữ bản gốc ở chỗ khác khi thử; chủ quán không sửa tay SỐ CA sau khi script đã ghi; 3 bài thử bộ khung (`thu_nguoi_gac`, `thu_cong_cu`, `thu_cong`) có 6 ca đỏ SẴN vì cấu hình riêng của POS — so "không đỏ thêm" chứ không đòi xanh hết.
 
 ## Tình trạng 31.10
-- Đã gộp: KH-UI-2, KH-XEM-1, KH-LINK-1, KH-UI-5a, KH-SLOGAN-1, KH-LUU-1, KH-UI-3a, KH-UI-3c, KH-MUA-1, KH-KHOP-1, KH-UI-3b; KH-ND-1 (nhu cầu 10 món tạm trong `src/noiDung/mon.js`, theo `unique_id` POS). Bộ khung tự chạy 1.8.1. Sổ việc v17.
+- Đã gộp: KH-UI-2, KH-XEM-1, KH-LINK-1, KH-UI-5a, KH-SLOGAN-1, KH-LUU-1, KH-UI-3a, KH-UI-3c, KH-MUA-1, KH-KHOP-1, KH-UI-3b, KH-UI-3d; KH-ND-1 (nhu cầu 10 món tạm trong `src/noiDung/mon.js`, theo `unique_id` POS). Bộ khung tự chạy 1.8.1. Sổ việc v18.
 - **KH-MUA-1 (phía App)**: ĐÃ GỘP (PR #9, 7d11fce). Giỏ (tab 5), Thanh toán (tại quầy; giao "Sắp có"), QR payOS / ví + PIN, Theo dõi đơn `/don/<mã>`; cờ `DAT_ONLINE = false` (`src/noiDung/caiDat.js`), cổng `datCongDatDon` trong `src/datDon.js` (mọi tên trường POS ở đó). Không thêm cửa vào `api.js` (K8).
 - **KH-KHOP-1**: ĐÃ GỘP (PR #10, 3cf6288); chủ quán thử tay đạt 31.10 (đăng nhập: mọi mục POS đã có đều ✓). Lỗi nhỏ: "Kiểm lại" không đọc lại đăng nhập → KH-UI-3b. Trang `/kiemkhop` tạm công khai, sau chuyển vào `/admin`.
 - App thật: đăng nhập được (mã lấy ở POS: Khách hàng → bấm khách → "🔑 Mã đăng nhập App"); hạng, điểm, giá VIP, giờ mở cửa hiện đúng. POS ở `https://www.pos-tuquyduong.io.vn` (`VITE_POS_API` trên Cloudflare); `KH_JWT_SECRET` đã đặt trên Render.
@@ -37,7 +37,7 @@
 
 ## Việc kế tiếp (theo thứ tự)
 1. (xong 31.10) Soát cuối KH-KHOP-1.
-2. KH-UI-3b ĐÃ GỘP (PR #11, f5c13fb; chủ quán thử tay đạt): hồ sơ xưng hô + 1 địa chỉ, lời chào theo giờ POS, tự gia hạn, menu công khai, hợp đồng v3 trong `thiet_ke/`. **KH-UI-3d ĐANG MỞ** (31.10, nhánh `viec/KH-UI-3d`): Ưu đãi cho khách vãng lai + văn phong lời chào (xưng hô chữ thường, "!"). Bài học soát 3b: phiếu phải liệt kê ĐỦ bài thử cũ sẽ sửa (cổng A6); bài cũ chỉ đổi phần Chromium → mục `## Bài thử cũ sửa` (A11); `SỐ CA` theo KHONG_TRINH_DUYET=1 (A16). Sau đó KH-THU-1 (rút `thu_KHMUA1.js` dưới trần 120 giây).
+2. KH-UI-3b, KH-UI-3d ĐÃ GỘP (PR #11, #12). **KH-NHANH-1 ĐANG MỞ** (01.11, Opus, nhánh `viec/KH-NHANH-1`): kho dữ liệu khách chung, tải trước khi mở app, cập nhật ngầm, màn mở 1 lần/ngày, lưu tóm tắt trên máy, Thanh toán luôn lấy số dư mới, ẩn hạng 0% (đo thật 01.11: mỗi vòng POS ~400 ms, /toi 1,45 s). Sau đó KH-PWA-1 (service worker), KH-THU-1. Bài học soát 3b/3d: bài cũ chỉ đổi phần Chromium → THÊM ca hàm thuần đỏ trên gốc, KHÔNG dùng `## Bài thử cũ sửa` (bản gốc chạy trên code mới đỏ — luật 6.9 POS); `SỐ CA` theo KHONG_TRINH_DUYET=1; phiếu liệt kê đủ bài cũ (dùng glob `cong_cu/thu_KH*.js`). Trình duyệt của Claude đã đăng nhập App KH (chủ quán, 01.11) — đo / xem app thật được.
 3. Khi POS gộp KH-MUA-1 + hợp đồng có cửa đặt đơn: phiếu **KH-MUA-1b** (Opus): thêm cửa vào `api.js`, tiêm `goi` vào cổng, POS giả dựng từ hợp đồng, ca 401; TRƯỚC KHI BẬT CỜ sửa: Back từ màn QR tạo được đơn chờ trả thứ hai; khoá "đơn có thể đã tạo" mất khi lui màn / tải lại; thẻ Lịch sử đơn dẫn tới Theo dõi đơn; khoá chống gửi lặp `khoa_gui` (POS đã nhận); thêm món xong quay lại trang trước (chốt 31.10). Rồi bật `DAT_ONLINE`.
 4. KH-MUA-2 (Ahamove: phí giao, ô địa chỉ, tài xế) khi POS báo tên cửa.
 5. KH-ND-2 khi POS có KH-SP-1 (đọc từ `/menu`, bỏ `mon.js`; mục "Bán chạy" chủ quán tự chọn; "Ưu đãi nhiều nhất").
@@ -46,7 +46,8 @@
 - Mốc: App KH xong 04.11 → chủ quán thử 05.11 → tên miền / QR 06.11 → khai trương T7 07.11 (lùi nếu đặt đơn chưa xong).
 
 ## Chủ quán làm ngay
-- Mở Claude Code: `/lam-viec KH-UI-3d` (Sonnet). Xong gửi chat soát cuối.
+- Mở Claude Code: `/lam-viec KH-NHANH-1` (**Opus**). Xong gửi chat soát cuối.
+- Chuyển POS: `YEU_CAU_APPKH_GUI_POS_01112026.md` (tốc độ) + `_b.md` (hạng Vàng 1/3 tháng, Kim Cương chỉ cấp).
 - Thử đăng ký SĐT MỚI khi POS xong **KH-QUAY-2** (ô "Mã đăng nhập App cho số mới" ở màn Khách hàng — hiện quầy CHỈ cấp mã cho khách đã có, POS nhận 31.10, làm sau BH-CKTAY-1, trước khai trương; `YEU_CAU_APPKH_GUI_POS_31102026_e.md`).
 - Đặt khoá payOS trên Render + webhook `https://www.pos-tuquyduong.io.vn/api/payos/webhook`; nâng Render gói trả phí (cùng lúc, chậm nhất 02.11); Ahamove: đang chờ Aha (cần khoá ~03.11).
 

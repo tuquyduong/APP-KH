@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 17,
-  "cap_nhat": "2026-10-31",
+  "phien_ban_so": 18,
+  "cap_nhat": "2026-11-01",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -156,13 +156,35 @@
       "ten": "Trang Uu dai mo cho khach vang lai (banner Gio vang theo POS, bang hang /hang, khoa diem / vi / voucher; ?ma= QR hoa don van ve dang nhap) + van phong loi chao: xung ho chu thuong giua cau, \"!\" cuoi cau, ten ngan viet hoa chu dau, nut xung ho chu thuong nhu demo",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "han": "2026-11-03",
       "phu_thuoc": [
         "KH-UI-3b"
       ],
-      "ghi_chu": "31.10 tach tu KH-UI-3 (3b) cho gon; QUYET_DINH 30.10 \"chi 3 thu can dang nhap\" | 31.10: mo phieu KH-UI-3d (Sonnet, Th); chu quan chot van phong 31.10 toi (thay C1 cua KH-UI-3b)",
-      "ngay": "2026-10-31"
+      "ghi_chu": "31.10 tach tu KH-UI-3 (3b) cho gon; QUYET_DINH 30.10 \"chi 3 thu can dang nhap\" | 31.10: mo phieu KH-UI-3d (Sonnet, Th); chu quan chot van phong 31.10 toi (thay C1 cua KH-UI-3b) | 01.11: chat soat cuoi DAT (code dung phieu; chat them ca ham thuan C1(f) vao thu_KHLUU1 cho A11 — KHONG dung ## Bai thu cu sua vi ban goc do tren code moi; SO CA thu_KHLUU1 31 → 20); gop PR #12 (5ed0c1e)",
+      "ngay": "2026-10-31",
+      "commit": "5ed0c1e"
+    },
+    {
+      "ma": "KH-NHANH-1",
+      "ten": "App khong bat khach cho: kho du lieu khach chung (/toi /diem /voucher /don), tai truoc khi mo app, giu du lieu da co + cap nhat ngam (quay lai app >60s, moi 5 phut, sau thao tac), man mo day du chi lan dau moi ngay, luu tom tat (ten, xung ho, hang, so du vi, diem) tren may, Thanh toan luon lay so du moi, an hang 0%",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "dang_mo",
+      "ngay": "2026-11-01",
+      "han": "2026-11-03",
+      "ghi_chu": "01.11 chat do that: moi vong toi POS ~400ms, /toi 1452ms, /diem 1438ms; App tu chuyen tab 60-150ms. Phan POS (CORS maxAge, vung Singapore, /toi cham) gui POS o YEU_CAU_APPKH_GUI_POS_01112026.md"
+    },
+    {
+      "ma": "KH-PWA-1",
+      "ten": "Service worker cho PWA: khung app, phong chu, anh nam san tren may khach → mo app gan nhu tuc thi; luon nhan ban moi nhat (khong ket ban cu)",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-NHANH-1"
+      ],
+      "ghi_chu": "01.11 tach khoi KH-NHANH-1 (can than cap nhat ban moi)"
     },
     {
       "ma": "KH-THU-1",
