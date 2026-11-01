@@ -32,8 +32,9 @@
 | duLieuKhach.gopToi: bỏ hồ sơ của phiên trước (sdt khác) (D4, vòng sửa 1) | VS-GOP-HO-SO-PHIEN-CU |
 | duLieuKhach.luuTomTat: giữ điểm cũ khi /diem chưa về (E3, vòng sửa 1) | VS-TOMTAT-MAT-DIEM |
 | Don.jsx: trang 1 làm mới → bỏ trang sau (A4, vòng sửa 2) | VS-DON-GIU-TRANG-SAU |
+| Don.jsx: so danh sách mã, không so đối tượng (A4, vòng sửa 3) | VS-DON-SO-THAM-CHIEU |
 
-Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-GOP-HO-SO-PHIEN-CU, VS-TOMTAT-MAT-DIEM, VS-DON-GIU-TRANG-SAU, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
+Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-GOP-HO-SO-PHIEN-CU, VS-TOMTAT-MAT-DIEM, VS-DON-GIU-TRANG-SAU, VS-DON-SO-THAM-CHIEU, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
 VS-KHONG-DUNG-CHUNG-LENH, VS-KET-QUA-PHIEN-CU, VS-LOI-XOA-BAN-CU, VS-QUAY-LAI-KHONG-SO-GIO, VS-HANG-0-CON-HIEN, BV-TAI-TRUOC,
 BV-XOA-KHO-KHI-DOI-PHIEN, BV-DOIKHACH-KHI-DANG-NHAP, BV-LAM-MOI-NGAM, BV-NHAN-MA-LAM-MOI, BV-SO-DU-DANG-CAP-NHAT, BV-HANG-0
 
@@ -172,3 +173,30 @@ BÀI HỌC: NGUYÊN TẮC — đặt lại state theo dữ liệu làm mới ng�
 - Marker trong CHUỖI vẫn làm xanh ca đọc nguồn B1 / B2 / D3 trên GitHub (không trình duyệt); ở máy các ca Chromium B1 / B2 bù lại.
 - Điện thoại thật, trình duyệt Zalo, mạng chậm thật (POS thật ~400 ms / vòng) — chủ quán thử tay (H4).
 - ManDau hiện theo đồng hồ máy: máy khách sai giờ thì màn mở có thể hiện / không hiện lệch ngày (ngoại lệ §6 có chủ đích, chỉ hiệu ứng).
+
+## Kết quả chạy đột biến sau vòng sửa 3 (HEAD 4f7f668) — 22/22 bị bắt
+```
+VS-TT-DUNG-SO-DU-KHO: ĐỎ — 216 đạt · 7 hỏng
+VS-TOMTAT-KHACH-KHAC: ĐỎ — 77 đạt · 2 hỏng
+VS-GOP-HO-SO-PHIEN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-TOMTAT-MAT-DIEM: ĐỎ — 78 đạt · 1 hỏng
+VS-TAB-GOI-LAI: ĐỎ — 78 đạt · 1 hỏng
+VS-DON-GIU-TRANG-SAU: ĐỎ — 219 đạt · 4 hỏng
+VS-DON-SO-THAM-CHIEU: ĐỎ — 219 đạt · 4 hỏng
+VS-DANGXUAT-GIU-TOMTAT: ĐỎ — 218 đạt · 5 hỏng
+VS-MANDAU-LAN-HAI: ĐỎ — 201 đạt · 13 hỏng
+VS-TOMTAT-CO-QR: ĐỎ — 217 đạt · 6 hỏng
+VS-KHONG-DUNG-CHUNG-LENH: ĐỎ — 77 đạt · 2 hỏng
+VS-KET-QUA-PHIEN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-LOI-XOA-BAN-CU: ĐỎ — 78 đạt · 1 hỏng
+VS-QUAY-LAI-KHONG-SO-GIO: ĐỎ — 78 đạt · 1 hỏng
+VS-HANG-0-CON-HIEN: ĐỎ — 218 đạt · 5 hỏng
+BV-TAI-TRUOC: ĐỎ — 204 đạt · 19 hỏng
+BV-XOA-KHO-KHI-DOI-PHIEN: ĐỎ — 78 đạt · 1 hỏng
+BV-DOIKHACH-KHI-DANG-NHAP: ĐỎ — 219 đạt · 4 hỏng
+BV-LAM-MOI-NGAM: ĐỎ — 210 đạt · 13 hỏng
+BV-NHAN-MA-LAM-MOI: ĐỎ — 219 đạt · 4 hỏng
+BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 219 đạt · 4 hỏng
+BV-HANG-0: ĐỎ — 219 đạt · 4 hỏng
+TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
+```
