@@ -76,4 +76,14 @@ Nghiệm thu soát đếm: 11/15 đủ bằng chứng lúc soát; A5 + C2 đã b
 ## Mục nghiệm thu — bằng chứng
 A1–A4: `thu_KHUI3d.js` phần 1 + ca Chromium · A5: bảng trên · B1–B5: `thu_KHUI3d.js` (nguồn + Chromium: vanglai-*, dangnhap-*, qr-ma, qr-ma-dong-dn, het-phien) · C1: `thu_KHUI3d.js` ba cỡ × 100/130% · C2: Câu hỏi 1 · C3: `so_anh/` + `doi_chieu_demo.md` (thiếu 430 + ảnh tô lệch) · C4: `--day-du` + cổng ĐẠT + 9 đột biến · C5: chủ quán.
 
-HEAD ĐÃ KIỂM: dfc6939
+HEAD ĐÃ KIỂM: d0f679e + commit này
+
+## Chat soát cuối (01.11.2026)
+- Kết luận: **ĐẠT** sau một commit của chat (chỉ bài thử + hồ sơ, không đổi code app):
+  - Câu hỏi 1 (C2): KHÔNG thêm `## Bài thử cũ sửa` — chạy bản GỐC `thu_KHLUU1.js` trên code mới (có Chromium) ra ĐỎ → không đúng mục đó (luật 6.9 của POS).
+    Thay vào: thêm ca hàm thuần C1(f) `loiChao('', null, 'Khách thử') === 'Chào Thử!'` — đỏ trên gốc, xanh trên mới, chạy cả khi không có trình duyệt.
+  - `SỐ CA cong_cu/thu_KHLUU1.js`: 31 → 20 (số GitHub đếm; bài không đọc `KHONG_TRINH_DUYET`).
+- Chat chạy lại KIỂU GITHUB (ẩn Playwright) trên bản cuối: cổng tĩnh + cổng chạy ĐẠT. Đọc code UuDai.jsx, App.jsx, luongDangNhap.js, duongDan.js, dinhDang.js,
+  dangNhap.js, HoSo.jsx: đúng phiếu (A1–A5, B1–B5); link QR `?ma=` vẫn bắt đăng nhập khi chưa đăng nhập.
+- Câu hỏi 2 (ảnh 430): chấp nhận — bài thử Chromium đã chạy 430 + chữ 130%; ảnh 360/390 đủ để so demo.
+- Phát hiện "hạng 0% hiện giảm 0%": chuyển chủ quán quyết (đề nghị: ẩn dòng hạng 0%), làm ở việc sau — không chặn gộp.

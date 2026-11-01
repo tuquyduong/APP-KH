@@ -21,4 +21,8 @@ SỐ CA cong_cu/thu_KHUI3b.js: 56
 SỐ CA cong_cu/thu_KHXEM1.js: 61
 SỐ CA cong_cu/thu_KHLINK1.js: 97
 SỐ CA cong_cu/thu_KHUI2.js: 78
-SỐ CA cong_cu/thu_KHLUU1.js: 31
+SỐ CA cong_cu/thu_KHLUU1.js: 20
+
+Chat soát cuối (01.11): thêm ca hàm thuần vào cong_cu/thu_KHLUU1.js (C1(f) "Chào Thử!") vì ca cũ chỉ chạy trong Chromium (GitHub không có → A11).
+Bản mới trên code GỐC main, ẩn Playwright: ✗ C1(f) … — Chào thử · 19 đạt · 1 hỏng. Trên code mới: 20 đạt · 0 hỏng (ẩn Playwright) · 32 đạt · 0 hỏng (có Chromium).
+SỐ CA thu_KHLUU1 sửa 31 → 20 = số ca khi KHÔNG có Playwright (bài không đọc KHONG_TRINH_DUYET; 31 là số đếm có Chromium).
