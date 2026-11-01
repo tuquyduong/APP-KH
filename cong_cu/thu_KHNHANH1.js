@@ -12,7 +12,10 @@ let dat = 0, hong = 0;
 const k = (ten, dung, them = '') => {
   if (dung) { dat++; console.log(`  ✓ ${ten}`); } else { hong++; console.log(`  ✗ ${ten}${them ? '  — ' + them : ''}`); }
 };
-const doc = (f) => { try { return fs.readFileSync(path.join(GOC, f), 'utf8'); } catch { return ''; } };
+const docTho = (f) => { try { return fs.readFileSync(path.join(GOC, f), 'utf8'); } catch { return ''; } };
+// Ca đọc nguồn khớp trên code ĐÃ BỎ chú thích (`/* … */`, `// …` ngoài chuỗi có "://"): marker nằm trong chú thích không làm bài xanh.
+const boChuThich = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`\\])\/\/[^\n]*/g, '$1');
+const doc = (f) => (f.startsWith('src/') ? boChuThich(docTho(f)) : docTho(f));
 const nap = (f) => import(pathToFileURL(path.join(GOC, f)).href);
 const thu = async (ten, f) => { try { await f(); } catch (e) { k(`${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } };
 const cho = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -100,6 +103,11 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('D3 lưu hồ sơ có hồ sơ POS trả về → gộp vào kho, KHÔNG gọi lại /toi', g5 === 1 && c5.kho.lay().dl.khach.ten === 'Lan' && c5.kho.lay().dl.khach.qr === 'Q' && c5.kho.lay().dl.khach.xung_ho === 'co');
     D.gopToi(c5, {}); await cho(5);
     k('D3 POS không trả hồ sơ → lấy lại /toi', g5 === 2, String(g5));
+    await cho(5); D.gopToi(c5, { sdt: '0911222333', ten: 'Người khác' }); await cho(5);
+    k('D4 trả lời PUT /toi của phiên trước (sdt khác) về muộn → không gộp vào kho của khách hiện tại', c5.kho.lay().dl.khach.ten !== 'Người khác' && g5 === 2, JSON.stringify(c5.kho.lay().dl.khach));
+    let g6 = 0; const c6 = D.taoCua(() => { g6++; return Promise.resolve({}); });
+    D.gopToi(c6, { ten: 'X' });
+    k('D4 kho trống (đã đổi / hết phiên) → gopToi không ghi, không gọi', c6.kho.lay().dl === null && g6 === 0);
     const uu = doc('src/pages/UuDai.jsx');
     k('D3 nhận mã hoá đơn → lấy lại /diem, /voucher, /toi', /khiXong=\{\(\) => lamMoi\(\[cuaDiem, cuaVoucher, cuaToi\]\)\}/.test(uu));
     k('D3 lưu hồ sơ (HoSo) gộp kết quả vào cuaToi', /gopToi\(cuaToi/.test(doc('src/pages/HoSo.jsx')));
@@ -154,7 +162,26 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     const ap = doc('src/App.jsx');
     k('E2 hết phiên (401) không xoá dữ liệu trên máy: donPhien không gọi xoaTatCa', !/const donPhien = \(\) => \{[^\n]*xoaTatCa/.test(ap));
     const dlk = doc('src/duLieuKhach.js');
-    k('E3 gieo bản lưu chỉ khi đúng chủ (tomTatCuaKhach + docChu)', /tomTatCuaKhach\(docTomTat\(\), docChu\(\)\)/.test(dlk));
+    const D = await nap('src/duLieuKhach.js');
+    const kg = khoGia(); kg.setItem('kh_chu', 'chu-B'); kg.setItem('kh_tom_tat', JSON.stringify(ban));
+    D.xoaKhoKhach(); D.napTomTat(kg);
+    k('E3 bản lưu của khách A, máy đang giữ khách B (kh_chu) → KHÔNG gieo vào kho', D.cuaToi.kho.lay().dl === null && D.cuaDiem.kho.lay().dl === null, JSON.stringify(D.cuaToi.kho.lay().dl));
+    kg.setItem('kh_chu', 'chu-A'); D.napTomTat(kg);
+    const gieo = D.cuaToi.kho.lay().dl;
+    k('E3 đúng chủ → gieo tên, xưng hô, hạng, ví, điểm (cờ tuMay, luc 0 → vẫn lấy mới), không sdt / qr', gieo && gieo.tuMay && gieo.khach.ten === 'Nguyễn Linh' && D.cuaDiem.kho.lay().dl.points === 1250 && D.cuaToi.kho.lay().luc === 0 && !('sdt' in gieo.khach) && !('qr' in gieo.khach), JSON.stringify(gieo));
+    kg.removeItem('kh_chu'); D.xoaKhoKhach(); D.napTomTat(kg);
+    k('E3 chưa biết chủ (không kh_chu) → không gieo', D.cuaToi.kho.lay().dl === null);
+    const chuA = LM.dauVet(KHACH_A.sdt);
+    const kl = khoGia(); kl.setItem('kh_chu', chuA); kl.setItem('kh_tom_tat', JSON.stringify({ ...ban, chu: chuA }));
+    D.xoaKhoKhach(); D.napTomTat(kl);
+    D.cuaToi.kho.dat({ dl: { khach: { ...KHACH_A, ten: 'Linh Mới' } }, luc: 5, loi: '' }); D.luuTomTat(kl);
+    const sau = TT.docTomTat(kl);
+    k('E3 /toi thật về trước /diem → bản lưu đổi tên nhưng GIỮ điểm cũ của cùng khách', sau && sau.ten === 'Linh Mới' && sau.points === 1250, JSON.stringify(sau));
+    D.cuaDiem.kho.dat({ dl: { points: 1300, history: [] }, luc: 5, loi: '' }); D.luuTomTat(kl);
+    k('E3 /diem thật về → bản lưu lấy điểm mới', TT.docTomTat(kl).points === 1300);
+    kl.setItem('kh_chu', 'chu-khac'); kl.setItem('kh_tom_tat', '{"chu":"x"}'); D.luuTomTat(kl);
+    k('E3 hồ sơ thật KHÔNG thuộc chủ đang giữ máy → không ghi bản lưu (chờ doiKhach dọn)', kl.getItem('kh_tom_tat') === '{"chu":"x"}');
+    D.xoaKhoKhach();
     k('E3 ghi bản lưu chỉ khi hồ sơ thật thuộc đúng chủ (cungKhach === true)', /cungKhach\([^)]*\) !== true/.test(dlk));
     k('E4/F1 Thanh toán không đọc kho / bản lưu', !/cuaToi|duLieuKhach|tomTat/.test(doc('src/pages/ThanhToan.jsx')) && /dungTai\(layToi\)/.test(doc('src/pages/ThanhToan.jsx')));
     k('E4 bản lưu chỉ đọc ở duLieuKhach (không chỗ nào khác dùng để tính)', fs.readdirSync(path.join(GOC, 'src/pages')).every((f) => !/tomTatLuu/.test(doc('src/pages/' + f))) && !/tomTatLuu/.test(doc('src/datDon.js') + doc('src/dungDatDon.js')));
@@ -169,7 +196,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     const chan = khoGia(true); let vo = false; let d;
     try { d = N.docNgayDaXem(chan); N.ghiNgayDaXem('2026-11-01', chan); } catch { vo = true; }
     k('C3 kho bị chặn → không vỡ, đọc null → hiện màn mở', !vo && d === null && N.canHienManDau(d, '2026-11-01'));
-    k('C2 ghi chú ngoại lệ §6 ngay tại dòng code', /homNayMay[^\n]*\n?[^\n]*/.test(doc('src/ngayManDau.js')) && /§6[^\n]*(hiệu ứng|hiện \/ không hiện)/.test(doc('src/ngayManDau.js')));
+    k('C2 ghi chú ngoại lệ §6 ngay trên dòng code homNayMay (chú thích → đọc bản thô)', /§6[^\n]*(hiệu ứng|hiện \/ không hiện)[^\n]*\nexport const homNayMay/.test(docTho('src/ngayManDau.js')));
     const md = doc('src/components/ManDau.jsx');
     k('C1 ManDau dùng quy tắc ngày (canHienManDau + homNayMay)', /canHienManDau\(docNgayDaXem\(\), homNayMay\(\)\)/.test(md) && /ghiNgayDaXem\(homNayMay\(\)\)/.test(md));
   });
@@ -276,6 +303,7 @@ async function trinhDuyet(pw) {
   const chu = (t, sel) => t.locator(sel).first().innerText().catch(() => '');
   const doiHet = async (t, sel, mau, ms = 4000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (mau.test(await chu(t, sel))) return Date.now() - t0; await t.waitForTimeout(25); } return -1; };
   const anHien = (t, an) => t.evaluate((an) => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => an }); Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => (an ? 'hidden' : 'visible') }); document.dispatchEvent(new Event('visibilitychange')); }, an);
+  const chup = async (t, ten) => { if (process.env.LUU_ANH_DIR) await t.screenshot({ path: path.join(process.env.LUU_ANH_DIR, ten + '.png') }); };
   const sang = (t, duong) => t.evaluate((d) => { history.pushState(history.state, '', d); dispatchEvent(new PopStateEvent('popstate', { state: history.state })); }, duong);
 
   // B1 + A3: mở app → mỗi cửa một lần; chuyển tab 3 vòng → không gọi thêm, nội dung có ngay.
@@ -312,17 +340,19 @@ async function trinhDuyet(pw) {
     });
   }
 
+  for (const rong of [360, 390, 430]) {
   // B3 + G — vãng lai
-  await may('vanglai', { token: '' }, async ({ S, trang }) => {
+  await may(`vanglai-${rong}`, { rong, token: '' }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/uudai'); await t.waitForTimeout(TRE + 500);
-    k('B3 chưa đăng nhập → không gọi cửa cần token', KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
+    k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
     const the = await chu(t, '#rewards .tier-card');
-    k('G1 bảng hạng vãng lai không hiện hạng 0% (Test0d), vẫn hiện Vàng 10%', /Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
+    k(`G1 [${rong}] bảng hạng vãng lai không hiện hạng 0% (Test0d), vẫn hiện Vàng 10%`, /Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
+    await chup(t, `ung-dung_uudai-vanglai-hang_${rong}`);
   });
 
   // C1 + E3 — mở lần 2 cùng ngày; đổi ngày
-  await may('lan-hai', { xemManDau: false }, async ({ ctx, S, trang }) => {
+  await may(`lan-hai-${rong}`, { rong, xemManDau: false }, async ({ ctx, S, trang }) => {
     const t = await trang();
     await mo(t, '/trangchu');
     k('C1 lần mở đầu tiên trong ngày → có màn mở', (await t.locator('#splashOverlay').count()) === 1);
@@ -348,6 +378,23 @@ async function trinhDuyet(pw) {
     await mo(t3, '/trangchu');
     k('C1 đổi ngày → có màn mở', (await t3.locator('#splashOverlay').count()) === 1);
   });
+
+  // F1 — Thanh toán luôn lấy /toi mới; nút ví khoá tới khi /toi về, kể cả khi kho / bản lưu có số dư đủ
+  await may(`thanh-toan-${rong}`, { rong, gieo: { kh_gio: JSON.stringify([{ ma: 'TLB', so_luong: 1, ghi_chu: '' }]), kh_chu: LM.dauVet(KHACH_A.sdt), kh_tom_tat: JSON.stringify({ chu: LM.dauVet(KHACH_A.sdt), luc: 1, ten: 'Nguyễn Linh', xung_ho: 'chi', hang: null, so_du_vi: 999999, points: 1 }) } }, async ({ S, trang }) => {
+    const t = await trang();
+    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(TRE + 300);
+    const n0 = dem(S, '/toi');
+    await sang(t, '/thanhtoan'); await t.waitForTimeout(TRE - 400);
+    const vi = t.locator('#checkout .opt-row', { hasText: 'Ví nội bộ' });
+    const lop = await vi.getAttribute('class'), ch = await vi.innerText();
+    await chup(t, `ung-dung_thanhtoan-dang-cap-nhat_${rong}`);
+    k(`F1 [${rong}] mở Thanh toán → /toi được gọi lại`, dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
+    k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /btn-disabled/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
+    await t.waitForTimeout(TRE + 300);
+    k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/btn-disabled/.test(await vi.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
+    k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
+  });
+  }
 
   // E2 + D4 + B2 — đăng xuất xoá; 401 giữ nhưng không hiện; khách B không bao giờ thấy số của A
   const dangNhapB = async (t) => {
@@ -381,20 +428,6 @@ async function trinhDuyet(pw) {
     const thay = await dangNhapB(t);
     k('E3/D4 sau 401, khách B đăng nhập → không lúc nào thấy số / tên của A', thay.length === 0, thay[0]);
     k('E2 khách B đăng nhập → bản tóm tắt của A bị thay', !/Linh|1250/.test(await t.evaluate(() => localStorage.getItem('kh_tom_tat') || '')));
-  });
-
-  // F1 — Thanh toán luôn lấy /toi mới; nút ví khoá tới khi /toi về, kể cả khi kho / bản lưu có số dư đủ
-  await may('thanh-toan', { gieo: { kh_gio: JSON.stringify([{ ma: 'TLB', so_luong: 1, ghi_chu: '' }]), kh_chu: LM.dauVet(KHACH_A.sdt), kh_tom_tat: JSON.stringify({ chu: LM.dauVet(KHACH_A.sdt), luc: 1, ten: 'Nguyễn Linh', xung_ho: 'chi', hang: null, so_du_vi: 999999, points: 1 }) } }, async ({ S, trang }) => {
-    const t = await trang();
-    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(TRE + 300);
-    const n0 = dem(S, '/toi');
-    await sang(t, '/thanhtoan'); await t.waitForTimeout(TRE - 400);
-    const vi = t.locator('#checkout .opt-row', { hasText: 'Ví nội bộ' });
-    const lop = await vi.getAttribute('class'), ch = await vi.innerText();
-    k('F1 mở Thanh toán → /toi được gọi lại', dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
-    k('F1 chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)', /btn-disabled/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
-    await t.waitForTimeout(TRE + 300);
-    k('F1 /toi về → ví mở, số dư mới', !/btn-disabled/.test(await vi.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
   });
 
   // D3 nhận mã; D1 ẩn / hiện; D2 mỗi 5 phút

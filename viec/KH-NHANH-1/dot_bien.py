@@ -16,7 +16,9 @@ MANDAU = 'src/components/ManDau.jsx'
 
 DOT_BIEN = [
     ('VS-TT-DUNG-SO-DU-KHO', TT, "import { layToi } from '../api.js';\nimport { dungTai } from '../dungTai.js';", "import { cuaToi as layToi, dungCua as dungTai } from '../duLieuKhach.js';", True),
-    ('VS-TOMTAT-KHACH-KHAC', KHO, "const ban = tomTatCuaKhach(docTomTat(), docChu());", "const ban = docTomTat();", False),
+    ('VS-TOMTAT-KHACH-KHAC', KHO, "const ban = tomTatCuaKhach(docTomTat(k), docChu(k));", "const ban = docTomTat(k);", False),
+    ('VS-GOP-HO-SO-PHIEN-CU', KHO, "  if (khach && khach.sdt && cu.sdt && khach.sdt !== cu.sdt) return;", "", False),
+    ('VS-TOMTAT-MAT-DIEM', KHO, "diem && !diem.tuMay ? diem : cu && { points: cu.points }", "diem && !diem.tuMay ? diem : null", False),
     ('VS-TAB-GOI-LAI', KHO, "useEffect(() => { cua.napNeuCu(); }, [cua]);", "useEffect(() => { cua.lay(); }, [cua]);", True),
     ('VS-DANGXUAT-GIU-TOMTAT', LUUMAY, "KHOA_GIA_HAN, KHOA_TOM_TAT];", "KHOA_GIA_HAN];", True),
     ('VS-MANDAU-LAN-HAI', MANDAU, "doc(KHOA_DA_XEM) !== '1' && canHienManDau(docNgayDaXem(), homNayMay())", "doc(KHOA_DA_XEM) !== '1'", True),

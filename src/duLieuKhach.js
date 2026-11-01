@@ -56,29 +56,36 @@ export const lamMoiKhiQuayLai = (ds, bay = Date.now()) => ds.forEach((c) => { if
 /** Lưu hồ sơ xong: POS trả hồ sơ → gộp vào kho (không gọi lại); không trả → lấy lại /toi. */
 export function gopToi(cua, khach) {
   const s = cua.kho.lay();
-  if (!khach || !Object.keys(khach).length || !s.dl || !s.dl.khach || s.dl.tuMay) { cua.lay(); return; }
-  cua.kho.dat({ ...s, dl: { ...s.dl, khach: { ...s.dl.khach, ...khach } } });
+  const cu = s.dl && !s.dl.tuMay && s.dl.khach;
+  if (!cu) return; // kho trống (đã đổi / hết phiên): không có gì để gộp, mở màn sau sẽ lấy mới
+  if (khach && khach.sdt && cu.sdt && khach.sdt !== cu.sdt) return; // trả lời của phiên trước về muộn: không gộp hồ sơ người khác
+  if (!khach || !Object.keys(khach).length) { cua.lay(); return; }
+  cua.kho.dat({ ...s, dl: { ...s.dl, khach: { ...cu, ...khach } } });
 }
 
-/** Gieo bản tóm tắt trên máy vào kho /toi, /diem (luc = 0 → vẫn lấy mới ngay). Chỉ bản của đúng khách đang giữ máy (`kh_chu`). */
-export function napTomTat() {
-  const ban = tomTatCuaKhach(docTomTat(), docChu());
+/** Gieo bản tóm tắt trên máy vào kho /toi, /diem (luc = 0 → vẫn lấy mới ngay). Chỉ bản của đúng khách đang giữ máy (`kh_chu`). `k` = kho tiêm để thử. */
+export function napTomTat(k) {
+  const ban = tomTatCuaKhach(docTomTat(k), docChu(k));
   if (!ban) return;
   const { ten, xung_ho, hang, so_du_vi, points } = ban;
   if (!cuaToi.kho.lay().dl) cuaToi.kho.dat({ dl: { tuMay: true, khach: { ten, xung_ho, hang, so_du_vi } }, luc: 0, loi: '' });
   if (typeof points === 'number' && !cuaDiem.kho.lay().dl) cuaDiem.kho.dat({ dl: { tuMay: true, points }, luc: 0, loi: '' });
 }
 
-/** Ghi bản tóm tắt khi có hồ sơ THẬT của đúng khách đang giữ máy (khác khách: chờ luuMay.doiKhach dọn trước). */
-export function luuTomTat() {
+/** Ghi bản tóm tắt khi có hồ sơ THẬT của đúng khách đang giữ máy (khác khách: chờ luuMay.doiKhach dọn trước). `k` = kho tiêm để thử. */
+export function luuTomTat(k) {
   const toi = cuaToi.kho.lay().dl;
   const sdt = toi && !toi.tuMay && toi.khach && toi.khach.sdt;
-  if (!sdt || cungKhach(sdt) !== true) return;
-  const ban = rutTomTat(toi, cuaDiem.kho.lay().dl, dauVet(sdt), Date.now());
-  if (ban) ghiTomTat(ban);
+  if (!sdt || cungKhach(sdt, k) !== true) return;
+  const chu = dauVet(sdt);
+  const diem = cuaDiem.kho.lay().dl;
+  const cu = tomTatCuaKhach(docTomTat(k), chu); // /diem chưa về (hoặc lỗi): giữ điểm của bản lưu cũ cùng khách
+  const ban = rutTomTat(toi, diem && !diem.tuMay ? diem : cu && { points: cu.points }, chu, Date.now());
+  if (ban) ghiTomTat(ban, k);
 }
-cuaToi.kho.dangKy(luuTomTat);
-cuaDiem.kho.dangKy(luuTomTat);
+const ghiKhiDoi = () => luuTomTat();
+cuaToi.kho.dangKy(ghiKhiDoi);
+cuaDiem.kho.dangKy(ghiKhiDoi);
 
 /** Màn đọc một cửa: { dl, loi, dangTai, taiLai } (cùng dạng dungTai → dùng được TrangTai). Mở màn → lấy ngầm nếu bản quá 5 phút. */
 export function dungCua(cua, { that = false } = {}) {
