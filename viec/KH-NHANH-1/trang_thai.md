@@ -149,3 +149,26 @@ BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 207 đạt · 4 hỏng
 BV-HANG-0: ĐỎ — 207 đạt · 4 hỏng
 TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
 ```
+
+## Soát độc lập /ra-soat — vòng 3 (agent general-purpose, chỉ đọc) — báo cáo (giữ nguyên ý, gọn dòng)
+KHÔNG ĐẠT — "lỗi nhẹ: một chỗ Lịch sử đơn khách nhìn thấy được, và giấy tờ ghi một mục không có thật. Đường tiền và bảo mật không thấy lỗi."
+LỖI TÌM ĐƯỢC:
+- src/pages/Don.jsx:50 `useEffect(…, [dau.dl])` — mỗi lần làm mới ngầm `dl` là đối tượng mới dù nội dung y cũ → xoá các trang khách đã bấm "Xem thêm" (5 phút, quay lại app, mở màn khi bản cũ) — K5.
+- trang_thai.md:113 ghi "Thêm `## Phát hiện` và mục CHƯA KIỂM thật (dưới đây)" nhưng không có mục CHƯA KIỂM — K1.
+- thu_KHNHANH1.js:112, :128 — Don.jsx viết lại chỉ có ca đọc nguồn, không ca Chromium "Xem thêm" — K3.
+NGHI NGỜ: kết quả Chromium sau vòng sửa 2 chưa ghi; Don.jsx đang chờ trang 2 mà trang 1 làm mới → có thể gọi trùng trang 2 (lọc trùng `ma` che được); TaiKhoan.jsx:40 hiện " · Hạng Vàng" có dấu phân cách đứng đầu khi đang hiện bản lưu (~1 giây); tên ca Chromium lan-hai… không ghi [rong].
+NGHIỆM THU: 25/28 · thiếu: A4 (Lịch sử đơn mất trang khi làm mới ngầm), H3 (chờ phiên chính), H4 (thử tay chủ quán). D3 "đặt đơn" chỉ đọc nguồn vì DAT_ONLINE còn tắt — đạt kèm ghi chú, phải ghi CHƯA KIỂM thật.
+CHƯA SOÁT ĐƯỢC: không chạy npm test, --day-du, cong.js, dot_bien.py, Chromium; không xem ảnh; không thử điện thoại / Zalo.
+BÀI HỌC: NGUYÊN TẮC — đặt lại state theo dữ liệu làm mới ngầm phải so NỘI DUNG, không so tham chiếu. KHOÁ — màn đổi mô hình state phải có ít nhất một ca hành vi. KHOÁ (bộ kiểm) — mỗi "ghi X / (dưới đây)" phải grep ra tiêu đề X (lặp ba vòng).
+
+### Vòng sửa 3 (commit 1b4414a) — vòng sửa CUỐI (so_vong_sua_toi_da = 3)
+- Don.jsx: chỉ bỏ trang sau khi DANH SÁCH MÃ trang 1 đổi (`khoaTrang1` + `useRef`); lần nạp đầu không bỏ. Ca Chromium mới `lich-su-don-{360,390,430}`:
+  "Xem thêm" → trang 2; làm mới ngầm không có đơn mới → trang 2 còn; có đơn mới → hiện đơn mới, bỏ trang sau, còn "Xem thêm". Đột biến VS-DON-GIU-TRANG-SAU, VS-DON-SO-THAM-CHIEU (bản lỗi vòng 2).
+- TaiKhoan.jsx: dòng phụ ghép bằng `filter(Boolean).join(' · ')` — không còn dấu phân cách thừa khi đang hiện bản lưu (chưa có sdt).
+- Mục `## Chưa kiểm` dưới đây (thật). Kết quả Chromium ghi ở mục "Kết quả kiểm".
+
+## Chưa kiểm
+- D3 "đặt đơn → /toi, /don, /diem" (`App.jsx` `xongDatDon` gọi `lamMoi([cuaToi, cuaDon, cuaDiem])`): chỉ có ca đọc nguồn (đã bỏ chú thích) + đột biến không có. Luồng đặt đơn thật còn tắt (cờ DAT_ONLINE, cổng KH-MUA-1b) nên chưa dựng ca Chromium đặt đơn → kiểm khi KH-MUA-1b bật cờ.
+- Marker trong CHUỖI vẫn làm xanh ca đọc nguồn B1 / B2 / D3 trên GitHub (không trình duyệt); ở máy các ca Chromium B1 / B2 bù lại.
+- Điện thoại thật, trình duyệt Zalo, mạng chậm thật (POS thật ~400 ms / vòng) — chủ quán thử tay (H4).
+- ManDau hiện theo đồng hồ máy: máy khách sai giờ thì màn mở có thể hiện / không hiện lệch ngày (ngoại lệ §6 có chủ đích, chỉ hiệu ứng).
