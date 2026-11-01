@@ -280,7 +280,7 @@ async function trinhDuyet(pw) {
       const duong = p.slice('/api/kh'.length);
       let than = null; try { than = req.postDataJSON(); } catch { /* không thân */ }
       S.goi.push({ pt, duong, auth, q: u.search, luc: Date.now() });
-      await cho(TRE);
+      await cho(S.tre || TRE);
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1 }] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY, dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
@@ -367,13 +367,14 @@ async function trinhDuyet(pw) {
     k('E1 có bản tóm tắt sau khi lấy /toi, /diem; không sdt / qr / địa chỉ', !!luu && /1250/.test(luu) && !/0909123456|QR-A-BI-MAT|Lê Lợi/.test(luu), luu);
     await t.close();
     S.diem['tok-A'] = 1300; S.khach['tok-A'].so_du_vi = 150000;
+    S.tre = 1500; // POS chậm hơn ở lần mở thứ hai: "hiện ngay từ bản lưu" đo được rõ cả khi máy chạy thử đang bận
     const t2 = await trang();
     const t0 = Date.now();
     await mo(t2, '/trangchu');
     const daiNgay = await chu(t2, '#home .points-card .num'); const chao = await chu(t2, '#home h1');
     const sau = Date.now() - t0;
     k('C1 mở lần 2 cùng ngày → KHÔNG có màn mở', (await t2.locator('#splashOverlay').count()) === 0);
-    k('E3 điểm + tên hiện NGAY từ bản lưu (trước khi POS trả)', /1\.250/.test(daiNgay) && /Linh/.test(chao) && sau < TRE, `${daiNgay} | ${chao} | ${sau} ms`);
+    k('E3 điểm + tên hiện NGAY từ bản lưu (trước khi POS trả)', /1\.250/.test(daiNgay) && /Linh/.test(chao) && sau < S.tre, `${daiNgay} | ${chao} | ${sau} ms`);
     k('E3 rồi đổi sang số POS mới', (await doiHet(t2, '#home .points-card .num', /1\.300/)) >= 0, await chu(t2, '#home .points-card .num'));
     await t2.locator('.tabbar .tab:nth-child(6)').click();
     k('E3 Tài khoản: số dư ví mới 150.000đ', (await doiHet(t2, '#account .acc-q', /150\.000/)) >= 0, await chu(t2, '#account .acc-q'));
