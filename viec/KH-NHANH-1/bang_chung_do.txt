@@ -14,6 +14,9 @@ Cách chạy trên gốc: bản src/ + index.html + public/ của 7d07931 (git a
    ✗ B2 vừa đăng nhập → tải trước (/don 0 lần), ✗ F1 chờ /toi ("Chưa đọc được số dư"), ✗ D1 ẩn 61 giây rồi hiện lại (2,2,1,0 → 2,2,1,0),
    ✗ G1 bảng hạng vãng lai còn "Test0d — giảm 0%".
    sau vá: KHONG_TRINH_DUYET=1 → 69 đạt · 0 hỏng · có Chromium → 126 đạt · 0 hỏng
+   vòng sửa 1 (sau /ra-soat): thêm ca hàm thuần E3 / D4 gopToi, bỏ chú thích trước khi khớp nguồn, Thanh toán / lần hai / vãng lai chạy 360/390/430.
+   chạy lại trên gốc (bản bài a90e859): 4 đạt · 7 hỏng (cùng 7 dòng ✗ như trên).
+   sau vá: KHONG_TRINH_DUYET=1 → 76 đạt · 0 hỏng · có Chromium → 166 đạt · 0 hỏng
 
 == thu_KHLUU1.js (bài cũ sửa: ca đọc nguồn B3 + ca mới B3 đăng nhập; ca Chromium C1(h) đổi theo; đọc KHONG_TRINH_DUYET) — trên gốc
   ✗ B3 App gọi cuaToi.lay → doiKhach(khach.sdt) → tn.nap()
@@ -33,7 +36,7 @@ Cách chạy trên gốc: bản src/ + index.html + public/ của 7d07931 (git a
 29 đạt · 3 hỏng
    sau vá: KHONG_TRINH_DUYET=1 → 32 đạt · 0 hỏng · có Chromium → 172 đạt · 0 hỏng
 
-SỐ CA thu_KHNHANH1: 69
+SỐ CA thu_KHNHANH1: 76
 SỐ CA thu_KHLUU1: 21
 SỐ CA thu_KHXEM1: 61
 SỐ CA thu_KHUI3d: 32

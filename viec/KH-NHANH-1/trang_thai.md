@@ -29,7 +29,66 @@
 | App.jsx đăng nhập → doiKhach trước khi bật phiên (B2, E2) | BV-DOIKHACH-KHI-DANG-NHAP |
 | App.jsx dungLamMoiNgam (D1, D2) | BV-LAM-MOI-NGAM |
 | UuDai.jsx nhận mã → lamMoi diem, voucher, toi (D3) | BV-NHAN-MA-LAM-MOI |
+| duLieuKhach.gopToi: bỏ hồ sơ của phiên trước (sdt khác) (D4, vòng sửa 1) | VS-GOP-HO-SO-PHIEN-CU |
+| duLieuKhach.luuTomTat: giữ điểm cũ khi /diem chưa về (E3, vòng sửa 1) | VS-TOMTAT-MAT-DIEM |
 
-Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
+Tên đột biến: VS-TT-DUNG-SO-DU-KHO, VS-TOMTAT-KHACH-KHAC, VS-GOP-HO-SO-PHIEN-CU, VS-TOMTAT-MAT-DIEM, VS-TAB-GOI-LAI, VS-DANGXUAT-GIU-TOMTAT, VS-MANDAU-LAN-HAI, VS-TOMTAT-CO-QR,
 VS-KHONG-DUNG-CHUNG-LENH, VS-KET-QUA-PHIEN-CU, VS-LOI-XOA-BAN-CU, VS-QUAY-LAI-KHONG-SO-GIO, VS-HANG-0-CON-HIEN, BV-TAI-TRUOC,
 BV-XOA-KHO-KHI-DOI-PHIEN, BV-DOIKHACH-KHI-DANG-NHAP, BV-LAM-MOI-NGAM, BV-NHAN-MA-LAM-MOI, BV-SO-DU-DANG-CAP-NHAT, BV-HANG-0
+
+## Soát độc lập /ra-soat — vòng 1 (agent general-purpose, chỉ đọc) — nguyên báo cáo
+KHÔNG ĐẠT
+
+Lý do chính: hai mục nghiệm thu chưa có bằng chứng ghi trong kho (H3, và một phần H1). Ngoài ra lớp chặn "khách B thấy bản tóm tắt của khách A" chỉ được bảo vệ bằng một mẫu đọc nguồn. Code chạy đúng ở mọi ca tôi chạy được: `KHONG_TRINH_DUYET=1 node cong_cu/thu_KHNHANH1.js` cho 69 đạt · 0 hỏng; chạy có Chromium cho 126 đạt · 0 hỏng (tôi tự chạy lại cả hai).
+
+LỖI TÌM ĐƯỢC:
+- viec/KH-NHANH-1/trang_thai.md (cả file, 35 dòng) — chỉ có "Bước 1" và bảng tên đột biến. KHÔNG ghi kết quả `npm test`, `--day-du`, `node tu_chay/cong.js chay`; không ghi kết quả chạy dot_bien.py (chỉ có tên, không có dòng ĐỎ/XANH, nên con số 18/18 không thấy trong kho); không ghi kết quả phần Chromium (CLAUDE.md §9 bắt ghi vào trang_thai.md). Câu "126 đạt, 18/18 bị bắt, npm test xanh" của máy chính vì vậy chưa có căn cứ trong kho. Thuộc khuôn K1, và trái LUAT §6.3.
+- cong_cu/thu_KHNHANH1.js:157 + dot_bien.py (dòng VS-TOMTAT-KHACH-KHAC, cột False) — lớp chặn E3 (duLieuKhach.js `napTomTat`: `tomTatCuaKhach(docTomTat(), docChu())`) chỉ được kiểm bằng regex đọc nguồn. Không ca Chromium nào có tình huống "kh_tom_tat thuộc khách khác với kh_chu", vì DangNhap→doiKhach (App.jsx:183) đã xoá trước. Gỡ lớp chặn mà để lại đúng chuỗi đó trong chú thích thì bài vẫn xanh. `napTomTat` đọc thẳng localStorage nên không tiêm kho để thử hàm thuần được. Thuộc khuôn K3 (bài chỉ kiểm marker).
+- Tương tự, các ca phần 1 ở thu_KHNHANH1.js:94, 106, 108, 109, 159, 179, 185 chỉ là regex trên nguồn; regex cũng khớp khi chuỗi nằm trong chú thích. Trên GitHub (không có trình duyệt) đây là lớp kiểm duy nhất cho B1/B2/D3 đặt đơn/D4/F1. Riêng D3 "đặt đơn → /toi, /don, /diem" (App.jsx `xongDatDon`) không có ca hành vi nào, kể cả trong Chromium. Thuộc khuôn K3.
+- viec/KH-NHANH-1/doi_chieu_demo.md:3 — ghi "Không chụp so ảnh mới" dù có 3 chỗ hiện khác trên màn. CLAUDE.md §5 yêu cầu so ảnh và lưu `viec/<MÃ>/so_anh/`. Dòng "Màn mở" ở cột lý do không có mã (a)–(e); dòng G1 ghi (b) nhưng lý do thật là quyết định 01.11.
+
+NGHI NGỜ:
+- src/duLieuKhach.js `gopToi` — không có chốt `phien` như `lay()`: PUT /toi của phiên cũ về sau khi đổi phiên có thể gộp hồ sơ cũ vào kho khách mới; kho rỗng thì gọi `cua.lay()` (GET /toi không token).
+- `luuTomTat` + `rutTomTat` — /toi thật về TRƯỚC /diem thì bản lưu bị ghi đè không có `points`.
+- src/App.jsx `hangToi` — bản thứ hai của `/toi.hang`, chỉ đặt một lần mỗi phiên; giá theo hạng ở Menu/Giỏ không theo kho mới (có từ trước, K4).
+- Mở app với token đã hết hạn: `napTomTat` hiện bản lưu (đúng chủ) ~0,4–1,4 giây trước khi 401 về.
+- B1 gửi 4 cửa có token cùng lúc; token hết hạn → `donPhien` chạy 4 lần (vô hại, chưa có bài thử).
+- Kho không có trường `dangTai`; suy ra trong `hienCua` — tương đương A1.
+
+NGHIỆM THU: 25/28 mục có bằng chứng · mục thiếu: H1 (chỉ ca chuyển tab chạy 3 cỡ), H3 (không ghi kết quả npm test / --day-du / cong.js / đột biến), H4 (thử tay chủ quán).
+CHƯA SOÁT ĐƯỢC: không chạy npm test, --day-du, cong.js, dot_bien.py; ba bài cũ chỉ đọc diff; không thử điện thoại thật / Zalo.
+BÀI HỌC: (1) KHOÁ: napTomTat nhận kho tiêm + ca hàm thuần "chu-A vs kh_chu chu-B → kho rỗng". (2) KHOÁ: ca đọc nguồn bỏ chú thích trước khi khớp. (3) NGUYÊN TẮC: mọi chỗ ghi kho chung từ kết quả bất đồng bộ phải qua chốt phiên. (4) NGUYÊN TẮC / bộ kiểm: trang_thai.md phải có dòng kết quả thật trước khi gọi /ra-soat.
+
+### Vòng sửa 1 (commit a90e859, 5198770)
+- gopToi: kho trống → không ghi / không gọi; `sdt` POS trả khác `sdt` trong kho → bỏ (ca D4 hàm thuần mới + VS-GOP-HO-SO-PHIEN-CU).
+- luuTomTat: /diem chưa thật → giữ `points` của bản lưu cũ cùng khách (ca E3 mới + VS-TOMTAT-MAT-DIEM).
+- napTomTat / luuTomTat nhận kho tiêm → ca hàm thuần E3 "bản của A, máy giữ B → không gieo"; "chưa biết chủ → không gieo"; "hồ sơ không thuộc chủ → không ghi".
+- Bài thử: ca đọc nguồn khớp trên src ĐÃ BỎ chú thích (`boChuThich`); ca ghi chú §6 đọc bản thô có ràng buộc ngay trên dòng `homNayMay`.
+- H1: vãng lai (G1, B3), lần hai / đổi ngày (C1, E3), Thanh toán (F1) chạy 360/390/430; chụp ảnh `so_anh/` + ảnh demo; doi_chieu_demo.md ghi lý do theo sổ quyết định.
+- Không nhận: `hangToi` (có từ trước, ngoài mục tiêu — ghi `## Phát hiện`); khoá phiên ManDau (giữ, lý do ở ke_hoach.md); `donPhien` 4 lần (vô hại); token hết hạn hiện bản lưu đúng chủ < 1,5 giây (ghi `## Phát hiện`).
+- D3 "đặt đơn": giữ ca đọc nguồn (đã bỏ chú thích) — luồng đặt đơn thật nằm sau cờ DAT_ONLINE / cổng KH-MUA-1b, chưa dựng ca Chromium (ghi CHƯA KIỂM).
+
+## Kết quả chạy đột biến (python3 viec/KH-NHANH-1/dot_bien.py, sau vòng sửa 1, HEAD 5198770)
+```
+VS-TT-DUNG-SO-DU-KHO: ĐỎ — 159 đạt · 7 hỏng
+VS-TOMTAT-KHACH-KHAC: ĐỎ — 74 đạt · 2 hỏng
+VS-GOP-HO-SO-PHIEN-CU: ĐỎ — 75 đạt · 1 hỏng
+VS-TOMTAT-MAT-DIEM: ĐỎ — 75 đạt · 1 hỏng
+VS-TAB-GOI-LAI: ĐỎ — 163 đạt · 3 hỏng
+VS-DANGXUAT-GIU-TOMTAT: ĐỎ — 163 đạt · 3 hỏng
+VS-MANDAU-LAN-HAI: ĐỎ — 151 đạt · 11 hỏng
+VS-TOMTAT-CO-QR: ĐỎ — 160 đạt · 6 hỏng
+VS-KHONG-DUNG-CHUNG-LENH: ĐỎ — 74 đạt · 2 hỏng
+VS-KET-QUA-PHIEN-CU: ĐỎ — 75 đạt · 1 hỏng
+VS-LOI-XOA-BAN-CU: ĐỎ — 75 đạt · 1 hỏng
+VS-QUAY-LAI-KHONG-SO-GIO: ĐỎ — 75 đạt · 1 hỏng
+VS-HANG-0-CON-HIEN: ĐỎ — 161 đạt · 5 hỏng
+BV-TAI-TRUOC: ĐỎ — 151 đạt · 15 hỏng
+BV-XOA-KHO-KHI-DOI-PHIEN: ĐỎ — 75 đạt · 1 hỏng
+BV-DOIKHACH-KHI-DANG-NHAP: ĐỎ — 164 đạt · 2 hỏng
+BV-LAM-MOI-NGAM: ĐỎ — 163 đạt · 3 hỏng
+BV-NHAN-MA-LAM-MOI: ĐỎ — 164 đạt · 2 hỏng
+BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 162 đạt · 4 hỏng
+BV-HANG-0: ĐỎ — 162 đạt · 4 hỏng
+TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
+```
