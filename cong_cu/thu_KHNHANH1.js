@@ -109,7 +109,8 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('K5 cùng số điện thoại khác định dạng (+84… / 0…) → vẫn gộp (không chặn oan)', c5.kho.lay().dl.khach.ten === 'Cùng khách' && g5 === 2, JSON.stringify(c5.kho.lay().dl.khach));
     const dlk0 = doc('src/duLieuKhach.js');
     k('A3 mở màn: dungCua chỉ lấy khi bản quá 5 phút (napNeuCu), không gọi thẳng lay', /export function dungCua[\s\S]*?useEffect\(\(\) => \{ cua\.napNeuCu\(\); \}, \[cua\]\)/.test(dlk0) && !/export function dungCua[\s\S]*?useEffect\(\(\) => \{ cua\.lay\(\)/.test(dlk0));
-    k('A4 Lịch sử đơn: trang 1 làm mới → bỏ các trang sau đã xem (không hụt dòng do OFFSET)', /useEffect\(\(\) => \{ datSau\(TRANG_SAU_RONG\); \}, \[dau\.dl\]\)/.test(doc('src/pages/Don.jsx')));
+    const dnSrc = doc('src/pages/Don.jsx');
+    k('A4 Lịch sử đơn: chỉ bỏ trang sau khi DANH SÁCH MÃ trang 1 đổi (so nội dung, không so đối tượng)', /const khoaTrang1 = dau\.dl \? dau\.dl\.data\.map\(\(d\) => d\.ma\)\.join\(','\) : ''/.test(dnSrc) && /if \(khoaTruoc\.current && khoaTrang1 !== khoaTruoc\.current\) datSau\(TRANG_SAU_RONG\)/.test(dnSrc) && /\}, \[khoaTrang1\]\)/.test(dnSrc) && !/\[dau\.dl\]\)/.test(dnSrc));
     let g6 = 0; const c6 = D.taoCua(() => { g6++; return Promise.resolve({}); });
     D.gopToi(c6, { ten: 'X' });
     k('D4 kho trống (đã đổi / hết phiên) → gopToi không ghi, không gọi', c6.kho.lay().dl === null && g6 === 0);
@@ -293,7 +294,9 @@ async function trinhDuyet(pw) {
       if (duong === '/toi') return json(200, { success: true, khach: S.khach[auth] });
       if (duong === '/diem') return json(200, { success: true, points: S.diem[auth], history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ', code: 'VC7', discount_type: 'fixed', discount_value: 20000, expires_at: '2026-11-30T23:59:59', status: 'active' }], ma_khach_moi: [] });
-      if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [] });
+      const donO = (ma) => ({ ma, ngay: '2026-10-30T19:00:00', tong: 30000, da_tra: 30000, trang_thai: 'completed', thanh_toan: 'paid' });
+      if (duong === '/don' && pt === 'GET' && u.search === '?trang=2') return json(200, { success: true, trang: 2, con_nua: false, data: [donO('TQD2')] });
+      if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: !!S.coDon, data: S.coDon ? (S.donMoi ? [donO('TQD9'), donO('TQD1')] : [donO('TQD1')]) : [] });
       if (duong === '/nhan-diem') { S.diem[auth] += 10; return json(200, { success: true, diem_cong: 10 }); }
       if (duong === '/gio/bao-gia') return json(200, BG);
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
@@ -460,6 +463,24 @@ async function trinhDuyet(pw) {
   });
 
   // D3 lưu hồ sơ: POS trả hồ sơ → không gọi lại /toi; Trang chủ đổi lời chào theo
+  // A4 — Lịch sử đơn: trang 1 ở kho chung, "Xem thêm" gọi trang 2; làm mới ngầm KHÔNG có đơn mới → trang 2 còn; có đơn mới → bỏ trang sau.
+  await may(`lich-su-don-${rong}`, { rong }, async ({ ctx, S, trang }) => {
+    S.coDon = true;
+    const t = await trang();
+    await mo(t, '/taikhoan/donhang'); await doiHet(t, '#orderhistory', /TQD1/);
+    await t.locator('#orderhistory .more-l span').click();
+    const coTrang2 = (await doiHet(t, '#orderhistory', /TQD2/)) >= 0;
+    k(`A4 [${rong}] "Xem thêm" → gọi /don?trang=2, hiện đơn trang 2`, coTrang2 && S.goi.some((g) => g.duong === '/don' && g.q === '?trang=2'));
+    const n1 = S.goi.filter((g) => g.duong === '/don' && g.q === '?trang=1').length;
+    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
+    const lai = S.goi.filter((g) => g.duong === '/don' && g.q === '?trang=1').length;
+    k(`A4 [${rong}] làm mới ngầm trang 1 không có đơn mới → trang 2 khách đã mở VẪN còn`, lai === n1 + 1 && /TQD2/.test(await chu(t, '#orderhistory')), `${n1} → ${lai} | ${await chu(t, '#orderhistory')}`);
+    S.donMoi = true;
+    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
+    const ch = await chu(t, '#orderhistory');
+    k(`A4 [${rong}] có đơn mới ở trang 1 → hiện đơn mới, bỏ trang sau cũ (không hụt dòng), còn "Xem thêm"`, /TQD9/.test(ch) && !/TQD2/.test(ch) && /Xem thêm/.test(ch), ch);
+  });
+
   await may(`ho-so-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
     await mo(t, '/taikhoan/thongtin'); await t.waitForSelector('#ten-toi'); await t.waitForTimeout(TRE + 300);

@@ -37,7 +37,7 @@ export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moT
             <div className="acc-card" {...bam(moHoSo)}>
               <div className="acc-top">
                 <div className="avatar">{(khach.ten || '?').trim().charAt(0).toUpperCase()}</div>
-                <div className="acc-n"><b>{khach.ten}</b><small>{cheSdt(khach.sdt)}{khach.hang ? ` · Hạng ${khach.hang.ten}` : ''}</small></div>
+                <div className="acc-n"><b>{khach.ten}</b><small>{[cheSdt(khach.sdt), khach.hang && `Hạng ${khach.hang.ten}`].filter(Boolean).join(' · ')}</small></div>
                 <span className="acc-edit">Sửa ›</span>
               </div>
               {(typeof khach.so_du_vi === 'number' || diem.dl || soVoucher !== null) && (

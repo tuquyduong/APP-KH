@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDon } from '../duLieuKhach.js';
@@ -46,8 +46,14 @@ const TRANG_SAU_RONG = { ds: [], trang: 1, conNua: null, dang: false, loi: '' };
 export default function LichSuDon({ chonDon, lui, datLai }) {
   const dau = dungCua(cuaDon); // trang 1 ở kho chung (tải trước khi mở app); trang 2 trở đi gọi khi khách bấm "Xem thêm" (không giữ)
   const [sau, datSau] = useState(TRANG_SAU_RONG);
-  // Trang 1 vừa làm mới (đơn mới đẩy đơn cũ sang trang sau — phân trang OFFSET): bỏ các trang sau đã xem, tránh hụt dòng; khách bấm "Xem thêm" lại.
-  useEffect(() => { datSau(TRANG_SAU_RONG); }, [dau.dl]);
+  // Trang 1 làm mới mà danh sách mã ĐỔI (đơn mới đẩy đơn cũ sang trang sau — phân trang OFFSET): bỏ các trang sau đã xem, tránh hụt dòng.
+  // So NỘI DUNG (mã đơn), không so đối tượng: làm mới ngầm không có đơn mới thì giữ nguyên các trang khách đã mở.
+  const khoaTrang1 = dau.dl ? dau.dl.data.map((d) => d.ma).join(',') : '';
+  const khoaTruoc = useRef(khoaTrang1);
+  useEffect(() => {
+    if (khoaTruoc.current && khoaTrang1 !== khoaTruoc.current) datSau(TRANG_SAU_RONG);
+    khoaTruoc.current = khoaTrang1;
+  }, [khoaTrang1]);
   const conNua = sau.conNua === null ? !!(dau.dl && dau.dl.con_nua) : sau.conNua;
   // Phân trang theo OFFSET: đơn mới làm trang sau lặp lại đơn cuối trang trước → bỏ đơn đã có (key trùng).
   const ds = (dau.dl ? dau.dl.data : []).concat(sau.ds).filter((d, i, a) => a.findIndex((c) => c.ma === d.ma) === i);
