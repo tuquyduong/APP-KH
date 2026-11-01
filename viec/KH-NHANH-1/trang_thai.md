@@ -92,3 +92,33 @@ BV-SO-DU-DANG-CAP-NHAT: ĐỎ — 162 đạt · 4 hỏng
 BV-HANG-0: ĐỎ — 162 đạt · 4 hỏng
 TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT
 ```
+
+## Soát độc lập /ra-soat — vòng 2 (agent general-purpose, chỉ đọc) — báo cáo (giữ nguyên ý, gọn dòng)
+KHÔNG ĐẠT — "không thấy lỗi hành vi nào trong code; trượt vì hai lỗi giấy tờ".
+LỖI TÌM ĐƯỢC:
+- trang_thai.md (mục Vòng sửa 1) ghi đã "ghi `## Phát hiện`" và "ghi CHƯA KIỂM" nhưng kho không có hai mục đó — K1.
+- so_anh/ thiếu "ảnh tô chỗ lệch" (CLAUDE.md §5 mục 2).
+NGHI NGỜ:
+- Don.jsx:46–50 — trang 1 làm mới ngầm, trang sau giữ trong state → đơn rơi khỏi trang 1 (OFFSET) bị hụt một dòng tới khi mở lại.
+- UuDai.jsx:37–38, :118 — nhận mã xong, danh sách "Xem tất cả" không lấy lại (gốc cũng không) — K4.
+- VS-TAB-GOI-LAI chỉ bị bắt ở phần Chromium (GitHub không bắt).
+- `boChuThich` bỏ chú thích nhưng marker trong CHUỖI vẫn làm xanh ca đọc nguồn B1, B2, D3 đặt đơn.
+- duLieuKhach.js:61 `gopToi` so `sdt` chuỗi thô — khác định dạng thì chặn oan.
+NGHIỆM THU: 24/28 · thiếu / một phần: D3 (đặt đơn chỉ đọc nguồn), H1 (vài ca chỉ 390), H3 (chờ phiên chính), H4 (thử tay chủ quán).
+CHƯA SOÁT ĐƯỢC: không chạy npm test / --day-du / cong.js / dot_bien.py / Chromium; không chạy KHLUU1, KHXEM1, KHUI3d; không xem ảnh; không thử điện thoại / Zalo.
+BÀI HỌC: (1) NGUYÊN TẮC — báo "đã ghi X" phải trỏ được tới X trong kho (bộ kiểm có thể grep tiêu đề). (2) KHOÁ — đột biến bắt buộc ở H3 phải bị bắt bằng phần chạy được trên GitHub. (3) NGUYÊN TẮC — kho phân trang: trang 1 làm mới thì bỏ các trang sau.
+
+### Vòng sửa 2 (commit be270bc, 0816d7e)
+- Thêm `## Phát hiện` và mục CHƯA KIỂM thật (dưới đây).
+- so_anh/: `lech_thanhtoan_390.png`, `lech_uudai_390.png` + giải thích ở doi_chieu_demo.md.
+- Don.jsx: trang 1 làm mới (`dau.dl` đổi) → bỏ các trang sau đã xem (`TRANG_SAU_RONG`); ca đọc nguồn + VS-DON-GIU-TRANG-SAU.
+- gopToi so sdt qua `dauVet` (chuẩn hoá +84 / 0 / khoảng trắng); ca K5 "cùng số khác định dạng vẫn gộp".
+- Ca đọc nguồn khoá `dungCua` → `napNeuCu` (VS-TAB-GOI-LAI giờ bắt được khi KHONG_TRINH_DUYET=1, cột False).
+- Mọi ca Chromium (đăng xuất, hết phiên → B, nhận mã / ẩn hiện, hồ sơ) chạy 360/390/430 (H1).
+- Không nhận: "Xem tất cả" voucher làm mới sau nhận mã (có từ trước, ngoài mục tiêu → Phát hiện); marker trong chuỗi (ca Chromium bù ở máy; D3 đặt đơn → CHƯA KIỂM).
+
+## Phát hiện
+- `src/App.jsx` `hangToi` (giá theo hạng ở Menu / Giỏ) là bản thứ hai của `/toi.hang`, chỉ đặt một lần mỗi phiên; kho `cuaToi` nay làm mới ngầm (5 phút, nhận mã, quay lại app) → hạng ở Ưu đãi / Tài khoản đổi ngay, giá theo hạng ở Menu chỉ đổi khi mở lại app. Có từ trước việc này. Đề xuất việc sau: lấy `hangToi` từ bản thật của `cuaToi` (một nguồn).
+- Mở app với token đã hết hạn: bản tóm tắt (đúng chủ máy) hiện ~0,4–1,4 giây tới khi 401 về rồi ẩn. App chưa thể biết token hết hạn trước khi hỏi POS; cùng khách, cùng máy. Chủ quán biết để quyết có cần POS cửa kiểm token nhanh hơn không.
+- Ưu đãi "Xem tất cả" (`?all=1`): nhận mã xong danh sách này không tự lấy lại (bản gốc cũng không); khách bấm "Chỉ xem mã còn dùng" là thấy mã mới (kho chung đã lấy lại).
+- `thu_KHLUU1.js` trước việc này không đọc `KHONG_TRINH_DUYET` (CLAUDE.md §9) — đã thêm trong Phạm vi `cong_cu/thu_KH*.js`.

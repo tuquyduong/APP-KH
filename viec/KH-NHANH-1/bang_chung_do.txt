@@ -36,7 +36,9 @@ Cách chạy trên gốc: bản src/ + index.html + public/ của 7d07931 (git a
 29 đạt · 3 hỏng
    sau vá: KHONG_TRINH_DUYET=1 → 32 đạt · 0 hỏng · có Chromium → 172 đạt · 0 hỏng
 
-SỐ CA thu_KHNHANH1: 76
+   vòng sửa 2 (bản bài be270bc): trên gốc 4 đạt · 7 hỏng (cùng 7 dòng ✗); sau vá KHONG_TRINH_DUYET=1 → 79 đạt · 0 hỏng.
+
+SỐ CA thu_KHNHANH1: 79
 SỐ CA thu_KHLUU1: 21
 SỐ CA thu_KHXEM1: 61
 SỐ CA thu_KHUI3d: 32
