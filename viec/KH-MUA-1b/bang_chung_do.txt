@@ -31,6 +31,13 @@ chạy với KHONG_TRINH_DUYET=1.
      ✗ D2 kho bị chặn + chưa rõ → vẫn khoá đặt, "Gửi lại đúng đơn này" (bản ghi giữ trong bộ nhớ trang)
    220 đạt · 6 hỏng
    sau vòng sửa 1: KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng · có Chromium → 229 đạt · 0 hỏng (thêm ca kiem-lai-luc-bam — đỏ với đột biến BV-KIEM-LAI-LUC-BAM 228·1)
+   vòng sửa 2 (sau /ra-soat vòng 2) — ca mới chạy trên code TRƯỚC khi sửa (src/ = bản vòng sửa 1, trước commit "vong sua 2"), có Chromium:
+     ✗ D3 kho chặn + đăng nhập mà không biết chủ cũ (doiKhach) → quên bản ghi trong bộ nhớ trang (không lọt sang khách khác)
+     ✗ Đ2 quá 24 giờ: KHÔNG còn nút "Gửi lại đúng đơn này" (POS không nhớ khoá quá 24 giờ — gửi lại sẽ báo sai), mời xem Lịch sử đơn
+     ✗ D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"  — 2 lần gửi
+     ✗ D3(d) hai tab cùng "chưa rõ", tab 2 gửi lại thành công → tab 1 hiện "Bạn vừa đặt đơn #TQD42", nút khoá, không gửi thêm  — 2
+   233 đạt · 4 hỏng
+   sau vòng sửa 2: KHONG_TRINH_DUYET=1 → 42 đạt · 0 hỏng · có Chromium → 237 đạt · 0 hỏng
 
 == thu_KHMUA1.js (bài cũ sửa — phần không trình duyệt đổi theo v5; danh sách ca + lý do ở trang_thai.md) — trên gốc
   ✗ D1 (v5) giao tận nơi chưa mở: luôn cach_nhan tai_quan, không dia_chi; không mã thì không gửi ma_giam
@@ -60,7 +67,7 @@ chạy với KHONG_TRINH_DUYET=1.
    ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Câu hỏi Q3 (trang_thai.md, mục ## Câu hỏi)
      xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
 
-SỐ CA cong_cu/thu_KHMUA1b.js: 41
+SỐ CA cong_cu/thu_KHMUA1b.js: 42
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHNHANH1.js: 80
 SỐ CA cong_cu/thu_KHKHOP1.js: 47
