@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 18,
-  "cap_nhat": "2026-11-01",
+  "phien_ban_so": 19,
+  "cap_nhat": "2026-11-02",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -170,10 +170,11 @@
       "ten": "App khong bat khach cho: kho du lieu khach chung (/toi /diem /voucher /don), tai truoc khi mo app, giu du lieu da co + cap nhat ngam (quay lai app >60s, moi 5 phut, sau thao tac), man mo day du chi lan dau moi ngay, luu tom tat (ten, xung ho, hang, so du vi, diem) tren may, Thanh toan luon lay so du moi, an hang 0%",
       "loai": "Th",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "ngay": "2026-11-01",
       "han": "2026-11-03",
-      "ghi_chu": "01.11 chat do that: moi vong toi POS ~400ms, /toi 1452ms, /diem 1438ms; App tu chuyen tab 60-150ms. Phan POS (CORS maxAge, vung Singapore, /toi cham) gui POS o YEU_CAU_APPKH_GUI_POS_01112026.md"
+      "ghi_chu": "01.11 chat do that: moi vong toi POS ~400ms, /toi 1452ms, /diem 1438ms; App tu chuyen tab 60-150ms. Phan POS (CORS maxAge, vung Singapore, /toi cham) gui POS o YEU_CAU_APPKH_GUI_POS_01112026.md | 01.11: chat soat cuoi DAT; do POS gia tre 700ms: chuyen tab 40-117ms (truoc ~850ms), 0 lan hoi POS khi chuyen tab (truoc 16), mo lai app hien diem sau 366ms (truoc 1136ms); gop PR #13 (7e7f92a)",
+      "commit": "7e7f92a"
     },
     {
       "ma": "KH-PWA-1",
@@ -259,16 +260,17 @@
     },
     {
       "ma": "KH-MUA-1b",
-      "ten": "Noi that dat don: them cua dat don vao api.js theo hop dong moi, tiem vao cong, bat co DAT_ONLINE",
+      "ten": "Bat dat don online theo hop dong v5: noi cua that vao api.js, khoa_gui + tong_da_xem, luat 4xx = chua tao, tu gui lai cung khoa khi khong biet ket qua, khong bao gio don thu hai ngoai y muon, QR / vi / vi_qr, QR tu GET /don/:ma, the Lich su don, them mon xong quay lai trang truoc, bat co DAT_ONLINE",
       "loai": "Th",
       "model": "Opus",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-MUA-1",
-        "POS KH-MUA-1 gop + hop dong co cua dat don"
+        "KH-NHANH-1"
       ],
       "han": "2026-11-04",
-      "ghi_chu": "31.10 chu quan chot: them mon xong KHONG nhay vao gio, quay lai trang khach dung truoc khi bam vao mon (Trang mon mo thang bang link → ve Menu); sua themVaoGio o src/App.jsx. Theo TRA_LOI_POS_31102026_b.md: khoa_gui moi lan bam Dat hang (giu khi gui lai do loi mang), cach_tra qr/vi/vi_qr (giu_vi, con_lai), ma_giam_loi duoi o ma, mon[].ma + qr tu GET /don/:ma, giam[].loai la → cong vao tong. Truoc khi bat co DAT_ONLINE: Back tu man QR, khoa don co the da tao, the Lich su don. | TRA_LOI_POS_31102026_c + _d: tong_da_xem bat buoc → 409 GIA_DA_DOI { bao_gia } (hien gia moi, khach bam Dat lai); 4xx KHONG giu khoa_gui (gui lai cung khoa duoc); 503 DANG_XU_LY / PAYOS_CHUA_CAU_HINH, 502 PAYOS_LOI, mat mang → cho ~2s gui lai CUNG khoa (toi da 3, roi sang Lich su don); vi_qr khi vi 0d = QR; ma_giam_loi (MA_KHONG_LOI_HON) duoi o ma; tien_ve_cho_doi_soat → bao quan da nhan tien; ma don A + 8 ky tu; HET_HANG / MON_KHONG_BAN danh dau mon theo ma; hop dong v5"
+      "ghi_chu": "31.10 chu quan chot: them mon xong KHONG nhay vao gio, quay lai trang khach dung truoc khi bam vao mon (Trang mon mo thang bang link → ve Menu); sua themVaoGio o src/App.jsx. Theo TRA_LOI_POS_31102026_b.md: khoa_gui moi lan bam Dat hang (giu khi gui lai do loi mang), cach_tra qr/vi/vi_qr (giu_vi, con_lai), ma_giam_loi duoi o ma, mon[].ma + qr tu GET /don/:ma, giam[].loai la → cong vao tong. Truoc khi bat co DAT_ONLINE: Back tu man QR, khoa don co the da tao, the Lich su don. | TRA_LOI_POS_31102026_c + _d: tong_da_xem bat buoc → 409 GIA_DA_DOI { bao_gia } (hien gia moi, khach bam Dat lai); 4xx KHONG giu khoa_gui (gui lai cung khoa duoc); 503 DANG_XU_LY / PAYOS_CHUA_CAU_HINH, 502 PAYOS_LOI, mat mang → cho ~2s gui lai CUNG khoa (toi da 3, roi sang Lich su don); vi_qr khi vi 0d = QR; ma_giam_loi (MA_KHONG_LOI_HON) duoi o ma; tien_ve_cho_doi_soat → bao quan da nhan tien; ma don A + 8 ky tu; HET_HANG / MON_KHONG_BAN danh dau mon theo ma; hop dong v5 | 02.11: POS da gop KH-MUA-1, hop dong v5 (sua cuoi bbb0892) chep nguyen van vao viec/KH-MUA-1b/hop_dong_v5.md; bo chu \"(payOS)\" (POS doi SePay, khong ghi cung ten nha cung cap / tai khoan nhan); phieu Cho duyet ke hoach",
+      "ngay": "2026-11-02"
     },
     {
       "ma": "KH-MUA-2",
