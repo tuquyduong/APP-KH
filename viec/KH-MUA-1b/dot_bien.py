@@ -23,7 +23,6 @@ DOT_BIEN = [
     ('VS-LUU-PIN', DD, "  const { pin, ...con } = than;", "  const { ...con } = than;", True),
     ('BV-CHAN-KHI-CHUA-RO', TT, "|| dsDon.dangTai || chuaRo || !!donKhac || !!donCho ||", "|| dsDon.dangTai || !!donKhac || !!donCho ||", True),
     ('BV-CHAN-DON-CHO-TRA', TT, "|| dsDon.dangTai || chuaRo || !!donKhac || !!donCho ||", "|| dsDon.dangTai || chuaRo || !!donKhac ||", True),
-    ('BV-KIEM-LAI-LUC-BAM', TT, "if (g && (!g.ma_don || g.khoa_gui !== daThay.current)) { ve((x) => x + 1); return; }", "void g;", True),
     ('BV-KIEM-O-DIEM-GUI', TT, "if (!cu && chanBoiBanGhi(docGuiDo(), daThay.current)) {", "if (false) {", True),
     ('VS-DATHAY-CA-CHUA-RO', TT, "useRef(guiDo && guiDo.ma_don ? guiDo.khoa_gui : null);", "useRef(guiDo && guiDo.khoa_gui);", True),
     ('BV-QUEN-BO-NHO-KHI-DOI-KHACH', 'src/luuMay.js', "ghiChu(sdt, k); quenBoNho(); }", "ghiChu(sdt, k); }", False),

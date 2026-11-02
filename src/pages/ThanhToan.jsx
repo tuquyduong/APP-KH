@@ -117,7 +117,6 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   };
   const xacNhan = () => {
     if (khoa) return;
-    if (chanBoiBanGhi(docGuiDo(), daThay.current)) { ve((x) => x + 1); return; } // kiểm lại NGAY LÚC BẤM (trước khi hỏi PIN)
     if (cachTra === 'qr') guiDon(); else datMoPin({});
   };
   const guiLaiDungDon = () => { if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
