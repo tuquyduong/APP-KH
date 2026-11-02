@@ -48,9 +48,11 @@ chạy với KHONG_TRINH_DUYET=1.
   ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/, từng byte (có v3 của việc này trở lên)  — …/viec/KH-MUA-1b/hop_dong_v5.md
 55 đạt · 1 hỏng
    sau vá: KHONG_TRINH_DUYET=1 → 56 đạt · 0 hỏng · có Chromium → 173 đạt · 0 hỏng
+   ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Đã ghi ## Câu hỏi Q3
+     xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
 
-SỐ CA thu_KHMUA1b.js: 40
-SỐ CA thu_KHMUA1.js: 55
-SỐ CA thu_KHNHANH1.js: 80
-SỐ CA thu_KHKHOP1.js: 47
-SỐ CA thu_KHUI3b.js: 56
+SỐ CA cong_cu/thu_KHMUA1b.js: 40
+SỐ CA cong_cu/thu_KHMUA1.js: 55
+SỐ CA cong_cu/thu_KHNHANH1.js: 80
+SỐ CA cong_cu/thu_KHKHOP1.js: 47
+SỐ CA cong_cu/thu_KHUI3b.js: 56
