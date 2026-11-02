@@ -6,7 +6,7 @@ import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
 import {
-  CHU_CHUA_MO, banGhiGui, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { dungBaoGia } from '../dungDatDon.js';
@@ -41,7 +41,14 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const [canPin, datCanPin] = useState(false);
   const [hetLuc, datHetLuc] = useState(0);
   const [, ve] = useState(0);
-  const [guiDo, datGuiDo] = useState(() => docGuiDo());
+  // Bản ghi lần gửi (kh_don_gui) đọc LẠI mỗi lần vẽ và khi tab khác ghi (sự kiện storage) — không tin bản chụp lúc mở màn (tab mở trước, ra-soát vòng 1).
+  const guiDo = docGuiDo();
+  const daThay = useRef(guiDo && guiDo.khoa_gui); // bản ghi đã có khi mở màn / khách đã xem → không coi là "đơn vừa đặt ở cửa sổ khác"
+  useEffect(() => {
+    const nghe = (e) => { if (!e.key || e.key === KHOA_DON_GUI) ve((x) => x + 1); };
+    window.addEventListener('storage', nghe);
+    return () => window.removeEventListener('storage', nghe);
+  }, []);
   const [dangHuy, datDangHuy] = useState(false);
   const gui = useRef(null);
   if (!gui.current) gui.current = khoaGui((than) => guiDonAnToan(than, { khiGuiLai: () => datGuiLai(true) }));
@@ -62,9 +69,10 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const thieu = viThieu(bg && bg.tong, soDu);
   const cachTra = !dungVi ? 'qr' : duoc.vi ? 'vi' : duoc.viQr ? 'vi_qr' : 'qr';
   const chuaRo = !dang && !!guiDo && !guiDo.ma_don;
+  const donKhac = !dang && !!guiDo && !!guiDo.ma_don && guiDo.khoa_gui !== daThay.current ? guiDo.ma_don : ''; // vừa đặt ở tab / cửa sổ khác
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
   const chan = chanDat(gh) || chanPos;
-  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donCho || conGiay > 0 || monLoi;
+  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
 
   function xuLyLoi(e) {
     const dl = e.duLieu || {};
@@ -95,19 +103,24 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       datDang(false); datMoPin(null); xong(don);
     }, (e) => {
       datDang(false); datGuiLai(false);
-      if (e.code === 'KHONG_BIET') { datMoPin(null); datGuiDo(docGuiDo()); return; }
-      ghiGuiDo(null); datGuiDo(null); // POS trả 4xx: chắc chưa tạo
+      if (e.code === 'KHONG_BIET') { datMoPin(null); return; }
+      ghiGuiDo(null); // POS trả 4xx: chắc chưa tạo
       if (MA_PIN.includes(e.code)) throw e;
       datMoPin(null);
+      // Gửi lại đơn CŨ mà giá đã đổi: báo giá POS kèm theo là của giỏ cũ → KHÔNG đè bảng tiền của giỏ đang xem.
+      if (cu && e.code === 'GIA_DA_DOI') { datThongBao('Giá đã đổi so với lần đặt trước — đơn đó chưa tạo, mời bạn đặt lại'); return; }
       xuLyLoi(e);
     });
   };
   const xacNhan = () => {
     if (khoa) return;
+    const g = docGuiDo(); // kiểm lại NGAY LÚC BẤM: tab khác có thể vừa gửi
+    if (g && (!g.ma_don || g.khoa_gui !== daThay.current)) { ve((x) => x + 1); return; }
     if (cachTra === 'qr') guiDon(); else datMoPin({});
   };
   const guiLaiDungDon = () => { if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
-  const boQua = () => { ghiGuiDo(null); datGuiDo(null); };
+  const boQua = () => { ghiGuiDo(null); ve((x) => x + 1); };
+  const datThem = () => { daThay.current = guiDo.khoa_gui; ve((x) => x + 1); };
   const huyDonCho = () => {
     datDangHuy(true); datThongBao('');
     huyDon(donCho.ma).then(() => { datDangHuy(false); sauHuy(); dsDon.taiLai(); }, (e) => { datDangHuy(false); datThongBao(e.message); dsDon.taiLai(); });
@@ -120,7 +133,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     : cachTra === 'vi' ? `Số dư ${dinhDangGia(soDu)} — đủ trả cả đơn` : `Dùng hết ${dinhDangGia(soDu)} trong ví, còn thiếu ${dinhDangGia(thieu)} → quét QR`;
   const batDuocVi = duoc.vi || duoc.viQr;
   const chuNut = !DAT_ONLINE ? CHU_CHUA_MO : dang ? (guiLai ? 'Mạng chậm, đang gửi lại…' : 'Đang gửi…') : dsDon.dangTai ? 'Đang kiểm tra đơn trước…'
-    : chuaRo || donCho ? 'Xử lý đơn trước rồi đặt tiếp' : conGiay ? `Thử lại sau ${conGiay} giây` : bg ? `Xác nhận trả ${dinhDangGia(bg.tong)}` : 'Xác nhận';
+    : chuaRo || donKhac || donCho ? 'Xử lý đơn trước rồi đặt tiếp' : conGiay ? `Thử lại sau ${conGiay} giây` : bg ? `Xác nhận trả ${dinhDangGia(bg.tong)}` : 'Xác nhận';
   // Khối cảnh báo / chờ: khuôn .nt-state của demo (biểu tượng + dòng đậm + dòng nhỏ).
   const canhBao = (tieuDe, phu) => <div className="nt-state" role="alert"><Ico ten="warning" s={18} /><div>{tieuDe}{phu && <small>{phu}</small>}</div></div>;
 
@@ -139,14 +152,21 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
           {guiDo.quaHan && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
         </>
       )}
-      {!chuaRo && donCho && (
+      {!chuaRo && donKhac && (
+        <>
+          {canhBao(`Bạn vừa đặt đơn #${donKhac} ở cửa sổ khác`, 'Bạn xem đơn đó trước khi đặt thêm nhé.')}
+          <button type="button" className="checkout-btn" onClick={() => moDon(donKhac)}><span>Xem đơn {donKhac}</span><span>→</span></button>
+          <button type="button" className="ghost-btn" onClick={datThem}>Đặt thêm đơn mới</button>
+        </>
+      )}
+      {!chuaRo && !donKhac && donCho && (
         <>
           {canhBao(`Bạn có đơn #${donCho.ma} đang chờ trả`, 'Bạn trả tiếp hoặc huỷ đơn đó rồi đặt đơn mới nhé.')}
           <button type="button" className="checkout-btn" onClick={() => moDon(donCho.ma)}><span>Tiếp tục trả đơn {donCho.ma}</span><span>→</span></button>
           <button type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho}>Huỷ đơn đó</button>
         </>
       )}
-      <div className="sec-head" style={chuaRo || donCho ? undefined : { marginTop: 0 }}><h2>Hình thức nhận hàng</h2></div>
+      <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><h2>Hình thức nhận hàng</h2></div>
       <div className="mode-row">
         <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><b>Giao tận nơi</b><span>Giao qua Ahamove · Sắp có</span></div>
         <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><b>Lấy tại quầy</b><span>Miễn phí giao</span></div>

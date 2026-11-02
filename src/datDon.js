@@ -137,18 +137,25 @@ export function banGhiGui(than, luc = Date.now()) {
   const { pin, ...con } = than;
   return { khoa_gui: than.khoa_gui, than: con, cach_tra: than.cach_tra, luc };
 }
-/** Đọc bản ghi (+ quaHan: quá 24 giờ). Không có / hỏng / kho chặn → null. */
+// Kho bị chặn (cửa sổ riêng tư…): bản ghi vẫn giữ trong BỘ NHỚ TRANG để "chưa rõ" còn chặn đặt mới — ghi vẫn trả false (không báo đã lưu).
+let banGhiBoNho = null;
+const quaHanLuc = (g, bay) => ({ ...g, quaHan: !(bay - g.luc < NGAY_MS) });
+
+/** Đọc bản ghi (+ quaHan: quá 24 giờ). Không có / hỏng → null; kho chặn → bản trong bộ nhớ trang. */
 export function docGuiDo(k = khoMay, bay = Date.now()) {
+  let tho;
+  try { tho = layKho(k).getItem(KHOA_DON_GUI); } catch { return banGhiBoNho && quaHanLuc(banGhiBoNho, bay); }
   try {
-    const g = JSON.parse(layKho(k).getItem(KHOA_DON_GUI));
-    if (!g || !chu(g.khoa_gui) || !g.than) return null;
-    return { ...g, quaHan: !(bay - g.luc < NGAY_MS) };
+    const g = JSON.parse(tho);
+    return g && chu(g.khoa_gui) && g.than ? quaHanLuc(g, bay) : null;
   } catch { return null; }
 }
-/** Ghi bản ghi; null = xoá. Kho chặn → false (không báo đã lưu). */
+/** Ghi bản ghi; null = xoá. Kho chặn → false (không báo đã lưu), bản ghi giữ trong bộ nhớ trang. */
 export function ghiGuiDo(g, k = khoMay) {
+  const con = g ? (({ quaHan, ...x }) => x)(g) : null;
+  banGhiBoNho = con;
   try {
-    if (g) { const { quaHan, ...con } = g; layKho(k).setItem(KHOA_DON_GUI, JSON.stringify(con)); } else layKho(k).removeItem(KHOA_DON_GUI);
+    if (con) layKho(k).setItem(KHOA_DON_GUI, JSON.stringify(con)); else layKho(k).removeItem(KHOA_DON_GUI);
     return true;
   } catch { return false; }
 }

@@ -138,7 +138,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); xoaTatCa(); datGio([]); datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
@@ -164,10 +164,11 @@ export default function App() {
     vaoGio(`Đã thêm ${demMon(them)} món vào giỏ${boChu ? ' · ' + boChu : ''}`);
   }, (e) => datThongBao(e.message)));
   const xongDatDon = (don) => { lamMoi([cuaToi, cuaDon, cuaDiem]); di(taoDuongDan('theodoi', { ma: don.ma })); };
-  // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ, mã giảm, bản ghi; bị huỷ → chỉ dọn bản ghi. Làm mới /don, /toi (ví được nhả).
-  const cuaMayNay = (ma) => { const g = docGuiDo(); return !!g && g.ma_don === ma; };
-  const daTra = (ma) => { if (cuaMayNay(ma)) { ghiGuiDo(null); doiGio([]); datMaGiam(''); } };
-  const daHuy = (ma) => { if (cuaMayNay(ma)) ghiGuiDo(null); lamMoi([cuaDon, cuaToi]); };
+  // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ + mã giảm MỘT lần (đánh dấu `xong`). Bản ghi GIỮ (không xoá) để tab
+  // Thanh toán đang mở ở cửa sổ khác vẫn thấy "Bạn vừa đặt đơn …" (ra-soát vòng 1); đơn mới ghi đè, đăng xuất / đổi khách xoá. Huỷ → làm mới /don, /toi (ví nhả).
+  const banGhiCua = (ma) => { const g = docGuiDo(); return g && g.ma_don === ma ? g : null; };
+  const daTra = (ma) => { const g = banGhiCua(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
+  const daHuy = () => lamMoi([cuaDon, cuaToi]);
 
   return (
     <NguCanhGia.Provider value={nguCanhGia}>
