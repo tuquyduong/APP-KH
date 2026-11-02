@@ -179,7 +179,10 @@ async function trinhDuyet(pw) {
   const BAY = (g) => `2026-10-30T${g}`;
   const luuAnh = process.env.LUU_ANH_DIR || '';
 
-  async function ca(ten, { rong = 390, dn = true, gio = null, pos = {}, batCo = true } = {}, chay) {
+  // Các ca chạy SONG SONG 4 luồng (mỗi ca một ngữ cảnh riêng): `ca(...)` chỉ xếp hàng, chạy ở cuối — giữ dưới trần 120 giây của bộ kiểm.
+  const hangCa = [];
+  const ca = (...a) => { hangCa.push(a); return Promise.resolve(); };
+  async function caThat(ten, { rong = 390, dn = true, gio = null, pos = {}, batCo = true } = {}, chay) {
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     const t = await ctx.newPage();
     const loi = [];
@@ -428,5 +431,6 @@ async function trinhDuyet(pw) {
       });
     }
   }
+  await Promise.all([...Array(4)].map(async () => { while (hangCa.length) await caThat(...hangCa.shift()); }));
   await trinh.close();
 }
