@@ -79,8 +79,8 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
       {!don && (loi ? <KhungLoi loi={loi} thuLai={taiLai} /> : <div className="khung-tai" aria-busy="true" />)}
       {don && (
         <>
-          {choTra && viQr && <div className="care-disclaimer qr-vi">Đã giữ <b>{dinhDangGia(banGhi.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(banGhi.con_lai)}</b></div>}
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} taoMaMoi={taoMoi} dang={dangHuy} />}
+          {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(banGhi.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(banGhi.con_lai)}</b></div>}
           {don.tienVeChoDoiSoat && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.</div></div>}
           {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">#{don.ma}</div></div>}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>

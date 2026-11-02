@@ -6,7 +6,7 @@ import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
 import {
-  CHU_CHUA_MO, CHU_CHUA_RO, banGhiGui, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  CHU_CHUA_MO, banGhiGui, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { dungBaoGia } from '../dungDatDon.js';
@@ -129,7 +129,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       <DauManCon tieuDe="Thanh toán" phu="Chọn cách nhận hàng & trả tiền" lui={lui} canTrai />
       {chuaRo && (
         <>
-          {canhBao(guiDo.quaHan ? 'Lần đặt trước (hơn 24 giờ) chưa rõ kết quả' : 'Lần đặt trước chưa rõ kết quả', `${CHU_CHUA_RO} Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.`)}
+          {canhBao(guiDo.quaHan ? 'Lần đặt trước (hơn 24 giờ) chưa rõ kết quả' : 'Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
           <div className="card bang-tien">
             {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
@@ -146,7 +146,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
           <button type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho}>Huỷ đơn đó</button>
         </>
       )}
-      <div className="sec-head" style={{ marginTop: 0 }}><h2>Hình thức nhận hàng</h2></div>
+      <div className="sec-head" style={chuaRo || donCho ? undefined : { marginTop: 0 }}><h2>Hình thức nhận hàng</h2></div>
       <div className="mode-row">
         <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><b>Giao tận nơi</b><span>Giao qua Ahamove · Sắp có</span></div>
         <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><b>Lấy tại quầy</b><span>Miễn phí giao</span></div>
