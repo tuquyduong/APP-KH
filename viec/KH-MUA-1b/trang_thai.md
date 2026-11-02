@@ -226,6 +226,50 @@ BÀI HỌC:
 Giới hạn còn lại (ghi để chủ quán biết): kho bị chặn (cửa sổ riêng tư) + TẢI LẠI trang → bản ghi trong bộ nhớ mất, D3(c) không chặn được ở đó (POS vẫn chặn
 cùng khoá; lưới 10 giây của POS cho đơn chờ trả cùng giỏ). Không có cách lưu nào khác khi trình duyệt chặn lưu.
 
+## Soát độc lập vòng 3 (`/ra-soat`, agent general-purpose) — báo cáo chép nguyên (rút phần "trả lời theo 8 mục", ý đã gói dưới)
+```
+KHÔNG ĐẠT
+
+Các lệnh đã chạy (chỉ đọc): KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1b.js: 42 đạt · 0 hỏng. node cong_cu/thu_KHMUA1b.js (có Chromium): 237 đạt · 0 hỏng,
+32 giây. npm test: 29 đạt · 0 hỏng. KHONG_TRINH_DUYET=1 với KHMUA1 / KHNHANH1 / KHKHOP1 / KHUI3b: 55 / 80 / 47 / 56 — khớp SỐ CA ở bang_chung_do.txt:70–74.
+cmp hop_dong_v5.md với thiet_ke/HOP_DONG_API_KH.md: khớp. git ls-files dist: rỗng. File Cấm không bị đổi; trong thiet_ke/ chỉ đổi HOP_DONG_API_KH.md.
+
+LỖI TÌM ĐƯỢC:
+1. src/pages/ThanhToan.jsx:97 + :101–102 (đường vào :122 và :205) — K4, đường song song: hai tab, bảng PIN của "Gửi lại" mở sẵn. Đường cu ("Gửi lại đúng
+   đơn này") bỏ hẳn phép kiểm ở điểm gửi (if (!cu && …)). moPin.cu là bản chụp lúc bấm. Cách xảy ra: tab A và tab B cùng hiện "chưa rõ" khoá K1, cách trả ví.
+   Tab A bấm "Gửi lại", bảng PIN mở với cu = K1. Tab B gửi lại K1 và nhận một 4xx (vd 429 QUA_NHIEU_LAN hoặc PIN_SAI rồi khách đóng bảng) → :110 xoá bản ghi.
+   Tab B sau đó đặt đơn mới K2. Tab A nhập PIN, gửi K1. Hợp đồng: "Trả lời 4xx của POST /don không giữ khoá gửi — gửi lại cùng khoa_gui được xử lý như lần
+   đầu" → POS tạo đơn K1 của giỏ cũ = ĐƠN THỨ HAI, với ví thì trừ hai lần. Hỏng thêm: :102 ghiGuiDo(cu) ghi đè bản ghi "chưa rõ" K2 của tab B. Bài thử không
+   có ca; đột biến BV-KIEM-O-DIEM-GUI chỉ phủ đường không có cu. Sửa: đầu guiDon, khi có cu đọc docGuiDo(); chỉ gửi khi bản ghi hiện tại có
+   khoa_gui === cu.khoa_gui và chưa có ma_don; ngược lại đóng bảng PIN và vẽ lại. Thêm ca + đột biến.
+2. viec/KH-MUA-1b/trang_thai.md:232 và :234 — K1 / nghiệm thu H3, lặp lần thứ ba: hai dòng --day-du và node tu_chay/cong.js chay vẫn ghi "(ghi ở dưới sau
+   lần chạy cuối)", bên dưới không có kết quả nào.
+
+NGHI NGỜ:
+- src/datDon.js:145–151 — bản trong bộ nhớ trang chỉ được dùng khi getItem NÉM lỗi. Nếu kho đọc được mà ghi hỏng (setItem ném — đầy kho) thì ghiGuiDo trả
+  false nhưng docGuiDo đọc localStorage: null, hoặc bản ghi cũ đã có đơn trùng daThay → "chưa rõ" không chặn nữa (K5 đảo). Sửa: nhớ cờ "lần ghi cuối hỏng",
+  cờ bật thì ưu tiên banGhiBoNho.
+- src/luuMay.js:66 — kho bị chặn: cungKhach luôn 'chuaBiet' → mọi lần đăng nhập lại đều quenBoNho(), kể cả CÙNG khách sau lỗi phiên 401 → bản ghi "chưa rõ"
+  trong bộ nhớ bị quên. Chỉ ở cửa sổ riêng tư; trang_thai chưa ghi giới hạn này. Kho bình thường thì KHÔNG bị quên oan (luuMay.js:63–66).
+- src/pages/ThanhToan.jsx:97–98 — điểm gửi chỉ kiểm bản ghi, không kiểm phần còn lại của khoa (!bg, chan, donCho, conGiay). bg thành null khi bảng PIN đang
+  mở → :98 bg.tong ném TypeError trong effect của PinSheet. /toi tải lại khi bảng PIN mở → cachTra có thể đổi. Hiếm.
+- src/pages/ThanhToan.jsx:146/:153 — điểm duyệt 2 chỉ ghi nút "Gửi lại…" + câu "sẽ không tạo đơn thứ hai"; quá 24 giờ nay ẩn nút và đổi câu — hợp lý theo hợp
+  đồng nhưng là thay đổi so với điểm đã duyệt, chưa ghi Câu hỏi. doi_chieu_demo.md:15 và :17 hơi lệch nhau.
+- Q4 nên mở rộng: PIN_SAI, PIN_DANG_KHOA (423), CHUA_CO_PIN ở lần gửi lại sau "chưa rõ" cũng xoá bản ghi (:110 trước kiểm MA_PIN :111) — chỉ "chắc chưa tạo"
+  nếu POS tra khoá TRƯỚC khi kiểm PIN. App đúng luật hợp đồng; là câu hỏi cho POS.
+Đơn giản: App.jsx:178 sauHuy chép lại daHuy → sauHuy={daHuy}; daHuy không dùng tham số; ThanhToan.jsx:72–73 tính chanGhi một lần rồi suy ra chuaRo / donKhac.
+
+NGHIỆM THU: 34/38 mục có bằng chứng · mục thiếu: D3(d) (đường "Gửi lại" có bảng PIN mở sẵn), H3 (chưa ghi --day-du / cổng; ✗ [A11] = Q3 đã biết),
+G1 (Trang chủ chưa có ô món — đã biết), H4 (chủ quán thử tay — đã biết).
+
+CHƯA SOÁT ĐƯỢC: không chạy dot_bien.py (ghi đè src); không chạy --day-du, cong.js chay; không dựng lại cây trước vòng sửa 2; không xem so_anh; không có POS thật.
+
+BÀI HỌC:
+- NGUYÊN TẮC: "Mọi đường gửi, KỂ CẢ đường gửi lại khoá cũ, phải kiểm lại bản ghi ở điểm gửi. Gửi lại chỉ khi bản ghi HIỆN TẠI vẫn đúng khoá đó và vẫn chưa rõ."
+- KHOÁ: ca "bảng PIN gửi lại mở sẵn, tab kia nhận 4xx rồi đặt đơn mới, nhập PIN → 0 POST khoá cũ, bản ghi của tab kia còn nguyên" + đột biến.
+- NGUYÊN TẮC (lần thứ ba): dòng "ghi ở dưới" / "đã thêm" phải có kết quả thật đi kèm — nên thành phép kiểm grep tự động.
+```
+
 ## Kiểm (bản cuối, sau vòng sửa 2)
 - `node cong_cu/thu_KHMUA1b.js` → 237 đạt · 0 hỏng (Chromium, ~25 giây); `KHONG_TRINH_DUYET=1` → 42 đạt · 0 hỏng.
 - `npm test` → 29 đạt · 0 hỏng (mọi `thu_*.js` xanh: KHMUA1 128 · KHNHANH1 224 · KHKHOP1 84 · KHUI3b 173 …).

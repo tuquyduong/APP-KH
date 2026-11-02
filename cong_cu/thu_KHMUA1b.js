@@ -124,6 +124,10 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
     kho.setItem('kh_don_gui', '{hỏng');
     k('D3 bản ghi hỏng → null, không ném; kho chặn → null / false', D.docGuiDo(kho, 1) === null && D.docGuiDo(khoChan, 1) === null && D.ghiGuiDo(bg, khoChan) === false);
     k('D3 kho chặn: bản ghi vẫn giữ trong bộ nhớ trang (chưa rõ vẫn chặn đặt), không báo đã lưu', (D.docGuiDo(khoChan, 2000) || {}).khoa_gui === 'K'.repeat(20) && D.ghiGuiDo(null, khoChan) === false && D.docGuiDo(khoChan, 2000) === null);
+    const khoDay = { ...khoGia(), setItem() { throw new Error('đầy kho'); } }; // đọc được, ghi hỏng (đầy kho)
+    D.ghiGuiDo(null, khoGia()); khoDay.m.set('kh_don_gui', JSON.stringify({ ...bg, khoa_gui: 'CU'.repeat(10), ma_don: 'TQD1' }));
+    k('D3 kho đọc được mà GHI hỏng (đầy kho) → docGuiDo trả bản ghi mới trong bộ nhớ trang, không bản cũ trên kho', D.ghiGuiDo(bg, khoDay) === false && (D.docGuiDo(khoDay, 2000) || {}).khoa_gui === 'K'.repeat(20));
+    D.ghiGuiDo(null, khoGia());
     const L = await nap('src/luuMay.js');
     D.ghiGuiDo(bg, khoChan);
     L.doiKhach('0911222333', khoChan);
@@ -536,6 +540,18 @@ async function trinhDuyet(pw) {
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
     await nhapPin(t2, PIN); await t2.waitForTimeout(800);
     k('D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);
+  });
+  them('gui-lai-pin-mo-san', { S0: { vi: 300000 } }, async ({ t, S }) => {
+    const ghi = (k) => t.evaluate((k) => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: k, than: { mon: [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'vi', khoa_gui: k, tong_da_xem: 87654 }, cach_tra: 'vi', luc: Date.now() })), k);
+    await mo(t, '/trangchu');
+    await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
+    await ghi('K1'.repeat(10));
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click(); await t.waitForSelector('.pin-pad'); // bảng PIN của "Gửi lại" (K1) mở sẵn
+    await ghi('K2'.repeat(10)); // trong lúc đó tab khác: K1 nhận 4xx (bản ghi xoá) rồi đặt đơn mới K2 đang chưa rõ
+    await nhapPin(t, PIN); await t.waitForTimeout(600);
+    k('D3(d) bảng PIN "Gửi lại" mở sẵn, tab khác đã thay bản ghi → nhập PIN KHÔNG gửi khoá cũ, bản ghi K2 của tab kia còn nguyên', S.guiDon.length === 0 && JSON.parse((await luu(t)) || '{}').khoa_gui === 'K2'.repeat(10), `${S.guiDon.length} | ${await luu(t)}`);
   });
   them('hai-tab-chua-ro', {}, async ({ t, S, trang }) => {
     await mo(t, '/trangchu');
