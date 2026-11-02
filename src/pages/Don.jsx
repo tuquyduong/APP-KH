@@ -9,9 +9,11 @@ import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 // Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
 // `datLai` — cùng cờ DAT_ONLINE) để App đọc chi tiết đơn rồi bỏ món vào giỏ theo `ma`;
 // ô lọc (Đang giao / Hoàn thành / Đã hủy) ẩn vì POS chưa ghi giá trị `trang_thai`. Chỉ hiện trạng thái POS trả — KHÔNG tính tiền chưa trả.
+// Đơn App chưa có đơn thật: trang_thai / thanh_toan = null (hợp đồng v5) → đọc tien_trinh.
 function NhanDon({ don }) {
-  if (don.trang_thai === 'cancelled') return <div className="order-status cancelled">Đã hủy</div>;
-  if (don.thanh_toan === 'paid') return <div className="order-status done">Đã thanh toán</div>;
+  if (don.trang_thai === 'cancelled' || don.tien_trinh === 'da_huy') return <div className="order-status cancelled">Đã hủy</div>;
+  if (don.tien_trinh === 'cho_tra') return <div className="order-status shipping">Chờ thanh toán</div>;
+  if (don.thanh_toan === 'paid' || ['da_tra', 'dang_lam', 'xong'].includes(don.tien_trinh)) return <div className="order-status done">Đã thanh toán</div>;
   return null;
 }
 
@@ -77,7 +79,7 @@ export default function LichSuDon({ chonDon, lui, datLai }) {
       <DauManCon tieuDe="Lịch sử đơn hàng" phu={ds.length > 0 && !conNua ? `${ds.length} đơn` : ''} lui={lui} />
       {ds.length === 0 && !dang && !loi && <div className="empty-note">Bạn chưa có đơn nào.</div>}
       {ds.map((d) => (
-        <div className="order-card" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d.ma)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d.ma); }}>
+        <div className="order-card" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d); }}>
           <div className="top">
             <div><div className="code">#{d.ma}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
             <NhanDon don={d} />
