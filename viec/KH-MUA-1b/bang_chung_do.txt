@@ -1,0 +1,56 @@
+KH-MUA-1b — bằng chứng đỏ trên code gốc, xanh sau vá
+Gốc = cây ở dc07781 (kế hoạch đã duyệt; src/ chưa sửa, git archive vào thư mục nháp + node_modules), chép bài thử bản MỚI vào cong_cu/ của bản đó,
+chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHMUA1b.js (bài mới) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md
+  ✗ A1 bảng mã lỗi đặt đơn đọc từ hợp đồng (≥ 20 mã, có DANG_XU_LY 503, GIA_DA_DOI 409)  — 0
+  ✗ A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)
+  ✗ A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có)  — menu_sp,don_tien_trinh
+  ✗ A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi
+  ✗ B2 datDon.js không còn cổng tiêm (datCongDatDon), không fetch; gọi cửa từ api.js
+  ✗ B2 bỏ danh sách cứng LOI_CHUA_TAO / chuaTaoDon
+  ✗ B3 DAT_ONLINE = true
+  ✗ C1 thân báo giá: … cach_nhan luôn tai_quan, không giao / dia_chi  — {…"cach_nhan":"giao","dia_chi":"12 Lê Lợi"}
+  ✗ C2 thân đặt = thân báo giá + cach_tra + khoa_gui + tong_da_xem; pin CHỈ khi vi / vi_qr
+  ✗ C dừng giữa chừng  — D.taoKhoaGui is not a function
+  ✗ D dừng giữa chừng  — D.loaiLoi is not a function
+  ✗ E dừng giữa chừng  — D.cachTraDuoc is not a function
+  ✗ F-G dừng giữa chừng  — undefined is not a function
+1 đạt · 14 hỏng
+   trên gốc CÓ Chromium (bản bài c0696a3): 79 đạt · 68 hỏng — vd ✗ E2/K5 [390] nút QR không ghi "payOS", ✗ E1 ví + QR, ✗ Đ3 "Đang kiểm tra đơn trước…",
+   ✗ F6 thẻ cho_tra → /taikhoan/donhang/TQD51, ✗ F3 tien_ve_cho_doi_soat, ✗ G1 /menu/ca-phe → /giohang, ✗ C6 dòng giảm, 40 ca "dừng giữa chừng"
+   (nút Đặt khoá vì DAT_ONLINE = false).
+   sau vá: KHONG_TRINH_DUYET=1 → 40 đạt · 0 hỏng · có Chromium → 212 đạt · 0 hỏng (23 giây)
+
+== thu_KHMUA1.js (bài cũ sửa — phần không trình duyệt đổi theo v5; danh sách ca + lý do ở trang_thai.md) — trên gốc
+  ✗ D1 (v5) giao tận nơi chưa mở: luôn cach_nhan tai_quan, không dia_chi; không mã thì không gửi ma_giam
+  ✗ D1 (v5) đọc trả lời POST /don: ma_don, tong, tien_trinh, qr { chuoi, het_han }  — {…"trangThai":""…}
+  ✗ D3 (v5) đường dẫn cửa đặt đơn ở MỘT chỗ api.js: /gio/bao-gia, /don, /don/:ma, /don/:ma/huy
+  ✗ D1 (v5) api.js có cửa đặt đơn (bao-gia, POST /don, huy) — chỗ DUY NHẤT gọi mạng
+  ✗ D2 (v5) cờ DAT_ONLINE ở src/noiDung/caiDat.js, đã bật
+  ✗ D2 cờ tắt (công tắc khẩn): cửa ghi trả lỗi "Đặt online sắp mở…", không gọi api
+  (+ dừng ở ca B8: D.loaiLoi is not a function)
+35 đạt · 7 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 55 đạt · 0 hỏng · có Chromium → 128 đạt · 0 hỏng (ca chạy song song 4 luồng)
+
+== thu_KHNHANH1.js (bài cũ: phần Chromium bỏ gói tiêm cổng → THÊM 1 ca đọc nguồn đỏ trên gốc, theo phiếu H2) — trên gốc
+  ✗ F1 (KH-MUA-1b) Thanh toán dùng cửa đặt đơn thật của api.js — không còn cổng tiêm datCongDatDon (bài thử dựng app nguyên bản)
+79 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 80 đạt · 0 hỏng · có Chromium → 224 đạt · 0 hỏng
+
+== thu_KHKHOP1.js (bài cũ sửa: ca A1 việc POS còn chờ theo v5; POS giả /menu, /don trả dạng v5) — trên gốc
+  ✗ A1 có đủ các việc POS còn chờ: GIOVANG-1, KH-MUA-2, TOPPING-1 (KH-SP-1 / KH-MUA-1 đã gộp ở hợp đồng v4 / v5 → không còn chờ)
+46 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 47 đạt · 0 hỏng · có Chromium → 84 đạt · 0 hỏng
+
+== thu_KHUI3b.js (bài cũ sửa: ca A1 so hợp đồng với bản hop_dong_v<N>.md MỚI NHẤT trong viec/, thay vì cố định v3) — trên gốc
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/, từng byte (có v3 của việc này trở lên)  — …/viec/KH-MUA-1b/hop_dong_v5.md
+55 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 56 đạt · 0 hỏng · có Chromium → 173 đạt · 0 hỏng
+
+SỐ CA thu_KHMUA1b.js: 40
+SỐ CA thu_KHMUA1.js: 55
+SỐ CA thu_KHNHANH1.js: 80
+SỐ CA thu_KHKHOP1.js: 47
+SỐ CA thu_KHUI3b.js: 56
