@@ -352,7 +352,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan');
     await t.waitForTimeout(300); await t.locator('#checkout .switch').click();
     await t.locator('#checkout .nut-dat').click(); await t.waitForTimeout(300);
-    await t.keyboard.type('1357'); await t.waitForTimeout(300); await t.clock.fastForward(7000); await t.waitForTimeout(900);
+    await t.keyboard.type('1357'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
     k('B8 (v5) trả ví mà mất mạng: tự gửi lại CÙNG khoá 3 lần rồi đóng bảng PIN, báo "chưa rõ", nhắc xem Lịch sử đơn', (await t.locator('.pin-sheet').count()) === 0 && /Lịch sử đơn/.test(await chu(t, '#checkout')) && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && dem(P, 'POST', '/don') === 4 && new Set(P.goi.filter((g) => g.pt === 'POST' && g.duong === '/don').map((g) => g.than.khoa_gui)).size === 1, String(dem(P, 'POST', '/don')));
     await t.locator('#checkout .nut-dat').click({ force: true }); await t.waitForTimeout(400);
     k('B8 … nút Xác nhận KHOÁ (bấm lại không mở PIN, không gửi đơn thứ hai); có nút "Xem Lịch sử đơn"', /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && (await t.locator('.pin-sheet').count()) === 0 && dem(P, 'POST', '/don') === 4 && (await t.locator('#checkout button', { hasText: 'Xem Lịch sử đơn' }).count()) === 1);
@@ -365,7 +365,7 @@ async function trinhDuyet(pw) {
       await mo(t, '/thanhtoan');
       await t.waitForTimeout(300); await t.locator('#checkout .switch').click();
       await t.locator('#checkout .nut-dat').click(); await t.waitForTimeout(300);
-      await t.keyboard.type('1357'); await t.waitForTimeout(300); await t.clock.fastForward(7000); await t.waitForTimeout(900);
+      await t.keyboard.type('1357'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
       await t.locator('#checkout .nut-dat').click({ force: true }); await t.waitForTimeout(400);
       k(`B8 (v5) trả ví, POS ${ten}: chưa rõ — tự gửi lại cùng khoá (1 + 3 lần), rồi đóng PIN, khoá nút, không gửi thêm`, (await t.locator('.pin-sheet').count()) === 0 && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && dem(P, 'POST', '/don') === 4, String(dem(P, 'POST', '/don')));
     });
