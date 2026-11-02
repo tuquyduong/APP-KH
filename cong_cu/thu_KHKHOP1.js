@@ -32,7 +32,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
   k('A1 mỗi mục đủ khoá ma/ten/cua/token/truong/khi/co; khi ∈ {truoc_kt, sau_kt}; token ∈ {true,false,"tuy_chon"}',
     ds.length > 0 && ds.every((m) => KHOA.every((x) => x in m) && ['truoc_kt', 'sau_kt'].includes(m.khi) && [true, false, 'tuy_chon'].includes(m.token) && Array.isArray(m.truong)));
   k('A1 có cả hai nhóm trước / sau khai trương', ds.some((m) => m.khi === 'truoc_kt') && ds.some((m) => m.khi === 'sau_kt'));
-  k('A1 có đủ các việc POS còn chờ: GIOVANG-1, KH-SP-1, KH-MUA-1 (KH-API-3 đã gộp ở hợp đồng v3)', ['GIOVANG-1', 'KH-SP-1', 'KH-MUA-1'].every((v) => ds.some((m) => m.viec_pos === v)));
+  k('A1 có đủ các việc POS còn chờ: GIOVANG-1, KH-MUA-2, TOPPING-1 (KH-SP-1 / KH-MUA-1 đã gộp ở hợp đồng v4 / v5 → không còn chờ)', ['GIOVANG-1', 'KH-MUA-2', 'TOPPING-1'].every((v) => ds.some((m) => m.viec_pos === v)) && !ds.some((m) => (m.co === false || m.moi) && ['KH-SP-1', 'KH-MUA-1'].includes(m.viec_pos)));
   k('A1 có trường mới của GIOVANG-1 (gia_mon) và KH-SP-1 (nhu_cau, the_chat, mo_ta, cong_dung, thanh_phan, anh)',
     ['gia_mon', 'nhu_cau', 'the_chat', 'mo_ta', 'cong_dung', 'thanh_phan', 'anh'].every((t) => ds.some((m) => m.truong.some((x) => x.includes(t)))));
 
@@ -167,14 +167,14 @@ async function trinhDuyet(pw) {
       if (duong === '/menu') {
         if (P.menuCanDN && !/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_TOKEN_SAI' });
         const m = { ma: 'TLB', ten: 'Trà Lục Bảo', nhom: 'Trà', gia: 30000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [{ hang_id: 1, gia: 27000 }] };
-        return json(200, { success: true, data: [P.menuMoi ? { ...m, nhu_cau: ['mất ngủ'], the_chat: ['nhiệt'], mo_ta: 'a', cong_dung: 'b', thanh_phan: 'c', anh: 'd' } : m] });
+        return json(200, { success: true, data: [{ ...m, nhu_cau: ['ngu_ngon'], the_chat: ['am_hu'], mo_ta: 'a', cong_dung: 'b', thanh_phan: 'c', anh: 'd' }] }); // v4: trường thông tin món luôn có
       }
       if (!/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_TOKEN_SAI' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: SDT, ten: TEN, ngay_tao: BAY, qr: 'QR', so_du_vi: 100000, hang: null } });
       if (duong === '/diem') return json(200, { success: true, points: 12, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
-      if (duong === '/don') return json(200, { success: true, trang: 1, con_nua: false, data: P.khongDon ? [] : [{ ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid' }] });
-      if (duong === `/don/${MA_DON}`) return json(200, { success: true, don: { ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid', mon: [{ ten: 'Trà', so_luong: 1, don_gia: 1, thanh_tien: 1, ghi_chu: '' }] } });
+      if (duong === '/don') return json(200, { success: true, trang: 1, con_nua: false, data: P.khongDon ? [] : [{ ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid', tien_trinh: 'xong', qr: null, tien_ve_cho_doi_soat: false }] });
+      if (duong === `/don/${MA_DON}`) return json(200, { success: true, don: { ma: MA_DON, ngay: BAY, tong: 81000, da_tra: 81000, trang_thai: 'completed', thanh_toan: 'paid', tien_trinh: 'xong', qr: { chuoi: 'Q', het_han: BAY }, tien_ve_cho_doi_soat: false, mon: [{ ten: 'Trà', so_luong: 1, don_gia: 1, thanh_tien: 1, ghi_chu: '' }] } });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
     t.setDefaultTimeout(4000);
@@ -196,8 +196,8 @@ async function trinhDuyet(pw) {
     k('B2 kết nối thông ✓, có giờ POS 20:30:05 và độ lệch với đồng hồ máy', /Thông/.test(await t.locator('#kiemkhop .ket-noi').innerText()) && /20:30:05/.test(nd) && /lệch/i.test(nd), nd.slice(0, 200));
     k('B3 nhóm "Trước khai trương" đứng trước "Sau khai trương"', nd.indexOf('Trước khai trương') >= 0 && nd.indexOf('Trước khai trương') < nd.indexOf('Sau khai trương'));
     k('B3 cửa công khai đủ trường → ✓ (hạng)', /✓/.test(await hang(t, 'Hạng').innerText()));
-    k('B3 trường mới chưa có (nhu_cau/mô tả của menu, gia_mon) → ⏳ nêu việc POS, không ✗', (await Promise.all(['KH-SP-1', 'GIOVANG-1'].map(async (v) => { const h = t.locator('#kiemkhop .muc', { hasText: v }).first(); const s = await h.innerText(); return /⏳/.test(s) && !/✗/.test(s); }))).every(Boolean));
-    k('B3 cửa chưa có trong hợp đồng (đặt đơn) → ⏳ "POS đang làm: KH-MUA-1", KHÔNG gọi', /POS đang làm: KH-MUA-1/.test(nd) && !P.goi.some((g) => /gio\/bao-gia|\/huy|gia-han|phi-giao/.test(g.duong)) && dem(P, 'POST', '/don') === 0);
+    k('B3 trường mới chưa có (gia_mon) → ⏳ nêu việc POS, không ✗', (await Promise.all(['GIOVANG-1'].map(async (v) => { const h = t.locator('#kiemkhop .muc', { hasText: v }).first(); const s = await h.innerText(); return /⏳/.test(s) && !/✗/.test(s); }))).every(Boolean));
+    k('B3 cửa đặt đơn (v5) → "Có trong hợp đồng (không gọi thử)"; cửa chưa có (phí giao) → ⏳ "POS đang làm: KH-MUA-2"; KHÔNG gọi', /Có trong hợp đồng \(không gọi thử\)/.test(await hang(t, 'Báo giá giỏ hàng').innerText()) && /POS đang làm: KH-MUA-2/.test(nd) && !P.goi.some((g) => /gio\/bao-gia|\/huy|gia-han|phi-giao/.test(g.duong)) && dem(P, 'POST', '/don') === 0);
     k('B3 cửa cần token khi chưa đăng nhập → "Đăng nhập để kiểm", không gọi /toi /diem /voucher /don', /Đăng nhập để kiểm/.test(nd) && ['/toi', '/diem', '/voucher'].every((d) => dem(P, 'GET', d) === 0) && !P.goi.some((g) => g.duong.startsWith('/don')));
     k('B3 không bao giờ POST / PUT', !P.goi.some((g) => g.pt !== 'GET'), JSON.stringify(P.goi.filter((g) => g.pt !== 'GET')));
     k('B4 mỗi cửa công khai đúng MỘT lần (kể cả /gio-hoat-dong dùng chung phần Kết nối)', CUA_GET.every((d) => dem(P, 'GET', d) === 1), JSON.stringify(P.goi.map((g) => g.duong)));
@@ -212,7 +212,7 @@ async function trinhDuyet(pw) {
     const nd = await chu(t);
     k('B3 đã đăng nhập: gọi MỘT lần mỗi cửa kể cả /toi /diem /voucher /don và /don/:ma', [...CUA_GET, '/toi', '/diem', '/voucher', '/don', `/don/${MA_DON}`].every((d) => dem(P, 'GET', d) === 1), JSON.stringify(P.goi.map((g) => g.duong)));
     k('B3 không còn "Đăng nhập để kiểm"', !/Đăng nhập để kiểm/.test(nd));
-    k('B3 trường mới POS đã trả (nhu_cau, mo_ta, gia_mon) → ✓', (await Promise.all(['KH-SP-1', 'GIOVANG-1'].map(async (v) => /✓/.test(await t.locator('#kiemkhop .muc', { hasText: v }).first().innerText())))).every(Boolean));
+    k('B3 trường mới POS đã trả (gia_mon) và trường v4 / v5 (thông tin món, tiến trình đơn) → ✓', /✓/.test(await t.locator('#kiemkhop .muc', { hasText: 'GIOVANG-1' }).first().innerText()) && /✓/.test(await hang(t, 'Thông tin món').innerText()) && /✓/.test(await hang(t, 'Tiến trình đơn').innerText()));
     k('B3 cửa menu khi đã có token vẫn gọi 1 lần', dem(P, 'GET', '/menu') === 1);
     k('B5 không hiện số điện thoại, tên khách, mã đơn, số điểm', !nd.includes(SDT) && !nd.includes('Linh') && !nd.includes(MA_DON) && !/\b12 điểm|100\.000/.test(nd));
     const kho = await t.evaluate(() => JSON.stringify({ ...localStorage }));
