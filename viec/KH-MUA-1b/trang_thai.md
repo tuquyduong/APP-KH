@@ -60,22 +60,29 @@ Giữ nguyên: G2 "Đặt lại" (`dat-lai`), mọi ca giỏ / tab / tràn ngang
 tiến trình đơn ✓.
 `cong_cu/thu_KHUI3b.js`: A1 so hợp đồng với bản `hop_dong_v<N>.md` MỚI NHẤT trong `viec/` (trước cố định v3 — đỏ khi hợp đồng lên v5).
 
-## Chỗ vá → đột biến (`python3 viec/KH-MUA-1b/dot_bien.py`, đối chứng trước: bản vá XANH 212 · 0)
+## Chỗ vá → đột biến (`python3 viec/KH-MUA-1b/dot_bien.py`, sau vòng sửa 1; đối chứng trước: bản vá XANH 229 · 0)
 | Chỗ vá | Đột biến | Kết quả |
 |---|---|---|
-| `datDon.guiDonAnToan` gửi lại ĐÚNG thân + khoá | VS-GUI-LAI-KHOA-MOI · VS-GUI-LAI-THAN-KHAC | ĐỎ 201·11 · ĐỎ 210·2 |
-| `datDon.loaiLoi` luật 4xx | VS-5XX-LA-CHUA-TAO · VS-4XX-LA-KHONG-BIET · BV-LUAT-4XX | ĐỎ 36·4 · ĐỎ 202·10 · ĐỎ 197·14 |
-| `datDon.thanDatDon` có `tong_da_xem` | BV-TONG-DA-XEM | ĐỎ 171·36 |
-| `ThanhToan` `tong_da_xem` = `bg.tong` đang hiện | VS-TONG-TU-TINH | ĐỎ 174·33 |
-| `datDon.banGhiGui` bỏ PIN | VS-LUU-PIN | ĐỎ 209·3 |
-| `ThanhToan` khoá khi chưa rõ / có đơn chờ trả | BV-CHAN-KHI-CHUA-RO · BV-CHAN-DON-CHO-TRA | ĐỎ 208·4 · ĐỎ 210·2 |
-| `ThanhToan` ghi `kh_don_gui` TRƯỚC khi gửi | BV-GHI-TRUOC-GUI | ĐỎ 204·8 |
-| `ThanhToan` GIA_DA_DOI thay bảng tiền | BV-GIA-DA-DOI | ĐỎ 210·2 |
-| cửa thật nối trước khi bật cờ | VS-BAT-CO-TRUOC-NOI-CUA · BV-CO-TAT | ĐỎ 159·47 · ĐỎ 39·1 |
-| `App.themVaoGio` quay lại trang trước | BV-QUAY-LAI-SAU-THEM | ĐỎ 208·4 |
+| `datDon.guiDonAnToan` gửi lại ĐÚNG thân + khoá | VS-GUI-LAI-KHOA-MOI · VS-GUI-LAI-THAN-KHAC | ĐỎ 218·11 · ĐỎ 227·2 |
+| `datDon.loaiLoi` luật 4xx | VS-5XX-LA-CHUA-TAO · VS-4XX-LA-KHONG-BIET · BV-LUAT-4XX | ĐỎ 37·4 · ĐỎ 218·11 · ĐỎ 213·15 |
+| `datDon.thanDatDon` có `tong_da_xem` | BV-TONG-DA-XEM | ĐỎ 186·38 |
+| `ThanhToan` `tong_da_xem` = `bg.tong` đang hiện | VS-TONG-TU-TINH | ĐỎ 189·35 |
+| `datDon.banGhiGui` bỏ PIN | VS-LUU-PIN | ĐỎ 224·5 |
+| `ThanhToan` khoá khi chưa rõ / có đơn chờ trả | BV-CHAN-KHI-CHUA-RO · BV-CHAN-DON-CHO-TRA | ĐỎ 226·3 · ĐỎ 227·2 |
+| `ThanhToan` kiểm lại bản ghi lúc bấm (vòng 1) | BV-KIEM-LAI-LUC-BAM | ĐỎ 228·1 |
+| `datDon` giữ bản ghi trong bộ nhớ khi kho chặn (vòng 1) | BV-GIU-BO-NHO | ĐỎ 227·2 |
+| gửi lại đơn cũ + GIA_DA_DOI không đè bảng tiền (vòng 1) | BV-GUI-LAI-GIA-DOI | ĐỎ 228·1 |
+| `App.daTra` giữ bản ghi, đánh dấu xong (vòng 1) | VS-XOA-BAN-GHI-KHI-XONG | ĐỎ 226·3 |
+| `ThanhToan` ghi `kh_don_gui` TRƯỚC khi gửi | BV-GHI-TRUOC-GUI | ĐỎ 219·10 |
+| `ThanhToan` GIA_DA_DOI thay bảng tiền | BV-GIA-DA-DOI | ĐỎ 227·2 |
+| cửa thật nối trước khi bật cờ | VS-BAT-CO-TRUOC-NOI-CUA · BV-CO-TAT | ĐỎ 171·52 · ĐỎ 40·1 |
+| `App.themVaoGio` quay lại trang trước | BV-QUAY-LAI-SAU-THEM | ĐỎ 225·4 |
 Tên đột biến: VS-GUI-LAI-KHOA-MOI, VS-GUI-LAI-THAN-KHAC, VS-5XX-LA-CHUA-TAO, VS-4XX-LA-KHONG-BIET, BV-LUAT-4XX, BV-TONG-DA-XEM, VS-TONG-TU-TINH, VS-LUU-PIN,
-BV-CHAN-KHI-CHUA-RO, BV-CHAN-DON-CHO-TRA, BV-GHI-TRUOC-GUI, BV-GIA-DA-DOI, VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT, BV-QUAY-LAI-SAU-THEM.
-TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (15/15). Ca K5 (không chặn oan): đơn QR thường (`qr-360/390/430`), ví đủ (`vi`), ví + QR (`vi_qr-*`) — xanh ở bản vá.
+BV-CHAN-KHI-CHUA-RO, BV-CHAN-DON-CHO-TRA, BV-KIEM-LAI-LUC-BAM, BV-GIU-BO-NHO, BV-GUI-LAI-GIA-DOI, VS-XOA-BAN-GHI-KHI-XONG, BV-GHI-TRUOC-GUI, BV-GIA-DA-DOI,
+VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT, BV-QUAY-LAI-SAU-THEM.
+TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (19/19). Lần chạy đầu sau vòng sửa 1: BV-KIEM-LAI-LUC-BAM SỐNG (sự kiện storage vẽ lại trước khi bấm) → thêm ca
+`kiem-lai-luc-bam` (bản ghi ghi ngay trong trang, không có sự kiện) → bị bắt. Ca K5 (không chặn oan): đơn QR thường (`qr-*`), ví đủ (`vi`), ví + QR (`vi_qr-*`),
+"Đặt thêm đơn mới" sau khi biết đơn ở tab khác (`d3d-tab-mo-truoc-vi`) — xanh ở bản vá.
 
 ## Soát độc lập vòng 1 (`/ra-soat`, agent general-purpose) — báo cáo chép nguyên
 ```

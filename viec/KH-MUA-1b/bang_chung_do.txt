@@ -22,6 +22,15 @@ chạy với KHONG_TRINH_DUYET=1.
    ✗ F6 thẻ cho_tra → /taikhoan/donhang/TQD51, ✗ F3 tien_ve_cho_doi_soat, ✗ G1 /menu/ca-phe → /giohang, ✗ C6 dòng giảm, 40 ca "dừng giữa chừng"
    (nút Đặt khoá vì DAT_ONLINE = false).
    sau vá: KHONG_TRINH_DUYET=1 → 40 đạt · 0 hỏng · có Chromium → 212 đạt · 0 hỏng (23 giây)
+   vòng sửa 1 (sau /ra-soat vòng 1) — ca mới chạy trên code TRƯỚC khi sửa (src/ ở 7538c97 = bản vá vòng 0, cờ bật), có Chromium:
+     ✗ D3 kho chặn: bản ghi vẫn giữ trong bộ nhớ trang (chưa rõ vẫn chặn đặt), không báo đã lưu
+     ✗ D3(d) tab 2 mở TRƯỚC, tab 1 đang gửi (chưa rõ) → tab 2 bấm đặt KHÔNG gửi khoá mới, hiện "Gửi lại đúng đơn này"  — 2
+     ✗ D3(d) tab 2 mở TRƯỚC, tab 1 trả ví xong → tab 2 bấm đặt KHÔNG tạo đơn thứ hai, báo "Bạn vừa đặt đơn #TQD42"  — 2 lần gửi
+     ✗ ca d3d-tab-mo-truoc-vi dừng giữa chừng  — locator.click: Timeout 6000ms exceeded.
+     ✗ D1 "Gửi lại đúng đơn này" nhận GIA_DA_DOI → bảng tiền VẪN của giỏ hiện tại (87.654đ, không 31.000đ), bỏ bản ghi, mời đặt lại
+     ✗ D2 kho bị chặn + chưa rõ → vẫn khoá đặt, "Gửi lại đúng đơn này" (bản ghi giữ trong bộ nhớ trang)
+   220 đạt · 6 hỏng
+   sau vòng sửa 1: KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng · có Chromium → 229 đạt · 0 hỏng (thêm ca kiem-lai-luc-bam — đỏ với đột biến BV-KIEM-LAI-LUC-BAM 228·1)
 
 == thu_KHMUA1.js (bài cũ sửa — phần không trình duyệt đổi theo v5; danh sách ca + lý do ở trang_thai.md) — trên gốc
   ✗ D1 (v5) giao tận nơi chưa mở: luôn cach_nhan tai_quan, không dia_chi; không mã thì không gửi ma_giam
@@ -48,10 +57,10 @@ chạy với KHONG_TRINH_DUYET=1.
   ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/, từng byte (có v3 của việc này trở lên)  — …/viec/KH-MUA-1b/hop_dong_v5.md
 55 đạt · 1 hỏng
    sau vá: KHONG_TRINH_DUYET=1 → 56 đạt · 0 hỏng · có Chromium → 173 đạt · 0 hỏng
-   ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Đã ghi ## Câu hỏi Q3
+   ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Câu hỏi Q3 (trang_thai.md, mục ## Câu hỏi)
      xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
 
-SỐ CA cong_cu/thu_KHMUA1b.js: 40
+SỐ CA cong_cu/thu_KHMUA1b.js: 41
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHNHANH1.js: 80
 SỐ CA cong_cu/thu_KHKHOP1.js: 47
