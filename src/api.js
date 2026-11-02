@@ -19,30 +19,35 @@ export function xoaToken() {
 }
 export const datKhiHetPhien = (f) => { khiHetPhien = f; };
 
-function loiApi(status, code, error) {
+// `duLieu` = nguyên thân lỗi POS (vd `bao_gia` của GIA_DA_DOI, `thu_lai_sau_giay`, `ma` của món hết hàng).
+function loiApi(status, code, error, duLieu = null) {
   const e = new Error(loiTheoCode(code, error));
-  e.status = status; e.code = code;
+  e.status = status; e.code = code; e.duLieu = duLieu;
   return e;
 }
 
 // Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
 const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong'];
 
-async function goi(phuongThuc, duong, than) {
+// `choMs` (tuỳ chọn): quá ngần này ms chưa xong → huỷ, ném như mất mạng (status 0) — người gọi coi là "chưa rõ".
+async function goi(phuongThuc, duong, than, choMs) {
   const token = CUA_CONG_KHAI.includes(duong) ? '' : docToken();
   const tieuDe = { 'Content-Type': 'application/json' };
   if (token) tieuDe.Authorization = `Bearer ${token}`;
-  let res;
+  const huy = choMs ? new AbortController() : null;
+  const hen = huy && setTimeout(() => huy.abort(), choMs);
+  let res, dl = null;
   try {
-    res = await fetch(ghepDiaChi(import.meta.env.VITE_POS_API, duong), { method: phuongThuc, headers: tieuDe, body: than === undefined ? undefined : JSON.stringify(than) });
+    res = await fetch(ghepDiaChi(import.meta.env.VITE_POS_API, duong), { method: phuongThuc, headers: tieuDe, body: than === undefined ? undefined : JSON.stringify(than), signal: huy ? huy.signal : undefined });
+    try { dl = await res.json(); } catch (e) { if (huy && huy.signal.aborted) throw e; /* không phải JSON */ }
   } catch {
     throw loiApi(0, 'MANG_LOI');
+  } finally {
+    clearTimeout(hen);
   }
-  let dl = null;
-  try { dl = await res.json(); } catch { /* không phải JSON */ }
   if (!res.ok || !dl) {
     if (res.status === 401 && token) { xoaToken(); khiHetPhien(); }
-    throw loiApi(res.status, dl && dl.code, dl && dl.error);
+    throw loiApi(res.status, dl && dl.code, dl && dl.error, dl);
   }
   return dl;
 }
@@ -65,3 +70,8 @@ export const layChiTietDon = (ma) => goi('GET', `/don/${encodeURIComponent(ma)}`
 export const nhanMaBill = (ma) => goi('POST', '/nhan-ma-bill', { ma });
 export const nhanDiem = (ma) => goi('POST', '/nhan-diem', { ma });
 export const datPin = (pin, pinLai) => goi('PUT', '/pin', { pin, pin_lai: pinLai });
+// Đặt đơn (hợp đồng v5). Thân dựng ở datDon.js. POST /don chờ tối đa MS_CHO_DAT_DON rồi coi là "chưa rõ" (datDon.guiDonAnToan gửi lại cùng khoá).
+const MS_CHO_DAT_DON = 20000;
+export const baoGiaGio = (than) => goi('POST', '/gio/bao-gia', than);
+export const datDonApp = (than) => goi('POST', '/don', than, MS_CHO_DAT_DON);
+export const huyDonApp = (ma) => goi('POST', `/don/${encodeURIComponent(ma)}/huy`);

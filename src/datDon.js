@@ -1,86 +1,160 @@
-// Cổng đặt đơn (KH-MUA-1): dựng thân yêu cầu, đọc trả lời — MỌI tên trường / đường dẫn cửa đặt đơn ở MỘT chỗ này.
-// Tên cửa theo bản DỰ KIẾN của POS (thiet_ke/trao_doi/TRA_LOI_POS_31102026.md mục 3); hợp đồng /api/kh chưa có các cửa này nên api.js CHƯA có hàm gọi.
-// Gọi mạng qua MỘT hàm tiêm vào `datCongDatDon(fn)`, fn(phuongThuc, duong, than) → Promise (cùng dạng `goi` của api.js). KH-MUA-1b: thêm cửa vào
-// api.js, tiêm, bật cờ DAT_ONLINE. App KHÔNG tính tiền: tạm tính / giảm / phí / tổng lấy NGUYÊN từ POS.
+// Đặt đơn (KH-MUA-1b, hợp đồng v5): dựng thân yêu cầu, đọc trả lời, luật lỗi, vòng gửi lại, ghi nhớ lần gửi chưa rõ — MỌI tên trường đặt đơn ở MỘT chỗ này.
+// Gọi mạng qua api.js. App KHÔNG tính tiền: tạm tính / giảm / tổng / ví giữ / QR còn lại lấy NGUYÊN từ POS.
+// Cờ DAT_ONLINE (noiDung/caiDat.js) là công tắc tắt khẩn: tắt → không gọi cửa ghi nào, nút đặt hiện CHU_CHUA_MO.
 import { DAT_ONLINE } from './noiDung/caiDat.js';
+import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
 
 export const CHU_CHUA_MO = 'Đặt online sắp mở — mời bạn đặt tại quầy';
-export const DUONG_DAT_DON = {
-  baoGia: '/gio/bao-gia',
-  don: '/don',
-  xem: (ma) => `/don/${encodeURIComponent(ma)}`,
-  huy: (ma) => `/don/${encodeURIComponent(ma)}/huy`,
-};
-
-let cong = null;
-export const datCongDatDon = (fn) => { cong = fn; };
-
-function goiCong(phuongThuc, duong, than) {
-  if (!DAT_ONLINE || !cong) {
-    const e = new Error(CHU_CHUA_MO); e.code = 'CHUA_MO';
-    return Promise.reject(e);
-  }
-  return cong(phuongThuc, duong, than);
-}
+const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(CHU_CHUA_MO), { code: 'CHUA_MO' })));
 
 const so = (n) => typeof n === 'number' && Number.isFinite(n);
 const chu = (s) => String(s || '').trim();
 
-/** Thân `POST /gio/bao-gia`: mon[] { ma, so_luong, ghi_chu }, ma_giam (khi có), cach_nhan, dia_chi (chỉ khi giao). Không gửi giá. */
-export function thanBaoGia(gio, { maGiam, cachNhan, diaChi } = {}) {
-  const t = { mon: gio.map(({ ma, so_luong, ghi_chu }) => ({ ma, so_luong, ghi_chu })) };
+/** Thân `POST /gio/bao-gia`: mon[] { ma, so_luong, ghi_chu? }, ma_giam (khi có), cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá. */
+export function thanBaoGia(gio, { maGiam } = {}) {
+  const t = { mon: gio.map(({ ma, so_luong, ghi_chu }) => (chu(ghi_chu) ? { ma, so_luong, ghi_chu } : { ma, so_luong })) };
   if (chu(maGiam)) t.ma_giam = chu(maGiam);
-  t.cach_nhan = cachNhan === 'giao' ? 'giao' : 'tai_quan';
-  if (t.cach_nhan === 'giao' && chu(diaChi)) t.dia_chi = chu(diaChi);
+  t.cach_nhan = 'tai_quan';
   return t;
 }
 
-/** Thân `POST /don`: thân báo giá + cach_tra ("qr" | "vi"); `pin` CHỈ khi trả ví (không lưu ở đâu). */
-export function thanDatDon(gio, tuy, { cachTra, pin } = {}) {
-  const t = { ...thanBaoGia(gio, tuy), cach_tra: cachTra === 'vi' ? 'vi' : 'qr' };
-  if (t.cach_tra === 'vi') t.pin = pin;
+const CACH_TRA = ['qr', 'vi', 'vi_qr'];
+/** Thân `POST /don`: thân báo giá + cach_tra + khoa_gui + tong_da_xem (= `tong` của báo giá đang hiện); `pin` CHỈ khi vi / vi_qr (không lưu ở đâu). */
+export function thanDatDon(gio, tuy, { cachTra, pin, khoaGui, tongDaXem } = {}) {
+  const t = { ...thanBaoGia(gio, tuy), cach_tra: CACH_TRA.includes(cachTra) ? cachTra : 'qr', khoa_gui: khoaGui, tong_da_xem: tongDaXem };
+  if (t.cach_tra !== 'qr') t.pin = pin;
   return t;
 }
 
-/** Trả lời báo giá → { tamTinh, giam[] { loai, soTien }, phiGiao, tong }. Không có `tong` là số → null (không hiện tổng). */
+/** Khoá gửi mới (16–64 ký tự A-Z a-z 0-9 -): randomUUID, máy cũ thì 32 số hex từ getRandomValues. Mỗi lần khách BẤM đặt một khoá. */
+export function taoKhoaGui(cr = globalThis.crypto) {
+  if (cr && typeof cr.randomUUID === 'function') return cr.randomUUID();
+  return Array.from(cr.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** Trả lời báo giá → { tamTinh, giam[] { loai, soTien }, phiGiao, tong, maGiamLoi { code, error } | null }. Không có `tong` là số → null. */
 export function docBaoGia(r) {
   if (!r || !so(r.tong)) return null;
+  const ml = r.ma_giam_loi;
   return {
     tamTinh: so(r.tam_tinh) ? r.tam_tinh : null,
     giam: (Array.isArray(r.giam) ? r.giam : []).filter((g) => g && so(g.so_tien)).map((g) => ({ loai: chu(g.loai), soTien: g.so_tien })),
     phiGiao: so(r.phi_giao) ? r.phi_giao : null,
     tong: r.tong,
+    maGiamLoi: ml && chu(ml.error) ? { code: chu(ml.code), error: chu(ml.error) } : null,
   };
 }
 
-/** Trả lời `POST /don` → { ma, tong, trangThai, qr { chuoi, hetHan } | null }; thiếu mã đơn → null. */
-export function docDatDon(r) {
-  if (!r || !chu(r.ma_don)) return null;
-  const qr = r.qr && chu(r.qr.chuoi) ? { chuoi: String(r.qr.chuoi), hetHan: chu(r.qr.het_han) } : null;
-  return { ma: String(r.ma_don), tong: so(r.tong) ? r.tong : null, trangThai: chu(r.trang_thai), qr };
+/** Tên dòng giảm theo demo (checkout "Giảm giá (voucher)", giỏ "Ưu đãi hạng …", nhãn "Giờ vàng"); loại lạ → "Giảm giá". */
+export function tenGiam(loai, tenHang) {
+  if (loai === 'ma_giam') return 'Giảm giá (voucher)';
+  if (loai === 'hang') return chu(tenHang) ? `Ưu đãi hạng ${chu(tenHang)}` : 'Ưu đãi hạng';
+  if (loai === 'gio_vang') return 'Giờ vàng';
+  return 'Giảm giá';
 }
 
-/** Trả lời `GET /don/:ma` → { ma, ngay, tong, tienTrinh, mon[] { ma, ten, so_luong, thanh_tien, ghi_chu } }. */
+const docQR = (q) => (q && chu(q.chuoi) ? { chuoi: String(q.chuoi), hetHan: chu(q.het_han) } : null);
+
+/** Trả lời `POST /don` → { ma, tong, giuVi, conLai, tienTrinh, qr, trung }; thiếu ma_don → null (= "chưa rõ"). */
+export function docDatDon(r) {
+  if (!r || !chu(r.ma_don)) return null;
+  return {
+    ma: String(r.ma_don), tong: so(r.tong) ? r.tong : null, giuVi: so(r.giu_vi) ? r.giu_vi : null, conLai: so(r.con_lai) ? r.con_lai : null,
+    tienTrinh: chu(r.tien_trinh), qr: docQR(r.qr), trung: r.trung === true,
+  };
+}
+
+/** Trả lời `GET /don/:ma` → { ma, ngay, tong, tienTrinh, qr, thanhToan, tienVeChoDoiSoat, mon[] }. Bước đơn chỉ đọc `tien_trinh`. */
 export function docDon(r) {
   const d = r && r.don;
   if (!d || !chu(d.ma)) return null;
   const mon = (Array.isArray(d.mon) ? d.mon : []).map((m) => ({ ma: chu(m.ma), ten: chu(m.ten), so_luong: m.so_luong, thanh_tien: m.thanh_tien, ghi_chu: chu(m.ghi_chu) }));
-  return { ma: String(d.ma), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), mon };
+  return {
+    ma: String(d.ma), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), qr: docQR(d.qr),
+    thanhToan: d.thanh_toan == null ? null : d.thanh_toan, tienVeChoDoiSoat: d.tien_ve_cho_doi_soat === true, mon,
+  };
 }
 
-export const baoGia = (than) => goiCong('POST', DUONG_DAT_DON.baoGia, than).then(docBaoGia);
-export const taoDon = (than) => goiCong('POST', DUONG_DAT_DON.don, than).then(docDatDon);
-export const xemDon = (ma) => goiCong('GET', DUONG_DAT_DON.xem(ma)).then(docDon);
-export const huyDon = (ma) => goiCong('POST', DUONG_DAT_DON.huy(ma));
+export const baoGia = canMo((than) => baoGiaGio(than).then(docBaoGia));
+export const xemDon = (ma) => layChiTietDon(ma).then(docDon);
+export const huyDon = canMo((ma) => huyDonApp(ma));
 
-// Lỗi POS báo CHẮC CHẮN chưa tạo đơn (tên dự kiến, mục 3 TRA_LOI_POS_31102026 + hợp đồng v2): chỉ những lỗi này cho khách sửa rồi gửi lại.
-// Mọi lỗi khác (mất mạng, 5xx, trả lời không đọc được / thiếu mã đơn) = đơn CÓ THỂ đã tạo, ví có thể đã trừ → không cho gửi lại.
-const LOI_CHUA_TAO = ['PIN_SAI', 'VI_KHONG_DU', 'HET_HANG', 'NGOAI_GIO', 'NGOAI_GIO_HOAT_DONG', 'QUA_GIO_NHAN_DON', 'CHUA_MO'];
-export const chuaTaoDon = (e) => !!e && LOI_CHUA_TAO.includes(e.code);
+/**
+ * Luật 4xx của hợp đồng v5: MỌI trả lời 4xx CÓ `code` = chắc chắn chưa tạo đơn, chưa giữ / trừ ví → 'chua_tao' (khách sửa rồi bấm lại, khoá mới).
+ * Còn lại — mất mạng / hết giờ chờ (status 0), 5xx, 4xx không code, 200 thiếu mã đơn — → 'khong_biet' (đơn CÓ THỂ đã tạo).
+ */
+export function loaiLoi(e) {
+  if (e && e.code === 'CHUA_MO') return 'chua_tao';
+  return e && e.status >= 400 && e.status < 500 && e.code ? 'chua_tao' : 'khong_biet';
+}
 
-/** Ví còn thiếu bao nhiêu so với tổng POS báo (0 = đủ). Thiếu số → null (không cho chọn ví). */
+const MS_GUI_LAI = 2000;  // chờ giữa hai lần tự gửi lại
+const LAN_GUI_LAI = 3;    // "chưa rõ" thường: tự gửi lại tối đa ngần này lần
+const LAN_DANG_XU_LY = 30; // DANG_XU_LY: gửi lại tới khoảng 1 phút (30 × 2 giây) như hợp đồng v5
+const choThat = (ms) => new Promise((x) => setTimeout(x, ms));
+export const CHU_CHUA_RO = 'Chưa rõ quán đã nhận đơn chưa.';
+
+/**
+ * Gửi `POST /don` an toàn: MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
+ * Nhận đơn (kể cả trung) → trả đơn; 'chua_tao' → ném lỗi POS; 'khong_biet' → chờ ~2 giây gửi lại; hết lượt → ném { code: 'KHONG_BIET' }.
+ */
+export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat, khiGuiLai = () => {} } = {}) {
+  let lan = 0, lanXuLy = 0;
+  for (;;) {
+    let loi;
+    try {
+      const don = docDatDon(await gui(than));
+      if (don) return don;
+      loi = { status: 200 };
+    } catch (e) { loi = e; }
+    if (loaiLoi(loi) === 'chua_tao') throw loi;
+    const xuLy = loi.code === 'DANG_XU_LY';
+    if (xuLy ? ++lanXuLy > LAN_DANG_XU_LY : ++lan > LAN_GUI_LAI) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET' });
+    khiGuiLai();
+    await cho(MS_GUI_LAI);
+  }
+}
+
+/** Cách trả được chọn theo số dư /toi mới và tổng báo giá: ví đủ → vi; 0 < dư < tổng → vi_qr. Số thật (giu_vi, con_lai) do POS trả. */
+export function cachTraDuoc(tong, soDu) {
+  const co = so(tong) && so(soDu);
+  return { vi: co && soDu >= tong, viQr: co && soDu > 0 && soDu < tong };
+}
+
+/** Ví còn thiếu bao nhiêu so với tổng POS báo (0 = đủ). Thiếu số → null. */
 export const viThieu = (tong, soDu) => (so(tong) && so(soDu) ? Math.max(0, tong - soDu) : null);
+
+// Ghi nhớ lần gửi (D3): `kh_don_gui` = { khoa_gui, than KHÔNG pin, cach_tra, luc } ghi TRƯỚC lần gửi đầu; nhận đơn → thêm ma_don, giu_vi, con_lai
+// (đúng số POS trả, để tải lại trên cùng máy vẫn hiện dòng ví + QR); chắc chưa tạo → xoá. Còn bản ghi mà chưa có ma_don = "chưa rõ" → chặn đặt mới.
+export const KHOA_DON_GUI = 'kh_don_gui';
+const NGAY_MS = 24 * 3600 * 1000; // POS nhớ khoá gửi 24 giờ
+const khoMay = () => localStorage;
+const layKho = (k) => (typeof k === 'function' ? k() : k);
+
+/** Bản ghi từ thân vừa dựng — bỏ `pin`. */
+export function banGhiGui(than, luc = Date.now()) {
+  const { pin, ...con } = than;
+  return { khoa_gui: than.khoa_gui, than: con, cach_tra: than.cach_tra, luc };
+}
+/** Đọc bản ghi (+ quaHan: quá 24 giờ). Không có / hỏng / kho chặn → null. */
+export function docGuiDo(k = khoMay, bay = Date.now()) {
+  try {
+    const g = JSON.parse(layKho(k).getItem(KHOA_DON_GUI));
+    if (!g || !chu(g.khoa_gui) || !g.than) return null;
+    return { ...g, quaHan: !(bay - g.luc < NGAY_MS) };
+  } catch { return null; }
+}
+/** Ghi bản ghi; null = xoá. Kho chặn → false (không báo đã lưu). */
+export function ghiGuiDo(g, k = khoMay) {
+  try {
+    if (g) { const { quaHan, ...con } = g; layKho(k).setItem(KHOA_DON_GUI, JSON.stringify(con)); } else layKho(k).removeItem(KHOA_DON_GUI);
+    return true;
+  } catch { return false; }
+}
+
+/** Thẻ đơn ở Lịch sử mở Theo dõi đơn khi đơn App còn đang chạy; xong / huỷ / bill quầy → Chi tiết đơn. */
+export const moTheoDoi = (tt) => ['cho_tra', 'da_tra', 'dang_lam'].includes(tt);
 
 /** Chặn đặt biết trước theo /gio-hoat-dong: ngừng nhận đơn / quán đóng → câu hiện cho khách; được đặt / chưa biết → ''. POS vẫn là bên chặn. */
 export function chanDat(gh) {
@@ -135,7 +209,7 @@ export function taoGop(ms) {
   return gop;
 }
 
-/** Một lần bấm = một lần gửi: đang gửi thì lần bấm sau trả null, không gọi lại. Lỗi (kể cả mất mạng) không tự gửi lại. */
+/** Một lần bấm = một lần gửi: đang gửi (kể cả đang tự gửi lại) thì lần bấm sau trả null, không gọi thêm. */
 export function khoaGui(f) {
   let dang = false;
   return (...a) => {
