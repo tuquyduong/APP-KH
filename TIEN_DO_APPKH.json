@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 19,
+  "phien_ban_so": 20,
   "cap_nhat": "2026-11-02",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -273,6 +273,64 @@
       "ngay": "2026-11-02"
     },
     {
+      "ma": "KH-NAP-1",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1b",
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
+      ],
+      "ten": "Khach tu nap tien vao vi tren App bang QR: chon goi (GET /goi-nap), tao phien nap co khoa_gui + luat 4xx/5xx nhu dat don, man QR doc lai duoc khi tai lai, nap xong lam moi so du; Lich su vi (nap · tang · tra don · het han tien tang)",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Dung lai co che gui lai / khoa cua KH-MUA-1b"
+    },
+    {
+      "ma": "KH-VI-2",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1b",
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
+      ],
+      "ten": "Tien tang co han trong vi: dong \"Tien tang X — con N ngay N gio\" dem nguoc theo bay_gio POS, het han tu an; dong tang / het han trong Lich su vi",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Ma mo tai khoan lan dau tang tien (POS 2b). Chu quan chot: so du vi (ca tien tang) dung HET cho MOI don, KHONG co dieu kien don toi thieu → Thanh toan van theo so_du_vi nhu v5"
+    },
+    {
+      "ma": "KH-SINH-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
+      ],
+      "ten": "O ngay sinh trong Thong tin ca nhan: nhap MOT lan (PUT /toi khi dang null), buoc xac nhan \"khong tu sua duoc sau khi luu\", cau \"Nhap dung nhu can cuoc — quan doi chieu khi ap uu dai sinh nhat\"; da co thi chi hien",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Tach tu KH-HOSO-1"
+    },
+    {
+      "ma": "KH-CT-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)",
+        "KH-SINH-1"
+      ],
+      "ten": "Chuong trinh dac biet o trang Uu dai (GET /chuong-trinh): ten + mo ta ngan, ghi \"ap dung tai quan\"; dung ngay sinh nhat khach hien \"Uu dai sinh nhat hom nay\" (theo bay_gio POS)",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can)"
+    },
+    {
+      "ma": "KH-HANG-2",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS HANG-1 len hop dong"
+      ],
+      "ten": "Hang theo HANG-1: chi_cap → \"Hang danh tang khach than thiet\", khong hien gia; het_han null → \"Khong thoi han\"; xep hang theo thu_bac; goi[] chi hien (nut mua the van la P3b sau khai truong)",
+      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip"
+    },
+    {
       "ma": "KH-MUA-2",
       "ten": "Giao hang Ahamove phia App: phi giao, dia chi giao (dia_chi v3), tien trinh co tai xe",
       "loai": "Th",
@@ -295,7 +353,8 @@
       "ma": "KH-HOSO-1",
       "ten": "Man ho so day du con lai (email, gioi tinh, ngay sinh, thong tin hoa don) — xung ho + dia chi da dua len truoc (dang ky 3 buoc, KH-UI-3)",
       "loai": "Th",
-      "trang_thai": "cho"
+      "trang_thai": "cho",
+      "ghi_chu": "02.11: ngay sinh tach sang KH-SINH-1 (truoc khai truong); phan con lai van sau khai truong"
     },
     {
       "ma": "KH-OTP-1",
