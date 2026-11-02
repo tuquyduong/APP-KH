@@ -227,11 +227,12 @@ async function trinhDuyet(pw) {
       const tho = req.postData();
       let than = null; try { than = JSON.parse(tho); } catch { /* không thân */ }
       S.goi.push({ pt, duong, luc: Date.now() });
+      if (duong === '/don' && pt === 'POST') S.guiDon.push(tho);
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [{ id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('20:30:00'), dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       if (duong === '/menu') return json(200, { success: true, data: MENU_DS });
-      if (!/tok-A/.test(req.headers().authorization || '') || S.chet) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
+      if (!/tok-A/.test(req.headers().authorization || '') || (S.chetDon && duong === '/don' && pt === 'POST')) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-15T23:59:59' }, so_du_vi: S.vi } });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
@@ -243,7 +244,6 @@ async function trinhDuyet(pw) {
         return json(200, { success: true, ...S.bg });
       }
       if (duong === '/don' && pt === 'POST') {
-        S.guiDon.push(tho);
         if (S.treDon) await new Promise((x) => setTimeout(x, S.treDon));
         const x = S.kich.shift();
         if (x === 'abort') return r.abort('internetdisconnected');
@@ -401,7 +401,7 @@ async function trinhDuyet(pw) {
     await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300); // /toi về → App đã ghi chủ máy (không xoá bản ghi gieo)
     await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify(g)), { khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr', luc: Date.now() - 25 * 3600 * 1000 });
     await mo(t, '/thanhtoan');
-    k('Đ2 bản ghi quá 24 giờ → có nút "Bỏ qua, đặt đơn mới"', await doiChu(t, '#checkout', /Bỏ qua, đặt đơn mới/));
+    k('Đ2 bản ghi quá 24 giờ → có nút "Bỏ qua, đặt đơn mới"', await doiChu(t, '#checkout', /Bỏ qua, đặt đơn mới/), `${await luu(t)} | ${(await chu(t, '#checkout')).slice(0, 120)}`);
     await t.locator('#checkout button', { hasText: 'Bỏ qua, đặt đơn mới' }).click();
     k('Đ2 bỏ qua → mở nút đặt, xoá bản ghi', await sanSang(t) && (await luu(t)) === null && S.guiDon.length === 0);
   });
@@ -528,6 +528,7 @@ async function trinhDuyet(pw) {
       S.don.get('TQD60').tt = 'da_tra';
       await t.locator('#tracking button', { hasText: 'Huỷ đơn' }).click();
       const ok = await doiChu(t, '#tracking', /gọi quán để huỷ/);
+      await doi(t, async () => /Số đơn của bạn/.test(await chu(t, '#tracking')));
       const tel = await t.locator('#tracking a[href^="tel:"]').count();
       k(`F4 DA_TRA_GOI_QUAN → câu POS; số quán ${lh ? 'CÓ → link tel:' : 'trống → không link'}`, ok && (lh ? tel > 0 : tel === 0), String(tel));
     });
@@ -554,7 +555,7 @@ async function trinhDuyet(pw) {
   });
   them('401', {}, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
-    S.chet = true; await bam(t);
+    S.chetDon = true; await bam(t);
     k('401 giữa chừng → hết phiên, về Trang chủ, không "chưa rõ", không bản ghi', await doi(t, async () => /\/trangchu$/.test(t.url())) && (await luu(t)) === null && S.guiDon.length === 1, `${t.url()} ${await luu(t)} ${S.guiDon.length}`);
   });
   them('giam', {}, async ({ t }) => {
