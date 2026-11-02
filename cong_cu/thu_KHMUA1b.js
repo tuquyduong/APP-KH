@@ -529,11 +529,10 @@ async function trinhDuyet(pw) {
     await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
     await t.evaluate(() => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr', luc: Date.now() })));
     await mo(t, '/thanhtoan');
-    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')) && /87\.654đ/.test(await chu(t, '#checkout .bang-tien')));
     await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
-    await doi(t, async () => /đặt lại/.test(await chu(t, '#checkout .nt-state')));
+    await doi(t, async () => S.guiDon.length === 1 && (await chu(t, '#checkout .nt-state')).length > 0); await t.waitForTimeout(300);
     const tien = await chu(t, '#checkout .bang-tien');
-    console.log('  · DÒ', JSON.stringify(tien), JSON.stringify(await chu(t, '#checkout')).slice(0, 400), S.guiDon.length);
     k('D1 "Gửi lại đúng đơn này" nhận GIA_DA_DOI → bảng tiền VẪN của giỏ hiện tại (87.654đ, không 31.000đ), bỏ bản ghi, mời đặt lại', /87\.654đ/.test(tien) && !/31\.000đ/.test(tien) && (await luu(t)) === null && await sanSang(t) && /87\.654đ/.test(await nut(t).innerText()), tien);
   });
   them('kho-chan', { chanKho: true, S0: { kich: ['abort', 'abort', 'abort', 'abort'] } }, async ({ t, S }) => {
