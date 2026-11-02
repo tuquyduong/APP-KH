@@ -397,7 +397,8 @@ async function trinhDuyet(pw) {
     k('D3(c) "Gửi lại đúng đơn này" gửi CÙNG khoá + CÙNG thân → nhận đơn, MỘT đơn', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && S.guiDon.length === 5 && giongNhau(S.guiDon) && S.don.size === 1, String(S.guiDon.length));
   });
   them('qua_han', {}, async ({ t, S }) => {
-    await t.goto(URL0 + '/trangchu');
+    await mo(t, '/trangchu');
+    await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300); // /toi về → App đã ghi chủ máy (không xoá bản ghi gieo)
     await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify(g)), { khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr', luc: Date.now() - 25 * 3600 * 1000 });
     await mo(t, '/thanhtoan');
     k('Đ2 bản ghi quá 24 giờ → có nút "Bỏ qua, đặt đơn mới"', await doiChu(t, '#checkout', /Bỏ qua, đặt đơn mới/));
@@ -554,7 +555,7 @@ async function trinhDuyet(pw) {
   them('401', {}, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
     S.chet = true; await bam(t);
-    k('401 giữa chừng → hết phiên, về Trang chủ, không "chưa rõ", không bản ghi', await doi(t, async () => /\/trangchu$/.test(t.url())) && (await luu(t)) === null && S.guiDon.length === 1);
+    k('401 giữa chừng → hết phiên, về Trang chủ, không "chưa rõ", không bản ghi', await doi(t, async () => /\/trangchu$/.test(t.url())) && (await luu(t)) === null && S.guiDon.length === 1, `${t.url()} ${await luu(t)} ${S.guiDon.length}`);
   });
   them('giam', {}, async ({ t }) => {
     await mo(t, '/giohang');
