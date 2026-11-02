@@ -399,7 +399,7 @@ async function trinhDuyet(pw) {
   them('qua_han', {}, async ({ t, S }) => {
     await mo(t, '/trangchu');
     await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300); // /toi về → App đã ghi chủ máy (không xoá bản ghi gieo)
-    await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify(g)), { khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr', luc: Date.now() - 25 * 3600 * 1000 });
+    await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify({ ...g, luc: Date.now() - 25 * 3600 * 1000 })), { khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr' }); // luc tính theo đồng hồ (giả) của trang
     await mo(t, '/thanhtoan');
     k('Đ2 bản ghi quá 24 giờ → có nút "Bỏ qua, đặt đơn mới"', await doiChu(t, '#checkout', /Bỏ qua, đặt đơn mới/), `${await luu(t)} | ${(await chu(t, '#checkout')).slice(0, 120)}`);
     await t.locator('#checkout button', { hasText: 'Bỏ qua, đặt đơn mới' }).click();
