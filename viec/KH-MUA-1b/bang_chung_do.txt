@@ -38,6 +38,11 @@ chạy với KHONG_TRINH_DUYET=1.
      ✗ D3(d) hai tab cùng "chưa rõ", tab 2 gửi lại thành công → tab 1 hiện "Bạn vừa đặt đơn #TQD42", nút khoá, không gửi thêm  — 2
    233 đạt · 4 hỏng
    sau vòng sửa 2: KHONG_TRINH_DUYET=1 → 42 đạt · 0 hỏng · có Chromium → 237 đạt · 0 hỏng
+   vòng sửa 3 (sau /ra-soat vòng 3) — ca mới chạy trên code TRƯỚC khi sửa (src/ = bản vòng sửa 2), có Chromium:
+     ✗ D3 kho đọc được mà GHI hỏng (đầy kho) → docGuiDo trả bản ghi mới trong bộ nhớ trang, không bản cũ trên kho
+     ✗ D3(d) bảng PIN "Gửi lại" mở sẵn, tab khác đã thay bản ghi → nhập PIN KHÔNG gửi khoá cũ, bản ghi K2 của tab kia còn nguyên  — 1 | {"khoa_gui":"K1K1…"…}
+   239 đạt · 2 hỏng
+   sau vòng sửa 3: KHONG_TRINH_DUYET=1 → 43 đạt · 0 hỏng · có Chromium → 241 đạt · 0 hỏng
 
 == thu_KHMUA1.js (bài cũ sửa — phần không trình duyệt đổi theo v5; danh sách ca + lý do ở trang_thai.md) — trên gốc
   ✗ D1 (v5) giao tận nơi chưa mở: luôn cach_nhan tai_quan, không dia_chi; không mã thì không gửi ma_giam
@@ -67,7 +72,7 @@ chạy với KHONG_TRINH_DUYET=1.
    ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Câu hỏi Q3 (trang_thai.md, mục ## Câu hỏi)
      xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
 
-SỐ CA cong_cu/thu_KHMUA1b.js: 42
+SỐ CA cong_cu/thu_KHMUA1b.js: 43
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHNHANH1.js: 80
 SỐ CA cong_cu/thu_KHKHOP1.js: 47

@@ -60,32 +60,35 @@ Giữ nguyên: G2 "Đặt lại" (`dat-lai`), mọi ca giỏ / tab / tràn ngang
 tiến trình đơn ✓.
 `cong_cu/thu_KHUI3b.js`: A1 so hợp đồng với bản `hop_dong_v<N>.md` MỚI NHẤT trong `viec/` (trước cố định v3 — đỏ khi hợp đồng lên v5).
 
-## Chỗ vá → đột biến (`python3 viec/KH-MUA-1b/dot_bien.py`, sau vòng sửa 2; đối chứng trước: bản vá XANH 237 · 0)
+## Chỗ vá → đột biến (`python3 viec/KH-MUA-1b/dot_bien.py`, sau vòng sửa 3; đối chứng trước: bản vá XANH 241 · 0)
 | Chỗ vá | Đột biến | Kết quả |
 |---|---|---|
-| `datDon.guiDonAnToan` gửi lại ĐÚNG thân + khoá | VS-GUI-LAI-KHOA-MOI · VS-GUI-LAI-THAN-KHAC | ĐỎ 226·11 · ĐỎ 235·2 |
-| `datDon.loaiLoi` luật 4xx | VS-5XX-LA-CHUA-TAO · VS-4XX-LA-KHONG-BIET · BV-LUAT-4XX | ĐỎ 38·4 · ĐỎ 226·11 · ĐỎ 221·15 |
-| `datDon.thanDatDon` có `tong_da_xem` | BV-TONG-DA-XEM | ĐỎ 193·39 |
-| `ThanhToan` `tong_da_xem` = `bg.tong` đang hiện | VS-TONG-TU-TINH | ĐỎ 196·36 |
-| `datDon.banGhiGui` bỏ PIN | VS-LUU-PIN | ĐỎ 231·6 |
-| `ThanhToan` khoá khi chưa rõ / có đơn chờ trả | BV-CHAN-KHI-CHUA-RO · BV-CHAN-DON-CHO-TRA | ĐỎ 234·3 · ĐỎ 235·2 |
-| luật chặn theo bản ghi ở ĐIỂM GỬI `guiDon` (vòng 1–2) | BV-KIEM-O-DIEM-GUI | ĐỎ 235·2 |
-| `daThay` chỉ bản ghi đã có đơn (vòng 2) | VS-DATHAY-CA-CHUA-RO | ĐỎ 236·1 |
-| quên bản ghi bộ nhớ khi đổi khách (vòng 2) | BV-QUEN-BO-NHO-KHI-DOI-KHACH | ĐỎ 41·1 |
-| quá 24 giờ ẩn "Gửi lại" (vòng 2) | BV-AN-GUI-LAI-QUA-HAN | ĐỎ 236·1 |
-| `datDon` giữ bản ghi trong bộ nhớ khi kho chặn (vòng 1) | BV-GIU-BO-NHO | ĐỎ 235·2 |
-| gửi lại đơn cũ + GIA_DA_DOI không đè bảng tiền (vòng 1) | BV-GUI-LAI-GIA-DOI | ĐỎ 236·1 |
-| `App.daTra` giữ bản ghi, đánh dấu xong (vòng 1) | VS-XOA-BAN-GHI-KHI-XONG | ĐỎ 233·4 |
-| `ThanhToan` ghi `kh_don_gui` TRƯỚC khi gửi | BV-GHI-TRUOC-GUI | ĐỎ 227·10 |
-| `ThanhToan` GIA_DA_DOI thay bảng tiền | BV-GIA-DA-DOI | ĐỎ 235·2 |
-| cửa thật nối trước khi bật cờ | VS-BAT-CO-TRUOC-NOI-CUA · BV-CO-TAT | ĐỎ 177·54 · ĐỎ 41·1 |
-| `App.themVaoGio` quay lại trang trước | BV-QUAY-LAI-SAU-THEM | ĐỎ 233·4 |
+| `datDon.guiDonAnToan` gửi lại ĐÚNG thân + khoá | VS-GUI-LAI-KHOA-MOI · VS-GUI-LAI-THAN-KHAC | ĐỎ 230·11 · ĐỎ 239·2 |
+| `datDon.loaiLoi` luật 4xx | VS-5XX-LA-CHUA-TAO · VS-4XX-LA-KHONG-BIET · BV-LUAT-4XX | ĐỎ 39·4 · ĐỎ 230·11 · ĐỎ 225·15 |
+| `datDon.thanDatDon` có `tong_da_xem` | BV-TONG-DA-XEM | ĐỎ 197·39 |
+| `ThanhToan` `tong_da_xem` = `bg.tong` đang hiện | VS-TONG-TU-TINH | ĐỎ 200·36 |
+| `datDon.banGhiGui` bỏ PIN | VS-LUU-PIN | ĐỎ 235·6 |
+| `ThanhToan` khoá khi chưa rõ / có đơn chờ trả | BV-CHAN-KHI-CHUA-RO · BV-CHAN-DON-CHO-TRA | ĐỎ 238·3 · ĐỎ 239·2 |
+| luật chặn ở ĐIỂM GỬI `guiDon` — đơn mới (vòng 1–3) | BV-KIEM-O-DIEM-GUI | ĐỎ 239·2 |
+| điểm gửi — "Gửi lại" chỉ khi bản ghi hiện tại vẫn đúng khoá, chưa rõ (vòng 3) | BV-KIEM-GUI-LAI | ĐỎ 240·1 |
+| ghi hỏng → đọc bộ nhớ trang (vòng 3) | BV-GHI-HONG | ĐỎ 42·1 |
+| `daThay` chỉ bản ghi đã có đơn (vòng 2) | VS-DATHAY-CA-CHUA-RO | ĐỎ 240·1 |
+| quên bản ghi bộ nhớ khi đổi khách (vòng 2) | BV-QUEN-BO-NHO-KHI-DOI-KHACH | ĐỎ 42·1 |
+| quá 24 giờ ẩn "Gửi lại" (vòng 2) | BV-AN-GUI-LAI-QUA-HAN | ĐỎ 240·1 |
+| `datDon` giữ bản ghi trong bộ nhớ khi kho chặn (vòng 1) | BV-GIU-BO-NHO | ĐỎ 238·3 |
+| gửi lại đơn cũ + GIA_DA_DOI không đè bảng tiền (vòng 1) | BV-GUI-LAI-GIA-DOI | ĐỎ 240·1 |
+| `App.daTra` giữ bản ghi, đánh dấu xong (vòng 1) | VS-XOA-BAN-GHI-KHI-XONG | ĐỎ 237·4 |
+| `ThanhToan` ghi `kh_don_gui` TRƯỚC khi gửi | BV-GHI-TRUOC-GUI | ĐỎ 231·10 |
+| `ThanhToan` GIA_DA_DOI thay bảng tiền | BV-GIA-DA-DOI | ĐỎ 239·2 |
+| cửa thật nối trước khi bật cờ | VS-BAT-CO-TRUOC-NOI-CUA · BV-CO-TAT | ĐỎ 181·54 · ĐỎ 42·1 |
+| `App.themVaoGio` quay lại trang trước | BV-QUAY-LAI-SAU-THEM | ĐỎ 237·4 |
 Tên đột biến: VS-GUI-LAI-KHOA-MOI, VS-GUI-LAI-THAN-KHAC, VS-5XX-LA-CHUA-TAO, VS-4XX-LA-KHONG-BIET, BV-LUAT-4XX, BV-TONG-DA-XEM, VS-TONG-TU-TINH, VS-LUU-PIN,
-BV-CHAN-KHI-CHUA-RO, BV-CHAN-DON-CHO-TRA, BV-KIEM-O-DIEM-GUI, VS-DATHAY-CA-CHUA-RO, BV-QUEN-BO-NHO-KHI-DOI-KHACH, BV-AN-GUI-LAI-QUA-HAN, BV-GIU-BO-NHO,
-BV-GUI-LAI-GIA-DOI, VS-XOA-BAN-GHI-KHI-XONG, BV-GHI-TRUOC-GUI, BV-GIA-DA-DOI, VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT, BV-QUAY-LAI-SAU-THEM.
-TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (22/22). Lịch sử: sau vòng sửa 1 BV-KIEM-LAI-LUC-BAM sống → thêm ca `kiem-lai-luc-bam`; vòng sửa 2 dời phép kiểm vào `guiDon`
-(một chỗ) → phép kiểm ở nút thành thừa, đã bỏ cùng đột biến đó (ca `kiem-lai-luc-bam` nay do BV-KIEM-O-DIEM-GUI canh). Ca K5 (không chặn oan): đơn QR thường
-(`qr-*`), ví đủ (`vi`), ví + QR (`vi_qr-*`), "Đặt thêm đơn mới" sau khi biết đơn ở tab khác (`d3d-tab-mo-truoc-vi`) — xanh ở bản vá.
+BV-CHAN-KHI-CHUA-RO, BV-CHAN-DON-CHO-TRA, BV-KIEM-O-DIEM-GUI, BV-KIEM-GUI-LAI, BV-GHI-HONG, VS-DATHAY-CA-CHUA-RO, BV-QUEN-BO-NHO-KHI-DOI-KHACH,
+BV-AN-GUI-LAI-QUA-HAN, BV-GIU-BO-NHO, BV-GUI-LAI-GIA-DOI, VS-XOA-BAN-GHI-KHI-XONG, BV-GHI-TRUOC-GUI, BV-GIA-DA-DOI, VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT,
+BV-QUAY-LAI-SAU-THEM.
+TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (24/24). Lịch sử: sau vòng sửa 1 BV-KIEM-LAI-LUC-BAM sống → thêm ca `kiem-lai-luc-bam`; vòng sửa 2 dời phép kiểm vào `guiDon`
+(một chỗ) → phép kiểm ở nút thừa, đã bỏ cùng đột biến đó (ca `kiem-lai-luc-bam` nay do BV-KIEM-O-DIEM-GUI canh). Ca K5 (không chặn oan): đơn QR thường
+(`qr-*`), ví đủ (`vi`), ví + QR (`vi_qr-*`), "Đặt thêm đơn mới" (`d3d-tab-mo-truoc-vi`), "Gửi lại đúng đơn này" thành công (`mat_mang`) — xanh ở bản vá.
 
 ## Soát độc lập vòng 1 (`/ra-soat`, agent general-purpose) — báo cáo chép nguyên
 ```
@@ -270,6 +273,17 @@ BÀI HỌC:
 - NGUYÊN TẮC (lần thứ ba): dòng "ghi ở dưới" / "đã thêm" phải có kết quả thật đi kèm — nên thành phép kiểm grep tự động.
 ```
 
+## Vòng sửa 3 (sau soát vòng 3 — vòng sửa CUỐI, `so_vong_sua_toi_da` = 3)
+| Lỗi soát | Sửa | Ca (đỏ trước — bang_chung_do.txt) | Đột biến |
+|---|---|---|---|
+| D3(d) "Gửi lại" có bảng PIN mở sẵn, tab khác đã thay bản ghi → gửi khoá cũ, ghi đè bản ghi tab kia | điểm gửi `guiDon`: đường `cu` chỉ gửi khi bản ghi HIỆN TẠI `conChuaRo(g, cu.khoa_gui)` (đúng khoá, chưa có đơn); không thì đóng bảng PIN, vẽ lại | `gui-lai-pin-mo-san` | BV-KIEM-GUI-LAI |
+| H3 chưa ghi kết quả `--day-du` / cổng (K1, lần ba) | mục `## Kiểm` dưới ghi KẾT QUẢ thật của lần chạy cuối, không còn dòng giữ chỗ | — | — |
+| (nghi ngờ) kho đọc được mà ghi hỏng (đầy kho) → đọc bản cũ trên kho | cờ `ghiHong`: lần ghi cuối hỏng → đọc bản trong bộ nhớ trang | ca thuần "kho đầy" | BV-GHI-HONG |
+| (nghi ngờ) điểm gửi không kiểm báo giá | đơn mới: điểm gửi chặn cả khi `bg` không còn (bảng PIN mở mà giỏ / mã đổi) — hết TypeError | (ca `bao-gia-cho`, `gia_da_doi` vẫn xanh) | BV-KIEM-O-DIEM-GUI |
+| (gọn) | `chanGhi` tính một lần rồi suy ra `chuaRo` / `donKhac`; `sauHuy={daHuy}`; `daHuy()` không tham số | — | — |
+Giới hạn còn lại (thêm): kho bị chặn (cửa sổ riêng tư) + đăng nhập lại (kể cả cùng khách sau lỗi phiên 401) → bộ nhớ trang quên bản ghi (không phân biệt được
+khách cũ / mới khi không đọc được `kh_chu`) — ưu tiên không lọt dữ liệu sang khách khác; POS vẫn chặn cùng khoá.
+
 ## Kiểm (bản cuối, sau vòng sửa 2)
 - `node cong_cu/thu_KHMUA1b.js` → 237 đạt · 0 hỏng (Chromium, ~25 giây); `KHONG_TRINH_DUYET=1` → 42 đạt · 0 hỏng.
 - `npm test` → 29 đạt · 0 hỏng (mọi `thu_*.js` xanh: KHMUA1 128 · KHNHANH1 224 · KHKHOP1 84 · KHUI3b 173 …).
@@ -289,7 +303,15 @@ BÀI HỌC:
 - Q5 (nhỏ): `KHO_BAN` 409 — hợp đồng ghi "gửi lại cùng khoá"; App theo luật 4xx coi là chưa tạo, khách bấm lại (khoá mới). An toàn; nếu POS muốn App tự gửi
   lại cùng khoá thì thêm vào nhóm chưa rõ.
 
+- Q6 (điểm duyệt 2 — báo để chủ quán biết): bản ghi "chưa rõ" QUÁ 24 GIỜ nay KHÔNG còn nút "Gửi lại đúng đơn này" và câu "sẽ không tạo đơn thứ hai"; thay bằng
+  "Bạn xem Lịch sử đơn trước khi đặt đơn mới nhé." + "Xem Lịch sử đơn" + "Bỏ qua, đặt đơn mới". Lý do: hợp đồng v5 — POS nhớ khoá 24 giờ, quá hạn gửi lại nhận
+  409 KHOA_GUI_DA_DUNG nên câu "không tạo đơn thứ hai" không còn đúng. Dưới 24 giờ giữ nguyên như đã duyệt. Chủ quán đồng ý thì không cần làm gì.
+- Q4 (mở rộng theo soát vòng 3): ngoài lỗi phiên 401 / 429, cả PIN_SAI / PIN_DANG_KHOA / CHUA_CO_PIN ở lần GỬI LẠI cùng khoá sau "chưa rõ" — POS kiểm PIN
+  trước hay sau khi tra khoá? Nếu trước → 4xx đó không chứng minh đơn cũ chưa tạo.
+
 ## Phát hiện
+- `thu_KHNHANH1.js` từng đỏ 1 ca (223 · 1) trong `npm test` khi một agent soát chạy song song bài Chromium cùng lúc (máy bận); chạy riêng 224 · 0, `npm test`
+  lúc máy rảnh 29 · 0. Ca phụ thuộc thời gian của KH-NHANH-1 (đo theo mili-giây) — đề xuất việc sau: nới bằng chờ theo điều kiện thay vì mốc cố định.
 - G1 "Trang chủ / gợi ý trắc nghiệm": `src/noiDung/trangChu.js` `MON_NOI_BAT = []` → Trang chủ hiện chưa có ô món để mở Trang món. Kết quả trắc nghiệm mở món
   qua cùng `chonMon` → `di()` (đẩy lịch sử) như Menu, nên "quay lại trang trước" là cùng cơ chế `history.back()` đã thử ở ca `g1` (Menu nhóm Cà phê →
   món → về đúng /menu/ca-phe; mở thẳng link → /menu). Chưa có ca riêng cho trắc nghiệm (cần gieo kết quả trắc nghiệm).
