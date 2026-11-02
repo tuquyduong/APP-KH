@@ -332,7 +332,7 @@ async function trinhDuyet(pw) {
       k('F1 tải lại /don/TQD42 vẫn thấy QR (từ GET /don/:ma) + số tiền + đếm ngược', await doi(t, async () => (await t.locator('.khung-qr svg').count()) > 0 && /87\.654đ/.test(await chu(t, '.qr-chu')) && /còn \d:/.test(await chu(t, '.qr-chu'))));
       S.don.get('TQD42').tt = 'da_tra';
       k('F đơn chuyển da_tra (hỏi lại 3 giây) → số đơn để đọc cho nhân viên', await doiChu(t, '#tracking', /Số đơn của bạn/, 7000));
-      k('F đã trả → giỏ dọn (cả sau khi tải lại) và bản ghi lần gửi xoá', await doi(t, async () => (await t.locator('.tab .tab-so').count()) === 0 && (await luu(t)) === null));
+      k('F đã trả → giỏ dọn (cả sau khi tải lại); bản ghi lần gửi GIỮ, đánh dấu xong (tab khác còn thấy "vừa đặt")', await doi(t, async () => (await t.locator('.tab .tab-so').count()) === 0 && (JSON.parse((await luu(t)) || '{}').xong === true)));
     });
   }
 
