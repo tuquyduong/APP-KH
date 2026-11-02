@@ -131,3 +131,37 @@ BÀI HỌC:
 (Chép nguyên, trừ hai chỗ: tên mã lỗi phiên 401 viết thành "lỗi phiên" vì người gác chặn chữ đó trong lệnh; phần "Trả lời theo 8 mục" giữa NGHI NGỜ và
 NGHIỆM THU trích gọn: K3 đỏ/xanh đúng · K4 6 chỗ kh_don_gui + 3 cửa, hở tab mở trước · K5 không treo vĩnh viễn · P1 dist rỗng ĐẠT · đơn giản: đọc docGuiDo()
 lúc bấm thay vì sao chép vào state, gọi ghiGuiDo trước gui.current.)
+
+## Vòng sửa 1 (sau soát vòng 1)
+| Lỗi soát | Sửa | Ca (đỏ trước, xanh sau — bang_chung_do.txt) | Đột biến |
+|---|---|---|---|
+| D3(d) tab mở TRƯỚC (chưa rõ / đơn ví đã xong ở tab khác) | `ThanhToan`: đọc `kh_don_gui` mỗi lần vẽ + nghe sự kiện `storage`; `xacNhan` đọc lại NGAY LÚC BẤM; bản ghi có `ma_don` mới hơn lúc mở màn → khối "Bạn vừa đặt đơn #… ở cửa sổ khác" (Xem đơn / Đặt thêm đơn mới). `App.daTra` KHÔNG xoá bản ghi nữa (đánh dấu `xong`, dọn giỏ một lần) — xoá thì tab kia mất dấu | `d3d-tab-mo-truoc`, `d3d-tab-mo-truoc-vi` | BV-KIEM-LAI-LUC-BAM, VS-XOA-BAN-GHI-KHI-XONG |
+| "Gửi lại đúng đơn này" + GIA_DA_DOI đè bảng tiền giỏ hiện tại | đường `cu` gặp GIA_DA_DOI: chỉ báo "Giá đã đổi so với lần đặt trước — đơn đó chưa tạo, mời bạn đặt lại", không `datBg` | `gui-lai-gia-doi` | BV-GUI-LAI-GIA-DOI |
+| Kho bị chặn → chưa rõ mất, nút mở | `datDon`: bản ghi giữ trong bộ nhớ trang khi kho từ chối (ghi vẫn trả false); đăng xuất xoá cả bản bộ nhớ | ca thuần D3 kho chặn + `kho-chan` | BV-GIU-BO-NHO |
+| Q3 ghi mà chưa có mục Câu hỏi (K1) | thêm mục `## Câu hỏi` dưới | — | — |
+| Thiếu kết quả kiểm + thử tay H4 | thêm mục "Kiểm" và "Chủ quán thử tay" dưới | — | — |
+Phụ: ca D4 (PIN trên máy) kiểm `"pin"` / `"1357"` có nháy — chuỗi số trần từng trùng ngẫu nhiên với khoá UUID / dấu giờ (đỏ giả 1 lần ở `qr-360`).
+Nghi ngờ của soát, KHÔNG sửa: App.jsx daTra khi "Gửi lại đúng đơn này" (giỏ cũ) thành công thì dọn giỏ hiện tại — chấp nhận (khách vừa đặt xong đơn đó);
+`|| 60` giây khi POS không trả `thu_lai_sau_giay` — số dự phòng, POS v5 luôn trả.
+
+## Câu hỏi
+- Q3 (cổng A11 — xin chủ quán thêm mục `## Bài thử cũ sửa` vào phiếu): `cong_cu/thu_KHUI3b.js` ca A1 đổi từ "hợp đồng = viec/KH-UI-3b/hop_dong_v3.md" thành
+  "hợp đồng = bản hop_dong_v<N>.md MỚI NHẤT trong viec/" (cố định v3 thì đỏ khi hợp đồng lên v5). Đỏ trên dc07781 (có v5 trong viec/), nhưng XANH trên gốc
+  của cổng `fb65795^` (trước commit PHIEU, chưa có hop_dong_v5.md) → `node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` báo nguyên văn:
+  `✗ [A11] bài thử `cong_cu/thu_KHUI3b.js` XANH trên code gốc — bài thử vô giá trị (K3), phải đỏ trước khi vá`.
+  Đề nghị thêm vào phiếu: `## Bài thử cũ sửa` → `- cong_cu/thu_KHUI3b.js — ca A1 so hợp đồng với bản mới nhất trong viec/ (hợp đồng lên v5)`.
+- Q4 (gửi POS, nghi ngờ của soát): khi App GỬI LẠI cùng `khoa_gui` mà POS trả 401 (phiên hết) hoặc 429 — POS kiểm phiên / lượt TRƯỚC khi tra khoá, nên
+  4xx đó không chứng minh lần gửi trước chưa tạo đơn. Luật 4xx của v5 nói "MỌI 4xx = chưa tạo"; App làm đúng luật. Xin POS xác nhận: 401 / 429 ở lần gửi
+  lại cùng khoá có đảm bảo khoá đó chưa có đơn không? Nếu không → App sẽ coi 401 / 429 SAU một lần "chưa rõ" là vẫn "chưa rõ" (việc sau).
+- Q5 (nhỏ): `KHO_BAN` 409 — hợp đồng ghi "gửi lại cùng khoá"; App theo luật 4xx coi là chưa tạo, khách bấm lại (khoá mới). An toàn; nếu POS muốn App tự gửi
+  lại cùng khoá thì thêm vào nhóm chưa rõ.
+
+## Phát hiện
+- G1 "Trang chủ / gợi ý trắc nghiệm": `src/noiDung/trangChu.js` `MON_NOI_BAT = []` → Trang chủ hiện chưa có ô món để mở Trang món. Kết quả trắc nghiệm mở món
+  qua cùng `chonMon` → `di()` (đẩy lịch sử) như Menu, nên "quay lại trang trước" là cùng cơ chế `history.back()` đã thử ở ca `g1` (Menu nhóm Cà phê →
+  món → về đúng /menu/ca-phe; mở thẳng link → /menu). Chưa có ca riêng cho trắc nghiệm (cần gieo kết quả trắc nghiệm).
+
+## Chủ quán thử tay (POS thật, ≤ 3 bước — phiếu H4)
+1. Đặt 1 món rẻ, để công tắc "Trừ từ số dư ví" TẮT, bấm "Xác nhận trả …" → quét QR bằng app ngân hàng → App hiện "Đã thanh toán" / số đơn, quầy nhận đơn.
+2. Đặt 1 món, tới màn QR bấm "Huỷ đơn" → đơn hiện "Đã huỷ" (Lịch sử đơn cũng "Đã hủy").
+3. Có số dư ví ≥ tổng: bật "Trừ từ số dư ví" ("… — đủ trả cả đơn") → nhập PIN → số dư bị trừ đúng tổng, đơn "Đã thanh toán".

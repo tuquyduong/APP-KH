@@ -524,6 +524,13 @@ async function trinhDuyet(pw) {
     await t2.locator('#checkout button', { hasText: 'Đặt thêm đơn mới' }).click();
     k('D3(d) khách chủ ý "Đặt thêm đơn mới" → nút đặt mở lại (K5)', await sanSang(t2));
   });
+  them('kiem-lai-luc-bam', {}, async ({ t, S }) => {
+    await mo(t, '/thanhtoan'); await sanSang(t);
+    // bản ghi "chưa rõ" xuất hiện mà trang CHƯA vẽ lại (ghi ngay trong trang → không có sự kiện storage): chỉ phép kiểm lúc bấm chặn được
+    await t.evaluate(() => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: 'KHAC'.repeat(5), than: { mon: [{ ma: 'TLB', so_luong: 2 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'KHAC'.repeat(5), tong_da_xem: 87654 }, cach_tra: 'qr', luc: Date.now() })));
+    await bam(t); await t.waitForTimeout(500);
+    k('D3 bản ghi "chưa rõ" mới có mà màn chưa vẽ lại → bấm đặt KHÔNG gửi, hiện "Gửi lại đúng đơn này" (kiểm lại lúc bấm)', S.guiDon.length === 0 && /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')), String(S.guiDon.length));
+  });
   them('gui-lai-gia-doi', { S0: { bgDoi: { ...BG, tong: 31000, tam_tinh: 31000, giam: [] } } }, async ({ t, S }) => {
     await mo(t, '/trangchu');
     await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
