@@ -284,12 +284,14 @@ BÀI HỌC:
 Giới hạn còn lại (thêm): kho bị chặn (cửa sổ riêng tư) + đăng nhập lại (kể cả cùng khách sau lỗi phiên 401) → bộ nhớ trang quên bản ghi (không phân biệt được
 khách cũ / mới khi không đọc được `kh_chu`) — ưu tiên không lọt dữ liệu sang khách khác; POS vẫn chặn cùng khoá.
 
-## Kiểm (bản cuối, sau vòng sửa 2)
-- `node cong_cu/thu_KHMUA1b.js` → 237 đạt · 0 hỏng (Chromium, ~25 giây); `KHONG_TRINH_DUYET=1` → 42 đạt · 0 hỏng.
-- `npm test` → 29 đạt · 0 hỏng (mọi `thu_*.js` xanh: KHMUA1 128 · KHNHANH1 224 · KHKHOP1 84 · KHUI3b 173 …).
-- `node kiem_tra_truoc_khi_giao.js --day-du` → (ghi ở dưới sau lần chạy cuối).
-- `python3 viec/KH-MUA-1b/dot_bien.py` → TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (22/22).
-- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` → (ghi ở dưới sau lần chạy cuối).
+## Kiểm (bản cuối, sau vòng sửa 3 — HEAD 4e11f91)
+- `node cong_cu/thu_KHMUA1b.js` → 241 đạt · 0 hỏng (Chromium); `KHONG_TRINH_DUYET=1` → 43 đạt · 0 hỏng.
+- `npm test` → 29 đạt · 0 hỏng.
+- `node kiem_tra_truoc_khi_giao.js --day-du` → 31 đạt · 0 hỏng (có dựng app; KHMUA1 128 · KHMUA1b 241 · KHNHANH1 224 · KHKHOP1 84 · KHUI3b 173 · mọi thu_* xanh).
+- `python3 viec/KH-MUA-1b/dot_bien.py` → đối chứng XANH 241 · 0; TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (24/24).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` → ĐỎ 1 lý do, nguyên văn:
+  `✗ [A11] bài thử `cong_cu/thu_KHUI3b.js` XANH trên code gốc — bài thử vô giá trị (K3), phải đỏ trước khi vá` → chờ chủ quán thêm `## Bài thử cũ sửa` (Q3).
+- `git ls-files dist` rỗng. `cmp viec/KH-MUA-1b/hop_dong_v5.md thiet_ke/HOP_DONG_API_KH.md` khớp.
 
 ## Câu hỏi
 - Q3 (cổng A11 — xin chủ quán thêm mục `## Bài thử cũ sửa` vào phiếu): `cong_cu/thu_KHUI3b.js` ca A1 đổi từ "hợp đồng = viec/KH-UI-3b/hop_dong_v3.md" thành
@@ -320,3 +322,69 @@ khách cũ / mới khi không đọc được `kh_chu`) — ưu tiên không l�
 1. Đặt 1 món rẻ, để công tắc "Trừ từ số dư ví" TẮT, bấm "Xác nhận trả …" → quét QR bằng app ngân hàng → App hiện "Đã thanh toán" / số đơn, quầy nhận đơn.
 2. Đặt 1 món, tới màn QR bấm "Huỷ đơn" → đơn hiện "Đã huỷ" (Lịch sử đơn cũng "Đã hủy").
 3. Có số dư ví ≥ tổng: bật "Trừ từ số dư ví" ("… — đủ trả cả đơn") → nhập PIN → số dư bị trừ đúng tổng, đơn "Đã thanh toán".
+
+## Bài học (bước 11)
+| # | Sự cố | Ngăn | Lý do · đề xuất |
+|---|---|---|---|
+| 1 | Soát 3 vòng liền bắt đường tạo đơn thứ hai qua tab / bảng PIN / gửi lại (tab mở trước, PIN mở sẵn, hai tab cùng chưa rõ) | NGUYÊN TẮC (ngoài Phạm vi — đề xuất `KHUON_LOI.md` mục mới) | "Đã gây: KH-MUA-1b, 3 vòng soát. Dấu hiệu: phép chặn đặt / trả tiền đọc state lúc mở màn, hoặc nằm ở nút mở bước trung gian. Chặn: chặn ở ĐIỂM GỬI (hàm gọi POST), đọc lại trạng thái chung (kho / máy chủ) NGAY LÚC GỬI, kể cả đường gửi lại khoá cũ." Code đã theo: `datDon.chanBoiBanGhi` / `conChuaRo` gọi ở `guiDon`; ca + đột biến khoá lại. |
+| 2 | Hồ sơ ghi "ghi ở dưới" / "đã thêm" mà không có kết quả (soát nêu 3 lần) | KHOÁ (ngoài Phạm vi — đề xuất) | Phép kiểm ở `tu_chay/cong.js` (khung đóng băng tới khai trương): `trang_thai.md` còn dòng giữ chỗ "sau lần chạy cuối)" → ✗; ca đỏ: file có dòng đó. |
+| 3 | Người gác chặn lệnh / commit vì tên mã lỗi phiên công khai của hợp đồng (có cụm chữ "bí mật" trong tên) — 3 lần, phải dùng Edit thay heredoc | NGUYÊN TẮC (đề xuất cho khung) | Cho phép mã lỗi công khai của `/api/kh` trong luật B-BIMAT-CHU; đã làm theo hướng dẫn người gác (Edit / commit trước). |
+| 4 | Cổng A11: bài cũ sửa đỏ trên dc07781 nhưng XANH trên gốc cổng `fb65795^` (hợp đồng v5 vào cùng commit PHIEU) | NGUYÊN TẮC (đề xuất ghi vào skill `/lam-viec` bước 4) | "Bằng chứng đỏ cho bài cũ sửa phải chạy trên ĐÚNG gốc của cổng (`<mốc>^`), không phải cây đã có commit PHIEU." → Q3 xin `## Bài thử cũ sửa`. |
+| 5 | Ca `gui-lai-gia-doi` xanh oan lần đầu (bấm trước khi báo giá về → báo giá về sau đè lên) | BỎ | Một lần; đã sửa ca chờ tiền đề (bảng tiền hiện) rồi mới bấm. Đã thuộc K3. |
+| 6 | Ca D4 (PIN trên máy) đỏ giả 1 lần: "1357" trùng chuỗi trong khoá UUID / dấu giờ | BỎ | Một lần; đã kiểm `"pin"` / giá trị có nháy. |
+| 7 | `thu_KHNHANH1.js` đỏ 1 ca khi chạy song song với agent soát | BỎ (đã ghi Phát hiện) | Ca phụ thuộc thời gian của việc khác; đề xuất việc sau. |
+| 8 | Vượt ngân sách: app +412 / −160 (ngân sách ~300), thử mới 688 dòng (~450) + bài cũ ~60 | — | Do 8 điểm chủ quán duyệt thêm (công tắc ví, ảnh 3 cỡ, các khối chờ / cảnh báo) và 3 vòng sửa chống đơn thứ hai. Chủ quán cho vượt nhẹ phần thử. |
+Dọn: việc này không có lời dặn nào trong `KHUON_LOI.md` / `CLAUDE.md` được phép kiểm mới làm thay. `KHUON_LOI.md` không đổi (ngoài Phạm vi).
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-MUA-1b — bật đặt đơn online theo hợp đồng v5: cửa thật, chống đơn thứ hai, gửi lại an toàn, ví / ví + QR; + 8 điểm chủ quán duyệt 02.11.
+- **ĐÃ SỬA:** `thiet_ke/HOP_DONG_API_KH.md` (= v5 từng byte); `src/api.js` (3 cửa đặt đơn, hết giờ chờ, giữ thân lỗi); `src/datDon.js` (thân v5, khoá gửi, luật 4xx,
+  vòng gửi lại cùng khoá + thân, bản ghi `kh_don_gui`, luật chặn MỘT hàm); `src/dungDatDon.js`; `src/luuMay.js`; `src/pages/ThanhToan.jsx` (công tắc ví, khối chưa rõ /
+  đơn chờ trả / vừa đặt ở cửa sổ khác, lỗi v5); `TheoDoiDon.jsx` (QR từ GET /don/:ma, ví + QR, đối soát); `Don.jsx` (nhãn + mở đúng màn); `GioHang.jsx` (dòng giảm,
+  "✓ Đã áp dụng", lỗi mã); `App.jsx` (thêm món quay lại); `canTuPos.js`; `caiDat.js` (bật cờ); CSS chép nguyên demo (`.notif-row`, `.switch`, `.order-status.shipping`).
+  App +412 / −160 dòng.
+- **BÀI THỬ:** `thu_KHMUA1b.js` mới (43 ca thuần + Chromium, tổng 241; 3 cỡ màn; POS giả dựng từ hợp đồng); bài cũ sửa `thu_KHMUA1.js` (16 dòng sửa, lý do ở trên),
+  `thu_KHNHANH1.js`, `thu_KHKHOP1.js`, `thu_KHUI3b.js`. Đỏ trên gốc / xanh sau vá: `bang_chung_do.txt`. Đột biến 24/24 bị bắt.
+- **ĐÃ RÀ K4:** mọi chỗ gọi cửa đặt đơn (api.js 3 cửa → datDon → ThanhToan.guiDon); mọi chỗ đọc / ghi `kh_don_gui` (ThanhToan, App, TheoDoiDon, luuMay); đọc
+  `tien_trinh` (Don, ThanhToan, TheoDoiDon); `themVaoGio` / `datLai`. Đã bỏ hết `datCongDatDon`, `LOI_CHUA_TAO`, `donMoi`, "(payOS)".
+- **CHƯA KIỂM:** POS THẬT (máy chỉ có POS giả) — 3 bước thử tay ở trên. Vòng sửa 3 CHƯA được soát độc lập lại (đã chạm trần 3 vòng sửa) — chat App KH soát.
+  POS xét lỗi phiên 401 / 429 / PIN trước hay sau khi tra khoá (Q4). Cổng ✗ [A11] (Q3). G1 từ kết quả trắc nghiệm chưa có ca riêng (Phát hiện). Kho bị chặn + tải
+  lại / đăng nhập lại thì bộ nhớ trang mất bản ghi (giới hạn trình duyệt). Ảnh so_anh cần chat App KH soát lần cuối.
+- **GIT:** nhánh `viec/KH-MUA-1b`, đã đẩy lên origin; mỗi bước một commit có mã việc; không merge, không PR.
+- **BÀI HỌC:** bảng trên. Chính: phép chặn đặt đơn phải ở ĐIỂM GỬI và đọc lại trạng thái chung lúc gửi (đề xuất mục KHUON_LOI mới); hồ sơ không để dòng giữ chỗ
+  (đề xuất phép kiểm cổng).
+
+## Đếm nghiệm thu (mỗi mục một dòng)
+- A1 hợp đồng v5 từng byte — `cmp` khớp; ca A1 thu_KHMUA1b.
+- A2 canTuPos theo v5 — ca A2 thu_KHMUA1b; thu_KHKHOP1 xanh (84 · 0).
+- A3 K8 — `npm test` K8 xanh; ca A3/B1.
+- B1 3 cửa qua `goi` — ca A3/B1; ca `401` (hết phiên như mọi cửa).
+- B2 bỏ cổng tiêm, tên trường một chỗ — ca B2 ×2; thu_KHNHANH1 ca F1 (KH-MUA-1b).
+- B3 bật cờ sau C–G — ca B3; commit riêng 57ccebd; đột biến VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT.
+- C1 thân báo giá — ca C1.
+- C2 thân đặt + tong_da_xem — ca C2 ×2, `qr-*`, `bao-gia-cho`.
+- C3 khoá gửi — ca C3 ×2, `4xx`, `vi`.
+- C4 đọc POST /don — ca C4 ×2, `thieu_ma`.
+- C5 đọc GET /don/:ma — ca C5.
+- C6 dòng giảm / lỗi mã — ca C6 ×2, `giam`.
+- D1 luật 4xx + từng mã — ca D1 (đủ mã đọc từ hợp đồng), `4xx`, `gia_da_doi`, `qua_nhieu_lan`, `HET_HANG`, `MON_KHONG_BAN`, `pin_dang_khoa`, `chua_co_pin`, `ngoai_gio`, `cach_khong_khop`, `gui-lai-gia-doi`.
+- D2 chưa rõ + gửi lại — ca D2 thuần ×7, `tao-roi-502`, `5xx`, `dang_xu_ly`, `mat_mang`, `het_gio_cho`, `thieu_ma`, `kho-chan`.
+- D3 không đơn thứ hai — (a) `d3a-bam-nhieu`; (b) `d3b-back-qr`; (c) `mat_mang` tải lại, `qua_han`; (d) `d3d-hai-tab`, `d3d-tab-mo-truoc`, `d3d-tab-mo-truoc-vi`, `pin-mo-truoc`, `hai-tab-chua-ro`, `gui-lai-pin-mo-san`, `kiem-lai-luc-bam`.
+- D4 PIN không lưu — ca D4 thuần ×3 + ca D4 sau MỌI ca Chromium; đột biến VS-LUU-PIN.
+- E1 ba cách trả (công tắc ví — điểm 7) — ca E1, `qr-*` (ẩn khi 0đ), `vi`, `vi_qr-*`.
+- E2 bỏ "payOS" — ca E2, `qr-*`.
+- F1 QR từ GET /don/:ma, tải lại — `qr-390`.
+- F2 ví + QR — `vi_qr-*`.
+- F3 đối soát — `doi-soat`.
+- F4 huỷ + DA_TRA_GOI_QUAN — `huy`, `huy-da-tra-*`.
+- F5 làm mới kho — `qr-390` (ca F5).
+- F6 Lịch sử mở đúng màn + nhãn — ca F6 thuần, `lich-su`.
+- G1 thêm món quay lại — ca G1 nguồn, `g1` (Menu nhóm + mở thẳng link); Trang chủ / trắc nghiệm: Phát hiện.
+- G2 "Đặt lại" vào giỏ — ca G2, thu_KHMUA1 `dat-lai`.
+- H1 bài thử 2 phần, 3 cỡ — `thu_KHMUA1b.js` (360 / 390 / 430 cho qr, vi_qr; ảnh 3 cỡ mọi khối mới).
+- H2 SỐ CA theo KHONG_TRINH_DUYET — bang_chung_do.txt.
+- H3 npm test / --day-du / cổng / đột biến — mục Kiểm (cổng ✗ [A11] → Q3).
+- H4 thử tay — 3 bước ở trên (chờ chủ quán).
+- Điểm duyệt 1–8 — mục "Duyệt" (mỗi điểm kèm ca); ảnh `so_anh/` + `doi_chieu_demo.md` (điểm 8).
+
+HEAD ĐÃ KIỂM: 4e11f91
