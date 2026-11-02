@@ -6,7 +6,7 @@ import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
 import {
-  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { dungBaoGia } from '../dungDatDon.js';
@@ -43,7 +43,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const [, ve] = useState(0);
   // Bản ghi lần gửi (kh_don_gui) đọc LẠI mỗi lần vẽ và khi tab khác ghi (sự kiện storage) — không tin bản chụp lúc mở màn (tab mở trước, ra-soát vòng 1).
   const guiDo = docGuiDo();
-  const daThay = useRef(guiDo && guiDo.khoa_gui); // bản ghi đã có khi mở màn / khách đã xem → không coi là "đơn vừa đặt ở cửa sổ khác"
+  // Khoá của bản ghi ĐÃ CÓ ĐƠN lúc mở màn (khách đã biết đơn đó). Bản ghi CHƯA RÕ không tính: tab khác gửi lại thành công → màn này phải báo "vừa đặt".
+  const daThay = useRef(guiDo && guiDo.ma_don ? guiDo.khoa_gui : null);
   useEffect(() => {
     const nghe = (e) => { if (!e.key || e.key === KHOA_DON_GUI) ve((x) => x + 1); };
     window.addEventListener('storage', nghe);
@@ -69,7 +70,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const thieu = viThieu(bg && bg.tong, soDu);
   const cachTra = !dungVi ? 'qr' : duoc.vi ? 'vi' : duoc.viQr ? 'vi_qr' : 'qr';
   const chuaRo = !dang && !!guiDo && !guiDo.ma_don;
-  const donKhac = !dang && !!guiDo && !!guiDo.ma_don && guiDo.khoa_gui !== daThay.current ? guiDo.ma_don : ''; // vừa đặt ở tab / cửa sổ khác
+  const donKhac = !dang && !chuaRo && chanBoiBanGhi(guiDo, daThay.current) ? guiDo.ma_don : ''; // vừa đặt ở tab / cửa sổ khác
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
   const chan = chanDat(gh) || chanPos;
   const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
@@ -92,6 +93,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
 
   // `cu` = bản ghi lần gửi chưa rõ: gửi lại ĐÚNG thân + khoá đó (PIN nhập lại, không nhớ).
   const guiDon = (pin, cu) => {
+    // ĐIỂM GỬI: kiểm lại bản ghi ở đây (không chỉ ở nút) — bảng PIN mở sẵn mà tab khác vừa gửi / vừa đặt xong thì không gửi khoá mới.
+    if (!cu && chanBoiBanGhi(docGuiDo(), daThay.current)) { datMoPin(null); ve((x) => x + 1); return Promise.resolve(); }
     const than = cu ? { ...cu.than, ...(cu.cach_tra !== 'qr' ? { pin } : {}) } : thanDatDon(gio, tuy, { cachTra, pin, khoaGui: taoKhoaGui(), tongDaXem: bg.tong });
     const p = gui.current(than);
     if (!p) return Promise.resolve(); // đang gửi: bấm thêm không tạo đơn thứ hai
@@ -114,8 +117,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   };
   const xacNhan = () => {
     if (khoa) return;
-    const g = docGuiDo(); // kiểm lại NGAY LÚC BẤM: tab khác có thể vừa gửi
-    if (g && (!g.ma_don || g.khoa_gui !== daThay.current)) { ve((x) => x + 1); return; }
+    if (chanBoiBanGhi(docGuiDo(), daThay.current)) { ve((x) => x + 1); return; } // kiểm lại NGAY LÚC BẤM (trước khi hỏi PIN)
     if (cachTra === 'qr') guiDon(); else datMoPin({});
   };
   const guiLaiDungDon = () => { if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
@@ -142,12 +144,14 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       <DauManCon tieuDe="Thanh toán" phu="Chọn cách nhận hàng & trả tiền" lui={lui} canTrai />
       {chuaRo && (
         <>
-          {canhBao(guiDo.quaHan ? 'Lần đặt trước (hơn 24 giờ) chưa rõ kết quả' : 'Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
+          {guiDo.quaHan ? canhBao('Lần đặt trước (hơn 24 giờ) chưa rõ kết quả', 'Bạn xem Lịch sử đơn trước khi đặt đơn mới nhé.')
+            : canhBao('Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
           <div className="card bang-tien">
             {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
-          <button type="button" className="checkout-btn" onClick={guiLaiDungDon}><span>Gửi lại đúng đơn này</span><span>→</span></button>
+          {/* Quá 24 giờ POS không còn nhớ khoá (trả KHOA_GUI_DA_DUNG) → không mời gửi lại, chỉ xem Lịch sử / bỏ qua. */}
+          {!guiDo.quaHan && <button type="button" className="checkout-btn" onClick={guiLaiDungDon}><span>Gửi lại đúng đơn này</span><span>→</span></button>}
           <button type="button" className="ghost-btn" onClick={moLichSu}>Xem Lịch sử đơn</button>
           {guiDo.quaHan && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
         </>

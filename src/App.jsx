@@ -16,7 +16,7 @@ import { khoGioHoatDong } from './gioHoatDong.js';
 import { dungKho } from './kho.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon } from './gio.js';
-import { docGuiDo, ghiGuiDo, moTheoDoi, monDatLai } from './datDon.js';
+import { banGhiCuaDon, ghiGuiDo, moTheoDoi, monDatLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
@@ -166,8 +166,7 @@ export default function App() {
   const xongDatDon = (don) => { lamMoi([cuaToi, cuaDon, cuaDiem]); di(taoDuongDan('theodoi', { ma: don.ma })); };
   // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ + mã giảm MỘT lần (đánh dấu `xong`). Bản ghi GIỮ (không xoá) để tab
   // Thanh toán đang mở ở cửa sổ khác vẫn thấy "Bạn vừa đặt đơn …" (ra-soát vòng 1); đơn mới ghi đè, đăng xuất / đổi khách xoá. Huỷ → làm mới /don, /toi (ví nhả).
-  const banGhiCua = (ma) => { const g = docGuiDo(); return g && g.ma_don === ma ? g : null; };
-  const daTra = (ma) => { const g = banGhiCua(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
+  const daTra = (ma) => { const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
   const daHuy = () => lamMoi([cuaDon, cuaToi]);
 
   return (

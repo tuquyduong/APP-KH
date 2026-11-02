@@ -160,6 +160,17 @@ export function ghiGuiDo(g, k = khoMay) {
   } catch { return false; }
 }
 
+/** Bộ nhớ trang quên bản ghi (đăng nhập mà không biết chủ cũ — luuMay.doiKhach). */
+export const quenBoNho = () => { banGhiBoNho = null; };
+
+/**
+ * MỘT luật chặn đặt mới theo bản ghi (gọi ở ĐIỂM GỬI và khi vẽ): còn lần gửi chưa rõ, hoặc có đơn vừa đặt mà màn này chưa thấy
+ * (`daThay` = khoá của bản ghi ĐÃ CÓ ĐƠN lúc mở màn / khách đã bấm "Đặt thêm đơn mới") → chặn.
+ */
+export const chanBoiBanGhi = (g, daThay) => !!g && (!g.ma_don || g.khoa_gui !== daThay);
+/** Bản ghi lần gửi của đúng đơn `ma` (đặt từ máy này), không có → null. */
+export const banGhiCuaDon = (ma) => { const g = docGuiDo(); return g && g.ma_don === ma ? g : null; };
+
 /** Thẻ đơn ở Lịch sử mở Theo dõi đơn khi đơn App còn đang chạy; xong / huỷ / bill quầy → Chi tiết đơn. */
 export const moTheoDoi = (tt) => ['cho_tra', 'da_tra', 'dang_lam'].includes(tt);
 

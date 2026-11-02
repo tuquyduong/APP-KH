@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { bayGio } from '../bayGio.js';
-import { buocTienTrinh, conLaiQR, docGuiDo, huyDon, xongChua } from '../datDon.js';
+import { banGhiCuaDon, buocTienTrinh, conLaiQR, huyDon, xongChua } from '../datDon.js';
 import { dungTheoDoi } from '../dungDatDon.js';
 import { LIEN_HE } from '../noiDung/lienHe.js';
 import Man, { DauManCon } from '../components/Man.jsx';
@@ -55,8 +55,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
   const [dangHuy, datDangHuy] = useState(false);
   const tt = don ? don.tienTrinh : '';
   const choTra = tt === 'cho_tra';
-  const ghi = docGuiDo();
-  const banGhi = ghi && ghi.ma_don === ma ? ghi : null;
+  const banGhi = banGhiCuaDon(ma);
   const viQr = !!banGhi && banGhi.cach_tra === 'vi_qr' && banGhi.giu_vi > 0;
   // Số cạnh QR: QR cả đơn → tổng; ví + QR → phần còn lại POS trả. Không có bản ghi (máy khác) → không biết → ẩn.
   const soTra = !banGhi ? null : banGhi.cach_tra === 'qr' ? (don && don.tong) : Number.isFinite(banGhi.con_lai) ? banGhi.con_lai : null;
