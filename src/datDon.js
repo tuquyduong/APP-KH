@@ -139,12 +139,15 @@ export function banGhiGui(than, luc = Date.now()) {
 }
 // Kho bị chặn (cửa sổ riêng tư…): bản ghi vẫn giữ trong BỘ NHỚ TRANG để "chưa rõ" còn chặn đặt mới — ghi vẫn trả false (không báo đã lưu).
 let banGhiBoNho = null;
+let ghiHong = false; // lần ghi cuối bị kho từ chối (chặn / đầy) → bản trên kho có thể CŨ: đọc bản trong bộ nhớ trang
 const quaHanLuc = (g, bay) => ({ ...g, quaHan: !(bay - g.luc < NGAY_MS) });
 
 /** Đọc bản ghi (+ quaHan: quá 24 giờ). Không có / hỏng → null; kho chặn → bản trong bộ nhớ trang. */
 export function docGuiDo(k = khoMay, bay = Date.now()) {
+  const boNho = () => banGhiBoNho && quaHanLuc(banGhiBoNho, bay);
+  if (ghiHong) return boNho();
   let tho;
-  try { tho = layKho(k).getItem(KHOA_DON_GUI); } catch { return banGhiBoNho && quaHanLuc(banGhiBoNho, bay); }
+  try { tho = layKho(k).getItem(KHOA_DON_GUI); } catch { return boNho(); }
   try {
     const g = JSON.parse(tho);
     return g && chu(g.khoa_gui) && g.than ? quaHanLuc(g, bay) : null;
@@ -156,18 +159,21 @@ export function ghiGuiDo(g, k = khoMay) {
   banGhiBoNho = con;
   try {
     if (con) layKho(k).setItem(KHOA_DON_GUI, JSON.stringify(con)); else layKho(k).removeItem(KHOA_DON_GUI);
+    ghiHong = false;
     return true;
-  } catch { return false; }
+  } catch { ghiHong = true; return false; }
 }
 
 /** Bộ nhớ trang quên bản ghi (đăng nhập mà không biết chủ cũ — luuMay.doiKhach). */
-export const quenBoNho = () => { banGhiBoNho = null; };
+export const quenBoNho = () => { banGhiBoNho = null; ghiHong = false; };
 
 /**
  * MỘT luật chặn đặt mới theo bản ghi (gọi ở ĐIỂM GỬI và khi vẽ): còn lần gửi chưa rõ, hoặc có đơn vừa đặt mà màn này chưa thấy
  * (`daThay` = khoá của bản ghi ĐÃ CÓ ĐƠN lúc mở màn / khách đã bấm "Đặt thêm đơn mới") → chặn.
  */
 export const chanBoiBanGhi = (g, daThay) => !!g && (!g.ma_don || g.khoa_gui !== daThay);
+/** "Gửi lại đúng đơn này" chỉ khi bản ghi HIỆN TẠI vẫn đúng khoá đó và vẫn chưa rõ (tab khác có thể đã giải / thay bằng đơn mới). */
+export const conChuaRo = (g, khoa) => !!g && g.khoa_gui === khoa && !g.ma_don;
 /** Bản ghi lần gửi của đúng đơn `ma` (đặt từ máy này), không có → null. */
 export const banGhiCuaDon = (ma) => { const g = docGuiDo(); return g && g.ma_don === ma ? g : null; };
 

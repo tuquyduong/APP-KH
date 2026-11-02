@@ -6,7 +6,7 @@ import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
 import {
-  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { dungBaoGia } from '../dungDatDon.js';
@@ -69,8 +69,9 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const duoc = cachTraDuoc(bg && bg.tong, soDu);
   const thieu = viThieu(bg && bg.tong, soDu);
   const cachTra = !dungVi ? 'qr' : duoc.vi ? 'vi' : duoc.viQr ? 'vi_qr' : 'qr';
-  const chuaRo = !dang && !!guiDo && !guiDo.ma_don;
-  const donKhac = !dang && !chuaRo && chanBoiBanGhi(guiDo, daThay.current) ? guiDo.ma_don : ''; // vừa đặt ở tab / cửa sổ khác
+  const chanGhi = !dang && chanBoiBanGhi(guiDo, daThay.current); // MỘT luật: chưa rõ, hoặc đơn vừa đặt ở tab / cửa sổ khác
+  const chuaRo = chanGhi && !guiDo.ma_don;
+  const donKhac = chanGhi && !chuaRo ? guiDo.ma_don : '';
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
   const chan = chanDat(gh) || chanPos;
   const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
@@ -94,7 +95,9 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   // `cu` = bản ghi lần gửi chưa rõ: gửi lại ĐÚNG thân + khoá đó (PIN nhập lại, không nhớ).
   const guiDon = (pin, cu) => {
     // ĐIỂM GỬI: kiểm lại bản ghi ở đây (không chỉ ở nút) — bảng PIN mở sẵn mà tab khác vừa gửi / vừa đặt xong thì không gửi khoá mới.
-    if (!cu && chanBoiBanGhi(docGuiDo(), daThay.current)) { datMoPin(null); ve((x) => x + 1); return Promise.resolve(); }
+    // Gửi lại (cu): chỉ khi bản ghi HIỆN TẠI vẫn đúng khoá đó và vẫn chưa rõ. Đơn mới: không bị bản ghi chặn và báo giá đang hiện còn đó.
+    const g = docGuiDo();
+    if (cu ? !conChuaRo(g, cu.khoa_gui) : chanBoiBanGhi(g, daThay.current) || !bg) { datMoPin(null); ve((x) => x + 1); return Promise.resolve(); }
     const than = cu ? { ...cu.than, ...(cu.cach_tra !== 'qr' ? { pin } : {}) } : thanDatDon(gio, tuy, { cachTra, pin, khoaGui: taoKhoaGui(), tongDaXem: bg.tong });
     const p = gui.current(than);
     if (!p) return Promise.resolve(); // đang gửi: bấm thêm không tạo đơn thứ hai

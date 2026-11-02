@@ -61,12 +61,12 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
   const soTra = !banGhi ? null : banGhi.cach_tra === 'qr' ? (don && don.tong) : Number.isFinite(banGhi.con_lai) ? banGhi.con_lai : null;
   useEffect(() => {
     if (tt && tt !== 'cho_tra' && tt !== 'da_huy') daTra(ma);
-    if (tt === 'da_huy') daHuy(ma);
+    if (tt === 'da_huy') daHuy();
   }, [tt]);
   // "Tạo mã mới" = huỷ đơn chờ trả rồi về Thanh toán — CHỈ khi huỷ thành công (POS từ chối, vd đơn vừa được trả → hiện lời POS, hỏi lại trạng thái).
   const taoMoi = () => {
     datDangHuy(true); datLoiHuy('');
-    huyDon(ma).then(() => { daHuy(ma); veThanhToan(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
+    huyDon(ma).then(() => { daHuy(); veThanhToan(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
   };
   const huy = () => {
     datDangHuy(true); datLoiHuy('');
