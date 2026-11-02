@@ -533,6 +533,7 @@ async function trinhDuyet(pw) {
     await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
     await doi(t, async () => /đặt lại/.test(await chu(t, '#checkout .nt-state')));
     const tien = await chu(t, '#checkout .bang-tien');
+    console.log('  · DÒ', JSON.stringify(tien), JSON.stringify(await chu(t, '#checkout')).slice(0, 400), S.guiDon.length);
     k('D1 "Gửi lại đúng đơn này" nhận GIA_DA_DOI → bảng tiền VẪN của giỏ hiện tại (87.654đ, không 31.000đ), bỏ bản ghi, mời đặt lại', /87\.654đ/.test(tien) && !/31\.000đ/.test(tien) && (await luu(t)) === null && await sanSang(t) && /87\.654đ/.test(await nut(t).innerText()), tien);
   });
   them('kho-chan', { chanKho: true, S0: { kich: ['abort', 'abort', 'abort', 'abort'] } }, async ({ t, S }) => {
