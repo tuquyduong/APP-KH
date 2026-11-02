@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 20,
+  "phien_ban_so": 21,
   "cap_nhat": "2026-11-02",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -269,7 +269,7 @@
         "KH-NHANH-1"
       ],
       "han": "2026-11-04",
-      "ghi_chu": "31.10 chu quan chot: them mon xong KHONG nhay vao gio, quay lai trang khach dung truoc khi bam vao mon (Trang mon mo thang bang link → ve Menu); sua themVaoGio o src/App.jsx. Theo TRA_LOI_POS_31102026_b.md: khoa_gui moi lan bam Dat hang (giu khi gui lai do loi mang), cach_tra qr/vi/vi_qr (giu_vi, con_lai), ma_giam_loi duoi o ma, mon[].ma + qr tu GET /don/:ma, giam[].loai la → cong vao tong. Truoc khi bat co DAT_ONLINE: Back tu man QR, khoa don co the da tao, the Lich su don. | TRA_LOI_POS_31102026_c + _d: tong_da_xem bat buoc → 409 GIA_DA_DOI { bao_gia } (hien gia moi, khach bam Dat lai); 4xx KHONG giu khoa_gui (gui lai cung khoa duoc); 503 DANG_XU_LY / PAYOS_CHUA_CAU_HINH, 502 PAYOS_LOI, mat mang → cho ~2s gui lai CUNG khoa (toi da 3, roi sang Lich su don); vi_qr khi vi 0d = QR; ma_giam_loi (MA_KHONG_LOI_HON) duoi o ma; tien_ve_cho_doi_soat → bao quan da nhan tien; ma don A + 8 ky tu; HET_HANG / MON_KHONG_BAN danh dau mon theo ma; hop dong v5 | 02.11: POS da gop KH-MUA-1, hop dong v5 (sua cuoi bbb0892) chep nguyen van vao viec/KH-MUA-1b/hop_dong_v5.md; bo chu \"(payOS)\" (POS doi SePay, khong ghi cung ten nha cung cap / tai khoan nhan); phieu Cho duyet ke hoach",
+      "ghi_chu": "31.10 chu quan chot: them mon xong KHONG nhay vao gio, quay lai trang khach dung truoc khi bam vao mon (Trang mon mo thang bang link → ve Menu); sua themVaoGio o src/App.jsx. Theo TRA_LOI_POS_31102026_b.md: khoa_gui moi lan bam Dat hang (giu khi gui lai do loi mang), cach_tra qr/vi/vi_qr (giu_vi, con_lai), ma_giam_loi duoi o ma, mon[].ma + qr tu GET /don/:ma, giam[].loai la → cong vao tong. Truoc khi bat co DAT_ONLINE: Back tu man QR, khoa don co the da tao, the Lich su don. | TRA_LOI_POS_31102026_c + _d: tong_da_xem bat buoc → 409 GIA_DA_DOI { bao_gia } (hien gia moi, khach bam Dat lai); 4xx KHONG giu khoa_gui (gui lai cung khoa duoc); 503 DANG_XU_LY / PAYOS_CHUA_CAU_HINH, 502 PAYOS_LOI, mat mang → cho ~2s gui lai CUNG khoa (toi da 3, roi sang Lich su don); vi_qr khi vi 0d = QR; ma_giam_loi (MA_KHONG_LOI_HON) duoi o ma; tien_ve_cho_doi_soat → bao quan da nhan tien; ma don A + 8 ky tu; HET_HANG / MON_KHONG_BAN danh dau mon theo ma; hop dong v5 | 02.11: POS da gop KH-MUA-1, hop dong v5 (sua cuoi bbb0892) chep nguyen van vao viec/KH-MUA-1b/hop_dong_v5.md; bo chu \"(payOS)\" (POS doi SePay, khong ghi cung ten nha cung cap / tai khoan nhan); phieu Cho duyet ke hoach | 02.11 chat soat ke hoach dc07781 DAT kem dan; chu quan duyet Q1 (tai lai Theo doi don: an dong giu vi / QR con lai + so tien canh QR khi khong co du lieu; xin POS v7 them cach_tra, giu_vi, con_lai vao GET /don/:ma) va Q2 (localStorage kh_don_gui, khong PIN, xoa khi dang xuat / doi khach)",
       "ngay": "2026-11-02"
     },
     {
@@ -293,8 +293,8 @@
         "KH-MUA-1b",
         "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
       ],
-      "ten": "Tien tang co han trong vi: dong \"Tien tang X — con N ngay N gio\" dem nguoc theo bay_gio POS, het han tu an; dong tang / het han trong Lich su vi",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Ma mo tai khoan lan dau tang tien (POS 2b). Chu quan chot: so du vi (ca tien tang) dung HET cho MOI don, KHONG co dieu kien don toi thieu → Thanh toan van theo so_du_vi nhu v5"
+      "ten": "Qua chao mung + Thuong nap trong vi: o \"So du vi\" hien so_du_nap (nap + thuong nap, POS tra); dong rieng \"Qua chao mung X — con N ngay N gio\" dem nguoc theo bay_gio POS, het han tu an; Lich su vi (nap kem thuong nap, qua chao mung, qua het han, tra don, hoan don); tra don van theo so_du_vi tong",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Ma mo tai khoan lan dau tang tien (POS 2b). Chu quan chot: so du vi (ca tien tang) dung HET cho MOI don, KHONG co dieu kien don toi thieu → Thanh toan van theo so_du_vi nhu v5 | 02.11 POS ban 5: HAI loai — Qua chao mung (mot lan, CO han) va Thuong nap (moi lan nap, KHONG han, gop vao so du); bo chu \"Tien tang\"; xin POS v7 them so_du_nap (YEU_CAU_APPKH_GUI_POS_02112026_c.md)"
     },
     {
       "ma": "KH-SINH-1",
@@ -320,6 +320,30 @@
       "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can)"
     },
     {
+      "ma": "KH-GHICHU-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1b",
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026_b.md)"
+      ],
+      "ten": "Ghi chu mon: nut chon nhanh (GET /ghi-chu-nhanh: It da, Khong da, It duong…) + o go tu do o Trang mon; sua ghi chu ngay trong Gio; gui theo cach POS chot",
+      "ghi_chu": "02.11 chu quan: ghi chu mon LUC NAO cung phai co, o moi kenh (POS ban 4 muc 3d). App da co o go tu do (<= 100 ky tu). Truoc khai truong"
+    },
+    {
+      "ma": "KH-HD-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-MUA-1b",
+        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026_b.md)"
+      ],
+      "ten": "Chi tiet don = dung mau hoa don POS: ve theo danh sach dong hoa don POS dung san (loai, trai, phai, kieu chu), khong tu tinh, khong tu sap dong, khong ghi cung dau hoa don (theo don vi ban)",
+      "ghi_chu": "02.11 chu quan: \"KH lay form cua POS\" (POS ban 4 muc 3c)"
+    },
+    {
       "ma": "KH-HANG-2",
       "loai": "Th",
       "model": "Sonnet",
@@ -340,7 +364,8 @@
         "KH-MUA-1b",
         "POS KH-MUA-2"
       ],
-      "han": "2026-11-06"
+      "han": "2026-11-06",
+      "ghi_chu": "02.11 chu quan (POS ban 4 muc 3e): KHONG thu ho (COD), khach luon tra truoc; mien phi giao theo cai dat POS (mac dinh KHONG) → App hien dung phi_giao, 0 = \"Mien phi giao\"; giao that bai do khach KHONG hoan tien → hien ro truoc khi dat + o danh dau \"Toi da doc\"; bao phi dung chung ham POS (GIAO-1)"
     },
     {
       "ma": "KHUNG-1.8.1",
