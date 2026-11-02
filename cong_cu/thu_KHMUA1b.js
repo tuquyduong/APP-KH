@@ -282,7 +282,7 @@ async function trinhDuyet(pw) {
     try { await chay({ t, S, ctx, trang }); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); }
     // D4 sau MỌI ca: không chuỗi PIN ở kho trình duyệt (mọi tab của máy)
     let coPin = false;
-    for (const tb of ctx.pages()) coPin = coPin || await tb.evaluate((pin) => JSON.stringify({ ...localStorage }).includes(pin) || JSON.stringify({ ...sessionStorage }).includes(pin), PIN).catch(() => false);
+    for (const tb of ctx.pages()) coPin = coPin || await tb.evaluate((pin) => { const s = JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }); return s.includes(`\\"${pin}\\"`) || s.includes('\\"pin\\"'); }, PIN).catch(() => false); // giá trị trong JSON lồng: \"1357\" / \"pin\" (chuỗi số trần có thể trùng khoá ngẫu nhiên)
     k(`D4 [${ten}] không có PIN trong localStorage / sessionStorage`, !coPin);
     k(`[${ten}] trang không báo lỗi JS`, loiTrang.length === 0, loiTrang[0]);
     await ctx.close();
@@ -519,7 +519,7 @@ async function trinhDuyet(pw) {
     await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
     await bam(t2).catch(() => {}); await t2.waitForTimeout(500);
-    k('D3(d) tab 2 mở TRƯỚC, tab 1 trả ví xong → tab 2 bấm đặt KHÔNG tạo đơn thứ hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);
+    k('D3(d) tab 2 mở TRƯỚC, tab 1 trả ví xong → tab 2 bấm đặt KHÔNG tạo đơn thứ hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi ${S.guiDon.map((x) => JSON.parse(x).cach_tra).join(',')} | ${(await chu(t2, '#checkout')).slice(0, 160)}`);
     await chup(t2, 'thanhtoan-don-khac-390');
     await t2.locator('#checkout button', { hasText: 'Đặt thêm đơn mới' }).click();
     k('D3(d) khách chủ ý "Đặt thêm đơn mới" → nút đặt mở lại (K5)', await sanSang(t2));
