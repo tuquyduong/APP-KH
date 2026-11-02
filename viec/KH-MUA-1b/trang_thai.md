@@ -151,6 +151,66 @@ Phụ: ca D4 (PIN trên máy) kiểm `"pin"` / `"1357"` có nháy — chuỗi s�
 Nghi ngờ của soát, KHÔNG sửa: App.jsx daTra khi "Gửi lại đúng đơn này" (giỏ cũ) thành công thì dọn giỏ hiện tại — chấp nhận (khách vừa đặt xong đơn đó);
 `|| 60` giây khi POS không trả `thu_lai_sau_giay` — số dự phòng, POS v5 luôn trả.
 
+## Soát độc lập vòng 2 (`/ra-soat`, agent general-purpose) — báo cáo chép nguyên
+```
+KHÔNG ĐẠT
+
+Lệnh đã chạy: KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1b.js cho 41 đạt · 0 hỏng. node cong_cu/thu_KHMUA1b.js (có Chromium) cho 229 đạt · 0 hỏng, chạy
+30 giây. npm test cho 29 đạt · 0 hỏng. git ls-files dist rỗng. cmp hợp đồng v5 với thiet_ke/HOP_DONG_API_KH.md khớp. Tôi tự thử lại ca thuần "kho chặn" trên
+src ở 7538c97 (chép bằng git archive vào nháp): kết quả doc null (đỏ). Trên HEAD: đọc lại được bản ghi (xanh). Vậy ca này đỏ thật trên code trước khi sửa.
+
+LỖI TÌM ĐƯỢC:
+- src/pages/ThanhToan.jsx:202 + :94–99 (+ :115–120) — Kiểm lại lúc bấm chỉ nằm trong xacNhan. Với ví, xacNhan chỉ mở bảng PIN (datMoPin({})). Lúc khách
+  nhập đủ 4 số, PinSheet gọi thẳng guiDon(pin), và guiDon không đọc lại docGuiDo() cũng không xét khoa. Sự kiện storage có vẽ lại màn, nhưng không đóng PinSheet.
+  Cách xảy ra: tab B bật ví, bấm đặt, bảng PIN mở. Trong lúc đó tab A đặt xong đơn ví (hoặc rơi vào "chưa rõ"). Khách nhập PIN ở tab B, App gửi khoá MỚI và
+  tạo đơn thứ hai, ví bị trừ hai lần. Lưới 10 giây của POS chỉ bắt đơn cho_tra, nên không bắt được đơn đã trừ ví.
+  Hỏng thêm: ghiGuiDo(ghi) ở :99 ghi đè bản ghi "chưa rõ" của tab A. Nếu tab B sau đó nhận 4xx thì :107 xoá luôn, tab A mất dấu chặn.
+  Ca d3d-tab-mo-truoc-vi (cong_cu/thu_KHMUA1b.js:516–526) chỉ thử khi tab 2 bấm SAU lúc tab 1 xong, nên không phủ đường này. — K4 (đường song song qua bảng
+  PIN), K3 (bài thử chỉ phủ đường dễ). Đây vẫn là D3(d).
+  Cách sửa gọn: dời phép kiểm bản ghi từ xacNhan vào đầu guiDon khi không có cu; bị chặn thì đóng PinSheet và vẽ lại. Thêm ca "tab 2 mở bảng PIN trước,
+  tab 1 trả ví xong, tab 2 nhập PIN → 1 lần POST".
+- src/pages/ThanhToan.jsx:46 (cùng :72, :118) — daThay lấy khoá của bản ghi có sẵn lúc mở màn, kể cả bản ghi CHƯA RÕ (chưa có ma_don).
+  Cách xảy ra: tab A và tab B cùng hiện "Lần đặt trước chưa rõ kết quả". Ở tab B khách bấm "Gửi lại đúng đơn này", POS trả trung (đơn ví đã trừ). Tab A nhận
+  sự kiện storage: bản ghi giờ có ma_don với cùng khoá K1, mà K1 = daThay, nên donKhac = ''. Khối cảnh báo biến mất lặng lẽ và nút đặt mở lại. Tab A vẫn
+  giữ giỏ cũ trong bộ nhớ, vì App.jsx không nghe storage cho giỏ.
+  Đơn ví đã ở da_tra, dsDon chỉ đọc một lần lúc mở màn, nên donCho không chặn. Khách bấm là thành đơn thứ hai. — K4.
+  Sửa: daThay = useRef(guiDo && guiDo.ma_don ? guiDo.khoa_gui : null). Khi đó bản ghi được giải ở tab khác sẽ hiện "Bạn vừa đặt đơn #…".
+- viec/KH-MUA-1b/trang_thai.md:149 — ghi "thêm mục 'Kiểm' và 'Chủ quán thử tay' dưới", nhưng file không có mục Kiểm. grep "^## " chỉ ra Đối chiếu /
+  Duyệt / Bài thử cũ sửa / Chỗ vá / Soát vòng 1 / Vòng sửa 1 / Câu hỏi / Phát hiện / Chủ quán thử tay. Cũng không có dòng kết quả npm test, --day-du,
+  node tu_chay/cong.js chay của bản hiện tại. Lỗi H3 của vòng 1 vẫn còn. — K1.
+
+NGHI NGỜ:
+- src/datDon.js:141 + src/luuMay.js:61–68 — Khi kho bị chặn: doiKhach không đọc được kh_chu, nên trả "chưaBiet" và coDuLieu=false, không xoá gì. donPhien
+  (App.jsx, lỗi phiên 401) cố ý không xoá banGhiBoNho. Nếu khách A hết phiên rồi khách B đăng nhập trong cùng trang mà không tải lại, B thấy món và tổng
+  của A ở khối "chưa rõ". B bấm "Gửi lại đúng đơn này" thì gửi thân của A bằng phiên của B. Hợp đồng dòng 82 ghi "khoá nhớ theo khách", nên POS có thể tạo
+  đơn món của A cho B. Hiếm (cửa sổ riêng tư, đổi người không tải lại). Giỏ trong bộ nhớ cũng lọt theo cùng cách từ trước việc này. Nên xoá banGhiBoNho
+  khi doiKhach không biết chủ cũ, hoặc khi đăng nhập lại mà kho chặn.
+- Kho chặn + tải lại trang thì bản ghi trong bộ nhớ mất, nên D3(c) không còn chặn ở cửa sổ riêng tư. Không tránh được, nhưng trang_thai chưa ghi rõ giới hạn này.
+- ThanhToan.jsx:121 + :145/:150 — bản ghi quá 24 giờ vẫn có nút "Gửi lại đúng đơn này" và câu "sẽ không tạo đơn thứ hai". Theo hợp đồng dòng 82, quá
+  24 giờ POS trả 409 KHOA_GUI_DA_DUNG. App coi đó là "chắc chưa tạo" (:107) và báo "Vui lòng đặt lại", trong khi đơn cũ có thể đã có. Không sinh đơn thứ hai,
+  nhưng lời báo sai. Nên ẩn nút gửi lại khi quaHan, hoặc khi gửi lại mà gặp mã này thì báo "xem Lịch sử đơn".
+- Q4 (lỗi phiên 401 / 429 ở lần gửi lại sau "chưa rõ" bị coi là chưa tạo) và Q5 (KHO_BAN) đã ghi ở Câu hỏi, đang chờ POS. Tôi đồng ý cần hỏi.
+- guiDon trả Promise.resolve() khi đang gửi (:97). Khi đó PinSheet giữ 4 số trong state, dang=false, bảng không tự đóng. PIN nằm trong state của bảng tới
+  khi bảng đóng. Không lọt ra kho hay log.
+
+NGHIỆM THU: 34/38 mục có bằng chứng · mục thiếu: D3 (còn hai đường (d) ở trên), G1 (Trang chủ chưa có ô món — ghi ở Phát hiện; chưa có ca cho trắc
+nghiệm), H3 (chưa ghi kết quả npm test / --day-du / cổng; cổng ✗ [A11] ở Q3), H4 (thử tay của chủ quán, mới có 3 bước, chưa làm).
+
+CHƯA SOÁT ĐƯỢC: không chạy dot_bien.py (ghi đè file trong src, trái việc chỉ đọc) — 19/19 là lời ghi, chưa kiểm; không chạy --day-du, tu_chay/cong.js chay;
+không dựng lại toàn bộ bài Chromium trên 7538c97 (chỉ kiểm lại ca thuần kho chặn); không xem ảnh so_anh; không có POS thật (lỗi phiên 401 / 429 trước hay
+sau khi tra khoa_gui).
+
+Đơn giản (mục 8): ThanhToan.jsx:71–72 và :117–118 viết luật chặn theo bản ghi ở hai chỗ, hơi khác nhau → gom thành MỘT hàm chanBoiBanGhi(g, daThay) và gọi
+trong guiDon (sửa luôn lỗ PinSheet). App.jsx banGhiCua và TheoDoiDon.jsx:58–59 cùng viết "bản ghi của đơn mã X" → đưa một hàm vào datDon.js.
+
+BÀI HỌC:
+- KHOÁ (bài thử): ca "bảng PIN mở trước, tab khác đặt xong hoặc chưa rõ, nhập PIN → không có POST thứ hai". Ca "hai tab cùng chưa rõ, tab kia gửi lại thành
+  công → tab này hiện 'Bạn vừa đặt đơn', nút khoá". Đột biến: bỏ phép kiểm trong guiDon.
+- NGUYÊN TẮC (KHUON_LOI.md): "Phép chặn đặt đơn phải nằm ở ĐIỂM GỬI (hàm gọi POST), không ở nút mở bước trung gian (bảng PIN, hộp xác nhận); mọi đường dẫn
+  tới gửi đều qua đó."
+- NGUYÊN TẮC: "Mục ghi 'đã thêm' trong trang_thai phải grep thấy tiêu đề mục đó" — lặp lại K1 của vòng 1.
+```
+
 ## Câu hỏi
 - Q3 (cổng A11 — xin chủ quán thêm mục `## Bài thử cũ sửa` vào phiếu): `cong_cu/thu_KHUI3b.js` ca A1 đổi từ "hợp đồng = viec/KH-UI-3b/hop_dong_v3.md" thành
   "hợp đồng = bản hop_dong_v<N>.md MỚI NHẤT trong viec/" (cố định v3 thì đỏ khi hợp đồng lên v5). Đỏ trên dc07781 (có v5 trong viec/), nhưng XANH trên gốc

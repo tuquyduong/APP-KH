@@ -125,6 +125,9 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
     k('D3 bản ghi hỏng → null, không ném; kho chặn → null / false', D.docGuiDo(kho, 1) === null && D.docGuiDo(khoChan, 1) === null && D.ghiGuiDo(bg, khoChan) === false);
     k('D3 kho chặn: bản ghi vẫn giữ trong bộ nhớ trang (chưa rõ vẫn chặn đặt), không báo đã lưu', (D.docGuiDo(khoChan, 2000) || {}).khoa_gui === 'K'.repeat(20) && D.ghiGuiDo(null, khoChan) === false && D.docGuiDo(khoChan, 2000) === null);
     const L = await nap('src/luuMay.js');
+    D.ghiGuiDo(bg, khoChan);
+    L.doiKhach('0911222333', khoChan);
+    k('D3 kho chặn + đăng nhập mà không biết chủ cũ (doiKhach) → quên bản ghi trong bộ nhớ trang (không lọt sang khách khác)', D.docGuiDo(khoChan, 2000) === null);
     const kL = khoGia(); kL.setItem('kh_don_gui', JSON.stringify(bg));
     L.xoaTatCa(kL);
     k('D3 kh_don_gui nằm trong danh sách khoá của luuMay.js (đăng xuất xoá)', !kL.m.has('kh_don_gui'));
@@ -414,6 +417,7 @@ async function trinhDuyet(pw) {
     await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify({ ...g, luc: Date.now() - 25 * 3600 * 1000 })), { khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr' }); // luc tính theo đồng hồ (giả) của trang
     await mo(t, '/thanhtoan');
     k('Đ2 bản ghi quá 24 giờ → có nút "Bỏ qua, đặt đơn mới"', await doiChu(t, '#checkout', /Bỏ qua, đặt đơn mới/), `${await luu(t)} | ${(await chu(t, '#checkout')).slice(0, 120)}`);
+    k('Đ2 quá 24 giờ: KHÔNG còn nút "Gửi lại đúng đơn này" (POS không nhớ khoá quá 24 giờ — gửi lại sẽ báo sai), mời xem Lịch sử đơn', !/Gửi lại đúng đơn này/.test(await chu(t, '#checkout')) && /Xem Lịch sử đơn/.test(await chu(t, '#checkout')));
     await t.locator('#checkout button', { hasText: 'Bỏ qua, đặt đơn mới' }).click();
     k('Đ2 bỏ qua → mở nút đặt, xoá bản ghi', await sanSang(t) && (await luu(t)) === null && S.guiDon.length === 0);
   });
@@ -523,6 +527,28 @@ async function trinhDuyet(pw) {
     await chup(t2, 'thanhtoan-don-khac-390');
     await t2.locator('#checkout button', { hasText: 'Đặt thêm đơn mới' }).click();
     k('D3(d) khách chủ ý "Đặt thêm đơn mới" → nút đặt mở lại (K5)', await sanSang(t2));
+  });
+  them('pin-mo-truoc', { S0: { vi: 300000 } }, async ({ t, S, trang }) => {
+    const t2 = await trang(); await mo(t2, '/thanhtoan'); await sanSang(t2); await doiChu(t2, '#checkout', /Số dư 300\.000đ/);
+    await batVi(t2); await bam(t2); await t2.waitForSelector('.pin-pad'); // tab 2: bảng PIN mở sẵn
+    await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 300\.000đ/);
+    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
+    await nhapPin(t2, PIN); await t2.waitForTimeout(800);
+    k('D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);
+  });
+  them('hai-tab-chua-ro', {}, async ({ t, S, trang }) => {
+    await mo(t, '/trangchu');
+    await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
+    await t.evaluate(() => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: 'HAI'.repeat(6), than: { mon: [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'HAI'.repeat(6), tong_da_xem: 87654 }, cach_tra: 'qr', luc: Date.now() })));
+    await mo(t, '/thanhtoan');
+    const t2 = await trang(); await mo(t2, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout'))); await doi(t2, async () => /Gửi lại đúng đơn này/.test(await chu(t2, '#checkout')));
+    await t2.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
+    await doi(t2, async () => /\/don\/TQD42$/.test(t2.url()));
+    await t.waitForTimeout(500);
+    await bam(t).catch(() => {}); await t.waitForTimeout(400);
+    k('D3(d) hai tab cùng "chưa rõ", tab 2 gửi lại thành công → tab 1 hiện "Bạn vừa đặt đơn #TQD42", nút khoá, không gửi thêm', /Bạn vừa đặt đơn #TQD42/.test(await chu(t, '#checkout')) && await nutKhoa(t) && S.guiDon.length === 1, `${S.guiDon.length} | ${(await chu(t, '#checkout')).slice(0, 120)}`);
   });
   them('kiem-lai-luc-bam', {}, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
