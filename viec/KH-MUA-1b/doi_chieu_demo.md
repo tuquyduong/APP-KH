@@ -10,7 +10,7 @@ Không thêm màu / phông / bóng mới: mọi lớp dùng đã có trong `src/
 ## Thanh toán (checkout)
 | Khối trong demo | Đã làm | Khác gì · lý do |
 |---|---|---|
-| "Cách trả tiền": các `opt-row` + `rdo` (QR, Ví…) và dòng "Trừ Ví nội bộ / Còn phải trả" | MỘT công tắc **"Trừ từ số dư ví"**: khuôn `.notif-row` + `.switch` của demo (màn Cài đặt thông báo, dòng 326–333: hàng trắng bo 14px, bóng `rgba(26,54,93,.08)`, công tắc bật `--pink-dark`) — CSS chép nguyên vào `demo_mua.css`. Dòng phụ: "Số dư …", "Số dư … — đủ trả cả đơn", "Dùng hết … trong ví, còn thiếu … → quét QR". Ví 0đ → ẩn. Dưới là hàng "Chuyển khoản QR" cùng khuôn `.notif-row` + biểu tượng `i-qr` (`ico-mint`) — ẩn khi trả đủ bằng ví | **Khác demo** — chủ quán điểm 7 (02.11). Không hiện "Trừ ví / Còn phải trả" trước khi đặt: số thật (`giu_vi`, `con_lai`) do POS trả sau khi đặt (phiếu E1 — App không tính tiền) |
+| "Cách trả tiền" (ảnh `demo_checkout-tra_*`): `opt-row` ô tích "Ví nội bộ" (Số dư · dùng …), "Phần còn lại … — chọn 1 cách", `opt-row` + `rdo` VNPay / MoMo / ZaloPay / Chuyển khoản QR; bảng tiền có "Trừ Ví nội bộ / Còn phải trả" | MỘT công tắc **"Trừ từ số dư ví"**: khuôn `.notif-row` + `.switch` của demo (màn Cài đặt thông báo, dòng 326–333: hàng trắng bo 14px, bóng `rgba(26,54,93,.08)`, công tắc bật `--pink-dark`) — CSS chép nguyên vào `demo_mua.css`. Dòng phụ: "Số dư …", "Số dư … — đủ trả cả đơn", "Dùng hết … trong ví, còn thiếu … → quét QR". Ví 0đ → ẩn. Dưới là hàng "Chuyển khoản QR" cùng khuôn `.notif-row` + biểu tượng `i-qr` (`ico-mint`) — ẩn khi trả đủ bằng ví | **Khác demo** — chủ quán điểm 7 (02.11) thay ô tích + nhiều cổng bằng MỘT công tắc; VNPay / MoMo / ZaloPay không có (c)/(b): POS chỉ có QR ngân hàng. Không hiện "Trừ ví / Còn phải trả" trước khi đặt: số thật (`giu_vi`, `con_lai`) do POS trả sau khi đặt (phiếu E1 — App không tính tiền) |
 | (demo không có) bảng PIN khi trả ví | `PinSheet` có sẵn (khuôn PATCH29 của demo: chấm tròn + bàn phím) | — |
 | (demo không có) "Lần đặt trước chưa rõ kết quả" | khuôn mới theo **thẻ cảnh báo `.nt-state` của demo** (dòng 1454–1456: nền `#FFF1E8`, chữ đậm + dòng nhỏ `small`, biểu tượng `i-warning`) + **thẻ `.card.bang-tien`** (dòng món ×SL, "Tổng cộng") + nút chính `checkout-btn` "Gửi lại đúng đơn này →" + nút phụ `ghost-btn` "Xem Lịch sử đơn" (quá 24 giờ thêm "Bỏ qua, đặt đơn mới") | (c)/(d) phiếu D2–D3, chủ quán điểm 2 |
 | (demo không có) "Bạn có đơn #… đang chờ trả" | `.nt-state` + `checkout-btn` "Tiếp tục trả đơn … →" + `ghost-btn` "Huỷ đơn đó" (đang huỷ → `btn-disabled`) | phiếu D3(b) |
@@ -25,7 +25,7 @@ Không thêm màu / phông / bóng mới: mọi lớp dùng đã có trong `src/
 | Khối trong demo | Đã làm | Khác gì · lý do |
 |---|---|---|
 | (demo tracking không có QR trả tiền) | QR + chú thích `.care-disclaimer.qr-chu` (đã có từ KH-MUA-1) | QR đọc từ `GET /don/:ma` (F1) |
-| (demo không có) "Đã giữ … trong ví · quét QR …" | khuôn mới theo **chú thích dưới QR** của app (`.care-disclaimer.qr-chu`, số đậm `b`), đặt ngay trên QR | phiếu F2; máy khác (không bản ghi) → ẩn (Q1 duyệt) |
+| (demo không có) "Đã giữ … trong ví · quét QR …" | khuôn mới theo **chú thích dưới QR** của app (`.care-disclaimer.qr-chu`, căn giữa, số đậm `b`), ngay dưới chú thích QR | phiếu F2; máy khác (không bản ghi) → ẩn (Q1 duyệt) |
 | (demo không có) "Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn." | `.nt-state` | phiếu F3 |
 
 ## Lịch sử đơn (orderhistory)
