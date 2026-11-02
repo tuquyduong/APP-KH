@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { layToi, suaHoSo } from '../api.js';
-import { dungTai } from '../dungTai.js';
+import { suaHoSo } from '../api.js';
+import { dungCua, cuaToi, gopToi } from '../duLieuKhach.js';
 import { cheSdt, chiaLoiChao } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
 import { XUNG_HO, DIA_CHI_TOI_DA, tenXungHo } from '../noiDung/dangNhap.js';
@@ -83,31 +83,27 @@ function DiaChi({ ho, doi }) {
 }
 
 export default function HoSo({ lui }) {
-  const tai = dungTai(layToi);
+  const tai = dungCua(cuaToi, { that: true }); // ô sửa cần hồ sơ thật (sdt, địa chỉ): bản tóm tắt trên máy không đủ
   const [moPin, datMoPin] = useState(false);
-  const [moi, datMoi] = useState({}); // phần POS vừa trả sau khi lưu (xưng hô / tên) → thẻ xem trước đổi theo, không cần tải lại
+  const doi = (k) => gopToi(cuaToi, k); // hồ sơ POS vừa trả → gộp vào kho chung: thẻ xem trước, Trang chủ, Tài khoản đổi theo, không gọi lại
   return (
     <Man id="profile">
       <DauManCon canTrai tieuDe="Thông tin cá nhân" phu="Xưng hô, tên, địa chỉ và mã PIN" lui={lui} />
       <TrangTai tai={tai}>
-        {({ khach }) => {
-          const ho = { ...khach, ...moi };
-          const doi = (k) => datMoi((m) => ({ ...m, ...k }));
-          return (
-            <>
-              <XungHo ho={ho} doi={doi} />
-              <SuaTen ho={ho} doi={doi} />
-              <DiaChi ho={ho} doi={doi} />
-              <div className="card pf-card">
-                <div className="tt">Bảo mật</div>
-                <div className="pf-link" role="button" tabIndex={0} onClick={() => datMoPin(true)} onKeyDown={(e) => { if (e.key === 'Enter') datMoPin(true); }}>
-                  <Ico ten="card" s={16} /> <span>Mã PIN<small>4 số · đặt hoặc đổi mã PIN của bạn</small></span><b>Đặt / đổi ›</b>
-                </div>
-                <div className="pf-note">Nhân viên quán không xem được mã PIN của bạn.</div>
+        {({ khach: ho }) => (
+          <>
+            <XungHo ho={ho} doi={doi} />
+            <SuaTen ho={ho} doi={doi} />
+            <DiaChi ho={ho} doi={doi} />
+            <div className="card pf-card">
+              <div className="tt">Bảo mật</div>
+              <div className="pf-link" role="button" tabIndex={0} onClick={() => datMoPin(true)} onKeyDown={(e) => { if (e.key === 'Enter') datMoPin(true); }}>
+                <Ico ten="card" s={16} /> <span>Mã PIN<small>4 số · đặt hoặc đổi mã PIN của bạn</small></span><b>Đặt / đổi ›</b>
               </div>
-            </>
-          );
-        }}
+              <div className="pf-note">Nhân viên quán không xem được mã PIN của bạn.</div>
+            </div>
+          </>
+        )}
       </TrangTai>
       {moPin && <PinSheet dong={() => datMoPin(false)} />}
     </Man>

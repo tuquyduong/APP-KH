@@ -1,5 +1,4 @@
-import { layToi, layDiem } from '../api.js';
-import { dungTai } from '../dungTai.js';
+import { dungCua, cuaToi, cuaDiem } from '../duLieuKhach.js';
 import { loiChao, dinhDangSo } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
 import { nhuCauCoMon } from '../menuLoc.js';
@@ -40,8 +39,8 @@ function DauChung({ chao, moQR, the }) {
 }
 
 function DauHoiVien({ moQR, moUuDai }) {
-  const toi = dungTai(layToi);
-  const diem = dungTai(layDiem);
+  const toi = dungCua(cuaToi);
+  const diem = dungCua(cuaDiem);
   const hang = toi.dl && toi.dl.khach.hang; // null = chưa có hạng → không hiện nhãn hạng
   dungKho(khoGioHoatDong); // vẽ lại mỗi khi POS báo giờ (bayGio() đổi theo `bay_gio` của POS, KHÔNG theo đồng hồ máy)
   const k = toi.dl && toi.dl.khach;

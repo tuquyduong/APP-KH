@@ -1,0 +1,45 @@
+KH-NHANH-1 — bằng chứng đỏ trên code gốc (7d07931), xanh sau vá
+Cách chạy trên gốc: bản src/ + index.html + public/ của 7d07931 (git archive) ở thư mục nháp, chép bài thử MỚI vào cong_cu/ của bản đó, chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHNHANH1.js (bài mới) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ A dừng giữa chừng  — Cannot find module '…/src/duLieuKhach.js'
+  ✗ A4 "Xem tất cả" voucher vẫn gọi layVoucher(true) khi bấm
+  ✗ A5 duLieuKhach chỉ lấy dữ liệu qua api.js
+  ✗ E dừng giữa chừng  — Cannot find module '…/src/tomTatLuu.js'
+  ✗ C dừng giữa chừng  — Cannot find module '…/src/ngayManDau.js'
+  ✗ F1 trong lúc chờ /toi: "Đang cập nhật số dư…"
+  ✗ F-G dừng giữa chừng  — GH.hangCoGiam is not a function
+4 đạt · 7 hỏng
+   trên gốc CÓ Chromium (bản bài thử đầu, b183bd5): 28 đạt · 36 hỏng — vd ✗ E3 điểm + tên hiện NGAY từ bản lưu ("— điểm | Chào bạn!"),
+   ✗ B2 vừa đăng nhập → tải trước (/don 0 lần), ✗ F1 chờ /toi ("Chưa đọc được số dư"), ✗ D1 ẩn 61 giây rồi hiện lại (2,2,1,0 → 2,2,1,0),
+   ✗ G1 bảng hạng vãng lai còn "Test0d — giảm 0%".
+   sau vá: KHONG_TRINH_DUYET=1 → 69 đạt · 0 hỏng · có Chromium → 126 đạt · 0 hỏng
+   vòng sửa 1 (sau /ra-soat): thêm ca hàm thuần E3 / D4 gopToi, bỏ chú thích trước khi khớp nguồn, Thanh toán / lần hai / vãng lai chạy 360/390/430.
+   chạy lại trên gốc (bản bài a90e859): 4 đạt · 7 hỏng (cùng 7 dòng ✗ như trên).
+   sau vá: KHONG_TRINH_DUYET=1 → 76 đạt · 0 hỏng · có Chromium → 166 đạt · 0 hỏng
+
+== thu_KHLUU1.js (bài cũ sửa: ca đọc nguồn B3 + ca mới B3 đăng nhập; ca Chromium C1(h) đổi theo; đọc KHONG_TRINH_DUYET) — trên gốc
+  ✗ B3 App gọi cuaToi.lay → doiKhach(khach.sdt) → tn.nap()
+  ✗ B3 đăng nhập xong: doiKhach(sdt hồ sơ xác minh) TRƯỚC khi bật phiên
+19 đạt · 2 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 21 đạt · 0 hỏng · có Chromium → 33 đạt · 0 hỏng
+
+== thu_KHXEM1.js (bài cũ sửa: ca đọc nguồn Trang chủ) — trên gốc
+  ✗ Trang chủ khách: /toi, /diem chỉ nằm trong DauHoiVien
+60 đạt · 1 hỏng
+   sau vá: 61 đạt · 0 hỏng
+
+== thu_KHUI3d.js (bài cũ sửa: hai ca đọc nguồn B4 / B2 + ca mới B4 tải trước; ca Chromium B4 cho /don) — trên gốc
+  ✗ B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher
+  ✗ B2 phần riêng khách (nhập mã, voucher, lịch sử) chỉ nằm trong UuDaiToi
+  ✗ B4 có phiên: App tải trước /toi, /diem, /voucher, /don một chỗ (lamMoi(CUA_KHACH))
+29 đạt · 3 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 32 đạt · 0 hỏng · có Chromium → 172 đạt · 0 hỏng
+
+   vòng sửa 2 (bản bài be270bc): trên gốc 4 đạt · 7 hỏng (cùng 7 dòng ✗); sau vá KHONG_TRINH_DUYET=1 → 79 đạt · 0 hỏng.
+   vòng sửa 3 (bản bài 1b4414a): trên gốc 4 đạt · 7 hỏng (cùng 7 dòng ✗); sau vá KHONG_TRINH_DUYET=1 → 79 đạt · 0 hỏng · có Chromium → 223 đạt · 0 hỏng.
+
+SỐ CA cong_cu/thu_KHNHANH1.js: 79
+SỐ CA cong_cu/thu_KHLUU1.js: 21
+SỐ CA cong_cu/thu_KHXEM1.js: 61
+SỐ CA cong_cu/thu_KHUI3d.js: 32

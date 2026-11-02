@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import qrcode from 'qrcode-generator';
-import { layToi } from '../api.js';
-import { dungTai } from '../dungTai.js';
+import { dungCua, cuaToi } from '../duLieuKhach.js';
 import { cheSdt } from '../dinhDang.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
@@ -26,7 +25,7 @@ export function VeQR({ noiDung, nhan = 'Mã QR thành viên' }) {
 }
 
 export default function ManQR({ lui }) {
-  const tai = dungTai(layToi);
+  const tai = dungCua(cuaToi, { that: true }); // cần `qr` thật: bản tóm tắt trên máy không có
   return (
     <Man id="member">
       <DauManCon tieuDe="Mã thành viên" lui={lui} />

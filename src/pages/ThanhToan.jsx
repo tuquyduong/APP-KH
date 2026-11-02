@@ -64,7 +64,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu }) {
     if (cachTra === 'vi') datMoPin(true); else guiDon();
   };
 
-  let dongVi = soDu === null ? 'Chưa đọc được số dư' : `Số dư ${dinhDangGia(soDu)}`;
+  // Số dư quyết định "ví đủ / thiếu" CHỈ lấy từ /toi gọi SAU khi mở màn (không kho chung, không bản tóm tắt — KH-NHANH-1 F1); chờ thì ví khoá.
+  let dongVi = toi.dangTai ? 'Đang cập nhật số dư…' : soDu === null ? 'Chưa đọc được số dư' : `Số dư ${dinhDangGia(soDu)}`;
   if (thieu > 0) dongVi += ` · còn thiếu ${dinhDangGia(thieu)}`;
   const chuNut = !DAT_ONLINE ? CHU_CHUA_MO : dang ? 'Đang gửi…' : bg ? `Xác nhận trả ${dinhDangGia(bg.tong)}` : 'Xác nhận';
 

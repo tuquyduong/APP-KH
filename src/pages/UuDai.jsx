@@ -1,7 +1,9 @@
-import { useCallback, useState } from 'react';
-import { layDiem, layToi, layVoucher } from '../api.js';
+import { useState } from 'react';
+import { layVoucher } from '../api.js';
 import { dungTai } from '../dungTai.js';
+import { dungCua, cuaDiem, cuaToi, cuaVoucher, lamMoi } from '../duLieuKhach.js';
 import { dungGia } from '../heThong.js';
+import { hangCoGiam } from '../giaHang.js';
 import { dinhDangGia, dinhDangNgay, dinhDangSo, moTaGiam } from '../dinhDang.js';
 import { THE_MOI_UU_DAI } from '../noiDung/dangNhap.js';
 import Man, { NutQR } from '../components/Man.jsx';
@@ -31,13 +33,16 @@ function TheVoucher({ ten, ma, loai, giaTri, toiThieu, han, nhan }) {
   );
 }
 
-function DanhSachVoucher({ tatCa }) {
-  const ham = useCallback(() => layVoucher(tatCa), [tatCa]);
-  const tai = dungTai(ham);
+// "Xem tất cả" (`?all=1`) gọi khi khách bấm, không giữ trong kho (A4); mã còn dùng đọc kho chung.
+const layTatCa = () => layVoucher(true);
+const VoucherTatCa = () => <DanhSachVoucher tai={dungTai(layTatCa)} />;
+const VoucherConDung = () => <DanhSachVoucher tai={dungCua(cuaVoucher)} />;
+
+function DanhSachVoucher({ tai }) {
   return (
     <TrangTai tai={tai}>
       {(dl) => {
-        const dung = dl.data; // không `?all`: POS chỉ trả mã còn dùng (hợp đồng)
+        const dung = dl.data; // không `?all`: POS chỉ trả mã còn dùng; `?all`: thêm mã đã dùng / hết hạn (nhãn)
         return (
           <>
             {dl.ma_khach_moi.length === 0 && dung.length === 0 && <div className="empty-note">Bạn chưa có voucher nào.</div>}
@@ -69,7 +74,7 @@ function BannerGioVang({ mo }) {
   );
 }
 
-// Thẻ hạng (demo tier-card). `hang` = hạng của khách (/toi); không có → bảng các hạng của POS (/hang); POS không trả → ẩn, không bịa.
+// Thẻ hạng (demo tier-card). `hang` = hạng của khách (/toi); không có → bảng các hạng giảm thật của POS (/hang, bỏ hạng 0%); không còn hạng nào → ẩn, không bịa.
 function TheHang({ hang }) {
   const { dsHang } = dungGia();
   if (hang) {
@@ -81,18 +86,19 @@ function TheHang({ hang }) {
       </div>
     );
   }
-  if (!Array.isArray(dsHang) || dsHang.length === 0) return null;
+  const ds = hangCoGiam(dsHang);
+  if (ds.length === 0) return null;
   return (
     <div className="tier-card">
-      <div className="top"><div><div className="name">Hạng thành viên</div>{dsHang.map((h) => <div className="pct" key={h.id}>{h.ten} — giảm {h.phan_tram}%</div>)}</div></div>
+      <div className="top"><div><div className="name">Hạng thành viên</div>{ds.map((h) => <div className="pct" key={h.id}>{h.ten} — giảm {h.phan_tram}%</div>)}</div></div>
     </div>
   );
 }
 
 // Phần riêng của khách đã đăng nhập: thẻ hạng + điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
 function UuDaiToi({ maSan, khiNhanXong }) {
-  const tai = dungTai(layDiem);
-  const toi = dungTai(layToi);
+  const tai = dungCua(cuaDiem);
+  const toi = dungCua(cuaToi);
   const [tatCa, datTatCa] = useState(false);
   const khach = toi.dl && toi.dl.khach;
   return (
@@ -109,14 +115,14 @@ function UuDaiToi({ maSan, khiNhanXong }) {
       </TrangTai>
 
       <div className="sec-head"><h2>Nhập mã trên hoá đơn</h2></div>
-      <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={tai.taiLai} />
+      <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={() => lamMoi([cuaDiem, cuaVoucher, cuaToi])} />
 
       <div className="sec-head"><h2>Ví voucher</h2></div>
-      <DanhSachVoucher tatCa={tatCa} />
+      {tatCa ? <VoucherTatCa /> : <VoucherConDung />}
       <div className="more-l"><span role="button" tabIndex={0} onClick={() => datTatCa(!tatCa)} onKeyDown={(e) => { if (e.key === 'Enter') datTatCa(!tatCa); }}>{tatCa ? 'Chỉ xem mã còn dùng' : 'Xem tất cả'}</span></div>
 
       <div className="sec-head"><h2>Lịch sử điểm</h2></div>
-      {tai.dl && (tai.dl.history.length === 0
+      {tai.dl && !tai.dl.tuMay && (tai.dl.history.length === 0
         ? <div className="empty-note">Chưa có điểm nào.</div>
         : tai.dl.history.map((h) => (
           <div className="tx-item" key={h.id}>

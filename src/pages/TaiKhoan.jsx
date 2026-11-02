@@ -1,5 +1,4 @@
-import { layToi, layDiem, layVoucher } from '../api.js';
-import { dungTai } from '../dungTai.js';
+import { dungCua, cuaToi, cuaDiem, cuaVoucher } from '../duLieuKhach.js';
 import { cheSdt, dinhDangSo, dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { THE_CHAT } from '../noiDung/theChat.js';
 import { DONG_TAI_KHOAN } from '../noiDung/tracNghiemChu.js';
@@ -11,7 +10,7 @@ import { bam } from '../components/bam.js';
 
 // Tài khoản theo demo (account): thẻ tên + 3 ô nhanh, nhóm "Của tôi" / "Cài đặt", đăng xuất.
 // Bỏ: Ví & Thẻ quà tặng (nạp / tặng thẻ → KH-MUA-1), Gia đình (sau khai trương), Thông báo & âm thanh, Quản trị (không thuộc app khách).
-// Ô nhanh Ví · Điểm · Voucher; hạng cạnh số điện thoại. Ví = `so_du_vi` của /toi, lấy mới mỗi lần mở màn (không lưu trên máy); chưa có số thì ẩn ô.
+// Ô nhanh Ví · Điểm · Voucher; hạng cạnh số điện thoại. Đọc kho chung (duLieuKhach.js): có sẵn thì hiện ngay, cập nhật ngầm; chưa có số thì ẩn ô.
 
 function DongMenu({ bieuTuong, ten, phu, chon }) {
   return (
@@ -24,9 +23,9 @@ function DongMenu({ bieuTuong, ten, phu, chon }) {
 }
 
 export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moTracNghiem, moUuDai, dangXuat }) {
-  const tai = dungTai(layToi);
-  const diem = dungTai(layDiem);
-  const voucher = dungTai(layVoucher);
+  const tai = dungCua(cuaToi);
+  const diem = dungCua(cuaDiem);
+  const voucher = dungCua(cuaVoucher);
   // `/voucher` không `?all` chỉ trả mã còn dùng (hợp đồng) → đếm thẳng, không dựa trường trạng thái ngoài hợp đồng.
   const soVoucher = voucher.dl ? voucher.dl.ma_khach_moi.length + voucher.dl.data.length : null;
   return (
@@ -38,7 +37,7 @@ export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moT
             <div className="acc-card" {...bam(moHoSo)}>
               <div className="acc-top">
                 <div className="avatar">{(khach.ten || '?').trim().charAt(0).toUpperCase()}</div>
-                <div className="acc-n"><b>{khach.ten}</b><small>{cheSdt(khach.sdt)}{khach.hang ? ` · Hạng ${khach.hang.ten}` : ''}</small></div>
+                <div className="acc-n"><b>{khach.ten}</b><small>{[cheSdt(khach.sdt), khach.hang && `Hạng ${khach.hang.ten}`].filter(Boolean).join(' · ')}</small></div>
                 <span className="acc-edit">Sửa ›</span>
               </div>
               {(typeof khach.so_du_vi === 'number' || diem.dl || soVoucher !== null) && (

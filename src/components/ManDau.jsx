@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { KHAU_HIEU } from '../noiDung/thuongHieu.js';
+import { canHienManDau, docNgayDaXem, ghiNgayDaXem, homNayMay } from '../ngayManDau.js';
 
-// Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu mỗi phiên trình duyệt, chạm hoặc "Bỏ qua" để vào app.
+// Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu tiên MỖI NGÀY (ngayManDau.js; đã xem trong phiên này thì cũng thôi), chạm hoặc "Bỏ qua" để vào app.
 // Âm thanh của demo: nút "Bật âm thanh", MẶC ĐỊNH TẮT, nhớ lựa chọn trong phiên. prefers-reduced-motion → bỏ chuyển động.
 const KHOA_DA_XEM = 'kh_da_xem_man_dau';
 const KHOA_AM_THANH = 'kh_am_thanh_man_dau';
@@ -16,7 +17,7 @@ const AM_LUONG = 0.8;
 const MS_NHOE_AM = 700;
 
 export default function ManDau() {
-  const [hien, datHien] = useState(() => doc(KHOA_DA_XEM) !== '1');
+  const [hien, datHien] = useState(() => doc(KHOA_DA_XEM) !== '1' && canHienManDau(docNgayDaXem(), homNayMay()));
   const [an, datAn] = useState(false);
   const [chuXong, datChuXong] = useState(false);
   const [tat, datTat] = useState(() => doc(KHOA_AM_THANH) !== 'on');
@@ -57,6 +58,7 @@ export default function ManDau() {
   useEffect(() => {
     if (!an) return undefined;
     ghi(KHOA_DA_XEM, '1');
+    ghiNgayDaXem(homNayMay());
     const t = setTimeout(() => datHien(false), MS_MO_DAN);
     return () => clearTimeout(t);
   }, [an]);

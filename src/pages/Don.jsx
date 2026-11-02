@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
+import { dungCua, cuaDon } from '../duLieuKhach.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
@@ -40,27 +41,36 @@ export function ChiTietDon({ ma, lui }) {
   );
 }
 
-export default function LichSuDon({ chonDon, lui, datLai }) {
-  const [ds, datDs] = useState([]);
-  const [trang, datTrang] = useState(0);
-  const [conNua, datConNua] = useState(false);
-  const [dang, datDang] = useState(true);
-  const [loi, datLoi] = useState('');
+const TRANG_SAU_RONG = { ds: [], trang: 1, conNua: null, dang: false, loi: '' };
 
-  const tai = useCallback(async (t) => {
-    datDang(true); datLoi('');
+export default function LichSuDon({ chonDon, lui, datLai }) {
+  const dau = dungCua(cuaDon); // trang 1 ở kho chung (tải trước khi mở app); trang 2 trở đi gọi khi khách bấm "Xem thêm" (không giữ)
+  const [sau, datSau] = useState(TRANG_SAU_RONG);
+  // Trang 1 làm mới mà danh sách mã ĐỔI (đơn mới đẩy đơn cũ sang trang sau — phân trang OFFSET): bỏ các trang sau đã xem, tránh hụt dòng.
+  // So NỘI DUNG (mã đơn), không so đối tượng: làm mới ngầm không có đơn mới thì giữ nguyên các trang khách đã mở.
+  const khoaTrang1 = dau.dl ? dau.dl.data.map((d) => d.ma).join(',') : '';
+  const khoaTruoc = useRef(khoaTrang1);
+  useEffect(() => {
+    if (khoaTruoc.current && khoaTrang1 !== khoaTruoc.current) datSau(TRANG_SAU_RONG);
+    khoaTruoc.current = khoaTrang1;
+  }, [khoaTrang1]);
+  const conNua = sau.conNua === null ? !!(dau.dl && dau.dl.con_nua) : sau.conNua;
+  // Phân trang theo OFFSET: đơn mới làm trang sau lặp lại đơn cuối trang trước → bỏ đơn đã có (key trùng).
+  const ds = (dau.dl ? dau.dl.data : []).concat(sau.ds).filter((d, i, a) => a.findIndex((c) => c.ma === d.ma) === i);
+  const dang = dau.dangTai || sau.dang;
+  const loi = dau.loi || sau.loi;
+
+  async function xemThem() {
+    const t = sau.trang + 1;
+    datSau((s) => ({ ...s, dang: true, loi: '' }));
     try {
       const r = await layDon(t);
-      // Phân trang theo OFFSET: đơn mới làm trang sau lặp lại đơn cuối trang trước → bỏ đơn đã có (key trùng).
-      datDs((cu) => (t === 1 ? r.data : [...cu, ...r.data.filter((d) => !cu.some((c) => c.ma === d.ma))]));
-      datTrang(t); datConNua(r.con_nua);
+      datSau((s) => ({ ds: [...s.ds, ...r.data], trang: t, conNua: r.con_nua, dang: false, loi: '' }));
     } catch (e) {
-      datLoi(e.message);
-    } finally {
-      datDang(false);
+      datSau((s) => ({ ...s, dang: false, loi: e.message }));
     }
-  }, []);
-  useEffect(() => { tai(1); }, [tai]);
+  }
+  const thuLai = dau.loi ? dau.taiLai : xemThem;
 
   return (
     <Man id="orderhistory">
@@ -76,8 +86,8 @@ export default function LichSuDon({ chonDon, lui, datLai }) {
         </div>
       ))}
       {dang && <div className="khung-tai" aria-busy="true" />}
-      {loi && <KhungLoi loi={loi} thuLai={() => tai(trang + 1)} />}
-      {conNua && !dang && !loi && <div className="more-l"><span role="button" tabIndex={0} onClick={() => tai(trang + 1)} onKeyDown={(e) => { if (e.key === 'Enter') tai(trang + 1); }}>Xem thêm</span></div>}
+      {loi && <KhungLoi loi={loi} thuLai={thuLai} />}
+      {conNua && !dang && !loi && <div className="more-l"><span role="button" tabIndex={0} onClick={xemThem} onKeyDown={(e) => { if (e.key === 'Enter') xemThem(); }}>Xem thêm</span></div>}
     </Man>
   );
 }

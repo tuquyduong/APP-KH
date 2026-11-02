@@ -75,7 +75,9 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
   const app = doc('src/App.jsx'), hk = doc('src/dungTracNghiem.js');
   k('B1 dangXuat gọi xoaTatCa()', /const dangXuat = \(\) => \{[^\n]*xoaTatCa\(\)/.test(app));
   k('B2 donPhien (hết phiên / 401) chỉ dọn bộ nhớ: gọi tn.donBoNho(), KHÔNG xoá khoá', /const donPhien = \(\) => \{[^\n]*tnGoc\.donBoNho\(\)/.test(app) && !/const donPhien = \(\) => \{[^\n]*(xoaTatCa|xoaKetQua|donSach)/.test(app) && /const donBoNho = \(\) => \{(?![^\n]*xoaKetQua)[^\n]*datLuu\(null\)/.test(hk));
-  k('B3 App gọi layToi → doiKhach(khach.sdt) → tn.nap()', /layToi\(\)/.test(app) && /doiKhach\(/.test(app) && /doiKhach\([^;]*; tnGoc\.nap\(\); datDaBiet\(true\)/.test(app) && /const nap = /.test(hk));
+  // KH-NHANH-1: /toi lấy qua kho chung (cuaToi.lay — cùng lệnh tải trước, không gọi trùng); đăng nhập xong doiKhach ngay bằng sdt của hồ sơ xác minh.
+  k('B3 App gọi cuaToi.lay → doiKhach(khach.sdt) → tn.nap()', /cuaToi\.lay\(\)/.test(app) && /doiKhach\(r\.khach\.sdt\)[^;]*;[^;]*; tnGoc\.nap\(\); datDaBiet\(true\)/.test(app) && /const nap = /.test(hk));
+  k('B3 đăng nhập xong: doiKhach(sdt hồ sơ xác minh) TRƯỚC khi bật phiên', /khiXong=\{\(k\) => \{ if \(k && doiKhach\(k\.sdt\)\) docLaiGio\(\); datDangNhap\(true\); \}\}/.test(app) && /khiXong\(r\.khach\)/.test(doc('src/pages/DangNhap.jsx')));
   k('B4 hook không còn donSach (không code chết); nút Xoá kết quả vẫn xoá khoá', !/donSach/.test(hk + app) && /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk));
   k('B4 hook vẫn giữ khiHau / anToan trong bản lưu', /khiHau: ban\.khiHau, anToan: ban\.anToan/.test(hk));
   k('B5 Bản lưu chỉ hiện khi đã đăng nhập VÀ đã biết khách (chưa đăng nhập / chờ /toi không lộ)', /dangNhap \? tn\.klLuu : null/.test(app) && /const tn = daBiet \? tnGoc : \{ \.\.\.tnGoc, luu: null, klLuu: null, hien: null \}/.test(app));
@@ -87,8 +89,8 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
 
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
-  try { pw = require('playwright'); } catch { /* không có */ }
-  if (!pw) { console.log('  BỎ QUA: không có Playwright ở máy này — các ca C1 (a)–(g) CHƯA chạy'); }
+  if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } } // CLAUDE.md §9: KHONG_TRINH_DUYET=1 → bỏ phần trình duyệt có chủ ý
+  if (!pw) { console.log('  BỎ QUA: không có Playwright ở máy này (hoặc KHONG_TRINH_DUYET=1) — các ca C1 (a)–(g) CHƯA chạy'); }
   else await trinhDuyet(pw, lm.dauVet, BAN);
 
   console.log(`\n${dat} đạt · ${hong} hỏng`);
@@ -181,7 +183,7 @@ async function trinhDuyet(pw, dauVet, BAN) {
 
   await ca('h', { luu: gieo(SDT_A, { token: false }), pos: { giu: 1500 } }, async (t) => {
     await mo(t, '/dangnhap'); await dangNhapUi(t, SDT_B); await cho(t, 400);
-    k('C1(h) khách B vừa đăng nhập, /toi chưa về: KHÔNG thấy kết quả của khách A (trên màn lẫn ô Trang chủ)', !(await chu(t)).includes(XEM) && (await doc_(t, 'kh_tracnghiem')) === BAN);
+    k('C1(h) khách B vừa đăng nhập, /toi chưa về: KHÔNG thấy kết quả của khách A; bản của A đã xoá ngay lúc đăng nhập (KH-NHANH-1)', !(await chu(t)).includes(XEM) && (await doc_(t, 'kh_tracnghiem')) === null && (await doc_(t, 'kh_chu')) === dauVet(SDT_B));
     await cho(t, 1500);
     k('C1(h) /toi về → bản của A bị xoá, chủ = B, vẫn không hiện', (await doc_(t, 'kh_tracnghiem')) === null && (await doc_(t, 'kh_chu')) === dauVet(SDT_B) && !(await chu(t)).includes(XEM));
   });

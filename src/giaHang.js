@@ -23,3 +23,6 @@ export function bacThang(dsHang, mon, hangToi) {
 
 /** Menu không còn giá hạng của khách (bản công khai): bỏ `gia_hang` khỏi mọi món, không sửa bản gốc. */
 export const boGiaHang = (dl) => (dl && Array.isArray(dl.data) ? { ...dl, data: dl.data.map(({ gia_hang: _bo, ...mon }) => mon) } : dl);
+
+/** Bảng hạng cho khách xem: chỉ hạng giảm thật (`phan_tram` là số > 0) — chủ quán chốt 01.11 ẩn hạng 0%. Không phải mảng → []. */
+export const hangCoGiam = (ds) => (Array.isArray(ds) ? ds.filter((h) => typeof h.phan_tram === 'number' && h.phan_tram > 0) : []);

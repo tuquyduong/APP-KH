@@ -124,7 +124,8 @@ const khoGia = (dau = {}, nem = false) => {
 
   console.log('— Soát: khách chưa đăng nhập không gọi dữ liệu riêng; menu chỉ lưu bản công khai');
   const tc = doc('src/pages/TrangChu.jsx'), dm = doc('src/dungMenu.js');
-  k('Trang chủ khách: /toi, /diem chỉ nằm trong DauHoiVien', !/export default function TrangChu[\s\S]*dungTai\(/.test(tc) && /function DauHoiVien[\s\S]*dungTai\(layToi\)/.test(tc));
+  // KH-NHANH-1: /toi, /diem đọc kho chung (dungCua) thay vì tự gọi (dungTai).
+  k('Trang chủ khách: /toi, /diem chỉ nằm trong DauHoiVien', !/export default function TrangChu[\s\S]*dung(Tai|Cua)\(/.test(tc) && /function DauHoiVien[\s\S]*dungCua\(cuaToi\)[\s\S]*dungCua\(cuaDiem\)/.test(tc));
   k('menu chỉ ghi lên máy khi lấy lúc chưa có phiên', /if \(!coPhien\) ghiMenuLuu/.test(dm) && /phien\.current !== dangNhap/.test(dm));
   k('giờ VN không dùng Intl (WebView cũ)', !/Intl/.test(doc('src/menuLuu.js')));
   k('đổi phiên → hỏi lại menu dù còn mới', /taiLai\(doiPhien\)/.test(dm));
