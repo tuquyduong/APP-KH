@@ -289,12 +289,13 @@ async function trinhDuyet(pw) {
   const chu = (t, sel) => t.locator(sel).first().innerText().catch(() => '');
   const doi = async (t, fn, ms = 6000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await fn()) return true; await t.waitForTimeout(40); } return false; };
   const doiChu = (t, sel, mau, ms) => doi(t, async () => mau.test(await chu(t, sel)), ms);
-  const nut = (t) => t.locator('#checkout .checkout-btn').first();
+  const nut = (t) => t.locator('#checkout .nut-dat').first();
   const nutKhoa = async (t) => (await nut(t).getAttribute('aria-disabled').catch(() => null)) === 'true';
   const sanSang = (t) => doi(t, async () => !(await nutKhoa(t)) && /Xác nhận trả/.test(await nut(t).innerText().catch(() => '')));
   const bam = async (t) => { await nut(t).click(); };
   const nhapPin = async (t, pin) => { for (const c of pin) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); };
-  const chon = (t, mau) => t.locator('#checkout .opt-row', { hasText: mau }).first().click();
+  const batVi = (t) => t.locator('#checkout .switch').first().click();
+  const dongVi = (t) => chu(t, '#checkout .the-vi .s');
   const luu = (t) => t.evaluate(() => localStorage.getItem('kh_don_gui'));
   const tranNgang = (t) => t.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   const chup = async (t, ten) => { if (anhDir) await t.screenshot({ path: path.join(anhDir, ten + '.png') }); };
@@ -307,7 +308,9 @@ async function trinhDuyet(pw) {
   for (const rong of [360, 390, 430]) {
     them(`qr-${rong}`, { rong }, async ({ t, S }) => {
       await mo(t, '/thanhtoan');
-      k(`E2/K5 [${rong}] nút QR "Chuyển khoản QR" không ghi "payOS"`, /Chuyển khoản QR/.test(await chu(t, '#checkout')) && !/payOS/i.test(await chu(t, '#checkout')));
+      k(`E2/K5 [${rong}] dòng "Chuyển khoản QR" không ghi "payOS"`, /Chuyển khoản QR/.test(await chu(t, '#checkout')) && !/payOS/i.test(await chu(t, '#checkout')));
+      await doi(t, async () => !/Đang cập nhật số dư/.test(await chu(t, '#checkout')));
+      k(`Đ7 [${rong}] ví 0đ → ẩn công tắc "Trừ từ số dư ví"`, (await t.locator('#checkout .switch').count()) === 0 && !/Trừ từ số dư ví/.test(await chu(t, '#checkout')));
       k(`K5 [${rong}] đơn QR thường: nút "Xác nhận trả 87.654đ" bật`, await sanSang(t));
       await chup(t, `thanhtoan-${rong}`);
       k(`[${rong}] Thanh toán không tràn ngang`, !(await tranNgang(t)));
@@ -333,8 +336,13 @@ async function trinhDuyet(pw) {
   them('vi', { S0: { vi: 100000 } }, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
     await doiChu(t, '#checkout', /Số dư 100\.000đ/);
-    await chon(t, 'Ví nội bộ'); await bam(t);
+    k('Đ7 công tắc tắt mặc định → QR cả đơn, dòng phụ "Số dư 100.000đ"', !(await t.locator('#checkout .switch.on').count()) && /^Số dư 100\.000đ$/.test((await dongVi(t)).trim()));
+    await batVi(t);
+    k('Đ7 bật + số dư ≥ tổng → trả ví: "Số dư 100.000đ — đủ trả cả đơn", ẩn dòng QR', /Số dư 100\.000đ — đủ trả cả đơn/.test(await dongVi(t)) && !/Chuyển khoản QR/.test(await chu(t, '#checkout')));
+    await chup(t, 'thanhtoan-vi-du-390');
+    await bam(t);
     await t.waitForSelector('.pin-pad');
+    await chup(t, 'thanhtoan-pin-390');
     await nhapPin(t, '1111');
     k('D1 PIN sai → bảng PIN hiện lời POS, nhập lại', await doiChu(t, '.pin-msg', /PIN_SAI/));
     await nhapPin(t, PIN);
@@ -347,9 +355,10 @@ async function trinhDuyet(pw) {
     them(`vi_qr-${rong}`, { rong, S0: { vi: 50000 } }, async ({ t }) => {
       await mo(t, '/thanhtoan'); await sanSang(t);
       await doiChu(t, '#checkout', /Số dư 50\.000đ/);
-      const vi = t.locator('#checkout .opt-row', { hasText: 'Ví nội bộ' }).first();
-      k(`E1 [${rong}] ví thiếu: "Ví nội bộ" khoá, "Ví + QR" bật + "Dùng hết số dư ví, quét QR phần còn lại"`, (await vi.getAttribute('aria-disabled')) === 'true' && /Dùng hết số dư ví, quét QR phần còn lại/.test(await chu(t, '#checkout')));
-      await chon(t, 'Ví + QR'); await bam(t);
+      await batVi(t);
+      k(`Đ7/E1 [${rong}] bật + 0 < số dư < tổng → ví + QR: "Dùng hết 50.000đ trong ví, còn thiếu 37.654đ → quét QR"`, /Dùng hết 50\.000đ trong ví, còn thiếu 37\.654đ → quét QR/.test(await dongVi(t)) && /phần còn thiếu/.test(await chu(t, '#checkout')));
+      await chup(t, `thanhtoan-vi-qr-${rong}`);
+      await bam(t);
       await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
       k(`F2 [${rong}] vi_qr: "Đã giữ 50.000đ trong ví · quét QR 37.654đ"`, await doiChu(t, '#tracking', /Đã giữ 50\.000đ trong ví · quét QR 37\.654đ/));
       await chup(t, `theodoi-viqr-${rong}`);
@@ -449,12 +458,12 @@ async function trinhDuyet(pw) {
   }
   them('pin_dang_khoa', { S0: { vi: 100000, pinKhoa: true } }, async ({ t }) => {
     await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 100\.000đ/);
-    await chon(t, 'Ví nội bộ'); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
     k('D1 PIN_DANG_KHOA → bảng PIN hiện lời POS', await doiChu(t, '.pin-msg', /PIN_DANG_KHOA/));
   });
   them('chua_co_pin', { S0: { vi: 100000, chuaCoPin: true } }, async ({ t }) => {
     await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 100\.000đ/);
-    await chon(t, 'Ví nội bộ'); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
     k('D1 CHUA_CO_PIN → lời POS + nút "Đặt mã PIN"', await doi(t, async () => /CHUA_CO_PIN/.test(await chu(t, '#checkout')) && (await t.locator('#checkout button', { hasText: 'Đặt mã PIN' }).count()) === 1));
   });
   them('ngoai_gio', { S0: { kich: [loiPos('QUA_GIO_NHAN_DON')] } }, async ({ t }) => {
@@ -463,10 +472,10 @@ async function trinhDuyet(pw) {
   });
   them('cach_khong_khop', { S0: { vi: 50000 } }, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 50\.000đ/);
-    await chon(t, 'Ví + QR');
+    await batVi(t);
     S.vi = 200000;
     await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
-    k('D1 CACH_KHONG_KHOP → tải lại số dư, chuyển sang "Ví nội bộ"', await doi(t, async () => /CACH_KHONG_KHOP/.test(await chu(t, '#checkout')) && /active/.test(await t.locator('#checkout .opt-row', { hasText: 'Ví nội bộ' }).getAttribute('class'))));
+    k('D1 CACH_KHONG_KHOP → tải lại số dư, công tắc đang bật thành trả ví ("đủ trả cả đơn")', await doi(t, async () => /CACH_KHONG_KHOP/.test(await chu(t, '#checkout')) && /đủ trả cả đơn/.test(await dongVi(t))));
   });
   them('d3a-bam-nhieu', { S0: { treDon: 800 } }, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
