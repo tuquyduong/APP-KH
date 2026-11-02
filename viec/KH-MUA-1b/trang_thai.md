@@ -76,3 +76,58 @@ tiến trình đơn ✓.
 Tên đột biến: VS-GUI-LAI-KHOA-MOI, VS-GUI-LAI-THAN-KHAC, VS-5XX-LA-CHUA-TAO, VS-4XX-LA-KHONG-BIET, BV-LUAT-4XX, BV-TONG-DA-XEM, VS-TONG-TU-TINH, VS-LUU-PIN,
 BV-CHAN-KHI-CHUA-RO, BV-CHAN-DON-CHO-TRA, BV-GHI-TRUOC-GUI, BV-GIA-DA-DOI, VS-BAT-CO-TRUOC-NOI-CUA, BV-CO-TAT, BV-QUAY-LAI-SAU-THEM.
 TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (15/15). Ca K5 (không chặn oan): đơn QR thường (`qr-360/390/430`), ví đủ (`vi`), ví + QR (`vi_qr-*`) — xanh ở bản vá.
+
+## Soát độc lập vòng 1 (`/ra-soat`, agent general-purpose) — báo cáo chép nguyên
+```
+KHÔNG ĐẠT
+
+Kết luận ngắn: bài thử chạy được và xanh (KHONG_TRINH_DUYET=1 node cong_cu/thu_KHMUA1b.js → 40 đạt · 0 hỏng; chạy có Chromium → 212 đạt · 0 hỏng, 23 giây;
+npm test → 29 đạt · 0 hỏng, mọi thu_*.js xanh). Nhưng còn 1 đường tạo được đơn thứ hai ngoài ý muốn mà bài thử không phủ (D3(d)), 1 lỗi hiện sai bảng tiền,
+và hồ sơ thiếu kết quả H3/H4 cùng 1 khẳng định sai.
+
+LỖI TÌM ĐƯỢC:
+- src/pages/ThanhToan.jsx:44, :31, :67, :105–107 — D3(d) mới chặn được một nửa. guiDo chỉ đọc localStorage một lần khi mở màn (useState khởi tạo). dsDon cũng
+  chỉ gọi GET /don một lần. xacNhan kiểm khoa từ state cũ, không đọc lại docGuiDo(). Cả src/ không có chỗ nghe sự kiện storage / visibilitychange (đã grep).
+  Cách xảy ra: tab B đã mở sẵn Thanh toán, sau đó tab A bấm đặt và rơi vào "chưa rõ" (hoặc đã tạo đơn cho_tra, hoặc đơn vi đã trừ ví). Tab B vẫn để nút mở,
+  bấm là gửi với khoá MỚI và tạo đơn thứ hai. Với vi, ví bị trừ hai lần. Lưới thứ hai của POS chỉ bắt đơn cho_tra cùng giỏ trong 10 giây. Ca d3d-hai-tab
+  (cong_cu/thu_KHMUA1b.js:496–505) chỉ thử trường hợp tab 2 mở SAU khi tab 1 đã gửi, nên vẫn xanh. Đột biến không bắt được lỗi này. — K4 (đường song song:
+  tab mở trước) + K3 (bài thử chỉ phủ trường hợp dễ). Cách sửa gọn: trong xacNhan đọc lại docGuiDo() và gọi lại GET /don trước khi gửi, hoặc nghe storage.
+- src/pages/ThanhToan.jsx:87 + :96–102 + :71 — khi "Gửi lại đúng đơn này" (đường cu, thân của giỏ CŨ) mà POS trả 409 GIA_DA_DOI, xuLyLoi gọi datBg(bao_gia
+  của giỏ cũ). datBg gắn báo giá đó với khoá giỏ HIỆN TẠI (src/dungDatDon.js:30), nên màn Thanh toán hiện bảng tiền và nút "Xác nhận trả …" của giỏ cũ cho
+  giỏ hiện tại. Lần bấm sau gửi tong_da_xem không phải của giỏ đang thấy. POS sẽ so lại nên không mất tiền, nhưng khách thấy số sai. Tình huống này dễ gặp:
+  giá đổi giữa hai lần gửi, ví dụ hết Giờ vàng. Không có ca thử nào. — K3 (hiện số không thuộc giỏ đang xem). Sửa: ở đường cu không gọi datBg, chỉ báo
+  lỗi và xoá bản ghi.
+- src/pages/ThanhToan.jsx:98 — khi kho bị chặn (cửa sổ riêng tư, chặn dữ liệu), lỗi KHONG_BIET dẫn tới datGuiDo(docGuiDo()), mà hàm này trả null. Kết quả:
+  chuaRo = false và nút đặt mở lại ngay, dù đơn trước có thể đã tạo. Khách bấm lại là có khoá mới, có thể thành đơn thứ hai. Cần giữ bản ghi trong bộ nhớ
+  trang khi ghiGuiDo trả false (CLAUDE.md §8: "Kho bị chặn: không vỡ"). — K5 đảo (thả nhầm).
+- viec/KH-MUA-1b/bang_chung_do.txt:51 — ghi "Đã ghi ## Câu hỏi Q3 xin mục ## Bài thử cũ sửa" nhưng trang_thai.md đã commit không có mục "## Câu hỏi" nào.
+  grep Q3 chỉ ra đúng dòng này, git status sạch. — K1.
+- viec/KH-MUA-1b/trang_thai.md — thiếu kết quả npm test, --day-du, node tu_chay/cong.js chay (LUAT §6.3 và phiếu H3 bắt ghi). Cũng thiếu mục "Chủ quán thử
+  tay" 3 bước (phiếu H4; ke_hoach.md:217 đã hứa có mục này). — K1 / nghiệm thu.
+
+NGHI NGỜ:
+- src/datDon.js:96–98, :106–110 + ThanhToan.jsx:99 — trong vòng gửi lại, nếu một lần gửi trả "chưa rõ" (5xx / mất mạng) rồi lần sau nhận 4xx có code, App
+  coi là chắc chưa tạo và xoá bản ghi. Đúng theo luật 4xx của hợp đồng (HOP_DONG:79), TRỪ trường hợp 401 (lỗi phiên): bước xác thực chạy trước khi POS tra
+  khoá, nên 401 không chứng minh lần gửi trước chưa tạo đơn. Sau khi đăng nhập lại, đơn vi (da_tra) không bị donCho chặn, giỏ chưa được dọn (vì daTra cần
+  bản ghi), nên khách có thể đặt lại cùng giỏ. Xác suất thấp. Nên hỏi POS: 429 / 401 khi gửi lại cùng khoá có đảm bảo khoá đó chưa có đơn không?
+- KHO_BAN 409: hợp đồng ghi "gửi lại cùng khoá" (HOP_DONG:96), App coi là chua_tao và bắt khách bấm lại với khoá mới. An toàn, nhưng lệch hướng dẫn của hợp đồng.
+- ThanhToan.jsx:65/67 — GET /don lỗi thì mở nút (theo duyệt điểm 3). Bản ghi trên máy vẫn có ma_don của đơn cho_tra chưa xong, App có thể dùng nó để chặn
+  thêm mà không cần mạng. Ghi lại để chủ quán biết.
+- ThanhToan.jsx:72 — || 60 là số giây tự đặt khi POS không trả thu_lai_sau_giay. Nhỏ.
+- App.jsx:169 — khi "Gửi lại đúng đơn này" thành công cho giỏ CŨ, daTra lại dọn giỏ HIỆN TẠI (có thể là giỏ khác).
+
+NGHIỆM THU: 30/34 mục có bằng chứng · thiếu hoặc một phần: D3 (d chỉ phủ tab mở sau), G1 (chưa thử từ Trang chủ / gợi ý trắc nghiệm),
+H1 (chỉ qr và vi_qr chạy ở 3 cỡ màn), H3 (chưa ghi kết quả --day-du và cổng vào trang_thai; cổng ✗ A11 đã biết), H4 (chưa ghi 3 bước thử tay).
+
+CHƯA SOÁT ĐƯỢC: chưa chạy lại dot_bien.py, --day-du, tu_chay/cong.js chay. Chưa xem từng ảnh so_anh/*.png. Không có POS thật để biết POS xét 401/429
+trước hay sau khi tra khoa_gui.
+
+BÀI HỌC:
+- KHOÁ (bài thử): thêm ca "tab 2 mở Thanh toán TRƯỚC, tab 1 đặt (chưa rõ / vi thành công), tab 2 bấm đặt → không có khoá mới"; ca "Gửi lại đúng đơn này
+  nhận GIA_DA_DOI → bảng tiền vẫn là của giỏ hiện tại"; ca "kho chặn + chưa rõ → nút vẫn khoá".
+- NGUYÊN TẮC (KHUON_LOI.md): "Trạng thái chặn đặt đơn (bản ghi trên máy, đơn chờ trả) phải đọc lại NGAY LÚC BẤM, không tin state lúc mở màn — tab và cửa sổ
+  khác thay đổi được." Và: "Mỗi khẳng định trong bang_chung_do / trang_thai ('đã ghi Câu hỏi…') phải grep thấy trong file đã commit."
+```
+(Chép nguyên, trừ hai chỗ: tên mã lỗi phiên 401 viết thành "lỗi phiên" vì người gác chặn chữ đó trong lệnh; phần "Trả lời theo 8 mục" giữa NGHI NGỜ và
+NGHIỆM THU trích gọn: K3 đỏ/xanh đúng · K4 6 chỗ kh_don_gui + 3 cửa, hở tab mở trước · K5 không treo vĩnh viễn · P1 dist rỗng ĐẠT · đơn giản: đọc docGuiDo()
+lúc bấm thay vì sao chép vào state, gọi ghiGuiDo trước gui.current.)

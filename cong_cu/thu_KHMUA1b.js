@@ -123,6 +123,7 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
     k('D3 ghi null = xoá', D.ghiGuiDo(null, kho) === true && D.docGuiDo(kho, 2000) === null);
     kho.setItem('kh_don_gui', '{hỏng');
     k('D3 bản ghi hỏng → null, không ném; kho chặn → null / false', D.docGuiDo(kho, 1) === null && D.docGuiDo(khoChan, 1) === null && D.ghiGuiDo(bg, khoChan) === false);
+    k('D3 kho chặn: bản ghi vẫn giữ trong bộ nhớ trang (chưa rõ vẫn chặn đặt), không báo đã lưu', (D.docGuiDo(khoChan, 2000) || {}).khoa_gui === 'K'.repeat(20) && D.ghiGuiDo(null, khoChan) === false && D.docGuiDo(khoChan, 2000) === null);
     const L = await nap('src/luuMay.js');
     const kL = khoGia(); kL.setItem('kh_don_gui', JSON.stringify(bg));
     L.xoaTatCa(kL);
@@ -180,8 +181,10 @@ async function trinhDuyet(pw) {
   const loiPos = (code, them = {}) => ({ st: MA_LOI[code] || 400, o: { error: `Lời POS giả: ${code}`, code, ...them } });
 
   // Một ngữ cảnh = một máy. S = trạng thái POS giả (dùng chung mọi tab của máy đó).
-  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, S0 = {} } = {}, chay) {
+  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, chanKho = false, S0 = {} } = {}, chay) {
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
+    // chanKho: localStorage từ chối riêng khoá kh_don_gui (như cửa sổ riêng tư / chặn dữ liệu)
+    if (chanKho) await ctx.addInitScript(() => { for (const m of ['getItem', 'setItem', 'removeItem']) { const g = Storage.prototype[m]; Storage.prototype[m] = function (k, ...a) { if (k === 'kh_don_gui') throw new Error('chặn'); return g.call(this, k, ...a); }; } });
     await ctx.clock.install({ time: new Date('2026-10-30T20:30:00+07:00') }); await ctx.clock.resume();
     await ctx.addInitScript(({ dn, gio }) => {
       if (sessionStorage.getItem('da_gieo')) return;
@@ -200,7 +203,7 @@ async function trinhDuyet(pw) {
       const cu = S.khoa.get(t.khoa_gui);
       if (cu) return cu.dd === dinhDanh(t) ? { st: 200, o: { ...cu.tra, trung: true } } : loiPos('KHOA_GUI_DA_DUNG');
       const tong = S.bg.tong;
-      if (t.tong_da_xem !== tong) { const { success, ...bao } = S.bg; return loiPos('GIA_DA_DOI', { bao_gia: bao }); }
+      if (t.tong_da_xem !== tong) { const { success, ...bao } = S.bgDoi || S.bg; return loiPos('GIA_DA_DOI', { bao_gia: bao }); }
       if (t.cach_tra !== 'qr') {
         if (S.chuaCoPin) return loiPos('CHUA_CO_PIN');
         if (S.pinKhoa) return loiPos('PIN_DANG_KHOA');
@@ -502,6 +505,40 @@ async function trinhDuyet(pw) {
     await t.clock.fastForward(25000);
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()), 9000);
     k('D3(d) hai tab cộng lại: mọi lần gửi cùng MỘT khoá, MỘT đơn', S.don.size === 1 && new Set(S.guiDon.map(khoa)).size === 1, `${S.don.size} đơn, ${S.guiDon.length} lần`);
+  });
+  them('d3d-tab-mo-truoc', { S0: { kich: ['treo'] } }, async ({ t, S, trang }) => {
+    const t2 = await trang(); await mo(t2, '/thanhtoan'); await sanSang(t2); // tab 2 mở Thanh toán TRƯỚC
+    await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
+    await doi(t, async () => S.guiDon.length === 1);
+    await bam(t2).catch(() => {}); await t2.waitForTimeout(500);
+    k('D3(d) tab 2 mở TRƯỚC, tab 1 đang gửi (chưa rõ) → tab 2 bấm đặt KHÔNG gửi khoá mới, hiện "Gửi lại đúng đơn này"', S.guiDon.length === 1 && /Gửi lại đúng đơn này/.test(await chu(t2, '#checkout')) && await nutKhoa(t2), String(S.guiDon.length));
+  });
+  them('d3d-tab-mo-truoc-vi', { S0: { vi: 100000 } }, async ({ t, S, trang }) => {
+    const t2 = await trang(); await mo(t2, '/thanhtoan'); await sanSang(t2);
+    await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 100\.000đ/);
+    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
+    await bam(t2).catch(() => {}); await t2.waitForTimeout(500);
+    k('D3(d) tab 2 mở TRƯỚC, tab 1 trả ví xong → tab 2 bấm đặt KHÔNG tạo đơn thứ hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);
+    await chup(t2, 'thanhtoan-don-khac-390');
+    await t2.locator('#checkout button', { hasText: 'Đặt thêm đơn mới' }).click();
+    k('D3(d) khách chủ ý "Đặt thêm đơn mới" → nút đặt mở lại (K5)', await sanSang(t2));
+  });
+  them('gui-lai-gia-doi', { S0: { bgDoi: { ...BG, tong: 31000, tam_tinh: 31000, giam: [] } } }, async ({ t, S }) => {
+    await mo(t, '/trangchu');
+    await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
+    await t.evaluate(() => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: 'CU'.repeat(10), than: { mon: [{ ma: 'TLB', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'qr', khoa_gui: 'CU'.repeat(10), tong_da_xem: 30000 }, cach_tra: 'qr', luc: Date.now() })));
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
+    await doi(t, async () => /đặt lại/.test(await chu(t, '#checkout .nt-state')));
+    const tien = await chu(t, '#checkout .bang-tien');
+    k('D1 "Gửi lại đúng đơn này" nhận GIA_DA_DOI → bảng tiền VẪN của giỏ hiện tại (87.654đ, không 31.000đ), bỏ bản ghi, mời đặt lại', /87\.654đ/.test(tien) && !/31\.000đ/.test(tien) && (await luu(t)) === null && await sanSang(t) && /87\.654đ/.test(await nut(t).innerText()), tien);
+  });
+  them('kho-chan', { chanKho: true, S0: { kich: ['abort', 'abort', 'abort', 'abort'] } }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
+    await t.clock.fastForward(7000);
+    k('D2 kho bị chặn + chưa rõ → vẫn khoá đặt, "Gửi lại đúng đơn này" (bản ghi giữ trong bộ nhớ trang)', await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')), 9000) && await nutKhoa(t) && S.guiDon.length === 4);
   });
   them('kiem-don-truoc', { S0: { treDsDon: 1500 } }, async ({ t }) => {
     await mo(t, '/thanhtoan');
