@@ -82,8 +82,10 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
   });
 
   await thu('D', async () => {
-    const sai = MA_DAT_DON.filter((x) => x.st < 500).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'chua_tao').map((x) => x.code);
-    k('D1 MỌI 4xx có code của hợp đồng (+401 KH_TOKEN_SAI) → chắc chưa tạo', sai.length === 0 && D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'chua_tao', sai.join(','));
+    const sai = MA_DAT_DON.filter((x) => x.st < 500 && x.st !== 401).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'chua_tao').map((x) => x.code);
+    k('D1 MỌI 4xx có code của hợp đồng (trừ 401) → chắc chưa tạo', sai.length === 0 && MA_DAT_DON.length > 10, sai.join(','));
+    // S1 (vòng 4): 401 do lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần trước chưa tạo đơn
+    k('S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'khong_biet');
     const sai5 = MA_DAT_DON.filter((x) => x.st >= 500).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'khong_biet').map((x) => x.code);
     k('D2 5xx của hợp đồng (DANG_XU_LY, PAYOS_*…), LOI_MAY_CHU 500, mất mạng (status 0), 4xx không code, 200 lạ → chưa rõ',
       sai5.length === 0 && ['LOI_MAY_CHU', 'MANG_LOI'].every((c, i) => D.loaiLoi(loi([500, 0][i], c)) === 'khong_biet') && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi({ status: 200 }) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet', sai5.join(','));
@@ -110,6 +112,10 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
     k('D1 4xx → gửi đúng 1 lần, ném nguyên lỗi POS (không gửi lại)', d.goi.length === 1 && d.nem && d.nem.code === 'PIN_SAI');
     const e = await chay([{ success: true, tong: 1 }, OK]);
     k('D2 200 thiếu ma_don → gửi lại cùng thân, nhận đơn', e.kq && e.goi.length === 2 && e.goi[1] === e.than);
+    const s1a = await chay([loi(0, 'MANG_LOI'), loi(401, 'KH_TOKEN_SAI'), OK]);
+    k('S1 mất mạng rồi 401 khi tự gửi lại → dừng ngay (2 lần gửi, không gửi tiếp), ném KHONG_BIET', s1a.goi.length === 2 && s1a.nem && s1a.nem.code === 'KHONG_BIET', `${s1a.goi.length} ${s1a.nem && s1a.nem.code}`);
+    const s1b = await chay([loi(401, 'KH_TOKEN_SAI'), OK]);
+    k('S1 401 ngay lần gửi đầu → 1 lần gửi, ném KHONG_BIET (bản ghi giữ)', s1b.goi.length === 1 && s1b.nem && s1b.nem.code === 'KHONG_BIET', `${s1b.goi.length} ${s1b.nem && s1b.nem.code}`);
     const f = await chay([{ ...OK, trung: true }]);
     k('D2 trung:true → coi như thành công (1 lần gửi)', f.kq && f.kq.trung === true && f.goi.length === 1);
     // ghi nhớ lần gửi
@@ -651,7 +657,39 @@ async function trinhDuyet(pw) {
   them('401', {}, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t);
     S.chetDon = true; await bam(t);
-    k('401 giữa chừng → hết phiên, về Trang chủ, không "chưa rõ", không bản ghi', await doi(t, async () => /\/trangchu$/.test(t.url())) && (await luu(t)) === null && S.guiDon.length === 1, `${t.url()} ${await luu(t)} ${S.guiDon.length}`);
+    const ve = await doi(t, async () => /\/trangchu$/.test(t.url()));
+    const g = JSON.parse((await luu(t)) || '{}');
+    k('S1 401 ngay lần gửi đầu → hết phiên, về Trang chủ, GIỮ bản ghi chưa rõ (cùng khoá), không tự gửi lại', ve && g.khoa_gui === khoa(S.guiDon[0]) && !g.ma_don && S.guiDon.length === 1, `${t.url()} ${await luu(t)} ${S.guiDon.length}`);
+    S.chetDon = false; await t.evaluate(() => localStorage.setItem('kh_token', 'tok-A')); // đăng nhập lại, cùng khách
+    await mo(t, '/thanhtoan');
+    k('S1 đăng nhập lại → Thanh toán hiện "Lần đặt trước chưa rõ kết quả" + "Gửi lại đúng đơn này", nút đặt khoá', await doi(t, async () => /Lần đặt trước chưa rõ kết quả/.test(await chu(t, '#checkout')) && /Gửi lại đúng đơn này/.test(await chu(t, '#checkout'))) && await nutKhoa(t));
+  });
+  them('401-gui-lai', { S0: { kich: ['tao+502', { st: 401, o: { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' } }] } }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
+    await t.clock.fastForward(3000);
+    const ve = await doi(t, async () => /\/trangchu$/.test(t.url()), 8000);
+    const g = JSON.parse((await luu(t)) || '{}');
+    k('S1 lần 1 đã tạo nhưng mất trả lời, tự gửi lại nhận 401 → dừng (2 lần gửi), GIỮ bản ghi chưa rõ', ve && S.guiDon.length === 2 && g.khoa_gui === khoa(S.guiDon[0]) && !g.ma_don, `${t.url()} ${S.guiDon.length} ${await luu(t)}`);
+    await t.evaluate(() => localStorage.setItem('kh_token', 'tok-A'));
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
+    k('S1 đăng nhập lại, "Gửi lại đúng đơn này" → CÙNG khoá + thân, POS trả đơn cũ (trung), MỘT đơn', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && S.guiDon.length === 3 && giongNhau(S.guiDon) && S.don.size === 1, `${S.guiDon.length} ${S.don.size}`);
+  });
+  them('gui-lai-pin-sai', { S0: { vi: 300000 } }, async ({ t, S }) => {
+    await mo(t, '/trangchu');
+    await doi(t, async () => S.goi.some((g) => g.duong === '/toi')); await t.waitForTimeout(300);
+    const K = 'PS'.repeat(10);
+    await t.evaluate((K) => localStorage.setItem('kh_don_gui', JSON.stringify({ khoa_gui: K, than: { mon: [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_luong: 1 }], cach_nhan: 'tai_quan', cach_tra: 'vi', khoa_gui: K, tong_da_xem: 87654 }, cach_tra: 'vi', luc: Date.now() })), K);
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click(); await t.waitForSelector('.pin-pad');
+    await nhapPin(t, '2468');
+    const loiPin = await doiChu(t, '.pin-msg', /PIN_SAI/);
+    k('S2 "Gửi lại đúng đơn này" + sai PIN → bảng PIN còn mở, hiện lời POS, bản ghi GIỮ', loiPin && (await t.locator('.pin-pad').count()) === 1 && JSON.parse((await luu(t)) || '{}').khoa_gui === K, await luu(t));
+    await nhapPin(t, PIN);
+    const bo = (tho) => { const { pin, ...x } = JSON.parse(tho); return JSON.stringify(x); };
+    k('S2 nhập lại đúng PIN → gửi ĐÚNG khoá + thân cũ, nhận đơn, MỘT đơn', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && S.guiDon.length === 2 && S.guiDon.every((x) => khoa(x) === K) && bo(S.guiDon[0]) === bo(S.guiDon[1]) && S.don.size === 1, `${S.guiDon.length} ${t.url()}`);
   });
   them('giam', {}, async ({ t }) => {
     await mo(t, '/giohang');
