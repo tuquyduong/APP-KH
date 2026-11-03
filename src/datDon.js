@@ -83,10 +83,11 @@ export const huyDon = canMo((ma) => huyDonApp(ma));
 /**
  * Luật 4xx của hợp đồng v5: MỌI trả lời 4xx CÓ `code` = chắc chắn chưa tạo đơn, chưa giữ / trừ ví → 'chua_tao' (khách sửa rồi bấm lại, khoá mới).
  * Còn lại — mất mạng / hết giờ chờ (status 0), 5xx, 4xx không code, 200 thiếu mã đơn — → 'khong_biet' (đơn CÓ THỂ đã tạo).
+ * Ngoại lệ 401: lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần gửi trước chưa tạo → 'khong_biet'.
  */
 export function loaiLoi(e) {
   if (e && e.code === 'CHUA_MO') return 'chua_tao';
-  return e && e.status >= 400 && e.status < 500 && e.code ? 'chua_tao' : 'khong_biet';
+  return e && e.status >= 400 && e.status < 500 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';
 }
 
 const MS_GUI_LAI = 2000;  // chờ giữa hai lần tự gửi lại
@@ -98,6 +99,7 @@ export const CHU_CHUA_RO = 'Chưa rõ quán đã nhận đơn chưa.';
 /**
  * Gửi `POST /don` an toàn: MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
  * Nhận đơn (kể cả trung) → trả đơn; 'chua_tao' → ném lỗi POS; 'khong_biet' → chờ ~2 giây gửi lại; hết lượt → ném { code: 'KHONG_BIET' }.
+ * 401 (hết phiên) → ném KHONG_BIET ngay, không tự gửi lại (người gọi GIỮ bản ghi; đăng nhập lại thì "Gửi lại đúng đơn này").
  */
 export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat, khiGuiLai = () => {} } = {}) {
   let lan = 0, lanXuLy = 0;
@@ -110,7 +112,7 @@ export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat
     } catch (e) { loi = e; }
     if (loaiLoi(loi) === 'chua_tao') throw loi;
     const xuLy = loi.code === 'DANG_XU_LY';
-    if (xuLy ? ++lanXuLy > LAN_DANG_XU_LY : ++lan > LAN_GUI_LAI) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET' });
+    if (loi.status === 401 || (xuLy ? ++lanXuLy > LAN_DANG_XU_LY : ++lan > LAN_GUI_LAI)) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET' });
     khiGuiLai();
     await cho(MS_GUI_LAI);
   }
