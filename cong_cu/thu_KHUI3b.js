@@ -60,6 +60,13 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
     // Hợp đồng trong kho = bản chép MỚI NHẤT ở viec/*/hop_dong_v<N>.md (v3 của việc này, sau đó v5 của KH-MUA-1b…), từng byte.
     const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
     k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/, từng byte (có v3 của việc này trở lên)', !!banHd && banHd.n >= 3 && Buffer.compare(fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')), fs.readFileSync(banHd.f)) === 0, banHd && banHd.f);
+    // KH-MUA-1b: ba cửa đặt đơn api.js gọi phải là cửa "có" trong bảng của hợp đồng (v3 chưa có → đỏ)
+    const hd = doc('thiet_ke/HOP_DONG_API_KH.md'), api = doc('src/api.js');
+    const thieu = [['POST', '/gio/bao-gia'], ['POST', '/don'], ['POST', '/don/:ma/huy']].filter(([pt, d]) => {
+      const goiApi = new RegExp(`goi\\('${pt}', [\`']${d.replace(':ma', '\\$\\{[^}]+\\}').replace(/\//g, '\\/')}[\`']`).test(api);
+      return !goiApi || !hd.includes(`| \`${pt} ${d}\` | có |`);
+    }).map((x) => x.join(' '));
+    k('A1 hợp đồng có đủ ba cửa đặt đơn mà api.js gọi: POST /gio/bao-gia, POST /don, POST /don/:ma/huy', thieu.length === 0, thieu.join(', '));
   });
 
   await thu('A2', async () => {
