@@ -4,6 +4,8 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 03.11.2026
+- **Lời chào hiện ĐỦ TÊN đúng như khách nhập** (chủ quán 03.11): vd khách nhập "LINH P" → "Chào buổi trưa, anh LINH P!". Bỏ cách lấy chữ cuối của tên. (Thay ý "Tên ngắn viết hoa chữ đầu" của 31.10.) (KH-BAO-1)
+- **Khách tạo từ App phải ĐỦ trường thông tin y như khách tạo ở POS** (chủ quán 03.11), và khách App phải hiện ở màn Khách hàng POS — việc POS (`trao_doi/YEU_CAU_APPKH_GUI_POS_03112026_b.md`: một hàm tạo khách chung cho quầy + App).
 - **Đặt online, đến quán lấy** (chủ quán 03.11): lựa chọn "Lấy tại quầy · Miễn phí giao" đã có từ KH-MUA-1 — khai trương được kể cả khi Ahamove (KH-MUA-2) chưa xong.
 - **Báo đơn xong** (03.11, "theo đề nghị"): nhân viên chỉ chạm MỘT nút "Xong — gọi khách" (POS, có Hoàn tác 5 giây); App báo ở MỌI màn: dải "Đơn #… đã sẵn sàng — mời bạn ra quầy", đổi tên tab, tiếng (Android rung); dòng nhắc "Giữ App mở để được báo khi đồ uống xong". Báo khi App đã tắt: sau khai trương (KH-TB-1 / Zalo). (KH-BAO-1)
 - **"Khách đã lấy" để ở POS** (03.11): nhân viên chạm khi tiện, không bắt buộc; trước giờ đóng cửa 30 phút POS nhắc đơn chưa lấy (kèm SĐT); đến giờ đóng cửa tự ghi "Đã lấy". App chỉ nhận thông báo đã nhận (`tien_trinh` `da_lay` — chờ POS lên hợp đồng).
@@ -30,7 +32,7 @@
 - **Hạng:** ẩn hạng giảm 0% trên App. Chủ quán đã bỏ hạng thử "Test0d", đổi tên GOLD → **Vàng** (BÁN, muốn gói 1 tháng và 3 tháng), VIP → **Kim Cương** (CHỈ CẤP, không bán) — phần cài đặt / bán thẻ là việc POS (YEU_CAU_APPKH_GUI_POS_01112026_b.md). App hiện tên + % giảm, không hiện giá cho tới khi POS có `chi_cap`.
 
 ## 31.10.2026
-- **Văn phong lời chào (chủ quán chốt 31.10 tối, xem app thật thấy "Chào buổi chiều, Anh Linh"):** xưng hô GIỮA câu viết chữ thường, lời chào LUÔN có "!" cuối câu: "Chào buổi chiều, anh Linh!" · chưa có giờ POS "Chào anh Linh!" · chưa có xưng hô "Chào buổi chiều, Linh!" · chưa có tên "Chào buổi chiều, anh!" · chưa đăng nhập "Chào bạn!". Tên ngắn viết hoa chữ đầu. Nút chọn xưng hô chữ thường như demo (anh · chị · cô · chú · bác · em · bạn). Xưng hô đứng đầu dòng thì viết hoa theo chính tả. (Thay mục C1 phiếu KH-UI-3b "viết hoa chữ đầu"; làm trong KH-UI-3d.)
+- **Văn phong lời chào (chủ quán chốt 31.10 tối, xem app thật thấy "Chào buổi chiều, Anh Linh"):** xưng hô GIỮA câu viết chữ thường, lời chào LUÔN có "!" cuối câu: "Chào buổi chiều, anh Linh!" · chưa có giờ POS "Chào anh Linh!" · chưa có xưng hô "Chào buổi chiều, Linh!" · chưa có tên "Chào buổi chiều, anh!" · chưa đăng nhập "Chào bạn!". Tên ngắn viết hoa chữ đầu (thay bằng 03.11: hiện đủ tên như khách nhập). Nút chọn xưng hô chữ thường như demo (anh · chị · cô · chú · bác · em · bạn). Xưng hô đứng đầu dòng thì viết hoa theo chính tả. (Thay mục C1 phiếu KH-UI-3b "viết hoa chữ đầu"; làm trong KH-UI-3d.)
 - **Chốt 5 câu giỏ hàng (chủ quán 31.10, "theo đề nghị", riêng câu 2 chủ quán SỬA):**
   1. Giữ viên số món trên tab Giỏ hàng (demo không có).
   2. Nút "Thêm vào giỏ" chỉ ở Trang món (đúng demo), NHƯNG thêm xong KHÔNG nhảy vào giỏ: hiện thông báo "Đã thêm … vào giỏ" và quay lại
