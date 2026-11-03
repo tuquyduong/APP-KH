@@ -174,3 +174,43 @@ không
 - KHÔNG tính tiền ở App (tạm tính, giảm, tổng, ví giữ, QR còn lại đều lấy từ POS). KHÔNG làm giao tận nơi (KH-MUA-2), topping / combo, đổi điểm.
 - KHÔNG lưu PIN ở bất kỳ đâu.
 - Chỉ push `git push -u origin viec/KH-MUA-1b`. Không đụng `main`, không merge, không tạo PR.
+
+## Vòng sửa 4 — chat soát cuối 03.11 (chủ quán duyệt vượt trần 3 vòng, CHỈ đúng 3 mục dưới)
+Chat soát cuối đầu nhánh 80e5f91: cổng `tinh` ĐẠT; `chay` kiểu GitHub còn ✗ [A11] `thu_KHUI3b.js`; `npm test` có trình duyệt 29 · 0;
+ghép thử main ceccd81 không đụng nhau; ảnh 360 / 390 / 430 đạt tinh thần demo. Đọc đường tiền `src/datDon.js`, `src/pages/ThanhToan.jsx`,
+`src/dungDatDon.js` + phía POS `server/utils/donApp.js` (`datDon` dòng 182–235), `server/routes/kh/index.js` (dòng 140 `router.use(xacThucKhach)`).
+Tìm ra 2 lỗi đường tiền (S1, S2), và cách gỡ đúng cho Q3 (S3). Làm ĐỦ 3 mục, mỗi chỗ vá có ca ĐỎ trước + đột biến. KHÔNG làm thêm gì khác.
+
+- **S1 — 401 khi gửi lại làm mất "chưa rõ" → có thể thành đơn thứ hai (tiền).**
+  `loaiLoi` (`src/datDon.js`) coi mọi 4xx có `code` là chắc chưa tạo, kể cả 401 `KH_TOKEN_SAI`. Nhưng 401 do lớp xác thực POS trả TRƯỚC khi tra
+  khoá gửi (`routes/kh/index.js` dòng 140), nên KHÔNG chứng minh lần gửi trước chưa tạo đơn. Chat đã chạy thử: lần 1 mất mạng, lần tự gửi lại nhận
+  401 → `guiDonAnToan` ném `KH_TOKEN_SAI` → `ThanhToan.jsx` `ghiGuiDo(null)` xoá bản ghi. Khách đăng nhập lại, đặt khoá mới → nếu lần 1 đã tạo
+  (đã trừ ví) thì thành hai đơn. Cùng lỗi với nút "Gửi lại đúng đơn này" khi phiên đã hết.
+  Sửa (MỘT chỗ, theo luật chặn hiện có): 401 của `POST /don` = KHÔNG BIẾT. `guiDonAnToan` gặp 401 thì dừng ngay (không tự gửi lại), ném
+  `KHONG_BIET`, GIỮ bản ghi `kh_don_gui` (kể cả lần gửi đầu — gửi lại cùng khoá thì POS chỉ tạo một đơn). Đăng nhập lại (cùng khách) → màn
+  Thanh toán hiện "Lần đặt trước chưa rõ kết quả" + "Gửi lại đúng đơn này" như cũ. Đăng xuất / đổi khách vẫn xoá như CLAUDE.md §8.
+  Ghi cho biết (chat đã đọc code POS): 429 `QUA_NHIEU_LAN`, `PIN_SAI`, `PIN_DANG_KHOA`, `KHO_BAN`… POS trả SAU khi tra khoá (`donApp.js` dòng
+  186–195, `taoPhien` sau đó) → vẫn đúng là "chưa tạo". Chỉ 401 (và lỗi trước lớp `datDon`) là ngoại lệ.
+  Ca đỏ trước: hàm thuần (`loaiLoi` / `guiDonAnToan` với `gui` giả: lần 1 status 0, lần 2 401) + ca màn (bản ghi còn sau 401). Đột biến:
+  `VS-401-CHUA-TAO` (401 lại thành chưa tạo), `VS-401-TU-GUI-LAI` (401 vẫn tự gửi lại), `BV-401-XOA-BAN-GHI`.
+
+- **S2 — "Gửi lại đúng đơn này" + nhập sai PIN: bảng PIN đóng im, không gửi, không báo.**
+  `ThanhToan.jsx` nhánh lỗi: `ghiGuiDo(null)` chạy TRƯỚC khi ném lỗi PIN cho bảng PIN. Khách nhập lại PIN → `guiDon(pin, cu)` thấy
+  `conChuaRo(g, …)` sai (bản ghi đã xoá) → `datMoPin(null)` đóng bảng, không gửi, không lời nào.
+  Sửa: gửi lại (`cu`) mà POS trả `PIN_SAI` / `PIN_DANG_KHOA` → GIỮ bản ghi (POS chưa thấy khoá → chưa tạo; giữ là an toàn), bảng PIN hiện lời
+  POS, nhập lại thì gửi ĐÚNG khoá + thân cũ. Đơn mới (không `cu`) giữ như hiện nay.
+  Ca đỏ trước + đột biến `VS-PIN-GUI-LAI-XOA`.
+
+- **S3 — Q3: KHÔNG dùng `## Bài thử cũ sửa` cho `thu_KHUI3b.js`.** Bản gốc của bài này chạy trên code mới ĐỎ (A1 so hợp đồng với v3, kho đã v5),
+  nên HOC-1 không áp (`tu_chay/MAU_PHIEU.md` mục Bài thử cũ sửa; đúng dòng H2 phiếu này). Gỡ A11 bằng cách THÊM vào `thu_KHUI3b.js` một ca đọc
+  nguồn có ý nghĩa, ĐỎ trên gốc: `thiet_ke/HOP_DONG_API_KH.md` có đủ ba cửa đặt đơn mà `src/api.js` gọi — `POST /gio/bao-gia`, `POST /don`,
+  `POST /don/:ma/huy` (v3 chưa có → đỏ trên gốc). Cập nhật `SỐ CA` theo `KHONG_TRINH_DUYET=1`.
+
+- **Chủ quán trả lời các câu hỏi còn lại:** Q4 — chat đã gửi POS (thư `YEU_CAU_APPKH_GUI_POS_03112026.md` mục F); App làm theo S1. Q5 — giữ như
+  đang làm. Q6 — đồng ý.
+
+- **Sau khi sửa:** `npm test`, `--day-du`, cổng `tinh` + `chay` (`KHONG_TRINH_DUYET=1`) ĐẠT; đột biến cũ + mới đều bị bắt. Soát độc lập MỘT lượt,
+  chỉ cho chỗ vá vòng 3 + vòng 4. Lượt đó KHÔNG ĐẠT → DỪNG, ghi báo cáo, KHÔNG sửa thêm (chat App KH xử lý). Ghi lại "HEAD ĐÃ KIỂM".
+
+- **KHÔNG làm trong việc này** (đã có việc riêng KH-BAO-1, chủ quán duyệt 03.11): hai dòng to "Trừ ví … / Quét QR phần còn lại …" ở bảng tiền;
+  nhớ lựa chọn công tắc trên máy; báo "đơn đã xong" ở mọi màn.
