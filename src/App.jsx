@@ -16,7 +16,7 @@ import { khoGioHoatDong } from './gioHoatDong.js';
 import { dungKho } from './kho.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon } from './gio.js';
-import { monDatLai } from './datDon.js';
+import { banGhiCuaDon, ghiGuiDo, moTheoDoi, monDatLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
@@ -83,8 +83,8 @@ export default function App() {
   const [gio, datGio] = useState(docGio);
   const [maGiam, datMaGiam] = useState('');
   const [thongBao, datThongBao] = useState('');
-  const donMoi = useRef(null);
-  const doiGio = (g) => { datGio(g); ghiGio(g); };
+  const [monLoi, datMonLoi] = useState(null); // { ma, chu } POS vừa báo HET_HANG / MON_KHONG_BAN — dòng giỏ đánh dấu tới khi giỏ đổi
+  const doiGio = (g) => { datGio(g); ghiGio(g); datMonLoi(null); };
   const docLaiGio = () => { datGio(docGio()); datMaGiam(''); }; // luuMay.doiKhach vừa xoá dữ liệu của khách trước
   const khungCuon = useRef(null);
   const viTriMenu = useRef(0);
@@ -98,8 +98,8 @@ export default function App() {
 
   // 401 giữa phiên / đăng xuất: về chế độ khách VÀ về Trang chủ (không giữ trang của người trước). `maCho` giữ để nhận sau khi đăng nhập lại.
   // Dọn phiên ở MỘT chỗ cho cả đăng xuất lẫn 401 (hai đường từng dọn khác nhau). Bản menu lưu trên máy cũng xoá (có thể mang giá theo hạng của khách trước).
-  // Giỏ GIỮ khi hết phiên (như dữ liệu trên máy, §8); mã giảm và đơn vừa tạo (QR) thuộc phiên → dọn cùng chỗ.
-  const donPhien = () => { thay('/trangchu'); datMaGiam(''); donMoi.current = null; xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datDaBiet(false); datHangToi(null); tnGoc.donBoNho(); xoaKhoKhach(); };
+  // Giỏ và bản ghi lần gửi đơn (kh_don_gui) GIỮ khi hết phiên (như dữ liệu trên máy, §8); mã giảm thuộc phiên → dọn cùng chỗ.
+  const donPhien = () => { thay('/trangchu'); datMaGiam(''); xoaMenuLuu(); datDangNhap(false); datDaVaoMenu(false); datNhuCau(''); quayLaiMenu.current = false; viTriMenu.current = 0; datDaBiet(false); datHangToi(null); tnGoc.donBoNho(); xoaKhoKhach(); };
   useEffect(() => { datKhiHetPhien(donPhien); });
 
   // Mỗi lần có phiên (mở app khi còn token, hoặc vừa đăng nhập): hiện ngay bản tóm tắt của đúng khách, tải trước CẢ BỐN cửa khách cùng lúc (KH-NHANH-1 B);
@@ -138,7 +138,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); xoaTatCa(); datGio([]); datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
@@ -153,8 +153,9 @@ export default function App() {
   const moGioVang = () => { quayLaiMenu.current = false; datNhuCau(''); di(taoDuongDan('menu', { nhom: 'gio-vang' })); datLanVaoMenu((n) => n + 1); };
   const taiTab = (t) => trang === t;
   const vaoGio = (chu) => { datThongBao(chu); di(taoDuongDan('giohang')); };
-  const themVaoGio = (mon, so, ghiChu) => { doiGio(themMon(gio, mon.ma, so, ghiChu)); vaoGio(`Đã thêm ${mon.ten} vào giỏ`); };
-  // "Đặt lại" đọc `mon[].ma` — trường DỰ KIẾN (hợp đồng v2 chưa có) → chỉ mở cùng cờ DAT_ONLINE (KH-MUA-1b), không thì báo sai "không còn bán".
+  // Thêm món xong QUAY LẠI trang trước (QĐ 31.10; mở thẳng link món → /menu, cha của /mon) — không nhảy vào giỏ.
+  const themVaoGio = (mon, so, ghiChu) => { doiGio(themMon(gio, mon.ma, so, ghiChu)); datThongBao(`Đã thêm ${mon.ten} vào giỏ`); luiVe(); };
+  // "Đặt lại" đọc `mon[].ma` (hợp đồng v5) — mở cùng cờ DAT_ONLINE; vẫn vào giỏ (G2).
   const datLai = (ma) => (!ds.length ? Promise.resolve(datThongBao('Menu chưa tải xong, thử lại sau ít giây')) : layChiTietDon(ma).then((r) => {
     const { them, boQua } = monDatLai(r.don, ds);
     const boChu = boQua ? `${boQua} món không còn bán, đã bỏ qua` : '';
@@ -162,17 +163,20 @@ export default function App() {
     doiGio(them.reduce((g, d) => themMon(g, d.ma, d.so_luong, d.ghi_chu), gio));
     vaoGio(`Đã thêm ${demMon(them)} món vào giỏ${boChu ? ' · ' + boChu : ''}`);
   }, (e) => datThongBao(e.message)));
-  const xongDatDon = (don) => { donMoi.current = don; lamMoi([cuaToi, cuaDon, cuaDiem]); di(taoDuongDan('theodoi', { ma: don.ma })); };
-  const daTra = (ma) => { if (donMoi.current && donMoi.current.ma === ma) { donMoi.current = null; doiGio([]); datMaGiam(''); } };
+  const xongDatDon = (don) => { lamMoi([cuaToi, cuaDon, cuaDiem]); di(taoDuongDan('theodoi', { ma: don.ma })); };
+  // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ + mã giảm MỘT lần (đánh dấu `xong`). Bản ghi GIỮ (không xoá) để tab
+  // Thanh toán đang mở ở cửa sổ khác vẫn thấy "Bạn vừa đặt đơn …" (ra-soát vòng 1); đơn mới ghi đè, đăng xuất / đổi khách xoá. Huỷ → làm mới /don, /toi (ví nhả).
+  const daTra = (ma) => { const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
+  const daHuy = () => lamMoi([cuaDon, cuaToi]);
 
   return (
     <NguCanhGia.Provider value={nguCanhGia}>
     <div className="phone">
       <div className="screens" ref={khungCuon}>
         {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
-        {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} />}
-        {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} />}
-        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} qr={donMoi.current && donMoi.current.ma === r.tham.ma ? donMoi.current.qr : null} lui={luiVe} daTra={daTra} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
+        {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} monLoi={monLoi} />}
+        {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} veGio={() => di(taoDuongDan('giohang'))} danhDauMon={datMonLoi} sauHuy={daHuy} />}
+        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} lui={luiVe} daTra={daTra} daHuy={daHuy} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
         {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moGioVang={moGioVang} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
         {taiTab('uudai') && <UuDai dangNhap={dangNhap} maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} moGioVang={moGioVang} moDangNhap={() => moDangNhap('/uudai')} />}
         {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
@@ -182,7 +186,7 @@ export default function App() {
         {trang === 'mon' && <MonTheoDuong mon={monLink} tai={menu} lui={luiVe} moQR={moQR} moMenu={moMenu} them={themVaoGio} />}
         {!dangNhap && trang === 'dangnhap' && <DangNhap khiXong={(k) => { if (k && doiKhach(k.sdt)) docLaiGio(); datDangNhap(true); }} dong={luiVe} coMaHoaDon={!!maCho} />}
         {dangNhap && trang === 'qr' && <ManQR lui={luiVe} />}
-        {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(ma) => di(taoDuongDan('don', { ma }))} lui={luiVe} datLai={DAT_ONLINE ? datLai : null} />}
+        {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(d) => di(taoDuongDan(moTheoDoi(d.tien_trinh) ? 'theodoi' : 'don', { ma: d.ma }))} lui={luiVe} datLai={DAT_ONLINE ? datLai : null} />}
         {dangNhap && trang === 'don' && <ChiTietDon ma={r.tham.ma} lui={luiVe} />}
         {dangNhap && trang === 'thongtin' && <HoSo lui={luiVe} />}
         {trang === 'hotro' && <HoTro lui={luiVe} />}

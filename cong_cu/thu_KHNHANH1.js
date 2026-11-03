@@ -210,6 +210,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
   await thu('F-G', async () => {
     const tt = doc('src/pages/ThanhToan.jsx');
     k('F1 trong lúc chờ /toi: "Đang cập nhật số dư…"', /toi\.dangTai \? 'Đang cập nhật số dư…'/.test(tt));
+    k('F1 (KH-MUA-1b) Thanh toán dùng cửa đặt đơn thật của api.js — không còn cổng tiêm datCongDatDon (bài thử dựng app nguyên bản)', !/datCongDatDon/.test(doc('src/datDon.js') + tt) && /baoGiaGio/.test(doc('src/datDon.js')));
     k('F2 Theo dõi đơn, Chi tiết đơn không đọc kho', !/duLieuKhach|dungCua/.test(doc('src/pages/TheoDoiDon.jsx')) && /dungTai\(useCallback\(\(\) => layChiTietDon/.test(doc('src/pages/Don.jsx')));
     const GH = await nap('src/giaHang.js');
     const ds = [{ id: 1, ten: 'Test0d', phan_tram: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10 }, { id: 3, ten: 'Chuỗi', phan_tram: '5' }, { id: 4, ten: 'Rỗng', phan_tram: null }, { id: 5, ten: 'Âm', phan_tram: -1 }, { id: 6, ten: 'Lạ', phan_tram: NaN }];
@@ -239,15 +240,11 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 async function trinhDuyet(pw) {
   const esbuild = require('esbuild');
   const LM = await nap('src/luuMay.js');
-  // Bật cờ DAT_ONLINE + tiêm cổng đặt đơn CHỈ trong gói của bài thử (cùng cách thu_KHMUA1.js) — để Thanh toán có báo giá thật.
+  // App nguyên bản (KH-MUA-1b: cửa đặt đơn đã nối ở api.js, cờ DAT_ONLINE bật) — Thanh toán có báo giá thật từ POS giả.
   const goiApp = (await esbuild.build({
-    stdin: { contents: `import { datCongDatDon } from './datDon.js'; import { docToken } from './api.js';
-      datCongDatDon(async (pt, duong, than) => { const r = await fetch('/api/kh' + duong, { method: pt, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + docToken() }, body: than === undefined ? undefined : JSON.stringify(than) });
-        const dl = await r.json(); if (!r.ok) { const e = new Error(dl.error); e.code = dl.code; throw e; } return dl; });
-      import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
+    stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
-    plugins: [{ name: 'bat-co', setup(b) { b.onLoad({ filter: /caiDat\.js$/ }, () => ({ contents: 'export const DAT_ONLINE = true;', loader: 'js' })); } }],
   })).outputFiles[0].text;
   const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
   const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
@@ -397,13 +394,13 @@ async function trinhDuyet(pw) {
     await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(TRE + 300);
     const n0 = dem(S, '/toi');
     await sang(t, '/thanhtoan'); await t.waitForTimeout(TRE - 400);
-    const vi = t.locator('#checkout .opt-row', { hasText: 'Ví nội bộ' });
-    const lop = await vi.getAttribute('class'), ch = await vi.innerText();
+    const vi = t.locator('#checkout .the-vi'), cong = t.locator('#checkout .the-vi .switch');
+    const lop = await cong.getAttribute('class'), ch = await vi.innerText();
     await chup(t, `ung-dung_thanhtoan-dang-cap-nhat_${rong}`);
     k(`F1 [${rong}] mở Thanh toán → /toi được gọi lại`, dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
     k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /btn-disabled/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
     await t.waitForTimeout(TRE + 300);
-    k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/btn-disabled/.test(await vi.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
+    k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/btn-disabled/.test(await cong.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
     k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
   });
   }));

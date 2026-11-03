@@ -1,0 +1,100 @@
+KH-MUA-1b — bằng chứng đỏ trên code gốc, xanh sau vá
+Gốc = cây ở dc07781 (kế hoạch đã duyệt; src/ chưa sửa, git archive vào thư mục nháp + node_modules), chép bài thử bản MỚI vào cong_cu/ của bản đó,
+chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHMUA1b.js (bài mới) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md
+  ✗ A1 bảng mã lỗi đặt đơn đọc từ hợp đồng (≥ 20 mã, có DANG_XU_LY 503, GIA_DA_DOI 409)  — 0
+  ✗ A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)
+  ✗ A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có)  — menu_sp,don_tien_trinh
+  ✗ A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi
+  ✗ B2 datDon.js không còn cổng tiêm (datCongDatDon), không fetch; gọi cửa từ api.js
+  ✗ B2 bỏ danh sách cứng LOI_CHUA_TAO / chuaTaoDon
+  ✗ B3 DAT_ONLINE = true
+  ✗ C1 thân báo giá: … cach_nhan luôn tai_quan, không giao / dia_chi  — {…"cach_nhan":"giao","dia_chi":"12 Lê Lợi"}
+  ✗ C2 thân đặt = thân báo giá + cach_tra + khoa_gui + tong_da_xem; pin CHỈ khi vi / vi_qr
+  ✗ C dừng giữa chừng  — D.taoKhoaGui is not a function
+  ✗ D dừng giữa chừng  — D.loaiLoi is not a function
+  ✗ E dừng giữa chừng  — D.cachTraDuoc is not a function
+  ✗ F-G dừng giữa chừng  — undefined is not a function
+1 đạt · 14 hỏng
+   trên gốc CÓ Chromium (bản bài c0696a3): 79 đạt · 68 hỏng — vd ✗ E2/K5 [390] nút QR không ghi "payOS", ✗ E1 ví + QR, ✗ Đ3 "Đang kiểm tra đơn trước…",
+   ✗ F6 thẻ cho_tra → /taikhoan/donhang/TQD51, ✗ F3 tien_ve_cho_doi_soat, ✗ G1 /menu/ca-phe → /giohang, ✗ C6 dòng giảm, 40 ca "dừng giữa chừng"
+   (nút Đặt khoá vì DAT_ONLINE = false).
+   sau vá: KHONG_TRINH_DUYET=1 → 40 đạt · 0 hỏng · có Chromium → 212 đạt · 0 hỏng (23 giây)
+   vòng sửa 1 (sau /ra-soat vòng 1) — ca mới chạy trên code TRƯỚC khi sửa (src/ ở 7538c97 = bản vá vòng 0, cờ bật), có Chromium:
+     ✗ D3 kho chặn: bản ghi vẫn giữ trong bộ nhớ trang (chưa rõ vẫn chặn đặt), không báo đã lưu
+     ✗ D3(d) tab 2 mở TRƯỚC, tab 1 đang gửi (chưa rõ) → tab 2 bấm đặt KHÔNG gửi khoá mới, hiện "Gửi lại đúng đơn này"  — 2
+     ✗ D3(d) tab 2 mở TRƯỚC, tab 1 trả ví xong → tab 2 bấm đặt KHÔNG tạo đơn thứ hai, báo "Bạn vừa đặt đơn #TQD42"  — 2 lần gửi
+     ✗ ca d3d-tab-mo-truoc-vi dừng giữa chừng  — locator.click: Timeout 6000ms exceeded.
+     ✗ D1 "Gửi lại đúng đơn này" nhận GIA_DA_DOI → bảng tiền VẪN của giỏ hiện tại (87.654đ, không 31.000đ), bỏ bản ghi, mời đặt lại
+     ✗ D2 kho bị chặn + chưa rõ → vẫn khoá đặt, "Gửi lại đúng đơn này" (bản ghi giữ trong bộ nhớ trang)
+   220 đạt · 6 hỏng
+   sau vòng sửa 1: KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng · có Chromium → 229 đạt · 0 hỏng (thêm ca kiem-lai-luc-bam — đỏ với đột biến BV-KIEM-LAI-LUC-BAM 228·1)
+   vòng sửa 2 (sau /ra-soat vòng 2) — ca mới chạy trên code TRƯỚC khi sửa (src/ = bản vòng sửa 1, trước commit "vong sua 2"), có Chromium:
+     ✗ D3 kho chặn + đăng nhập mà không biết chủ cũ (doiKhach) → quên bản ghi trong bộ nhớ trang (không lọt sang khách khác)
+     ✗ Đ2 quá 24 giờ: KHÔNG còn nút "Gửi lại đúng đơn này" (POS không nhớ khoá quá 24 giờ — gửi lại sẽ báo sai), mời xem Lịch sử đơn
+     ✗ D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"  — 2 lần gửi
+     ✗ D3(d) hai tab cùng "chưa rõ", tab 2 gửi lại thành công → tab 1 hiện "Bạn vừa đặt đơn #TQD42", nút khoá, không gửi thêm  — 2
+   233 đạt · 4 hỏng
+   sau vòng sửa 2: KHONG_TRINH_DUYET=1 → 42 đạt · 0 hỏng · có Chromium → 237 đạt · 0 hỏng
+   vòng sửa 3 (sau /ra-soat vòng 3) — ca mới chạy trên code TRƯỚC khi sửa (src/ = bản vòng sửa 2), có Chromium:
+     ✗ D3 kho đọc được mà GHI hỏng (đầy kho) → docGuiDo trả bản ghi mới trong bộ nhớ trang, không bản cũ trên kho
+     ✗ D3(d) bảng PIN "Gửi lại" mở sẵn, tab khác đã thay bản ghi → nhập PIN KHÔNG gửi khoá cũ, bản ghi K2 của tab kia còn nguyên  — 1 | {"khoa_gui":"K1K1…"…}
+   239 đạt · 2 hỏng
+   sau vòng sửa 3: KHONG_TRINH_DUYET=1 → 43 đạt · 0 hỏng · có Chromium → 241 đạt · 0 hỏng
+
+== thu_KHMUA1.js (bài cũ sửa — phần không trình duyệt đổi theo v5; danh sách ca + lý do ở trang_thai.md) — trên gốc
+  ✗ D1 (v5) giao tận nơi chưa mở: luôn cach_nhan tai_quan, không dia_chi; không mã thì không gửi ma_giam
+  ✗ D1 (v5) đọc trả lời POST /don: ma_don, tong, tien_trinh, qr { chuoi, het_han }  — {…"trangThai":""…}
+  ✗ D3 (v5) đường dẫn cửa đặt đơn ở MỘT chỗ api.js: /gio/bao-gia, /don, /don/:ma, /don/:ma/huy
+  ✗ D1 (v5) api.js có cửa đặt đơn (bao-gia, POST /don, huy) — chỗ DUY NHẤT gọi mạng
+  ✗ D2 (v5) cờ DAT_ONLINE ở src/noiDung/caiDat.js, đã bật
+  ✗ D2 cờ tắt (công tắc khẩn): cửa ghi trả lỗi "Đặt online sắp mở…", không gọi api
+  (+ dừng ở ca B8: D.loaiLoi is not a function)
+35 đạt · 7 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 55 đạt · 0 hỏng · có Chromium → 128 đạt · 0 hỏng (ca chạy song song 4 luồng)
+
+== thu_KHNHANH1.js (bài cũ: phần Chromium bỏ gói tiêm cổng → THÊM 1 ca đọc nguồn đỏ trên gốc, theo phiếu H2) — trên gốc
+  ✗ F1 (KH-MUA-1b) Thanh toán dùng cửa đặt đơn thật của api.js — không còn cổng tiêm datCongDatDon (bài thử dựng app nguyên bản)
+79 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 80 đạt · 0 hỏng · có Chromium → 224 đạt · 0 hỏng
+
+== thu_KHKHOP1.js (bài cũ sửa: ca A1 việc POS còn chờ theo v5; POS giả /menu, /don trả dạng v5) — trên gốc
+  ✗ A1 có đủ các việc POS còn chờ: GIOVANG-1, KH-MUA-2, TOPPING-1 (KH-SP-1 / KH-MUA-1 đã gộp ở hợp đồng v4 / v5 → không còn chờ)
+46 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 47 đạt · 0 hỏng · có Chromium → 84 đạt · 0 hỏng
+
+== thu_KHUI3b.js (bài cũ sửa: ca A1 so hợp đồng với bản hop_dong_v<N>.md MỚI NHẤT trong viec/, thay vì cố định v3) — trên gốc
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/, từng byte (có v3 của việc này trở lên)  — …/viec/KH-MUA-1b/hop_dong_v5.md
+55 đạt · 1 hỏng
+   sau vá: KHONG_TRINH_DUYET=1 → 56 đạt · 0 hỏng · có Chromium → 173 đạt · 0 hỏng
+   ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Câu hỏi Q3 (trang_thai.md, mục ## Câu hỏi)
+     xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
+
+== VÒNG SỬA 4 (phiếu, chat soát cuối 03.11) — bài thử commit TRƯỚC khi vá (7f9af9a, 52a3615), chạy trên src/ của 80e5f91 (bản vòng 3)
+thu_KHMUA1b.js, KHONG_TRINH_DUYET=1:
+  ✗ S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")
+  ✗ S1 mất mạng rồi 401 khi tự gửi lại → dừng ngay (2 lần gửi, không gửi tiếp), ném KHONG_BIET  — 2 KH_TOKEN_SAI
+  ✗ S1 401 ngay lần gửi đầu → 1 lần gửi, ném KHONG_BIET (bản ghi giữ)  — 1 KH_TOKEN_SAI
+43 đạt · 3 hỏng
+thu_KHMUA1b.js, có Chromium (thêm):
+  ✗ S1 401 ngay lần gửi đầu → hết phiên, về Trang chủ, GIỮ bản ghi chưa rõ (cùng khoá), không tự gửi lại  — http://kh.test/trangchu null 1
+  ✗ S1 lần 1 đã tạo nhưng mất trả lời, tự gửi lại nhận 401 → dừng (2 lần gửi), GIỮ bản ghi chưa rõ  — http://kh.test/trangchu 2 null
+  ✗ S2 "Gửi lại đúng đơn này" + sai PIN → bảng PIN còn mở, hiện lời POS, bản ghi GIỮ
+  ✗ S1 đăng nhập lại → Thanh toán hiện "Lần đặt trước chưa rõ kết quả" + "Gửi lại đúng đơn này", nút đặt khoá
+  ✗ S2 nhập lại đúng PIN → gửi ĐÚNG khoá + thân cũ, nhận đơn, MỘT đơn  — 1 http://kh.test/thanhtoan
+  ✗ ca 401-gui-lai dừng giữa chừng  — locator.click: Timeout 6000ms exceeded.
+244 đạt · 9 hỏng
+   sau vá (64e3e46 + d9e9a7d): KHONG_TRINH_DUYET=1 → 46 đạt · 0 hỏng · có Chromium → 253 đạt · 0 hỏng (32 giây)
+thu_KHUI3b.js (S3 — ca đọc nguồn MỚI, thay cho xin ## Bài thử cũ sửa) — trên gốc của cổng fb65795^ (git archive vào nháp, chép bài bản 52a3615),
+KHONG_TRINH_DUYET=1:
+  ✗ A1 hợp đồng có đủ ba cửa đặt đơn mà api.js gọi: POST /gio/bao-gia, POST /don, POST /don/:ma/huy  — POST /gio/bao-gia, POST /don, POST /don/:ma/huy
+56 đạt · 1 hỏng
+   trên code hiện tại: KHONG_TRINH_DUYET=1 → 57 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHMUA1b.js: 46
+SỐ CA cong_cu/thu_KHMUA1.js: 55
+SỐ CA cong_cu/thu_KHNHANH1.js: 80
+SỐ CA cong_cu/thu_KHKHOP1.js: 47
+SỐ CA cong_cu/thu_KHUI3b.js: 57
