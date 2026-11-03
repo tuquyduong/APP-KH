@@ -413,8 +413,67 @@ Dọn: việc này không có lời dặn nào trong `KHUON_LOI.md` / `CLAUDE.md
 - G2 "Đặt lại" vào giỏ — ca G2, thu_KHMUA1 `dat-lai`.
 - H1 bài thử 2 phần, 3 cỡ — `thu_KHMUA1b.js` (360 / 390 / 430 cho qr, vi_qr; ảnh 3 cỡ mọi khối mới).
 - H2 SỐ CA theo KHONG_TRINH_DUYET — bang_chung_do.txt.
-- H3 npm test / --day-du / cổng / đột biến — mục Kiểm (cổng ✗ [A11] → Q3).
+- H3 npm test / --day-du / cổng / đột biến — mục Kiểm (cổng ✗ [A11] → Q3). **Cập nhật vòng 4:** mục "Vòng sửa 4" + "Kiểm (vòng 4)" dưới — cổng chạy ĐẠT, đột biến 28/28.
 - H4 thử tay — 3 bước ở trên (chờ chủ quán).
 - Điểm duyệt 1–8 — mục "Duyệt" (mỗi điểm kèm ca); ảnh `so_anh/` + `doi_chieu_demo.md` (điểm 8).
+- **Vòng 4 S1** 401 = chưa rõ, giữ bản ghi — ca thuần `S1 …` ×3 (thu_KHMUA1b.js D), Chromium `401`, `401-gui-lai`; đột biến VS-401-CHUA-TAO, VS-401-TU-GUI-LAI, BV-401-XOA-BAN-GHI.
+- **Vòng 4 S2** gửi lại + sai PIN giữ bản ghi — Chromium `gui-lai-pin-sai`; đột biến VS-PIN-GUI-LAI-XOA.
+- **Vòng 4 S3** gỡ A11 — ca A1 mới thu_KHUI3b.js, đỏ trên `fb65795^` (56 · 1); cổng chạy không còn ✗ [A11].
 
-HEAD ĐÃ KIỂM: 4e11f91
+## Soát độc lập vòng 4 (`/ra-soat`, MỘT lượt theo phiếu, agent general-purpose, chỉ chỗ vá vòng 3 + 4) — báo cáo chép nguyên
+```
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:  viec/KH-MUA-1b/trang_thai.md:420 — "HEAD ĐÃ KIỂM: 4e11f91" chưa đổi sau vòng 4 (HEAD là d80e182, code vòng 4 tới d112e0c). Phiếu vòng 4 dặn ghi lại dòng này — K1
+               viec/KH-MUA-1b/trang_thai.md:302–320 — mục vòng 4 KHÔNG ghi kết quả `node tu_chay/cong.js chay` (phiếu "Sau khi sửa": tinh + chay ĐẠT; LUAT §6.3). Đây là lần thứ tư lỗi H3 lặp lại. Tôi đã tự chạy: `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` → ✓ CỔNG CHẠY ĐẠT (còn 2 cảnh báo A16), nhưng hồ sơ chưa ghi. Thêm nữa: "Báo cáo 7 mục" :376–381 và "Đếm nghiệm thu" :416 vẫn ghi số cũ: 24/24, 241 ca, "Cổng ✗ [A11] (Q3)", "Q4 CHƯA KIỂM". Các số này trái với mục vòng 4 (28/28, 253, A11 đã gỡ) — K1
+               src/pages/ThanhToan.jsx:100 (vòng 3) — chỗ chặn `|| !bg` ở điểm gửi không có ca đỏ và không có đột biến. BV-KIEM-O-DIEM-GUI (dot_bien.py:26) bỏ `chanBoiBanGhi` nhưng GIỮ `!bg`. trang_thai.md:288 chỉ ghi "ca bao-gia-cho, gia_da_doi vẫn xanh", tức không có ca nào đỏ — K3
+NGHI NGỜ:      src/datDon.js:144–170 (vòng 3, ghiHong): lần ghi hỏng (kho đầy) bật cờ, và từ đó tab này bỏ qua kho tới khi có lần ghi thành công. Tab khác vừa đặt đơn hay vừa có bản ghi chưa rõ thì tab này không thấy (không hiện "Bạn vừa đặt đơn…"). Rất hiếm, nhưng là chiều có thể sinh đơn thứ hai. Có thể gọn hơn: khi ghi hỏng thì thử removeItem bản cũ.
+               Q4 / phiếu S1: "429, PIN_*, KHO_BAN do POS trả SAU khi tra khoá (donApp.js 186–195)" là lời ghi về code POS, không đọc được từ kho này. Lý do giữ / xoá bản ghi ở nhánh PIN_SAI / CHUA_CO_PIN / QUA_NHIEU_LAN khi gửi lại đều dựa vào lời ghi đó.
+               S2: chưa có ca riêng cho PIN_DANG_KHOA khi gửi lại. Code dùng chung MA_PIN với PIN_SAI (ThanhToan.jsx:24, :114), nên rủi ro thấp.
+               Chưa có ca đầu–cuối cho "401 → giữ bản ghi → khách KHÁC đăng nhập → bản ghi bị xoá". Code đúng: luuMay.js:13 có KHOA_DON_GUI trong danh sách, :61–66 xoá khi khác khách. Thành viên danh sách đã được thu_KHMUA1b.js:141–143 khoá lại (qua xoaTatCa), nhưng nhánh doiKhach với kho thường chưa có ca.
+NGHIỆM THU:    5/7 mục có bằng chứng · mục thiếu: (vòng 3) chặn `!bg` ở điểm gửi — không ca, không đột biến; (vòng 4) H3 — chưa ghi kết quả cổng chay, HEAD ĐÃ KIỂM cũ
+CHƯA SOÁT ĐƯỢC: code POS thật (401 trả trước, PIN / 429 trả sau khi tra khoá); dot_bien.py (không chạy vì nó sửa tạm src; 28/28 là lời ghi). Bản Chromium của thu_KHMUA1b chưa chạy lại (tôi chỉ chạy KHONG_TRINH_DUYET=1 → 46 · 0). Chưa xem so_anh.
+BÀI HỌC:       KHOÁ (đề nghị lần thứ tư): cổng nên tự kiểm `trang_thai.md`: (a) dòng "HEAD ĐÃ KIỂM" phải bằng commit code cuối; (b) mục vòng sửa mới nhất phải có dòng kết quả `cong.js chay`.
+               NGUYÊN TẮC: mỗi phép chặn mới ở điểm gửi phải có một đột biến bỏ ĐÚNG phép đó (một vế một đột biến), không gộp chung vào đột biến của vế khác.
+```
+Ý phụ của người soát (gói): K4 — 4 chỗ `ghiGuiDo(null)` (ThanhToan :114 đơn mới sai PIN, :115 4xx khác, :127 bỏ qua quá 24 giờ; App :141 đăng xuất) + luuMay; KHÔNG đường nào xoá bản ghi sau 401
+(App `donPhien` không đụng, api.js:49 chỉ xoá phiên, ThanhToan :112 return trước). Bốn đường gửi đều qua `guiDonAnToan`. K5 — 401 ngay lần đầu cũng giữ bản ghi (đúng phiếu "kể cả
+lần gửi đầu"); không luồng hợp lệ nào bị chặn oan. Đường tiền: chỉ `tongDaXem: bg.tong`. dist rỗng. Đơn giản: luật 401 nằm hai chỗ (`loaiLoi` + `guiDonAnToan`) — có thể gộp một dòng.
+
+**Phiên chính xử lý (theo phiếu: lượt soát KHÔNG ĐẠT → DỪNG, KHÔNG sửa code thêm, chat App KH xử lý):**
+- Lỗi 1 + 2 (hồ sơ): là bước 11 phiên chính chưa tới lúc soát chạy (soát chạy trước khi ghi cổng / báo cáo). Đã ghi ở mục "Kiểm (vòng 4)" dưới + dòng HEAD ĐÃ KIỂM cuối file
+  — chỉ đổi `trang_thai.md`, không đổi code.
+- Lỗi 3 (`!bg` ở điểm gửi `ThanhToan.jsx:100`, vòng 3, không ca đỏ / đột biến riêng) — KHÔNG sửa (phiếu cấm làm thêm). Chuyển chat App KH. Gợi ý: đột biến
+  `BV-DIEM-GUI-BAO-GIA` (`|| !bg) {` → `) {`) + ca bảng PIN mở sẵn rồi đổi giỏ / mã giữa chừng → nhập PIN không gửi.
+- Nghi ngờ (ghiHong, PIN_DANG_KHOA khi gửi lại, ca doiKhach với kho thường, gộp luật 401 một chỗ) — chuyển chat App KH, không làm.
+
+## Kiểm (vòng 4 — HEAD code d112e0c, hồ sơ d80e182)
+- `node cong_cu/thu_KHMUA1b.js` → 253 đạt · 0 hỏng (Chromium); `KHONG_TRINH_DUYET=1` → 46 · 0. `thu_KHUI3b.js` 174 · 0 (Chromium) / 57 · 0.
+- `npm test` → 29 đạt · 0 hỏng. `node kiem_tra_truoc_khi_giao.js --day-du` → 31 đạt · 0 hỏng (KHMUA1 128 · KHMUA1b 253 · KHNHANH1 224 · KHKHOP1 84 · KHUI3b 174).
+- `python3 viec/KH-MUA-1b/dot_bien.py` → ĐỐI CHỨNG XANH 253 · 0; TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (28/28).
+- `node tu_chay/cong.js tinh . fb65795^ HEAD viec/KH-MUA-1b` → chỉ `✗ [A19] "HEAD ĐÃ KIỂM: 4e11f91" cũ hơn commit d9e9a7d đổi code` (dòng HEAD ĐÃ KIỂM ghi ở cuối lần này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` → ✓ CỔNG CHẠY ĐẠT (2 cảnh báo A16: thu_KHMUA1.js 42 ≠ 55 ca, thu_KHMUA1b.js 12 ≠ 46 ca
+  — bài dừng sớm trên gốc, đúng như bằng chứng đỏ).
+- Stop hook của môi trường chạy `npm test` hai lần TRONG lúc `dot_bien.py` sửa tạm `src/` → báo đỏ giả (126·2, 238·14, 251·2); sau khi khôi phục `npm test` 29 · 0.
+
+## Báo cáo 7 mục — vòng sửa 4
+- **VIỆC:** KH-MUA-1b vòng sửa 4 (phiếu 928f217): S1 401 khi đặt đơn = chưa rõ; S2 gửi lại + sai PIN giữ bản ghi; S3 gỡ cổng A11 của `thu_KHUI3b.js`.
+- **ĐÃ SỬA:** `src/datDon.js` (+3: `loaiLoi` 401 → khong_biet; `guiDonAnToan` 401 → KHONG_BIET ngay); `src/pages/ThanhToan.jsx` (+2: sai PIN chỉ xoá bản ghi khi đơn mới);
+  `cong_cu/thu_KHMUA1b.js` (+~35: 3 ca thuần, 3 ca Chromium, sửa ca D1 bỏ 401); `cong_cu/thu_KHUI3b.js` (+7: ca A1 ba cửa đặt đơn); `dot_bien.py` (+4 đột biến).
+- **BÀI THỬ:** đỏ trên src vòng 3 (43·3 thuần, 244·9 Chromium), xanh sau vá (46·0 / 253·0); S3 đỏ trên gốc cổng (56·1), xanh 57·0. `SỐ CA` 46 và 57. Đột biến 28/28.
+- **ĐÃ RÀ K4:** mọi chỗ gọi `loaiLoi` (1, `guiDonAnToan`); mọi đường gửi đặt đơn (lần đầu, tự gửi lại, "Gửi lại đúng đơn này", gửi lại có PIN) qua `guiDonAnToan`; mọi
+  `ghiGuiDo(null)` (ThanhToan ×3, App đăng xuất) + `luuMay`; không bài cũ nào khẳng định 401 = chưa tạo (grep thu_KHMUA1 / KHNHANH1 / KHKHOP1).
+- **CHƯA KIỂM:** POS THẬT (401 trả trước khi tra khoá; 429 / PIN_* trả sau — lời chat đọc POS, máy không đọc được). Lượt soát độc lập vòng 4 KHÔNG ĐẠT — lỗi `!bg` vòng 3
+  chưa có ca / đột biến (phiếu cấm sửa thêm, chuyển chat App KH). Không có ca: PIN_DANG_KHOA khi gửi lại; 401 rồi khách KHÁC đăng nhập (kho thường). Ảnh so_anh không đổi ở vòng 4.
+- **GIT:** nhánh `viec/KH-MUA-1b`, đã đẩy; mỗi bước một commit có mã việc; không merge, không PR.
+- **BÀI HỌC:** bảng dưới.
+
+## Bài học vòng 4 (bước 11)
+| # | Sự cố | Ngăn | Lý do · đề xuất |
+|---|---|---|---|
+| 9 | Luật "MỌI 4xx = chưa tạo" của hợp đồng không đúng với 401 (lớp xác thực trả trước khi tra khoá) — chat soát cuối mới bắt | NGUYÊN TẮC (ngoài Phạm vi — đề xuất `KHUON_LOI.md`) | "Đã gây: KH-MUA-1b S1. Dấu hiệu: luật 'mã lỗi ⇒ chưa ghi gì' áp cho mọi mã, kể cả mã do lớp đứng TRƯỚC chỗ ghi (xác thực, giới hạn). Chặn: với mỗi mã, hỏi nó trả trước hay sau chỗ tra khoá / ghi; trước → coi là không biết." |
+| 10 | Stop hook chạy `npm test` trong lúc `dot_bien.py` sửa tạm `src/` → đỏ giả, nhắc "commit" khi cây đang bị đột biến | NGUYÊN TẮC (đề xuất cho khung / skill) | Chạy đột biến ở cây nháp (git worktree / archive) thay vì sửa tạm cây chính; hoặc giữ lượt (không kết thúc lượt) tới khi đột biến xong. |
+| 11 | Soát chạy trước khi phiên chính ghi cổng / HEAD ĐÃ KIỂM → soát tính là lỗi hồ sơ (lần thứ tư) | KHOÁ (ngoài Phạm vi — đề xuất `tu_chay/cong.js`, như soát nêu) | Ca đỏ: `trang_thai.md` có mục vòng sửa mới nhất mà không dòng `CỔNG CHẠY`. Trước mắt: ghi kết quả cổng VÀO hồ sơ TRƯỚC khi gọi `/ra-soat`. |
+| 12 | `!bg` ở điểm gửi gộp chung đột biến với vế khác | NGUYÊN TẮC (theo soát) | Một vế chặn — một đột biến. Chuyển chat App KH. |
+| 13 | Người gác chặn lệnh có chữ TOKEN (grep api.js, chạy bài thử chưa commit), biến trong đích ghi, `until`/`pgrep` | BỎ | Đã làm theo hướng dẫn (Grep / Edit, commit trước, đường dẫn viết thẳng); không lặp lỗi mới. |
+
+HEAD ĐÃ KIỂM: d80e182
