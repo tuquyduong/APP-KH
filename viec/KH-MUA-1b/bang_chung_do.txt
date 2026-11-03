@@ -72,8 +72,29 @@ chạy với KHONG_TRINH_DUYET=1.
    ⚠ gốc của cổng (fb65795^ = 4ea2c90, TRƯỚC commit PHIEU) chưa có viec/KH-MUA-1b/hop_dong_v5.md → ca A1 XANH ở đó (cổng ✗ [A11]). Câu hỏi Q3 (trang_thai.md, mục ## Câu hỏi)
      xin mục ## Bài thử cũ sửa cho bài này (không tự thêm ca đỏ giả).
 
-SỐ CA cong_cu/thu_KHMUA1b.js: 43
+== VÒNG SỬA 4 (phiếu, chat soát cuối 03.11) — bài thử commit TRƯỚC khi vá (7f9af9a, 52a3615), chạy trên src/ của 80e5f91 (bản vòng 3)
+thu_KHMUA1b.js, KHONG_TRINH_DUYET=1:
+  ✗ S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")
+  ✗ S1 mất mạng rồi 401 khi tự gửi lại → dừng ngay (2 lần gửi, không gửi tiếp), ném KHONG_BIET  — 2 KH_TOKEN_SAI
+  ✗ S1 401 ngay lần gửi đầu → 1 lần gửi, ném KHONG_BIET (bản ghi giữ)  — 1 KH_TOKEN_SAI
+43 đạt · 3 hỏng
+thu_KHMUA1b.js, có Chromium (thêm):
+  ✗ S1 401 ngay lần gửi đầu → hết phiên, về Trang chủ, GIỮ bản ghi chưa rõ (cùng khoá), không tự gửi lại  — http://kh.test/trangchu null 1
+  ✗ S1 lần 1 đã tạo nhưng mất trả lời, tự gửi lại nhận 401 → dừng (2 lần gửi), GIỮ bản ghi chưa rõ  — http://kh.test/trangchu 2 null
+  ✗ S2 "Gửi lại đúng đơn này" + sai PIN → bảng PIN còn mở, hiện lời POS, bản ghi GIỮ
+  ✗ S1 đăng nhập lại → Thanh toán hiện "Lần đặt trước chưa rõ kết quả" + "Gửi lại đúng đơn này", nút đặt khoá
+  ✗ S2 nhập lại đúng PIN → gửi ĐÚNG khoá + thân cũ, nhận đơn, MỘT đơn  — 1 http://kh.test/thanhtoan
+  ✗ ca 401-gui-lai dừng giữa chừng  — locator.click: Timeout 6000ms exceeded.
+244 đạt · 9 hỏng
+   sau vá (64e3e46 + d9e9a7d): KHONG_TRINH_DUYET=1 → 46 đạt · 0 hỏng · có Chromium → 253 đạt · 0 hỏng (32 giây)
+thu_KHUI3b.js (S3 — ca đọc nguồn MỚI, thay cho xin ## Bài thử cũ sửa) — trên gốc của cổng fb65795^ (git archive vào nháp, chép bài bản 52a3615),
+KHONG_TRINH_DUYET=1:
+  ✗ A1 hợp đồng có đủ ba cửa đặt đơn mà api.js gọi: POST /gio/bao-gia, POST /don, POST /don/:ma/huy  — POST /gio/bao-gia, POST /don, POST /don/:ma/huy
+56 đạt · 1 hỏng
+   trên code hiện tại: KHONG_TRINH_DUYET=1 → 57 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHMUA1b.js: 46
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHNHANH1.js: 80
 SỐ CA cong_cu/thu_KHKHOP1.js: 47
-SỐ CA cong_cu/thu_KHUI3b.js: 56
+SỐ CA cong_cu/thu_KHUI3b.js: 57

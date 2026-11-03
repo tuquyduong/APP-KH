@@ -13,6 +13,12 @@ dc07781 KH-MUA-1b: ke hoach (cho duyet) + trang thai, cau hoi Q1-Q2
 fb65795 PHIEU: KH-MUA-1b
 4ea2c90 TIEN-DO: KH-NHANH-1 xong (PR #13 7e7f92a); mo KH-MUA-1b (hop dong v5); trao doi POS 01.11-02.11 - so v19
 ```
+- Lần 3 (vòng sửa 4, 03.11): nhánh `viec/KH-MUA-1b`; cây sạch; hook mở phiên đã kéo fb65795 → 928f217; HEAD `928f217` = FETCH_HEAD `928f217` (bằng nhau, không kéo).
+```
+928f217 PHIEU: KH-MUA-1b - vong sua 4 (chat soat cuoi 03.11, chu quan duyet): S1 401 khi gui lai, S2 sai PIN khi gui lai, S3 thu_KHUI3b
+80e5f91 KH-MUA-1b: trang thai - Kiem (ket qua that), Bai hoc, bao cao 7 muc, dem nghiem thu, HEAD DA KIEM
+4e11f91 KH-MUA-1b: vong sua 3 - ho so (dot bien 24/24, cau hoi Q4/Q6, phat hien, bang chung do)
+```
 
 ## Duyệt (chủ quán 02.11)
 - Kế hoạch dc07781 DUYỆT (chat App KH soát ĐẠT). Q1 DUYỆT, Q2 DUYỆT. Làm thêm 8 điểm — cách làm:
@@ -293,7 +299,31 @@ khách cũ / mới khi không đọc được `kh_chu`) — ưu tiên không l�
   `✗ [A11] bài thử `cong_cu/thu_KHUI3b.js` XANH trên code gốc — bài thử vô giá trị (K3), phải đỏ trước khi vá` → chờ chủ quán thêm `## Bài thử cũ sửa` (Q3).
 - `git ls-files dist` rỗng. `cmp viec/KH-MUA-1b/hop_dong_v5.md thiet_ke/HOP_DONG_API_KH.md` khớp.
 
+## Vòng sửa 4 (phiếu 928f217 — chat soát cuối 03.11, chủ quán duyệt vượt trần; CHỈ S1, S2, S3)
+- Bài thử commit TRƯỚC khi vá: 7f9af9a (`thu_KHMUA1b.js`), 52a3615 (`thu_KHUI3b.js`); đỏ trên src vòng 3 → `bang_chung_do.txt` mục VÒNG SỬA 4.
+- **S1** (64e3e46, `src/datDon.js`): `loaiLoi` — 401 → `khong_biet` (lớp xác thực POS trả trước khi tra khoá); `guiDonAnToan` — 401 → ném `KHONG_BIET` ngay,
+  không tự gửi lại. `ThanhToan` nhánh `KHONG_BIET` sẵn có GIỮ bản ghi (không sửa màn). Đăng nhập lại cùng khách → "Lần đặt trước chưa rõ kết quả" + "Gửi lại
+  đúng đơn này"; đăng xuất / đổi khách vẫn xoá (`App.dangXuat`, `luuMay.doiKhach`). 401 ở nút "Gửi lại đúng đơn này" đi cùng `guiDonAnToan` → cùng luật.
+  Ca: hàm thuần `S1 401 …` ×3; Chromium `401` (gửi đầu 401 → giữ bản ghi, đăng nhập lại thấy "chưa rõ"), `401-gui-lai` (lần 1 tạo rồi 502, tự gửi lại 401 →
+  dừng, giữ; đăng nhập lại "Gửi lại" → POS trả `trung`, MỘT đơn).
+- **S2** (d9e9a7d, `src/pages/ThanhToan.jsx`): nhánh `PIN_SAI` / `PIN_DANG_KHOA` xoá bản ghi CHỈ khi đơn mới (`!cu`); gửi lại giữ bản ghi → bảng PIN hiện lời POS,
+  nhập lại gửi ĐÚNG khoá + thân cũ. Ca Chromium `gui-lai-pin-sai`. Đơn mới sai PIN vẫn như cũ (ca `pin_dang_khoa`, K5).
+- **S3** (52a3615, `cong_cu/thu_KHUI3b.js`): ca A1 mới — ba cửa đặt đơn `api.js` gọi có dòng `| … | có |` trong hợp đồng. Trên gốc cổng `fb65795^` ĐỎ (56 · 1),
+  hiện tại 57 · 0. Không xin `## Bài thử cũ sửa`.
+- Đột biến (d112e0c) — chỗ vá → đột biến: `loaiLoi` 401 → VS-401-CHUA-TAO (ĐỎ 246·7); `guiDonAnToan` dừng ở 401 → VS-401-TU-GUI-LAI (ĐỎ 44·2), BV-401-XOA-BAN-GHI
+  (ĐỎ 247·6); `ThanhToan` gửi lại sai PIN giữ bản ghi → VS-PIN-GUI-LAI-XOA (ĐỎ 251·2). Ba đột biến cũ của `loaiLoi` (VS-5XX-LA-CHUA-TAO, VS-4XX-LA-KHONG-BIET,
+  BV-LUAT-4XX) chỉ đổi chuỗi gốc theo dòng mới.
+  `python3 viec/KH-MUA-1b/dot_bien.py` → ĐỐI CHỨNG XANH 253 · 0; TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (28/28). Tên mới: VS-401-CHUA-TAO, VS-401-TU-GUI-LAI,
+  BV-401-XOA-BAN-GHI, VS-PIN-GUI-LAI-XOA. (Lưu ý: stop hook của môi trường chạy `npm test` hai lần TRONG lúc đột biến đang sửa tạm `src/` → hook báo đỏ giả;
+  sau khi bộ đột biến khôi phục, `npm test` 29 · 0.)
+- Kiểm sau vòng 4: `node cong_cu/thu_KHMUA1b.js` 253 · 0 (Chromium), `KHONG_TRINH_DUYET=1` 46 · 0; `thu_KHUI3b.js` 174 · 0 / 57 · 0; `npm test` 29 · 0;
+  `node kiem_tra_truoc_khi_giao.js --day-du` 31 · 0.
+- Ngân sách vòng 4: app +5 dòng (datDon 3, ThanhToan 2), thử +40 dòng.
+
 ## Câu hỏi
+- **Đã trả lời (phiếu vòng sửa 4, 03.11):** Q3 → KHÔNG dùng `## Bài thử cũ sửa`; thêm ca đọc nguồn đỏ trên gốc vào `thu_KHUI3b.js` (S3, đã làm). Q4 → chat đã gửi
+  POS (thư `YEU_CAU_APPKH_GUI_POS_03112026.md` mục F); App làm theo S1 (401 = chưa rõ, đã làm); 429 / PIN_* POS trả SAU khi tra khoá → vẫn "chưa tạo"
+  (chat đọc `donApp.js` dòng 186–195). Q5 → giữ như đang làm. Q6 → đồng ý. Không còn câu hỏi mở. Các mục dưới giữ để tra.
 - Q3 (cổng A11 — xin chủ quán thêm mục `## Bài thử cũ sửa` vào phiếu): `cong_cu/thu_KHUI3b.js` ca A1 đổi từ "hợp đồng = viec/KH-UI-3b/hop_dong_v3.md" thành
   "hợp đồng = bản hop_dong_v<N>.md MỚI NHẤT trong viec/" (cố định v3 thì đỏ khi hợp đồng lên v5). Đỏ trên dc07781 (có v5 trong viec/), nhưng XANH trên gốc
   của cổng `fb65795^` (trước commit PHIEU, chưa có hop_dong_v5.md) → `node tu_chay/cong.js chay . fb65795^ HEAD viec/KH-MUA-1b` báo nguyên văn:

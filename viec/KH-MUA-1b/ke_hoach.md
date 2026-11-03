@@ -232,3 +232,20 @@ Ca K5 (đường hợp lệ không chặn oan): đơn QR thường, ví đủ, v
    - **Chú thích cũ.** Sửa chú thích nhắc cổng tiêm ở `caiDat.js:2-3`, `datDon.js:1-4`, `ThanhToan.jsx:17-20`.
 
 Ngân sách sau soát: app ~295 / 300 (thêm ~30 cho 4 đường song song); thử ~460 / 450 (Chromium bớt nhờ 2b, thêm ca mục 3). Vượt thì báo trong trạng thái.
+
+## Vòng sửa 4 (phiếu, chat soát cuối 03.11 — chỉ S1, S2, S3)
+- **S1 — 401 khi đặt đơn = chưa rõ.**
+  - A (chọn, 2 dòng app): `datDon.loaiLoi` thêm `e.status !== 401` (401 không còn "chắc chưa tạo"); `guiDonAnToan` gặp 401 → ném `KHONG_BIET` NGAY
+    (không tự gửi lại — token đã xoá, gửi lại vô ích). `ThanhToan` nhánh `KHONG_BIET` sẵn có đã GIỮ bản ghi → không phải sửa màn.
+    Đăng nhập lại cùng khách → màn hiện "Lần đặt trước chưa rõ" (luật chặn sẵn có). Đổi khách / đăng xuất vẫn xoá (`luuMay`, `App.dangXuat`).
+  - B: loại lỗi mới `'het_phien'` + nhánh riêng ở `ThanhToan` — nhiều dòng hơn, cùng kết quả. Bỏ.
+  - Ca: hàm thuần `loaiLoi(401)`, `guiDonAnToan` [mất mạng, 401] → 2 lần gửi + KHONG_BIET, [401] → 1 lần + KHONG_BIET; Chromium `401` (gửi đầu 401 →
+    bản ghi giữ, đăng nhập lại thấy "chưa rõ"), `401-gui-lai` (lần 1 tạo rồi 502, lần 2 401 → giữ; đăng nhập lại "Gửi lại" → trung, MỘT đơn).
+  - Đột biến: VS-401-CHUA-TAO, VS-401-TU-GUI-LAI, BV-401-XOA-BAN-GHI.
+- **S2 — gửi lại + sai PIN.** A (chọn, 1 dòng): nhánh `MA_PIN` của `ThanhToan.guiDon` xoá bản ghi CHỈ khi đơn mới (`!cu`); gửi lại giữ bản ghi → nhập lại
+  PIN qua `conChuaRo` gửi ĐÚNG khoá + thân cũ. B: đọc lại bản ghi trong PinSheet — ngoài chỗ, bỏ.
+  Ca Chromium `gui-lai-pin-sai`. Đột biến VS-PIN-GUI-LAI-XOA.
+- **S3 — gỡ A11 `thu_KHUI3b.js`.** Thêm ca A1 đọc nguồn: ba cửa đặt đơn `api.js` gọi (`POST /gio/bao-gia`, `POST /don`, `POST /don/:ma/huy`) có dòng
+  `| … | có |` trong `thiet_ke/HOP_DONG_API_KH.md`. Gốc cổng `fb65795^` (v3, api.js chưa gọi) → đỏ.
+- K5 (không chặn oan): mọi ca cũ giữ xanh (đơn QR / ví / ví + QR / "Gửi lại" thành công); sai PIN ở ĐƠN MỚI vẫn xoá bản ghi như cũ (ca `pin_dang_khoa`).
+- Đường song song đã canh: 401 ở lần đầu / lần tự gửi lại / nút "Gửi lại đúng đơn này" (cùng `guiDonAnToan`); sai PIN ở đơn mới / gửi lại.
