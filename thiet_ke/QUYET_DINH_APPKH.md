@@ -3,6 +3,15 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 03.11.2026
+- **Đặt online, đến quán lấy** (chủ quán 03.11): lựa chọn "Lấy tại quầy · Miễn phí giao" đã có từ KH-MUA-1 — khai trương được kể cả khi Ahamove (KH-MUA-2) chưa xong.
+- **Báo đơn xong** (03.11, "theo đề nghị"): nhân viên chỉ chạm MỘT nút "Xong — gọi khách" (POS, có Hoàn tác 5 giây); App báo ở MỌI màn: dải "Đơn #… đã sẵn sàng — mời bạn ra quầy", đổi tên tab, tiếng (Android rung); dòng nhắc "Giữ App mở để được báo khi đồ uống xong". Báo khi App đã tắt: sau khai trương (KH-TB-1 / Zalo). (KH-BAO-1)
+- **"Khách đã lấy" để ở POS** (03.11): nhân viên chạm khi tiện, không bắt buộc; trước giờ đóng cửa 30 phút POS nhắc đơn chưa lấy (kèm SĐT); đến giờ đóng cửa tự ghi "Đã lấy". App chỉ nhận thông báo đã nhận (`tien_trinh` `da_lay` — chờ POS lên hợp đồng).
+- **Đơn App in ĐỦ hoá đơn + tem như quầy** (03.11): tự in không cần bấm; hàng đợi in ưu tiên quầy (in nốt đơn đang in dở → in đơn quầy → in tiếp đơn App); in lại thật đơn giản, tính trước kẹt giấy / hết giấy / in lỗi — việc POS (`trao_doi/YEU_CAU_APPKH_GUI_POS_03112026.md`). Chủ quán mua máy in sớm.
+- **Thanh toán** (03.11, theo thư POS e chủ quán đồng ý): luôn hiện to hai dòng "Trừ ví … / Quét QR phần còn lại …" ngay trên nút Đặt; App nhớ lựa chọn công tắc "Trừ từ số dư ví" lần trước (chỉ trên máy, xoá khi đăng xuất / đổi khách), vẫn hỏi PIN khi trừ ví. (KH-BAO-1)
+- **Ví 0đ:** KH-MUA-1b ẩn công tắc; từ KH-NAP-1 đổi thành công tắc xám + nút "Nạp ví". **Quà chào mừng còn dưới 24 giờ:** dòng nhỏ đổi màu cảnh báo (KH-VI-2).
+- **KH-MUA-1b vòng sửa 4** (chủ quán duyệt vượt trần 3 vòng, sau chat soát cuối 03.11): S1 401 khi gửi lại phải giữ "chưa rõ", S2 nhập sai PIN khi gửi lại, S3 thêm ca cho `thu_KHUI3b.js` (không dùng "Bài thử cũ sửa"). Q5 giữ như máy làm, Q6 đồng ý.
+
 ## 02.11.2026
 - **Làm TRƯỚC KHAI TRƯƠNG, kể cả phải lùi ngày khai trương** (chủ quán chốt 02.11, trả lời bản 3 của POS 01.11): (1) khách **tự nạp tiền vào ví trên App bằng QR** + lịch sử ví (KH-NAP-1); (2) **ô ngày sinh** trong hồ sơ: nhập MỘT lần, khách không tự sửa, chỉ quán sửa sau khi xem căn cước, ghi "Nhập đúng như căn cước — quán đối chiếu khi áp ưu đãi sinh nhật" (KH-SINH-1); (3) **danh sách chương trình đặc biệt** ở trang Ưu đãi, ghi "áp dụng tại quán", App không áp lên đơn App (KH-CT-1). Kèm theo: tiền tặng có hạn (KH-VI-2), hiển thị hạng theo HANG-1 (KH-HANG-2). Phụ thuộc POS lên hợp đồng (`YEU_CAU_APPKH_GUI_POS_02112026.md` mục 5); ngày khai trương chốt lại khi POS báo lịch. Thay câu "đề nghị: sau khai trương" trong bản nháp thư 02.11.
 - **Số dư ví dùng HẾT cho MỌI đơn** (chủ quán chốt 02.11): cả tiền tặng, KHÔNG có điều kiện "đơn từ X đồng" (khác thiết kế 2b của POS 01.11 — đã báo POS). Tiền tặng vẫn có hạn dùng theo POS. App chọn Ví / Ví + QR / QR theo `so_du_vi` như hợp đồng v5.
