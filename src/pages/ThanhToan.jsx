@@ -110,8 +110,9 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     }, (e) => {
       datDang(false); datGuiLai(false);
       if (e.code === 'KHONG_BIET') { datMoPin(null); return; }
-      ghiGuiDo(null); // POS trả 4xx: chắc chưa tạo
-      if (MA_PIN.includes(e.code)) throw e;
+      // POS trả 4xx: chắc chưa tạo → xoá bản ghi. Trừ gửi lại (cu) mà sai PIN: GIỮ bản ghi để nhập lại PIN gửi ĐÚNG khoá + thân cũ.
+      if (MA_PIN.includes(e.code)) { if (!cu) ghiGuiDo(null); throw e; }
+      ghiGuiDo(null);
       datMoPin(null);
       // Gửi lại đơn CŨ mà giá đã đổi: báo giá POS kèm theo là của giỏ cũ → KHÔNG đè bảng tiền của giỏ đang xem.
       if (cu && e.code === 'GIA_DA_DOI') { datThongBao('Giá đã đổi so với lần đặt trước — đơn đó chưa tạo, mời bạn đặt lại'); return; }
