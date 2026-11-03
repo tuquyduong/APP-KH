@@ -15,9 +15,9 @@ CO = 'src/noiDung/caiDat.js'
 DOT_BIEN = [
     ('VS-GUI-LAI-KHOA-MOI', DD, "const don = docDatDon(await gui(than));", "const don = docDatDon(await gui({ ...than, khoa_gui: taoKhoaGui() }));", True),
     ('VS-GUI-LAI-THAN-KHAC', DD, "const don = docDatDon(await gui(than));", "const don = docDatDon(await gui(JSON.parse(JSON.stringify({ ...than, mon: [...than.mon].reverse() }))));", True),
-    ('VS-5XX-LA-CHUA-TAO', DD, "return e && e.status >= 400 && e.status < 500 && e.code ? 'chua_tao' : 'khong_biet';", "return e && e.status >= 400 && e.code ? 'chua_tao' : 'khong_biet';", False),
-    ('VS-4XX-LA-KHONG-BIET', DD, "return e && e.status >= 400 && e.status < 500 && e.code ? 'chua_tao' : 'khong_biet';", "return e && e.status === 400 && e.code ? 'chua_tao' : 'khong_biet';", True),
-    ('BV-LUAT-4XX', DD, "return e && e.status >= 400 && e.status < 500 && e.code ? 'chua_tao' : 'khong_biet';", "return e && ['PIN_SAI', 'VI_KHONG_DU', 'HET_HANG', 'NGOAI_GIO', 'QUA_GIO_NHAN_DON'].includes(e.code) ? 'chua_tao' : 'khong_biet';", True),
+    ('VS-5XX-LA-CHUA-TAO', DD, "return e && e.status >= 400 && e.status < 500 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';", "return e && e.status >= 400 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';", False),
+    ('VS-4XX-LA-KHONG-BIET', DD, "return e && e.status >= 400 && e.status < 500 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';", "return e && e.status === 400 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';", True),
+    ('BV-LUAT-4XX', DD, "return e && e.status >= 400 && e.status < 500 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';", "return e && ['PIN_SAI', 'VI_KHONG_DU', 'HET_HANG', 'NGOAI_GIO', 'QUA_GIO_NHAN_DON'].includes(e.code) ? 'chua_tao' : 'khong_biet';", True),
     ('BV-TONG-DA-XEM', DD, "khoa_gui: khoaGui, tong_da_xem: tongDaXem };", "khoa_gui: khoaGui };", True),
     ('VS-TONG-TU-TINH', TT, "khoaGui: taoKhoaGui(), tongDaXem: bg.tong });", "khoaGui: taoKhoaGui(), tongDaXem: bg.tamTinh - bg.giam.reduce((s, g) => s + g.soTien, 0) + 1 });", True),
     ('VS-LUU-PIN', DD, "  const { pin, ...con } = than;", "  const { ...con } = than;", True),
@@ -37,6 +37,11 @@ DOT_BIEN = [
     ('VS-BAT-CO-TRUOC-NOI-CUA', DD, "{ gui = canMo(datDonApp),", "{ gui = canMo(() => Promise.reject(Object.assign(new Error('Chưa nối cửa'), { status: 0, code: 'MANG_LOI' }))),", True),
     ('BV-CO-TAT', CO, "export const DAT_ONLINE = true;", "export const DAT_ONLINE = false;", False),
     ('BV-QUAY-LAI-SAU-THEM', APP, "datThongBao(`Đã thêm ${mon.ten} vào giỏ`); luiVe(); };", "vaoGio(`Đã thêm ${mon.ten} vào giỏ`); };", True),
+    # vòng sửa 4 (chat soát cuối 03.11): S1 401 = chưa rõ, S2 gửi lại + sai PIN giữ bản ghi
+    ('VS-401-CHUA-TAO', DD, " && e.status !== 401 && e.code ? 'chua_tao'", " && e.code ? 'chua_tao'", True),
+    ('VS-401-TU-GUI-LAI', DD, "if (loi.status === 401 || (xuLy", "if (false || (xuLy", False),
+    ('BV-401-XOA-BAN-GHI', DD, "if (loi.status === 401 || (xuLy", "if (loi.status === 401) throw loi; if ((xuLy", True),
+    ('VS-PIN-GUI-LAI-XOA', TT, "if (MA_PIN.includes(e.code)) { if (!cu) ghiGuiDo(null); throw e; }", "if (MA_PIN.includes(e.code)) { ghiGuiDo(null); throw e; }", True),
 ]
 
 
