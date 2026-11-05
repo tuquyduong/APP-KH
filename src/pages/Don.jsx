@@ -5,6 +5,8 @@ import { dungCua, cuaDon } from '../duLieuKhach.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
+import HoaDonKhach from '../components/HoaDonKhach.jsx';
+import { docHoaDon } from '../hoaDon.js';
 
 // Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
 // `datLai` — cùng cờ DAT_ONLINE) để App đọc chi tiết đơn rồi bỏ món vào giỏ theo `ma`;
@@ -29,13 +31,15 @@ export function ChiTietDon({ ma, lui }) {
               <div><div className="code">#{don.ma || ma}</div><div className="date">{dinhDangNgay(don.ngay)}</div></div>
               <NhanDon don={don} />
             </div>
-            {don.mon.map((m, i) => (
-              <div className="summary-row" key={i}>
-                <span>{m.so_luong} × {m.ten}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
-                <span>{dinhDangGia(m.thanh_tien)}</span>
-              </div>
-            ))}
-            <div className="summary-row total"><span>Tổng</span><span>{dinhDangGia(don.tong)}</span></div>
+            {docHoaDon(don).length > 0 ? <HoaDonKhach don={don} /> : <>
+              {don.mon.map((m, i) => (
+                <div className="summary-row" key={i}>
+                  <span>{m.so_luong} × {m.ten}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
+                  <span>{dinhDangGia(m.thanh_tien)}</span>
+                </div>
+              ))}
+              <div className="summary-row total"><span>Tổng</span><span>{dinhDangGia(don.tong)}</span></div>
+            </>}
           </div>
         )}
       </TrangTai>
