@@ -149,3 +149,38 @@ và ghi lại HEAD ĐÃ KIỂM trước khi gọi soát.
 ## Cổng sau vòng sửa 2
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 12fe94d^ HEAD viec/KH-MUA-1c` ở 3800669 → `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16 như trước: mốc chưa có hop_dong_v9.md).
 HEAD ĐÃ KIỂM: 3800669
+
+## Soát độc lập vòng 3 — báo cáo (tóm đủ ý)
+KHÔNG ĐẠT — "Phần code và tiền đúng. Lỗi nằm ở hồ sơ đột biến."
+LỖI TÌM ĐƯỢC:
+- src/components/PinSheet.jsx:36 + dot_bien.py:33 + trang_thai.md:146 — sau vòng sửa 2 (Enter ở "Đã lưu" = dong()), vế `xong ||` trong xacNhan là code chết; đột biến
+  VS-PIN-ENTER-SAU-XONG gỡ đúng vế đó nên SỐNG (người soát tự chạy ở bản chép: 110 · 0); câu "18/18 ĐỎ" sai ở HEAD; chỗ vá Enter = Xong chưa có đột biến — K1 / §6.2.
+- bang_chung_do.txt:57-62 — thiếu dòng đỏ / xanh cho ca + đột biến vòng sửa 2 — K1 nhẹ.
+Đã kiểm vòng sửa 2: ThanhToan.jsx:133, :167 đúng (chặn cả bàn phím, cả nhánh QR lẫn PIN); BV-GUI-LAI-CHO-DEM-NGUOC ĐỎ (108 · 2); HEAD ĐÃ KIỂM 3800669 hợp lệ A19.
+Số ca chạy lại khớp: 26 / 47 / 55 / 48; thu_KHMUA1c 110 · 0; cmp v9 khớp; không dist/, không file ngoài Phạm vi.
+NGHI NGỜ: (1) datDon.js:9,102 + ThanhToan.jsx:122,167 (có từ 1b, ngoài diff) — DAT_ONLINE tắt mà còn bản ghi chưa rõ: "Gửi lại" vẫn bấm → CHUA_MO = chua_tao ở lan 0
+→ xoá bản ghi → bật lại công tắc đặt được khoá MỚI (hiếm: phải dựng lại app với cờ tắt). (2) nhánh gửi lại: 4xx khác 429 / PIN vẫn xoá — đúng kế hoạch, an toàn nếu
+thứ tự POS "tra khoá → lượt → thân" là thật (Q2 chưa trả lời). (3) hetLuc chỉ trong state: tải lại mất đếm ngược (thêm một 429, không đơn thứ hai). (4) hai lần
+Xác nhận liền đóng bảng sớm, mất lời PIN_SAI (không đơn thứ hai).
+NGHIỆM THU: 21/24 · thiếu: E2 (đột biến sống — đã sửa vòng 3), E3 (/security-review chuẩn chưa chạy; người soát chấp nhận nội dung tự rà), E4 chờ chủ quán.
+BÀI HỌC: NGUYÊN TẮC — sửa một chỗ vá đã có đột biến thì chạy lại đột biến ở HEAD; chỉ ghi "TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT" kèm đầu ra ở đúng HEAD ĐÃ KIỂM.
+KHOÁ — nút gửi lại POST /don phải tôn trọng công tắc DAT_ONLINE như nút đặt.
+
+## Vòng sửa 3 (cuối — so_vong_sua_toi_da = 3)
+- `PinSheet.jsx`: bỏ vế chết `xong ||` (Enter ở màn "Đã lưu" đã = Xong ở bộ nghe phím); đột biến VS-PIN-ENTER-SAU-XONG nay gỡ `if (xong) dong(); else` → ĐỎ.
+- dot_bien.py chạy lại ở ae2007e: ĐỐI CHỨNG XANH 110 · 0; 18/18 ĐỎ — "TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT" (đầu ra ở bang_chung_do.txt). `--day-du` 32 đạt · 0 hỏng.
+- Bằng chứng vòng 2–3 chép vào bang_chung_do.txt.
+- KHÔNG sửa trong việc này (đã hết vòng sửa; ngoài diff, có từ KH-MUA-1b) → Câu hỏi Q3.
+
+## Câu hỏi (thêm)
+- Q3 (đụng tiền, có từ KH-MUA-1b — soát vòng 3 nêu): khi công tắc khẩn `DAT_ONLINE` tắt mà máy khách còn bản ghi "chưa rõ", nút "Gửi lại đúng đơn này" vẫn bấm
+  → `CHUA_MO` bị xếp "chưa tạo" → xoá bản ghi → bật lại công tắc khách đặt được khoá MỚI. Đề xuất việc sau (~3 dòng `ThanhToan.jsx`): khoá nút "Gửi lại" khi
+  `!DAT_ONLINE` (như nút đặt) và/hoặc nhánh `cu` gặp `CHUA_MO` thì giữ bản ghi; ca thử bằng đột biến BV-CO-TAT (dựng app với cờ tắt). Đã hết 3 vòng sửa nên
+  máy không tự làm — chủ quán quyết gộp vào việc sau hay mở vòng sửa 4.
+
+## Phát hiện (thêm)
+- 503 `PAYOS_CHUA_CAU_HINH` = "chưa rõ" (luật 5xx của hợp đồng, có từ 1b): khách kẹt ở "Gửi lại đúng đơn này" tới 24 giờ mới có "Bỏ qua". Xin chat POS
+  xác nhận mã này POS trả TRƯỚC khi tạo phiên — nếu đúng, có thể đưa vào nhóm "chưa tạo" (việc sau).
+- `hetLuc` (đếm ngược 429) chỉ trong bộ nhớ trang — tải lại mất đếm ngược, bấm sớm nhận thêm một 429 (không đơn thứ hai).
+- Hai lần "Xác nhận" liền trước khi vẽ lại có thể đóng bảng PIN sớm, mất lời PIN_SAI (không đơn thứ hai).
+- `ghiGuiDo(null)` hỏng khi kho đầy mà `getItem` vẫn đọc → đọc lại bản cũ (chặn oan, hiếm).

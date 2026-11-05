@@ -59,3 +59,11 @@ SỐ CA cong_cu/thu_KHKHOP1.js: 48
   VS-GUI-LAI-429-XOA: ĐỎ — 106 đạt · 2 hỏng ✗ B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ …
   VS-PIN-ENTER-SAU-XONG: ĐỎ — 107 đạt · 1 hỏng ✗ F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai — 2
 Sau vá: thu_KHMUA1c 108 đạt · 0 hỏng (Chromium); 26 · 0 (KHONG_TRINH_DUYET=1).
+
+## Soát vòng 2–3 (05.11) — ca mới (chỉ phần trình duyệt; SỐ CA không đổi: 26 với KHONG_TRINH_DUYET=1)
+Đỏ khi bỏ vá = đột biến gỡ đúng chỗ vá, chạy ở ae2007e (src giống HEAD cuối), có Chromium — đầu ra dot_bien.py:
+  ĐỐI CHỨNG (không đột biến): XANH — 110 đạt · 0 hỏng
+  BV-GUI-LAI-CHO-DEM-NGUOC: ĐỎ — 108 đạt · 2 hỏng ✗ B1 (soát vòng 2) bấm "Gửi lại" TRONG lúc đếm ngược …
+  VS-PIN-ENTER-SAU-XONG (nay gỡ `if (xong) dong(); else`): ĐỎ — 109 đạt · 1 hỏng ✗ F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" …
+  (16 đột biến còn lại ĐỎ như trên — xem trang_thai "Vòng sửa 3") · TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (18/18)
+Sau vá: thu_KHMUA1c 110 đạt · 0 hỏng (Chromium); 26 · 0 (KHONG_TRINH_DUYET=1).
