@@ -1,0 +1,43 @@
+KH-TT-1 — bằng chứng đỏ (bài thử chạy trên code GỐC src/pages/ThanhToan.jsx của commit 102478a, chưa có thanh_toan.css)
+
+== cong_cu/thu_KHTT1.js (bài MỚI), chạy đủ cả Chromium trên code gốc ==
+Phần 1 — đọc nguồn
+  ✗ A1 cả dòng .the-vi là role="switch" có aria-checked + aria-label, gắn bam
+  ✗ A1 ô .switch chỉ là hình: không gắn bam / role riêng
+  ✗ A3 có chữ "Bấm để thử lại" và gọi toi.taiLai()
+  ✗ B1 không còn khối "Chuyển khoản QR" / "Quét mã bằng app ngân hàng"
+  ✗ B3 chữ nút: "Thanh toán qua QR", "Trừ ví", "+ QR"; hết "Xác nhận trả"
+  ✗ C1 thanh_toan.css có file, ThanhToan.jsx import nó, main.jsx / giaoDien.css không nhắc tới
+  ✗ C1 CSS có vùng bấm ≥ 44px cho .the-vi
+Phần 2 — App thật trong Chromium
+  ✗ A1 bấm CHỮ "Trừ từ số dư ví" → aria-checked true
+  ✗ A1 bấm trúng ô .switch một lần → bật đúng MỘT lần
+  ✗ A1 ví tắt: nút "Thanh toán qua QR 87.654đ"  — Xác nhận trả 87.654đ →
+  ✗ A1/B3 ví đủ → nút "Trừ ví 87.654đ"  — Xác nhận trả 87.654đ →
+  ✗ A1 Enter trên dòng → bật · role=switch trên dòng + aria-label
+  ✗ A2 báo giá chưa về → dòng ví khoá (aria-disabled)
+  ✗ A3 /toi lỗi → "Chưa đọc được số dư · Bấm để thử lại"  — Trừ từ số dư ví / Chưa đọc được số dư
+  ✗ A3 bấm dòng → /toi gọi lần nữa, hiện số dư; đọc lại được → bật được
+  ✗ A4/B2 ví 0đ → không tiêu đề "Cách trả tiền" (gốc vẫn hiện tiêu đề)
+  ✗ B1 không còn chữ "Chuyển khoản QR" · B1/B3 ví 0đ nút "Thanh toán qua QR 87.654đ"
+  ✗ B3 ví thiếu → "Trừ ví 500.000đ + QR 487.654đ"  — Xác nhận trả 987.654đ →
+  ✗ B4 dòng nhỏ giữ câu "Dùng hết … → quét QR" (không bật được bằng bấm chữ)
+  ✗ K5 vi_qr / đặt ví đủ vẫn hỏi PIN (ca dừng: bấm chữ không bật ví)
+Kết quả trên gốc: 33 đạt · 29 hỏng (có Chromium); KHONG_TRINH_DUYET=1: 2 đạt · 7 hỏng.
+Sau khi vá: 62 đạt · 0 hỏng (có Chromium); KHONG_TRINH_DUYET=1: 9 đạt · 0 hỏng.
+SỐ CA cong_cu/thu_KHTT1.js: 9
+
+== Bài thử cũ (đã sửa chữ) chạy với Chromium trên code GỐC (ThanhToan.jsx quay về chữ "Xác nhận trả" + dòng "Chuyển khoản QR" + bấm .switch) — ĐỎ ==
+cong_cu/thu_KHMUA1b.js: 239 đạt · 15 hỏng
+cong_cu/thu_KHMUA1.js: 127 đạt · 1 hỏng
+cong_cu/thu_KHMUA1c.js: 109 đạt · 1 hỏng
+cong_cu/thu_KHNHANH1.js: 221 đạt · 3 hỏng
+Sau khi vá: 254 / 128 / 110 / 224 đạt · 0 hỏng (có Chromium).
+
+== Bài thử cũ sửa chữ (D2) — số ca khi chạy KHONG_TRINH_DUYET=1, trên code đã vá ==
+(Cổng GitHub không có Chromium nên phần sửa chữ trong trình duyệt xanh trên gốc → mỗi bài thêm MỘT ca đọc nguồn ở Phần 1,
+ đỏ trên gốc khi không có Chromium: tìm "KH-TT-1" trong từng bài. Số ca dưới đây đã tính ca thêm.)
+SỐ CA cong_cu/thu_KHMUA1.js: 56
+SỐ CA cong_cu/thu_KHMUA1b.js: 48
+SỐ CA cong_cu/thu_KHMUA1c.js: 27
+SỐ CA cong_cu/thu_KHNHANH1.js: 81

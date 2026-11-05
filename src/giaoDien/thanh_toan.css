@@ -1,0 +1,5 @@
+/* Thanh toán (KH-TT-1): cả dòng "Trừ từ số dư ví" là chỗ bấm (≥ 44px, ngón tay trên iPhone), nút đặt xuống dòng được khi chữ dài. Chỉ dùng biến của demo. */
+.the-vi{ min-height:44px; cursor:pointer; }
+.the-vi.the-vi-khoa{ opacity:.45; cursor:default; }
+.nut-dat > span:first-child{ min-width:0; text-align:left; overflow-wrap:anywhere; }
+.nut-dat > span:last-child{ flex-shrink:0; margin-left:10px; }

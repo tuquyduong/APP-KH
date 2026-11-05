@@ -27,6 +27,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
 
 (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
+  k('KH-TT-1 B3 nút đặt ghi cách trả (không còn "Xác nhận trả", dòng "Chuyển khoản QR")', /Trừ ví/.test(doc('src/pages/ThanhToan.jsx')) && !/Xác nhận trả|Chuyển khoản QR/.test(doc('src/pages/ThanhToan.jsx')));
   let G = null, D = null, L = null, DD = null, LDN = null, CD = null;
   try { G = await nap('src/gio.js'); } catch (e) { k('nạp src/gio.js', false, String(e.message).split('\n')[0]); }
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
@@ -288,7 +289,7 @@ async function trinhDuyet(pw) {
     const vi = t.locator('#checkout .the-vi');
     await t.waitForTimeout(300); await vi.locator('.switch').click(); await t.waitForTimeout(200);
     k('B3 (v5 ví + QR) ví không đủ: bật được, nói rõ dùng hết số dư và còn thiếu 37.654đ (theo tổng POS)', /Dùng hết 50\.000đ trong ví, còn thiếu 37\.654đ/.test(await vi.innerText()), await vi.innerText());
-    k('B3 (v5 ví + QR) phần còn thiếu vẫn trả bằng QR', /Chuyển khoản QR/.test(await chu(t, '#checkout')));
+    k('B3 (v5 ví + QR) phần còn thiếu vẫn trả bằng QR (nút "Trừ ví 50.000đ + QR 37.654đ")', /Trừ ví 50\.000đ \+ QR 37\.654đ/.test(await chu(t, '#checkout .nut-dat')), await chu(t, '#checkout .nut-dat'));
   });
 
   await ca('ngoai-gio', { gio: GIO2, pos: { gh: { nhan_don: false, dang_mo: true, thong_bao: 'Quán ngừng nhận đơn online, mở lại 07:00 ngày mai' } } }, async (t, loi, P) => {
