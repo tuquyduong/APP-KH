@@ -27,6 +27,13 @@ Kết quả trên gốc: 33 đạt · 29 hỏng (có Chromium); KHONG_TRINH_DUYE
 Sau khi vá: 62 đạt · 0 hỏng (có Chromium); KHONG_TRINH_DUYET=1: 9 đạt · 0 hỏng.
 SỐ CA cong_cu/thu_KHTT1.js: 9
 
+== Bài thử cũ (đã sửa chữ) chạy với Chromium trên code GỐC (ThanhToan.jsx quay về chữ "Xác nhận trả" + dòng "Chuyển khoản QR" + bấm .switch) — ĐỎ ==
+cong_cu/thu_KHMUA1b.js: 239 đạt · 15 hỏng
+cong_cu/thu_KHMUA1.js: 127 đạt · 1 hỏng
+cong_cu/thu_KHMUA1c.js: 109 đạt · 1 hỏng
+cong_cu/thu_KHNHANH1.js: 221 đạt · 3 hỏng
+Sau khi vá: 254 / 128 / 110 / 224 đạt · 0 hỏng (có Chromium).
+
 == Bài thử cũ sửa chữ (D2) — số ca khi chạy KHONG_TRINH_DUYET=1, trên code đã vá ==
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHMUA1b.js: 47
