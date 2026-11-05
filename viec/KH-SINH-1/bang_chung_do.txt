@@ -22,3 +22,8 @@ SỐ CA cong_cu/thu_KHUI2.js: 78
 SỐ CA cong_cu/thu_KHUI3b.js: 57
 SỐ CA cong_cu/thu_KHUI3d.js: 32
 SỐ CA cong_cu/thu_KHLUU1.js: 21
+
+Bài sửa thường thứ 5 (Câu hỏi 1, chủ quán duyệt 05.11): cong_cu/thu_KHNHANH1.js ca "D3 Trang chủ chào theo xưng hô vừa lưu" — regex /cô Linh/ → /cô Nguyễn Linh!/ (POS giả tên "Nguyễn Linh").
+  ĐỎ trên gốc: chiaLoiChao(19,'cô','Nguyễn Linh') ở src/dinhDang.js của 5f7dd67 = {xung:"cô", ten:"Linh"} → chào "cô Linh!" ≠ /cô Nguyễn Linh!/ (đo bằng nạp thẳng hàm gốc; máy chặn git checkout src nên không chạy cả bài trên gốc).
+  XANH sau vá: có Chromium 224 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 80 đạt · 0 hỏng.
+SỐ CA cong_cu/thu_KHNHANH1.js: 80
