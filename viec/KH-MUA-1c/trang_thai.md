@@ -145,3 +145,7 @@ và ghi lại HEAD ĐÃ KIỂM trước khi gọi soát.
 - `PinSheet.jsx`: Enter ở màn "Đã lưu" = "Xong" (đóng bảng); ca F3 kiểm thêm bảng đóng.
 - Đột biến: ĐỐI CHỨNG XANH 110 · 0; 18/18 ĐỎ ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT"). `--day-du` 32 đạt · 0 hỏng (thu_KHMUA1c 110 · 0).
 - Không sửa (ghi lại): hai lần Xác nhận liền (không đơn thứ hai, khoaGui chặn); 503 PAYOS_CHUA_CAU_HINH = chưa rõ (luật 1b, hợp đồng: 5xx chưa rõ) → Phát hiện cho chủ quán.
+
+## Cổng sau vòng sửa 2
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 12fe94d^ HEAD viec/KH-MUA-1c` ở 3800669 → `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16 như trước: mốc chưa có hop_dong_v9.md).
+HEAD ĐÃ KIỂM: 3800669
