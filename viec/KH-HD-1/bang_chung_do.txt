@@ -4,5 +4,9 @@ ERR_MODULE_NOT_FOUND: Cannot find module '.../src/hoaDon.js' imported from cong_
 
 0 đạt · 1 hỏng
 
-Sau khi vá: 77 đạt · 0 hỏng (có Chromium); 25 đạt · 0 hỏng (KHONG_TRINH_DUYET=1).
+Bằng chứng đỏ riêng phần Chromium (soát vòng 1 đòi): đặt hoaDon.js + HoaDonKhach.jsx + hoa_don.css mới cạnh Don.jsx CŨ (chưa nối HoaDonKhach), chạy lại:
+
+54 đạt · 32 hỏng   (các ca B1 giảm hạng / trả ví / giá gạch / ghi chú / điểm / .discount / đơn huỷ cảnh báo… đều ✗)
+
+Sau khi vá: 86 đạt · 0 hỏng (có Chromium); 25 đạt · 0 hỏng (KHONG_TRINH_DUYET=1).
 SỐ CA cong_cu/thu_KHHD1.js: 25

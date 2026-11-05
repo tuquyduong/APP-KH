@@ -86,6 +86,9 @@ async function trinhDuyet(pw) {
     VI: { ma: 'A47Z8N9CF', ngay: '2026-11-05T10:15:00', tong: 2700, trang_thai: 'completed', thanh_toan: 'paid', tien_trinh: 'xong', mon: MON, hoa_don: TO_VI },
     HUY: { ma: 'HUY0001', ngay: '2026-11-05T11:00:00', tong: 2700, trang_thai: 'cancelled', thanh_toan: 'refunded', tien_trinh: 'da_huy', mon: MON,
       hoa_don: [L('canh_bao', 'ĐƠN ĐÃ HUỶ'), L('ten_quan', 'TỨ QUÝ ĐƯỜNG'), L('mon', '3 x TEST 1000', '3.000đ'), L('tong', 'TỔNG CỘNG', '2.700đ', { dam: true })] },
+    XAU: { ma: 'XAU0001', ngay: '2026-11-05T13:00:00', tong: 2700, trang_thai: 'completed', thanh_toan: 'paid', tien_trinh: 'xong', mon: MON,
+      hoa_don: [L('so_bill', 'SỐ BILL', ''), L('nhan', '', ''), L('tieu_de', '', ''), L('chan', '', ''), L('mon', 'Trà thảo mộc đặc biệt gừng quế hoa cúc kỷ tử táo đỏ ít đường nhiều đá', '3.000.000.000đ', { gach: '3.300.000.000đ' }),
+        L('tong', 'TỔNG CỘNG', '2.700đ', { dam: true }), L('loai_la_dai', 'Dòng lạ rất dài', 'x'.repeat(60) + ' ' + 'y'.repeat(60)), L('dia_chi', 'z'.repeat(80))] },
     CHO: { ma: 'CHO0001', ngay: '2026-11-05T12:00:00', tong: 2700, trang_thai: null, thanh_toan: null, tien_trinh: 'cho_tra', mon: MON, hoa_don: [] },
   };
   async function mo(rong, ma) {
@@ -141,6 +144,21 @@ async function trinhDuyet(pw) {
     k('B3 đơn huỷ: nhãn "Đã hủy" giữ', /Đã hủy/.test(await t.locator('#orderdetail .order-status').innerText()));
     await chup(t, '2_don_huy', 360);
     k('đơn huỷ: không lỗi JS', loiTrang.length === 0, loiTrang[0]);
+    await ctx.close();
+  }
+  for (const rong of [390, 430]) {
+    const { t, ctx } = await mo(rong, 'HUY0001');
+    await chup(t, '2_don_huy', rong);
+    await ctx.close();
+  }
+  for (const rong of [360, 390, 430]) {
+    const { t, ctx, loiTrang } = await mo(rong, 'XAU0001');
+    const chu = await t.locator('#orderdetail .order-card').innerText();
+    const soKhoi = await t.locator('#orderdetail .hd-dau, #orderdetail .hd-tieu-de, #orderdetail .hd-chan').count();
+    k(`K5 [${rong}] dữ liệu xấu: số bill rỗng / dòng trống không vẽ "Số bill:" hay khối trống (chỉ còn dòng địa chỉ)`, !/Số bill/.test(chu) && soKhoi === 1, String(soKhoi));
+    k(`B5 [${rong}] chữ rất dài (tên món, số tiền, địa chỉ, dòng lạ) không tràn ngang`, await t.evaluate(() => { const c = document.querySelector('#orderdetail .order-card'); return document.documentElement.scrollWidth <= window.innerWidth + 1 && c.scrollWidth <= c.clientWidth + 1; }));
+    await chup(t, '4_don_xau', rong);
+    k(`[${rong}] dữ liệu xấu: không lỗi JS`, loiTrang.length === 0, loiTrang[0]);
     await ctx.close();
   }
   for (const rong of [360, 390, 430]) {
