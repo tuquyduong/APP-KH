@@ -26,6 +26,9 @@
 
 ## Kiểm (bước 6, 05.11)
 - `npm test`: 28 đạt · 2 hỏng khi chạy lần đầu — `thu_KHUI3b.js` (ca B1 "xem trước dùng tên mới", trong Phạm vi → đã sửa, nay 174 đạt · 0 hỏng) và `thu_KHNHANH1.js` (NGOÀI Phạm vi → `## Câu hỏi` 1).
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 31 đạt · 1 hỏng (chỉ `thu_KHNHANH1.js`, Câu hỏi 1); `vite build` thành công, `dist/index.html` đúng.
+- Cổng `node tu_chay/cong.js tinh . 5f7dd67^ HEAD viec/KH-SINH-1`: chỉ còn `✗ [A19]` (dòng "HEAD ĐÃ KIỂM" ghi sau lần kiểm cuối) — Phạm vi, A7, A17 đạt.
+- CHƯA làm (chờ trả lời Câu hỏi 1): cổng `chay` (`KHONG_TRINH_DUYET=1`), dòng `HEAD ĐÃ KIỂM`, `/ra-soat`, bước 10–11 (báo cáo 7 mục, Bài học).
 - Chromium thật: `thu_KHSINH1.js` 92 đạt · 0 hỏng; ảnh 360 / 390 / 430 ở `so_anh/`, `doi_chieu_demo.md`.
 
 ## Phát hiện
