@@ -49,4 +49,7 @@
 - KHOÁ (đã làm, trong Phạm vi): bài sửa chữ nằm trong Chromium thì cổng không có trình duyệt thấy "xanh trên gốc" (A11) → thêm ca đọc nguồn ở Phần 1 của mỗi bài cũ (đỏ trên gốc, có "KH-TT-1").
 - KHOÁ (đã làm): dấu kiểm đọc nguồn khớp nhầm code cũ (K3) → đổi mẫu sang `bam\(toi\.taiLai\)`.
 - NGUYÊN TẮC (đề xuất, ngoài Phạm vi → chat soát gom): khi chuyển chỗ bấm từ phần tử con lên cha, thêm ca "bấm đúng một lần" vì bài cũ vẫn xanh nhờ nổi bọt. Không đủ chung để mở K mới; BỎ nếu chat soát thấy một lần.
+- GHI CHÚ chạy kiểm: `thu_KHNHANH1.js` (POS giả trễ 700 ms) hỏng 3 ca khi có HAI `npm test` chạy cùng lúc (hook Stop + lệnh nền của máy); chạy riêng 225 đạt · 0 hỏng, `npm test` một mình 32 đạt · 0 hỏng. Nghi do tải máy, chưa chứng minh; ghi phát hiện cho chat soát.
+- CỔNG: `✓ CỔNG CHẠY ĐẠT` (`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 102478a^ HEAD viec/KH-TT-1`, HEAD 7ab5506); `tinh` chỉ còn A19 chờ dòng cuối.
 - BỎ: người gác chặn `mkdir`/`cp` thư mục/`sed -i`/lệnh ghép — chỉ là cách làm, dùng Edit và lệnh đơn.
+HEAD ĐÃ KIỂM: efaba0b
