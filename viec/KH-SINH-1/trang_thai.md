@@ -9,11 +9,10 @@
 - Thấy commit `PHIEU: KH-SINH-1` (`5f7dd67`).
 
 ## Câu hỏi
-1. **Bài `cong_cu/thu_KHNHANH1.js` ngoài Phạm vi nhưng đỏ vì lời chào đủ tên (phiếu B4 chỉ kể 4 bài; còn sót bài thứ 5).**
-   Dòng 492: `k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Linh/.test(await chu(t, '#home h1')), …)` — POS giả có tên "Nguyễn Linh", lời chào mới là "Chào buổi tối, cô Nguyễn Linh!"
-   → `npm test` hiện `✗ thu_KHNHANH1.js (221 đạt · 3 hỏng)`, 3 hỏng = cùng ca D3 ở 3 cỡ màn. Đề nghị: thêm `cong_cu/thu_KHNHANH1.js` vào Phạm vi và đổi regex thành `/cô Nguyễn Linh/` (1 dòng; sửa bài thường như B4 — đỏ trên gốc? KHÔNG: ca này
-   XANH trên code gốc, đỏ sau vá, nên đây là bài sửa theo hành vi mới chứ không thêm ca hồi quy; vẫn cần chủ quán duyệt vì bài ngoài Phạm vi). Máy KHÔNG tự sửa. Chưa sửa thì `npm test` đỏ đúng 1 bài này, các bài khác xanh.
-   Hệ quả: chưa chạy được bước 6 trọn vẹn (`npm test` xanh), cổng `chay`, `/ra-soat` — dừng chờ chủ quán.
+1. (ĐÃ TRẢ LỜI — chủ quán duyệt 05.11, ghi ở phiếu) `thu_KHNHANH1.js` ca D3 đổi regex thành `/cô Nguyễn Linh!/`; đã sửa ở commit `8ff848d`, `SỐ CA` ở `bang_chung_do.txt`.
+
+## Bước 1 (làm lại 05.11, phiên tiếp)
+- `git fetch`: HEAD = FETCH_HEAD = `266cd8a` (hook mở phiên kéo từ `5f7dd67`). `git log --oneline -3`: `266cd8a PHIEU…trả lời Câu hỏi 1` · `6127258 KH-SINH-1: ghi ket qua kiem…` · `e0550c5 KH-SINH-1: bang chung do, doi chieu demo…`.
 
 ## Bảng "chỗ vá → đột biến" (`dot_bien.py`; kết quả: TẤT CẢ BỊ BẮT — số ở `bang_chung_do.txt`)
 | Chỗ vá | Đột biến |
@@ -24,13 +23,13 @@
 | `gio.js` `chenDong` | VS-CHEN-LAI-SAI-CHO · VS-CHEN-LAI-NHAN-DOI-DONG |
 | `GioHang.jsx` nút xoá + Hoàn tác | BV-NUT-XOA-MON · VS-HOAN-TAC-KHONG-TRA-DONG · VS-THONG-BAO-KHONG-TU-TAT |
 
-## Kiểm (bước 6, 05.11)
-- `npm test`: 28 đạt · 2 hỏng khi chạy lần đầu — `thu_KHUI3b.js` (ca B1 "xem trước dùng tên mới", trong Phạm vi → đã sửa, nay 174 đạt · 0 hỏng) và `thu_KHNHANH1.js` (NGOÀI Phạm vi → `## Câu hỏi` 1).
-- `node kiem_tra_truoc_khi_giao.js --day-du`: 31 đạt · 1 hỏng (chỉ `thu_KHNHANH1.js`, Câu hỏi 1); `vite build` thành công, `dist/index.html` đúng.
-- Cổng `node tu_chay/cong.js tinh . 5f7dd67^ HEAD viec/KH-SINH-1`: chỉ còn `✗ [A19]` (dòng "HEAD ĐÃ KIỂM" ghi sau lần kiểm cuối) — Phạm vi, A7, A17 đạt.
-- CHƯA làm (chờ trả lời Câu hỏi 1): cổng `chay` (`KHONG_TRINH_DUYET=1`), dòng `HEAD ĐÃ KIỂM`, `/ra-soat`, bước 10–11 (báo cáo 7 mục, Bài học).
+## Kiểm (bước 6, 05.11 — sau Câu hỏi 1)
+- `npm test`: 30 đạt · 0 hỏng (`thu_KHNHANH1.js` 224 đạt · 0 hỏng, có Chromium).
+- `node kiem_tra_truoc_khi_giao.js --day-du`: vite build thành công, `dist/index.html` đúng; lần chạy đầu 31 đạt · 1 hỏng do `thu_KHMUA1b.js` (ngoài Phạm vi, chạy riêng lại 253 đạt · 0 hỏng — xem Phát hiện).
+- Cổng `tinh`: chỉ còn `✗ [A19]` trước khi ghi dòng HEAD ĐÃ KIỂM.
 - Chromium thật: `thu_KHSINH1.js` 92 đạt · 0 hỏng; ảnh 360 / 390 / 430 ở `so_anh/`, `doi_chieu_demo.md`.
 
 ## Phát hiện
 - Người gác chặn `sed -i`, `for` / `;` / `&&` ghép lệnh chạy script, `git -C`, `sleep` — đã đổi sang Edit và lệnh đơn (không phải lỗi, chỉ ghi nhận).
 - `npm test` chạy hơn 10 phút trên máy này (nhiều bài Chromium cũ chạy tuần tự) — vượt mốc 120 s của công cụ, phải chạy nền.
+- Bài thử Chromium chập chờn khi máy bận (ngoài Phạm vi, không sửa): hook báo `thu_KHNHANH1.js` 222 đạt · 2 hỏng một lần, `--day-du` báo `thu_KHMUA1b.js` 252 đạt · 1 hỏng một lần; chạy riêng lại đều 0 hỏng (224 / 253). Ca hỏng nằm ở phần trình duyệt (chạy 56–61 giây). Đề xuất: chat soát xem hạn chờ ở các bài Chromium.
