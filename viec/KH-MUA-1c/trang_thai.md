@@ -184,3 +184,52 @@ KHOÁ — nút gửi lại POST /don phải tôn trọng công tắc DAT_ONLINE 
 - `hetLuc` (đếm ngược 429) chỉ trong bộ nhớ trang — tải lại mất đếm ngược, bấm sớm nhận thêm một 429 (không đơn thứ hai).
 - Hai lần "Xác nhận" liền trước khi vẽ lại có thể đóng bảng PIN sớm, mất lời PIN_SAI (không đơn thứ hai).
 - `ghiGuiDo(null)` hỏng khi kho đầy mà `getItem` vẫn đọc → đọc lại bản cũ (chặn oan, hiếm).
+
+## Bài học (bước 11)
+Sự cố gom được: người gác chặn 18 lần (B-PHANTICH 6 — nối hai lệnh chạy script / `cat > /dev/null` treo; B-BIMAT-CHU 5 — chạy bài có chữ bí mật của bài thử
+chưa commit, script nháp có chữ môi trường, lệnh ghi hồ sơ có tên luật đó; B-CD-VITRI 2; B-CHUONGTRINH 2 — `until` trong Monitor; GIT-ADD 1 — add thư mục ảnh;
+SED-I 1; B-DICHCHU 1; GIT-LENH 1); soát 3 vòng KHÔNG ĐẠT (Enter sau "Đã lưu" gửi PUT /pin lần hai; "Gửi lại" + 429 xoá bản ghi; nút "Gửi lại" bấm được trong
+đếm ngược; đột biến thành code chết); cổng lần 1 đỏ A16 (SỐ CA thiếu tiền tố `cong_cu/`); đột biến BV-GUI-LAI-CHO-DEM-NGUOC lần đầu sống (ca chỉ bấm chuột,
+`.btn-disabled` chặn chuột không chặn phím).
+1. KHOÁ (ngoài Phạm vi — đề xuất): bộ kiểm tĩnh / `cong_cu/thu_KHUNG.js` thêm phép: mọi nút gửi `POST /don` trong `ThanhToan.jsx` (`xacNhan`, `guiLaiDungDon`)
+   qua CÙNG một vị từ khoá (DAT_ONLINE, conGiay, dang) — ca đỏ: ThanhToan của 3800669^ (nút "Gửi lại" không xét conGiay). Lý do: hai nút gửi cùng cửa tiền mà
+   luật khoá rải hai chỗ — Q3 (DAT_ONLINE) là ca thứ hai cùng khuôn.
+2. NGUYÊN TẮC (đề xuất `KHUON_LOI.md` mục mới — ngoài Phạm vi): "Sửa chỗ vá đã có đột biến → chạy lại dot_bien.py ở HEAD trước khi ghi 'TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT'".
+   Đã gây: KH-MUA-1c soát vòng 3 (VS-PIN-ENTER-SAU-XONG sống vì lần vá sau biến vế được khoá thành code chết). Dấu hiệu: đổi src/ sau lần chạy đột biến cuối.
+   Chặn: cổng có thể đòi dòng đầu ra dot_bien.py kèm SHA = HEAD ĐÃ KIỂM (đề xuất cho khung, sau khai trương — khung đóng băng).
+3. NGUYÊN TẮC (đề xuất): ca thử nút bị khoá phải kích CẢ kiểu bàn phím (`el.click()` / Enter), không chỉ chuột — `pointer-events:none` che lỗi.
+   Đã gây: KH-MUA-1c BV-GUI-LAI-CHO-DEM-NGUOC sống lần đầu. Gộp chung: bảng nhiều bước có bộ nghe phím toàn cửa sổ phải xử lý phím ở mọi bước kết thúc
+   (xong / đang gửi) + ca "bấm phím ở màn kết quả" (soát vòng 1: Enter sau "Đã lưu" → PUT /pin lần hai).
+4. BỎ: cổng A16 thiếu tiền tố `cong_cu/` — một lần, lời cổng nói rõ cách sửa. Người gác chặn — đều đúng luật đã ghi trong skill; không cần luật mới.
+Dọn: không thấy lời dặn nào trong KHUON_LOI.md / CLAUDE.md đã có phép kiểm làm thay do việc này.
+
+## Báo cáo 7 mục
+- VIỆC: KH-MUA-1c — đặt đơn theo hợp đồng v9 (KHO_BAN / hết phiên = chưa rõ, gửi lại CÙNG khoá; KHOA_GUI_DA_DUNG giữ bản ghi), Theo dõi đơn đọc ví đã giữ từ POS,
+  bảng PIN có Xoá lùi + Xác nhận, bù ca soát cuối KH-MUA-1b.
+- ĐÃ SỬA: src/datDon.js, src/pages/ThanhToan.jsx, src/pages/TheoDoiDon.jsx, src/components/PinSheet.jsx, src/giaoDien/giaoDien.css, src/kiemKhop/canTuPos.js,
+  src/api.js, src/pages/KiemKhop.jsx; thiet_ke/HOP_DONG_API_KH.md (= v9, cmp); bài thử thu_KHMUA1c.js (mới), thu_KHMUA1b.js, thu_KHMUA1.js, thu_KHKHOP1.js.
+  App ≈ +95 / −52 dòng (ngân sách 170); thử ≈ +360 (ngân sách 420).
+- BÀI THỬ: đỏ trên gốc / xanh sau vá (bang_chung_do.txt); SỐ CA (KHONG_TRINH_DUYET=1) 1c 26 · 1b 47 · 1 55 · KHOP1 48; Chromium 1c 110 · 1b 254 · 1 128 · KHOP1 85;
+  18 đột biến VS-/BV- đều ĐỎ, đối chứng xanh (ở ae2007e); `--day-du` 32 đạt · 0 hỏng; cổng `chay` ĐẠT ở 6e7eeeb.
+- ĐÃ RÀ K4: POST /don một đường (api.js → guiDonAnToan); `loaiLoi` một chỗ; `ghiGuiDo(null)` 4 chỗ (không chỗ nào xoá khi KHO_BAN / KHOA_GUI_DA_DUNG / 401 / 429 lúc
+  gửi lại); đọc `kh_don_gui` 6 chỗ (ThanhToan ×3, TheoDoiDon, App.daTra, luuMay); PinSheet 3 chỗ (ThanhToan ×2, HoSo) — có ca cho cả hai chế độ.
+- CHƯA KIỂM: iPhone Safari / WebKit / trình duyệt Zalo (chỉ Chromium) cho F1; code POS (thứ tự tra khoá → lượt, KHO_BAN sau chotPhien — Q2); `/security-review`
+  chuẩn (skill lỗi: không có origin/HEAD — đã tự rà, người soát vòng 3 chấp nhận nội dung); E4 chủ quán thử tay; Q3 (DAT_ONLINE + "Gửi lại", có từ 1b) chưa sửa.
+- GIT: nhánh viec/KH-MUA-1c, đã push; không merge, không PR.
+- BÀI HỌC: mục "Bài học" trên (1 KHOÁ đề xuất, 2 NGUYÊN TẮC đề xuất, 1 BỎ).
+
+## Nghiệm thu — đếm từng mục
+- A1 cmp v9 ↔ thiet_ke (thu_KHMUA1c A1, thu_KHMUA1b A1) ✓ · A2 thu_KHMUA1c A2 (3 ca) + thu_KHKHOP1 85 · 0 ✓
+- B1 thu_KHMUA1c B1 P (10 ca) + màn kho-ban-roi-don / kho-ban-mai / kho-ban-429 / kho-ban-hai-tab / gui-lai-429 ✓ · B2 P + màn khoa-da-dung + 1b '4xx' ✓
+- B3 thu_KHMUA1c B3/K5 P + 1b D1 ✓ · B4 màn kho-ban-mai ("Gửi lại đúng đơn này" sau hết lượt) ✓
+- C1 P + màn v7-may-khac / v7-ban-ghi-khac / v7-qr ✓ · C2 màn v7-don-quay + tĩnh ✓ · C3 tĩnh + Phát hiện QUYET_DINH_APPKH.md:29 ✓
+- D1 màn d1-bao-gia-mat + BV-DIEM-GUI-BAO-GIA ✓ · D2 màn d2-pin-dang-khoa ✓ · D3 màn d3-401-khach-khac ✓ · D4 P (5 ca) + BV-GHI-HONG-DOC-KHO ✓
+- D5 K5: QR (v7-qr, 1b qr-*), ví đủ (f2, 1b vi), ví + QR (1b vi_qr-*), GIA_DA_DOI (1b gia_da_doi), 4xx xoá (1b 4xx) ✓
+- F1 màn f1-pin-360/390/430 (6 ca) + BV-PIN-GIUA ✓ · F2 màn f2-xac-nhan (8 ca) ✓ · F3 màn f3-dat-pin (6 ca, Hồ sơ) ✓ · F4 màn f4-dang-gui ✓
+- F5 thu_KHMUA1 / thu_KHMUA1b sửa, đỏ gốc / xanh mới, SỐ CA ✓ · F6 so_anh/ 20 ảnh + doi_chieu_demo.md ✓
+- E1 thu_KHMUA1c ✓ · E2 18 đột biến ĐỎ ✓ · E3 --day-du / cổng ✓, /security-review chuẩn ✗ (môi trường) · E4 chờ chủ quán:
+  (1) đặt QR rẻ → tải lại Theo dõi đơn / mở máy khác vẫn thấy QR + số tiền; (2) đặt rồi Huỷ; (3) trả ví: số giữa nút, sai thì "Xoá" lùi một số, đủ 4 số bấm "Xác nhận" mới trả.
+
+## Cổng lần cuối
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 12fe94d^ HEAD viec/KH-MUA-1c` ở 6e7eeeb → `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16 như trước).
+HEAD ĐÃ KIỂM: 6e7eeeb
