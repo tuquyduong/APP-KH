@@ -386,7 +386,7 @@ async function trinhDuyet(pw) {
       await mo(t, '/thanhtoan'); await sanSang(t);
       await doiChu(t, '#checkout', /Số dư 50\.000đ/);
       await batVi(t);
-      k(`Đ7/E1 [${rong}] bật + 0 < số dư < tổng → ví + QR: "Dùng hết 50.000đ trong ví, còn thiếu 37.654đ → quét QR"`, /Dùng hết 50\.000đ trong ví, còn thiếu 37\.654đ → quét QR/.test(await dongVi(t)) && /phần còn thiếu/.test(await chu(t, '#checkout')));
+      k(`Đ7/E1 [${rong}] bật + 0 < số dư < tổng → ví + QR: "Dùng hết 50.000đ trong ví, còn thiếu 37.654đ → quét QR"`, /Dùng hết 50\.000đ trong ví, còn thiếu 37\.654đ → quét QR/.test(await dongVi(t)) && /Trừ ví 50\.000đ \+ QR 37\.654đ/.test(await chu(t, '#checkout .nut-dat')));
       await chup(t, `thanhtoan-vi-qr-${rong}`);
       await bam(t);
       await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
