@@ -1,4 +1,4 @@
-// Đặt đơn (KH-MUA-1b, hợp đồng v5): dựng thân yêu cầu, đọc trả lời, luật lỗi, vòng gửi lại, ghi nhớ lần gửi chưa rõ — MỌI tên trường đặt đơn ở MỘT chỗ này.
+// Đặt đơn (KH-MUA-1b, hợp đồng v5; KH-MUA-1c theo v9): dựng thân yêu cầu, đọc trả lời, luật lỗi, vòng gửi lại, ghi nhớ lần gửi chưa rõ — MỌI tên trường đặt đơn ở MỘT chỗ này.
 // Gọi mạng qua api.js. App KHÔNG tính tiền: tạm tính / giảm / tổng / ví giữ / QR còn lại lấy NGUYÊN từ POS.
 // Cờ DAT_ONLINE (noiDung/caiDat.js) là công tắc tắt khẩn: tắt → không gọi cửa ghi nào, nút đặt hiện CHU_CHUA_MO.
 import { DAT_ONLINE } from './noiDung/caiDat.js';
@@ -65,7 +65,10 @@ export function docDatDon(r) {
   };
 }
 
-/** Trả lời `GET /don/:ma` → { ma, ngay, tong, tienTrinh, qr, thanhToan, tienVeChoDoiSoat, mon[] }. Bước đơn chỉ đọc `tien_trinh`. */
+/**
+ * Trả lời `GET /don/:ma` → { ma, ngay, tong, tienTrinh, qr, thanhToan, tienVeChoDoiSoat, mon[], cachTra, giuVi, conLai }. Bước đơn chỉ đọc `tien_trinh`.
+ * v7: `cach_tra` / `giu_vi` / `con_lai` — POS cũ chưa trả → cachTra undefined (màn dùng bản ghi trên máy); đơn quầy / giá trị lạ → null.
+ */
 export function docDon(r) {
   const d = r && r.don;
   if (!d || !chu(d.ma)) return null;
@@ -73,6 +76,8 @@ export function docDon(r) {
   return {
     ma: String(d.ma), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), qr: docQR(d.qr),
     thanhToan: d.thanh_toan == null ? null : d.thanh_toan, tienVeChoDoiSoat: d.tien_ve_cho_doi_soat === true, mon,
+    cachTra: d.cach_tra === undefined ? undefined : CACH_TRA.includes(d.cach_tra) ? d.cach_tra : null,
+    giuVi: so(d.giu_vi) ? d.giu_vi : null, conLai: so(d.con_lai) ? d.con_lai : null,
   };
 }
 
@@ -80,39 +85,47 @@ export const baoGia = canMo((than) => baoGiaGio(than).then(docBaoGia));
 export const xemDon = (ma) => layChiTietDon(ma).then(docDon);
 export const huyDon = canMo((ma) => huyDonApp(ma));
 
-/**
- * Luật 4xx của hợp đồng v5: MỌI trả lời 4xx CÓ `code` = chắc chắn chưa tạo đơn, chưa giữ / trừ ví → 'chua_tao' (khách sửa rồi bấm lại, khoá mới).
- * Còn lại — mất mạng / hết giờ chờ (status 0), 5xx, 4xx không code, 200 thiếu mã đơn — → 'khong_biet' (đơn CÓ THỂ đã tạo).
- * Ngoại lệ 401: lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần gửi trước chưa tạo → 'khong_biet'.
- */
-export function loaiLoi(e) {
-  if (e && e.code === 'CHUA_MO') return 'chua_tao';
-  return e && e.status >= 400 && e.status < 500 && e.status !== 401 && e.code ? 'chua_tao' : 'khong_biet';
-}
-
+// Luật lỗi `POST /don` — MỘT chỗ (hợp đồng v9 dòng 99–116 + code POS datDon; chủ quán duyệt 05.11):
+//  'chua_tao'   4xx CÓ code mà POS trả TRƯỚC khi tạo phiên (PIN, giá đổi, hết hàng, ngoài giờ, 429…) → khách sửa rồi bấm lại (khoá mới).
+//  'khong_biet' đơn CÓ THỂ đã tạo, tự gửi lại CÙNG khoá + thân: mất mạng / hết giờ chờ (status 0), 5xx, 4xx không code, 200 thiếu mã đơn,
+//               và mã trong LUOT_GUI_LAI (KHO_BAN: POS có thể đã trừ ví rồi mới báo kho bận).
+//  'dung'       đơn CÓ THỂ đã tạo, KHÔNG tự gửi lại: 401 (lớp xác thực trả TRƯỚC khi tra khoá — đăng nhập lại rồi "Gửi lại đúng đơn này"),
+//               KHOA_GUI_DA_DUNG (khoá đã dùng / quá 24 giờ — mời xem Lịch sử đơn).
 const MS_GUI_LAI = 2000;  // chờ giữa hai lần tự gửi lại
 const LAN_GUI_LAI = 3;    // "chưa rõ" thường: tự gửi lại tối đa ngần này lần
-const LAN_DANG_XU_LY = 30; // DANG_XU_LY: gửi lại tới khoảng 1 phút (30 × 2 giây) như hợp đồng v5
+// Mã POS hẹn "gửi lại cùng khoá" → tự gửi lại tối đa ngần này lần: DANG_XU_LY ≈ 1 phút (không tính lượt); KHO_BAN 8 lần ≈ 16 giây (CÓ tính lượt,
+// 1 + 8 = 9 lần dưới trần 10 lần / 10 phút của POS).
+const LUOT_GUI_LAI = { DANG_XU_LY: 30, KHO_BAN: 8 };
+const MA_DUNG = ['KHOA_GUI_DA_DUNG'];
+
+export function loaiLoi(e) {
+  if (e && e.code === 'CHUA_MO') return 'chua_tao';
+  if (e && (e.status === 401 || MA_DUNG.includes(e.code))) return 'dung';
+  return e && e.status >= 400 && e.status < 500 && e.code && !LUOT_GUI_LAI[e.code] ? 'chua_tao' : 'khong_biet';
+}
 const choThat = (ms) => new Promise((x) => setTimeout(x, ms));
 export const CHU_CHUA_RO = 'Chưa rõ quán đã nhận đơn chưa.';
 
 /**
  * Gửi `POST /don` an toàn: MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
- * Nhận đơn (kể cả trung) → trả đơn; 'chua_tao' → ném lỗi POS; 'khong_biet' → chờ ~2 giây gửi lại; hết lượt → ném { code: 'KHONG_BIET' }.
- * 401 (hết phiên) → ném KHONG_BIET ngay, không tự gửi lại (người gọi GIỮ bản ghi; đăng nhập lại thì "Gửi lại đúng đơn này").
+ * Nhận đơn (kể cả trung) → trả đơn; 'chua_tao' ở lần gửi ĐẦU → ném lỗi POS; 'khong_biet' → chờ ~2 giây gửi lại (đếm lượt theo mã);
+ * còn lại → ném { code: 'KHONG_BIET', goc: mã POS } (người gọi GIỮ bản ghi): 'dung', hết lượt, và 4xx đến SAU một lần chưa rõ — chuỗi đã có lần
+ * POS có thể chạy dở nên 4xx sau đó không chứng minh chưa tạo (chủ quán 05.11).
  */
 export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat, khiGuiLai = () => {} } = {}) {
-  let lan = 0, lanXuLy = 0;
-  for (;;) {
+  const dem = {};
+  for (let lan = 0; ; lan++) {
     let loi;
     try {
       const don = docDatDon(await gui(than));
       if (don) return don;
       loi = { status: 200 };
     } catch (e) { loi = e; }
-    if (loaiLoi(loi) === 'chua_tao') throw loi;
-    const xuLy = loi.code === 'DANG_XU_LY';
-    if (loi.status === 401 || (xuLy ? ++lanXuLy > LAN_DANG_XU_LY : ++lan > LAN_GUI_LAI)) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET' });
+    const loai = loaiLoi(loi);
+    if (loai === 'chua_tao' && lan === 0) throw loi;
+    const nhom = LUOT_GUI_LAI[loi.code] ? loi.code : '';
+    dem[nhom] = (dem[nhom] || 0) + 1;
+    if (loai !== 'khong_biet' || dem[nhom] > (LUOT_GUI_LAI[nhom] || LAN_GUI_LAI)) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET', goc: loi.code });
     khiGuiLai();
     await cho(MS_GUI_LAI);
   }
@@ -128,7 +141,8 @@ export function cachTraDuoc(tong, soDu) {
 export const viThieu = (tong, soDu) => (so(tong) && so(soDu) ? Math.max(0, tong - soDu) : null);
 
 // Ghi nhớ lần gửi (D3): `kh_don_gui` = { khoa_gui, than KHÔNG pin, cach_tra, luc } ghi TRƯỚC lần gửi đầu; nhận đơn → thêm ma_don, giu_vi, con_lai
-// (đúng số POS trả, để tải lại trên cùng máy vẫn hiện dòng ví + QR); chắc chưa tạo → xoá. Còn bản ghi mà chưa có ma_don = "chưa rõ" → chặn đặt mới.
+// (đúng số POS trả — Theo dõi đơn dùng khi POS chưa trả các trường v7); chắc chưa tạo → xoá; KHOA_GUI_DA_DUNG → giữ, thêm da_dung.
+// Còn bản ghi mà chưa có ma_don = "chưa rõ" → chặn đặt mới.
 export const KHOA_DON_GUI = 'kh_don_gui';
 const NGAY_MS = 24 * 3600 * 1000; // POS nhớ khoá gửi 24 giờ
 const khoMay = () => localStorage;
@@ -141,19 +155,19 @@ export function banGhiGui(than, luc = Date.now()) {
 }
 // Kho bị chặn (cửa sổ riêng tư…): bản ghi vẫn giữ trong BỘ NHỚ TRANG để "chưa rõ" còn chặn đặt mới — ghi vẫn trả false (không báo đã lưu).
 let banGhiBoNho = null;
-let ghiHong = false; // lần ghi cuối bị kho từ chối (chặn / đầy) → bản trên kho có thể CŨ: đọc bản trong bộ nhớ trang
+let ghiHong = false; // lần ghi cuối bị kho từ chối (chặn / đầy) → kho không có bản ghi (đã thử xoá bản cũ) thì đọc bản trong bộ nhớ trang
 const quaHanLuc = (g, bay) => ({ ...g, quaHan: !(bay - g.luc < NGAY_MS) });
 
-/** Đọc bản ghi (+ quaHan: quá 24 giờ). Không có / hỏng → null; kho chặn → bản trong bộ nhớ trang. */
+/** Đọc bản ghi (+ quaHan: quá 24 giờ). LUÔN đọc kho trước (tab khác có thể vừa ghi); kho không có → bản trong bộ nhớ trang nếu lần ghi cuối hỏng. */
 export function docGuiDo(k = khoMay, bay = Date.now()) {
   const boNho = () => banGhiBoNho && quaHanLuc(banGhiBoNho, bay);
-  if (ghiHong) return boNho();
   let tho;
   try { tho = layKho(k).getItem(KHOA_DON_GUI); } catch { return boNho(); }
   try {
     const g = JSON.parse(tho);
-    return g && chu(g.khoa_gui) && g.than ? quaHanLuc(g, bay) : null;
-  } catch { return null; }
+    if (g && chu(g.khoa_gui) && g.than) return quaHanLuc(g, bay);
+  } catch { /* hỏng → như không có */ }
+  return ghiHong ? boNho() : null;
 }
 /** Ghi bản ghi; null = xoá. Kho chặn → false (không báo đã lưu), bản ghi giữ trong bộ nhớ trang. */
 export function ghiGuiDo(g, k = khoMay) {
@@ -163,7 +177,11 @@ export function ghiGuiDo(g, k = khoMay) {
     if (con) layKho(k).setItem(KHOA_DON_GUI, JSON.stringify(con)); else layKho(k).removeItem(KHOA_DON_GUI);
     ghiHong = false;
     return true;
-  } catch { ghiHong = true; return false; }
+  } catch {
+    ghiHong = true;
+    try { layKho(k).removeItem(KHOA_DON_GUI); } catch { /* chặn hẳn */ } // kho đầy vẫn xoá được: không để bản CŨ hơn bộ nhớ trang
+    return false;
+  }
 }
 
 /** Bộ nhớ trang quên bản ghi (đăng nhập mà không biết chủ cũ — luuMay.doiKhach). */
