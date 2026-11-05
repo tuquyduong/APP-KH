@@ -184,8 +184,13 @@ async function trinhDuyet(pw) {
     await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
     await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
     await doi(t, async () => S.guiDon.length === 1); await t.waitForTimeout(400);
-    k('B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ cùng khoá, vẫn "Gửi lại đúng đơn này", nút đặt khoá', JSON.parse((await luu(t)) || '{}').khoa_gui === K && /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')) && await nutKhoa(t), await luu(t));
+    k('B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ cùng khoá, khối chưa rõ còn, nút đặt khoá', JSON.parse((await luu(t)) || '{}').khoa_gui === K && /Lần đặt trước chưa rõ kết quả/.test(await chu(t, '#checkout')) && await nutKhoa(t), await luu(t));
+    const nutGl = t.locator('#checkout button', { hasText: /Gửi lại/ });
+    k('B1 (soát vòng 2) trong lúc đếm ngược: nút "Gửi lại sau N giây" khoá', /Gửi lại sau (30|29) giây/.test(await nutGl.innerText()) && (await nutGl.getAttribute('aria-disabled')) === 'true');
+    await nutGl.click({ force: true }); await t.waitForTimeout(500);
+    k('B1 (soát vòng 2) bấm "Gửi lại" TRONG lúc đếm ngược → không gửi thêm', S.guiDon.length === 1, String(S.guiDon.length));
     await t.clock.fastForward(31000);
+    await doiChu(t, '#checkout', /Gửi lại đúng đơn này/);
     await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
     k('B1 hết đếm ngược, gửi lại → CÙNG khoá, MỘT đơn', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && S.guiDon.length === 2 && S.guiDon.every((x) => khoa(x) === K) && S.don.size === 1, String(S.guiDon.length));
   });
