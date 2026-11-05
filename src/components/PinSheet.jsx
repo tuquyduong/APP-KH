@@ -5,6 +5,7 @@ import { datPin } from '../api.js';
 // Bảng đặt / đổi mã PIN 4 số theo demo (PATCH29): chấm tròn + bàn phím số, nhập hai lần. Gửi `PUT /pin { pin, pin_lai }`;
 // POS tự kiểm số dễ đoán / đã có PIN — app chỉ hiện nguyên lời POS (máy chủ mới là nơi giữ quy tắc).
 // `gui(pin)` có → chế độ NHẬP PIN để trả ví (KH-MUA-1): nhập MỘT lần, gọi gui(pin); POS từ chối → hiện nguyên lời, nhập lại. PIN không lưu ở đâu.
+// Hàng cuối "Xoá" (lùi một số) · 0 · "Xác nhận" (bật khi đủ 4 số): KHÔNG tự gửi khi vừa đủ số — khách bấm Xác nhận / Enter (chủ quán chốt 05.11, KH-MUA-1c).
 const DO_DAI = 4;
 const LOI_KHONG_KHOP = 'Hai lần nhập không khớp, đặt lại nhé';
 const LOI_TEXT = { moi: ['Đặt mã PIN mới', '4 số, không dùng số dễ đoán'], lai: ['Nhập lại mã PIN mới', 'Để chắc chắn bạn nhớ'], tra: ['Nhập mã PIN', 'Để trả bằng Ví nội bộ'] };
@@ -25,13 +26,14 @@ export default function PinSheet({ dong, gui }) {
     const phim = (e) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (/^\d$/.test(e.key)) nhan(e.key); else if (e.key === 'Backspace') xoa(); else if (e.key === 'Escape') dongNeuRanh();
+      else if (e.key === 'Enter') { e.preventDefault(); xacNhan(); } // không để Enter bấm hộ nút số đang được chạm
     };
     window.addEventListener('keydown', phim);
     return () => window.removeEventListener('keydown', phim);
   });
 
-  useEffect(() => {
-    if (so.length < DO_DAI) return;
+  function xacNhan() {
+    if (dang || so.length < DO_DAI) return;
     if (gui) {
       datDang(true);
       gui(so).then(() => datDang(false), (e) => { datDang(false); datSo(''); datThongBao(e.message); });
@@ -44,7 +46,7 @@ export default function PinSheet({ dong, gui }) {
       () => { datDang(false); datXong(true); },
       (e) => { datDang(false); datSo(''); datDau(''); datBuoc('moi'); datThongBao(e.message); },
     );
-  }, [so]);
+  }
 
   const [tieuDe, phu] = LOI_TEXT[buoc];
   const noi = (
@@ -64,9 +66,9 @@ export default function PinSheet({ dong, gui }) {
             <div className="pin-msg" role="alert">{thongBao}</div>
             <div className="pin-pad">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <button type="button" key={k} onClick={() => nhan(String(k))}>{k}</button>)}
-              <span />
-              <button type="button" onClick={() => nhan('0')}>0</button>
               <button type="button" className="lk" onClick={xoa}>Xoá</button>
+              <button type="button" onClick={() => nhan('0')}>0</button>
+              <button type="button" className="lk pin-ok" disabled={dang || so.length < DO_DAI} onClick={xacNhan}>{dang ? 'Đang gửi…' : 'Xác nhận'}</button>
             </div>
           </>
         )}

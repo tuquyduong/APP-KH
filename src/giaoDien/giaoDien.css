@@ -114,6 +114,11 @@ button:disabled{ opacity:.45; cursor:default; }
 .pf-prev{ margin-top:10px; font-size:13px; color:var(--ink); background:#FFF6E8; border-radius:12px; padding:9px 12px; display:flex; gap:6px; align-items:center; }
 .pf-chips button:disabled{ opacity:.45; }
 
+/* ===== Bảng PIN (KH-MUA-1c F1–F2, chủ quán chốt 05.11): demo để <button> mặc định trình duyệt = chữ GIỮA; luật :where(button) ở trên kế thừa text-align
+   của .panel (trái) → số lệch trái trên iPhone. Trả lại giữa. Nút "Xác nhận" (thay "Quên PIN" chưa có cửa POS): khuôn .lk của demo, chữ màu nhấn. ===== */
+.pin-pad button{ text-align:center; }
+.pin-pad button.pin-ok{ color:var(--pink-dark); font-weight:700; }
+
 /* ===== Nhãn nhỏ in hoa ở ô Giờ vàng / Trắc nghiệm (KH-UI-3b F2): lỗi CÓ SẴN trong demo — overflow:hidden + dòng quá thấp ở cỡ ~9px cắt dấu tiếng Việt (Ắ Ệ Ờ…).
    Chỉ nới chiều cao dòng; KHÔNG đổi màu / phông / cỡ chữ. ===== */
 .hb-k{ line-height:1.7; }
