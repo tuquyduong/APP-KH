@@ -3,6 +3,11 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 05.11.2026
+- **Đặt đơn: POS báo "kho bận" (`KHO_BAN`) = CHƯA RÕ, gửi lại CÙNG khoá** (chủ quán duyệt mở KH-MUA-1c 05.11): POS có thể báo kho bận SAU khi đã trừ ví (chat đọc code POS) — App không bao giờ cho đặt lại bằng khoá mới trong trường hợp này. `KHOA_GUI_DA_DUNG` → mời xem Lịch sử đơn, không tự xoá. Theo hợp đồng v9 dòng 116; chat POS sẽ sửa câu "mọi 4xx = chưa tạo" (dòng 101). (KH-MUA-1c)
+- **Bảng nhập PIN** (chủ quán 05.11, thử trên iPhone): số căn giữa nút, bàn phím giữa khung; hàng cuối "Xoá" (lùi MỘT số) · 0 · "Xác nhận"; KHÔNG tự gửi khi đủ 4 số — bấm "Xác nhận" mới gửi (cả trả ví lẫn đặt PIN). (KH-MUA-1c)
+- **Giỏ hàng có nút xoá món** và **số đơn hiển thị = số bill POS** (không dùng mã App dạng A47Z8N9CF) (chủ quán 05.11) — giỏ ở KH-BAO-1; số bill chờ POS trả trường (thư `YEU_CAU_APPKH_GUI_POS_05112026.md`).
+
 ## 03.11.2026
 - **Lời chào hiện ĐỦ TÊN đúng như khách nhập** (chủ quán 03.11): vd khách nhập "LINH P" → "Chào buổi trưa, anh LINH P!". Bỏ cách lấy chữ cuối của tên. (Thay ý "Tên ngắn viết hoa chữ đầu" của 31.10.) (KH-BAO-1)
 - **Khách tạo từ App phải ĐỦ trường thông tin y như khách tạo ở POS** (chủ quán 03.11), và khách App phải hiện ở màn Khách hàng POS — việc POS (`trao_doi/YEU_CAU_APPKH_GUI_POS_03112026_b.md`: một hàm tạo khách chung cho quầy + App).
