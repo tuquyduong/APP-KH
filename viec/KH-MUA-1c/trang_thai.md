@@ -16,6 +16,9 @@ a0b68d0 TIEN-DO: mo KH-MUA-1c (KHO_BAN = chua ro, gui lai cung khoa; hop dong v9
 - Ngoại lệ đã làm: nghiệm thu **A1** (chép `viec/KH-MUA-1c/hop_dong_v9.md` → `thiet_ke/HOP_DONG_API_KH.md`, `cmp` khớp). Lý do: Stop hook báo `npm test` ĐỎ
   ngay trên commit phiếu `12fe94d` — `thu_KHUI3b.js` ca A1 "HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/" (173 · 1), vì phiếu thêm v9 vào `viec/`
   mà `thiet_ke/` còn v5. Chép nguyên byte, không quyết định gì; sau chép `thu_KHUI3b.js` 174 · 0, `thu_KHKHOP1.js` 84 · 0.
+- Chép v9 làm `thu_KHMUA1b.js` ca A1 đỏ (bài ghim cứng `viec/KH-MUA-1b/hop_dong_v5.md`, 252 · 1) — hai bài cũ đòi hai bản khác nhau. Sửa ca A1 của
+  `thu_KHMUA1b.js` theo cùng luật `thu_KHUI3b.js` A1 (bản mới nhất trong `viec/`, v5 trở lên). Đỏ trên v5 (45 · 1), xanh trên v9 (46 · 0) — `bang_chung_do.txt`.
+  `npm test` → **29 đạt · 0 hỏng**. (Người gác chặn `git worktree`; kiểm đỏ bằng cách tạm chép bản v5 của `12fe94d` vào `thiet_ke/` rồi chép v9 lại, `cmp` khớp.)
 
 ## Câu hỏi
 - Q1 (đụng tiền, xin duyệt cùng kế hoạch): `ke_hoach.md` mục 6 chỉnh 1 — trong một chuỗi tự gửi lại, 4xx có code đến SAU một lần "chưa rõ" (vd 429 sau KHO_BAN)

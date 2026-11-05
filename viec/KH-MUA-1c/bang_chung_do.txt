@@ -1,0 +1,15 @@
+KH-MUA-1c — bằng chứng đỏ (phần đã làm trước khi duyệt kế hoạch: A1 + bài cũ thu_KHMUA1b.js ca A1)
+
+## A1 — thu_KHMUA1b.js ca A1 (đổi: so với bản hop_dong_v<N>.md mới nhất trong viec/, cùng luật thu_KHUI3b A1)
+Gốc = thiet_ke/HOP_DONG_API_KH.md của 12fe94d (v5), bài đã sửa, KHONG_TRINH_DUYET=1:
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte  — /home/user/APP-KH/viec/KH-MUA-1c/hop_dong_v9.md
+  45 đạt · 1 hỏng
+Sau chép v9 (cmp khớp), KHONG_TRINH_DUYET=1:
+  46 đạt · 0 hỏng
+(Bài cũ trước khi sửa, trên v9: ✗ A1 … ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md — 252 · 1 có Chromium; bài ghim cứng v5 trái với thu_KHUI3b A1 đòi bản mới nhất.)
+
+## thu_KHUI3b.js (không sửa bài) — đỏ ngay trên commit phiếu 12fe94d, xanh sau chép v9
+  12fe94d: ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ … — 173 đạt · 1 hỏng (Chromium)
+  sau chép: 174 đạt · 0 hỏng
+
+SỐ CA thu_KHMUA1b.js: 46
