@@ -29,6 +29,8 @@ DOT_BIEN = [
     ('BV-GHI-HONG-DOC-KHO', DD, "  let tho;\n", "  if (ghiHong) return boNho();\n  let tho;\n", False),
     ('VS-PIN-TU-GUI', PS, "  function xacNhan() {", "  useEffect(() => { if (so.length === DO_DAI) xacNhan(); }, [so]);\n  function xacNhan() {", True),
     ('VS-PIN-XOA-HET', PS, "datSo(so.slice(0, -1));", "datSo('');", True),
+    ('VS-GUI-LAI-429-XOA', TT, "if (cu && e.code === 'QUA_NHIEU_LAN') { datMoPin(null); xuLyLoi(e); return; }", "", True),
+    ('VS-PIN-ENTER-SAU-XONG', PS, "if (xong || dang || so.length < DO_DAI) return;", "if (dang || so.length < DO_DAI) return;", True),
     ('BV-PIN-GIUA', CSS, ".pin-pad button{ text-align:center; }\n", "", True),
 ]
 
