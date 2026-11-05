@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 29,
+  "phien_ban_so": 30,
   "cap_nhat": "2026-11-05",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -291,14 +291,15 @@
       "ma": "KH-TT-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-MUA-1c"
       ],
       "ten": "Thanh toan: bam CA dong \"Tru tu so du vi\" (khong chi o cong tac 42x24), so du loi → \"Bam de thu lai\"; bo dong \"Chuyen khoan QR\"; nut dat ghi dung cach tra (\"Thanh toan qua QR …\" / \"Tru vi …\" / \"Tru vi … + QR …\")",
-      "ghi_chu": "05.11 chu quan thu tren iPhone: bam tru so du khong phan hoi; dong Chuyen khoan QR thua voi nut Xac nhan tra. Chat doc code dc3f41e: chi o .switch 42x24 nhan bam; /toi loi → khoa, khong thu lai. Chay song song KH-SINH-1",
+      "ghi_chu": "05.11 chu quan thu tren iPhone: bam tru so du khong phan hoi; dong Chuyen khoan QR thua voi nut Xac nhan tra. Chat doc code dc3f41e: chi o .switch 42x24 nhan bam; /toi loi → khoa, khong thu lai. Chay song song KH-SINH-1 | 05.11 chat soat cuoi DAT: dau nhanh 63accb5; cong tinh + chay kieu GitHub DAT voi main 4278cd7; ghep thu main + KH-TT-1 + KH-SINH-1 sach (thu_KHNHANH1 hai cho khac nhau); anh 3 co dat. Ca dong vi bam duoc, so du loi → bam thu lai, bo dong QR, nut ghi cach tra. Gop PR #17 (650f750)",
       "ngay": "2026-11-05",
-      "han": "2026-11-06"
+      "han": "2026-11-06",
+      "commit": "650f750"
     },
     {
       "ma": "KH-BAO-1",
