@@ -10,7 +10,17 @@ a0b68d0 TIEN-DO: mo KH-MUA-1c (KHO_BAN = chua ro, gui lai cung khoa; hop dong v9
 8497ce3 TIEN-DO: KH-MUA-1b xong (chat soat cuoi DAT, gop PR); quyet dinh 03.11 (loi chao du ten, khach App du truong nhu POS); thu App 03.11 b - so v24
 ```
 
-## Bước đang ở
+## Đối chiếu bản chụp — phiên làm tiếp (05.11, sau duyệt kế hoạch 036e2cf)
+- Nhánh `viec/KH-MUA-1c`; cây sạch. `git fetch` → HEAD `0f158cc` · FETCH_HEAD `0f158cc` (bằng nhau, không kéo).
+```
+0f158cc KH-MUA-1c: bang chung do A1 + trang thai (npm test 29 dat)
+7dc7b0f KH-MUA-1c: thu_KHMUA1b A1 so hop dong voi ban moi nhat trong viec/ (nhu thu_KHUI3b)
+dd2fdf6 KH-MUA-1c: A1 chep hop dong v9 vao thiet_ke (npm test do tu commit phieu)
+```
+- Chủ quán duyệt kế hoạch (05.11): Q1 đồng ý cả hai — (1) 4xx đến SAU một lần "chưa rõ" trong cùng chuỗi tự gửi lại = chưa rõ, giữ bản ghi;
+  (2) KHO_BAN tự gửi lại tối đa 8 lần (~16 giây), hằng số có tên. Phương án A còn lại theo kế hoạch.
+
+## Bước đang ở (phiên trước)
 - Bước 3 xong: `ke_hoach.md` đã viết, agent phụ soát kế hoạch (kết quả ở cuối `ke_hoach.md`).
 - Phiếu dặn **"Chờ duyệt kế hoạch"** → commit, push, DỪNG. Chưa viết bài thử, chưa sửa `src/`.
 - Ngoại lệ đã làm: nghiệm thu **A1** (chép `viec/KH-MUA-1c/hop_dong_v9.md` → `thiet_ke/HOP_DONG_API_KH.md`, `cmp` khớp). Lý do: Stop hook báo `npm test` ĐỎ

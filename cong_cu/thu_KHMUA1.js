@@ -114,7 +114,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     // B3 ví
     k('B3 ví đủ → thiếu 0; thiếu → số thiếu theo số POS; thiếu số → null', D.viThieu(87654, 100000) === 0 && D.viThieu(87654, 50000) === 37654 && D.viThieu(null, 5) === null && D.viThieu(5, undefined) === null);
     // B8 lỗi theo danh sách trắng
-    k('B8 (v5 luật 4xx) 4xx có code → chắc chưa tạo; mất mạng / 5xx / không code / lạ → chưa rõ', D.loaiLoi({ status: 400, code: 'PIN_SAI' }) === 'chua_tao' && D.loaiLoi({ status: 400, code: 'VI_KHONG_DU' }) === 'chua_tao' && D.loaiLoi({ status: 409, code: 'KHO_BAN' }) === 'chua_tao' && D.loaiLoi({ status: 0, code: 'MANG_LOI' }) === 'khong_biet' && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi(new Error('x')) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet');
+    k('B8 (v9) 4xx có code → chắc chưa tạo, trừ KHO_BAN (chưa rõ); mất mạng / 5xx / không code / lạ → chưa rõ', D.loaiLoi({ status: 400, code: 'PIN_SAI' }) === 'chua_tao' && D.loaiLoi({ status: 400, code: 'VI_KHONG_DU' }) === 'chua_tao' && D.loaiLoi({ status: 409, code: 'KHO_BAN' }) === 'khong_biet' && D.loaiLoi({ status: 0, code: 'MANG_LOI' }) === 'khong_biet' && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi(new Error('x')) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet');
     // B6 ngoài giờ, lỗi
     k('B6 nhan_don false / dang_mo false → khoá + câu thong_bao; trong giờ / chưa biết → ""', D.chanDat({ nhan_don: false, dang_mo: true, thong_bao: 'Quán ngừng nhận đơn' }) === 'Quán ngừng nhận đơn' && !!D.chanDat({ nhan_don: true, dang_mo: false, thong_bao: '' }) && D.chanDat({ nhan_don: true, dang_mo: true }) === '' && D.chanDat(null) === '');
     // B7 đếm ngược QR theo giờ VN
