@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 05.11.2026
+- **Thanh toán: nút đặt nói cách trả, bỏ dòng "Chuyển khoản QR"** (chủ quán 05.11, thử trên iPhone): nút ghi "Thanh toán qua QR <tổng>" / "Trừ ví <tổng>" / "Trừ ví <số dư> + QR <còn thiếu>"; bấm vào BẤT KỲ chỗ nào của dòng "Trừ từ số dư ví" là bật / tắt; số dư đọc lỗi → "Bấm để thử lại" (KH-TT-1).
 - **Chi tiết đơn vẽ đúng tờ hoá đơn POS** (KH-HD-1 gộp 05.11): món, giá gạch, giảm hạng / Giờ vàng / mã, cách trả, điểm, lời cảm ơn; đơn chờ trả vẫn vẽ món + Tổng.
 - **KH-MUA-1c gộp** (05.11): "kho bận" / hết phiên / khoá đã dùng = CHƯA RÕ, không bao giờ khoá mới; 4xx đến sau một lần chưa rõ trong cùng chuỗi vẫn chưa rõ; "kho bận" tự gửi lại tối đa 8 lần. Bảng PIN: Xoá · 0 · Xác nhận, không tự gửi. Lỗi nhỏ còn lại (công tắc khẩn + Gửi lại) làm trong KH-BAO-1.
 - **Chạy song song nhiều phiên máy** (chủ quán 05.11: "chạy liên tục nhiều session để hoàn thành nhanh"): mỗi việc một nhánh, một phiên Claude Code; hai việc cùng lúc KHÔNG sửa chung file (phiếu ghi rõ file cấm của nhau). Đợt 1: KH-MUA-1c + KH-HD-1 + KH-SINH-1.
