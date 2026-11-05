@@ -15,6 +15,7 @@ import PinSheet from '../components/PinSheet.jsx';
 import { Ico, Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 import { BangTien } from './GioHang.jsx';
+import '../giaoDien/thanh_toan.css';
 
 // Thanh toán theo demo (checkout), hợp đồng v9. Cách nhận: Lấy tại quầy; Giao tận nơi (Ahamove) hiện nhưng TẮT tới KH-MUA-2.
 // Cách trả: MỘT công tắc "Trừ từ số dư ví" (khuôn .notif-row + .switch của demo; ví 0đ → ẩn): tắt → QR cả đơn; bật + số dư ≥ tổng → vi;
@@ -142,11 +143,13 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
 
   // Số dư quyết định cách trả CHỈ lấy từ /toi gọi SAU khi mở màn (KH-NHANH-1 F1); chờ thì công tắc khoá.
   const viBat = cachTra !== 'qr';
-  const dongVi = toi.dangTai ? 'Đang cập nhật số dư…' : soDu === null ? 'Chưa đọc được số dư' : !viBat ? `Số dư ${dinhDangGia(soDu)}`
+  const loiSoDu = !toi.dangTai && soDu === null; // /toi lỗi: bấm dòng để đọc lại, KHÔNG tự đặt cách trả
+  const dongVi = toi.dangTai ? 'Đang cập nhật số dư…' : loiSoDu ? 'Chưa đọc được số dư · Bấm để thử lại' : !viBat ? `Số dư ${dinhDangGia(soDu)}`
     : cachTra === 'vi' ? `Số dư ${dinhDangGia(soDu)} — đủ trả cả đơn` : `Dùng hết ${dinhDangGia(soDu)} trong ví, còn thiếu ${dinhDangGia(thieu)} → quét QR`;
   const batDuocVi = duoc.vi || duoc.viQr;
   const chuNut = !DAT_ONLINE ? CHU_CHUA_MO : dang ? (guiLai ? 'Mạng chậm, đang gửi lại…' : 'Đang gửi…') : dsDon.dangTai ? 'Đang kiểm tra đơn trước…'
-    : chuaRo || donKhac || donCho ? 'Xử lý đơn trước rồi đặt tiếp' : conGiay ? `Thử lại sau ${conGiay} giây` : bg ? `Xác nhận trả ${dinhDangGia(bg.tong)}` : 'Xác nhận';
+    : chuaRo || donKhac || donCho ? 'Xử lý đơn trước rồi đặt tiếp' : conGiay ? `Thử lại sau ${conGiay} giây` : !bg ? 'Xác nhận'
+      : cachTra === 'qr' ? `Thanh toán qua QR ${dinhDangGia(bg.tong)}` : cachTra === 'vi' ? `Trừ ví ${dinhDangGia(bg.tong)}` : `Trừ ví ${dinhDangGia(soDu)} + QR ${dinhDangGia(thieu)}`;
   // Khối cảnh báo / chờ: khuôn .nt-state của demo (biểu tượng + dòng đậm + dòng nhỏ).
   const canhBao = (tieuDe, phu) => <div className="nt-state" role="alert"><Ico ten="warning" s={18} /><div>{tieuDe}{phu && <small>{phu}</small>}</div></div>;
 
@@ -193,18 +196,16 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
         <div className="quay-chu">Khi tới quầy, bạn đọc <b>số đơn</b> hiện trong app cho nhân viên.</div>
       </div>
 
-      <div className="sec-head"><h2>Cách trả tiền</h2></div>
       {soDu !== 0 && (
-        <div className="notif-row the-vi">
-          <div><div className="t">Trừ từ số dư ví</div><div className="s">{dongVi}</div></div>
-          <div className={`switch${viBat ? ' on' : ''}${batDuocVi ? '' : ' btn-disabled'}`} role="switch" aria-checked={viBat} aria-label="Trừ từ số dư ví" aria-disabled={!batDuocVi} {...(batDuocVi ? bam(() => datDungVi(!dungVi)) : {})} />
-        </div>
-      )}
-      {cachTra !== 'vi' && (
-        <div className="notif-row">
-          <div><div className="t">Chuyển khoản QR</div><div className="s">{cachTra === 'vi_qr' ? 'Quét mã bằng app ngân hàng cho phần còn thiếu' : 'Quét mã bằng app ngân hàng'}</div></div>
-          <Ico ten="qr" s={22} lop="ico-mint" />
-        </div>
+        <>
+          <div className="sec-head"><h2>Cách trả tiền</h2></div>
+          {/* CẢ dòng là chỗ bấm (ngón tay trên iPhone không trúng ô 42×24); .switch chỉ là hình. */}
+          <div className={`notif-row the-vi${batDuocVi || loiSoDu ? '' : ' the-vi-khoa'}`} {...(loiSoDu ? bam(toi.taiLai) : batDuocVi ? bam(() => datDungVi(!dungVi)) : {})}
+            role={loiSoDu ? 'button' : 'switch'} aria-label={loiSoDu ? undefined : 'Trừ từ số dư ví'} aria-checked={loiSoDu ? undefined : viBat} aria-disabled={loiSoDu ? undefined : !batDuocVi}>
+            <div><div className="t">Trừ từ số dư ví</div><div className="s">{dongVi}</div></div>
+            <div className={`switch${viBat ? ' on' : ''}`} aria-hidden="true" />
+          </div>
+        </>
       )}
 
       <BangTien bg={bg} loi={loi} />
