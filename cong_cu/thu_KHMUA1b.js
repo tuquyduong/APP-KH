@@ -86,6 +86,7 @@ if (require.main === module) (async () => {
   await thu('D', async () => {
     const sai = MA_DAT_DON.filter((x) => x.st < 500 && x.st !== 401 && !['KHO_BAN', 'KHOA_GUI_DA_DUNG'].includes(x.code)).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'chua_tao').map((x) => x.code);
     k('D1 MỌI 4xx có code của hợp đồng (trừ 401, KHO_BAN, KHOA_GUI_DA_DUNG — v9, KH-MUA-1c) → chắc chưa tạo', sai.length === 0 && MA_DAT_DON.length > 10, sai.join(','));
+    k('D1 (v9, KH-MUA-1c) 409 KHO_BAN và KHOA_GUI_DA_DUNG KHÔNG phải "chắc chưa tạo" (đơn có thể đã tạo)', ['KHO_BAN', 'KHOA_GUI_DA_DUNG'].every((c) => D.loaiLoi(loi(409, c)) !== 'chua_tao'));
     // S1 (vòng 4): 401 do lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần trước chưa tạo đơn
     k('S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'khong_biet');
     const sai5 = MA_DAT_DON.filter((x) => x.st >= 500).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'khong_biet').map((x) => x.code);
