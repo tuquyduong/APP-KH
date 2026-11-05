@@ -82,3 +82,9 @@ VS-PIN-XOA-HET, BV-PIN-GIUA.
   demo `.ghost-btn` là `<button>` chữ giữa) đang chữ TRÁI ở mọi màn có nút này; `.qty-ctrl button` (giỏ — phiếu cấm). Không sửa ở việc này; đề xuất một việc
   giao diện riêng: rà mọi `<button>` của demo mặc định chữ giữa (bỏ `text-align:inherit` hoặc thêm luật cho từng khuôn) + so ảnh.
 - C3: `thiet_ke/QUYET_DINH_APPKH.md` — chủ quán / chat tự rà ghi chú "tạm, chờ POS v7" nếu có (máy không sửa sổ).
+
+## Cổng (trước /ra-soat — phiếu E3)
+- `node tu_chay/cong.js tinh . 12fe94d^ HEAD viec/KH-MUA-1c` → chỉ `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi dưới).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 12fe94d^ HEAD viec/KH-MUA-1c` → `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16: thu_KHMUA1c trên mốc in 23 ca ≠ 26 — mốc chưa có hop_dong_v9.md, nhóm A dừng sớm).
+  Lần chạy đầu đỏ A16 vì dòng `SỐ CA` thiếu tiền tố `cong_cu/` — đã sửa (7da938f).
+HEAD ĐÃ KIỂM: 7da938f
