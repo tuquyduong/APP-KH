@@ -22,7 +22,7 @@ const dongSwitch = (/<div className=\{`switch[^\n]*/.exec(TT) || [''])[0];
 console.log('Phần 1 — đọc nguồn');
 k('A1 cả dòng .the-vi là role="switch" có aria-checked + aria-label, gắn bam', /'switch'/.test(dongVi) && /aria-checked/.test(dongVi) && /aria-label=\{[^}]*'Trừ từ số dư ví'/.test(dongVi) && /bam\(/.test(dongVi), dongVi);
 k('A1 ô .switch chỉ là hình: không gắn bam / role riêng', dongSwitch !== '' && !/bam\(/.test(dongSwitch) && !/role=/.test(dongSwitch), dongSwitch);
-k('A3 có chữ "Bấm để thử lại" và gọi toi.taiLai()', /Bấm để thử lại/.test(TT) && /toi\.taiLai\(\)/.test(TT));
+k('A3 có chữ "Bấm để thử lại" và gọi toi.taiLai()', /Bấm để thử lại/.test(TT) && /bam\(toi\.taiLai\)/.test(TT));
 k('B1 không còn khối "Chuyển khoản QR" / "Quét mã bằng app ngân hàng"', !/Chuyển khoản QR|Quét mã bằng app ngân hàng/.test(TT));
 k('B3 chữ nút: "Thanh toán qua QR", "Trừ ví", "+ QR"; hết "Xác nhận trả"', /Thanh toán qua QR/.test(TT) && /Trừ ví/.test(TT) && /\+ QR/.test(TT) && !/Xác nhận trả/.test(TT));
 k('B3 chữ trạng thái cũ giữ nguyên', ['Đang gửi…', 'Mạng chậm, đang gửi lại…', 'Xử lý đơn trước rồi đặt tiếp', 'Đang kiểm tra đơn trước…', 'Thử lại sau '].every((c) => TT.includes(c)) && /CHU_CHUA_MO/.test(TT));
