@@ -43,8 +43,8 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     k('A1 xưng hô nhập hoa vẫn ra chữ thường giữa câu', c(G, 'Chị', 'Linh') === 'Chào buổi chiều, chị Linh!' && c('', 'ANH', 'Linh') === 'Chào anh Linh!');
     const p = d.chiaLoiChao(G, 'anh', 'Nam');
     k('A1 chiaLoiChao: xung chữ thường', p.xung === 'anh' && p.ten === 'Nam' && p.dau === 'Chào buổi chiều', JSON.stringify(p));
-    k('A2 tên ngắn = từ cuối, viết hoa chữ đầu, phần còn lại giữ nguyên', d.tenNgan('nguyễn linh') === 'Linh' && d.tenNgan('Anh Linh') === 'Linh' && d.tenNgan('  trần   văn  nAm ') === 'NAm' && d.tenNgan('') === '' && d.tenNgan(null) === '', [d.tenNgan('nguyễn linh'), d.tenNgan('trần văn nAm')].join('|'));
-    k('A2 "nguyễn linh" + "chị" → "Chào chị Linh!"', c('', 'chị', 'nguyễn linh') === 'Chào chị Linh!', c('', 'chị', 'nguyễn linh'));
+    k('A2 tên đủ như khách nhập (KH-SINH-1): gộp khoảng trắng, giữ hoa / thường', c('', null, '  trần   văn  nAm ') === 'Chào trần văn nAm!' && c('', null, 'Anh Linh') === 'Chào Anh Linh!', [c('', null, '  trần   văn  nAm '), c('', null, 'Anh Linh')].join('|'));
+    k('A2 "nguyễn linh" + "chị" → "Chào chị nguyễn linh!"', c('', 'chị', 'nguyễn linh') === 'Chào chị nguyễn linh!', c('', 'chị', 'nguyễn linh'));
   });
 
   await thu('A3', async () => {
@@ -267,7 +267,7 @@ async function trinhDuyet(pw) {
     await ca(`chao-${rong}`, { rong }, async (t) => {
       await mo(t, '/trangchu');
       const h1 = await chu(t, '#home h1');
-      k(`A1 [${rong}] Trang chủ: giờ POS 20:30 → "Chào buổi tối, chị Linh!"`, h1 === 'Chào buổi tối, chị Linh!', h1);
+      k(`A1 [${rong}] Trang chủ: giờ POS 20:30 → "Chào buổi tối, chị Nguyễn Linh!"`, h1 === 'Chào buổi tối, chị Nguyễn Linh!', h1);
       k(`A1 [${rong}] lời chào không tràn ngang`, await khongTran(t));
       if (rong === 360) await chup(t, 'ung-dung_trang-chu-dau_360');
     });
@@ -278,11 +278,11 @@ async function trinhDuyet(pw) {
   });
   await ca('chao-chua-xung-ho', { pos: { khach: { xung_ho: null } } }, async (t) => {
     await mo(t, '/trangchu');
-    k('A1 khách cũ chưa có xưng hô → "Chào buổi tối, Linh!"', (await chu(t, '#home h1')) === 'Chào buổi tối, Linh!', await chu(t, '#home h1'));
+    k('A1 khách cũ chưa có xưng hô → "Chào buổi tối, Nguyễn Linh!"', (await chu(t, '#home h1')) === 'Chào buổi tối, Nguyễn Linh!', await chu(t, '#home h1'));
   });
   await ca('chao-chua-bay-gio', { gio: 'hỏng', pos: { khach: { xung_ho: 'anh' } } }, async (t) => {
     await mo(t, '/trangchu');
-    k('A1 POS không trả bay_gio → "Chào anh Linh!"', (await chu(t, '#home h1')) === 'Chào anh Linh!', await chu(t, '#home h1'));
+    k('A1 POS không trả bay_gio → "Chào anh Nguyễn Linh!"', (await chu(t, '#home h1')) === 'Chào anh Nguyễn Linh!', await chu(t, '#home h1'));
   });
   await ca('chao-chua-ten', { pos: { khach: { ten: '' } } }, async (t) => {
     await mo(t, '/trangchu');
@@ -297,12 +297,12 @@ async function trinhDuyet(pw) {
         const chips = await t.locator('.pf-chips button').allInnerTexts();
         k(`A3 [${nhan}] 7 nút xưng hô viết chữ thường như demo`, chips.join(' · ') === 'anh · chị · cô · chú · bác · em · bạn', chips.join(' · '));
         const pv = await chu(t, '.pf-prev');
-        k(`A4 [${nhan}] xem trước “Chào buổi tối, chị Linh!”, xưng hô in đậm`, /Chào buổi tối,\s*chị\s*Linh!/.test(pv) && (await chu(t, '.pf-prev b')) === 'chị', pv);
+        k(`A4 [${nhan}] xem trước “Chào buổi tối, chị Nguyễn Linh!”, xưng hô in đậm`, /Chào buổi tối,\s*chị\s*Nguyễn Linh!/.test(pv) && (await chu(t, '.pf-prev b')) === 'chị', pv);
         k(`A4 [${nhan}] không tràn ngang`, await khongTran(t));
         if (rong === 360 && cs === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
         if (rong === 390 && cs === '100%') {
           await t.locator('.pf-chips button', { hasText: 'anh' }).click(); await t.waitForSelector('.save-ok');
-          k('A4 chọn "anh" → xem trước “… anh Linh!” ngay', /anh\s*Linh!/.test(await chu(t, '.pf-prev')));
+          k('A4 chọn "anh" → xem trước “… anh Nguyễn Linh!” ngay', /anh\s*Nguyễn Linh!/.test(await chu(t, '.pf-prev')));
         }
       });
     }

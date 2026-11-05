@@ -106,16 +106,16 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
     const M = dungModule(['dinhDang.js', 'bayGio.js']);
     const c = (gio, xh, ten) => M.loiChao(gio, xh, ten);
     const T = 'Nguyễn Thị Linh';
-    k('C1 sáng 07:00 → "Chào buổi sáng, chị Linh!" (xưng hô chữ thường, tên ngắn = từ cuối)', c('2026-10-30 07:00:00', 'chị', T) === 'Chào buổi sáng, chị Linh!', c('2026-10-30 07:00:00', 'chị', T));
+    k('C1 sáng 07:00 → "Chào buổi sáng, chị Nguyễn Thị Linh!" (xưng hô chữ thường, tên ĐỦ như khách nhập — KH-SINH-1)', c('2026-10-30 07:00:00', 'chị', T) === 'Chào buổi sáng, chị Nguyễn Thị Linh!', c('2026-10-30 07:00:00', 'chị', T));
     const moc = [['05:00:00', 'sáng'], ['10:59:59', 'sáng'], ['11:00:00', 'trưa'], ['12:59:59', 'trưa'], ['13:00:00', 'chiều'], ['17:59:59', 'chiều'], ['18:00:00', 'tối'], ['23:30:00', 'tối'], ['00:15:00', 'tối'], ['04:59:59', 'tối']];
     const sai = moc.filter(([g, b]) => c(`2026-10-30 ${g}`, 'anh', 'Nam') !== `Chào buổi ${b}, anh Nam!`).map(([g]) => g);
     k('C1 mốc giờ: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối', sai.length === 0, sai.join(','));
     k('C2 giờ POS dạng "T" cũng đọc đúng', c('2026-10-30T13:00:00', 'cô', 'Hoa') === 'Chào buổi chiều, cô Hoa!');
-    k('C2 chưa có bay_gio → "Chào chị Linh!", không có buổi', c('', 'chị', T) === 'Chào chị Linh!' && c(null, 'chị', T) === 'Chào chị Linh!' && c('hỏng', 'chị', T) === 'Chào chị Linh!');
-    k('C2 khách chưa có xưng hô (null / rỗng) → bỏ phần xưng hô', c('2026-10-30 07:00:00', null, T) === 'Chào buổi sáng, Linh!' && c('2026-10-30 07:00:00', '', T) === 'Chào buổi sáng, Linh!' && c('', undefined, T) === 'Chào Linh!');
+    k('C2 chưa có bay_gio → "Chào chị Nguyễn Thị Linh!", không có buổi', c('', 'chị', T) === 'Chào chị Nguyễn Thị Linh!' && c(null, 'chị', T) === 'Chào chị Nguyễn Thị Linh!' && c('hỏng', 'chị', T) === 'Chào chị Nguyễn Thị Linh!');
+    k('C2 khách chưa có xưng hô (null / rỗng) → bỏ phần xưng hô', c('2026-10-30 07:00:00', null, T) === 'Chào buổi sáng, Nguyễn Thị Linh!' && c('2026-10-30 07:00:00', '', T) === 'Chào buổi sáng, Nguyễn Thị Linh!' && c('', undefined, T) === 'Chào Nguyễn Thị Linh!');
     k('C2 chưa có tên → "bạn" (có xưng hô: chỉ xưng hô, không "chị bạn")', c('2026-10-30 07:00:00', null, '') === 'Chào buổi sáng, bạn!' && c('', null, '   ') === 'Chào bạn!' && c('2026-10-30 07:00:00', 'chị', null) === 'Chào buổi sáng, chị!');
     k('C3 chưa đăng nhập: loiChao rỗng cả ba → "Chào bạn!"', c('', '', '') === 'Chào bạn!');
-    k('C1 tên ngắn: nhiều khoảng trắng, một từ', c('', null, '  Trần   Văn  Nam ') === 'Chào Nam!' && c('', null, 'Linh') === 'Chào Linh!');
+    k('C1 tên đủ: nhiều khoảng trắng gộp lại, một từ', c('', null, '  Trần   Văn  Nam ') === 'Chào Trần Văn Nam!' &&c('', null, 'Linh') === 'Chào Linh!');
     k('C2 coBayGio: chưa nhận → false; nhận "bay_gio" → true; hỏng không đổi; xoaLech → false', typeof M.coBayGio === 'function' && (() => { const a = M.coBayGio(); M.datBayGio('x'); const b = M.coBayGio(); M.datBayGio('2026-10-30T20:30:00'); const d = M.coBayGio(); M.xoaLech(); return a === false && b === false && d === true && M.coBayGio() === false; })());
     const tc = doc('src/pages/TrangChu.jsx');
     k('C2 Trang chủ lấy giờ từ bayGio() của POS, không dùng đồng hồ máy', /bayGio\(\)/.test(tc) && !/new Date|Date\.now|gioVn/.test(tc));
@@ -304,13 +304,13 @@ async function trinhDuyet(pw) {
         const chips = await t.locator('.pf-chips button').allInnerTexts();
         k(`B1 [${nhan}] thẻ "Quán gọi bạn là" đầu màn, 7 nút theo XUNG_HO`, JSON.stringify(chips) === JSON.stringify(['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']) && /Quán gọi bạn là/.test(await t.locator('.pf-card').first().innerText()), JSON.stringify(chips));
         k(`B1 [${nhan}] nút đang chọn = xưng hô hiện tại (chị)`, await t.locator('.pf-chips button.on').innerText() === 'chị');
-        k(`B1 [${nhan}] xem trước kiểu demo theo giờ POS (không theo đồng hồ máy)`, /Chào buổi tối,\s*chị\s*Linh!/.test(await t.locator('.pf-prev').innerText()), await t.locator('.pf-prev').innerText());
+        k(`B1 [${nhan}] xem trước kiểu demo theo giờ POS (không theo đồng hồ máy)`, /Chào buổi tối,\s*chị\s*Nguyễn Linh!/.test(await t.locator('.pf-prev').innerText()), await t.locator('.pf-prev').innerText());
         if (rong === 360 && co === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
         await t.locator('.pf-chips button', { hasText: 'Anh' }).click();
         await t.waitForSelector('.save-ok');
         const pu = them(S, 'PUT', '/toi');
         k(`B1 [${nhan}] chạm "Anh" → PUT /toi chỉ { xung_ho: "anh" }, hiện "Đã lưu"`, pu.length === 1 && JSON.stringify(pu[0].than) === '{"xung_ho":"anh"}' && /Đã lưu/.test(await t.locator('.save-ok').first().innerText()), JSON.stringify(pu));
-        k(`B1 [${nhan}] xem trước đổi theo: "anh Linh"`, /anh\s*Linh/.test(await t.locator('.pf-prev').innerText()) && await t.locator('.pf-chips button.on').innerText() === 'anh');
+        k(`B1 [${nhan}] xem trước đổi theo: "anh Linh"`, /anh\s*Nguyễn Linh/.test(await t.locator('.pf-prev').innerText()) && await t.locator('.pf-chips button.on').innerText() === 'anh');
         await t.locator('#ten-toi').fill('Trần Minh'); await t.getByRole('button', { name: 'Lưu tên' }).click(); await t.waitForTimeout(300);
         const pu2 = them(S, 'PUT', '/toi');
         k(`B2 [${nhan}] Lưu tên → PUT /toi chỉ { ten }`, pu2.length === 2 && JSON.stringify(pu2[1].than) === '{"ten":"Trần Minh"}', JSON.stringify(pu2));
@@ -338,7 +338,7 @@ async function trinhDuyet(pw) {
 
   await ca('hoso-chua-xung-ho', { pos: { khach: { xung_ho: null } } }, async (t) => {
     await mo(t, '/taikhoan/thongtin');
-    k('B1 khách cũ chưa có xưng hô: không nút nào sáng, xem trước bỏ xưng hô', (await t.locator('.pf-chips button.on').count()) === 0 && /Chào buổi tối,\s*Linh/.test(await t.locator('.pf-prev').innerText()));
+    k('B1 khách cũ chưa có xưng hô: không nút nào sáng, xem trước bỏ xưng hô', (await t.locator('.pf-chips button.on').count()) === 0 && /Chào buổi tối,\s*Nguyễn Linh/.test(await t.locator('.pf-prev').innerText()));
   });
 
   await ca('hoso-tai-lai', {}, async (t, S) => {
@@ -355,7 +355,7 @@ async function trinhDuyet(pw) {
     await ca(`chao-${rong}`, { rong }, async (t) => {
       await mo(t, '/trangchu');
       const h1 = await t.locator('#home h1').innerText();
-      k(`C1 [${rong}] đã đăng nhập: giờ POS 20:30 (đồng hồ máy 07:00) → "Chào buổi tối, chị Linh!"`, h1 === 'Chào buổi tối, chị Linh!', h1);
+      k(`C1 [${rong}] đã đăng nhập: giờ POS 20:30 (đồng hồ máy 07:00) → "Chào buổi tối, chị Nguyễn Linh!"`, h1 === 'Chào buổi tối, chị Nguyễn Linh!', h1);
       k(`C [${rong}] lời chào không tràn ngang`, await khongTran(t));
       if (rong === 360) await chup(t, 'ung-dung_trang-chu-dau_360');
     });
@@ -364,7 +364,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/taikhoan/thongtin');
     await t.locator('.pf-chips button', { hasText: 'Cô' }).click(); await t.waitForSelector('.save-ok');
     await t.locator('.tabbar .tab', { hasText: 'Trang chủ' }).click(); await t.waitForTimeout(600);
-    k('C4 đổi xưng hô rồi về Trang chủ → lời chào mới ngay, không tải lại trang', await t.locator('#home h1').innerText() === 'Chào buổi tối, cô Linh!',await t.locator('#home h1').innerText());
+    k('C4 đổi xưng hô rồi về Trang chủ → lời chào mới ngay, không tải lại trang', await t.locator('#home h1').innerText() === 'Chào buổi tối, cô Nguyễn Linh!',await t.locator('#home h1').innerText());
   });
   await ca('chao-khach', { token: '' }, async (t, S) => {
     await mo(t, '/trangchu');
@@ -373,7 +373,7 @@ async function trinhDuyet(pw) {
   });
   await ca('chao-chua-bay-gio', { gio: 'hỏng', pos: { khach: { xung_ho: 'anh' } } }, async (t) => {
     await mo(t, '/trangchu');
-    k('C2 POS không trả bay_gio hợp lệ → "Chào anh Linh!", không buổi', await t.locator('#home h1').innerText() === 'Chào anh Linh!',await t.locator('#home h1').innerText());
+    k('C2 POS không trả bay_gio hợp lệ → "Chào anh Nguyễn Linh!", không buổi', await t.locator('#home h1').innerText() === 'Chào anh Nguyễn Linh!',await t.locator('#home h1').innerText());
   });
 
   // D — tự gia hạn
@@ -390,7 +390,7 @@ async function trinhDuyet(pw) {
   await ca('gia-han-429', { pos: { giaHan429: true } }, async (t, S) => {
     await mo(t, '/trangchu');
     const luu = await t.evaluate(() => ({ tk: localStorage.getItem('kh_token'), ngay: localStorage.getItem('kh_gia_han') }));
-    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, chị Linh!');
+    k('D2 429 → im lặng: không báo lỗi, giữ token, không ghi ngày', luu.tk === 'tok-A' && luu.ngay === null && await t.locator('#home h1').innerText() === 'Chào buổi tối, chị Nguyễn Linh!');
   });
 
   // E3 — menu công khai
