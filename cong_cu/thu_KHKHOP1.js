@@ -52,6 +52,9 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
     const sai4 = ds.filter((m) => m.co && !m.moi && m.cua.startsWith('GET') && m.truong.some((t) => !(cuaHd.get(khoaCua(m)).tra || []).includes(t))).map((m) => m.ma);
     k('A2 trường của mục cũ (không moi) đều có trong "tra" của hợp đồng', sai4.length === 0, sai4.join(','));
     k('A2 mục POST/PUT chỉ ghi "có trong hợp đồng" (không có truong để kiểm)', ds.filter((m) => /^(POST|PUT)/.test(m.cua)).every((m) => m.truong.length === 0));
+    const kk = doc('src/pages/KiemKhop.jsx');
+    const thieuGoi = [...new Set(ds.filter((m) => m.co && m.cua.startsWith('GET ') && m.cua !== 'GET /don/:ma').map((m) => m.cua))].filter((c) => !kk.includes(`'${c}'`));
+    k('A2 trang /kiemkhop có hàm gọi cho MỌI cửa GET co:true (KH-MUA-1c: có GET /chuong-trinh của v9)', kk.includes("'GET /chuong-trinh'") && thieuGoi.length === 0, thieuGoi.join(','));
   }
 
   // Hàm thuần
@@ -163,6 +166,7 @@ async function trinhDuyet(pw) {
       }
       if (duong === '/hang') { const h = { id: 1, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }; if (P.thieuHang) delete h[P.thieuHang]; return json(200, { success: true, data: [h] }); }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [], ...(P.gvMoi ? { gia_mon: [{ ma: 'TLB', gia_goc: 30000, gia: 25000 }] } : {}) });
+      if (duong === '/chuong-trinh') return json(200, { success: true, data: [{ ma: 'SN', ten: 'Sinh nhật', mo_ta: 'a', loai: 'sinh_nhat', dang_bat: true }] }); // v9 CT-1a
       const auth = req.headers().authorization || '';
       if (duong === '/menu') {
         if (P.menuCanDN && !/tok-A/.test(auth)) return json(401, { error: 'Cần đăng nhập', code: 'KH_TOKEN_SAI' });
@@ -186,7 +190,7 @@ async function trinhDuyet(pw) {
   };
   const chu = (t) => t.locator('#kiemkhop').innerText();
   const dem = (P, pt, d) => P.goi.filter((g) => g.pt === pt && g.duong === d).length;
-  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu'];
+  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu', '/chuong-trinh'];
   const hang = (t, ten) => t.locator('#kiemkhop .muc', { hasText: ten }).first();
 
   await ca('thong-vang-lai', {}, async (t, loi, P) => {
@@ -201,7 +205,7 @@ async function trinhDuyet(pw) {
     k('B3 cửa cần token khi chưa đăng nhập → "Đăng nhập để kiểm", không gọi /toi /diem /voucher /don', /Đăng nhập để kiểm/.test(nd) && ['/toi', '/diem', '/voucher'].every((d) => dem(P, 'GET', d) === 0) && !P.goi.some((g) => g.duong.startsWith('/don')));
     k('B3 không bao giờ POST / PUT', !P.goi.some((g) => g.pt !== 'GET'), JSON.stringify(P.goi.filter((g) => g.pt !== 'GET')));
     k('B4 mỗi cửa công khai đúng MỘT lần (kể cả /gio-hoat-dong dùng chung phần Kết nối)', CUA_GET.every((d) => dem(P, 'GET', d) === 1), JSON.stringify(P.goi.map((g) => g.duong)));
-    k('B3 chỉ gọi cửa có trong hợp đồng', P.goi.every((g) => ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu'].includes(g.duong)), JSON.stringify(P.goi));
+    k('B3 chỉ gọi cửa có trong hợp đồng', P.goi.every((g) => CUA_GET.includes(g.duong)), JSON.stringify(P.goi));
     k('B1 trang mở không cần đăng nhập, không thấy thanh tab chứa lối vào', !/dangnhap/.test(t.url()));
     k('B1 trang tự đặt <meta name="robots" content="noindex">', (await t.locator('meta[name="robots"]').getAttribute('content')) === 'noindex');
     k('thong-vang-lai: Lỗi JS = 0', loi.length === 0, loi.join('|'));
