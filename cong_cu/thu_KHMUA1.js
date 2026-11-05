@@ -288,7 +288,7 @@ async function trinhDuyet(pw) {
     const vi = t.locator('#checkout .the-vi');
     await t.waitForTimeout(300); await vi.locator('.switch').click(); await t.waitForTimeout(200);
     k('B3 (v5 ví + QR) ví không đủ: bật được, nói rõ dùng hết số dư và còn thiếu 37.654đ (theo tổng POS)', /Dùng hết 50\.000đ trong ví, còn thiếu 37\.654đ/.test(await vi.innerText()), await vi.innerText());
-    k('B3 (v5 ví + QR) phần còn thiếu vẫn trả bằng QR', /Chuyển khoản QR/.test(await chu(t, '#checkout')));
+    k('B3 (v5 ví + QR) phần còn thiếu vẫn trả bằng QR (nút "Trừ ví 50.000đ + QR 37.654đ")', /Trừ ví 50\.000đ \+ QR 37\.654đ/.test(await chu(t, '#checkout .nut-dat')), await chu(t, '#checkout .nut-dat'));
   });
 
   await ca('ngoai-gio', { gio: GIO2, pos: { gh: { nhan_don: false, dang_mo: true, thong_bao: 'Quán ngừng nhận đơn online, mở lại 07:00 ngày mai' } } }, async (t, loi, P) => {

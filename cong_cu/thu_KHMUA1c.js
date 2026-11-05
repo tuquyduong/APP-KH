@@ -237,7 +237,7 @@ async function trinhDuyet(pw) {
       for (let a = f && f.return; a; a = a.return) for (let h = a.memoizedState; h && typeof h === 'object' && 'next' in h; h = h.next) if (h.memoizedState === gio && h.queue) { h.queue.dispatch([]); return true; }
       return false;
     });
-    await doi(t, async () => !/Xác nhận trả/.test(await nut(t).innerText().catch(() => '')));
+    await doi(t, async () => /^Xác nhận( →)?$/.test((await nut(t).innerText().catch(() => '')).replace(/\s+/g, ' ').trim()));
     await goSo(t, PIN); await nutPin(t, 'Xác nhận').click(); await t.waitForTimeout(600);
     k('D1 bảng PIN mở sẵn, báo giá mất giữa chừng → nhập PIN + Xác nhận KHÔNG gửi POST /don, bảng đóng', da && S.guiDon.length === 0 && (await t.locator('.pin-pad').count()) === 0, `${da} ${S.guiDon.length}`);
   });

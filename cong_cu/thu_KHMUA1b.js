@@ -316,7 +316,7 @@ async function dungMay(pw, k) {
   const doiChu = (t, sel, mau, ms) => doi(t, async () => mau.test(await chu(t, sel)), ms);
   const nut = (t) => t.locator('#checkout .nut-dat').first();
   const nutKhoa = async (t) => (await nut(t).getAttribute('aria-disabled').catch(() => null)) === 'true';
-  const sanSang = (t) => doi(t, async () => !(await nutKhoa(t)) && /Xác nhận trả/.test(await nut(t).innerText().catch(() => '')));
+  const sanSang = (t) => doi(t, async () => !(await nutKhoa(t)) && /^(Thanh toán qua QR|Trừ ví) /.test(await nut(t).innerText().catch(() => '')));
   const bam = async (t) => { await nut(t).click(); };
   const nhapPin = async (t, pin) => { for (const c of pin) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await t.locator('.pin-pad button', { hasText: 'Xác nhận' }).click(); };
   const batVi = (t) => t.locator('#checkout .switch').first().click();
@@ -338,10 +338,10 @@ async function trinhDuyet(pw) {
   for (const rong of [360, 390, 430]) {
     them(`qr-${rong}`, { rong }, async ({ t, S }) => {
       await mo(t, '/thanhtoan');
-      k(`E2/K5 [${rong}] dòng "Chuyển khoản QR" không ghi "payOS"`, /Chuyển khoản QR/.test(await chu(t, '#checkout')) && !/payOS/i.test(await chu(t, '#checkout')));
+      k(`E2/K5 [${rong}] màn không ghi "payOS" (dòng "Chuyển khoản QR" đã bỏ — KH-TT-1)`, !/Chuyển khoản QR/.test(await chu(t, '#checkout')) && !/payOS/i.test(await chu(t, '#checkout')));
       await doi(t, async () => !/Đang cập nhật số dư/.test(await chu(t, '#checkout')));
       k(`Đ7 [${rong}] ví 0đ → ẩn công tắc "Trừ từ số dư ví"`, (await t.locator('#checkout .switch').count()) === 0 && !/Trừ từ số dư ví/.test(await chu(t, '#checkout')));
-      k(`K5 [${rong}] đơn QR thường: nút "Xác nhận trả 87.654đ" bật`, await sanSang(t));
+      k(`K5 [${rong}] đơn QR thường: nút "Thanh toán qua QR 87.654đ" bật`, await sanSang(t));
       await chup(t, `thanhtoan-${rong}`);
       k(`[${rong}] Thanh toán không tràn ngang`, !(await tranNgang(t)));
       const truoc = S.goi.length;
@@ -623,7 +623,7 @@ async function trinhDuyet(pw) {
   them('bao-gia-cho', { S0: { treBg: 1500 } }, async ({ t, S }) => {
     await mo(t, '/thanhtoan');
     await t.waitForTimeout(700);
-    k('Đ5 báo giá chưa về → nút Đặt khoá, không "Xác nhận trả"', (await nutKhoa(t)) && !/Xác nhận trả/.test(await nut(t).innerText()));
+    k('Đ5 báo giá chưa về → nút Đặt khoá, chữ "Xác nhận" (không ghi cách trả / tổng)', (await nutKhoa(t)) && /^Xác nhận( →)?$/.test((await nut(t).innerText()).replace(/\s+/g, ' ').trim()));
     k('Đ5 báo giá về → nút bật với đúng tổng đang hiện', await sanSang(t) && /87\.654đ/.test(await nut(t).innerText()));
     await bam(t);
     k('Đ5 tong_da_xem = tổng đang hiện', await doi(t, async () => S.guiDon.length === 1) && JSON.parse(S.guiDon[0]).tong_da_xem === 87654);

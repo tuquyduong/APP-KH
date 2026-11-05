@@ -394,13 +394,13 @@ async function trinhDuyet(pw) {
     await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(TRE + 300);
     const n0 = dem(S, '/toi');
     await sang(t, '/thanhtoan'); await t.waitForTimeout(TRE - 400);
-    const vi = t.locator('#checkout .the-vi'), cong = t.locator('#checkout .the-vi .switch');
+    const vi = t.locator('#checkout .the-vi'), cong = t.locator('#checkout .the-vi');
     const lop = await cong.getAttribute('class'), ch = await vi.innerText();
     await chup(t, `ung-dung_thanhtoan-dang-cap-nhat_${rong}`);
     k(`F1 [${rong}] mở Thanh toán → /toi được gọi lại`, dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
-    k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /btn-disabled/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
+    k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /the-vi-khoa/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
     await t.waitForTimeout(TRE + 300);
-    k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/btn-disabled/.test(await cong.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
+    k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/the-vi-khoa/.test(await cong.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
     k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
   });
   }));
