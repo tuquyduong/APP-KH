@@ -31,6 +31,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 
 (async () => {
   console.log('Phần 1 — hàm thuần + đọc nguồn');
+  k('KH-TT-1 A2 dòng ví khoá khi chờ /toi: class the-vi-khoa trên CẢ dòng (không còn btn-disabled trên .switch)', /the-vi-khoa/.test(doc('src/pages/ThanhToan.jsx')) && !/switch[^`]*btn-disabled/.test(doc('src/pages/ThanhToan.jsx')));
   const MAN = ['src/pages/TaiKhoan.jsx', 'src/pages/TrangChu.jsx', 'src/pages/UuDai.jsx', 'src/pages/HoSo.jsx', 'src/pages/ManQR.jsx'];
 
   await thu('A', async () => {

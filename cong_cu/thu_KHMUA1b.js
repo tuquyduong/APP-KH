@@ -34,6 +34,7 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
 
 if (require.main === module) (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
+  k('KH-TT-1 B1 màn Thanh toán không còn dòng "Chuyển khoản QR" / chữ "Xác nhận trả"; ba chữ nút theo cách trả', !/Chuyển khoản QR|Xác nhận trả/.test(doc('src/pages/ThanhToan.jsx')) && /Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')) && /\+ QR/.test(doc('src/pages/ThanhToan.jsx')));
   let D = null;
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
 

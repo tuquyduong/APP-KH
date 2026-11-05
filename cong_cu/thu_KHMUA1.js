@@ -27,6 +27,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
 
 (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
+  k('KH-TT-1 B3 nút đặt ghi cách trả (không còn "Xác nhận trả", dòng "Chuyển khoản QR")', /Trừ ví/.test(doc('src/pages/ThanhToan.jsx')) && !/Xác nhận trả|Chuyển khoản QR/.test(doc('src/pages/ThanhToan.jsx')));
   let G = null, D = null, L = null, DD = null, LDN = null, CD = null;
   try { G = await nap('src/gio.js'); } catch (e) { k('nạp src/gio.js', false, String(e.message).split('\n')[0]); }
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
