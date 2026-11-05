@@ -45,8 +45,8 @@ if (require.main === module) (async () => {
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const m = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || {};
     k('A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)', ['bao_gia', 'dat_don', 'huy_don'].every((x) => m(x).co === true));
-    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua)).map((x) => x.ma);
-    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có)', conMoi.length === 0, conMoi.join(','));
+    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && x.viec_pos !== 'HD-KH-1').map((x) => x.ma);
+    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c)', conMoi.length === 0, conMoi.join(','));
     const api = doc('src/api.js');
     k('A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi', /goi\('POST', '\/gio\/bao-gia'/.test(api) && /goi\('POST', '\/don'/.test(api) && /goi\('POST', `\/don\/\$\{[^}]+\}\/huy`/.test(api));
   });
@@ -88,7 +88,7 @@ if (require.main === module) (async () => {
     k('D1 MỌI 4xx có code của hợp đồng (trừ 401, KHO_BAN, KHOA_GUI_DA_DUNG — v9, KH-MUA-1c) → chắc chưa tạo', sai.length === 0 && MA_DAT_DON.length > 10, sai.join(','));
     k('D1 (v9, KH-MUA-1c) 409 KHO_BAN và KHOA_GUI_DA_DUNG KHÔNG phải "chắc chưa tạo" (đơn có thể đã tạo)', ['KHO_BAN', 'KHOA_GUI_DA_DUNG'].every((c) => D.loaiLoi(loi(409, c)) !== 'chua_tao'));
     // S1 (vòng 4): 401 do lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần trước chưa tạo đơn
-    k('S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'khong_biet');
+    k('S1 401 KH_TOKEN_SAI → chưa rõ, dừng không tự gửi lại ("dung", KH-MUA-1c; không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'dung');
     const sai5 = MA_DAT_DON.filter((x) => x.st >= 500).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'khong_biet').map((x) => x.code);
     k('D2 5xx của hợp đồng (DANG_XU_LY, PAYOS_*…), LOI_MAY_CHU 500, mất mạng (status 0), 4xx không code, 200 lạ → chưa rõ',
       sai5.length === 0 && ['LOI_MAY_CHU', 'MANG_LOI'].every((c, i) => D.loaiLoi(loi([500, 0][i], c)) === 'khong_biet') && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi({ status: 200 }) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet', sai5.join(','));
