@@ -114,7 +114,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     // B3 ví
     k('B3 ví đủ → thiếu 0; thiếu → số thiếu theo số POS; thiếu số → null', D.viThieu(87654, 100000) === 0 && D.viThieu(87654, 50000) === 37654 && D.viThieu(null, 5) === null && D.viThieu(5, undefined) === null);
     // B8 lỗi theo danh sách trắng
-    k('B8 (v5 luật 4xx) 4xx có code → chắc chưa tạo; mất mạng / 5xx / không code / lạ → chưa rõ', D.loaiLoi({ status: 400, code: 'PIN_SAI' }) === 'chua_tao' && D.loaiLoi({ status: 400, code: 'VI_KHONG_DU' }) === 'chua_tao' && D.loaiLoi({ status: 409, code: 'KHO_BAN' }) === 'chua_tao' && D.loaiLoi({ status: 0, code: 'MANG_LOI' }) === 'khong_biet' && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi(new Error('x')) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet');
+    k('B8 (v9) 4xx có code → chắc chưa tạo, trừ KHO_BAN (chưa rõ); mất mạng / 5xx / không code / lạ → chưa rõ', D.loaiLoi({ status: 400, code: 'PIN_SAI' }) === 'chua_tao' && D.loaiLoi({ status: 400, code: 'VI_KHONG_DU' }) === 'chua_tao' && D.loaiLoi({ status: 409, code: 'KHO_BAN' }) === 'khong_biet' && D.loaiLoi({ status: 0, code: 'MANG_LOI' }) === 'khong_biet' && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi(new Error('x')) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet');
     // B6 ngoài giờ, lỗi
     k('B6 nhan_don false / dang_mo false → khoá + câu thong_bao; trong giờ / chưa biết → ""', D.chanDat({ nhan_don: false, dang_mo: true, thong_bao: 'Quán ngừng nhận đơn' }) === 'Quán ngừng nhận đơn' && !!D.chanDat({ nhan_don: true, dang_mo: false, thong_bao: '' }) && D.chanDat({ nhan_don: true, dang_mo: true }) === '' && D.chanDat(null) === '');
     // B7 đếm ngược QR theo giờ VN
@@ -273,9 +273,9 @@ async function trinhDuyet(pw) {
     k('B3 ví hiện số dư /toi (100.000đ)', /100\.000đ/.test(await chu(t, '#checkout .the-vi')));
     await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(300);
     k('B3 trả ví → bảng PIN', (await t.locator('.pin-sheet').count()) === 1);
-    await t.keyboard.type('1111'); await t.waitForTimeout(600);
+    await t.keyboard.type('1111'); await t.keyboard.press('Enter'); await t.waitForTimeout(600);
     k('B6 PIN sai → hiện NGUYÊN lời POS, vẫn ở thanh toán', /Mã PIN không đúng, còn 4 lần thử/.test(await chu(t, '.pin-msg')) && /\/thanhtoan$/.test(t.url()));
-    await t.keyboard.type('1357'); await t.waitForTimeout(900);
+    await t.keyboard.type('1357'); await t.keyboard.press('Enter'); await t.waitForTimeout(900);
     const post = P.goi.filter((g) => g.pt === 'POST' && g.duong === '/don');
     k('B3 PIN đúng → thân có pin + cach_tra vi → sang Theo dõi đơn', post.length === 2 && post[1].than.pin === '1357' && post[1].than.cach_tra === 'vi' && /\/don\/TQD42$/.test(t.url()), t.url());
     const kho = await t.evaluate(() => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }));
@@ -355,7 +355,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan');
     await t.waitForTimeout(300); await t.locator('#checkout .switch').click();
     await t.locator('#checkout .nut-dat').click(); await t.waitForTimeout(300);
-    await t.keyboard.type('1357'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
+    await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
     k('B8 (v5) trả ví mà mất mạng: tự gửi lại CÙNG khoá 3 lần rồi đóng bảng PIN, báo "chưa rõ", nhắc xem Lịch sử đơn', (await t.locator('.pin-sheet').count()) === 0 && /Lịch sử đơn/.test(await chu(t, '#checkout')) && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && dem(P, 'POST', '/don') === 4 && new Set(P.goi.filter((g) => g.pt === 'POST' && g.duong === '/don').map((g) => g.than.khoa_gui)).size === 1, String(dem(P, 'POST', '/don')));
     await t.locator('#checkout .nut-dat').click({ force: true }); await t.waitForTimeout(400);
     k('B8 … nút Xác nhận KHOÁ (bấm lại không mở PIN, không gửi đơn thứ hai); có nút "Xem Lịch sử đơn"', /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && (await t.locator('.pin-sheet').count()) === 0 && dem(P, 'POST', '/don') === 4 && (await t.locator('#checkout button', { hasText: 'Xem Lịch sử đơn' }).count()) === 1);
@@ -368,7 +368,7 @@ async function trinhDuyet(pw) {
       await mo(t, '/thanhtoan');
       await t.waitForTimeout(300); await t.locator('#checkout .switch').click();
       await t.locator('#checkout .nut-dat').click(); await t.waitForTimeout(300);
-      await t.keyboard.type('1357'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
+      await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await t.waitForTimeout(300); await t.clock.fastForward(2100); } await t.waitForTimeout(600); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
       await t.locator('#checkout .nut-dat').click({ force: true }); await t.waitForTimeout(400);
       k(`B8 (v5) trả ví, POS ${ten}: chưa rõ — tự gửi lại cùng khoá (1 + 3 lần), rồi đóng PIN, khoá nút, không gửi thêm`, (await t.locator('.pin-sheet').count()) === 0 && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && dem(P, 'POST', '/don') === 4, String(dem(P, 'POST', '/don')));
     });

@@ -16,11 +16,12 @@ import { Ico, Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 import { BangTien } from './GioHang.jsx';
 
-// Thanh toán theo demo (checkout), hợp đồng v5. Cách nhận: Lấy tại quầy; Giao tận nơi (Ahamove) hiện nhưng TẮT tới KH-MUA-2.
+// Thanh toán theo demo (checkout), hợp đồng v9. Cách nhận: Lấy tại quầy; Giao tận nơi (Ahamove) hiện nhưng TẮT tới KH-MUA-2.
 // Cách trả: MỘT công tắc "Trừ từ số dư ví" (khuôn .notif-row + .switch của demo; ví 0đ → ẩn): tắt → QR cả đơn; bật + số dư ≥ tổng → vi;
 // bật + 0 < số dư < tổng → vi_qr (số giữ / còn lại do POS trả). Dùng ví thì hỏi PIN (PinSheet). Mọi số tiền từ báo giá POS.
 // Chống đơn thứ hai: một lần bấm = một khoá gửi (datDon.guiDonAnToan tự gửi lại CÙNG khoá + thân khi chưa rõ); lần gửi chưa rõ nhớ ở kh_don_gui
-// (tải lại / tab khác vẫn chặn) tới khi "Gửi lại đúng đơn này" ra kết quả; mở màn hỏi GET /don — có đơn chờ trả thì mời tiếp tục / huỷ trước.
+// (tải lại / tab khác vẫn chặn) tới khi "Gửi lại đúng đơn này" ra kết quả; KHOA_GUI_DA_DUNG → giữ bản ghi (da_dung), mời xem Lịch sử đơn / khách tự bỏ qua.
+// Mở màn hỏi GET /don — có đơn chờ trả thì mời tiếp tục / huỷ trước.
 const MA_PIN = ['PIN_SAI', 'PIN_DANG_KHOA'];      // bảng PIN hiện lời POS, khách nhập lại
 const MA_NGOAI_GIO = ['NGOAI_GIO', 'QUA_GIO_NHAN_DON'];
 const MA_MON = { HET_HANG: 'Hết hàng', MON_KHONG_BAN: 'Không còn bán' };
@@ -89,7 +90,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     }
     if (e.code === 'CHUA_CO_PIN') datCanPin(true);
     if (e.code === 'CACH_KHONG_KHOP') toi.taiLai(); // số dư mới đủ → công tắc đang bật tự thành trả ví
-    datThongBao(e.code === 'KHOA_GUI_DA_DUNG' ? 'Vui lòng đặt lại' : e.message);
+    datThongBao(e.message);
   }
 
   // `cu` = bản ghi lần gửi chưa rõ: gửi lại ĐÚNG thân + khoá đó (PIN nhập lại, không nhớ).
@@ -109,8 +110,14 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       datDang(false); datMoPin(null); xong(don);
     }, (e) => {
       datDang(false); datGuiLai(false);
-      if (e.code === 'KHONG_BIET') { datMoPin(null); return; }
+      if (e.code === 'KHONG_BIET') {
+        // Khoá đã dùng: đơn có thể đã đặt trước đó → GIỮ bản ghi (chỉ khi vẫn là của lần gửi này), không mời gửi lại / đặt lại.
+        if (e.goc === 'KHOA_GUI_DA_DUNG' && conChuaRo(docGuiDo(), ghi.khoa_gui)) ghiGuiDo({ ...ghi, da_dung: true });
+        datMoPin(null); return;
+      }
       // POS trả 4xx: chắc chưa tạo → xoá bản ghi. Trừ gửi lại (cu) mà sai PIN: GIỮ bản ghi để nhập lại PIN gửi ĐÚNG khoá + thân cũ.
+      // Gửi lại (cu) bị trần lượt: không chứng minh đơn cũ chưa tạo (chuỗi trước đã chưa rõ) → GIỮ bản ghi, đếm ngược rồi gửi lại đúng khoá.
+      if (cu && e.code === 'QUA_NHIEU_LAN') { datMoPin(null); xuLyLoi(e); return; }
       if (MA_PIN.includes(e.code)) { if (!cu) ghiGuiDo(null); throw e; }
       ghiGuiDo(null);
       datMoPin(null);
@@ -123,13 +130,14 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     if (khoa) return;
     if (cachTra === 'qr') guiDon(); else datMoPin({});
   };
-  const guiLaiDungDon = () => { if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
+  const guiLaiDungDon = () => { if (conGiay > 0) return; if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
   const boQua = () => { ghiGuiDo(null); ve((x) => x + 1); };
   const datThem = () => { daThay.current = guiDo.khoa_gui; ve((x) => x + 1); };
   const huyDonCho = () => {
     datDangHuy(true); datThongBao('');
     huyDon(donCho.ma).then(() => { datDangHuy(false); sauHuy(); dsDon.taiLai(); }, (e) => { datDangHuy(false); datThongBao(e.message); dsDon.taiLai(); });
   };
+  const khongGuiLai = guiDo && (guiDo.quaHan || guiDo.da_dung); // POS không nhận lại khoá này → chỉ xem Lịch sử / bỏ qua
   const tenMon = (ma) => (ds.find((m) => m.ma === ma) || {}).ten || ma;
 
   // Số dư quyết định cách trả CHỈ lấy từ /toi gọi SAU khi mở màn (KH-NHANH-1 F1); chờ thì công tắc khoá.
@@ -147,16 +155,18 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       <DauManCon tieuDe="Thanh toán" phu="Chọn cách nhận hàng & trả tiền" lui={lui} canTrai />
       {chuaRo && (
         <>
-          {guiDo.quaHan ? canhBao('Lần đặt trước (hơn 24 giờ) chưa rõ kết quả', 'Bạn xem Lịch sử đơn trước khi đặt đơn mới nhé.')
-            : canhBao('Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
+          {guiDo.da_dung ? canhBao('Đơn này có thể đã đặt trước đó — mời bạn xem Lịch sử đơn')
+            : guiDo.quaHan ? canhBao('Lần đặt trước (hơn 24 giờ) chưa rõ kết quả', 'Bạn xem Lịch sử đơn trước khi đặt đơn mới nhé.')
+              : canhBao('Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
           <div className="card bang-tien">
             {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
-          {/* Quá 24 giờ POS không còn nhớ khoá (trả KHOA_GUI_DA_DUNG) → không mời gửi lại, chỉ xem Lịch sử / bỏ qua. */}
-          {!guiDo.quaHan && <button type="button" className="checkout-btn" onClick={guiLaiDungDon}><span>Gửi lại đúng đơn này</span><span>→</span></button>}
+          {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
+          {/* 429 khi gửi lại: khoá nút tới hết đếm ngược (cùng luật nút đặt) — bấm sớm chỉ thêm lượt bị chặn. */}
+          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0} onClick={guiLaiDungDon}><span>{conGiay ? `Gửi lại sau ${conGiay} giây` : 'Gửi lại đúng đơn này'}</span><span>→</span></button>}
           <button type="button" className="ghost-btn" onClick={moLichSu}>Xem Lịch sử đơn</button>
-          {guiDo.quaHan && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
+          {khongGuiLai && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
         </>
       )}
       {!chuaRo && donKhac && (

@@ -1,0 +1,69 @@
+KH-MUA-1c — bằng chứng đỏ (phần đã làm trước khi duyệt kế hoạch: A1 + bài cũ thu_KHMUA1b.js ca A1)
+
+## A1 — thu_KHMUA1b.js ca A1 (đổi: so với bản hop_dong_v<N>.md mới nhất trong viec/, cùng luật thu_KHUI3b A1)
+Gốc = thiet_ke/HOP_DONG_API_KH.md của 12fe94d (v5), bài đã sửa, KHONG_TRINH_DUYET=1:
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte  — /home/user/APP-KH/viec/KH-MUA-1c/hop_dong_v9.md
+  45 đạt · 1 hỏng
+Sau chép v9 (cmp khớp), KHONG_TRINH_DUYET=1:
+  46 đạt · 0 hỏng
+(Bài cũ trước khi sửa, trên v9: ✗ A1 … ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md — 252 · 1 có Chromium; bài ghim cứng v5 trái với thu_KHUI3b A1 đòi bản mới nhất.)
+
+## thu_KHUI3b.js (không sửa bài) — đỏ ngay trên commit phiếu 12fe94d, xanh sau chép v9
+  12fe94d: ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ … — 173 đạt · 1 hỏng (Chromium)
+  sau chép: 174 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHMUA1b.js: 47
+
+## KH-MUA-1c sau duyệt kế hoạch (05.11) — bài ở HEAD chạy trên src/ GỐC (a2ecb7f, trước vá), KHONG_TRINH_DUYET=1
+(đổi tạm 8 file src/ bằng bản git archive a2ecb7f ở nháp, chạy, trả lại — người gác chặn git worktree)
+== thu_KHMUA1c.js (gốc, thoát 1) — bài MỚI
+  ✗ A2 canTuPos khai trường v7 (cach_tra, giu_vi, con_lai, hoa_don[]) và v9 (/chuong-trinh, khach.ngay_sinh)
+  ✗ A2 /chuong-trinh: co:true, token:false, không moi
+  ✗ B1 409 KHO_BAN → chưa rõ (khong_biet), không phải chưa tạo
+  ✗ B1/B2 401 và 409 KHOA_GUI_DA_DUNG → dừng (dung)
+  ✗ B1 KHO_BAN ×5 rồi đơn → 6 lần gửi … — 1 lần, ném KHO_BAN
+  ✗ B1/B4 KHO_BAN mãi → 1 + 8 lần gửi … — 1 lần, ném KHO_BAN
+  ✗ B1 Q1 KHO_BAN ×3 rồi 429 → chưa rõ … — 1 lần, ném KHO_BAN
+  ✗ B1 Q1 5xx rồi PIN_SAI trong cùng chuỗi → chưa rõ — 2 lần, ném PIN_SAI
+  ✗ B2 KHOA_GUI_DA_DUNG → ném { code: KHONG_BIET, goc } — ném KHOA_GUI_DA_DUNG
+  ✗ B1 luật lỗi MỘT chỗ …
+  ✗ C1 docDon đọc cach_tra, giu_vi, con_lai (v7)
+  ✗ C1 POS cũ thiếu trường → undefined; null → null; lạ → null
+  ✗ C3 bỏ ghi chú cũ "máy khác … không biết"
+  ✗ D4 kho đầy mà tab khác vừa ghi Y vào kho → đọc Y
+  12 đạt · 14 hỏng
+  Có Chromium (máy làm việc, bài bản đầu, cùng ca): 49 đạt · 44 hỏng — mọi ca F (bảng PIN: không có nút "Xác nhận", số lệch trái 46/51/58 px),
+  B1/B2 màn (KHO_BAN xoá bản ghi, "Vui lòng đặt lại"), C1/C2 màn (máy khác không thấy dòng ví), D1/D2 (không có nút Xác nhận) đều ✗.
+  D1/D5 phần có PIN đỏ trên gốc vì chưa có nút Xác nhận; vế `!bg` của D1 chứng minh bằng đột biến BV-DIEM-GUI-BAO-GIA (ĐỎ).
+== thu_KHMUA1b.js (gốc, thoát 1) — bài cũ sửa (phiếu F5: hành vi đã duyệt đổi)
+  ✗ D1 (v9, KH-MUA-1c) 409 KHO_BAN và KHOA_GUI_DA_DUNG KHÔNG phải "chắc chưa tạo"
+  ✗ S1 401 … ("dung", KH-MUA-1c)
+  45 đạt · 2 hỏng
+== thu_KHMUA1.js (gốc, thoát 1) — bài cũ sửa
+  ✗ B8 (v9) 4xx có code → chắc chưa tạo, trừ KHO_BAN (chưa rõ)
+  54 đạt · 1 hỏng
+== thu_KHKHOP1.js (gốc, thoát 1) — bài cũ sửa
+  ✗ A2 trang /kiemkhop có hàm gọi cho MỌI cửa GET co:true (KH-MUA-1c: có GET /chuong-trinh của v9)
+  47 đạt · 1 hỏng
+
+Trên code ĐÃ VÁ, KHONG_TRINH_DUYET=1: thu_KHMUA1c 26 · 0 · thu_KHMUA1b 47 · 0 · thu_KHMUA1 55 · 0 · thu_KHKHOP1 48 · 0.
+Có Chromium: thu_KHMUA1c 103 · 0 · thu_KHMUA1b 254 · 0 · thu_KHMUA1 128 · 0 · thu_KHKHOP1 85 · 0 (npm test 30 đạt · 0 hỏng).
+
+(Cổng chạy trên mốc 12fe94d^ in 23 ca cho thu_KHMUA1c: ở mốc chưa có viec/KH-MUA-1c/hop_dong_v9.md → nhóm A dừng sớm, đúng là đỏ.)
+SỐ CA cong_cu/thu_KHMUA1c.js: 26
+SỐ CA cong_cu/thu_KHMUA1.js: 55
+SỐ CA cong_cu/thu_KHKHOP1.js: 48
+
+## Soát vòng 1 (05.11) — hai ca mới (chỉ phần trình duyệt; SỐ CA không đổi vì KHONG_TRINH_DUYET=1 vẫn 26)
+Đỏ khi bỏ vá = đột biến gỡ ĐÚNG chỗ vá (dot_bien.py, có Chromium):
+  VS-GUI-LAI-429-XOA: ĐỎ — 106 đạt · 2 hỏng ✗ B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ …
+  VS-PIN-ENTER-SAU-XONG: ĐỎ — 107 đạt · 1 hỏng ✗ F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai — 2
+Sau vá: thu_KHMUA1c 108 đạt · 0 hỏng (Chromium); 26 · 0 (KHONG_TRINH_DUYET=1).
+
+## Soát vòng 2–3 (05.11) — ca mới (chỉ phần trình duyệt; SỐ CA không đổi: 26 với KHONG_TRINH_DUYET=1)
+Đỏ khi bỏ vá = đột biến gỡ đúng chỗ vá, chạy ở ae2007e (src giống HEAD cuối), có Chromium — đầu ra dot_bien.py:
+  ĐỐI CHỨNG (không đột biến): XANH — 110 đạt · 0 hỏng
+  BV-GUI-LAI-CHO-DEM-NGUOC: ĐỎ — 108 đạt · 2 hỏng ✗ B1 (soát vòng 2) bấm "Gửi lại" TRONG lúc đếm ngược …
+  VS-PIN-ENTER-SAU-XONG (nay gỡ `if (xong) dong(); else`): ĐỎ — 109 đạt · 1 hỏng ✗ F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" …
+  (16 đột biến còn lại ĐỎ như trên — xem trang_thai "Vòng sửa 3") · TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT (18/18)
+Sau vá: thu_KHMUA1c 110 đạt · 0 hỏng (Chromium); 26 · 0 (KHONG_TRINH_DUYET=1).

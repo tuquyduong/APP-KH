@@ -57,6 +57,7 @@ export const xinMa = (sdt) => goi('POST', '/dang-nhap/xin-ma', { sdt });
 export const xacMinh = (sdt, ma, ten, them) => goi('POST', '/dang-nhap/xac-minh', { sdt, ma, ten, ...them });
 export const layHang = () => goi('GET', '/hang');
 export const layGioVang = () => goi('GET', '/gio-vang');
+export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — chưa màn nào dùng (giao diện: việc KH-CT-1)
 export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
@@ -70,7 +71,7 @@ export const layChiTietDon = (ma) => goi('GET', `/don/${encodeURIComponent(ma)}`
 export const nhanMaBill = (ma) => goi('POST', '/nhan-ma-bill', { ma });
 export const nhanDiem = (ma) => goi('POST', '/nhan-diem', { ma });
 export const datPin = (pin, pinLai) => goi('PUT', '/pin', { pin, pin_lai: pinLai });
-// Đặt đơn (hợp đồng v5). Thân dựng ở datDon.js. POST /don chờ tối đa MS_CHO_DAT_DON rồi coi là "chưa rõ" (datDon.guiDonAnToan gửi lại cùng khoá).
+// Đặt đơn (hợp đồng v9). Thân dựng ở datDon.js. POST /don chờ tối đa MS_CHO_DAT_DON rồi coi là "chưa rõ" (datDon.guiDonAnToan gửi lại cùng khoá).
 const MS_CHO_DAT_DON = 20000;
 export const baoGiaGio = (than) => goi('POST', '/gio/bao-gia', than);
 export const datDonApp = (than) => goi('POST', '/don', than, MS_CHO_DAT_DON);

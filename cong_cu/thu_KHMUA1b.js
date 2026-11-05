@@ -32,19 +32,21 @@ const MENU_DS = [
 const BG = { dong: [{ ma: 'TLB', so_luong: 2, don_gia: 30000, thanh_tien: 60000 }, { ma: 'CFM', so_luong: 1, don_gia: 39000, thanh_tien: 39000 }], tam_tinh: 99000, giam: [{ loai: 'hang', so_tien: 11346 }], phi_giao: 0, tong: 87654, ma_giam_loi: null };
 const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_luong: 1, ghi_chu: '' }];
 
-(async () => {
+if (require.main === module) (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
   let D = null;
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
 
   await thu('A', async () => {
-    k('A1 thiet_ke/HOP_DONG_API_KH.md ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-MUA-1b/hop_dong_v5.md'))));
+    // Hợp đồng trong kho = bản chép MỚI NHẤT ở viec/*/hop_dong_v<N>.md (v5 của việc này, sau đó v9 của KH-MUA-1c…), từng byte — cùng luật thu_KHUI3b A1.
+    const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte', !!banHd && banHd.n >= 5 && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(banHd.f)), banHd && banHd.f);
     k('A1 bảng mã lỗi đặt đơn đọc từ hợp đồng (≥ 20 mã, có DANG_XU_LY 503, GIA_DA_DOI 409)', MA_DAT_DON.length >= 20 && MA_DAT_DON.some((x) => x.code === 'DANG_XU_LY' && x.st === 503) && MA_DAT_DON.some((x) => x.code === 'GIA_DA_DOI' && x.st === 409), String(MA_DAT_DON.length));
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const m = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || {};
     k('A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)', ['bao_gia', 'dat_don', 'huy_don'].every((x) => m(x).co === true));
-    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua)).map((x) => x.ma);
-    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có)', conMoi.length === 0, conMoi.join(','));
+    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && x.viec_pos !== 'HD-KH-1').map((x) => x.ma);
+    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c)', conMoi.length === 0, conMoi.join(','));
     const api = doc('src/api.js');
     k('A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi', /goi\('POST', '\/gio\/bao-gia'/.test(api) && /goi\('POST', '\/don'/.test(api) && /goi\('POST', `\/don\/\$\{[^}]+\}\/huy`/.test(api));
   });
@@ -82,10 +84,11 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
   });
 
   await thu('D', async () => {
-    const sai = MA_DAT_DON.filter((x) => x.st < 500 && x.st !== 401).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'chua_tao').map((x) => x.code);
-    k('D1 MỌI 4xx có code của hợp đồng (trừ 401) → chắc chưa tạo', sai.length === 0 && MA_DAT_DON.length > 10, sai.join(','));
+    const sai = MA_DAT_DON.filter((x) => x.st < 500 && x.st !== 401 && !['KHO_BAN', 'KHOA_GUI_DA_DUNG'].includes(x.code)).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'chua_tao').map((x) => x.code);
+    k('D1 MỌI 4xx có code của hợp đồng (trừ 401, KHO_BAN, KHOA_GUI_DA_DUNG — v9, KH-MUA-1c) → chắc chưa tạo', sai.length === 0 && MA_DAT_DON.length > 10, sai.join(','));
+    k('D1 (v9, KH-MUA-1c) 409 KHO_BAN và KHOA_GUI_DA_DUNG KHÔNG phải "chắc chưa tạo" (đơn có thể đã tạo)', ['KHO_BAN', 'KHOA_GUI_DA_DUNG'].every((c) => D.loaiLoi(loi(409, c)) !== 'chua_tao'));
     // S1 (vòng 4): 401 do lớp xác thực POS trả TRƯỚC khi tra khoá gửi → không chứng minh lần trước chưa tạo đơn
-    k('S1 401 KH_TOKEN_SAI → chưa rõ (không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'khong_biet');
+    k('S1 401 KH_TOKEN_SAI → chưa rõ, dừng không tự gửi lại ("dung", KH-MUA-1c; không phải "chắc chưa tạo")', D.loaiLoi(loi(401, 'KH_TOKEN_SAI')) === 'dung');
     const sai5 = MA_DAT_DON.filter((x) => x.st >= 500).filter((x) => D.loaiLoi(loi(x.st, x.code)) !== 'khong_biet').map((x) => x.code);
     k('D2 5xx của hợp đồng (DANG_XU_LY, PAYOS_*…), LOI_MAY_CHU 500, mất mạng (status 0), 4xx không code, 200 lạ → chưa rõ',
       sai5.length === 0 && ['LOI_MAY_CHU', 'MANG_LOI'].every((c, i) => D.loaiLoi(loi([500, 0][i], c)) === 'khong_biet') && D.loaiLoi({ status: 409 }) === 'khong_biet' && D.loaiLoi({ status: 200 }) === 'khong_biet' && D.loaiLoi(null) === 'khong_biet', sai5.join(','));
@@ -173,7 +176,10 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
-async function trinhDuyet(pw) {
+module.exports = { dungMay, MA_DAT_DON, BG, GIO };
+
+// Máy giả dùng chung (thu_KHMUA1c.js dùng lại): App thật dựng bằng esbuild + POS giả theo hợp đồng. `k` = hàm ghi ca của bài gọi.
+async function dungMay(pw, k) {
   const esbuild = require('esbuild');
   const dung = async (lienHe) => (await esbuild.build({
     stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
@@ -206,9 +212,10 @@ async function trinhDuyet(pw) {
       if (dn) localStorage.setItem('kh_token', 'tok-A');
       if (gio && !localStorage.getItem('kh_gio')) localStorage.setItem('kh_gio', JSON.stringify(gio));
     }, { dn, gio });
-    const S = { vi: 0, bg: BG, kich: [], guiDon: [], goi: [], don: new Map(), khoa: new Map(), donCu: [], soDon: 41, treBg: 0, treDon: 0, treDsDon: 0, ...S0 };
+    const S = { vi: 0, bg: BG, kich: [], guiDon: [], datPin: [], goi: [], don: new Map(), khoa: new Map(), donCu: [], soDon: 41, treBg: 0, treDon: 0, treDsDon: 0, ...S0 };
     const loiTrang = [];
-    const dongDon = (d) => ({ ma: d.ma, ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' || (d.tt === 'da_huy' && !d.daTra) ? 0 : d.tong, trang_thai: d.trangThai || null, thanh_toan: d.thanhToan || null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: !!d.tienVe });
+    const v7 = (d) => (d.v7 !== undefined ? d.v7 : d.cach ? { cach_tra: d.cach, giu_vi: d.giu, con_lai: d.tong - d.giu } : { cach_tra: null, giu_vi: null, con_lai: null });
+    const dongDon = (d) => ({ ...(S.v7 ? v7(d) : {}), ma: d.ma, ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' || (d.tt === 'da_huy' && !d.daTra) ? 0 : d.tong, trang_thai: d.trangThai || null, thanh_toan: d.thanhToan || null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: !!d.tienVe });
     const dinhDanh = (t) => JSON.stringify([t.mon, t.ma_giam || '', t.cach_nhan, t.cach_tra]);
     function datDon(t) {
       if (!/^[A-Za-z0-9-]{16,64}$/.test(t.khoa_gui || '')) return loiPos('KHOA_GUI_SAI');
@@ -229,7 +236,7 @@ async function trinhDuyet(pw) {
       const tt = t.cach_tra === 'vi' ? 'da_tra' : 'cho_tra';
       const qr = tt === 'cho_tra' ? { chuoi: '00020101021238570010A0000007270127' + ma, het_han: BAY('20:40:00') } : null;
       S.vi -= giu;
-      S.don.set(ma, { ma, tong, tt, qr, giu, mon: t.mon });
+      S.don.set(ma, { ma, tong, tt, qr, giu, cach: t.cach_tra, mon: t.mon });
       const tra = { success: true, ma_don: ma, tong, giu_vi: giu, con_lai: tong - giu, tien_trinh: tt, qr, trung: false };
       S.khoa.set(t.khoa_gui, { dd: dinhDanh(t), tra });
       return { st: 200, o: tra };
@@ -249,9 +256,10 @@ async function trinhDuyet(pw) {
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('20:30:00'), dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       if (duong === '/menu') return json(200, { success: true, data: MENU_DS });
       if (!/tok-A/.test(req.headers().authorization || '') || (S.chetDon && duong === '/don' && pt === 'POST')) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
-      if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-15T23:59:59' }, so_du_vi: S.vi } });
+      if (duong === '/toi') return json(200, { success: true, khach: { sdt: S.sdt || '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-15T23:59:59' }, so_du_vi: S.vi } });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
+      if (duong === '/pin' && pt === 'PUT') { S.datPin.push(than); return json(200, { success: true }); }
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-11-29T08:00:00' });
       if (duong === '/gio/bao-gia') {
         if (S.treBg) await new Promise((x) => setTimeout(x, S.treBg));
@@ -264,6 +272,7 @@ async function trinhDuyet(pw) {
         const x = S.kich.shift();
         if (x === 'abort') return r.abort('internetdisconnected');
         if (x === 'treo') return undefined; // không trả lời: App phải tự hết giờ chờ
+        if (x === 'tao+khoban') { datDon(than); return json(409, { error: 'Kho đang bận, mời bạn thử lại', code: 'KHO_BAN' }); }
         if (x === 'tao+502') { datDon(than); return r.fulfill({ status: 502, contentType: 'text/html', body: '<html>Bad gateway</html>' }); }
         if (x) return json(x.st, x.o);
         const kq = datDon(than);
@@ -309,7 +318,7 @@ async function trinhDuyet(pw) {
   const nutKhoa = async (t) => (await nut(t).getAttribute('aria-disabled').catch(() => null)) === 'true';
   const sanSang = (t) => doi(t, async () => !(await nutKhoa(t)) && /Xác nhận trả/.test(await nut(t).innerText().catch(() => '')));
   const bam = async (t) => { await nut(t).click(); };
-  const nhapPin = async (t, pin) => { for (const c of pin) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); };
+  const nhapPin = async (t, pin) => { for (const c of pin) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await t.locator('.pin-pad button', { hasText: 'Xác nhận' }).click(); };
   const batVi = (t) => t.locator('#checkout .switch').first().click();
   const dongVi = (t) => chu(t, '#checkout .the-vi .s');
   const luu = (t) => t.evaluate(() => localStorage.getItem('kh_don_gui'));
@@ -318,6 +327,11 @@ async function trinhDuyet(pw) {
   const giongNhau = (a) => a.length > 1 && a.every((x) => x === a[0]);
   const khoa = (tho) => { try { return JSON.parse(tho).khoa_gui; } catch { return ''; } };
 
+  return { trinh, may, mo, chu, doi, doiChu, nut, nutKhoa, sanSang, bam, nhapPin, batVi, dongVi, luu, tranNgang, chup, giongNhau, khoa, loiPos, BAY, PIN };
+}
+
+async function trinhDuyet(pw) {
+  const { trinh, may, mo, chu, doi, doiChu, nut, nutKhoa, sanSang, bam, nhapPin, batVi, dongVi, luu, tranNgang, chup, giongNhau, khoa, loiPos, BAY, PIN } = await dungMay(pw, k);
   const CA = [];
   const them = (ten, opt, f) => CA.push(() => may(ten, opt, f));
 
@@ -445,8 +459,9 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
     k('D1 4xx → hiện lời POS, KHÔNG "chưa rõ", nút mở lại, không bản ghi', await doiChu(t, '#checkout .nt-state', /DON_KHONG_HOP_LE/) && !/Gửi lại đúng đơn này/.test(await chu(t, '#checkout')) && await sanSang(t) && (await luu(t)) === null);
     await bam(t);
-    k('D1 KHOA_GUI_DA_DUNG → "Vui lòng đặt lại"', await doiChu(t, '#checkout .nt-state', /Vui lòng đặt lại/) && await sanSang(t));
-    await bam(t);
+    k('D1 KHOA_GUI_DA_DUNG (KH-MUA-1c B2) → "Đơn này có thể đã đặt trước đó", GIỮ bản ghi, không "Vui lòng đặt lại"', await doiChu(t, '#checkout', /Đơn này có thể đã đặt trước đó/) && !/Vui lòng đặt lại/.test(await chu(t, '#checkout')) && !!(await luu(t)) && await nutKhoa(t));
+    await t.locator('#checkout button', { hasText: 'Bỏ qua, đặt đơn mới' }).click();
+    await sanSang(t); await bam(t);
     k('D1/C3 mỗi lần bấm một khoá MỚI; lần cuối thành công', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && new Set(S.guiDon.map(khoa)).size === 3);
   });
   them('gia_da_doi', {}, async ({ t, S }) => {

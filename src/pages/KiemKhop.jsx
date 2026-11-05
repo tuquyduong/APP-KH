@@ -2,13 +2,13 @@
 // Việc KH-ADMIN-1 (sau khai trương) chuyển trang này vào /admin và XOÁ đường dẫn công khai /kiemkhop (duongDan.js, main.jsx).
 // Chỉ ĐỌC: mỗi cửa GET một lần mỗi lần mở / bấm "Kiểm lại"; không POST/PUT, không gọi theo giờ, không hiện hay lưu dữ liệu khách.
 import { useEffect, useState } from 'react';
-import { docToken, layHang, layGioVang, layGioHoatDong, layToi, layMenu, layDiem, layVoucher, layDon, layChiTietDon } from '../api.js';
+import { docToken, layHang, layGioVang, layGioHoatDong, layToi, layMenu, layDiem, layVoucher, layDon, layChiTietDon, layChuongTrinh } from '../api.js';
 import { ghepDiaChi } from '../dinhDang.js';
 import { CAN_TU_POS } from '../kiemKhop/canTuPos.js';
 import { trangThaiMuc, xepNhom, cuaCanGoi, phanLoaiKetNoi, doLechGiay } from '../kiemKhop/kiemKhop.js';
 import Man from '../components/Man.jsx';
 
-const GOI = { 'GET /hang': layHang, 'GET /gio-vang': layGioVang, 'GET /gio-hoat-dong': layGioHoatDong, 'GET /toi': layToi, 'GET /menu': layMenu, 'GET /diem': layDiem, 'GET /voucher': () => layVoucher(false), 'GET /don': () => layDon(1) };
+const GOI = { 'GET /hang': layHang, 'GET /gio-vang': layGioVang, 'GET /gio-hoat-dong': layGioHoatDong, 'GET /toi': layToi, 'GET /menu': layMenu, 'GET /diem': layDiem, 'GET /voucher': () => layVoucher(false), 'GET /don': () => layDon(1), 'GET /chuong-trinh': layChuongTrinh };
 const CUA_CHI_TIET = 'GET /don/:ma'; // mã đơn lấy từ /don vừa gọi; không hiện, không lưu
 const MS_CHONG_DON = 5000;
 const DAU = { ok: '✓', thieu: '✗', loi: '✗', cho: '⏳', rong: '?', hd: '•', dn: '–', dang: '…' };
