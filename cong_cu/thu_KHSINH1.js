@@ -257,7 +257,7 @@ async function trinhDuyet(pw) {
       await t.waitForTimeout(300);
       const ten = await t.locator('.cart-name').allInnerTexts();
       const g = JSON.parse(await t.evaluate(() => localStorage.getItem('kh_gio')));
-      k(`C2 [${nhan}] Hoàn tác → trả đúng dòng về đúng chỗ (Trà Lục Bảo ×2 “ít đá” đứng đầu)`, ten.join('|') === 'Trà Lục Bảo|Trà Cửu Bảo' && JSON.stringify(g) === JSON.stringify(GIO) && /ít đá/.test(await chu(t, '.cart-item')), ten.join('|') + ' ' + JSON.stringify(g));
+      k(`C2 [${nhan}] Hoàn tác → trả đúng dòng về đúng chỗ (Trà Lục Bảo ×2 “ít đá” đứng đầu)`, ten.join('|') === 'Trà Lục Bảo|Trà Cửu Bảo' && JSON.stringify(g) === JSON.stringify(GIO) && /ít đá/.test(await chu(t, '.cart-item >> nth=0')), ten.join('|') + ' ' + JSON.stringify(g));
       k(`C2 [${nhan}] sau Hoàn tác thông báo tắt`, (await t.locator('.toast.show').count()) === 0);
     });
   }

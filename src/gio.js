@@ -39,7 +39,13 @@ export function themMon(gio, ma, soLuong = 1, ghiChu = '') {
 /** Đổi số lượng dòng i; ≤ 0 → bỏ dòng. */
 export const doiSoLuong = (gio, i, soLuong) => (soLuong <= 0 ? xoaDong(gio, i) : gio.map((d, j) => (j === i ? { ...d, so_luong: kep(soLuong) } : d)));
 export const xoaDong = (gio, i) => gio.filter((_, j) => j !== i);
-export const demMon = (gio) => gio.reduce((s, d) => s + d.so_luong, 0);
+/** Hoàn tác xoá: trả `dong` về vị trí cũ; đã có dòng cùng mã + ghi chú (khách vừa thêm lại) thì cộng số lượng như `themMon`. */
+export function chenDong(gio, dong, vitri) {
+  if (gio.some((d) => d.ma === dong.ma && d.ghi_chu === dong.ghi_chu)) return themMon(gio, dong.ma, dong.so_luong, dong.ghi_chu);
+  const i = Math.min(Math.max(vitri, 0), gio.length);
+  return [...gio.slice(0, i), dong, ...gio.slice(i)];
+}
+export const demMon =(gio) => gio.reduce((s, d) => s + d.so_luong, 0);
 
 /** Dòng giỏ đối chiếu menu: { mon (null = không còn trong menu), conBan }. `con_hang` null (chưa biết) vẫn bán. */
 export function trangThaiDong(dong, ds) {

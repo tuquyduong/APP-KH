@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { suaHoSo } from '../api.js';
-import { dungCua, cuaToi, gopToi } from '../duLieuKhach.js';
-import { cheSdt, chiaLoiChao } from '../dinhDang.js';
+import { dungCua, cuaToi, gopToi, lamMoi } from '../duLieuKhach.js';
+import { cheSdt, chiaLoiChao, hienNgaySinh, tachNgaySinh } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
 import { XUNG_HO, DIA_CHI_TOI_DA, tenXungHo } from '../noiDung/dangNhap.js';
 import Man, { DauManCon } from '../components/Man.jsx';
@@ -9,16 +9,17 @@ import TrangTai from '../components/TrangTai.jsx';
 import PinSheet from '../components/PinSheet.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 
-// Thông tin cá nhân theo demo (profile): "Quán gọi bạn là" (xưng hô), Thông tin (tên, số điện thoại che giữa), Giao hàng (một địa chỉ), Bảo mật (mã PIN).
-// Bỏ: email, giới tính, ngày sinh, nhiều địa chỉ, hoá đơn công ty, quên PIN bằng OTP, thiết bị đăng nhập, xoá tài khoản — POS chưa có cửa (KH-HOSO-1).
+// Thông tin cá nhân theo demo (profile): "Quán gọi bạn là" (xưng hô), Thông tin (tên, số điện thoại che giữa), Ngày sinh (nhập MỘT lần — KH-SINH-1),
+// Giao hàng (một địa chỉ), Bảo mật (mã PIN).
+// Bỏ: email, giới tính, nhiều địa chỉ, hoá đơn công ty, quên PIN bằng OTP, thiết bị đăng nhập, xoá tài khoản — POS chưa có cửa (KH-HOSO-1).
 // Mọi nút lưu cùng đi `suaHoSo({ khoá_đổi })`: thân PUT /toi chỉ có khoá đang sửa.
 
-/** Một thẻ lưu: { dang, loi, xong, luu(truong) → true nếu POS nhận }. `khiXong(khach)` nhận hồ sơ POS trả về. */
-function dungLuu(khiXong) {
+/** Một thẻ lưu: { dang, loi, xong, luu(truong) → true nếu POS nhận }. `khiXong(khach)` nhận hồ sơ POS trả về; `khiLoi(e)` trả true = đã xử lý, không hiện lỗi. */
+function dungLuu(khiXong, khiLoi) {
   const [tt, datTt] = useState({ dang: false, loi: '', xong: false });
   async function luu(truong) {
     datTt({ dang: true, loi: '', xong: false });
-    try { const r = await suaHoSo(truong); khiXong(r.khach || {}); datTt({ dang: false, loi: '', xong: true }); return true; } catch (e) { datTt({ dang: false, loi: e.message, xong: false }); return false; }
+    try { const r = await suaHoSo(truong); khiXong(r.khach || {}); datTt({ dang: false, loi: '', xong: true }); return true; } catch (e) { datTt({ dang: false, loi: khiLoi && khiLoi(e) ? '' : e.message, xong: false }); return false; }
   }
   return { ...tt, luu, boXong: () => datTt((t) => ({ ...t, xong: false })) };
 }
@@ -65,6 +66,44 @@ function SuaTen({ ho, doi }) {
   );
 }
 
+/** Ngày sinh nhập MỘT lần (hợp đồng v9): chưa có → ô chọn ngày + hỏi lại + Lưu; đã có → chỉ xem (quán sửa ở POS). Không lưu trên máy. */
+function NgaySinh({ ho, doi }) {
+  const [v, datV] = useState('');
+  const [hoi, datHoi] = useState(false);
+  // NGAY_SINH_DA_CO (máy khác vừa nhập): đọc lại /toi, thẻ chuyển sang chế độ xem với ngày POS đang giữ — không hiện lỗi.
+  const s = dungLuu((khach) => doi({ ...khach, ngay_sinh: khach.ngay_sinh ?? v }), (e) => e.code === 'NGAY_SINH_DA_CO' && (lamMoi([cuaToi]), true));
+  const homNay = bayGio().slice(0, 10); // ngày lịch VN, chỉ để chặn ngày tương lai; tuổi do POS chặn
+  const hopLe = !!tachNgaySinh(v) && v <= homNay;
+  const gui = () => { datHoi(false); return s.luu({ ngay_sinh: v }); };
+  const daCo = hienNgaySinh(ho.ngay_sinh);
+  return (
+    <div className="card pf-card">
+      <div className="tt">Ngày sinh</div>
+      {daCo ? (
+        <>
+          <div className="pf-lock pf-ns-xem">{daCo}</div>
+          <div className="pf-note">Cần sửa? Mang căn cước đến quầy để nhân viên sửa.</div>
+        </>
+      ) : hoi ? (
+        <div className="pf-xn">
+          <div className="pf-note">Ngày sinh {hienNgaySinh(v)} — sau khi lưu bạn không tự sửa được. Lưu?</div>
+          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang} onClick={gui}>Lưu</button><button type="button" className="hq-b ghost" onClick={() => datHoi(false)}>Sửa lại</button></div>
+        </div>
+      ) : (
+        <>
+          <div className="pf-row">
+            <label htmlFor="ngay-sinh">Ngày sinh</label>
+            <input id="ngay-sinh" type="date" max={homNay} value={v} onChange={(e) => { datV(e.target.value); s.boXong(); }} />
+            <small>Nhập đúng như căn cước — quán đối chiếu khi áp ưu đãi sinh nhật. Chỉ nhập được một lần.</small>
+          </div>
+          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang || !hopLe} onClick={() => datHoi(true)}>Lưu</button></div>
+        </>
+      )}
+      <Bao s={s} chu="Đã lưu ngày sinh" />
+    </div>
+  );
+}
+
 function DiaChi({ ho, doi }) {
   const [dc, datDc] = useState(ho.dia_chi || '');
   const s = dungLuu((khach) => { datDc(khach.dia_chi || ''); doi(khach); });
@@ -94,6 +133,7 @@ export default function HoSo({ lui }) {
           <>
             <XungHo ho={ho} doi={doi} />
             <SuaTen ho={ho} doi={doi} />
+            <NgaySinh ho={ho} doi={doi} />
             <DiaChi ho={ho} doi={doi} />
             <div className="card pf-card">
               <div className="tt">Bảo mật</div>

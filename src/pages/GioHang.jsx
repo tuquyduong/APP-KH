@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import '../giaoDien/gio_xoa.css';
 import { dinhDangGia } from '../dinhDang.js';
 import { bieuTuongNhom } from '../menuLoc.js';
-import { demMon, doiSoLuong, duocThanhToan, giaHinhDung, trangThaiDong } from '../gio.js';
+import { chenDong, demMon, doiSoLuong, duocThanhToan, giaHinhDung, trangThaiDong, xoaDong } from '../gio.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import { tenGiam } from '../datDon.js';
 import { dungGia } from '../heThong.js';
@@ -32,7 +34,23 @@ export function BangTien({ bg, loi }) {
   );
 }
 
-function DongGio({ dong, i, gio, ds, doi, loiPos }) {
+const GIAY_HOAN_TAC = 5000; // thông báo "Đã xoá … · Hoàn tác" hiện ngần này mili-giây
+
+/** Thông báo nổi có nút (khuôn `.toast` của demo, như Thongbao.jsx). `daXoa` rỗng = không hiện. */
+function ThongBaoXoa({ daXoa, hoanTac, het }) {
+  useEffect(() => {
+    if (!daXoa) return undefined;
+    const h = setTimeout(het, GIAY_HOAN_TAC);
+    return () => clearTimeout(h);
+  }, [daXoa]);
+  if (!daXoa || typeof document === 'undefined') return null;
+  return createPortal(
+    <div className="toast show wrap co-nut" role="status">Đã xoá {daXoa.ten} · <button type="button" onClick={hoanTac}>Hoàn tác</button></div>,
+    document.querySelector('.phone') || document.body,
+  );
+}
+
+function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
   const { tt, maGv, hangToi } = dungGia();
   const { mon, conBan } = trangThaiDong(dong, ds);
   const dangGv = !!mon && !!tt && tt.pha === 'dang' && maGv.has(mon.ma); // như Menu: món đang Giờ vàng hiện giá gốc, không giá hạng
@@ -41,6 +59,7 @@ function DongGio({ dong, i, gio, ds, doi, loiPos }) {
   const canhBao = loiPos || (coMenu && !conBan ? (mon ? 'Hết hàng' : 'Không còn trong menu') : ''); // loiPos: POS vừa báo HET_HANG / MON_KHONG_BAN cho mã này
   return (
     <div className="cart-item">
+      <button type="button" className="cart-xoa" aria-label="Xoá món" onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
       <div className="cart-thumb" style={mon ? { background: bieuTuongNhom(mon.nhom).bg } : undefined}>{mon ? <AnhMon mon={mon} s={40} /> : <Ico ten="package" s={28} />}</div>
       <div className="cart-info">
         <div className="cart-name">{mon ? mon.ten : coMenu ? 'Món đã ngừng bán' : dong.ma}</div>
@@ -58,7 +77,10 @@ function DongGio({ dong, i, gio, ds, doi, loiPos }) {
 
 export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tiepTuc, moMenu, monLoi }) {
   const [o, datO] = useState(maGiam);
+  const [daXoa, datDaXoa] = useState(null); // { dong, vitri, ten } của món vừa xoá — để Hoàn tác
   const coMenu = ds.length > 0;
+  const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: trangThaiDong(d, ds).mon?.ten || 'món' }); doi(xoaDong(gio, i)); };
+  const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
   const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
   const { bg, loi } = dungBaoGia(gio, { maGiam }, dangNhap && coMenu && coThe);
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
@@ -74,7 +96,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
         </div>
       ) : (
         <>
-          {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} />)}
+          {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
           <div className="promo-box">
             <input placeholder="Nhập mã giảm giá" aria-label="Mã giảm giá" maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
             <button type="button" onClick={() => datMaGiam(o.trim())}>{daApMa ? '✓ Đã áp dụng' : 'Áp dụng'}</button>
@@ -86,6 +108,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
           </button>
         </>
       )}
+      <ThongBaoXoa daXoa={daXoa} hoanTac={hoanTac} het={() => datDaXoa(null)} />
     </Man>
   );
 }

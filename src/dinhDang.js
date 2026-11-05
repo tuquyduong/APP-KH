@@ -57,11 +57,28 @@ export function cheSdt(sdt) {
   return `${so.slice(0, 3)} xxx ${so.slice(-4)}`;
 }
 
-/** Từ cuối của họ tên, viết hoa chữ đầu ("nguyễn thị linh" → "Linh"); không có tên → "". */
-export const tenNgan = (ten) => { const t = String(ten || '').trim().split(/\s+/).pop() || ''; return t.charAt(0).toUpperCase() + t.slice(1); };
+/**
+ * Ngày lịch `YYYY-MM-DD` (ngày sinh của POS, không giờ / múi giờ) → { nam, thang, ngay } (số); sai dạng hoặc sai lịch (30/02…) → null.
+ * Tách chuỗi, không đọc bằng đối tượng Date (CLAUDE.md §6).
+ */
+export function tachNgaySinh(chuoi) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(chuoi || ''));
+  if (!m) return null;
+  const nam = +m[1], thang = +m[2], ngay = +m[3];
+  const nhuan = (nam % 4 === 0 && nam % 100 !== 0) || nam % 400 === 0;
+  const toiDa = thang === 2 ? (nhuan ? 29 : 28) : [4, 6, 9, 11].includes(thang) ? 30 : 31;
+  return thang >= 1 && thang <= 12 && ngay >= 1 && ngay <= toiDa ? { nam, thang, ngay } : null;
+}
+
+/** "1990-03-12" → "12/03/1990"; không đọc được → "". */
+export function hienNgaySinh(chuoi) {
+  const t = tachNgaySinh(chuoi);
+  return t ? `${chuoi.slice(8, 10)}/${chuoi.slice(5, 7)}/${t.nam}` : '';
+}
 
 /**
- * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "chị" | "" (chữ thường, đứng giữa câu), ten: "Linh" | "bạn" | "" }.
+ * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "chị" | "" (chữ thường, đứng giữa câu), ten: "Linh P" | "bạn" | "" }.
+ * Tên = ĐỦ như khách nhập (cắt hai đầu, gộp khoảng trắng thừa, giữ hoa / thường — chủ quán chốt 03.11).
  * `gio` = giờ VN của POS ("YYYY-MM-DD HH:mm:ss" hoặc "…THH:mm:ss"); không đọc được → không có buổi. Mốc: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối.
  */
 export function chiaLoiChao(gio, xungHo, ten) {
@@ -69,7 +86,7 @@ export function chiaLoiChao(gio, xungHo, ten) {
   const h = m ? +m[1] : -1;
   const buoi = h < 0 ? '' : h >= 5 && h < 11 ? ' buổi sáng' : h >= 11 && h < 13 ? ' buổi trưa' : h >= 13 && h < 18 ? ' buổi chiều' : ' buổi tối';
   const xung = String(xungHo || '').trim().toLowerCase();
-  return { dau: `Chào${buoi}`, xung, ten: tenNgan(ten) || (xung ? '' : 'bạn') };
+  return { dau: `Chào${buoi}`, xung, ten: String(ten || '').trim().replace(/\s+/g, ' ') || (xung ? '' : 'bạn') };
 }
 
 /** "Chào buổi sáng, chị Linh!" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào chị Linh!"; chưa có gì: "Chào bạn!"). */
