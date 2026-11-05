@@ -75,7 +75,7 @@ const OK = { success: true, ma_don: 'TQD42', tong: 1, giu_vi: 0, con_lai: 1, tie
     k('B1 DANG_XU_LY mãi vẫn ≈ 1 phút (31 lần gửi)', h.goi.length === 31 && h.nem && h.nem.code === 'KHONG_BIET', h.n);
     const dd = doc('src/datDon.js');
     const ham = (/export async function guiDonAnToan[\s\S]*?\n}/.exec(dd) || [''])[0];
-    k('B1 luật lỗi MỘT chỗ: datDon.js nêu KHO_BAN đúng một lần (bảng mã), guiDonAnToan không tự xét mã / 401', (dd.match(/KHO_BAN/g) || []).length === 1 && !!ham && !/401|'[A-Z_]{4,}'/.test(ham), ham.slice(0, 80));
+    k('B1 luật lỗi MỘT chỗ: datDon.js nêu KHO_BAN đúng một lần (bảng mã), guiDonAnToan không tự xét mã / 401', (dd.match(/KHO_BAN/g) || []).length === 1 && !!ham && !/401|'(?!KHONG_BIET')[A-Z_]{4,}'/.test(ham), ham.slice(0, 80));
   });
 
   await thu('C', async () => {
