@@ -311,7 +311,7 @@ async function trinhDuyet(pw) {
     await goSo(t, '2468'); await nutPin(t, 'Xác nhận').click(); await goSo(t, '2468'); await nutPin(t, 'Xác nhận').click();
     k('F3 hai lần khớp → PUT /pin { pin, pin_lai } MỘT lần → "Đã lưu mã PIN"', await doiChu(t, '.pin-sheet', /Đã lưu mã PIN/) && S.datPin.length === 1 && S.datPin[0].pin === '2468' && S.datPin[0].pin_lai === '2468', JSON.stringify(S.datPin));
     await t.keyboard.press('Enter'); await t.waitForTimeout(500);
-    k('F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai', S.datPin.length === 1, String(S.datPin.length));
+    k('F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai, đóng bảng như nút "Xong"', S.datPin.length === 1 && (await t.locator('.pin-sheet').count()) === 0, String(S.datPin.length));
   });
   them('f4-dang-gui', { S0: { vi: 300000, treDon: 1500 } }, async ({ t, S }) => {
     await moPinVi(t, S);
