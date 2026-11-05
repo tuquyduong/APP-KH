@@ -10,8 +10,9 @@ import { Ico } from '../components/BieuTuong.jsx';
 import { VeQR } from './ManQR.jsx';
 
 // Theo dõi đơn theo demo (tracking), đường dẫn /don/<ma>. Đơn chờ trả: QR lấy từ GET /don/:ma (tải lại / máy khác vẫn thấy), đếm ngược tới het_han
-// theo "bây giờ" của POS, hỏi trạng thái mỗi 3 giây; hết hạn → "Tạo mã mới" / "Huỷ đơn". Số giữ ví / QR còn lại chỉ có trong trả lời POST /don →
-// đọc từ bản ghi lần gửi trên máy này (kh_don_gui); máy khác không có → ẩn dòng đó và số cạnh QR (không hiện tổng sai cho đơn ví + QR).
+// theo "bây giờ" của POS, hỏi trạng thái mỗi 3 giây; hết hạn → "Tạo mã mới" / "Huỷ đơn". Số giữ ví / QR còn lại: `cach_tra`, `giu_vi`, `con_lai` của
+// GET /don/:ma (v7 — tải lại / máy khác vẫn đúng; đơn quầy null → không dòng ví); POS chưa trả các trường đó → bản ghi lần gửi trên máy này (kh_don_gui),
+// không có thì ẩn dòng ví và số cạnh QR (không hiện tổng sai cho đơn ví + QR). App không tự tính số nào.
 // Đã trả: số đơn to để đọc cho nhân viên + các bước tien_trinh, hỏi lại mỗi 10 giây tới khi xong. Bản đồ / tài xế: KH-MUA-2.
 const dongHo = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
@@ -55,10 +56,11 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
   const [dangHuy, datDangHuy] = useState(false);
   const tt = don ? don.tienTrinh : '';
   const choTra = tt === 'cho_tra';
-  const banGhi = banGhiCuaDon(ma);
-  const viQr = !!banGhi && banGhi.cach_tra === 'vi_qr' && banGhi.giu_vi > 0;
-  // Số cạnh QR: QR cả đơn → tổng; ví + QR → phần còn lại POS trả. Không có bản ghi (máy khác) → không biết → ẩn.
-  const soTra = !banGhi ? null : banGhi.cach_tra === 'qr' ? (don && don.tong) : Number.isFinite(banGhi.con_lai) ? banGhi.con_lai : null;
+  // Cách trả + số ví đã giữ: POS trước (v7), không có trường thì bản ghi trên máy; đơn quầy (cach_tra null) → null.
+  const tra = don && don.cachTra !== undefined ? (don.cachTra && { cach_tra: don.cachTra, giu_vi: don.giuVi, con_lai: don.conLai }) : banGhiCuaDon(ma);
+  const viQr = !!tra && tra.cach_tra === 'vi_qr' && tra.giu_vi > 0;
+  // Số cạnh QR: QR cả đơn → tổng; ví + QR → phần còn lại POS trả; không biết → ẩn.
+  const soTra = !tra ? null : tra.cach_tra === 'qr' ? (don && don.tong) : Number.isFinite(tra.con_lai) ? tra.con_lai : null;
   useEffect(() => {
     if (tt && tt !== 'cho_tra' && tt !== 'da_huy') daTra(ma);
     if (tt === 'da_huy') daHuy();
@@ -79,7 +81,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
       {don && (
         <>
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} taoMaMoi={taoMoi} dang={dangHuy} />}
-          {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(banGhi.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(banGhi.con_lai)}</b></div>}
+          {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(tra.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(tra.con_lai)}</b></div>}
           {don.tienVeChoDoiSoat && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.</div></div>}
           {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">#{don.ma}</div></div>}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>
