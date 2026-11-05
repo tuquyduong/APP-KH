@@ -130,7 +130,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     if (khoa) return;
     if (cachTra === 'qr') guiDon(); else datMoPin({});
   };
-  const guiLaiDungDon = () => { if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
+  const guiLaiDungDon = () => { if (conGiay > 0) return; if (guiDo.cach_tra === 'qr') guiDon(undefined, guiDo); else datMoPin({ cu: guiDo }); };
   const boQua = () => { ghiGuiDo(null); ve((x) => x + 1); };
   const datThem = () => { daThay.current = guiDo.khoa_gui; ve((x) => x + 1); };
   const huyDonCho = () => {
@@ -163,7 +163,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
-          {!khongGuiLai && <button type="button" className="checkout-btn" onClick={guiLaiDungDon}><span>Gửi lại đúng đơn này</span><span>→</span></button>}
+          {/* 429 khi gửi lại: khoá nút tới hết đếm ngược (cùng luật nút đặt) — bấm sớm chỉ thêm lượt bị chặn. */}
+          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0} onClick={guiLaiDungDon}><span>{conGiay ? `Gửi lại sau ${conGiay} giây` : 'Gửi lại đúng đơn này'}</span><span>→</span></button>}
           <button type="button" className="ghost-btn" onClick={moLichSu}>Xem Lịch sử đơn</button>
           {khongGuiLai && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
         </>
