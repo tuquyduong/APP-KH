@@ -70,6 +70,7 @@ Khách tự nhập ngày sinh (một lần) để quán áp ưu đãi sinh nhậ
 - cong_cu/thu_KHUI3b.js
 - cong_cu/thu_KHUI3d.js
 - cong_cu/thu_KHLUU1.js
+- cong_cu/thu_KHNHANH1.js
 
 ## Ngân sách
 ~110 dòng app + ~300 dòng thử.
@@ -89,3 +90,10 @@ không
 - KHÔNG sửa `tu_chay/`, `.claude/`, `.github/`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`, `kiem_tra_truoc_khi_giao.js`, `src/package.json`, `index.html`.
 - KHÔNG làm chương trình đặc biệt / hạng (KH-CT-1), báo đơn xong / Thanh toán (KH-BAO-1b).
 - Chỉ push `git push -u origin viec/KH-SINH-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời Câu hỏi 1 (chủ quán duyệt 05.11, chat App KH soạn)
+- ĐỒNG Ý thêm `cong_cu/thu_KHNHANH1.js` vào Phạm vi — CHỈ để sửa ca "D3 Trang chủ chào theo xưng hô vừa lưu" (dòng ~492) theo lời chào đủ tên:
+  regex `/cô Linh/` → `/cô Nguyễn Linh!/` (đủ tên POS giả "Nguyễn Linh"). Đây là bài sửa thường như B4: ca mới ĐỎ trên gốc (gốc chào "cô Linh!") / XANH trên mới,
+  ghi `SỐ CA thu_KHNHANH1.js` vào `bang_chung_do.txt`; KHÔNG dùng `## Bài thử cũ sửa`.
+- KHÔNG sửa dòng nào khác của `thu_KHNHANH1.js`: việc KH-TT-1 đang chạy song song sửa đoạn ví ở Thanh toán (~dòng 394–406) của cùng file — hai chỗ cách xa, gộp không vướng.
+- Sau đó làm tiếp bước 6 trở đi như phiếu (npm test, `--day-du`, cổng `tinh` + `chay`, HEAD ĐÃ KIỂM, `/ra-soat`, báo cáo 7 mục).
