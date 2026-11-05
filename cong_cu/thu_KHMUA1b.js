@@ -38,7 +38,9 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
 
   await thu('A', async () => {
-    k('A1 thiet_ke/HOP_DONG_API_KH.md ĐÚNG TỪNG BYTE viec/KH-MUA-1b/hop_dong_v5.md', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-MUA-1b/hop_dong_v5.md'))));
+    // Hợp đồng trong kho = bản chép MỚI NHẤT ở viec/*/hop_dong_v<N>.md (v5 của việc này, sau đó v9 của KH-MUA-1c…), từng byte — cùng luật thu_KHUI3b A1.
+    const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte', !!banHd && banHd.n >= 5 && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(banHd.f)), banHd && banHd.f);
     k('A1 bảng mã lỗi đặt đơn đọc từ hợp đồng (≥ 20 mã, có DANG_XU_LY 503, GIA_DA_DOI 409)', MA_DAT_DON.length >= 20 && MA_DAT_DON.some((x) => x.code === 'DANG_XU_LY' && x.st === 503) && MA_DAT_DON.some((x) => x.code === 'GIA_DA_DOI' && x.st === 409), String(MA_DAT_DON.length));
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const m = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || {};
