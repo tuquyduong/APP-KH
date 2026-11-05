@@ -26,7 +26,7 @@ export default function PinSheet({ dong, gui }) {
     const phim = (e) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (/^\d$/.test(e.key)) nhan(e.key); else if (e.key === 'Backspace') xoa(); else if (e.key === 'Escape') dongNeuRanh();
-      else if (e.key === 'Enter') { e.preventDefault(); xacNhan(); } // không để Enter bấm hộ nút số đang được chạm
+      else if (e.key === 'Enter') { e.preventDefault(); if (xong) dong(); else xacNhan(); } // không để Enter bấm hộ nút số đang được chạm
     };
     window.addEventListener('keydown', phim);
     return () => window.removeEventListener('keydown', phim);
