@@ -12,7 +12,7 @@ Sau chép v9 (cmp khớp), KHONG_TRINH_DUYET=1:
   12fe94d: ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ … — 173 đạt · 1 hỏng (Chromium)
   sau chép: 174 đạt · 0 hỏng
 
-SỐ CA thu_KHMUA1b.js: 47
+SỐ CA cong_cu/thu_KHMUA1b.js: 47
 
 ## KH-MUA-1c sau duyệt kế hoạch (05.11) — bài ở HEAD chạy trên src/ GỐC (a2ecb7f, trước vá), KHONG_TRINH_DUYET=1
 (đổi tạm 8 file src/ bằng bản git archive a2ecb7f ở nháp, chạy, trả lại — người gác chặn git worktree)
@@ -49,6 +49,7 @@ SỐ CA thu_KHMUA1b.js: 47
 Trên code ĐÃ VÁ, KHONG_TRINH_DUYET=1: thu_KHMUA1c 26 · 0 · thu_KHMUA1b 47 · 0 · thu_KHMUA1 55 · 0 · thu_KHKHOP1 48 · 0.
 Có Chromium: thu_KHMUA1c 103 · 0 · thu_KHMUA1b 254 · 0 · thu_KHMUA1 128 · 0 · thu_KHKHOP1 85 · 0 (npm test 30 đạt · 0 hỏng).
 
-SỐ CA thu_KHMUA1c.js: 26
-SỐ CA thu_KHMUA1.js: 55
-SỐ CA thu_KHKHOP1.js: 48
+(Cổng chạy trên mốc 12fe94d^ in 23 ca cho thu_KHMUA1c: ở mốc chưa có viec/KH-MUA-1c/hop_dong_v9.md → nhóm A dừng sớm, đúng là đỏ.)
+SỐ CA cong_cu/thu_KHMUA1c.js: 26
+SỐ CA cong_cu/thu_KHMUA1.js: 55
+SỐ CA cong_cu/thu_KHKHOP1.js: 48
