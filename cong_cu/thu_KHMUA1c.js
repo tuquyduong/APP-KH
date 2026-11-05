@@ -187,7 +187,7 @@ async function trinhDuyet(pw) {
     k('B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ cùng khoá, khối chưa rõ còn, nút đặt khoá', JSON.parse((await luu(t)) || '{}').khoa_gui === K && /Lần đặt trước chưa rõ kết quả/.test(await chu(t, '#checkout')) && await nutKhoa(t), await luu(t));
     const nutGl = t.locator('#checkout button', { hasText: /Gửi lại/ });
     k('B1 (soát vòng 2) trong lúc đếm ngược: nút "Gửi lại sau N giây" khoá', /Gửi lại sau (30|29) giây/.test(await nutGl.innerText()) && (await nutGl.getAttribute('aria-disabled')) === 'true');
-    await nutGl.click({ force: true }); await t.waitForTimeout(500);
+    await nutGl.click({ force: true }); await nutGl.evaluate((b) => b.click()); await t.waitForTimeout(500); // chuột + kích kiểu bàn phím (pointer-events không chặn)
     k('B1 (soát vòng 2) bấm "Gửi lại" TRONG lúc đếm ngược → không gửi thêm', S.guiDon.length === 1, String(S.guiDon.length));
     await t.clock.fastForward(31000);
     await doiChu(t, '#checkout', /Gửi lại đúng đơn này/);
