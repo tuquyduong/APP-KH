@@ -177,6 +177,19 @@ async function trinhDuyet(pw) {
     k('B2 khách tự bấm "Bỏ qua, đặt đơn mới" → bản ghi xoá, nút đặt mở', await sanSang(t) && (await luu(t)) === null && S.guiDon.length === 1);
   });
 
+  them('gui-lai-429', { S0: { kich: [loiPos('QUA_NHIEU_LAN', { thu_lai_sau_giay: 30 })] } }, async ({ t, S }) => {
+    const K = 'TL'.repeat(10);
+    await choToi(t, S); await ghiBanGhi(t, THAN(K, 'qr'));
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
+    await doi(t, async () => S.guiDon.length === 1); await t.waitForTimeout(400);
+    k('B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ cùng khoá, vẫn "Gửi lại đúng đơn này", nút đặt khoá', JSON.parse((await luu(t)) || '{}').khoa_gui === K && /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')) && await nutKhoa(t), await luu(t));
+    await t.clock.fastForward(31000);
+    await t.locator('#checkout button', { hasText: 'Gửi lại đúng đơn này' }).click();
+    k('B1 hết đếm ngược, gửi lại → CÙNG khoá, MỘT đơn', await doi(t, async () => /\/don\/TQD42$/.test(t.url())) && S.guiDon.length === 2 && S.guiDon.every((x) => khoa(x) === K) && S.don.size === 1, String(S.guiDon.length));
+  });
+
   // ---- C: Theo dõi đơn đọc ví đã giữ từ POS (v7)
   const DON_VQ = { ma: 'TQD70', tong: 81000, tt: 'cho_tra', qr: { chuoi: '0002010102TQD70', het_han: BAY('20:40:00') }, giu: 30000, cach: 'vi_qr' };
   them('v7-may-khac', { S0: { v7: true, vi: 99000 } }, async ({ t, S }) => {
@@ -292,6 +305,8 @@ async function trinhDuyet(pw) {
     k('F3 hai lần không khớp → "Hai lần nhập không khớp, đặt lại nhé", 0 PUT /pin', await doiChu(t, '.pin-msg', /Hai lần nhập không khớp, đặt lại nhé/) && S.datPin.length === 0);
     await goSo(t, '2468'); await nutPin(t, 'Xác nhận').click(); await goSo(t, '2468'); await nutPin(t, 'Xác nhận').click();
     k('F3 hai lần khớp → PUT /pin { pin, pin_lai } MỘT lần → "Đã lưu mã PIN"', await doiChu(t, '.pin-sheet', /Đã lưu mã PIN/) && S.datPin.length === 1 && S.datPin[0].pin === '2468' && S.datPin[0].pin_lai === '2468', JSON.stringify(S.datPin));
+    await t.keyboard.press('Enter'); await t.waitForTimeout(500);
+    k('F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai', S.datPin.length === 1, String(S.datPin.length));
   });
   them('f4-dang-gui', { S0: { vi: 300000, treDon: 1500 } }, async ({ t, S }) => {
     await moPinVi(t, S);
