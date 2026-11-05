@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 26,
+  "phien_ban_so": 27,
   "cap_nhat": "2026-11-05",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -277,14 +277,15 @@
       "ma": "KH-MUA-1c",
       "loai": "T",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "ngay": "2026-11-05",
       "han": "2026-11-06",
       "phu_thuoc": [
         "KH-MUA-1b"
       ],
       "ten": "Dat don theo hop dong v9 + bang PIN co nut Xac nhan va Xoa lui (so can giua, khong tu gui khi du 4 so): 409 KHO_BAN = chua ro (POS co the bao kho ban SAU khi tru vi) → tu gui lai CUNG khoa, giu ban ghi; KHOA_GUI_DA_DUNG → moi xem Lich su don (khong xoa ban ghi); luat \"chua ro\" MOT cho; chep hop dong v9 + canTuPos; Theo doi don doc cach_tra / giu_vi / con_lai tu GET /don/:ma (v7); bu ca thu + dot bien soat cuoi KH-MUA-1b (!bg, PIN_DANG_KHOA, 401 + doi khach, ghiHong)",
-      "ghi_chu": "05.11 chat App KH: hop dong v9 tu mau thuan (dong 101 \"moi 4xx = chua tao\" vs dong 116 \"KHO_BAN gui lai cung khoa\"); doc code POS donApp.js: kho ban nem sau chotPhien → 409 nhung vi DA TRU, don da co → App khoa moi = tru vi lan hai. Chat POS (ban giao 04.11) cung y, se sua cau chu luat 4xx. Phieu Cho duyet ke hoach"
+      "ghi_chu": "05.11 chat App KH: hop dong v9 tu mau thuan (dong 101 \"moi 4xx = chua tao\" vs dong 116 \"KHO_BAN gui lai cung khoa\"); doc code POS donApp.js: kho ban nem sau chotPhien → 409 nhung vi DA TRU, don da co → App khoa moi = tru vi lan hai. Chat POS (ban giao 04.11) cung y, se sua cau chu luat 4xx. Phieu Cho duyet ke hoach | 05.11 chat soat cuoi DAT: dau nhanh e81a116; cong tinh + chay kieu GitHub DAT voi main f20f0d7; ghep main sach; npm test co trinh duyet 30/0; dot bien 18/18; soat may 3 vong (loi da sua, vong 3: code + tien dung). Q2 (POS kiem khoa truoc khi dem luot?): chat doc code POS donApp.js datDon — tra khoa (dong ~186-193) TRUOC giuLuotDat (~194) → DUNG, 429 chi khi khoa chua co. Q3 (cong tac khan DAT_ONLINE tat + \"Gui lai dung don nay\" → CHUA_MO coi chua tao, xoa ban ghi): chu quan chon gop vao KH-BAO-1. Gop PR #15 (9cf192f)",
+      "commit": "9cf192f"
     },
     {
       "ma": "KH-BAO-1",
@@ -296,7 +297,7 @@
         "KH-MUA-1c"
       ],
       "ten": "Sau dat don: bao \"Don #... da san sang - moi ban ra quay\" o MOI man (dai bao dau man + doi ten tab + tieng, Android rung), hoi GET /don/:ma 10-15 giay khi con don dang chay (ca khi tab an - dungTheoDoi hien dung khi document.hidden); dong nhac \"Giu App mo de duoc bao khi do uong xong\"; da_lay (khi POS len hop dong) → \"Da nhan - cam on ban!\", tat bao. Thanh toan: hai dong to \"Tru vi ... / Quet QR phan con lai ...\" ngay tren nut Dat; nho lua chon cong tac \"Tru tu so du vi\" tren may (khoa moi trong src/luuMay.js, xoa khi dang xuat / doi khach), van hoi PIN",
-      "ghi_chu": "03.11 chu quan duyet \"theo de nghi\" (chat App KH). Thu POS e 02.11 (luong vi) chu quan dong y. Phan da_lay cho POS len hop dong (YEU_CAU_APPKH_GUI_POS_03112026.md muc E). Truoc khai truong | 03.11 chu quan: loi chao hien DU TEN dung nhu khach nhap (vd \"Chao buoi trua, anh LINH P!\") — bo cach lay chu cuoi (src/dinhDang.js tenNgan); thay quyet dinh 31.10 \"ten ngan\". Them tu soat cuoi KH-MUA-1b: (1) ca do + dot bien rieng cho chan `!bg` o diem gui ThanhToan; (2) ca PIN_DANG_KHOA khi gui lai; (3) ca 401 roi khach KHAC dang nhap (kho thuong) → ban ghi kh_don_gui bi xoa; (4) xem lai ghiHong (kho day: tab khong thay ban ghi tab khac) — can nhac removeItem ban cu khi ghi hong; (5) gop luat 401 mot cho (loaiLoi) | 05.11: loi chao du ten + nut xoa mon chuyen sang KH-SINH-1; con lai (bao don xong moi man, hai dong Tru vi / Quet QR, nho cong tac, ca !bg…) lam SAU KH-MUA-1c (cung man Thanh toan / Theo doi don)"
+      "ghi_chu": "03.11 chu quan duyet \"theo de nghi\" (chat App KH). Thu POS e 02.11 (luong vi) chu quan dong y. Phan da_lay cho POS len hop dong (YEU_CAU_APPKH_GUI_POS_03112026.md muc E). Truoc khai truong | 03.11 chu quan: loi chao hien DU TEN dung nhu khach nhap (vd \"Chao buoi trua, anh LINH P!\") — bo cach lay chu cuoi (src/dinhDang.js tenNgan); thay quyet dinh 31.10 \"ten ngan\". Them tu soat cuoi KH-MUA-1b: (1) ca do + dot bien rieng cho chan `!bg` o diem gui ThanhToan; (2) ca PIN_DANG_KHOA khi gui lai; (3) ca 401 roi khach KHAC dang nhap (kho thuong) → ban ghi kh_don_gui bi xoa; (4) xem lai ghiHong (kho day: tab khong thay ban ghi tab khac) — can nhac removeItem ban cu khi ghi hong; (5) gop luat 401 mot cho (loaiLoi) | 05.11: loi chao du ten + nut xoa mon chuyen sang KH-SINH-1; con lai (bao don xong moi man, hai dong Tru vi / Quet QR, nho cong tac, ca !bg…) lam SAU KH-MUA-1c (cung man Thanh toan / Theo doi don) | 05.11 tu soat cuoi KH-MUA-1c: (1) CHUA_MO (DAT_ONLINE tat) khi \"Gui lai dung don nay\" → GIU ban ghi (khong coi chua tao) + khoa nut khi cong tac tat; ca do + dot bien; (2) xem lai kieu nut \"Xoa\" / \"Xac nhan\" o bang PIN (dang la chu, chua dong khung) neu chu quan muon nut ro hon"
     },
     {
       "ma": "KH-NAP-1",

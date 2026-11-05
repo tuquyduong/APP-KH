@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 05.11.2026
+- **KH-MUA-1c gộp** (05.11): "kho bận" / hết phiên / khoá đã dùng = CHƯA RÕ, không bao giờ khoá mới; 4xx đến sau một lần chưa rõ trong cùng chuỗi vẫn chưa rõ; "kho bận" tự gửi lại tối đa 8 lần. Bảng PIN: Xoá · 0 · Xác nhận, không tự gửi. Lỗi nhỏ còn lại (công tắc khẩn + Gửi lại) làm trong KH-BAO-1.
 - **Chạy song song nhiều phiên máy** (chủ quán 05.11: "chạy liên tục nhiều session để hoàn thành nhanh"): mỗi việc một nhánh, một phiên Claude Code; hai việc cùng lúc KHÔNG sửa chung file (phiếu ghi rõ file cấm của nhau). Đợt 1: KH-MUA-1c + KH-HD-1 + KH-SINH-1.
 - **Lịch sử đơn = tóm tắt đơn thật** (chủ quán 05.11): chi tiết đơn vẽ đúng tờ hoá đơn POS (`hoa_don[]`, KH-HD-1); danh sách có nhận ở đâu / trả bằng gì / số món / giảm (POS KH-TOMTAT-1). **Số đơn = số hoá đơn POS** dạng `APP0016` / `HD0016` (POS CK-NOIDUNG-1, trường `so_hd`; `TRA_LOI_POS_05112026.md`).
 - **Đặt đơn: POS báo "kho bận" (`KHO_BAN`) = CHƯA RÕ, gửi lại CÙNG khoá** (chủ quán duyệt mở KH-MUA-1c 05.11): POS có thể báo kho bận SAU khi đã trừ ví (chat đọc code POS) — App không bao giờ cho đặt lại bằng khoá mới trong trường hợp này. `KHOA_GUI_DA_DUNG` → mời xem Lịch sử đơn, không tự xoá. Theo hợp đồng v9 dòng 116; chat POS sẽ sửa câu "mọi 4xx = chưa tạo" (dòng 101). (KH-MUA-1c)
