@@ -116,6 +116,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
         datMoPin(null); return;
       }
       // POS trả 4xx: chắc chưa tạo → xoá bản ghi. Trừ gửi lại (cu) mà sai PIN: GIỮ bản ghi để nhập lại PIN gửi ĐÚNG khoá + thân cũ.
+      // Gửi lại (cu) bị trần lượt: không chứng minh đơn cũ chưa tạo (chuỗi trước đã chưa rõ) → GIỮ bản ghi, đếm ngược rồi gửi lại đúng khoá.
+      if (cu && e.code === 'QUA_NHIEU_LAN') { datMoPin(null); xuLyLoi(e); return; }
       if (MA_PIN.includes(e.code)) { if (!cu) ghiGuiDo(null); throw e; }
       ghiGuiDo(null);
       datMoPin(null);

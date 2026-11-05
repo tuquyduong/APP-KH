@@ -33,7 +33,7 @@ export default function PinSheet({ dong, gui }) {
   });
 
   function xacNhan() {
-    if (dang || so.length < DO_DAI) return;
+    if (xong || dang || so.length < DO_DAI) return; // màn "Đã lưu": Enter không gửi lại
     if (gui) {
       datDang(true);
       gui(so).then(() => datDang(false), (e) => { datDang(false); datSo(''); datThongBao(e.message); });
