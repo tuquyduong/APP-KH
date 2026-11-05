@@ -1,0 +1,10 @@
+/* Tờ hoá đơn giao khách (KH-HD-1) — chỉ dùng biến màu của demo; lớp dùng lại: summary-row, nt-state, order-card. */
+.hd-dau{ font-size:11px; color:var(--muted); line-height:1.5; overflow-wrap:anywhere; }
+.hd-dau.dam{ font-weight:700; color:var(--ink); }
+.hd-tieu-de{ font-size:11px; font-weight:700; letter-spacing:.04em; color:var(--navy); margin:12px 0 2px; padding-top:8px; border-top:1px solid var(--line); }
+.hd-chan{ font-size:11px; color:var(--muted); text-align:center; line-height:1.5; margin-top:10px; overflow-wrap:anywhere; }
+.hd-dong .hd-ghi{ font-size:10.5px; color:var(--muted); margin-top:2px; }
+.hd-dong > span{ min-width:0; overflow-wrap:anywhere; }
+.hd-dong > span:last-child{ text-align:right; padding-left:8px; flex-shrink:0; }
+.hd-dong.dam{ font-weight:700; }
+.hd-gach{ text-decoration:line-through; color:var(--muted); margin-right:6px; font-weight:400; }
