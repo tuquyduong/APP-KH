@@ -314,7 +314,7 @@ async function trinhDuyet(pw) {
         await t.locator('#ten-toi').fill('Trần Minh'); await t.getByRole('button', { name: 'Lưu tên' }).click(); await t.waitForTimeout(300);
         const pu2 = them(S, 'PUT', '/toi');
         k(`B2 [${nhan}] Lưu tên → PUT /toi chỉ { ten }`, pu2.length === 2 && JSON.stringify(pu2[1].than) === '{"ten":"Trần Minh"}', JSON.stringify(pu2));
-        k(`B1 [${nhan}] xem trước dùng tên mới (Minh)`, /anh\s*Minh/.test(await t.locator('.pf-prev').innerText()));
+        k(`B1 [${nhan}] xem trước dùng tên mới ĐỦ (Trần Minh — KH-SINH-1)`, /anh\s*Trần Minh/.test(await t.locator('.pf-prev').innerText()));
         await t.locator('#dia-chi-toi').fill('12 Lê Lợi, Q.1'); await t.getByRole('button', { name: 'Lưu địa chỉ' }).click(); await t.waitForTimeout(300);
         const pu3 = them(S, 'PUT', '/toi');
         k(`B3 [${nhan}] Lưu địa chỉ → PUT /toi chỉ { dia_chi }`, pu3.length === 3 && JSON.stringify(pu3[2].than) === '{"dia_chi":"12 Lê Lợi, Q.1"}', JSON.stringify(pu3));
