@@ -5,6 +5,8 @@ import '../giaoDien/hoa_don.css';
 // Vẽ tờ hoá đơn giao khách (don.hoa_don[]) đúng thứ tự POS trả. Không tính tiền: chữ ở `trai` / `phai` đã dựng sẵn.
 function Dong({ d }) {
   const nhom = nhomHoaDon(d.loai);
+  if (!d.trai && !d.phai) return null; // dòng POS gửi trống (hoặc số bill rỗng): không vẽ khối trống
+  if (d.loai === 'so_bill' && !d.phai) return null;
   if (nhom === 'canh_bao') return <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{[d.trai, d.phai].filter(Boolean).join(' ')}</div></div>;
   if (nhom === 'dau') {
     const chu = d.loai === 'so_bill' ? `Số bill: ${d.phai}` : d.loai === 'gio' ? [d.trai, d.phai].filter(Boolean).join(' · ') : [d.trai, d.phai].filter(Boolean).join(' ');
