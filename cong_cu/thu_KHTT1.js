@@ -157,6 +157,22 @@ async function trinhDuyet(pw) {
       await chup(t, `thanhtoan-vi-du-${rong}`);
       k(`B5 [${rong}] Thanh toán không tràn ngang`, !(await tranNgang(t)));
     });
+    them(`rong-thieu-${rong}`, { rong, S0: { vi: 50000 } }, async ({ t }) => {
+      await moTT(t); await vi(t).locator('.t').click();
+      await chup(t, `thanhtoan-vi-thieu_${rong}`);
+      k(`B5 [${rong}] ví thiếu: nút "Trừ ví 50.000đ + QR 37.654đ", không tràn ngang`, /^Trừ ví 50\.000đ \+ QR 37\.654đ/.test(await chuNut(t)) && !(await tranNgang(t)));
+    });
+    them(`rong-loi-${rong}`, { rong, S0: { vi: 50000 } }, async ({ t, ctx }) => {
+      await ctx.route('**/api/kh/toi', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Lỗi máy chủ', code: 'LOI_MAY_CHU' }) }));
+      await moTT(t, false, false); await doi(t, async () => /Bấm để thử lại/.test(await chu(t, '#checkout .the-vi')) && /^Thanh toán qua QR/.test(await chuNut(t)));
+      await chup(t, `thanhtoan-so-du-loi_${rong}`);
+      k(`B5 [${rong}] số dư lỗi: không tràn ngang`, !(await tranNgang(t)));
+    });
+    them(`rong-0d-${rong}`, { rong }, async ({ t }) => {
+      await moTT(t, false, false); await doi(t, async () => /Thanh toán qua QR/.test(await chuNut(t)));
+      await chup(t, `thanhtoan-vi-0d_${rong}`);
+      k(`B5 [${rong}] ví 0đ: không tràn ngang`, !(await tranNgang(t)));
+    });
   }
 
   // chạy theo cụm để không vượt 120 giây của bộ kiểm
