@@ -1,0 +1,8 @@
+Bài thử cong_cu/thu_KHHD1.js chạy trên code GỐC (commit 6bafbae, trước khi có src/hoaDon.js, src/components/HoaDonKhach.jsx, src/giaoDien/hoa_don.css và sửa Don.jsx):
+
+ERR_MODULE_NOT_FOUND: Cannot find module '.../src/hoaDon.js' imported from cong_cu/thu_KHHD1.js
+
+0 đạt · 1 hỏng
+
+Sau khi vá: 77 đạt · 0 hỏng (có Chromium); 25 đạt · 0 hỏng (KHONG_TRINH_DUYET=1).
+SỐ CA thu_KHHD1: 25
