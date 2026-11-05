@@ -141,8 +141,7 @@ async function trinhDuyet(pw) {
   });
   them('kho-ban-mai', { S0: { kich: [...Array(9)].map(() => loiPos('KHO_BAN')) } }, async ({ t, S }) => {
     await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
-    await doi(t, async () => S.guiDon.length === 1); await t.clock.fastForward(20000);
-    const ok = await doi(t, async () => /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')), 9000);
+    const ok = await doi(t, async () => { await t.clock.fastForward(2000); return /Gửi lại đúng đơn này/.test(await chu(t, '#checkout')); }, 15000);
     const g = JSON.parse((await luu(t)) || '{}');
     k('B1/B4 KHO_BAN hết 8 lượt tự gửi lại → "Lần đặt trước chưa rõ kết quả" + "Gửi lại đúng đơn này", bản ghi GIỮ, nút đặt khoá', ok && /Lần đặt trước chưa rõ kết quả/.test(await chu(t, '#checkout')) && g.khoa_gui === khoa(S.guiDon[0]) && !g.ma_don && await nutKhoa(t), `${S.guiDon.length} | ${await luu(t)}`);
     k('B1 9 lần gửi y hệt (khoá + thân)', S.guiDon.length === 9 && giongNhau(S.guiDon), String(S.guiDon.length));
@@ -193,7 +192,7 @@ async function trinhDuyet(pw) {
     await choToi(t, S); await ghiBanGhi(t, { ...THAN('V7'.repeat(10), 'vi_qr'), ma_don: 'TQD70', giu_vi: 1000, con_lai: 80000 });
     await mo(t, '/don/TQD70');
     const ok = await doiChu(t, '#tracking', /Đã giữ 30\.000đ trong ví · quét QR 51\.000đ/);
-    k('C1 bản ghi trên máy ghi số KHÁC → hiện số POS (POS trước, máy sau)', ok && !/1\.000đ|80\.000đ/.test(await chu(t, '#tracking')), (await chu(t, '#tracking')).slice(0, 200));
+    k('C1 bản ghi trên máy ghi số KHÁC → hiện số POS (POS trước, máy sau)', ok && !/(?<![\d.])1\.000đ|80\.000đ/.test(await chu(t, '#tracking')), (await chu(t, '#tracking')).slice(0, 200));
   });
   them('v7-don-quay', { S0: { v7: true } }, async ({ t, S }) => {
     S.don.set('TQD71', { ...DON_VQ, ma: 'TQD71', v7: { cach_tra: null, giu_vi: null, con_lai: null } });
