@@ -88,3 +88,35 @@ VS-PIN-XOA-HET, BV-PIN-GIUA.
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 12fe94d^ HEAD viec/KH-MUA-1c` → `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16: thu_KHMUA1c trên mốc in 23 ca ≠ 26 — mốc chưa có hop_dong_v9.md, nhóm A dừng sớm).
   Lần chạy đầu đỏ A16 vì dòng `SỐ CA` thiếu tiền tố `cong_cu/` — đã sửa (7da938f).
 HEAD ĐÃ KIỂM: 7da938f
+
+## Soát độc lập vòng 1 (/ra-soat, agent general-purpose, 05.11) — báo cáo
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:
+- src/components/PinSheet.jsx:25-33, 35-48, 55-60 — đặt / đổi PIN: Enter ở màn "Đã lưu mã PIN" gọi xacNhan() → so === dau → datPin chạy lại (PUT /pin lần hai); lỗi mới do F2 (bản cũ useEffect([so]) không gửi lại); không ca nào bắt — K5/K4 (đường song song của Enter).
+- viec/KH-MUA-1c/dot_bien.py:24 — VS-GIU-VI-TU-TINH khác kế hoạch (Math.min(so_du_vi, tong)); bản làm `d.tong - d.con_lai` chỉ đỏ ở ca P có tong lệch; ca màn C1 81000 − 51000 = 30000 tự khớp; thiếu ca màn "/toi.so_du_vi khác giu_vi" — K3.
+NGHI NGỜ:
+- src/pages/ThanhToan.jsx:120 + src/datDon.js:125 — "Gửi lại đúng đơn này" là chuỗi MỚI; 429 QUA_NHIEU_LAN ngay lần đầu → lan === 0 → chưa tạo → ghiGuiDo(null) → hết đếm ngược đặt khoá mới. An toàn chỉ khi POS tra khoá TRƯỚC đếm lượt (hợp đồng v9 dòng 99-100 chỉ ngầm ý) — K1. Không ca thử.
+- src/datDon.js:180-183 — ghiGuiDo(null) hỏng mà getItem đọc được → đọc lại bản cũ (chặn oan, hiếm, không gây khoá mới).
+- bang_chung_do.txt: số "49 · 44", "46/51/58 px", "demo 0,01 px", "TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT" không có tệp kèm, chưa kiểm lại.
+- trang_thai.md: A1 làm trước khi duyệt kế hoạch (có ghi lý do) — lệch quy trình.
+NGHIỆM THU: 21/24 · thiếu: E3 (/security-review chưa chạy), E4 (chủ quán thử tay), F3 (hở Enter sau "Đã lưu").
+CHƯA SOÁT ĐƯỢC: code POS (thứ tự tra khoá / lượt / KHO_BAN sau chotPhien); không chạy lại dot_bien.py, npm test, --day-du, cổng; WebKit / iPhone / Zalo.
+BÀI HỌC: NGUYÊN TẮC — bộ nghe phím toàn cửa sổ của bảng nhiều bước phải tự chặn ở mọi bước kết thúc; KHOÁ — luật "chưa rõ → giữ bản ghi" áp cả chuỗi gửi lại do khách bấm (cu), hoặc POS ghi "tra khoá trước đếm lượt" vào hợp đồng, kèm ca "Gửi lại → 429"; NGUYÊN TẮC — đột biến đúng kế hoạch, ca bắt phải có dữ liệu tự khớp.
+(Mục 1–8 chi tiết của người soát: K3 bài có giá trị, chạy lại khớp SỐ CA; K4 POST /don 1 đường, loaiLoi 1 chỗ, ghiGuiDo(null) 4 chỗ, đọc kh_don_gui đủ, PinSheet 3 chỗ; K5 không chặn oan; đường tiền App không tự tính; không dist/, không file ngoài Phạm vi, cmp v9 khớp; đơn giản: dem[nhom] một dòng hơi khó đọc, TheoDoiDon:60 ba nhánh một dòng.)
+
+## Vòng sửa 1
+- Lỗi Enter: `PinSheet.jsx` `xacNhan` thêm `xong ||` (màn "Đã lưu" không gửi lại). Ca F3 mới + đột biến VS-PIN-ENTER-SAU-XONG (ĐỎ).
+- Nghi ngờ 429 khi "Gửi lại" (đụng tiền — chọn hướng AN TOÀN, cùng tinh thần quyết định Q1 05.11): `ThanhToan.jsx` — đường `cu` nhận `QUA_NHIEU_LAN` → GIỮ bản ghi,
+  đếm ngược, rồi "Gửi lại đúng đơn này" đúng khoá. Ca B1 mới `gui-lai-429` + đột biến VS-GUI-LAI-429-XOA (ĐỎ). Hướng này không bao giờ tạo đơn thứ hai;
+  giá: khách chờ hết đếm ngược. Xin POS xác nhận thứ tự "tra khoá trước đếm lượt" — xem Câu hỏi Q2 (không chặn việc).
+- VS-GIU-VI-TU-TINH: kế hoạch "Math.min(so_du_vi, tong)" KHÔNG đặt được ở Theo dõi đơn (màn này không đọc /toi); đột biến `tong − con_lai` với số POS thật
+  luôn bằng `giu_vi` (đột biến tương đương ở dữ liệu thật) → ca P dùng số lệch có chủ ý (ghi chú ở bài) để khoá "đọc NGUYÊN giu_vi". Giữ, ghi rõ ở đây.
+- `ghiGuiDo(null)` hỏng → chặn oan (hiếm, hướng an toàn): không sửa, ghi Phát hiện.
+- `/security-review`: skill lỗi trong môi trường (không có `origin/HEAD`). Tự rà diff `src/` theo mục bảo mật CLAUDE.md §7: không lưu PIN (grep
+  localStorage/sessionStorage/console trên dòng thêm: 0), không fetch ngoài api.js, không innerHTML / eval, cửa mới `GET /chuong-trinh` công khai qua `goi`,
+  không bí mật. Không thấy vấn đề. Ghi CHƯA KIỂM: chưa có lượt /security-review chuẩn.
+- Đột biến chạy lại: ĐỐI CHỨNG XANH 108 · 0; 17/17 ĐỎ ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT"). `--day-du` 32 đạt · 0 hỏng.
+
+## Câu hỏi (thêm — không chặn việc)
+- Q2 (cho chat POS): POS `datDon` có tra `khoa_gui` TRƯỚC bước đếm lượt 10 / 10 phút không (khoá đã có đơn → 200 `trung` chứ không 429)? Hợp đồng v9 dòng 99–100
+  chỉ ngầm ý. App hiện chọn an toàn: "Gửi lại đúng đơn này" nhận 429 thì giữ bản ghi. Nếu POS xác nhận, đề nghị ghi câu đó vào hợp đồng bản sau.

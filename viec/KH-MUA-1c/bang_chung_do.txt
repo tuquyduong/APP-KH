@@ -53,3 +53,9 @@ Có Chromium: thu_KHMUA1c 103 · 0 · thu_KHMUA1b 254 · 0 · thu_KHMUA1 128 · 
 SỐ CA cong_cu/thu_KHMUA1c.js: 26
 SỐ CA cong_cu/thu_KHMUA1.js: 55
 SỐ CA cong_cu/thu_KHKHOP1.js: 48
+
+## Soát vòng 1 (05.11) — hai ca mới (chỉ phần trình duyệt; SỐ CA không đổi vì KHONG_TRINH_DUYET=1 vẫn 26)
+Đỏ khi bỏ vá = đột biến gỡ ĐÚNG chỗ vá (dot_bien.py, có Chromium):
+  VS-GUI-LAI-429-XOA: ĐỎ — 106 đạt · 2 hỏng ✗ B1 (soát vòng 1) "Gửi lại đúng đơn này" nhận 429 ngay lần đầu → bản ghi GIỮ …
+  VS-PIN-ENTER-SAU-XONG: ĐỎ — 107 đạt · 1 hỏng ✗ F3 (soát vòng 1) Enter ở màn "Đã lưu mã PIN" KHÔNG gửi PUT /pin lần hai — 2
+Sau vá: thu_KHMUA1c 108 đạt · 0 hỏng (Chromium); 26 · 0 (KHONG_TRINH_DUYET=1).
