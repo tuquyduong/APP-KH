@@ -35,7 +35,9 @@ cong_cu/thu_KHNHANH1.js: 221 đạt · 3 hỏng
 Sau khi vá: 254 / 128 / 110 / 224 đạt · 0 hỏng (có Chromium).
 
 == Bài thử cũ sửa chữ (D2) — số ca khi chạy KHONG_TRINH_DUYET=1, trên code đã vá ==
-SỐ CA cong_cu/thu_KHMUA1.js: 55
-SỐ CA cong_cu/thu_KHMUA1b.js: 47
-SỐ CA cong_cu/thu_KHMUA1c.js: 26
-SỐ CA cong_cu/thu_KHNHANH1.js: 80
+(Cổng GitHub không có Chromium nên phần sửa chữ trong trình duyệt xanh trên gốc → mỗi bài thêm MỘT ca đọc nguồn ở Phần 1,
+ đỏ trên gốc khi không có Chromium: tìm "KH-TT-1" trong từng bài. Số ca dưới đây đã tính ca thêm.)
+SỐ CA cong_cu/thu_KHMUA1.js: 56
+SỐ CA cong_cu/thu_KHMUA1b.js: 48
+SỐ CA cong_cu/thu_KHMUA1c.js: 27
+SỐ CA cong_cu/thu_KHNHANH1.js: 81
