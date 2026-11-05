@@ -11,6 +11,12 @@
 ## Câu hỏi
 1. (ĐÃ TRẢ LỜI — chủ quán duyệt 05.11, ghi ở phiếu) `thu_KHNHANH1.js` ca D3 đổi regex thành `/cô Nguyễn Linh!/`; đã sửa ở commit `8ff848d`, `SỐ CA` ở `bang_chung_do.txt`.
 
+2. **Cổng `chay` đỏ A11 vì `thu_KHNHANH1.js` xanh trên code gốc.** Lệnh `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 5f7dd67^ HEAD viec/KH-SINH-1` →
+   `✗ [A11] bài thử cong_cu/thu_KHNHANH1.js XANH trên code gốc — bài thử vô giá trị (K3), phải đỏ trước khi vá`.
+   Nguyên nhân: ca D3 (dòng 492) nằm trong phần Chromium; GitHub / cổng chạy không trình duyệt nên ca không chạy, bài xanh cả trên gốc lẫn sau vá (80 đạt). Ở máy có Chromium ca đỏ trên gốc đo bằng hàm `chiaLoiChao` (xem `bang_chung_do.txt`).
+   Đề nghị chủ quán: thêm mục `## Bài thử cũ sửa` vào phiếu liệt kê `cong_cu/thu_KHNHANH1.js` (ca D3 chỉ chạy có Chromium, không đỏ được ở cổng không-trình-duyệt), HOẶC cho phép thêm một ca hàm thuần ở bài này (ngoài ý "không sửa dòng nào khác" của phiếu). Máy không tự chọn, không tự sửa phiếu.
+   Hệ quả: dừng ở đây; chưa ghi `HEAD ĐÃ KIỂM`, chưa `/ra-soat`, chưa báo cáo 7 mục.
+
 ## Bước 1 (làm lại 05.11, phiên tiếp)
 - `git fetch`: HEAD = FETCH_HEAD = `266cd8a` (hook mở phiên kéo từ `5f7dd67`). `git log --oneline -3`: `266cd8a PHIEU…trả lời Câu hỏi 1` · `6127258 KH-SINH-1: ghi ket qua kiem…` · `e0550c5 KH-SINH-1: bang chung do, doi chieu demo…`.
 
