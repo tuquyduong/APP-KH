@@ -30,7 +30,7 @@ DOT_BIEN = [
     ('VS-PIN-TU-GUI', PS, "  function xacNhan() {", "  useEffect(() => { if (so.length === DO_DAI) xacNhan(); }, [so]);\n  function xacNhan() {", True),
     ('VS-PIN-XOA-HET', PS, "datSo(so.slice(0, -1));", "datSo('');", True),
     ('VS-GUI-LAI-429-XOA', TT, "if (cu && e.code === 'QUA_NHIEU_LAN') { datMoPin(null); xuLyLoi(e); return; }", "", True),
-    ('VS-PIN-ENTER-SAU-XONG', PS, "if (xong || dang || so.length < DO_DAI) return;", "if (dang || so.length < DO_DAI) return;", True),
+    ('VS-PIN-ENTER-SAU-XONG', PS, "if (xong) dong(); else xacNhan();", "xacNhan();", True),
     ('BV-GUI-LAI-CHO-DEM-NGUOC', TT, "const guiLaiDungDon = () => { if (conGiay > 0) return; ", "const guiLaiDungDon = () => { ", True),
     ('BV-PIN-GIUA', CSS, ".pin-pad button{ text-align:center; }\n", "", True),
 ]
