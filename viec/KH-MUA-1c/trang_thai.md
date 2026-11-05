@@ -120,3 +120,28 @@ BÀI HỌC: NGUYÊN TẮC — bộ nghe phím toàn cửa sổ của bảng nhi�
 ## Câu hỏi (thêm — không chặn việc)
 - Q2 (cho chat POS): POS `datDon` có tra `khoa_gui` TRƯỚC bước đếm lượt 10 / 10 phút không (khoá đã có đơn → 200 `trung` chứ không 429)? Hợp đồng v9 dòng 99–100
   chỉ ngầm ý. App hiện chọn an toàn: "Gửi lại đúng đơn này" nhận 429 thì giữ bản ghi. Nếu POS xác nhận, đề nghị ghi câu đó vào hợp đồng bản sau.
+
+## Soát độc lập vòng 2 — báo cáo (tóm đủ ý, nguyên kết luận)
+KHÔNG ĐẠT — "Phần tiền đúng."
+LỖI TÌM ĐƯỢC:
+- trang_thai.md — "HEAD ĐÃ KIỂM: 7da938f" cũ (sau đó 678c3c2, bdb864b đổi code); vòng sửa 1 không chạy lại cổng — K1.
+- src/pages/ThanhToan.jsx:120 + :166 + :148-149 — "Gửi lại" nhận 429: nút "Gửi lại đúng đơn này" không xét conGiay → bấm được trong lúc đếm ngược (thêm POST, có thể kéo dài chặn);
+  không hiện "Thử lại sau N giây"; câu "đếm ngược rồi gửi lại" trong vòng sửa 1 không đúng code — K1, K5 nhẹ. Không sinh đơn thứ hai (cùng khoá).
+- cong_cu/thu_KHMUA1c.js:180-192 — ca gui-lai-429 chỉ bấm sau fastForward(31000), xanh cả khi không có đếm ngược — K3.
+NGHI NGỜ: đường cu + PIN (ví) + 429 không có ca riêng (đọc code thấy đúng); hai lần Xác nhận liền trước khi vẽ lại có thể đóng bảng PIN sớm, mất lời PIN_SAI
+(không đơn thứ hai); Enter ở màn "Đã lưu" bị nuốt (Space vẫn được); 503 PAYOS_CHUA_CAU_HINH = chưa rõ, khách kẹt tới 24 giờ (luật có từ 1b).
+Kiểm vòng 1: (a) đúng; (b) đúng về tiền, đếm ngược lỗi như trên; (c) chấp nhận lý do; (d) vẫn chưa có /security-review chuẩn.
+K4: datDonApp chỉ api.js:77 qua guiDonAnToan; ghiGuiDo(null) 4 chỗ, không chỗ nào xoá khi KHO_BAN / KHOA_GUI_DA_DUNG / 401; PinSheet 3 chỗ.
+Đường tiền: không đường nào gửi khoá MỚI khi đơn có thể đã tạo. Không dist/, không file ngoài Phạm vi, cmp v9 khớp. thu_KHMUA1c 108 · 0 khớp.
+NGHIỆM THU: 22/24 · thiếu: E3 (HEAD ĐÃ KIỂM cũ, chưa /security-review chuẩn); E4 chờ chủ quán.
+BÀI HỌC: KHOÁ — nút nào gửi lại POST /don sau 429 phải xét cùng điều kiện đếm ngược; ca phải bấm TRONG lúc đếm ngược. NGUYÊN TẮC — mỗi vòng sửa đổi code phải chạy lại cổng
+và ghi lại HEAD ĐÃ KIỂM trước khi gọi soát.
+
+## Vòng sửa 2
+- `ThanhToan.jsx`: nút "Gửi lại" khoá khi `conGiay > 0` (chữ "Gửi lại sau N giây", `btn-disabled` + `aria-disabled`, hàm `guiLaiDungDon` chặn cả kích bàn phím).
+  Ca mới: nút khoá + chữ đếm ngược; bấm (chuột force + `click()` kiểu bàn phím) TRONG lúc đếm ngược → 0 POST thêm; hết đếm ngược gửi lại đúng khoá.
+  Đột biến BV-GUI-LAI-CHO-DEM-NGUOC: lần đầu SỐNG (ca chỉ bấm chuột — `.btn-disabled{pointer-events:none}` chặn chuột, không chặn bàn phím) → sửa ca
+  thêm `click()` kiểu bàn phím → ĐỎ.
+- `PinSheet.jsx`: Enter ở màn "Đã lưu" = "Xong" (đóng bảng); ca F3 kiểm thêm bảng đóng.
+- Đột biến: ĐỐI CHỨNG XANH 110 · 0; 18/18 ĐỎ ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT"). `--day-du` 32 đạt · 0 hỏng (thu_KHMUA1c 110 · 0).
+- Không sửa (ghi lại): hai lần Xác nhận liền (không đơn thứ hai, khoaGui chặn); 503 PAYOS_CHUA_CAU_HINH = chưa rõ (luật 1b, hợp đồng: 5xx chưa rõ) → Phát hiện cho chủ quán.
