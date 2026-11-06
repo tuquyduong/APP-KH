@@ -10,7 +10,8 @@ import { KHOA_DON_GUI, quenBoNho } from './datDon.js';
 // số điện thoại có ít số nên đoán ngược được — chỉ dùng để so, không dùng để chứng thực. Kho tiêm vào để thử (như tracNghiemLuu.js).
 const KHOA_CHU = 'kh_chu';
 /** Mọi khoá dữ liệu khách. Tính năng mới lưu trên máy (kế hoạch và nhắc việc `kh_kehoach`…) thêm khoá của mình vào đây. */
-const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO, KHOA_GIA_HAN, KHOA_TOM_TAT, KHOA_DON_GUI];
+export const KHOA_DUNG_VI = 'kh_dung_vi'; // công tắc "Trừ từ số dư ví" lần trước: '1' / '0' (KH-BAO-1 C1) — không nhớ PIN, không nhớ số tiền
+const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO, KHOA_GIA_HAN, KHOA_TOM_TAT, KHOA_DON_GUI, KHOA_DUNG_VI];
 /** Khoá không tính là "dữ liệu chưa biết của ai": giỏ của khách vãng lai phải còn khi khách đăng nhập lần đầu (KH-MUA-1 A4); ngày gia hạn không phải dữ liệu của khách (KH-UI-3b D3). */
 const KHOA_VANG_LAI = [KHOA_GIO, KHOA_GIA_HAN];
 const kho = () => localStorage;
@@ -71,4 +72,13 @@ export function doiKhach(sdt, k = kho) {
 export function xoaTatCa(k = kho) {
   xoaDuLieu(k);
   try { lay(k).removeItem(KHOA_CHU); } catch { /* kho chặn */ }
+}
+
+/** Công tắc ví lần trước: true chỉ khi đã nhớ '1'; chưa nhớ / kho chặn → false. */
+export function docDungVi(k = kho) {
+  try { return lay(k).getItem(KHOA_DUNG_VI) === '1'; } catch { return false; }
+}
+/** Nhớ công tắc ví (khách vừa bấm). Kho chặn → không nhớ, không vỡ. */
+export function ghiDungVi(bat, k = kho) {
+  try { lay(k).setItem(KHOA_DUNG_VI, bat ? '1' : '0'); } catch { /* kho chặn: chỉ không nhớ */ }
 }

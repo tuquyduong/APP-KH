@@ -1,0 +1,4 @@
+/* Dải báo đơn xong (KH-BAO-1) — màu / chữ lấy từ khuôn .nt-state.on của demo; chỉ thêm bố cục. Nằm TRÊN cùng .phone (flex cột) nhờ order:-1. */
+.phone .bao-don{ order:-1; flex-shrink:0; margin:8px 12px 0; padding:10px 12px; position:relative; z-index:5; }
+.bao-don .bao-don-xem{ flex-shrink:0; min-height:36px; padding:0 12px; border:none; border-radius:10px; background:transparent; color:inherit; font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; }
+.bao-don .bao-don-tat{ flex-shrink:0; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border:none; background:transparent; color:inherit; cursor:pointer; }

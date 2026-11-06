@@ -3,10 +3,12 @@ import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { bayGio } from '../bayGio.js';
 import { banGhiCuaDon, buocTienTrinh, conLaiQR, huyDon, xongChua } from '../datDon.js';
 import { dungTheoDoi } from '../dungDatDon.js';
+import { docHoaDon } from '../hoaDon.js';
 import { LIEN_HE } from '../noiDung/lienHe.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import { KhungLoi } from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
+import HoaDonKhach from '../components/HoaDonKhach.jsx';
 import { VeQR } from './ManQR.jsx';
 
 // Theo dõi đơn theo demo (tracking), đường dẫn /don/<ma>. Đơn chờ trả: QR lấy từ GET /don/:ma (tải lại / máy khác vẫn thấy), đếm ngược tới het_han
@@ -84,15 +86,19 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(tra.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(tra.con_lai)}</b></div>}
           {don.tienVeChoDoiSoat && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.</div></div>}
           {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">#{don.ma}</div></div>}
+          {tt === 'xong' && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div>Đơn đã xong — mời bạn ra quầy</div></div>}
+          {(tt === 'da_tra' || tt === 'dang_lam') && <div className="care-disclaimer qr-chu">Giữ App mở để được báo khi đồ uống xong</div>}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>
-          {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><h2>Chi tiết đơn</h2></div>}
-          {don.mon.map((m, i) => (
-            <div className="cart-item" key={i}>
-              <div className="cart-thumb"><Ico ten="package" s={28} /></div>
-              <div className="cart-info"><div className="cart-name">{m.ten} ×{m.so_luong}</div>{m.ghi_chu && <div className="cart-opt">“{m.ghi_chu}”</div>}<div className="cart-price">{dinhDangGia(m.thanh_tien)}</div></div>
-            </div>
-          ))}
-          {don.tong !== null && <div className="card the-tong"><div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(don.tong)}</span></div></div>}
+          {docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
+            {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><h2>Chi tiết đơn</h2></div>}
+            {don.mon.map((m, i) => (
+              <div className="cart-item" key={i}>
+                <div className="cart-thumb"><Ico ten="package" s={28} /></div>
+                <div className="cart-info"><div className="cart-name">{m.ten} ×{m.so_luong}</div>{m.ghi_chu && <div className="cart-opt">“{m.ghi_chu}”</div>}<div className="cart-price">{dinhDangGia(m.thanh_tien)}</div></div>
+              </div>
+            ))}
+            {don.tong !== null && <div className="card the-tong"><div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(don.tong)}</span></div></div>}
+          </>}
           {loiHuy && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loiHuy}</div></div>}
           {choTra && <button type="button" className={`ghost-btn nut-huy${dangHuy ? ' btn-disabled' : ''}`} onClick={dangHuy ? undefined : huy}>Huỷ đơn</button>}
           {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai}`}>Gọi quán để huỷ</a>}

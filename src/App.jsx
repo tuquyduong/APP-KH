@@ -20,6 +20,7 @@ import { banGhiCuaDon, ghiGuiDo, moTheoDoi, monDatLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
+import BaoDonXong from './components/BaoDonXong.jsx';
 import GioHang from './pages/GioHang.jsx';
 import ThanhToan from './pages/ThanhToan.jsx';
 import TheoDoiDon from './pages/TheoDoiDon.jsx';
@@ -83,6 +84,7 @@ export default function App() {
   const [gio, datGio] = useState(docGio);
   const [maGiam, datMaGiam] = useState('');
   const [thongBao, datThongBao] = useState('');
+  const [tieuXong, datTieuXong] = useState(''); // "(Xong) Đơn #…" do BaoDonXong đặt; thắng tiêu đề của trang tới khi khách tắt / xem đơn
   const [monLoi, datMonLoi] = useState(null); // { ma, chu } POS vừa báo HET_HANG / MON_KHONG_BAN — dòng giỏ đánh dấu tới khi giỏ đổi
   const doiGio = (g) => { datGio(g); ghiGio(g); datMonLoi(null); };
   const docLaiGio = () => { datGio(docGio()); datMaGiam(''); }; // luuMay.doiKhach vừa xoá dữ liệu của khách trước
@@ -124,7 +126,7 @@ export default function App() {
     if (dangNhap && ((trang === 'tracnghiemlam' && !tn.bai) || (trang === 'tracnghiemketqua' && !tn.hien))) thay(taoDuongDan('tracnghiem'));
   }, [trang, dangNhap, tn.bai, tn.hien]);
 
-  useEffect(() => { document.title = tieuDeTrang(trang, monLink && monLink.ten); }, [trang, monLink]);
+  useEffect(() => { document.title = tieuDeTrang(trang, monLink && monLink.ten); if (tieuXong) document.title = tieuXong; }, [trang, monLink, tieuXong]);
 
   useLayoutEffect(() => {
     if (khungCuon.current) khungCuon.current.scrollTop = viTriCuonKhiDoiMan({ tab: trang, coManCon: false, quayLaiMenu: quayLaiMenu.current, daLuu: viTriMenu.current });
@@ -166,7 +168,7 @@ export default function App() {
   const xongDatDon = (don) => { lamMoi([cuaToi, cuaDon, cuaDiem]); di(taoDuongDan('theodoi', { ma: don.ma })); };
   // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ + mã giảm MỘT lần (đánh dấu `xong`). Bản ghi GIỮ (không xoá) để tab
   // Thanh toán đang mở ở cửa sổ khác vẫn thấy "Bạn vừa đặt đơn …" (ra-soát vòng 1); đơn mới ghi đè, đăng xuất / đổi khách xoá. Huỷ → làm mới /don, /toi (ví nhả).
-  const daTra = (ma) => { const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
+  const daTra = (ma) => { lamMoi([cuaDon]) /* đơn QR vừa trả: dải báo đơn xong bắt đầu hỏi */; const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio([]); datMaGiam(''); } };
   const daHuy = () => lamMoi([cuaDon, cuaToi]);
 
   return (
@@ -194,6 +196,7 @@ export default function App() {
       </div>
       <ThanhTab tab={r.tab || tabCuoi.current} chon={chonTab} soMon={demMon(gio)} />
       <Thongbao chu={thongBao} het={() => datThongBao('')} />
+      {dangNhap && <BaoDonXong moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} datTieuDe={datTieuXong} />}
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: SPRITE_MUA }} />
       <ManDau />
     </div>
