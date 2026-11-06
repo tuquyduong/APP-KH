@@ -1,0 +1,9 @@
+/* KH-CT-1 — khối "Chương trình đặc biệt" ở Ưu đãi. Dùng thẻ .voucher của demo; chỉ thêm xuống dòng chữ dài, thẻ sinh nhật nổi bật, dòng mời. Màu: biến của demo. */
+.ct-khoi .voucher .body{ gap:10px; min-width:0; }
+.ct-khoi .voucher .body > div:first-child{ min-width:0; flex:1; }
+.ct-khoi .voucher .t, .ct-khoi .voucher .s{ overflow-wrap:anywhere; }
+.ct-khoi .voucher .use{ flex-shrink:0; text-align:center; }
+.ct-khoi .voucher .ct-ic{ flex-shrink:0; margin-right:10px; display:flex; align-items:center; }
+.ct-khoi .voucher.ct-sn{ box-shadow:0 0 0 2px var(--coral), 0 1px 4px rgba(26,54,93,.08); }
+.ct-khoi .ct-chuc{ font-size:12px; font-weight:600; color:var(--forest); margin-top:6px; overflow-wrap:anywhere; }
+.ct-khoi .ct-moi{ display:block; font-size:11px; color:var(--muted); margin-top:6px; text-decoration:underline; cursor:pointer; overflow-wrap:anywhere; }

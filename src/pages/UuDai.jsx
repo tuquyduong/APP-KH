@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { layVoucher } from '../api.js';
+import { layVoucher, layChuongTrinh } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDiem, cuaToi, cuaVoucher, lamMoi } from '../duLieuKhach.js';
 import { dungGia } from '../heThong.js';
@@ -13,8 +13,12 @@ import TheMoi from '../components/TheMoi.jsx';
 import GvDem from '../components/GvDem.jsx';
 import { bam } from '../components/bam.js';
 import { Med } from '../components/BieuTuong.jsx';
+import { docChuongTrinh, sinhNhatHomNay } from '../chuongTrinh.js';
+import { bayGio } from '../bayGio.js';
+import '../giaoDien/chuong_trinh.css';
 
 // Ưu đãi theo demo (rewards): banner Giờ vàng, thẻ hạng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
+// Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
 //   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
 const LOAI_DIEM = { earn: 'Tích điểm', redeem: 'Đổi điểm' };
 const TRANG_THAI_VOUCHER = { used: 'Đã dùng', expired: 'Hết hạn' };
@@ -70,6 +74,58 @@ function BannerGioVang({ mo }) {
         <div className="rw-h">{tt.batDau} – {tt.ketThuc}<br />giảm {tt.phanTram}%</div>
         <button className="rw-b" type="button">Xem món Giờ vàng →</button>
       </div>
+    </div>
+  );
+}
+
+const BIEU_TUONG_CT = { sinh_nhat: 'ticket', hoc_sinh_gioi: 'card', khac: 'package' };
+const CHUC_SINH_NHAT = 'Chúc mừng sinh nhật! Mời bạn đến quán, đưa căn cước để nhận ưu đãi hôm nay.';
+const MOI_NHAP_NGAY_SINH = 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đãi sinh nhật';
+
+// Thẻ chương trình (khuôn .voucher của demo). `ghiChu` = dòng chúc mừng / mời nhập ngày sinh (chỉ thẻ sinh nhật của khách đã đăng nhập).
+function TheChuongTrinh({ ct, noiBat, ghiChu }) {
+  return (
+    <div className={`voucher${noiBat ? ' ct-sn' : ''}`}>
+      <div className="strip" />
+      <div className="body">
+        <span className="ct-ic"><Med ten={BIEU_TUONG_CT[ct.loai]} s={36} /></span>
+        <div>
+          <div className="t">{ct.ten}</div>
+          {ct.moTa && <div className="s">{ct.moTa}</div>}
+          {ghiChu}
+        </div>
+        <div className="use">Áp dụng tại quán</div>
+      </div>
+    </div>
+  );
+}
+
+// Khách đã đăng nhập: ngày sinh từ /toi (kho cuaToi). `undefined` = chưa biết → không hiện gì; `null` = chưa nhập → mời nhập.
+function ChuongTrinhToi({ ds, moHoSo }) {
+  const toi = dungCua(cuaToi);
+  const ngaySinh = toi.dl && toi.dl.khach ? toi.dl.khach.ngay_sinh : undefined;
+  const homNay = sinhNhatHomNay(ngaySinh, bayGio().slice(0, 10));
+  const xep = homNay ? [...ds.filter((c) => c.loai === 'sinh_nhat'), ...ds.filter((c) => c.loai !== 'sinh_nhat')] : ds;
+  return xep.map((c) => {
+    const sn = c.loai === 'sinh_nhat';
+    let ghiChu = null;
+    if (sn && homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
+    else if (sn && ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
+    return <TheChuongTrinh key={c.ma || c.ten} ct={c} noiBat={sn && homNay} ghiChu={ghiChu} />;
+  });
+}
+
+// Chương trình đặc biệt (GET /chuong-trinh, không token): mở cho cả khách vãng lai. Rỗng / lỗi / 429 → ẩn cả khối.
+function KhoiChuongTrinh({ dangNhap, moHoSo }) {
+  const { dl } = dungTai(layChuongTrinh);
+  const ds = docChuongTrinh(dl);
+  if (ds.length === 0) return null;
+  return (
+    <div className="ct-khoi">
+      <div className="sec-head"><h2>Chương trình đặc biệt</h2></div>
+      {dangNhap
+        ? <ChuongTrinhToi ds={ds} moHoSo={moHoSo} />
+        : ds.map((c) => <TheChuongTrinh key={c.ma || c.ten} ct={c} />)}
     </div>
   );
 }
@@ -136,11 +192,12 @@ function UuDaiToi({ maSan, khiNhanXong }) {
 }
 
 // Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
-export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap }) {
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo }) {
   return (
     <Man id="rewards">
       <div className="topbar"><div><h1>{dangNhap ? 'Ưu đãi của tôi' : 'Ưu đãi'}</h1></div><NutQR moQR={moQR} /></div>
       <BannerGioVang mo={moGioVang} />
+      <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
         ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} />
         : <><TheHang hang={null} /><div className="top-row mot"><TheMoi chu={THE_MOI_UU_DAI} moDangNhap={moDangNhap} /></div></>}
