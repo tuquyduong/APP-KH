@@ -167,7 +167,7 @@ async function trinhDuyet(pw) {
     const dau = await chu(t, '.bao-don');
     await dai(t).locator('button[aria-label="Tắt thông báo"]').click();
     const sau = await doi(t, async () => (await dai(t).count()) === 1 && (await chu(t, '.bao-don')) !== dau);
-    k('A2 hai đơn xong cùng lúc: tắt đơn đầu → đơn kia hiện tiếp, tiêu đề theo đơn đang hiện', sau && /Đơn #(A1|B2)/.test(dau) && (await tieuDe(t)).includes(/#(A1|B2)/.exec(await chu(t, '.bao-don'))[0]), `${dau} | ${await chu(t, '.bao-don')}`);
+    k('A2 hai đơn xong cùng lúc: tắt đơn đầu → đơn kia hiện tiếp, tiêu đề theo đơn đang hiện', sau && /Đơn #(A1|B2)/.test(dau) && await doi(t, async () => (await tieuDe(t)).includes(/#(A1|B2)/.exec(await chu(t, '.bao-don'))[0])), `${dau} | ${await chu(t, '.bao-don')}`);
   });
 
   them('dat-don-roi-menu', { gio: undefined, S0: { v7: true, vi: 200000 } }, async ({ t, S, ctx }) => {

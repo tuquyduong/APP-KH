@@ -14,7 +14,11 @@ export default function BaoDonXong({ moDon, datTieuDe }) {
   const [nho, datNho] = useState(docNho);
   const kq = xemDanhSach(s.dl && s.dl.data, nho);
   const ma = kq.choBao[0] || '';
-  useEffect(() => { if (kq.nho.thay.length !== nho.thay.length || kq.nho.thay.some((x, i) => x !== nho.thay[i])) { datNho(kq.nho); ghiNho(kq.nho); } });
+  // Đồng bộ mã "đã thấy" (chỉ phần thay; phần bao do nút tắt giữ — cập nhật theo bản mới nhất, không ghi đè bằng bản chụp cũ).
+  useEffect(() => {
+    if (kq.nho.thay.length === nho.thay.length && kq.nho.thay.every((x, i) => x === nho.thay[i])) return;
+    datNho((n) => { const m = { thay: kq.nho.thay, bao: n.bao }; ghiNho(m); return m; });
+  });
   useEffect(() => {
     if (!kq.dangChay) return undefined;
     const id = setInterval(hoiNgay, MS_HOI);
