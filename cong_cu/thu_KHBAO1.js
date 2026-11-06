@@ -277,5 +277,22 @@ async function trinhDuyet(pw) {
     k('C3 không gọi POST /don khi cờ tắt', S.guiDon.length === 0);
   });
 
+  // Chụp ảnh D2 (chỉ khi đặt LUU_ANH_DIR): dải ở Trang chủ + Menu, Theo dõi đơn dang_lam / xong / có tờ, Thanh toán công tắc đã nhớ.
+  if (process.env.LUU_ANH_DIR) {
+    for (const rong of [360, 390, 430]) {
+      them(`anh-${rong}`, { rong, gio: undefined, S0: { v7: true, vi: 100000, don: new Map([['TQD50', DON('TQD50', 'dang_lam')]]) } }, async ({ t, S, ctx }) => {
+        await t.route('**/api/kh/don/TQD50', async (r) => { if (S.hoaDon) await r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, don: { ma: 'TQD50', ngay: '2026-10-30T20:31:00', tong: 60000, tien_trinh: S.don.get('TQD50').tt, qr: null, tien_ve_cho_doi_soat: false, cach_tra: null, giu_vi: null, con_lai: null, hoa_don: TO, mon: [] } }) }); else await r.fallback(); });
+        await mo(t, '/don/TQD50'); await css(t); await doi(t, async () => /Giữ App mở/.test(await chu(t, '#tracking'))); await chup(t, `theodoi-dang-lam_${rong}`);
+        await khoiDau(t, S, '/trangchu');
+        S.don.get('TQD50').tt = 'xong'; await chay(ctx, 15500);
+        await doi(t, async () => (await dai(t).count()) === 1); await chup(t, `bao-trangchu_${rong}`);
+        await t.locator('.tabbar .tab').nth(1).click(); await t.waitForTimeout(400); await chup(t, `bao-menu_${rong}`);
+        await mo(t, '/don/TQD50'); await css(t); await doi(t, async () => /Đơn đã xong — mời bạn ra quầy/.test(await chu(t, '#tracking'))); await chup(t, `theodoi-xong_${rong}`);
+        S.hoaDon = true; await mo(t, '/don/TQD50'); await css(t); await doi(t, async () => /HD0042/.test(await chu(t, '#tracking'))); await chup(t, `theodoi-to-hoa-don_${rong}`);
+        await t.evaluate(() => localStorage.setItem('kh_dung_vi', '1')); await moTT(t, S);
+        await chup(t, `thanhtoan-nho-cong-tac_${rong}`);
+      });
+    }
+  }
   for (const c of CA) await c();
 }
