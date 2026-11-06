@@ -56,3 +56,15 @@
 - `npm test` + `--day-du`: 36 đạt · 0 hỏng. `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . c7553df^ HEAD viec/KH-CT-1` → ✓ CỔNG CHẠY ĐẠT (cảnh báo A16 về thu_KHCT1.js: trên gốc bài dừng sớm ở 5 ca vì chưa có src/chuongTrinh.js — đúng dự kiến).
 
 HEAD ĐÃ KIỂM: 32f8ccd
+
+## Soát độc lập (/ra-soat, vòng 1)
+ĐẠT (có nghi ngờ nhỏ, không có lỗi chặn). NGHIỆM THU: 12/12 mục có bằng chứng (C3 chưa được người soát tự chạy lại; C4 là bước thử tay của chủ quán).
+NGHI NGỜ (nguyên văn tóm tắt của người soát):
+1. `src/pages/UuDai.jsx` `ChuongTrinhToi` đọc `bayGio()` lúc vẽ, không đăng ký theo `bay_gio` của POS: nếu /toi về trước /gio-hoat-dong thì lần vẽ đầu dùng đồng hồ máy + 7 giờ, và không vẽ lại khi qua nửa đêm. Rủi ro thấp (chỉ sai khi đồng hồ máy khách lệch ngày). Máy KHÔNG sửa thêm (sẽ phải chạy lại cổng); ghi để chat soát quyết: thêm `dungGia()` vào `ChuongTrinhToi` để vẽ lại theo POS + ca Chromium /toi về trước.
+2. Hai chương trình `sinh_nhat` → dòng chúc mừng lặp trên mỗi thẻ, cả hai thẻ nổi bật; phiếu không cấm, chưa có ca.
+3. `ngay_sinh` chuỗi sai định dạng → không mời nhập (chỉ `=== null`), khớp phiếu B4.
+4. 29/02 → 28/02: đã ghi `## Phát hiện`.
+CHƯA SOÁT ĐƯỢC (người soát): `npm test`, `dot_bien.py`, `--day-du`, cổng `chay`, ảnh bằng mắt — máy chính đã chạy các lệnh này (xem mục Cổng).
+BÀI HỌC (người soát): màn hiển thị theo `bayGio()` nên đăng ký theo thời gian POS; danh sách nhiều thẻ cùng loại cần ca hai thẻ. → NGUYÊN TẮC/KHOÁ đề xuất cho việc sau (ngoài Phạm vi: không tự làm).
+
+HEAD ĐÃ KIỂM: 1eda381
