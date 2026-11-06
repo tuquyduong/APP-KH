@@ -1,0 +1,32 @@
+Bài thử KH-SINH-1 — bằng chứng ĐỎ trên code chưa sửa (HEAD gốc 5f7dd67 = commit PHIEU; src/ chưa đổi; bài thử viết / sửa xong ở commit 4eca4af TRƯỚC khi sửa src/).
+Cách chạy trên gốc: bài thử ở 4eca4af + src/ của 5f7dd67, KHONG_TRINH_DUYET=1 (cùng điều kiện GitHub); riêng thu_KHSINH1.js có thêm lần chạy ĐỦ (có Chromium).
+
+thu_KHSINH1.js (bài MỚI)  : 6 đạt · 18 hỏng (KHONG_TRINH_DUYET=1) — ✗ B1 ×5 (lời chào lấy chữ cuối: "anh P!", "chị Linh!"), ✗ B3 (tenNgan còn), ✗ A6 ×4 (chưa có tachNgaySinh / hienNgaySinh),
+                            ✗ A1 · A3 · A4 · A8 (HoSo chưa có thẻ Ngày sinh), ✗ C4 (chưa gio_xoa.css), ✗ C2 ×3 (chưa có chenDong)
+                            Chạy ĐỦ trên gốc (có Chromium): 10 đạt · 43 hỏng — ca Chromium đều dừng vì chưa có ô #ngay-sinh / nút "Xoá món".
+Bài cũ sửa theo quyết định 03.11 "lời chào đủ tên" (chủ quán đã duyệt → bài sửa thường, KHÔNG dùng ## Bài thử cũ sửa) — đều ĐỎ trên code gốc, XANH sau vá:
+  cong_cu/thu_KHUI2.js  : 77 đạt · 1 hỏng   (đã vá: 78 đạt · 0 hỏng)   chào theo (giờ, xưng hô, tên)
+  cong_cu/thu_KHUI3b.js : 53 đạt · 4 hỏng   (đã vá: 57 đạt · 0 hỏng)   C1 / C2 lời chào (hàm thuần); ca Chromium B1 / C1 / C2 / C4 / D2 / E đổi theo (đã vá có Chromium: 174 đạt · 0 hỏng)
+  cong_cu/thu_KHUI3d.js : 30 đạt · 2 hỏng   (đã vá: 32 đạt · 0 hỏng)   A2 tên đủ (thay "tên ngắn = từ cuối")
+  cong_cu/thu_KHLUU1.js : 20 đạt · 1 hỏng   (đã vá: 21 đạt · 0 hỏng)   C1(f) "Chào Khách thử!"
+Chạy ĐỦ (có Chromium) trên code đã vá: thu_KHSINH1.js 92 đạt · 0 hỏng; thu_KHUI3b.js 174 đạt · 0 hỏng; thu_KHUI3d.js 172 đạt · 0 hỏng; thu_KHLUU1.js 33 đạt · 0 hỏng; thu_KHUI2.js 78 đạt · 0 hỏng.
+
+Chống xanh vô giá trị: 14 đột biến (viec/KH-SINH-1/dot_bien.py) — mỗi lần bài thử ĐỎ:
+  VS-TEN-CHI-TU-CUOI 19·5 · VS-TEN-KHONG-GOP-KHOANG-TRANG 22·2 · VS-NGAY-30-02-HOP-LE 23·1 · VS-NAM-NHUAN-SAI 23·1 · VS-CHEN-LAI-SAI-CHO 23·1 · VS-CHEN-LAI-NHAN-DOI-DONG 23·1
+  (Chromium) VS-NGAY-SINH-GOP-KHOA-KHAC 88·4 · BV-HOI-LAI-TRUOC-KHI-LUU 71·5 · BV-CHAN-NGAY-TUONG-LAI 89·3 · VS-DA-CO-HIEN-LOI-THAY-VI-DOC-LAI 90·2 · BV-CHE-O-SUA-KHI-DA-CO 80·5
+  (Chromium) BV-NUT-XOA-MON 77·6 · VS-HOAN-TAC-KHONG-TRA-DONG 88·4 · VS-THONG-BAO-KHONG-TU-TAT 91·1
+  Kết: TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT.
+
+SỐ CA cong_cu/thu_KHSINH1.js: 24
+SỐ CA cong_cu/thu_KHUI2.js: 78
+SỐ CA cong_cu/thu_KHUI3b.js: 57
+SỐ CA cong_cu/thu_KHUI3d.js: 32
+SỐ CA cong_cu/thu_KHLUU1.js: 21
+
+Bài sửa thường thứ 5 (Câu hỏi 1, chủ quán duyệt 05.11): cong_cu/thu_KHNHANH1.js ca "D3 Trang chủ chào theo xưng hô vừa lưu" — regex /cô Linh/ → /cô Nguyễn Linh!/ (POS giả tên "Nguyễn Linh").
+  ĐỎ trên gốc: chiaLoiChao(19,'cô','Nguyễn Linh') ở src/dinhDang.js của 5f7dd67 = {xung:"cô", ten:"Linh"} → chào "cô Linh!" ≠ /cô Nguyễn Linh!/ (đo bằng nạp thẳng hàm gốc; máy chặn git checkout src nên không chạy cả bài trên gốc).
+  XANH sau vá: có Chromium 224 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 80 đạt · 0 hỏng.
+Câu hỏi 2 (chủ quán duyệt 06.11): thêm ca hàm thuần 'D3 lời chào dùng đủ tên khách nhập' vào Phần 1 của thu_KHNHANH1.js (chạy cả khi KHONG_TRINH_DUYET=1).
+  ĐỎ trên gốc: chiaLoiChao('2026-11-05T19:00:00','chi','Nguyễn Linh') ở src/dinhDang.js của 5f7dd67 = {"dau":"Chào buổi tối","xung":"chi","ten":"Linh"} ≠ 'Nguyễn Linh' (nạp bản gốc từ git show vào nháp).
+  XANH sau vá: KHONG_TRINH_DUYET=1 81 đạt · 0 hỏng.
+SỐ CA cong_cu/thu_KHNHANH1.js: 81

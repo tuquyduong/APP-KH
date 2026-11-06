@@ -85,7 +85,7 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
 
   // KH-UI-3d (chat soát): ca C1(f) mong đợi lời chào "Chào Thử!" chạy trong Chromium — GitHub không có trình duyệt nên khoá thêm bằng hàm thuần, đỏ trên gốc ("Chào thử").
   const dd = await nap('src/dinhDang.js');
-  k('C1(f) lời chào của khách "Khách thử" (chưa có giờ, chưa xưng hô) = "Chào Thử!" — tên ngắn viết hoa, có "!" (hàm thuần, như Chromium mong đợi)', dd.loiChao('', null, 'Khách thử') === 'Chào Thử!', dd.loiChao('', null, 'Khách thử'));
+  k('C1(f) lời chào của khách "Khách thử" (chưa có giờ, chưa xưng hô) = "Chào Khách thử!" — tên ĐỦ như khách nhập (KH-SINH-1), có "!" (hàm thuần, như Chromium mong đợi)', dd.loiChao('', null, 'Khách thử') === 'Chào Khách thử!', dd.loiChao('', null, 'Khách thử'));
 
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
@@ -190,7 +190,7 @@ async function trinhDuyet(pw, dauVet, BAN) {
 
   await ca('f', { luu: gieo(SDT_A, { chu: false }), chan: true, pos: { sdt: SDT_A } }, async (t, P, loi) => {
     await mo(t, '/trangchu'); await cho(t, 900);
-    k('C1(f) kho chặn ghi: App không vỡ, Trang chủ vẫn hiện', loi.length === 0 && (await chu(t)).includes('Chào Thử!'), loi.join('|')); // KH-UI-3b: lời chào dùng tên ngắn (từ cuối của "Khách thử"); KH-UI-3d: có "!" cuối câu
+    k('C1(f) kho chặn ghi: App không vỡ, Trang chủ vẫn hiện', loi.length === 0 && (await chu(t)).includes('Chào Khách thử!'), loi.join('|')); // KH-SINH-1: lời chào dùng tên đủ như khách nhập; KH-UI-3d: có "!" cuối câu
   });
 
   await trinh.close();
