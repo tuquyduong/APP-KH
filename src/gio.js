@@ -45,7 +45,7 @@ export function chenDong(gio, dong, vitri) {
   const i = Math.min(Math.max(vitri, 0), gio.length);
   return [...gio.slice(0, i), dong, ...gio.slice(i)];
 }
-export const demMon =(gio) => gio.reduce((s, d) => s + d.so_luong, 0);
+export const demMon = (gio) => gio.reduce((s, d) => s + d.so_luong, 0);
 
 /** Dòng giỏ đối chiếu menu: { mon (null = không còn trong menu), conBan }. `con_hang` null (chưa biết) vẫn bán. */
 export function trangThaiDong(dong, ds) {
