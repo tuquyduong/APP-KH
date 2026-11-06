@@ -1,25 +1,53 @@
 # KH-CT-1 — trạng thái
 
 ## Bước 1 — đối chiếu bản chụp (06.11)
-- Nhánh `viec/KH-CT-1`; cây sạch; `git fetch origin viec/KH-CT-1` → HEAD = FETCH_HEAD = `c7553df` (không cần kéo).
-- `git log --oneline -3`:
-  - `c7553df PHIEU: KH-CT-1`
-  - `25ab8b9 TIEN-DO: mo KH-CT-1 (chuong trinh dac biet o Uu dai, GET /chuong-trinh v9; uu dai sinh nhat hom nay)`
-  - `e7c5da9 TIEN-DO: KH-SINH-1 xong (chat soat cuoi DAT, gop PR)`
-- Thấy commit `PHIEU: KH-CT-1` (`c7553df`).
-
-## Đã làm tới đâu (dừng ở `## Câu hỏi`)
-- Kế hoạch `ke_hoach.md`; bài thử `cong_cu/thu_KHCT1.js` (đỏ trên gốc, xem `bang_chung_do.txt`); code: `src/chuongTrinh.js`, `src/giaoDien/chuong_trinh.css`, `src/pages/UuDai.jsx`, `src/App.jsx` (1 dòng `moHoSo`), `src/api.js` (`CUA_CONG_KHAI`).
-- `thu_KHCT1.js` xanh: 85 đạt · 0 hỏng (có Chromium), 17 đạt · 0 hỏng (`KHONG_TRINH_DUYET=1`).
-- CHƯA làm (chờ trả lời): `dot_bien.py`, ảnh `so_anh/`, `doi_chieu_demo.md`, `--day-du`, cổng `tinh` / `chay`, `/ra-soat`, báo cáo 7 mục.
+- Lần 1 (05–06.11): HEAD = FETCH_HEAD = `c7553df`.
+- Lần 2 (sau trả lời Câu hỏi 1): `git pull` do hook mở phiên kéo `f978c39 → f9f9187`; cây sạch.
+- `git log --oneline -3` lúc mở lại: `f9f9187 PHIEU: KH-CT-1 - tra loi Cau hoi 1 …` · `f978c39 KH-CT-1: cau hoi - …` · `91c2c86 KH-CT-1: khoi Chuong trinh dac biet o Uu dai + sinh nhat hom nay`.
+- Thấy commit `PHIEU: KH-CT-1` (`c7553df`, `f9f9187`). Mốc cổng: `c7553df^`.
 
 ## Câu hỏi
-1. **Bài cũ `cong_cu/thu_KHUI3d.js` ĐỎ sau khi làm đúng nghiệm thu (B5: màn Ưu đãi gọi `GET /chuong-trinh`).** `npm test` → `33 đạt · 1 hỏng`; `node cong_cu/thu_KHUI3d.js` → 7 ca ✗, đều ở nhóm B4 "Ưu đãi không gọi cửa lạ":
-   - dòng 90 (đọc nguồn `UuDai.jsx`): `✗ B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher` — danh sách cho phép chỉ có `layVoucher`, `layTatCa`; nay có thêm `layChuongTrinh`;
-   - dòng 225 (Chromium, ×6 = 360 / 390 / 430 × 100% / 130%): `✗ B4 [..] gọi /toi, /diem, /voucher (+ /don …) mỗi cửa một lần, không cửa nào lạ` — danh sách đường dẫn cho phép thiếu `'/chuong-trinh'` (thực tế gọi: `/toi,/diem,/voucher,/don,/chuong-trinh,/menu,/gio-hoat-dong,/hang,/gio-vang,/gia-han`).
-   Phiếu CẤM sửa "bất kỳ bài thử cũ nào" và `thu_KHUI3d.js` không ở `## Phạm vi` → máy dừng, không tự sửa.
-   **Đề nghị chủ quán:** thêm vào phiếu mục `## Bài thử cũ sửa` + `cong_cu/thu_KHUI3d.js` vào `## Phạm vi`, cho phép đúng hai sửa: (a) dòng 90 thêm `'layChuongTrinh'` vào danh sách tên `lay*` được phép; (b) dòng 225 thêm `'/chuong-trinh'` vào danh sách đường dẫn được phép. Bài này đỏ sau vá (không phải xanh trên gốc) nên không dính A11; sau khi sửa phải có dòng `SỐ CA thu_KHUI3d.js` mới trong `bang_chung_do.txt`.
-   Khi chủ quán duyệt: máy làm tiếp từ `dot_bien.py` trở đi.
+1. (ĐÃ TRẢ LỜI — chủ quán duyệt 06.11, ghi ở phiếu) `thu_KHUI3d.js` B4 đỏ vì `/chuong-trinh`; đã sửa đúng 2 chỗ + thêm ca đọc nguồn đỏ trên gốc.
 
 ## Phát hiện
-- Sinh 29/02 mà năm nay không nhuận → App tính 28/02 (theo phiếu A1). Chủ quán hỏi POS xem "quán đối chiếu căn cước" có cùng luật 28/02 không.
+- Sinh 29/02 mà năm nay không nhuận → App tính 28/02 (phiếu A1). Chat App KH hỏi POS cùng luật 28/02 (phiếu đã ghi nhận 06.11).
+
+## Bảng chỗ vá → đột biến (`dot_bien.py`; chạy: "TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT")
+| Chỗ vá | Đột biến |
+|---|---|
+| `docChuongTrinh` lọc `dang_bat === false` | VS-KHONG-LOC-DANG-BAT |
+| `docChuongTrinh` loai lạ → `khac` | VS-LOAI-LA-GIU-NGUYEN |
+| `docChuongTrinh` giữ thứ tự POS | VS-SAP-LAI-THU-TU |
+| `sinhNhatHomNay` 29/02 năm không nhuận → 28/02 | VS-29-02-KHONG-NHUAN-BO-QUA |
+| `sinhNhatHomNay` so cả tháng + ngày | VS-SINH-NHAT-CHI-SO-NGAY |
+| `api.js` `/chuong-trinh` công khai (không token) | BV-KHONG-CONG-KHAI |
+| "Hôm nay" theo `bayGio()` của POS | VS-HOM-NAY-THEO-DONG-HO-MAY |
+| Rỗng / lỗi → ẩn cả khối | BV-AN-KHOI-KHI-RONG |
+| Chỉ `ngay_sinh === null` mới mời nhập | VS-MOI-NHAP-KHI-CHUA-BIET |
+| Sinh nhật hôm nay → thẻ sinh nhật lên đầu | BV-THE-SINH-NHAT-LEN-DAU |
+| Dòng mời bấm được → mở Thông tin cá nhân | BV-BAM-MO-HO-SO |
+
+## Nghiệm thu — mỗi mục một dòng bằng chứng
+- A1 `docChuongTrinh` / `sinhNhatHomNay`: `thu_KHCT1.js` nhóm A1 + A1b (14 ca); đột biến 1–5.
+- A2 `CUA_CONG_KHAI`: ca A2 (đọc nguồn) + ca Chromium "GET … KHÔNG có Authorization, đúng MỘT lần"; BV-KHONG-CONG-KHAI.
+- B1 khối cho cả hai trạng thái, dưới Giờ vàng / trên thẻ hạng, nhãn "Áp dụng tại quán", không mức giảm: ca `chua-dn-*`, `dn-thuong`.
+- B2 rỗng / 500 / 429 / dữ liệu hỏng → ẩn, không lỗi JS: ca `an-*` (4 × 2 trạng thái); BV-AN-KHOI-KHI-RONG.
+- B3 chúc mừng (theo `bay_gio` POS, có đối chứng): ca `sinh-nhat-*`, `sinh-nhat-theo-pos`, `…-may-dung-pos-lech`, `…-khong-co-the`; VS-HOM-NAY…, BV-THE-SINH-NHAT-LEN-DAU.
+- B4 dòng mời + bấm mở `/taikhoan/thongtin`: ca `chua-nhap-*`, `co-ngay-sinh-khong-moi`, `chua-nhap-khong-the`, `toi-loi`; VS-MOI-NHAP…, BV-BAM-MO-HO-SO.
+- B5 chưa đăng nhập không B3 / B4, một lần GET: ca `chua-dn-*`.
+- B6 không tràn ngang 360 / 390 / 430 + CSS ở file riêng, K9 xanh (`npm test`): ca B6 + `khongTran`.
+- C1 `thu_KHCT1.js` (17 ca không trình duyệt, 86 có Chromium; `SỐ CA`: 17). C2 ảnh + `doi_chieu_demo.md`. C3 xem dưới. C4: bước thử tay chủ quán (dưới CHƯA KIỂM).
+
+## Báo cáo 7 mục
+1. **VIỆC**: KH-CT-1 — khối "Chương trình đặc biệt" ở Ưu đãi (`GET /chuong-trinh`) + ưu đãi sinh nhật hôm nay.
+2. **ĐÃ SỬA**: `src/chuongTrinh.js` (mới), `src/pages/UuDai.jsx`, `src/giaoDien/chuong_trinh.css` (mới), `src/api.js` (1 từ khoá + chú thích), `src/App.jsx` (1 dòng `moHoSo`), `cong_cu/thu_KHUI3d.js` (2 danh sách cho phép + 1 ca, theo duyệt 06.11).
+3. **BÀI THỬ**: `thu_KHCT1.js` đỏ trên gốc (1 đạt · 4 hỏng) → xanh (86 đạt có Chromium; 17 không); 11 đột biến đều bị bắt; `npm test` và `--day-du` xanh (36 đạt · 0 hỏng).
+4. **ĐÃ RÀ K4**: `grep "layChuongTrinh"` → chỉ `api.js` + `UuDai.jsx`; không còn nơi nào khác gọi `/chuong-trinh`; mọi chỗ so ngày sinh dùng `tachNgaySinh`.
+5. **CHƯA KIỂM**: POS thật (chỉ POS giả theo hợp đồng v9); trình duyệt Zalo; thử tay C4 (bật chương trình ở POS, tài khoản có ngày sinh hôm nay); POS có cùng luật 28/02 cho sinh 29/02 hay không.
+6. **GIT**: nhánh `viec/KH-CT-1`, đẩy sau từng bước; không PR, không merge.
+7. **BÀI HỌC**: xem `## Bài học`.
+
+## Bài học
+- BỎ — bài cũ `thu_KHUI3d.js` B4 cấm "cửa lạ" nên đỏ khi thêm cửa công khai hợp lệ: đã được xử lý bằng duyệt Phạm vi; chỉ xảy ra khi thêm cửa mới vào màn đã có khoá "không cửa lạ".
+- BỎ — người gác chặn lệnh ghép (`;`, `&&` sau lệnh chạy script) và `git checkout <SHA> --`: đã hướng dẫn rõ trong lý do chặn; làm theo (chạy từng lệnh riêng, chứng minh đỏ trên gốc bằng `git show <SHA>:<file> | grep`).
+- KHOÁ (đã làm, trong Phạm vi) — đột biến `VS-MOI-NHAP-KHI-CHUA-BIET` sống ở lần đầu vì bài chưa có ca "/toi lỗi → không mời nhập"; đã thêm ca `toi-loi` (đỏ với đột biến).
