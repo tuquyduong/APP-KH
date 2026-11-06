@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 31,
+  "phien_ban_so": 32,
   "cap_nhat": "2026-11-05",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -355,13 +355,14 @@
       "ma": "KH-CT-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
-        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)",
         "KH-SINH-1"
       ],
       "ten": "Chuong trinh dac biet o trang Uu dai (GET /chuong-trinh): ten + mo ta ngan, ghi \"ap dung tai quan\"; dung ngay sinh nhat khach hien \"Uu dai sinh nhat hom nay\" (theo bay_gio POS)",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can)"
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can) | 05.11 mo: POS da co GET /chuong-trinh (v9 CT-1a, khong token); khoi Chuong trinh dac biet o Uu dai cho ca khach vang lai, \"Ap dung tai quan\"; sinh nhat hom nay theo bay_gio POS → dong chuc mung + mang can cuoc; chua nhap ngay sinh → moi nhap. Chay song song KH-TT-1",
+      "ngay": "2026-11-05",
+      "han": "2026-11-07"
     },
     {
       "ma": "KH-GHICHU-1",
