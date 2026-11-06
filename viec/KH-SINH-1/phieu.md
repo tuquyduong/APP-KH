@@ -97,3 +97,14 @@ không
   ghi `SỐ CA thu_KHNHANH1.js` vào `bang_chung_do.txt`; KHÔNG dùng `## Bài thử cũ sửa`.
 - KHÔNG sửa dòng nào khác của `thu_KHNHANH1.js`: việc KH-TT-1 đang chạy song song sửa đoạn ví ở Thanh toán (~dòng 394–406) của cùng file — hai chỗ cách xa, gộp không vướng.
 - Sau đó làm tiếp bước 6 trở đi như phiếu (npm test, `--day-du`, cổng `tinh` + `chay`, HEAD ĐÃ KIỂM, `/ra-soat`, báo cáo 7 mục).
+
+## Trả lời Câu hỏi 2 (chủ quán duyệt 06.11, chat App KH soạn)
+- Chọn đường 2: THÊM MỘT ca hàm thuần vào Phần 1 của `cong_cu/thu_KHNHANH1.js` (chạy cả khi `KHONG_TRINH_DUYET=1`), ví dụ:
+  nạp `src/dinhDang.js`, `chiaLoiChao('2026-11-05T19:00:00', <xưng hô như POS giả của bài>, 'Nguyễn Linh').ten === 'Nguyễn Linh'` (chat đã chạy thử: gốc trả `'Linh'`, nhánh trả `'Nguyễn Linh'`).
+  Ca này ĐỎ trên gốc (gốc lấy chữ cuối "Linh") / XANH trên mới → cổng A11 thấy đỏ trên gốc kể cả không trình duyệt. Ghi lại `SỐ CA thu_KHNHANH1.js` (số mới, đếm với
+  `KHONG_TRINH_DUYET=1`) + bằng chứng đỏ vào `bang_chung_do.txt`.
+- KHÔNG dùng `## Bài thử cũ sửa` (luật HOC-1: chỉ dùng khi bài gốc vẫn xanh trên code mới — ở đây ca D3 gốc đỏ trên code mới).
+- Chỗ đặt: ngay TRƯỚC dòng `k('H2 bài đọc KHONG_TRINH_DUYET', …)` ở cuối Phần 1 — KHÔNG đặt sát dòng `console.log('Phần 1 …')` (main đã có ca KH-TT-1 ở đó, đặt sát sẽ vướng khi gộp).
+  Ngoài ca này và dòng D3 đã sửa, không đổi dòng nào khác của file.
+- Phát hiện "bài Chromium chập chờn khi máy bận" (thu_KHNHANH1, thu_KHMUA1b): ghi nhận, KHÔNG sửa ở việc này.
+- Sau đó làm tiếp: cổng `chay`, HEAD ĐÃ KIỂM, `/ra-soat`, báo cáo 7 mục, Bài học.
