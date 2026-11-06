@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 30,
+  "phien_ban_so": 31,
   "cap_nhat": "2026-11-05",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -341,14 +341,15 @@
       "ma": "KH-SINH-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-MUA-1b"
       ],
       "ten": "Ngay sinh nhap MOT lan (PUT /toi ngay_sinh, v9 CT-1a) + loi chao du ten nhu khach nhap + nut xoa mon trong gio (co Hoan tac)",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Tach tu KH-HOSO-1 | 05.11 mo dot 1 song song; gom phan dau KH-BAO-1 (loi chao, xoa mon) — khong dung Thanh toan / Theo doi don",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Tach tu KH-HOSO-1 | 05.11 mo dot 1 song song; gom phan dau KH-BAO-1 (loi chao, xoa mon) — khong dung Thanh toan / Theo doi don | 06.11 chat soat cuoi DAT: dau nhanh 64f90ca; cong tinh + chay kieu GitHub DAT; ghep thu voi main a5d48b9 (sau KH-TT-1) sach, npm test co trinh duyet 33/0; anh 3 co dat. Ngay sinh nhap mot lan, loi chao du ten, nut xoa mon + Hoan tac. Gop PR #18 (cf6db5e)",
       "ngay": "2026-11-05",
-      "han": "2026-11-07"
+      "han": "2026-11-07",
+      "commit": "cf6db5e"
     },
     {
       "ma": "KH-CT-1",
@@ -424,7 +425,7 @@
       "ten": "Man ho so day du con lai (email, gioi tinh, ngay sinh, thong tin hoa don) — xung ho + dia chi da dua len truoc (dang ky 3 buoc, KH-UI-3)",
       "loai": "Th",
       "trang_thai": "cho",
-      "ghi_chu": "02.11: ngay sinh tach sang KH-SINH-1 (truoc khai truong); phan con lai van sau khai truong"
+      "ghi_chu": "02.11: ngay sinh tach sang KH-SINH-1 (truoc khai truong); phan con lai van sau khai truong | 06.11 tu soat KH-SINH-1 (nghi ngo may ghi, chua sua): (1) NGAY_SINH_DA_CO ma doc lai /toi hong mang → khach bam Luu khong thay phan hoi; (2) Hoan tac chi cho mon xoa cuoi; (3) nut xoa mon vung cham 28px (nho hon 44px) — xem lai neu chu quan bam nham tren iPhone"
     },
     {
       "ma": "KH-OTP-1",
