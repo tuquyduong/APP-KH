@@ -27,7 +27,7 @@ function loiApi(status, code, error, duLieu = null) {
 }
 
 // Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
-const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong'];
+const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh'];
 
 // `choMs` (tuỳ chọn): quá ngần này ms chưa xong → huỷ, ném như mất mạng (status 0) — người gọi coi là "chưa rõ".
 async function goi(phuongThuc, duong, than, choMs) {
@@ -57,7 +57,7 @@ export const xinMa = (sdt) => goi('POST', '/dang-nhap/xin-ma', { sdt });
 export const xacMinh = (sdt, ma, ten, them) => goi('POST', '/dang-nhap/xac-minh', { sdt, ma, ten, ...them });
 export const layHang = () => goi('GET', '/hang');
 export const layGioVang = () => goi('GET', '/gio-vang');
-export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — chưa màn nào dùng (giao diện: việc KH-CT-1)
+export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — không token (CUA_CONG_KHAI); dùng ở UuDai
 export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
