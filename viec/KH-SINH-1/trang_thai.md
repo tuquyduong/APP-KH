@@ -45,3 +45,21 @@
 - ✓ CỔNG CHẠY ĐẠT (`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 5f7dd67^ HEAD viec/KH-SINH-1` tại HEAD 6865020).
 
 HEAD ĐÃ KIỂM: 6865020
+
+## Soát độc lập `/ra-soat` — vòng 1 (06.11)
+Kết quả agent: KHÔNG ĐẠT (nhẹ). NGHIỆM THU 20/20 mục có bằng chứng (D4 chỉ chờ văn bản 3 thao tác, ghi ở báo cáo bên dưới).
+- Lỗi: `src/gio.js:48` `demMon =(gio)` thiếu khoảng trắng; `thu_KHNHANH1.js:225` dòng H2 bị đổi lệch khoảng trắng (phiếu cấm đổi dòng khác) → ĐÃ SỬA ở commit 50521df. Lớp `pf-ns-xem` không phải lớp chết: là móc chọn của bài thử (thu_KHSINH1.js:176,202,208,209) → giữ.
+- Nghi ngờ (không sửa, ghi nhận): `NGAY_SINH_DA_CO` nuốt lỗi — nếu đọc lại /toi hỏng mạng thì khách không thấy phản hồi; chỉ một state `daXoa` nên Hoàn tác chỉ cho món xoá cuối; ảnh 360 tên dài sát nút QR (chưa đè).
+- Bài học (agent): phiếu dặn "không đổi dòng khác" thì soát `git diff` từng dòng sau khi sửa tay.
+- Sau sửa: cổng `chay` ✓ ĐẠT (KHONG_TRINH_DUYET=1); `npm test` lần 1 29 đạt · 1 hỏng (không rõ bài — chập chờn Chromium như mục Phát hiện), lần 2 lọc dòng hỏng: không có dòng hỏng nào.
+
+## Báo cáo 7 mục
+- VIỆC: KH-SINH-1 — ngày sinh nhập một lần (HoSo.jsx), lời chào đủ tên (dinhDang.js), nút xoá món + Hoàn tác (GioHang.jsx, gio.js, gio_xoa.css).
+- ĐÃ SỬA: các file trên + 5 bài thử cũ theo lời chào mới (KHUI2, KHUI3b, KHUI3d, KHLUU1, KHNHANH1 gồm ca hàm thuần mới) + bài mới thu_KHSINH1.js.
+- BÀI THỬ: thu_KHSINH1 24 ca (92 đủ Chromium); thu_KHNHANH1 81 (KHONG_TRINH_DUYET=1); 14 đột biến đều bị bắt; cổng tĩnh + chạy ĐẠT.
+- ĐÃ RÀ K4: tenNgan không còn ở src; mọi lời chào qua `chiaLoiChao`; `ngay_sinh` chỉ ở HoSo.jsx; xoá dòng giỏ chỉ qua `xoaDong`.
+- CHƯA KIỂM: chạy thật trên iPhone/Zalo; `npm test` lần 1 có 1 hỏng chưa xác định bài (lần 2 sạch); D4 — chủ quán thử tay: (1) Trang chủ chào "anh LINH P!"; (2) Hồ sơ nhập ngày sinh → lưu → không sửa được; (3) Giỏ bấm xoá món → Hoàn tác.
+- GIT: nhánh viec/KH-SINH-1, đã push; không PR, không merge.
+- BÀI HỌC: KHOÁ — đã có bài + 14 đột biến. NGUYÊN TẮC — sửa tay theo phiếu "không đổi dòng khác" thì xem diff từng dòng. BỎ — chập chờn Chromium (đã ghi Phát hiện).
+
+HEAD ĐÃ KIỂM: 50521df
