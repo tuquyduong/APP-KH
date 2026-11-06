@@ -1,0 +1,6 @@
+Bài thử KH-CT-1 — bằng chứng ĐỎ trên code chưa sửa (HEAD gốc c7553df = commit PHIEU; bài thử viết xong ở commit "bai thu thu_KHCT1.js" TRƯỚC khi sửa src/).
+Cách chạy trên gốc: KHONG_TRINH_DUYET=1 node cong_cu/thu_KHCT1.js (cùng điều kiện GitHub).
+
+thu_KHCT1.js (bài MỚI) : 1 đạt · 4 hỏng — ✗ A1 (chưa có src/chuongTrinh.js) · ✗ A1b (sinhNhatHomNay) · ✗ A2 ('/chuong-trinh' chưa trong CUA_CONG_KHAI) · ✗ B6 (chưa chuong_trinh.css / import)
+                         Đã vá: 17 đạt · 0 hỏng (KHONG_TRINH_DUYET=1); chạy ĐỦ có Chromium: 85 đạt · 0 hỏng.
+SỐ CA thu_KHCT1.js: 17
