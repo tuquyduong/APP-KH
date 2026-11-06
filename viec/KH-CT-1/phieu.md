@@ -54,6 +54,7 @@ Khách (kể cả chưa đăng nhập) mở Ưu đãi thấy các chương trìn
 - src/api.js
 - src/App.jsx
 - cong_cu/thu_KHCT1.js
+- cong_cu/thu_KHUI3d.js
 
 ## Ngân sách
 ~90 dòng app + ~220 dòng thử.
@@ -73,3 +74,15 @@ không
 - KHÔNG sửa `tu_chay/`, `.claude/`, `.github/`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`, `kiem_tra_truoc_khi_giao.js`, `src/package.json`, `index.html`.
 - KHÔNG áp chương trình lên giá / đơn App, KHÔNG tự đoán mức ưu đãi. KHÔNG làm hạng HANG-1 (KH-HANG-2, chờ POS lên hợp đồng).
 - Chỉ push `git push -u origin viec/KH-CT-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời Câu hỏi 1 (chủ quán duyệt 06.11, chat App KH soạn)
+- ĐỒNG Ý thêm `cong_cu/thu_KHUI3d.js` vào Phạm vi, CHỈ để:
+  1. nhóm B4 phần đọc nguồn (dòng ~90): thêm `'layChuongTrinh'` vào danh sách tên `lay*` được phép;
+  2. nhóm B4 phần Chromium (dòng ~225): thêm `'/chuong-trinh'` vào danh sách cửa được phép (vẫn giữ "mỗi cửa một lần" nếu ca đang kiểm số lần);
+  3. THÊM một ca đọc nguồn ở Phần 1 (chạy cả khi `KHONG_TRINH_DUYET=1`), ví dụ `k('B4 KH-CT-1: Ưu đãi gọi GET /chuong-trinh qua layChuongTrinh (cửa công khai)', /layChuongTrinh/.test(uu))`
+     — ĐỎ trên gốc / XANH trên mới, để cổng A11 thấy đỏ trên gốc kể cả không trình duyệt (cùng cách KH-TT-1 / KH-SINH-1 đã làm). Ghi `SỐ CA thu_KHUI3d.js` (đếm với
+     `KHONG_TRINH_DUYET=1`) + bằng chứng đỏ vào `bang_chung_do.txt`.
+- KHÔNG dùng `## Bài thử cũ sửa` (bài gốc đỏ trên code mới → thêm ca đỏ trên gốc, không miễn). Không nới phép kiểm nào khác của bài (vẫn cấm `goi(` / `fetch(` trong UuDai,
+  vẫn cấm cửa lạ khác).
+- Phát hiện 29/02 (App coi 28/02 năm không nhuận): ghi nhận, chat App KH hỏi POS cùng luật — không sửa thêm ở việc này.
+- Sau đó làm tiếp: đột biến, ảnh so demo, `--day-du`, cổng `tinh` + `chay`, HEAD ĐÃ KIỂM, `/ra-soat`, báo cáo 7 mục.
