@@ -99,7 +99,7 @@ async function trinhDuyet(pw) {
 
   // POS giả theo v9. `dn` = có token; `ct` = { status, body } cho /chuong-trinh (mặc định 200 + `ds`); `khach` ghi đè hồ sơ;
   // `bayGio` = bay_gio của POS; `may` = đồng hồ máy (khác bay_gio để chứng minh không dùng đồng hồ máy).
-  async function ca(ten, { rong = 390, dn = true, ds = [CT_SN, CT_HS], ct = null, khach = {}, bayGio = BAY_GIO, may = '2026-11-05T20:30:00+07:00' } = {}, chay) {
+  async function ca(ten, { rong = 390, dn = true, ds = [CT_SN, CT_HS], ct = null, khach = {}, bayGio = BAY_GIO, toiLoi = false, may = '2026-11-05T20:30:00+07:00' } = {}, chay) {
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     const t = await ctx.newPage();
     const loi = [];
@@ -122,6 +122,7 @@ async function trinhDuyet(pw) {
       if (duong === '/menu') return json(200, MENU);
       if (auth !== 'Bearer tok-A') return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-12-05T08:00:00' });
+      if (duong === '/toi' && toiLoi) return json(500, { error: 'Lỗi máy chủ', code: 'LOI_MAY_CHU' });
       if (duong === '/toi') return json(200, { success: true, khach: S.khach });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
@@ -217,6 +218,12 @@ async function trinhDuyet(pw) {
   await ca('chua-nhap-khong-the', { khach: { ngay_sinh: null }, ds: [CT_HS] }, async (t) => {
     await mo(t, '/uudai');
     k('B4 đối chứng: không có chương trình sinh_nhat → không dòng mời nhập', !(await manText(t)).includes(MOI_NHAP));
+  });
+
+  await ca('toi-loi', { toiLoi: true }, async (t) => {
+    await mo(t, '/uudai');
+    const van = await manText(t);
+    k('B4 đối chứng: /toi lỗi (chưa biết ngày sinh) → vẫn thấy chương trình nhưng KHÔNG dòng mời nhập / chúc mừng', /Chương trình đặc biệt/.test(van) && !van.includes(MOI_NHAP) && !van.includes(MOI_SN));
   });
 
   // B2 — rỗng / lỗi / 429 → ẩn
