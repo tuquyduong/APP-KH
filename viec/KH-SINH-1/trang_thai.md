@@ -39,3 +39,9 @@
 - Người gác chặn `sed -i`, `for` / `;` / `&&` ghép lệnh chạy script, `git -C`, `sleep` — đã đổi sang Edit và lệnh đơn (không phải lỗi, chỉ ghi nhận).
 - `npm test` chạy hơn 10 phút trên máy này (nhiều bài Chromium cũ chạy tuần tự) — vượt mốc 120 s của công cụ, phải chạy nền.
 - Bài thử Chromium chập chờn khi máy bận (ngoài Phạm vi, không sửa): hook báo `thu_KHNHANH1.js` 222 đạt · 2 hỏng một lần, `--day-du` báo `thu_KHMUA1b.js` 252 đạt · 1 hỏng một lần; chạy riêng lại đều 0 hỏng (224 / 253). Ca hỏng nằm ở phần trình duyệt (chạy 56–61 giây). Đề xuất: chat soát xem hạn chờ ở các bài Chromium.
+
+## Câu hỏi 2 — đã xử lý (06.11)
+- Thêm ca hàm thuần vào Phần 1 `thu_KHNHANH1.js` (commit 03db91b): đỏ trên gốc (`ten` = "Linh"), xanh sau vá; KHONG_TRINH_DUYET=1 81 đạt · 0 hỏng; SỐ CA 81 ở `bang_chung_do.txt`.
+- ✓ CỔNG CHẠY ĐẠT (`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 5f7dd67^ HEAD viec/KH-SINH-1` tại HEAD 6865020).
+
+HEAD ĐÃ KIỂM: 6865020
