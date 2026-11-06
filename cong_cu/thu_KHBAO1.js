@@ -81,7 +81,7 @@ const d = (ma, tt) => ({ ma, tien_trinh: tt });
   k('B2 HoaDonKhach lọc ghi_no (không bao giờ vẽ dòng nợ)', /ghi_no/.test(HDK) && /filter\(/.test(HDK));
   k('C2 ThanhToan khởi tạo công tắc từ docDungVi() và ghi bằng ghiDungVi; cachTra giữ luật cũ', /useState\(docDungVi\)|useState\(docDungVi\(\)\)|useState\(\(\) => docDungVi\(\)\)/.test(TT) && /ghiDungVi\(/.test(TT) && /const cachTra = !dungVi \? 'qr' : duoc\.vi \? 'vi' : duoc\.viQr \? 'vi_qr' : 'qr'/.test(TT));
   k('C1 luuMay.js: KHOA_DUNG_VI nằm trong KHOA_DU_LIEU, KHÔNG nằm trong KHOA_VANG_LAI', /KHOA_DU_LIEU = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')) && !/KHOA_VANG_LAI = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')));
-  k('C3 gửi lại gặp CHUA_MO → GIỮ bản ghi (nhánh riêng trước ghiGuiDo(null)); nút gửi lại khoá + CHU_CHUA_MO khi !DAT_ONLINE', /cu && e\.code === 'CHUA_MO'/.test(TT) && TT.indexOf("e.code === 'CHUA_MO'") < TT.indexOf('ghiGuiDo(null);\n      datMoPin(null);') && /!DAT_ONLINE \? CHU_CHUA_MO : conGiay \? `Gửi lại sau/.test(TT.replace(/\s+/g, ' ')) || /DAT_ONLINE[^\n]*CHU_CHUA_MO[^\n]*Gửi lại/.test(TT));
+  k('C3 gửi lại gặp CHUA_MO → GIỮ bản ghi (nhánh riêng trước ghiGuiDo(null)); nút gửi lại khoá + CHU_CHUA_MO khi !DAT_ONLINE', /cu && e\.code === 'CHUA_MO'/.test(TT) && TT.indexOf("e.code === 'CHUA_MO'") < TT.indexOf('ghiGuiDo(null);\n      datMoPin(null);') && /!DAT_ONLINE \? CHU_CHUA_MO : conGiay \? `Gửi lại sau/.test(TT.replace(/\s+/g, ' ')));
   k('D1 bao_don.css do BaoDonXong import; main.jsx / giaoDien.css / demo*.css không nhắc', docTho('src/giaoDien/bao_don.css').length > 0 && /import '\.\.\/giaoDien\/bao_don\.css'/.test(BDX) && !/bao_don/.test(docTho('src/main.jsx') + docTho('src/giaoDien/giaoDien.css') + fs.readdirSync(path.join(GOC, 'src/giaoDien')).filter((f) => /^demo.*\.css$/.test(f)).map((f) => docTho('src/giaoDien/' + f)).join('')));
 
   console.log('Phần 2 — App thật trong Chromium');
@@ -267,7 +267,8 @@ async function trinhDuyet(pw) {
     await t.evaluate((g) => localStorage.setItem('kh_don_gui', JSON.stringify(g)), kg);
     await mo(t, '/thanhtoan'); await css(t);
     await doi(t, async () => /Gửi lại|Đặt online sắp mở/.test(await chu(t, '#checkout')));
-    await t.locator('#checkout button', { hasText: /Gửi lại|Đặt online sắp mở/ }).first().click({ force: true }).catch(() => {});
+    // .btn-disabled tắt chuột (pointer-events) nhưng bàn phím vẫn "bấm" được → thử bằng Enter để chạm đúng nhánh xử lý lỗi.
+    await t.locator('#checkout .checkout-btn').first().focus(); await t.keyboard.press('Enter');
     await t.waitForTimeout(300);
     const con = await t.evaluate(() => localStorage.getItem('kh_don_gui'));
     k('C3 DAT_ONLINE tắt + bấm "Gửi lại đúng đơn này" → GIỮ bản ghi kh_don_gui', !!con && JSON.parse(con).khoa_gui === kg.khoa_gui, String(con));
