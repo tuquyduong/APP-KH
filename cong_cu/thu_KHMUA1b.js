@@ -182,13 +182,15 @@ module.exports = { dungMay, MA_DAT_DON, BG, GIO };
 // Máy giả dùng chung (thu_KHMUA1c.js dùng lại): App thật dựng bằng esbuild + POS giả theo hợp đồng. `k` = hàm ghi ca của bài gọi.
 async function dungMay(pw, k) {
   const esbuild = require('esbuild');
-  const dung = async (lienHe) => (await esbuild.build({
+  const dung = async (lienHe, tatCo = false) => (await esbuild.build({
     stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
-    plugins: lienHe ? [{ name: 'lien-he', setup(b) { b.onLoad({ filter: /lienHe\.js$/ }, () => ({ contents: `export const LIEN_HE = { dienThoai: '0900111222', zalo: '', email: '' }; export const coLienHe = () => true;`, loader: 'js' })); } }] : [],
+    plugins: lienHe ? [{ name: 'lien-he', setup(b) { b.onLoad({ filter: /lienHe\.js$/ }, () => ({ contents: `export const LIEN_HE = { dienThoai: '0900111222', zalo: '', email: '' }; export const coLienHe = () => true;`, loader: 'js' })); } }] : tatCo ? [{ name: 'tat-co', setup(b) { b.onLoad({ filter: /caiDat\.js$/ }, () => ({ contents: 'export const DAT_ONLINE = false;', loader: 'js' })); } }] : [],
   })).outputFiles[0].text;
   const goiApp = await dung(false), goiLienHe = await dung(true);
+  let goiTatCo = null; // bản dựng ép DAT_ONLINE = false (KH-BAO-1 C3), dựng khi ca cần
+  const layTatCo = async () => goiTatCo || (goiTatCo = await dung(false, true));
   const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
   const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
@@ -201,7 +203,8 @@ async function dungMay(pw, k) {
   const loiPos = (code, them = {}) => ({ st: MA_LOI[code] || 400, o: { error: `Lời POS giả: ${code}`, code, ...them } });
 
   // Một ngữ cảnh = một máy. S = trạng thái POS giả (dùng chung mọi tab của máy đó).
-  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, chanKho = false, S0 = {} } = {}, chay) {
+  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, chanKho = false, tatCo = false, S0 = {} } = {}, chay) {
+    const goiCa = tatCo ? await layTatCo() : lienHe ? goiLienHe : goiApp;
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     // chanKho: localStorage từ chối riêng khoá kh_don_gui (như cửa sổ riêng tư / chặn dữ liệu)
     if (chanKho) await ctx.addInitScript(() => { for (const m of ['getItem', 'setItem', 'removeItem']) { const g = Storage.prototype[m]; Storage.prototype[m] = function (k, ...a) { if (k === 'kh_don_gui') throw new Error('chặn'); return g.call(this, k, ...a); }; } });
@@ -245,7 +248,7 @@ async function dungMay(pw, k) {
     await ctx.route(`${URL0}/**`, async (r) => {
       const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
-      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: lienHe ? goiLienHe : goiApp });
+      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiCa });
       if (!p.startsWith('/api/kh')) return /\.[a-z0-9]+$/.test(p) ? r.fulfill({ status: 204, body: '' }) : r.fulfill({ contentType: 'text/html', body: HTML });
       const duong = p.slice('/api/kh'.length);
       const tho = req.postData();

@@ -81,7 +81,7 @@ const SDT_A = '0901234567', SDT_B = '0912345678';
   k('B4 hook không còn donSach (không code chết); nút Xoá kết quả vẫn xoá khoá', !/donSach/.test(hk + app) && /const xoa = \(\) => \{ xoaKetQua\(\);/.test(hk));
   k('B4 hook vẫn giữ khiHau / anToan trong bản lưu', /khiHau: ban\.khiHau, anToan: ban\.anToan/.test(hk));
   k('B5 Bản lưu chỉ hiện khi đã đăng nhập VÀ đã biết khách (chưa đăng nhập / chờ /toi không lộ)', /dangNhap \? tn\.klLuu : null/.test(app) && /const tn = daBiet \? tnGoc : \{ \.\.\.tnGoc, luu: null, klLuu: null, hien: null \}/.test(app));
-  k('B5 số điện thoại thô không vào localStorage ở luuMay.js', (doc('src/luuMay.js').match(/setItem\(/g) || []).length === 1 && /setItem\(KHOA_CHU, dauVet\(sdt\)\)/.test(doc('src/luuMay.js')));
+  k('B5 số điện thoại thô không vào localStorage ở luuMay.js', (doc('src/luuMay.js').match(/setItem\(/g) || []).length === 2 && /setItem\(KHOA_CHU, dauVet\(sdt\)\)/.test(doc('src/luuMay.js')) && /setItem\(KHOA_DUNG_VI, bat \? '1' : '0'\)/.test(doc('src/luuMay.js'))); // KH-BAO-1: thêm công tắc ví '1' / '0' (không phải số điện thoại)
 
   // KH-UI-3d (chat soát): ca C1(f) mong đợi lời chào "Chào Thử!" chạy trong Chromium — GitHub không có trình duyệt nên khoá thêm bằng hàm thuần, đỏ trên gốc ("Chào thử").
   const dd = await nap('src/dinhDang.js');
