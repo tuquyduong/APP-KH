@@ -51,3 +51,8 @@
 - BỎ — bài cũ `thu_KHUI3d.js` B4 cấm "cửa lạ" nên đỏ khi thêm cửa công khai hợp lệ: đã được xử lý bằng duyệt Phạm vi; chỉ xảy ra khi thêm cửa mới vào màn đã có khoá "không cửa lạ".
 - BỎ — người gác chặn lệnh ghép (`;`, `&&` sau lệnh chạy script) và `git checkout <SHA> --`: đã hướng dẫn rõ trong lý do chặn; làm theo (chạy từng lệnh riêng, chứng minh đỏ trên gốc bằng `git show <SHA>:<file> | grep`).
 - KHOÁ (đã làm, trong Phạm vi) — đột biến `VS-MOI-NHAP-KHI-CHUA-BIET` sống ở lần đầu vì bài chưa có ca "/toi lỗi → không mời nhập"; đã thêm ca `toi-loi` (đỏ với đột biến).
+
+## Cổng
+- `npm test` + `--day-du`: 36 đạt · 0 hỏng. `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . c7553df^ HEAD viec/KH-CT-1` → ✓ CỔNG CHẠY ĐẠT (cảnh báo A16 về thu_KHCT1.js: trên gốc bài dừng sớm ở 5 ca vì chưa có src/chuongTrinh.js — đúng dự kiến).
+
+HEAD ĐÃ KIỂM: 32f8ccd
