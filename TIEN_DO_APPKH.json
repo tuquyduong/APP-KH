@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 33,
+  "phien_ban_so": 34,
   "cap_nhat": "2026-11-05",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -358,14 +358,15 @@
       "ma": "KH-CT-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-SINH-1"
       ],
       "ten": "Chuong trinh dac biet o trang Uu dai (GET /chuong-trinh): ten + mo ta ngan, ghi \"ap dung tai quan\"; dung ngay sinh nhat khach hien \"Uu dai sinh nhat hom nay\" (theo bay_gio POS)",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can) | 05.11 mo: POS da co GET /chuong-trinh (v9 CT-1a, khong token); khoi Chuong trinh dac biet o Uu dai cho ca khach vang lai, \"Ap dung tai quan\"; sinh nhat hom nay theo bay_gio POS → dong chuc mung + mang can cuoc; chua nhap ngay sinh → moi nhap. Chay song song KH-TT-1",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can) | 05.11 mo: POS da co GET /chuong-trinh (v9 CT-1a, khong token); khoi Chuong trinh dac biet o Uu dai cho ca khach vang lai, \"Ap dung tai quan\"; sinh nhat hom nay theo bay_gio POS → dong chuc mung + mang can cuoc; chua nhap ngay sinh → moi nhap. Chay song song KH-TT-1 | 06.11 chat soat cuoi DAT: dau nhanh 0752cce; cong tinh + chay kieu GitHub DAT (A16 canh bao vo hai: bai dung som tren goc); ghep thu voi main bec27e9 sach, npm test co trinh duyet 34/0; ghep them KH-BAO-1 dang lam: App.jsx tu gop sach; anh 3 co dat. Khoi Chuong trinh dac biet o Uu dai + sinh nhat hom nay. Gop PR #19 (d5db20d)",
       "ngay": "2026-11-05",
-      "han": "2026-11-07"
+      "han": "2026-11-07",
+      "commit": "d5db20d"
     },
     {
       "ma": "KH-GHICHU-1",
@@ -402,7 +403,7 @@
         "POS HANG-1 len hop dong"
       ],
       "ten": "Hang theo HANG-1: chi_cap → \"Hang danh tang khach than thiet\", khong hien gia; het_han null → \"Khong thoi han\"; xep hang theo thu_bac; goi[] chi hien (nut mua the van la P3b sau khai truong)",
-      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip"
+      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip | 06.11 tu soat KH-CT-1 (lam kem vi cung sua UuDai.jsx): (1) ChuongTrinhToi doc \"hom nay\" luc ve — ve lai khi bay_gio POS ve (dungGia / bayGio), ca /toi ve truoc /gio-hoat-dong; (2) hai chuong trinh sinh_nhat cung luc → dong chuc mung chi o the dau"
     },
     {
       "ma": "KH-MUA-2",
