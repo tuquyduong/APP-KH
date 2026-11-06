@@ -2,5 +2,10 @@ Bài thử KH-CT-1 — bằng chứng ĐỎ trên code chưa sửa (HEAD gốc c
 Cách chạy trên gốc: KHONG_TRINH_DUYET=1 node cong_cu/thu_KHCT1.js (cùng điều kiện GitHub).
 
 thu_KHCT1.js (bài MỚI) : 1 đạt · 4 hỏng — ✗ A1 (chưa có src/chuongTrinh.js) · ✗ A1b (sinhNhatHomNay) · ✗ A2 ('/chuong-trinh' chưa trong CUA_CONG_KHAI) · ✗ B6 (chưa chuong_trinh.css / import)
-                         Đã vá: 17 đạt · 0 hỏng (KHONG_TRINH_DUYET=1); chạy ĐỦ có Chromium: 85 đạt · 0 hỏng.
+                         Đã vá: 17 đạt · 0 hỏng (KHONG_TRINH_DUYET=1); chạy ĐỦ có Chromium: 86 đạt · 0 hỏng.
 SỐ CA thu_KHCT1.js: 17
+
+thu_KHUI3d.js (bài cũ, chủ quán duyệt 06.11 thêm vào Phạm vi — sửa B4 cho /chuong-trinh + THÊM ca đọc nguồn "B4 KH-CT-1: Ưu đãi gọi GET /chuong-trinh qua layChuongTrinh"):
+  Ca mới ĐỎ trên code gốc: src/pages/UuDai.jsx ở c7553df không có `layChuongTrinh` (`git show c7553df:src/pages/UuDai.jsx | grep -c layChuongTrinh` → 0), nên /layChuongTrinh/.test(uu) = false.
+  Trước khi sửa bài (code mới, bài cũ): 165 đạt · 7 hỏng (ca B4 đọc nguồn ×1 + Chromium ×6). Sau sửa bài, code mới: 33 đạt · 0 hỏng (KHONG_TRINH_DUYET=1); chạy ĐỦ: 173 đạt · 0 hỏng.
+SỐ CA thu_KHUI3d.js: 33
