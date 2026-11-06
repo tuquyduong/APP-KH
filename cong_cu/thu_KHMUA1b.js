@@ -35,6 +35,7 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
 if (require.main === module) (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
   k('KH-TT-1 B1 màn Thanh toán không còn dòng "Chuyển khoản QR" / chữ "Xác nhận trả"; ba chữ nút theo cách trả', !/Chuyển khoản QR|Xác nhận trả/.test(doc('src/pages/ThanhToan.jsx')) && /Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')) && /\+ QR/.test(doc('src/pages/ThanhToan.jsx')));
+  k('KH-BAO-1 C2 công tắc ví mở theo máy nhớ (kh_dung_vi): tab sau thấy ví đã bật sẵn, nên ca hai tab không bấm tắt đi', /useState\(docDungVi\)/.test(doc('src/pages/ThanhToan.jsx')) && /ghiDungVi\(bat\)/.test(doc('src/pages/ThanhToan.jsx')));
   let D = null;
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
 
@@ -561,7 +562,9 @@ async function trinhDuyet(pw) {
     const t2 = await trang(); await mo(t2, '/thanhtoan'); await sanSang(t2); await doiChu(t2, '#checkout', /Số dư 300\.000đ/);
     await batVi(t2); await bam(t2); await t2.waitForSelector('.pin-pad'); // tab 2: bảng PIN mở sẵn
     await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 300\.000đ/);
-    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    // KH-BAO-1 C1: tab 2 vừa bật công tắc → máy nhớ '1' → tab 1 mở ra đã bật SẴN (không bấm tắt đi).
+    if (!(await t.locator('#checkout .switch.on').count())) await batVi(t);
+    await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
     await nhapPin(t2, PIN); await t2.waitForTimeout(800);
     k('D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);

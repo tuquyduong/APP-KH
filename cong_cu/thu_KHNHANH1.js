@@ -43,6 +43,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     const ap = doc('src/App.jsx');
     k('A1 App không gọi layToi() riêng (dùng cuaToi.lay — cùng lệnh)', !/layToi\(\)/.test(ap) && /cuaToi\.lay\(\)/.test(ap));
     k('A1 Lịch sử đơn: trang 1 đọc cuaDon', /dungCua\(cuaDon\)/.test(doc('src/pages/Don.jsx')));
+    k('KH-BAO-1 D1 quay lại tab: dải báo đơn xong hỏi NGAY cuaDon.lay() (dùng chung lệnh kho), nên ca ẩn / hiện đếm /don +1', /visibilitychange', hoiNgay/.test(doc('src/components/BaoDonXong.jsx')) && /const hoiNgay = \(\) => \{ if \(!document\.hidden\) cuaDon\.lay\(\)/.test(doc('src/components/BaoDonXong.jsx')));
 
     // A2 — không gọi trùng
     let goi = 0; let h = hua();
