@@ -29,7 +29,7 @@ KH-BAO-1 — bằng chứng đỏ: bài thử MỚI / SỬA chạy trên code G�
   → 20 đạt · 1 hỏng
 
 Số ca khi chạy trên code ĐÃ VÁ, VỚI KHONG_TRINH_DUYET=1 (đúng số GitHub đếm):
-SỐ CA cong_cu/thu_KHBAO1.js: 29
+SỐ CA cong_cu/thu_KHBAO1.js: 33
 SỐ CA cong_cu/thu_KHMUA1b.js: 49
 SỐ CA cong_cu/thu_KHNHANH1.js: 83
 SỐ CA cong_cu/thu_KHLUU1.js: 21
