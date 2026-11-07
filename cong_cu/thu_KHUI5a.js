@@ -172,7 +172,7 @@ function hangDemo(ten) {
     .every(([p, t]) => ra(p).trang === t && ra(p).canDN === true && ra(p).giuCho === false && ra(p).chuan === p && dd.taoDuongDan(t) === p && dd.trangCanDangNhap(t)));
   k('chữ hoa / "/" thừa vẫn ra đúng: /TracNghiem/Lam/ → /tracnghiem/lam', ra('/TracNghiem/Lam/').chuan === '/tracnghiem/lam');
   k('nút quay lại: /lam về /tracnghiem; /tracnghiem và /ketqua về Trang chủ', ra('/tracnghiem/lam').cha === '/tracnghiem' && ra('/tracnghiem').cha === '/trangchu' && ra('/tracnghiem/ketqua').cha === '/trangchu');
-  k('/kehoach vẫn chỉ giữ chỗ (việc KH-UI-5b)', ra('/kehoach').giuCho === true);
+  k('/kehoach là trang thật từ KH-UI-5b (hết giữ chỗ), cần đăng nhập, giữ tab Trang chủ', ra('/kehoach').giuCho === false && ra('/kehoach').trang === 'kehoach' && ra('/kehoach').canDN === true && ra('/kehoach').tab === 'trangchu');
   k('tiêu đề tab: "Trắc nghiệm · Tứ Quý Đường", "Kết quả thể trạng · Tứ Quý Đường"', dd.tieuDeTrang('tracnghiem') === 'Trắc nghiệm · Tứ Quý Đường' && dd.tieuDeTrang('tracnghiemketqua') === 'Kết quả thể trạng · Tứ Quý Đường');
   k('chưa đăng nhập vào /tracnghiem/lam → /dangnhap?tiep=/tracnghiem/lam', dd.taoDuongDan('dangnhap', { tiep: '/tracnghiem/lam' }) === '/dangnhap?tiep=%2Ftracnghiem%2Flam');
 
