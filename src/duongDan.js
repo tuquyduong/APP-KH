@@ -1,11 +1,13 @@
 // Bảng đường dẫn của app — MỘT chỗ khai báo (hàm thuần, không đụng DOM; bài thử cong_cu/thu_KHLINK1.js nạp thẳng).
 // Đường dẫn theo TRANG, không theo thiết bị. Màn mới phải thêm một dòng vào BANG.
 //   mau = mẫu đường dẫn (":ten" = tham số) · tab = tab sáng trên thanh tab (null = giữ tab trước) · canDN = khách phải đăng nhập
-//   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau (KH-UI-5b)
+//   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau · cho = các giá trị hợp lệ của tham số
 import { boDau } from './menuLoc.js';
 
 const HAU_TO_TIEU_DE = ' · Tứ Quý Đường';
 const TRANG_CHU = '/trangchu';
+/** Tiện ích của Kế hoạch (KH-UI-5b): chỉ ba cái này; năm cái còn lại là KH-UI-5c — đường dẫn lạ dưới /kehoach về /kehoach. */
+export const TIEN_ICH = ['theomua', 'ngayle', 'saptoi'];
 
 const BANG = [
   { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'Trang chủ' },
@@ -27,7 +29,8 @@ const BANG = [
   { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'Trắc nghiệm', cha: '/tracnghiem' },
   { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'Kết quả thể trạng' },
   { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'Kiểm khớp POS', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
-  { trang: 'kehoach', mau: '/kehoach', tab: null, tieuDe: 'Kế hoạch và nhắc việc', giuCho: true },
+  { trang: 'kehoach', mau: '/kehoach', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc' },
+  { trang: 'tienich', mau: '/kehoach/:tienich', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc', cha: '/kehoach', cho: TIEN_ICH },
 ];
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);
 const tenThamSo = (e) => [...e.mau.matchAll(/:(\w+)/g)].map((m) => m[1]);
@@ -75,12 +78,13 @@ export function docDuongDan(diaChi) {
     const khop = mau.every((m, j) => {
       if (m[0] !== ':') return m === doan[j].toLowerCase();
       tham[m.slice(1)] = m === ':ma' ? doan[j] : slug(doan[j]);
-      return !!tham[m.slice(1)];
+      return !!tham[m.slice(1)] && (!e.cho || e.cho.includes(tham[m.slice(1)]));
     });
     if (!khop) continue;
     if (e.trang === 'dangnhap') { const t = tiepHopLe(truyVan.get('tiep')); if (t) tham.tiep = t; }
     return ra(e, tham);
   }
+  if (dau === 'kehoach') return ra(BANG.find((e) => e.trang === 'kehoach'), {}); // /kehoach/<tiện ích lạ> → màn Kế hoạch
   if (GIU_CHO.includes(dau)) return { ...ra(BANG.find((e) => e.trang === dau), {}), chuan: '/' + doan.map(encodeURIComponent).join('/') };
   return { trang: 'khongthay', tham: {}, chuan: s, tab: null, canDN: false, cha: TRANG_CHU, giuCho: false };
 }

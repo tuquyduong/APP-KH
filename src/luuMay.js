@@ -3,6 +3,7 @@ import { KHOA_GIO } from './gio.js';
 import { KHOA_GIA_HAN } from './giaHan.js';
 import { KHOA_TOM_TAT } from './tomTatLuu.js';
 import { KHOA_DON_GUI, quenBoNho } from './datDon.js';
+import { KHOA_KE_HOACH } from './kehoach.js';
 
 // Dữ liệu của khách lưu TRÊN MÁY (localStorage) — quy tắc giữ / xoá ở MỘT chỗ (KH-LUU-1, chủ quán chốt 30.10):
 //   hết phiên (401) → GIỮ; bấm "Đăng xuất" → XOÁ hết; người đăng nhập sau KHÁC người trước → XOÁ.
@@ -11,7 +12,7 @@ import { KHOA_DON_GUI, quenBoNho } from './datDon.js';
 const KHOA_CHU = 'kh_chu';
 /** Mọi khoá dữ liệu khách. Tính năng mới lưu trên máy (kế hoạch và nhắc việc `kh_kehoach`…) thêm khoá của mình vào đây. */
 export const KHOA_DUNG_VI = 'kh_dung_vi'; // công tắc "Trừ từ số dư ví" lần trước: '1' / '0' (KH-BAO-1 C1) — không nhớ PIN, không nhớ số tiền
-const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO, KHOA_GIA_HAN, KHOA_TOM_TAT, KHOA_DON_GUI, KHOA_DUNG_VI];
+const KHOA_DU_LIEU = [KHOA_TRAC_NGHIEM, KHOA_GIO, KHOA_GIA_HAN, KHOA_TOM_TAT, KHOA_DON_GUI, KHOA_DUNG_VI, KHOA_KE_HOACH];
 /** Khoá không tính là "dữ liệu chưa biết của ai": giỏ của khách vãng lai phải còn khi khách đăng nhập lần đầu (KH-MUA-1 A4); ngày gia hạn không phải dữ liệu của khách (KH-UI-3b D3). */
 const KHOA_VANG_LAI = [KHOA_GIO, KHOA_GIA_HAN];
 const kho = () => localStorage;

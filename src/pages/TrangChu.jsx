@@ -13,15 +13,21 @@ import TheMoi from '../components/TheMoi.jsx';
 import OTracNghiem from '../components/OTracNghiem.jsx';
 import OGioVang from '../components/OGioVang.jsx';
 import { IcoVe } from '../components/BieuTuong.jsx';
+import OKeHoach from '../components/OKeHoach.jsx';
+import KhoaTienIch from '../components/KhoaTienIch.jsx';
+import { dungKeHoach } from '../components/dungKeHoach.js';
+import { homNayTuGio, ngayChuoi, viecNgay } from '../kehoach.js';
+import { taoDuongDan } from '../duongDan.js';
+import '../giaoDien/ke_hoach.css';
 import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
 import { dungKho } from '../kho.js';
 import { THE_MOI, tenXungHo } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
-//   thẻ "Xem cách dùng app", ô "Kế hoạch và nhắc việc" → KH-UI-5b · Mời bạn bè, combo → sau khai trương.
+//   thẻ "Xem cách dùng app" (chưa có video) · Mời bạn bè, combo → sau khai trương. Ô "Kế hoạch và nhắc việc" (KH-UI-5b) nằm cạnh thẻ hội viên như demo.
 // Demo không có dòng "quán đang mở / đóng": thêm MỘT dòng nhỏ (kiểu `.sub`) dưới lời chào, chữ lấy từ `/gio-hoat-dong` (xem `## Phát hiện` của KH-UI-3a).
 // Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
-function DauChung({ chao, moQR, the }) {
+function DauChung({ chao, moQR, the, ke }) {
   const quan = trangThaiQuan(dungKho(khoGioHoatDong));
   return (
     <>
@@ -33,12 +39,25 @@ function DauChung({ chao, moQR, the }) {
         </div>
         <div className="topbar-right"><NutQR moQR={moQR} /></div>
       </div>
-      <div className="top-row mot">{the}</div>
+      <div className="top-row">{the}{ke}</div>
     </>
   );
 }
 
-function DauHoiVien({ moQR, moUuDai }) {
+// Ô Kế hoạch và nhắc việc (demo utilCal) bọc KhoaTienIch: chưa đăng nhập → mờ + khoá, chạm → đăng nhập rồi về /kehoach. Chưa đăng nhập không đếm việc (số của khách trước).
+function OKeHoachTrangChu({ dangNhap, daBiet, moKeHoach, moDangNhapTai }) {
+  const { bang } = dungKeHoach(daBiet);
+  const homNay = homNayTuGio(bayGio());
+  if (!homNay) return null;
+  const so = dangNhap && daBiet ? viecNgay(bang, ngayChuoi(homNay)).filter((v) => !v.xong).length : null;
+  return (
+    <KhoaTienIch dangNhap={dangNhap} tiep={taoDuongDan('kehoach')} moDangNhap={moDangNhapTai}>
+      <OKeHoach homNay={homNay} soViec={so} mo={moKeHoach} />
+    </KhoaTienIch>
+  );
+}
+
+function DauHoiVien({ moQR, moUuDai, ke }) {
   const toi = dungCua(cuaToi);
   const diem = dungCua(cuaDiem);
   const hang = toi.dl && toi.dl.khach.hang; // null = chưa có hạng → không hiện nhãn hạng
@@ -48,6 +67,7 @@ function DauHoiVien({ moQR, moUuDai }) {
     <DauChung
       chao={loiChao(coBayGio() ? bayGio() : '', tenXungHo(k && k.xung_ho), k && k.ten)}
       moQR={moQR}
+      ke={ke}
       the={(
         <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
           <div className="card-top">
@@ -66,8 +86,9 @@ function DauHoiVien({ moQR, moUuDai }) {
 }
 
 // `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn!" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
-export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, locNhuCau, chonMon }) {
+export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
+  const ke = <OKeHoachTrangChu dangNhap={dangNhap} daBiet={daBiet} moKeHoach={moKeHoach} moDangNhapTai={moDangNhapTai} />;
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
   const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
   const coHomNay = !!HOM_NAY.tieuDe;
@@ -75,8 +96,8 @@ export default function TrangChu({ menu, dangNhap, klLuu, moQR, moMenu, moGioVan
   return (
     <Man id="home">
       {dangNhap
-        ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} />
-        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} />}
+        ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} ke={ke} />
+        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} ke={ke} />}
 
       <div className="hb-one">
         {coHomNay ? (
