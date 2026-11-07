@@ -80,3 +80,5 @@ Báo cáo (rút gọn, nguyên ý): không thấy lỗi hỏng / lộ dữ liệ
 - **KHOÁ** (đề xuất cho 5c, ngoài phạm vi): gom danh sách tiện ích một bảng (id, tên, biểu tượng, tiêu đề) và một ca đỏ nếu thêm tiện ích mà thiếu một nơi.
 - **BỎ**: ca BAO1 chập chờn — thuộc việc khác, ghi ở Phát hiện để chủ quán chuyển.
 - Người gác chặn: `sed -i`, `rm` trong kho, `git worktree`, `npx`, `$(…)`/ký tự đại diện trong `git add` — dùng Edit, `mv` ra nháp, `git archive`, `npm run build --`, liệt kê tên file.
+
+HEAD ĐÃ KIỂM: 512c59e
