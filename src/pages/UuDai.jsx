@@ -3,7 +3,9 @@ import { layVoucher, layChuongTrinh } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDiem, cuaToi, cuaVoucher, lamMoi } from '../duLieuKhach.js';
 import { dungGia } from '../heThong.js';
-import { hangCoGiam } from '../giaHang.js';
+import { dungKho } from '../kho.js';
+import { khoGioHoatDong } from '../gioHoatDong.js';
+import { hangCoGiam, laHangChiCap, dongGoi, CHU_HANG_TANG, CHU_KHONG_THOI_HAN } from '../giaHang.js';
 import { dinhDangGia, dinhDangNgay, dinhDangSo, moTaGiam } from '../dinhDang.js';
 import { THE_MOI_UU_DAI } from '../noiDung/dangNhap.js';
 import Man, { NutQR } from '../components/Man.jsx';
@@ -16,6 +18,7 @@ import { Med } from '../components/BieuTuong.jsx';
 import { docChuongTrinh, sinhNhatHomNay } from '../chuongTrinh.js';
 import { bayGio } from '../bayGio.js';
 import '../giaoDien/chuong_trinh.css';
+import '../giaoDien/hang.css';
 
 // Ưu đãi theo demo (rewards): banner Giờ vàng, thẻ hạng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
 // Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
@@ -104,13 +107,15 @@ function TheChuongTrinh({ ct, noiBat, ghiChu }) {
 function ChuongTrinhToi({ ds, moHoSo }) {
   const toi = dungCua(cuaToi);
   const ngaySinh = toi.dl && toi.dl.khach ? toi.dl.khach.ngay_sinh : undefined;
+  dungKho(khoGioHoatDong); // vẽ lại khi POS báo `bay_gio` (về sau /toi) — "hôm nay" theo giờ POS, không theo đồng hồ máy
   const homNay = sinhNhatHomNay(ngaySinh, bayGio().slice(0, 10));
   const xep = homNay ? [...ds.filter((c) => c.loai === 'sinh_nhat'), ...ds.filter((c) => c.loai !== 'sinh_nhat')] : ds;
-  return xep.map((c) => {
+  const dauTien = xep.findIndex((c) => c.loai === 'sinh_nhat'); // dòng chúc mừng / mời nhập chỉ ở thẻ sinh nhật ĐẦU TIÊN
+  return xep.map((c, i) => {
     const sn = c.loai === 'sinh_nhat';
     let ghiChu = null;
-    if (sn && homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
-    else if (sn && ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
+    if (sn && i === dauTien && homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
+    else if (sn && i === dauTien && ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
     return <TheChuongTrinh key={c.ma || c.ten} ct={c} noiBat={sn && homNay} ghiChu={ghiChu} />;
   });
 }
@@ -134,11 +139,13 @@ function KhoiChuongTrinh({ dangNhap, moHoSo }) {
 function TheHang({ hang }) {
   const { dsHang } = dungGia();
   if (hang) {
+    const tang = laHangChiCap(dsHang, hang.id);
     const db = hang.phan_tram_nhom_dac_biet > 0 ? ` · nhóm đặc biệt ${hang.phan_tram_nhom_dac_biet}%` : '';
     return (
       <div className="tier-card">
         <div className="top"><div><div className="name">Hạng {hang.ten}</div><div className="pct">Giảm {hang.phan_tram}% món thường{db}</div></div></div>
-        {hang.het_han && <div className="prog-lbl">Thẻ hết hạn: {dinhDangNgay(hang.het_han)}</div>}
+        {hang.het_han ? <div className="prog-lbl">Thẻ hết hạn: {dinhDangNgay(hang.het_han)}</div> : hang.het_han === null && <div className="prog-lbl">{CHU_KHONG_THOI_HAN}</div>}
+        {tang && <div className="hang-tang">{CHU_HANG_TANG}</div>}
       </div>
     );
   }
@@ -146,7 +153,12 @@ function TheHang({ hang }) {
   if (ds.length === 0) return null;
   return (
     <div className="tier-card">
-      <div className="top"><div><div className="name">Hạng thành viên</div>{ds.map((h) => <div className="pct" key={h.id}>{h.ten} — giảm {h.phan_tram}%</div>)}</div></div>
+      <div className="top"><div><div className="name">Hạng thành viên</div>{ds.map((h) => (
+        <div key={h.id}>
+          <div className="pct">{h.ten} — giảm {h.phan_tram}%</div>
+          {h.chi_cap === true ? <div className="hang-tang">{CHU_HANG_TANG}</div> : dongGoi(h).map((g, i) => <div className="hang-goi" key={i}>{g}</div>)}
+        </div>
+      ))}</div></div>
     </div>
   );
 }

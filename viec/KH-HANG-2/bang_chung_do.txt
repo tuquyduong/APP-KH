@@ -1,0 +1,26 @@
+Bài thử chạy trên code GỐC (commit 9c5438a = PHIEU: KH-HANG-2, src/ chưa sửa; bài thử mới/sửa chép vào bản chụp gốc ở nháp), có KHONG_TRINH_DUYET=1:
+
+cong_cu/thu_KHHANG2.js (bài mới):
+  ✗ A1 dừng giữa chừng — g.laHangChiCap is not a function
+  ✗ A2 dừng giữa chừng — g.dongGoi is not a function
+  ✗ A4 chú thích giaHang.js nói thu_bac, không còn "xếp theo thu_tu"
+  ✗ A1 nguồn: TheHang dùng CHU_KHONG_THOI_HAN + laHangChiCap + dongGoi
+  ✗ B1 nguồn: ChuongTrinhToi đăng ký kho giờ hoạt động (vẽ lại khi bay_gio về)
+  ✗ C1 UuDai.jsx import src/giaoDien/hang.css; file có; không màu cứng
+  1 đạt · 6 hỏng
+  (có trình duyệt, gốc: 39 đạt · 25 hỏng — A1/A2 ×3 cỡ, B2 ×3 cỡ + dòng mời nhập đều đỏ)
+
+cong_cu/thu_KHUI3d.js (sửa):
+  ✗ B2 KH-HANG-2: thẻ hạng không còn đọc gia_the; có "Không thời hạn" và dòng hạng tặng
+  33 đạt · 1 hỏng
+
+cong_cu/thu_KHCT1.js (sửa):
+  ✗ B2 KH-HANG-2: dòng chúc mừng / mời nhập chỉ ở thẻ sinh nhật ĐẦU TIÊN (dauTien)
+  ✗ B1 KH-HANG-2: ChuongTrinhToi vẽ lại khi POS báo bay_gio (dungKho(khoGioHoatDong))
+  17 đạt · 2 hỏng
+
+Sau khi vá: thu_KHHANG2 16 đạt · 0 hỏng (có trình duyệt 73 · 0); thu_KHUI3d 34 · 0 (có trình duyệt 174 · 0); thu_KHCT1 19 · 0 (có trình duyệt 89 · 0).
+Lưu ý thật: ca trình duyệt B1 (b1-hien / b1-an) XANH cả trên gốc (nơi khác trong app vẽ lại ChuongTrinhToi khi kho giờ đổi) — đỏ trên gốc của B1 nằm ở ca đọc nguồn.
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+SỐ CA cong_cu/thu_KHCT1.js: 19

@@ -64,6 +64,13 @@ const MOI_NHAP = 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đ
     k('A2 vẫn giữ /hang, /gio-vang, /gio-hoat-dong', !!ma && ['/hang', '/gio-vang', '/gio-hoat-dong'].every((x) => ma[1].includes(`'${x}'`)));
   });
 
+  await thu('B-HANG2', async () => {
+    const uu = doc('src/pages/UuDai.jsx');
+    const than = (uu.replace(/\/\/.*$/gm, '').split('function ChuongTrinhToi')[1] || '').split('\n}\n')[0]; // thân hàm, đã bỏ chú thích
+    k('B2 KH-HANG-2: ghiChu chỉ gắn khi i === dauTien (thẻ sinh nhật đầu)', /const dauTien = xep\.findIndex/.test(than) && (than.match(/i === dauTien/g) || []).length === 2);
+    k('B1 KH-HANG-2: thân ChuongTrinhToi gọi dungKho(khoGioHoatDong) (phòng thủ: vẽ lại khi bay_gio về)', /^\s*dungKho\(khoGioHoatDong\);/m.test(than));
+  });
+
   await thu('B6', async () => {
     const f = 'src/pages/UuDai.jsx';
     k("B6 UuDai.jsx import src/giaoDien/chuong_trinh.css (không sửa main.jsx)", /import ['"]\.\.\/giaoDien\/chuong_trinh\.css['"]/.test(doc(f)) && fs.existsSync(path.join(GOC, 'src/giaoDien/chuong_trinh.css')));
@@ -181,6 +188,10 @@ async function trinhDuyet(pw) {
       await chup(t, `sinh-nhat_${rong}`);
     });
   }
+  await ca('hai-sinh-nhat', { khach: { ngay_sinh: '1990-11-05' }, ds: [CT_HS, CT_SN, { ...CT_SN, ma: 'SN2', ten: 'Sinh nhật vàng' }] }, async (t) => {
+    await mo(t, '/uudai');
+    k('B3 KH-HANG-2: hai chương trình sinh_nhat → CHỈ MỘT dòng chúc mừng', (await manText(t)).split(MOI_SN).length === 2);
+  });
   await ca('sinh-nhat-theo-pos', { khach: { ngay_sinh: '1990-11-05' }, bayGio: '2026-11-05T09:00:00', may: '2026-03-01T09:00:00+07:00' }, async (t) => {
     await mo(t, '/uudai');
     k('B3 "hôm nay" theo bay_gio POS (11-05), KHÔNG theo đồng hồ máy (03-01)', (await manText(t)).includes(MOI_SN));

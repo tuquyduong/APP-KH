@@ -17,7 +17,7 @@ const nap = (f) => import(pathToFileURL(path.join(GOC, f)).href);
 const thu = async (ten, f) => { try { await f(); } catch (e) { k(`${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } };
 
 const BAY = (gio) => `2026-10-30T${gio}`;
-const HANG = { success: true, data: [{ id: 1, ten: 'Bạc', phan_tram: 5, phan_tram_nhom_dac_biet: 0, gia_the: 99000, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }] };
+const HANG = { success: true, data: [{ id: 1, ten: 'Bạc', phan_tram: 5, phan_tram_nhom_dac_biet: 0, chi_cap: false, goi: [{ so_thang: 3, gia: 99000 }], thu_bac: 1, thu_tu: 1 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, chi_cap: false, goi: [], thu_bac: 2, thu_tu: 2 }] };
 const MENU = { success: true, data: [{ ma: 'TLB', ten: 'Trà Lục Bảo', nhom: 'Trà Đông Y', gia: 30000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [{ hang_id: 2, gia: 27000 }] }] };
 const GV_TAT = { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] };
 const GV_DANG = { success: true, dang_chay: true, bat_dau: '20:00', ket_thuc: '22:00', phan_tram: 30, mon: ['TLB'] };
@@ -93,6 +93,8 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     k('B2 UuDaiToi chỉ được vẽ ở nhánh `dangNhap ?` (vãng lai không thấy điểm / voucher)', /\{dangNhap\s*\?\s*<UuDaiToi/.test(uu) && (uu.match(/<UuDaiToi/g) || []).length === 1);
     // KH-NHANH-1 B1: có phiên → App tải trước cả bốn cửa khách (có /don) — ca Chromium B4 đổi theo, khoá thêm bằng đọc nguồn (đỏ trên gốc).
     k('B4 có phiên: App tải trước /toi, /diem, /voucher, /don một chỗ (lamMoi(CUA_KHACH))', /lamMoi\(CUA_KHACH\)/.test(app));
+    // KH-HANG-2 (HANG-1, v10): thẻ hạng đọc `goi[]` / `chi_cap` / `het_han: null`, không còn `gia_the` — đỏ trên gốc.
+    k('B2 KH-HANG-2: thẻ hạng không còn đọc gia_the; có "Không thời hạn" và dòng hạng tặng', !/gia_the/.test(uu.replace(/\/\/.*$/gm, '')) && /\{CHU_KHONG_THOI_HAN\}/.test(uu) && /\{CHU_HANG_TANG\}/.test(uu));
   });
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');

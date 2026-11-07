@@ -1,0 +1,4 @@
+/* KH-HANG-2 — thẻ hạng: dòng "Hạng dành tặng", các gói tháng. Dùng lại .tier-card / .pct của demo; chỉ thêm cỡ chữ nhỏ + xuống dòng chữ dài. */
+.tier-card .hang-tang, .tier-card .hang-goi{ font-size:10.5px; opacity:.9; margin-top:2px; overflow-wrap:anywhere; }
+.tier-card .hang-tang{ font-weight:600; }
+.tier-card .top .hang-goi, .tier-card .top .hang-tang{ padding-left:12px; } /* trong bảng các hạng: thụt vào dưới tên hạng */
