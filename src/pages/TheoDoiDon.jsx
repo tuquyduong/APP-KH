@@ -3,13 +3,13 @@ import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { bayGio } from '../bayGio.js';
 import { banGhiCuaDon, buocTienTrinh, conLaiQR, huyDon, xongChua } from '../datDon.js';
 import { dungTheoDoi } from '../dungDatDon.js';
-import { docHoaDon } from '../hoaDon.js';
+import { docHoaDon, soDon } from '../hoaDon.js';
 import { LIEN_HE } from '../noiDung/lienHe.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import { KhungLoi } from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import HoaDonKhach from '../components/HoaDonKhach.jsx';
-import { VeQR } from './ManQR.jsx';
+import TheQR from '../components/TheQR.jsx';
 
 // Theo dõi đơn theo demo (tracking), đường dẫn /don/<ma>. Đơn chờ trả: QR lấy từ GET /don/:ma (tải lại / máy khác vẫn thấy), đếm ngược tới het_han
 // theo "bây giờ" của POS, hỏi trạng thái mỗi 3 giây; hết hạn → "Tạo mã mới" / "Huỷ đơn". Số giữ ví / QR còn lại: `cach_tra`, `giu_vi`, `con_lai` của
@@ -18,7 +18,7 @@ import { VeQR } from './ManQR.jsx';
 // Đã trả: số đơn to để đọc cho nhân viên + các bước tien_trinh, hỏi lại mỗi 10 giây tới khi xong. Bản đồ / tài xế: KH-MUA-2.
 const dongHo = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
-function TraQR({ qr, soTra, taoMaMoi, dang }) {
+function TraQR({ qr, soTra, soHd, taoMaMoi, dang }) {
   const [, ve] = useState(0);
   useEffect(() => { const id = setInterval(() => ve((x) => x + 1), 1000); return () => clearInterval(id); }, []);
   const con = conLaiQR(qr.hetHan, bayGio());
@@ -32,7 +32,7 @@ function TraQR({ qr, soTra, taoMaMoi, dang }) {
   }
   return (
     <>
-      <div className="khung-qr"><VeQR noiDung={qr.chuoi} nhan="Mã QR trả tiền" /></div>
+      <TheQR chuoi={qr.chuoi} soTien={soTra} soHd={soHd} />
       <div className="care-disclaimer qr-chu">Quét mã bằng app ngân hàng để trả{soTra !== null && <> <b>{dinhDangGia(soTra)}</b></>}{con !== null && <> · còn <b>{dongHo(con)}</b></>}</div>
     </>
   );
@@ -78,14 +78,14 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
   };
   return (
     <Man id="tracking">
-      <DauManCon tieuDe={`Đơn #${ma}`} phu={don && dinhDangNgay(don.ngay) ? `Đặt lúc ${dinhDangNgay(don.ngay)}` : ''} lui={lui} canTrai />
+      <DauManCon tieuDe={don ? `Đơn ${soDon(don.soHd, don.ma)}` : 'Đơn hàng'} phu={don && dinhDangNgay(don.ngay) ? `Đặt lúc ${dinhDangNgay(don.ngay)}` : ''} lui={lui} canTrai />
       {!don && (loi ? <KhungLoi loi={loi} thuLai={taiLai} /> : <div className="khung-tai" aria-busy="true" />)}
       {don && (
         <>
-          {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} taoMaMoi={taoMoi} dang={dangHuy} />}
+          {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(tra.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(tra.con_lai)}</b></div>}
-          {don.tienVeChoDoiSoat && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.</div></div>}
-          {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">#{don.ma}</div></div>}
+          {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{don.cauTienVe || 'Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.'}</div></div>}
+          {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">{soDon(don.soHd, don.ma)}</div></div>}
           {tt === 'xong' && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div>Đơn đã xong — mời bạn ra quầy</div></div>}
           {(tt === 'da_tra' || tt === 'dang_lam') && <div className="care-disclaimer qr-chu">Giữ App mở để được báo khi đồ uống xong</div>}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>

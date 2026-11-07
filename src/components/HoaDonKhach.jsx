@@ -25,6 +25,5 @@ function Dong({ d }) {
 }
 
 export default function HoaDonKhach({ don }) {
-  const dong = docHoaDon(don).filter((d) => d.loai !== 'ghi_no'); // App không bao giờ hiện dòng ghi_no của POS (CLAUDE.md §5)
-  return dong.map((d, i) => <Dong d={d} key={i} />);
+  return docHoaDon(don).map((d, i) => <Dong d={d} key={i} />);
 }

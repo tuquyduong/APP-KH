@@ -1,0 +1,40 @@
+KH-SOHD-1 — bằng chứng đỏ: bài thử MỚI / SỬA chạy trên code GỐC (src/ của commit PHIEU 00256b9, giải nén bằng git archive ở nháp; chỉ thay cong_cu/ bằng bản mới).
+Chạy với KHONG_TRINH_DUYET=1 (đúng cách GitHub chạy: không Chromium).
+
+== cong_cu/thu_KHSOHD1.js (bài MỚI) trên gốc ==
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../src/qrThuongHieu.js' (file chưa có trên gốc)
+  0 đạt · 1 hỏng
+
+== cong_cu/thu_KHBAO1.js (sửa) trên gốc ==
+  ✗ A2 tiêu đề "(Xong) Đơn <số đơn> — Tứ Quý Đường" (KH-SOHD-1: số đơn = so_hd), chu kỳ hỏi 15 000 ms
+  ✗ B2 docHoaDon lọc ghi_no (không bao giờ vẽ dòng nợ); HoaDonKhach vẽ từ docHoaDon
+  ✗ B2 (câu lệnh) docHoaDon chỉ bỏ loai === ghi_no (không đảo ngược)
+  30 đạt · 3 hỏng
+
+== cong_cu/thu_KHHD1.js (sửa) trên gốc ==
+  ✗ A1 giữ đủ số dòng (trừ ghi_no), đúng thứ tự POS
+  ✗ A1 tờ chỉ có ghi_no → rỗng (coi như không có tờ)
+  24 đạt · 2 hỏng
+
+== cong_cu/thu_KHMUA1.js (sửa) trên gốc ==
+  ✗ B7 vẽ QR trả tiền bằng thẻ thương hiệu TheQR (KH-SOHD-1); ManQR vẫn giữ VeQR cho mã thành viên
+  55 đạt · 1 hỏng
+
+== cong_cu/thu_KHMUA1b.js (sửa) trên gốc ==
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte
+  ✗ C5 (v11) đọc GET /don/:ma: so_hd → soHd (thiếu → null), mã App `ma` giữ nguyên
+  48 đạt · 2 hỏng
+
+== cong_cu/thu_KHMUA1c.js (sửa) trên gốc ==
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-SOHD-1/hop_dong_v11.md từng byte (v11 chứa v9)
+  26 đạt · 1 hỏng
+
+Số ca đếm trên code ĐÃ VÁ, KHONG_TRINH_DUYET=1 (đúng số GitHub đếm):
+SỐ CA cong_cu/thu_KHSOHD1.js: 39
+SỐ CA cong_cu/thu_KHBAO1.js: 33
+SỐ CA cong_cu/thu_KHHD1.js: 26
+SỐ CA cong_cu/thu_KHMUA1.js: 56
+SỐ CA cong_cu/thu_KHMUA1b.js: 50
+SỐ CA cong_cu/thu_KHMUA1c.js: 27
+
+(Ở máy làm việc, đủ cả Chromium: thu_KHSOHD1 107 đạt (101 khi không chụp ảnh) · thu_KHBAO1 105 · thu_KHHD1 87 · thu_KHMUA1 129 · thu_KHMUA1b 256 · thu_KHMUA1c 111 — số này KHÔNG ghi ở dòng SỐ CA.)
