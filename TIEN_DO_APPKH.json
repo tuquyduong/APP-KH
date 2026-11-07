@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 37,
+  "phien_ban_so": 38,
   "cap_nhat": "2026-11-07",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -417,15 +417,16 @@
       "ma": "KH-HANG-2",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-CT-1",
         "POS HANG-1 (v10)"
       ],
       "ten": "Hang theo HANG-1: chi_cap → \"Hang danh tang khach than thiet\", khong hien gia; het_han null → \"Khong thoi han\"; xep hang theo thu_bac; goi[] chi hien (nut mua the van la P3b sau khai truong)",
-      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip | 06.11 tu soat KH-CT-1 (lam kem vi cung sua UuDai.jsx): (1) ChuongTrinhToi doc \"hom nay\" luc ve — ve lai khi bay_gio POS ve (dungGia / bayGio), ca /toi ve truoc /gio-hoat-dong; (2) hai chuong trinh sinh_nhat cung luc → dong chuc mung chi o the dau | 06.11 mo: POS main co HANG-1 (v10); kem 2 sua nho khoi chuong trinh tu soat KH-CT-1. Chay song song KH-SOHD-1",
+      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip | 06.11 tu soat KH-CT-1 (lam kem vi cung sua UuDai.jsx): (1) ChuongTrinhToi doc \"hom nay\" luc ve — ve lai khi bay_gio POS ve (dungGia / bayGio), ca /toi ve truoc /gio-hoat-dong; (2) hai chuong trinh sinh_nhat cung luc → dong chuc mung chi o the dau | 06.11 mo: POS main co HANG-1 (v10); kem 2 sua nho khoi chuong trinh tu soat KH-CT-1. Chay song song KH-SOHD-1 | 07.11 chat soat cuoi DAT: dau nhanh dc4abc8; cong tinh + chay kieu GitHub DAT; ghep thu dot 3 sach, npm test co trinh duyet 38/0; anh dat. Hang chi_cap / Khong thoi han / goi thang; khoi chuong trinh: chuc mung chi the dau. Viec sau: src/tomTatLuu.js doi het_han thieu thanh null (khach dung tu ban luu co the thay \"Khong thoi han\" sai) — sua khi cham toi. Gop PR #22 (59059dc)",
       "ngay": "2026-11-06",
-      "han": "2026-11-07"
+      "han": "2026-11-07",
+      "commit": "59059dc"
     },
     {
       "ma": "KH-MUA-2",
