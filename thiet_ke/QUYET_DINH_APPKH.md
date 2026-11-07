@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 06.11.2026
+- **Kế hoạch (KH-UI-5b gộp 07.11):** lưới tiện ích cuối cùng theo demo mới nhất (6 ô, "Ngày cần nhớ" gộp Ngày lễ + Sinh nhật & giỗ) và nút ✕ ẩn banner đặt đúng như demo — làm ở KH-UI-5c; ô "hôm nay" của lịch tháng giữ kích thước thường (demo lỗi CSS).
 - **Thẻ mã QR thương hiệu** (chủ quán duyệt mẫu 06.11, POS GIAO-DIEN-1 mục F): mọi QR TRẢ TIỀN trên App dùng cùng mẫu với POS — thẻ kem #FBF3E6 viền vàng kim #B08028, chữ "Tứ Quý Đường" #7A1E18, mã mức H chấm tròn 4 màu phần tư (#253A6E · #966923 · #347042 · #B2342C), 3 ô góc tô đặc, logo giữa. 7 màu này duyệt ngoài demo (K9) chỉ cho `src/giaoDien/the_qr.css` + `src/qrThuongHieu.js`. Mã thành viên giữ như cũ. (KH-SOHD-1)
 - **Số đơn = số hoá đơn POS** (`so_hd`, ví dụ `APP0016`) ở mọi chỗ khách thấy; mã App `A…` chỉ để máy dùng. Tiền về muộn: App hiện NGUYÊN câu `thong_bao_tien_ve` của POS. (KH-SOHD-1)
 - **Hạng thẻ HANG-1** (POS v10): hạng chủ quán tặng ghi "Hạng dành tặng khách thân thiết", không giá; thẻ không thời hạn ghi "Không thời hạn"; Ưu đãi hiện gói tháng đang bán (mua thẻ trên App: sau khai trương). (KH-HANG-2)

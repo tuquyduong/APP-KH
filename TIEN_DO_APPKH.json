@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 38,
+  "phien_ban_so": 39,
   "cap_nhat": "2026-11-07",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -89,14 +89,15 @@
       "ten": "Ke hoach va nhac viec theo demo (/kehoach): lich am duong, tiet khi, viec cua toi (luu tren may), van khan, ngay can nho, xe co, uong thuoc, chu ky (suc khoe chi luu tren may), 6 tien ich, the video huong dan (an toi khi co video); o khoa khi chua dang nhap",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-5a (dung lai src/lich.js)",
         "KH-LUU-1 (dung src/luuMay.js)"
       ],
       "han": "2026-11-08",
       "ngay": "2026-11-06",
-      "ghi_chu": "06.11 mo (chu quan: tien ich ke hoach + banner anh sang chay qua \"nhu demo\"; chi can du 8 tien ich demo): lich + viec cua toi + Theo mua / Ngay le / Sap toi + banner hom nay ban nho fx-a o man Ke hoach / tien ich; 5 tien ich con lai = KH-UI-5c sau khi 5b gop. Chu cong tac: \"Nhac khi mo app\""
+      "ghi_chu": "06.11 mo (chu quan: tien ich ke hoach + banner anh sang chay qua \"nhu demo\"; chi can du 8 tien ich demo): lich + viec cua toi + Theo mua / Ngay le / Sap toi + banner hom nay ban nho fx-a o man Ke hoach / tien ich; 5 tien ich con lai = KH-UI-5c sau khi 5b gop. Chu cong tac: \"Nhac khi mo app\" | 07.11 chat soat cuoi DAT: dau nhanh a2c6b95; cong tinh + chay kieu GitHub DAT; ghep thu dot 3 sach, npm test co trinh duyet 38/0; anh dat. Lich am duong, viec cua toi, Theo mua / Ngay le / Sap toi, banner nho fx-a. Chat quyet 3 cau hoi (lam o KH-UI-5c): nut ✕ dat dung nhu demo; luoi 6 o theo demo cuoi (\"Ngay can nho\" gop Ngay le + Sinh nhat & gio); o hom nay giu thuong. Gop PR #23 (ee67b65)",
+      "commit": "ee67b65"
     },
     {
       "ma": "KH-UI-4",
