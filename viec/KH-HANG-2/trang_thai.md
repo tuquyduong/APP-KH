@@ -54,3 +54,10 @@
 - BỎ: người gác chặn `git stash`, chặn bash chạy file có "token" khi chưa commit, và chặn `for` / gộp lệnh chạy bài thử → lệnh ghi bài thử dùng Write, commit trước, mỗi lệnh chạy bài thử đứng một mình. Một lần, đã có thông báo rõ từ người gác; không thêm luật.
 - BỎ: ca trình duyệt B1 xanh trên gốc — đỏ nhờ ca đọc nguồn; ghi ở Phát hiện.
 - NGUYÊN TẮC / KHOÁ: không đề xuất mới.
+
+## Cổng (chạy ở HEAD 179bdc7, cây sạch, `KHONG_TRINH_DUYET=1`)
+✓ CỔNG CHẠY ĐẠT
+(kèm CẢNH BÁO A16 không chặn: `thu_KHHANG2` trên gốc in 7 ca ≠ 16 ở head vì A1/A2 dừng sớm khi thiếu hàm mới — đúng ý, bằng chứng đỏ ở `bang_chung_do.txt`.)
+Cổng `tinh` trước đó chỉ còn thiếu dòng "HEAD ĐÃ KIỂM" (A19), ghi dưới đây.
+
+HEAD ĐÃ KIỂM: 179bdc7
