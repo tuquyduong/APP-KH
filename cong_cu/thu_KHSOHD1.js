@@ -122,7 +122,8 @@ async function trinhDuyet(pw) {
   const DON = (ma, tt, them = {}) => ({ ma, tong: 87654, tt, qr: null, giu: 87654, cach: 'vi', mon: [], ...them });
   const DON_QR = (them = {}) => DON('TQD50', 'cho_tra', { cach: 'qr', giu: 0, soHd: 'APP0016', qr: { chuoi: MAU_CHUOI[0], het_han: HET }, ...them });
   const CA = [];
-  const them = (ten, opt, f) => { if (!process.env.CHI_CA || ten.includes(process.env.CHI_CA)) CA.push(() => may(ten, opt, f)); };
+  const LOGO = path.join(GOC, 'public/anh/logo_tqd_192.png'); // máy chủ giả không phát public/: cấp đúng file logo thật để ảnh chụp có logo
+  const them = (ten, opt, f) => { if (!process.env.CHI_CA || ten.includes(process.env.CHI_CA)) CA.push(() => may(ten, opt, async (c) => { await c.t.route('**/anh/logo_tqd_192.png', (r) => r.fulfill({ path: LOGO })); return f(c); })); };
   const mapDon = (...ds) => new Map(ds.map((d) => [d.ma, d]));
   const doiChu = (t, sel, re) => doi(t, async () => re.test(await chu(t, sel)));
 
