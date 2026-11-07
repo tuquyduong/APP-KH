@@ -47,8 +47,8 @@ if (require.main === module) (async () => {
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const m = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || {};
     k('A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)', ['bao_gia', 'dat_don', 'huy_don'].every((x) => m(x).co === true));
-    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && x.viec_pos !== 'HD-KH-1').map((x) => x.ma);
-    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c)', conMoi.length === 0, conMoi.join(','));
+    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && !['HD-KH-1', 'SOHD-1'].includes(x.viec_pos)).map((x) => x.ma);
+    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c và v11 SOHD-1 của KH-SOHD-1)', conMoi.length === 0, conMoi.join(','));
     const api = doc('src/api.js');
     k('A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi', /goi\('POST', '\/gio\/bao-gia'/.test(api) && /goi\('POST', '\/don'/.test(api) && /goi\('POST', `\/don\/\$\{[^}]+\}\/huy`/.test(api));
   });
@@ -220,7 +220,7 @@ async function dungMay(pw, k) {
     const S = { vi: 0, bg: BG, kich: [], guiDon: [], datPin: [], goi: [], don: new Map(), khoa: new Map(), donCu: [], soDon: 41, treBg: 0, treDon: 0, treDsDon: 0, ...S0 };
     const loiTrang = [];
     const v7 = (d) => (d.v7 !== undefined ? d.v7 : d.cach ? { cach_tra: d.cach, giu_vi: d.giu, con_lai: d.tong - d.giu } : { cach_tra: null, giu_vi: null, con_lai: null });
-    const dongDon = (d) => ({ ...(S.v7 ? v7(d) : {}), ma: d.ma, ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' || (d.tt === 'da_huy' && !d.daTra) ? 0 : d.tong, trang_thai: d.trangThai || null, thanh_toan: d.thanhToan || null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: !!d.tienVe });
+    const dongDon = (d) => ({ ...(S.v7 ? v7(d) : {}), ...(d.soHd !== undefined ? { so_hd: d.soHd } : {}), ...(d.tienVeDa ? { tien_ve_da_cong_vi: d.tienVeDa, thong_bao_tien_ve: d.thongBao } : {}), ma: d.ma, ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' || (d.tt === 'da_huy' && !d.daTra) ? 0 : d.tong, trang_thai: d.trangThai || null, thanh_toan: d.thanhToan || null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: !!d.tienVe });
     const dinhDanh = (t) => JSON.stringify([t.mon, t.ma_giam || '', t.cach_nhan, t.cach_tra]);
     function datDon(t) {
       if (!/^[A-Za-z0-9-]{16,64}$/.test(t.khoa_gui || '')) return loiPos('KHOA_GUI_SAI');
@@ -241,8 +241,8 @@ async function dungMay(pw, k) {
       const tt = t.cach_tra === 'vi' ? 'da_tra' : 'cho_tra';
       const qr = tt === 'cho_tra' ? { chuoi: '00020101021238570010A0000007270127' + ma, het_han: BAY('20:40:00') } : null;
       S.vi -= giu;
-      S.don.set(ma, { ma, tong, tt, qr, giu, cach: t.cach_tra, mon: t.mon });
-      const tra = { success: true, ma_don: ma, tong, giu_vi: giu, con_lai: tong - giu, tien_trinh: tt, qr, trung: false };
+      S.don.set(ma, { ma, tong, tt, qr, giu, cach: t.cach_tra, mon: t.mon, soHd: S.soHdDat });
+      const tra = { success: true, ma_don: ma, ...(S.soHdDat !== undefined ? { so_hd: S.soHdDat } : {}), tong, giu_vi: giu, con_lai: tong - giu, tien_trinh: tt, qr, trung: false };
       S.khoa.set(t.khoa_gui, { dd: dinhDanh(t), tra });
       return { st: 200, o: tra };
     }
@@ -351,7 +351,7 @@ async function trinhDuyet(pw) {
       k(`[${rong}] Thanh toán không tràn ngang`, !(await tranNgang(t)));
       const truoc = S.goi.length;
       await bam(t);
-      k(`C2 [${rong}] đặt QR → Theo dõi /don/TQD42, vẽ QR, "87.654đ", đếm ngược`, await doi(t, async () => /\/don\/TQD42$/.test(t.url()) && (await t.locator('.khung-qr svg').count()) > 0 && /87\.654đ/.test(await chu(t, '.qr-chu')) && /còn 9:/.test(await chu(t, '.qr-chu'))), t.url());
+      k(`C2 [${rong}] đặt QR → Theo dõi /don/TQD42, vẽ QR, "87.654đ", đếm ngược`, await doi(t, async () => /\/don\/TQD42$/.test(t.url()) && (await t.locator('.the-qr svg').count()) > 0 && /87\.654đ/.test(await chu(t, '.qr-chu')) && /còn 9:/.test(await chu(t, '.qr-chu'))), t.url());
       const than = JSON.parse(S.guiDon[0] || '{}');
       k(`C2 [${rong}] thân POST /don: khoa_gui đúng dạng, tong_da_xem = tổng đang hiện, cach_tra qr, không pin / giao / tiền`, S.guiDon.length === 1 && /^[A-Za-z0-9-]{16,64}$/.test(than.khoa_gui) && than.tong_da_xem === 87654 && than.cach_tra === 'qr' && than.cach_nhan === 'tai_quan' && !('pin' in than) && !('dia_chi' in than) && !('tong' in than), S.guiDon[0]);
       await chup(t, `theodoi-qr-${rong}`);
@@ -361,7 +361,7 @@ async function trinhDuyet(pw) {
       const sau = S.goi.slice(truoc).map((g) => `${g.pt} ${g.duong}`);
       k('F5 đặt xong làm mới /toi, /don, /diem', ['GET /toi', 'GET /don', 'GET /diem'].every((x) => sau.includes(x)), sau.join(','));
       await t.reload(); await t.waitForSelector('.phone');
-      k('F1 tải lại /don/TQD42 vẫn thấy QR (từ GET /don/:ma) + số tiền + đếm ngược', await doi(t, async () => (await t.locator('.khung-qr svg').count()) > 0 && /87\.654đ/.test(await chu(t, '.qr-chu')) && /còn \d:/.test(await chu(t, '.qr-chu'))));
+      k('F1 tải lại /don/TQD42 vẫn thấy QR (từ GET /don/:ma) + số tiền + đếm ngược', await doi(t, async () => (await t.locator('.the-qr svg').count()) > 0 && /87\.654đ/.test(await chu(t, '.qr-chu')) && /còn \d:/.test(await chu(t, '.qr-chu'))));
       S.don.get('TQD42').tt = 'da_tra';
       k('F đơn chuyển da_tra (hỏi lại 3 giây) → số đơn để đọc cho nhân viên', await doiChu(t, '#tracking', /Số đơn của bạn/, 7000));
       k('F đã trả → giỏ dọn (cả sau khi tải lại); bản ghi lần gửi GIỮ, đánh dấu xong (tab khác còn thấy "vừa đặt")', await doi(t, async () => (await t.locator('.tab .tab-so').count()) === 0 && (JSON.parse((await luu(t)) || '{}').xong === true)));
@@ -402,9 +402,9 @@ async function trinhDuyet(pw) {
       await t.reload(); await t.waitForSelector('.phone');
       k('Q1 tải lại trên CÙNG máy vẫn hiện dòng "Đã giữ … · quét QR …"', await doiChu(t, '#tracking', /Đã giữ 50\.000đ trong ví · quét QR 37\.654đ/));
       await t.evaluate(() => localStorage.removeItem('kh_don_gui')); await t.reload(); await t.waitForSelector('.phone');
-      await doi(t, async () => (await t.locator('.khung-qr svg').count()) > 0);
+      await doi(t, async () => (await t.locator('.the-qr svg').count()) > 0);
       const c = await chu(t, '#tracking');
-      k('Q1 máy khác (không bản ghi): vẫn QR, ẩn dòng giữ ví và số tiền cạnh QR (không hiện tổng sai)', (await t.locator('.khung-qr svg').count()) > 0 && !/Đã giữ/.test(c) && !/87\.654đ/.test(await chu(t, '.qr-chu')), c);
+      k('Q1 máy khác (không bản ghi): vẫn QR, ẩn dòng giữ ví và số tiền cạnh QR (không hiện tổng sai)', (await t.locator('.the-qr svg').count()) > 0 && !/Đã giữ/.test(c) && !/87\.654đ/.test(await chu(t, '.qr-chu')), c);
     });
   }
 
@@ -523,7 +523,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan'); await sanSang(t); await bam(t);
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
     await t.goBack(); await t.waitForSelector('#checkout');
-    k('D3(b) Back từ màn QR → Thanh toán khoá, mời "Tiếp tục trả đơn TQD42" / "Huỷ đơn đó"', await doi(t, async () => /Tiếp tục trả đơn TQD42/.test(await chu(t, '#checkout')) && /Huỷ đơn đó/.test(await chu(t, '#checkout'))) && await nutKhoa(t));
+    k('D3(b) Back từ màn QR → Thanh toán khoá, mời "Tiếp tục trả đơn TQD42" / "Huỷ đơn đó"', await doi(t, async () => /Tiếp tục trả đơn #TQD42/.test(await chu(t, '#checkout')) && /Huỷ đơn đó/.test(await chu(t, '#checkout'))) && await nutKhoa(t));
     await bam(t).catch(() => {}); await t.waitForTimeout(300);
     k('D3(b) bấm Đặt lúc đó → không đơn thứ hai', S.guiDon.length === 1 && S.don.size === 1);
     await chup(t, 'thanhtoan-dontruoc-390');

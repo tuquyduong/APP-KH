@@ -32,7 +32,9 @@ const TO_VI = [
   console.log('Phần 1 — hàm thuần src/hoaDon.js (A1–A3)');
   const h = await nap('src/hoaDon.js');
   const ds = h.docHoaDon({ hoa_don: TO_VI });
-  k('A1 giữ đủ số dòng, đúng thứ tự POS', ds.length === TO_VI.length && ds.every((d, i) => d.loai === TO_VI[i].loai));
+  const CON = TO_VI.filter((d) => d.loai !== 'ghi_no'); // KH-SOHD-1: docHoaDon tự bỏ ghi_no (App không bao giờ hiện nợ)
+  k('A1 giữ đủ số dòng (trừ ghi_no), đúng thứ tự POS', ds.length === CON.length && ds.every((d, i) => d.loai === CON[i].loai));
+  k('A1 tờ chỉ có ghi_no → rỗng (coi như không có tờ)', h.docHoaDon({ hoa_don: [TO_VI.find((d) => d.loai === 'ghi_no')] }).length === 0);
   k('A1 dòng mon: trai / phai / gach / ghiChu / dam đúng', ds[6].trai === '3 x TEST 1000' && ds[6].phai === '3.000đ' && ds[6].gach === '3.300đ' && ds[6].ghiChu === 'ít ngọt' && ds[0].dam === true && ds[6].dam === false);
   k('A1 không đổi chữ / không tính tiền (tong vẫn "2.700đ")', ds[12].phai === '2.700đ' && ds[8].phai === '-300đ');
   const thieu = h.docHoaDon({ hoa_don: [{ loai: 'mon' }, { trai: 'x' }, { loai: 'tong', phai: 5, dam: 'true' }] });

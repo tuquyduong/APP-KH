@@ -30,7 +30,7 @@ const OK = { success: true, ma_don: 'TQD42', tong: 1, giu_vi: 0, con_lai: 1, tie
   const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
 
   await thu('A', async () => {
-    k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-MUA-1c/hop_dong_v9.md từng byte', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-MUA-1c/hop_dong_v9.md'))));
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-SOHD-1/hop_dong_v11.md từng byte (v11 chứa v9)', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-SOHD-1/hop_dong_v11.md'))));
     const hd = JSON.parse(/<!-- HOP_DONG_MAY_DOC -->\s*```json\n([\s\S]*?)\n```/.exec(docTho('thiet_ke/HOP_DONG_API_KH.md'))[1]);
     const tra = (cua) => { const [pt, duong] = cua.split(' '); const c = hd.cua.find((x) => x.pt === pt && x.duong === duong); return c ? c.tra : null; };
     const khai = (cua) => CAN_TU_POS.filter((x) => x.cua === cua && x.co).flatMap((x) => x.truong);
@@ -217,7 +217,7 @@ async function trinhDuyet(pw) {
     S.don.set('TQD71', { ...DON_VQ, ma: 'TQD71', v7: { cach_tra: null, giu_vi: null, con_lai: null } });
     await choToi(t, S); await ghiBanGhi(t, { ...THAN('Q7'.repeat(10), 'vi_qr'), ma_don: 'TQD71', giu_vi: 30000, con_lai: 51000 });
     await mo(t, '/don/TQD71');
-    await doi(t, async () => (await t.locator('.khung-qr svg').count()) > 0);
+    await doi(t, async () => (await t.locator('.the-qr svg').count()) > 0);
     k('C2 POS trả cach_tra null (đơn quầy) → không dòng ví (kể cả bản ghi máy có số)', !/Đã giữ/.test(await chu(t, '#tracking')));
   });
   them('v7-qr', { S0: { v7: true } }, async ({ t }) => {

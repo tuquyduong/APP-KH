@@ -146,7 +146,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
   const tt2 = doc('src/pages/ThanhToan.jsx');
   k('B1 chữ "Giao qua Ahamove", "Sắp có", "đọc số đơn"; không "GHN"; không "suất"', /Giao qua Ahamove/.test(tt2) && /Sắp có/.test(tt2) && /đọc <b>số đơn<\/b>|đọc số đơn/.test(tt2) && !/GHN|suất/.test(tt2 + doc('src/pages/GioHang.jsx') + doc('src/pages/TheoDoiDon.jsx') + doc('src/datDon.js')));
   k('B3 PIN không lưu: datDon / ThanhToan / PinSheet không ghi PIN vào kho / log', !/(localStorage|sessionStorage|console\.)[^\n]*pin/i.test(tt2 + doc('src/datDon.js') + doc('src/components/PinSheet.jsx')));
-  k('B7 vẽ QR dùng lại VeQR của ManQR.jsx', /export function VeQR/.test(doc('src/pages/ManQR.jsx')) && /VeQR/.test(doc('src/pages/TheoDoiDon.jsx')));
+  k('B7 vẽ QR trả tiền bằng thẻ thương hiệu TheQR (KH-SOHD-1); ManQR vẫn giữ VeQR cho mã thành viên', /export function VeQR/.test(doc('src/pages/ManQR.jsx')) && /<TheQR /.test(doc('src/pages/TheoDoiDon.jsx')) && !/VeQR/.test(doc('src/pages/TheoDoiDon.jsx')));
   k('C2 số gọi quán lấy ở noiDung/lienHe.js', /LIEN_HE/.test(doc('src/pages/TheoDoiDon.jsx')));
 
   console.log('Phần 2 — App thật trong Chromium');
@@ -259,12 +259,12 @@ async function trinhDuyet(pw) {
     await t.locator('#checkout .checkout-btn').click(); await t.waitForTimeout(900);
     const post = P.goi.filter((g) => g.pt === 'POST' && g.duong === '/don');
     k('B7 Xác nhận QR → 1 lần POST /don (cach_tra qr, cach_nhan tai_quan, không pin) → /don/TQD42', post.length === 1 && post[0].than.cach_tra === 'qr' && post[0].than.cach_nhan === 'tai_quan' && !('pin' in post[0].than) && /\/don\/TQD42$/.test(t.url()), JSON.stringify(post) + t.url());
-    k('B7 QR hiện + đếm ngược tới het_han theo giờ POS (~10 phút)', (await t.locator('.khung-qr svg').count()) === 1 && /(9:5\d|10:00)/.test(await chu(t, '#tracking')), await chu(t, '#tracking'));
+    k('B7 QR hiện + đếm ngược tới het_han theo giờ POS (~10 phút)', (await t.locator('.the-qr svg').count()) === 1 && /(9:5\d|10:00)/.test(await chu(t, '#tracking')), await chu(t, '#tracking'));
     const truoc = dem(P, 'GET', '/don/TQD42');
     P.tt = 'da_tra';
     await t.waitForTimeout(3600);
     k('B7 hỏi trạng thái mỗi 3 giây khi chờ trả', dem(P, 'GET', '/don/TQD42') > truoc);
-    k('B7/C1 da_tra → hết QR, bước "Đã thanh toán" xong, số đơn to #TQD42, giỏ được dọn (tab hết số)', (await t.locator('.khung-qr').count()) === 0 && /#TQD42/.test(await chu(t, '.pick-num')) && (await t.locator('.tl-step.done').count()) >= 2 && (await t.locator('.tab .tab-so').count()) === 0);
+    k('B7/C1 da_tra → hết QR, bước "Đã thanh toán" xong, số đơn to #TQD42, giỏ được dọn (tab hết số)', (await t.locator('.the-qr').count()) === 0 && /#TQD42/.test(await chu(t, '.pick-num')) && (await t.locator('.tl-step.done').count()) >= 2 && (await t.locator('.tab .tab-so').count()) === 0);
     k('luong-qr: Lỗi JS = 0', loi.length === 0, loi.join('|'));
   });
 

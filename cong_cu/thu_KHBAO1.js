@@ -44,7 +44,7 @@ const d = (ma, tt) => ({ ma, tien_trinh: tt });
     B.ghiNho({ thay: ['A'], bao: ['A'] }, kho);
     k('A2 ghi / đọc nhớ qua kho (sessionStorage) khoá kh_bao_don; xoá được', JSON.stringify(B.docNho(kho)) === '{"thay":["A"],"bao":["A"]}' && kho.m.has('kh_bao_don') && (B.xoaNho(kho), !kho.m.has('kh_bao_don')));
     k('A2 kho chặn / dữ liệu hỏng → không vỡ, trả nhớ rỗng', JSON.stringify(B.docNho(khoChan)) === JSON.stringify(rong()) && (B.ghiNho(rong(), khoChan), true) && JSON.stringify(B.docNho(Object.assign(khoGia(), { getItem: () => '{hong' }))) === JSON.stringify(rong()));
-    k('A2 tiêu đề "(Xong) Đơn #<mã> — Tứ Quý Đường", chu kỳ hỏi 15 000 ms', B.tieuDeXong('TQD42') === '(Xong) Đơn #TQD42 — Tứ Quý Đường' && B.MS_HOI === 15000);
+    k('A2 tiêu đề "(Xong) Đơn <số đơn> — Tứ Quý Đường" (KH-SOHD-1: số đơn = so_hd), chu kỳ hỏi 15 000 ms', B.tieuDeXong('APP0016') === '(Xong) Đơn APP0016 — Tứ Quý Đường' && B.MS_HOI === 15000);
   }
   if (L) {
     const kho = khoGia();
@@ -78,11 +78,12 @@ const d = (ma, tt) => ({ ma, tien_trinh: tt });
   k('A3 TheoDoiDon: dòng "Giữ App mở để được báo khi đồ uống xong" và "Đơn đã xong — mời bạn ra quầy"', /Giữ App mở để được báo khi đồ uống xong/.test(TD) && /Đơn đã xong — mời bạn ra quầy/.test(TD) && !/cuaDon|dungCua/.test(TD));
   k('A3 dungTheoDoi vẫn hỏi 3 s / 10 s, dừng khi document.hidden; BaoDonXong không gọi /don/:ma', /GIAY_HOI_QR = 3/.test(docTho('src/dungDatDon.js')) && /GIAY_HOI_DON = 10/.test(docTho('src/dungDatDon.js')) && /document\.hidden/.test(DDD));
   k('B1 dungDatDon đưa hoa_don vào don; TheoDoiDon vẽ HoaDonKhach khi docHoaDon có dòng, còn lại mon[] + Tổng', /hoa_don/.test(DDD) && /HoaDonKhach/.test(TD) && /docHoaDon\(don\)\.length > 0/.test(TD) && /Tổng cộng/.test(TD));
-  k('B2 HoaDonKhach lọc ghi_no (không bao giờ vẽ dòng nợ)', /ghi_no/.test(HDK) && /filter\(/.test(HDK));
+  const HDN = doc('src/hoaDon.js'); // KH-SOHD-1: bộ lọc ghi_no chuyển vào docHoaDon (hết dòng = coi như không có tờ)
+  k('B2 docHoaDon lọc ghi_no (không bao giờ vẽ dòng nợ); HoaDonKhach vẽ từ docHoaDon', /ghi_no/.test(HDN) && /filter\(/.test(HDN) && /docHoaDon\(don\)\.map/.test(HDK));
   // Ca ôm CẢ câu lệnh (soát vòng 1): tên hàm còn ở dòng import / chỗ khác thì regex trần vẫn khớp oan, đột biến sống ở cổng không có Chromium.
   k('A2 (câu lệnh) hỏi định kỳ = setInterval(hoiNgay, MS_HOI) nên tab ẩn không hỏi; tháo ra: bỏ listener rồi xoaNho()', /setInterval\(hoiNgay, MS_HOI\)/.test(BDX) && /const hoiNgay = \(\) => \{ if \(!document\.hidden\) cuaDon\.lay\(\)/.test(BDX) && /removeEventListener\('visibilitychange', hoiNgay\); xoaNho\(\);/.test(BDX) && /if \(!kq\.dangChay\) return undefined;/.test(BDX));
   k('C2 (câu lệnh) trả ví vẫn hỏi PIN: qr → guiDon() ngay, còn lại mở PinSheet', /if \(cachTra === 'qr'\) guiDon\(\); else datMoPin\(\{\}\);/.test(TT));
-  k('B2 (câu lệnh) HoaDonKhach chỉ bỏ loai === ghi_no (không đảo ngược)', /\.filter\(\(d\) => d\.loai !== 'ghi_no'\)/.test(HDK));
+  k('B2 (câu lệnh) docHoaDon chỉ bỏ loai === ghi_no (không đảo ngược)', /&& d\.loai !== 'ghi_no'\)/.test(HDN));
   k('A2 (câu lệnh) nhớ đã tắt ghi qua tải lại: tat() gọi ghiNho', /const tat = \(\) => \{ const n = daBao\(kq\.nho, ma\); datNho\(n\); ghiNho\(n\); \};/.test(BDX));
   k('C2 ThanhToan khởi tạo công tắc từ docDungVi() và ghi bằng ghiDungVi; cachTra giữ luật cũ', /useState\(docDungVi\)|useState\(docDungVi\(\)\)|useState\(\(\) => docDungVi\(\)\)/.test(TT) && /ghiDungVi\(/.test(TT) && /const cachTra = !dungVi \? 'qr' : duoc\.vi \? 'vi' : duoc\.viQr \? 'vi_qr' : 'qr'/.test(TT));
   k('C1 luuMay.js: KHOA_DUNG_VI nằm trong KHOA_DU_LIEU, KHÔNG nằm trong KHOA_VANG_LAI', /KHOA_DU_LIEU = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')) && !/KHOA_VANG_LAI = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')));
