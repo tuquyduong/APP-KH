@@ -2,6 +2,8 @@
 // Chỉ báo đơn chuyển sang `xong` mà máy này ĐÃ THẤY đang chạy (da_tra / dang_lam) — đơn xong từ hôm trước không báo.
 // Nhớ { thay[], bao[] } ở sessionStorage (mất khi đóng tab; tải lại thì còn). Kho tiêm vào để thử.
 
+import { soDon } from './hoaDon.js';
+
 export const MS_HOI = 15000;            // có đơn đang chạy + tab hiện: hỏi GET /don mỗi ngần này ms
 export const KHOA_BAO_DON = 'kh_bao_don';
 const DANG_CHAY = ['da_tra', 'dang_lam'];
@@ -10,14 +12,14 @@ const kho = () => sessionStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 const gom = (a) => [...new Set(a)].slice(-TOI_DA);
 
-export const tieuDeXong = (ma) => `(Xong) Đơn #${ma} — Tứ Quý Đường`;
+export const tieuDeXong = (nhan) => `(Xong) Đơn ${nhan} — Tứ Quý Đường`;
 
-/** { nho, choBao[], dangChay } — `choBao` theo thứ tự POS trả; đơn nào khách chưa tắt thì còn ở đây. */
+/** { nho, choBao[], nhan{ma→số đơn}, dangChay } — `choBao` theo thứ tự POS trả (mã App); `nhan` là số đơn HIỆN cho khách (`soDon`). */
 export function xemDanhSach(ds, nho) {
-  const don = (Array.isArray(ds) ? ds : []).filter((x) => x && (typeof x.ma === 'string' || typeof x.ma === 'number') && String(x.ma) !== '').map((x) => ({ ma: String(x.ma), tt: x.tien_trinh }));
+  const don = (Array.isArray(ds) ? ds : []).filter((x) => x && (typeof x.ma === 'string' || typeof x.ma === 'number') && String(x.ma) !== '').map((x) => ({ ma: String(x.ma), tt: x.tien_trinh, nhan: soDon(x.so_hd, x.ma) }));
   const chay = don.filter((x) => DANG_CHAY.includes(x.tt)).map((x) => x.ma);
   const choBao = don.filter((x) => x.tt === 'xong' && nho.thay.includes(x.ma) && !nho.bao.includes(x.ma)).map((x) => x.ma);
-  return { nho: { thay: gom([...nho.thay, ...chay]), bao: nho.bao }, choBao, dangChay: chay.length > 0 };
+  return { nho: { thay: gom([...nho.thay, ...chay]), bao: nho.bao }, choBao, nhan: Object.fromEntries(don.map((x) => [x.ma, x.nhan])), dangChay: chay.length > 0 };
 }
 
 /** Khách tắt / xem đơn `ma` → không báo lại. */

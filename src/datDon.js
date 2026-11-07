@@ -4,6 +4,7 @@
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
+import { cauTienVe } from './hoaDon.js';
 
 export const CHU_CHUA_MO = 'Đặt online sắp mở — mời bạn đặt tại quầy';
 const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(CHU_CHUA_MO), { code: 'CHUA_MO' })));
@@ -66,7 +67,7 @@ export function docDatDon(r) {
 }
 
 /**
- * Trả lời `GET /don/:ma` → { ma, ngay, tong, tienTrinh, qr, thanhToan, tienVeChoDoiSoat, mon[], cachTra, giuVi, conLai }. Bước đơn chỉ đọc `tien_trinh`.
+ * Trả lời `GET /don/:ma` → { ma, soHd, ngay, tong, tienTrinh, qr, thanhToan, tienVeChoDoiSoat, cauTienVe, mon[], cachTra, giuVi, conLai }. Bước đơn chỉ đọc `tien_trinh`.
  * v7: `cach_tra` / `giu_vi` / `con_lai` — POS cũ chưa trả → cachTra undefined (màn dùng bản ghi trên máy); đơn quầy / giá trị lạ → null.
  */
 export function docDon(r) {
@@ -74,7 +75,7 @@ export function docDon(r) {
   if (!d || !chu(d.ma)) return null;
   const mon = (Array.isArray(d.mon) ? d.mon : []).map((m) => ({ ma: chu(m.ma), ten: chu(m.ten), so_luong: m.so_luong, thanh_tien: m.thanh_tien, ghi_chu: chu(m.ghi_chu) }));
   return {
-    ma: String(d.ma), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), qr: docQR(d.qr),
+    ma: String(d.ma), soHd: chu(d.so_hd) || null, cauTienVe: cauTienVe(d), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), qr: docQR(d.qr),
     thanhToan: d.thanh_toan == null ? null : d.thanh_toan, tienVeChoDoiSoat: d.tien_ve_cho_doi_soat === true, mon,
     cachTra: d.cach_tra === undefined ? undefined : CACH_TRA.includes(d.cach_tra) ? d.cach_tra : null,
     giuVi: so(d.giu_vi) ? d.giu_vi : null, conLai: so(d.con_lai) ? d.con_lai : null,

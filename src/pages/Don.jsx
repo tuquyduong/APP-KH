@@ -5,8 +5,9 @@ import { dungCua, cuaDon } from '../duLieuKhach.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
+import { Ico } from '../components/BieuTuong.jsx';
 import HoaDonKhach from '../components/HoaDonKhach.jsx';
-import { docHoaDon } from '../hoaDon.js';
+import { cauTienVe, docHoaDon, soDon } from '../hoaDon.js';
 
 // Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
 // `datLai` — cùng cờ DAT_ONLINE) để App đọc chi tiết đơn rồi bỏ món vào giỏ theo `ma`;
@@ -23,14 +24,15 @@ export function ChiTietDon({ ma, lui }) {
   const tai = dungTai(useCallback(() => layChiTietDon(ma), [ma]));
   return (
     <Man id="orderdetail">
-      <DauManCon tieuDe={`Đơn #${ma}`} lui={lui} />
+      <DauManCon tieuDe={tai.dl && tai.dl.don ? `Đơn ${soDon(tai.dl.don.so_hd, tai.dl.don.ma || ma)}` : 'Đơn hàng'} lui={lui} />
       <TrangTai tai={tai}>
         {({ don }) => (
           <div className="order-card">
             <div className="top">
-              <div><div className="code">#{don.ma || ma}</div><div className="date">{dinhDangNgay(don.ngay)}</div></div>
+              <div><div className="code">{soDon(don.so_hd, don.ma || ma)}</div><div className="date">{dinhDangNgay(don.ngay)}</div></div>
               <NhanDon don={don} />
             </div>
+            {cauTienVe(don) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{cauTienVe(don)}</div></div>}
             {docHoaDon(don).length > 0 ? <HoaDonKhach don={don} /> : <>
               {don.mon.map((m, i) => (
                 <div className="summary-row" key={i}>
@@ -85,7 +87,7 @@ export default function LichSuDon({ chonDon, lui, datLai }) {
       {ds.map((d) => (
         <div className="order-card" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d); }}>
           <div className="top">
-            <div><div className="code">#{d.ma}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
+            <div><div className="code">{soDon(d.so_hd, d.ma)}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
             <NhanDon don={d} />
           </div>
           <div className="bottom"><div className="total">{dinhDangGia(d.tong)}</div>{datLai && <button type="button" className="reorder-btn" onClick={(e) => { e.stopPropagation(); datLai(d.ma); }}>Đặt lại</button>}</div>

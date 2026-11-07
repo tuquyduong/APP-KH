@@ -5,6 +5,7 @@ import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
+import { soDon } from '../hoaDon.js';
 import {
   CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
@@ -77,6 +78,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const chanGhi = !dang && chanBoiBanGhi(guiDo, daThay.current); // MỘT luật: chưa rõ, hoặc đơn vừa đặt ở tab / cửa sổ khác
   const chuaRo = chanGhi && !guiDo.ma_don;
   const donKhac = chanGhi && !chuaRo ? guiDo.ma_don : '';
+  const nhanDon = (ma) => soDon(((dsDon.dl && dsDon.dl.data) || []).find((d) => d.ma === ma)?.so_hd, ma); // số đơn hiện cho khách; ma chỉ để gọi API
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
   const chan = chanDat(gh) || chanPos;
   const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
@@ -179,15 +181,15 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       )}
       {!chuaRo && donKhac && (
         <>
-          {canhBao(`Bạn vừa đặt đơn #${donKhac} ở cửa sổ khác`, 'Bạn xem đơn đó trước khi đặt thêm nhé.')}
-          <button type="button" className="checkout-btn" onClick={() => moDon(donKhac)}><span>Xem đơn {donKhac}</span><span>→</span></button>
+          {canhBao(`Bạn vừa đặt đơn ${nhanDon(donKhac)} ở cửa sổ khác`, 'Bạn xem đơn đó trước khi đặt thêm nhé.')}
+          <button type="button" className="checkout-btn" onClick={() => moDon(donKhac)}><span>Xem đơn {nhanDon(donKhac)}</span><span>→</span></button>
           <button type="button" className="ghost-btn" onClick={datThem}>Đặt thêm đơn mới</button>
         </>
       )}
       {!chuaRo && !donKhac && donCho && (
         <>
-          {canhBao(`Bạn có đơn #${donCho.ma} đang chờ trả`, 'Bạn trả tiếp hoặc huỷ đơn đó rồi đặt đơn mới nhé.')}
-          <button type="button" className="checkout-btn" onClick={() => moDon(donCho.ma)}><span>Tiếp tục trả đơn {donCho.ma}</span><span>→</span></button>
+          {canhBao(`Bạn có đơn ${nhanDon(donCho.ma)} đang chờ trả`, 'Bạn trả tiếp hoặc huỷ đơn đó rồi đặt đơn mới nhé.')}
+          <button type="button" className="checkout-btn" onClick={() => moDon(donCho.ma)}><span>Tiếp tục trả đơn {nhanDon(donCho.ma)}</span><span>→</span></button>
           <button type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho}>Huỷ đơn đó</button>
         </>
       )}
