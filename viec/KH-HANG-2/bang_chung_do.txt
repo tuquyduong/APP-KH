@@ -21,6 +21,6 @@ cong_cu/thu_KHCT1.js (sửa):
 
 Sau khi vá: thu_KHHANG2 16 đạt · 0 hỏng (có trình duyệt 73 · 0); thu_KHUI3d 34 · 0 (có trình duyệt 174 · 0); thu_KHCT1 19 · 0 (có trình duyệt 89 · 0).
 Lưu ý thật: ca trình duyệt B1 (b1-hien / b1-an) XANH cả trên gốc (nơi khác trong app vẽ lại ChuongTrinhToi khi kho giờ đổi) — đỏ trên gốc của B1 nằm ở ca đọc nguồn.
-SỐ CA thu_KHHANG2: 16
-SỐ CA thu_KHUI3d: 34
-SỐ CA thu_KHCT1: 19
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+SỐ CA cong_cu/thu_KHCT1.js: 19
