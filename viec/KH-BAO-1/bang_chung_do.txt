@@ -1,0 +1,37 @@
+KH-BAO-1 — bằng chứng đỏ: bài thử MỚI / SỬA chạy trên code GỐC (src/ của commit PHIEU b3b1489, giải nén bằng git archive ở nháp; chỉ thay cong_cu/ bằng bản mới), KHONG_TRINH_DUYET=1.
+
+== cong_cu/thu_KHBAO1.js (bài MỚI) trên gốc ==
+  ✗ nạp src/baoDonXong.js (không có file)
+  ✗ C1 luuMay export KHOA_DUNG_VI = kh_dung_vi, docDungVi / ghiDungVi
+  ✗ A2 App gắn <BaoDonXong MỘT lần, chỉ khi đã đăng nhập, cạnh <Thongbao
+  ✗ A2 BaoDonXong chỉ hỏi qua cuaDon.lay …
+  ✗ A2 xoá nhớ khi tháo … tiêu đề "(Xong)" qua state
+  ✗ A3 daTra làm mới cuaDon
+  ✗ A3 TheoDoiDon: dòng "Giữ App mở để được báo khi đồ uống xong" và "Đơn đã xong — mời bạn ra quầy"
+  ✗ B1 dungDatDon đưa hoa_don vào don; TheoDoiDon vẽ HoaDonKhach …
+  ✗ B2 HoaDonKhach lọc ghi_no
+  ✗ C2 ThanhToan khởi tạo công tắc từ docDungVi() …
+  ✗ C1 luuMay.js: KHOA_DUNG_VI nằm trong KHOA_DU_LIEU, KHÔNG nằm trong KHOA_VANG_LAI
+  ✗ C3 gửi lại gặp CHUA_MO → GIỮ bản ghi; nút gửi lại khoá + CHU_CHUA_MO khi !DAT_ONLINE
+  ✗ D1 bao_don.css do BaoDonXong import …
+  → 2 đạt · 13 hỏng
+
+== cong_cu/thu_KHMUA1b.js (bài CŨ sửa) trên gốc ==
+  ✗ KH-BAO-1 C2 công tắc ví mở theo máy nhớ (kh_dung_vi) …
+  → 48 đạt · 1 hỏng
+
+== cong_cu/thu_KHNHANH1.js (bài CŨ sửa) trên gốc ==
+  ✗ KH-BAO-1 D1 quay lại tab: dải báo đơn xong hỏi NGAY cuaDon.lay() …
+  → 82 đạt · 1 hỏng
+
+== cong_cu/thu_KHLUU1.js (bài CŨ sửa) trên gốc ==
+  ✗ B5 số điện thoại thô không vào localStorage ở luuMay.js (nay đòi 2 lần setItem: kh_chu + công tắc ví '1'/'0')
+  → 20 đạt · 1 hỏng
+
+Số ca khi chạy trên code ĐÃ VÁ, VỚI KHONG_TRINH_DUYET=1 (đúng số GitHub đếm):
+SỐ CA cong_cu/thu_KHBAO1.js: 33
+SỐ CA cong_cu/thu_KHMUA1b.js: 49
+SỐ CA cong_cu/thu_KHNHANH1.js: 83
+SỐ CA cong_cu/thu_KHLUU1.js: 21
+
+(Ở máy làm việc, đủ cả Chromium: thu_KHBAO1 101 đạt · thu_KHMUA1b 256 đạt · thu_KHNHANH1 227 đạt — số này KHÔNG ghi ở dòng SỐ CA.)

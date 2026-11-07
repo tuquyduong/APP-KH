@@ -35,6 +35,7 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
 if (require.main === module) (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
   k('KH-TT-1 B1 màn Thanh toán không còn dòng "Chuyển khoản QR" / chữ "Xác nhận trả"; ba chữ nút theo cách trả', !/Chuyển khoản QR|Xác nhận trả/.test(doc('src/pages/ThanhToan.jsx')) && /Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')) && /\+ QR/.test(doc('src/pages/ThanhToan.jsx')));
+  k('KH-BAO-1 C2 công tắc ví mở theo máy nhớ (kh_dung_vi): tab sau thấy ví đã bật sẵn, nên ca hai tab không bấm tắt đi', /useState\(docDungVi\)/.test(doc('src/pages/ThanhToan.jsx')) && /ghiDungVi\(bat\)/.test(doc('src/pages/ThanhToan.jsx')));
   let D = null;
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
 
@@ -182,13 +183,15 @@ module.exports = { dungMay, MA_DAT_DON, BG, GIO };
 // Máy giả dùng chung (thu_KHMUA1c.js dùng lại): App thật dựng bằng esbuild + POS giả theo hợp đồng. `k` = hàm ghi ca của bài gọi.
 async function dungMay(pw, k) {
   const esbuild = require('esbuild');
-  const dung = async (lienHe) => (await esbuild.build({
+  const dung = async (lienHe, tatCo = false) => (await esbuild.build({
     stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
     bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
     loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
-    plugins: lienHe ? [{ name: 'lien-he', setup(b) { b.onLoad({ filter: /lienHe\.js$/ }, () => ({ contents: `export const LIEN_HE = { dienThoai: '0900111222', zalo: '', email: '' }; export const coLienHe = () => true;`, loader: 'js' })); } }] : [],
+    plugins: lienHe ? [{ name: 'lien-he', setup(b) { b.onLoad({ filter: /lienHe\.js$/ }, () => ({ contents: `export const LIEN_HE = { dienThoai: '0900111222', zalo: '', email: '' }; export const coLienHe = () => true;`, loader: 'js' })); } }] : tatCo ? [{ name: 'tat-co', setup(b) { b.onLoad({ filter: /caiDat\.js$/ }, () => ({ contents: 'export const DAT_ONLINE = false;', loader: 'js' })); } }] : [],
   })).outputFiles[0].text;
   const goiApp = await dung(false), goiLienHe = await dung(true);
+  let goiTatCo = null; // bản dựng ép DAT_ONLINE = false (KH-BAO-1 C3), dựng khi ca cần
+  const layTatCo = async () => goiTatCo || (goiTatCo = await dung(false, true));
   const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
   const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
@@ -201,7 +204,8 @@ async function dungMay(pw, k) {
   const loiPos = (code, them = {}) => ({ st: MA_LOI[code] || 400, o: { error: `Lời POS giả: ${code}`, code, ...them } });
 
   // Một ngữ cảnh = một máy. S = trạng thái POS giả (dùng chung mọi tab của máy đó).
-  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, chanKho = false, S0 = {} } = {}, chay) {
+  async function may(ten, { rong = 390, dn = true, gio = GIO, lienHe = false, chanKho = false, tatCo = false, S0 = {} } = {}, chay) {
+    const goiCa = tatCo ? await layTatCo() : lienHe ? goiLienHe : goiApp;
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     // chanKho: localStorage từ chối riêng khoá kh_don_gui (như cửa sổ riêng tư / chặn dữ liệu)
     if (chanKho) await ctx.addInitScript(() => { for (const m of ['getItem', 'setItem', 'removeItem']) { const g = Storage.prototype[m]; Storage.prototype[m] = function (k, ...a) { if (k === 'kh_don_gui') throw new Error('chặn'); return g.call(this, k, ...a); }; } });
@@ -245,7 +249,7 @@ async function dungMay(pw, k) {
     await ctx.route(`${URL0}/**`, async (r) => {
       const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
-      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: lienHe ? goiLienHe : goiApp });
+      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiCa });
       if (!p.startsWith('/api/kh')) return /\.[a-z0-9]+$/.test(p) ? r.fulfill({ status: 204, body: '' }) : r.fulfill({ contentType: 'text/html', body: HTML });
       const duong = p.slice('/api/kh'.length);
       const tho = req.postData();
@@ -558,7 +562,9 @@ async function trinhDuyet(pw) {
     const t2 = await trang(); await mo(t2, '/thanhtoan'); await sanSang(t2); await doiChu(t2, '#checkout', /Số dư 300\.000đ/);
     await batVi(t2); await bam(t2); await t2.waitForSelector('.pin-pad'); // tab 2: bảng PIN mở sẵn
     await mo(t, '/thanhtoan'); await sanSang(t); await doiChu(t, '#checkout', /Số dư 300\.000đ/);
-    await batVi(t); await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
+    // KH-BAO-1 C1: tab 2 vừa bật công tắc → máy nhớ '1' → tab 1 mở ra đã bật SẴN (không bấm tắt đi).
+    if (!(await t.locator('#checkout .switch.on').count())) await batVi(t);
+    await bam(t); await t.waitForSelector('.pin-pad'); await nhapPin(t, PIN);
     await doi(t, async () => /\/don\/TQD42$/.test(t.url()));
     await nhapPin(t2, PIN); await t2.waitForTimeout(800);
     k('D3(d) tab 2 mở bảng PIN TRƯỚC, tab 1 trả ví xong, tab 2 nhập PIN → KHÔNG gửi lần hai, báo "Bạn vừa đặt đơn #TQD42"', S.guiDon.length === 1 && S.don.size === 1 && /Bạn vừa đặt đơn #TQD42/.test(await chu(t2, '#checkout')), `${S.guiDon.length} lần gửi`);

@@ -43,6 +43,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     const ap = doc('src/App.jsx');
     k('A1 App không gọi layToi() riêng (dùng cuaToi.lay — cùng lệnh)', !/layToi\(\)/.test(ap) && /cuaToi\.lay\(\)/.test(ap));
     k('A1 Lịch sử đơn: trang 1 đọc cuaDon', /dungCua\(cuaDon\)/.test(doc('src/pages/Don.jsx')));
+    k('KH-BAO-1 D1 quay lại tab: dải báo đơn xong hỏi NGAY cuaDon.lay() (dùng chung lệnh kho), nên ca ẩn / hiện đếm /don +1', /visibilitychange', hoiNgay/.test(doc('src/components/BaoDonXong.jsx')) && /const hoiNgay = \(\) => \{ if \(!document\.hidden\) cuaDon\.lay\(\)/.test(doc('src/components/BaoDonXong.jsx')));
 
     // A2 — không gọi trùng
     let goi = 0; let h = hua();
@@ -455,7 +456,9 @@ async function trinhDuyet(pw) {
     k('D3 điểm mới hiện (1.260)', /1\.260/.test(await chu(t, '#rewards .wallet-row')), await chu(t, '#rewards .wallet-row'));
     const a0 = demHet(S);
     await anHien(t, true); await ctx.clock.fastForward(10000); await anHien(t, false); await t.waitForTimeout(TRE + 300);
-    k('D1 ẩn 10 giây rồi hiện → không gọi lại', demHet(S) === a0, `${a0} → ${demHet(S)}`);
+    // KH-BAO-1: dải báo đơn xong hỏi NGAY GET /don một lần khi khách quay lại tab (dùng chung lệnh với kho cuaDon) — ba cửa kia vẫn không gọi lại.
+    const sau = demHet(S).split(',').map(Number), truoc = a0.split(',').map(Number);
+    k('D1 ẩn 10 giây rồi hiện → /toi, /diem, /voucher không gọi lại; /don đúng +1 (dải báo đơn xong)', KHUNG_CUA.every((d, i) => (d === '/don' ? sau[i] === truoc[i] + 1 : sau[i] === truoc[i])), `${a0} → ${demHet(S)}`);
     const a1 = KHUNG_CUA.map((d) => dem(S, d));
     await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
     const a2 = KHUNG_CUA.map((d) => dem(S, d));

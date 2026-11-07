@@ -9,6 +9,7 @@ import {
   CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
+import { docDungVi, ghiDungVi } from '../luuMay.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import PinSheet from '../components/PinSheet.jsx';
@@ -32,7 +33,9 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const toi = dungTai(layToi);
   const dsDon = dungTai(layDonDau); // gọi MỚI mỗi lần mở (không kho chung): đơn chờ trả của tab / lần mở trước
   const gh = dungKho(khoGioHoatDong);
-  const [dungVi, datDungVi] = useState(false);
+  // Công tắc nhớ lần trước (kh_dung_vi). Bật SẴN chỉ có tác dụng khi ví bật được: cachTra bên dưới tự về QR lúc /toi lỗi / đang tải / ví 0đ.
+  const [dungVi, datDungViTho] = useState(docDungVi);
+  const datDungVi = (bat) => { datDungViTho(bat); ghiDungVi(bat); };
   const [moPin, datMoPin] = useState(null);   // { cu?: bản ghi gửi lại } khi cần PIN
   const [moDatPin, datMoDatPin] = useState(false);
   const [dang, datDang] = useState(false);
@@ -119,6 +122,8 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       // POS trả 4xx: chắc chưa tạo → xoá bản ghi. Trừ gửi lại (cu) mà sai PIN: GIỮ bản ghi để nhập lại PIN gửi ĐÚNG khoá + thân cũ.
       // Gửi lại (cu) bị trần lượt: không chứng minh đơn cũ chưa tạo (chuỗi trước đã chưa rõ) → GIỮ bản ghi, đếm ngược rồi gửi lại đúng khoá.
       if (cu && e.code === 'QUA_NHIEU_LAN') { datMoPin(null); xuLyLoi(e); return; }
+      // Cờ DAT_ONLINE tắt: chưa gửi gì tới POS nhưng bản ghi là của lần "chưa rõ" TRƯỚC → GIỮ (không coi là "chưa tạo").
+      if (cu && e.code === 'CHUA_MO') { datMoPin(null); datThongBao(e.message); return; }
       if (MA_PIN.includes(e.code)) { if (!cu) ghiGuiDo(null); throw e; }
       ghiGuiDo(null);
       datMoPin(null);
@@ -167,7 +172,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
           {/* 429 khi gửi lại: khoá nút tới hết đếm ngược (cùng luật nút đặt) — bấm sớm chỉ thêm lượt bị chặn. */}
-          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0} onClick={guiLaiDungDon}><span>{conGiay ? `Gửi lại sau ${conGiay} giây` : 'Gửi lại đúng đơn này'}</span><span>→</span></button>}
+          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay || !DAT_ONLINE ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0 || !DAT_ONLINE} onClick={guiLaiDungDon}><span>{!DAT_ONLINE ? CHU_CHUA_MO : conGiay ? `Gửi lại sau ${conGiay} giây` : 'Gửi lại đúng đơn này'}</span><span>→</span></button>}
           <button type="button" className="ghost-btn" onClick={moLichSu}>Xem Lịch sử đơn</button>
           {khongGuiLai && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
         </>
