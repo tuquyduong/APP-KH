@@ -62,11 +62,13 @@ const TANG = 'Hạng dành tặng khách thân thiết';
 
   await thu('A1b', async () => {
     const f = doc('src/pages/UuDai.jsx');
-    k('A1 nguồn: TheHang dùng CHU_KHONG_THOI_HAN + laHangChiCap + dongGoi', /CHU_KHONG_THOI_HAN/.test(f) && /laHangChiCap\(/.test(f) && /dongGoi\(/.test(f));
+    const jsx = boChuThich(f);
+    k('A1 nguồn: TheHang DÙNG (không chỉ import) {CHU_KHONG_THOI_HAN}, {CHU_HANG_TANG}, laHangChiCap(dsHang…), dongGoi(h)', /\{CHU_KHONG_THOI_HAN\}/.test(jsx) && /\{CHU_HANG_TANG\}/.test(jsx) && /laHangChiCap\(dsHang,/.test(jsx) && /dongGoi\(h\)/.test(jsx));
   });
 
   await thu('B1n', async () => {
-    k('B1 nguồn: ChuongTrinhToi đăng ký kho giờ hoạt động (vẽ lại khi bay_gio về)', /function ChuongTrinhToi[\s\S]*?dungKho\(khoGioHoatDong\)/.test(doc('src/pages/UuDai.jsx')));
+    const than = (boChuThich(doc('src/pages/UuDai.jsx')).split('function ChuongTrinhToi')[1] || '').split('\n}\n')[0]; // chỉ thân hàm, đã bỏ chú thích
+    k('B1 nguồn: thân ChuongTrinhToi gọi dungKho(khoGioHoatDong) như một câu lệnh (vẽ lại khi bay_gio về)', /^\s*dungKho\(khoGioHoatDong\);/m.test(than) && /sinhNhatHomNay\(/.test(than), than.slice(0, 120));
   });
 
   await thu('C1', async () => {

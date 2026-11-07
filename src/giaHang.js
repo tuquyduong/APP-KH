@@ -1,6 +1,6 @@
-import { dinhDangGia } from './dinhDang.js';
 // Giá theo hạng — App KHÔNG tự tính: chỉ TRA bảng `gia_hang[]` POS gửi kèm từng món (máy chủ tính cùng hàm với quầy).
 // Hạng khách (`hangToi`) = { id, ten } lấy từ /toi; `dsHang` = /hang (POS đã xếp theo thu_bac tăng dần — App không sắp lại).
+import { dinhDangGia } from './dinhDang.js';
 
 /** Giá khách phải trả theo hạng: dòng `hang_id` = hạng khách; không có dòng (không hạng / bảng rỗng) → giá gốc. */
 export function giaChoKhach(mon, hangToi) {
@@ -37,5 +37,8 @@ export const laHangChiCap = (ds, id) => Array.isArray(ds) && ds.some((h) => h &&
 /** Dòng chữ các gói tháng ĐANG BÁN của một hạng ("3 tháng — 300.000đ"): chỉ `goi[]` (không đọc gia_the); hạng chỉ cấp, thiếu / sai kiểu → []. */
 export function dongGoi(h) {
   if (!h || h.chi_cap === true || !Array.isArray(h.goi)) return [];
-  return h.goi.filter((g) => g && Number.isInteger(g.so_thang) && g.so_thang > 0 && typeof g.gia === 'number' && g.gia > 0 && dinhDangGia(g.gia)).map((g) => `${g.so_thang} tháng — ${dinhDangGia(g.gia)}`);
+  return h.goi.flatMap((g) => {
+    const gia = g && Number.isInteger(g.so_thang) && g.so_thang > 0 && g.gia > 0 ? dinhDangGia(g.gia) : '';
+    return gia ? [`${g.so_thang} tháng — ${gia}`] : [];
+  });
 }

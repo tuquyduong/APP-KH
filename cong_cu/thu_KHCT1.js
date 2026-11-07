@@ -66,8 +66,9 @@ const MOI_NHAP = 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đ
 
   await thu('B-HANG2', async () => {
     const uu = doc('src/pages/UuDai.jsx');
-    k('B2 KH-HANG-2: dòng chúc mừng / mời nhập chỉ ở thẻ sinh nhật ĐẦU TIÊN (dauTien)', /dauTien/.test(uu) && /i === dauTien/.test(uu));
-    k('B1 KH-HANG-2: ChuongTrinhToi vẽ lại khi POS báo bay_gio (dungKho(khoGioHoatDong))', /function ChuongTrinhToi[\s\S]*?dungKho\(khoGioHoatDong\)/.test(uu));
+    const than = (uu.replace(/\/\/.*$/gm, '').split('function ChuongTrinhToi')[1] || '').split('\n}\n')[0]; // thân hàm, đã bỏ chú thích
+    k('B2 KH-HANG-2: ghiChu chỉ gắn khi i === dauTien (thẻ sinh nhật đầu)', /const dauTien = xep\.findIndex/.test(than) && (than.match(/i === dauTien/g) || []).length === 2);
+    k('B1 KH-HANG-2: thân ChuongTrinhToi gọi dungKho(khoGioHoatDong) (phòng thủ: vẽ lại khi bay_gio về)', /^\s*dungKho\(khoGioHoatDong\);/m.test(than));
   });
 
   await thu('B6', async () => {

@@ -156,7 +156,7 @@ function TheHang({ hang }) {
       <div className="top"><div><div className="name">Hạng thành viên</div>{ds.map((h) => (
         <div key={h.id}>
           <div className="pct">{h.ten} — giảm {h.phan_tram}%</div>
-          {h.chi_cap === true ? <div className="hang-tang">{CHU_HANG_TANG}</div> : dongGoi(h).map((g) => <div className="hang-goi" key={g}>{g}</div>)}
+          {h.chi_cap === true ? <div className="hang-tang">{CHU_HANG_TANG}</div> : dongGoi(h).map((g, i) => <div className="hang-goi" key={i}>{g}</div>)}
         </div>
       ))}</div></div>
     </div>
