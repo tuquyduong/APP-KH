@@ -13,6 +13,7 @@ ab9fe0f TIEN-DO: mo dot 3 song song (KH-SOHD-1 so_hd + tien ve + the QR thuong h
 
 2. **Ba ô theo phiếu, demo cuối có khác.** Demo (patch35 trở đi) chỉ còn 6 ô trong lưới (Theo mùa, Văn khấn, Ngày cần nhớ, Xe cộ, Uống thuốc, Chu kỳ) + dải "Sắp tới", và Ngày lễ gộp vào "Ngày cần nhớ" (hai tab). Máy làm đúng phiếu B3/B4 (ba ô riêng: Theo mùa, Ngày lễ, Sắp tới). Chủ quán muốn đúng demo cuối thì chuyển cho 5c gộp.
 3. **Ô "hôm nay" trong lưới tháng.** Demo: ô hôm nay cao 150 px vì lớp `.today` của lưới trùng lớp banner `.today` (lỗi CSS của demo). App giữ ô bình thường. Muốn y như demo (ô dài) thì nói.
+4. **Bộ kiểm có trình duyệt đỏ vì `cong_cu/thu_KHBAO1.js` dòng 146 (KH-BAO-1).** Ca "A2 'Xem đơn' → /don/TQD50, dải mất" đếm dải báo ngay khi địa chỉ vừa đổi, lúc dải chưa kịp mất → chập chờn (đỏ cả trên bản sao code GỐC 525e962, không do KH-UI-5b). File thuộc mục Cấm của phiếu và luật K8 cấm nới bộ kiểm nên máy KHÔNG sửa; nhờ chủ quán chuyển chat KH-BAO-1 sửa (chờ dải mất rồi mới đếm). `KHONG_TRINH_DUYET=1 npm test` xanh.
 
 ## Phát hiện (ngoài phạm vi / chưa làm)
 - Khối **"Từ TQD"** (`calTqd`), chấm vàng và mục chú giải: ẩn — POS chưa có sự kiện (hạn voucher / hạng / đơn hẹn giờ). Cần cửa `/api/kh` mới nếu chủ quán muốn có.
