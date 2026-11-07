@@ -3,7 +3,7 @@
 Ảnh ở `so_anh/`: `<cảnh>_<cỡ>_app.jpg`, `<cảnh>_<cỡ>_demo.jpg`, `<cảnh>_<cỡ>_lech.jpg` (đỏ = lệch > 48/765 tổng ba kênh), `bao_cao.txt` (% điểm ảnh lệch). Cỡ 390 / 360 / 430. Cùng ngày 7.11.2026 (Thứ Bảy, Lập đông), cùng dữ liệu mẫu.
 Kịch bản chụp ở nháp (không vào kho). Hai bên được dọn cho CÙNG phạm vi: demo bỏ "Từ TQD", chấm "Từ TQD", năm tiện ích 5c, dải `up-strip`, nguồn của 5c, thanh bật thông báo đẩy, món POS, banner nhỏ (trừ cảnh banner).
 Dữ liệu mẫu việc = bốn việc của demo (`AGENDA`); chữ "15 phút trước…" của demo thay bằng chữ của app để so cùng chữ.
-(Trong thư mục còn vài file `.png` của lần chụp đầu — KHÔNG commit, bản chính thức là `.jpg`.)
+Chưa chụp: cảnh `lich` "chọn một ngày lễ" (ô chọn là ô `sel` — cùng luật CSS với ô hôm nay, đã so ở các cảnh khác) và ô Trang chủ lúc CHƯA đăng nhập (demo không có bản này; chỉ kiểm bằng bài thử vẽ thật + thử tay E5).
 
 ## Màn `lich` — `/kehoach` (lich_*, lich_viec_*)
 | Khối trong demo | Đã làm | Khác gì, lý do |

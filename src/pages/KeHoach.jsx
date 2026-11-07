@@ -18,6 +18,7 @@ import { bam } from '../components/bam.js';
 import { dungKeHoach, layNgayMo } from '../components/dungKeHoach.js';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
+const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
 const TIEN_ICH = [['theomua', 'Theo mùa', 'fan'], ['ngayle', 'Ngày lễ', 'lantern'], ['saptoi', 'Sắp tới', 'sprig']]; // 5 tiện ích của KH-UI-5c chưa hiện
 
 /** Biểu tượng tranh tròn (demo EN): file the-chat-<tên>.svg tách từ demo; đèn lồng vẽ thẳng. */
@@ -38,7 +39,7 @@ export function DauMan({ tieuDe, phu, lui, phai }) {
 
 /** Màn Kế hoạch và nhắc việc (demo màn `lich`). `san` = đã biết khách là ai; `banner` = chữ banner "hôm nay" (mặc định của Trang chủ). */
 export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNghiem, coKetQuaTn = false, ds = [], chonMon, banner = { ...HOM_NAY, anh: BANNER.anh }, homNay: homNayCho }) {
-  const homNay = homNayCho || homNayTuGio(bayGio()) || { d: 1, m: 1, y: 2026 };
+  const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu, xoaHet } = dungKeHoach(san);
   const [chon, datChon] = useState(() => docNgay(layNgayMo()) || homNay);
   const [thang, datThang] = useState(() => ({ y: chon.y, m: chon.m }));
@@ -46,7 +47,7 @@ export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNg
   const [tb, datTb] = useState('');
   const [hoiXoa, datHoiXoa] = useState(false);
 
-  const luuVaBao = (moi, chu) => datTb(luu(moi) ? chu : LOI_KHO);
+  const luuVaBao = (moi, chu) => datTb(!san ? LOI_CHUA_BIET : luu(moi) ? chu : LOI_KHO);
   const doiThang = (n) => { let m = thang.m + n, y = thang.y; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } datThang({ y, m }); };
   const chonNgay = (d, m, y) => { datChon({ d, m, y }); if (m !== thang.m) datThang({ y, m }); };
   const veHomNay = () => { datChon(homNay); datThang({ y: homNay.y, m: homNay.m }); };
@@ -60,8 +61,9 @@ export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNg
   the.tip[1].forEach((id) => ghepMon(ds, [TU_KHOA_MON[id]], TU_KHOA_MON).forEach((m) => monTiet.includes(m) || monTiet.push(m)));
 
   const luuViec = (v) => {
+    if (!san) return LOI_CHUA_BIET;
     const moi = themViec(bang, v);
-    if (!moi) return v.tieu.trim() ? 'Ngày chưa đúng, chọn lại nhé' : 'Nhập tên việc trước nhé';
+    if (!moi) return !v.tieu.trim() ? 'Nhập tên việc trước nhé' : !docNgay(v.ngay) ? 'Ngày chưa đúng, chọn lại nhé' : 'Đã đủ số việc lưu trên máy này, xoá bớt việc cũ nhé';
     const ok = luu(moi);
     datThem(false);
     const n = docNgay(v.ngay);

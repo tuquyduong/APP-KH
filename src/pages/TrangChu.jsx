@@ -48,7 +48,6 @@ function DauChung({ chao, moQR, the, ke }) {
 function OKeHoachTrangChu({ dangNhap, daBiet, moKeHoach, moDangNhapTai }) {
   const { bang } = dungKeHoach(daBiet);
   const homNay = homNayTuGio(bayGio());
-  if (!homNay) return null;
   const so = dangNhap && daBiet ? viecNgay(bang, ngayChuoi(homNay)).filter((v) => !v.xong).length : null;
   return (
     <KhoaTienIch dangNhap={dangNhap} tiep={taoDuongDan('kehoach')} moDangNhap={moDangNhapTai}>

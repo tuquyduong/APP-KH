@@ -85,11 +85,11 @@ const DAU = {
 
 /** Màn tiện ích của Kế hoạch (demo màn `tool`): `id` = theomua | ngayle | saptoi. Nút quay lại về /kehoach (`veLich`). */
 export default function TienIch({ id, san = true, veLich, moTienIch, moBanner, ds = [], chonMon, banner = { ...HOM_NAY, anh: BANNER.anh }, homNay: homNayCho }) {
-  const homNay = homNayCho || homNayTuGio(bayGio()) || { d: 1, m: 1, y: 2026 };
+  const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu } = dungKeHoach(san);
   const [tb, datTb] = useState('');
   const [tieuDe, phu] = DAU[id];
-  const luuVaBao = (moi, chu) => datTb(luu(moi) ? chu : LOI_KHO);
+  const luuVaBao = (moi, chu) => datTb(!san ? 'Đang lấy thông tin tài khoản, thử lại sau ít giây' : luu(moi) ? chu : LOI_KHO);
   return (
     <Man id="tool">
       <DauMan tieuDe={tieuDe} phu={phu} lui={veLich} />

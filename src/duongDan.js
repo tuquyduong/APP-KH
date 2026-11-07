@@ -7,7 +7,7 @@ import { boDau } from './menuLoc.js';
 const HAU_TO_TIEU_DE = ' · Tứ Quý Đường';
 const TRANG_CHU = '/trangchu';
 /** Tiện ích của Kế hoạch (KH-UI-5b): chỉ ba cái này; năm cái còn lại là KH-UI-5c — đường dẫn lạ dưới /kehoach về /kehoach. */
-export const TIEN_ICH = ['theomua', 'ngayle', 'saptoi'];
+const TIEN_ICH =['theomua', 'ngayle', 'saptoi'];
 
 const BANG = [
   { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'Trang chủ' },

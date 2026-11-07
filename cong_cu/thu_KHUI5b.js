@@ -249,5 +249,9 @@ async function manHinh(KH) {
   k('K3 không có chữ "nợ", không số mẫu của demo (1.250, 1900, support@)', !/\bnợ\b/i.test(moiHet) && !/1\.250|1900|support@/.test(moiHet));
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
+  const kehoachJsx = doc('src/pages/KeHoach.jsx');
+  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu", sheet giữ nguyên chữ khách đã gõ', /if \(!san\) return LOI_CHUA_BIET;\s*\n\s*const moi = themViec/.test(kehoachJsx) && /!san \? LOI_CHUA_BIET : luu\(moi\)/.test(kehoachJsx) && /!san \? 'Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
+  k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(kehoachJsx));
+  k('E1 không còn ngày dự phòng bịa cho "hôm nay" (K3)', !/y: 2026 \}/.test(kehoachJsx + doc('src/pages/TienIch.jsx')) && !/if \(!homNay\) return null/.test(tc));
   void khong;
 }
