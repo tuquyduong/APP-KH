@@ -79,7 +79,8 @@ if (require.main === module) (async () => {
     k('C4 đọc POST /don: ma_don, tong, giu_vi, con_lai, tien_trinh, qr, trung', !!d && d.ma === 'TQD42' && d.tong === 87654 && d.giuVi === 50000 && d.conLai === 37654 && d.tienTrinh === 'cho_tra' && d.qr.chuoi === '0002' && d.qr.hetHan === '2026-10-30T20:40:00' && d.trung === true, JSON.stringify(d));
     k('C4 thiếu ma_don → null ("chưa rõ")', D.docDatDon({ success: true, tong: 1 }) === null && D.docDatDon(null) === null);
     const dn = D.docDon({ don: { ma: 'TQD42', ngay: '2026-10-30T20:31:00', tong: 87654, da_tra: 0, trang_thai: null, thanh_toan: null, tien_trinh: 'cho_tra', qr: { chuoi: 'Q', het_han: '2026-10-30T20:40:00' }, tien_ve_cho_doi_soat: true, mon: [] } });
-    k('C5 đọc GET /don/:ma: qr, thanh_toan, tien_ve_cho_doi_soat, tien_trinh', !!dn && dn.qr && dn.qr.chuoi === 'Q' && dn.tienVeChoDoiSoat === true && dn.thanhToan === null && dn.tienTrinh === 'cho_tra', JSON.stringify(dn));
+    k('C5 (v11) đọc GET /don/:ma: so_hd → soHd (thiếu → null), mã App `ma` giữ nguyên', !!dn && dn.soHd === null && dn.ma === 'TQD42' && D.docDon({ don: { ma: 'A7', so_hd: 'APP0016' } }).soHd === 'APP0016');
+    k('C5 đọc GET /don/:ma: qr, thanh_toan, tien_ve_cho_doi_soat, tien_trinh',!!dn && dn.qr && dn.qr.chuoi === 'Q' && dn.tienVeChoDoiSoat === true && dn.thanhToan === null && dn.tienTrinh === 'cho_tra', JSON.stringify(dn));
     const b = D.docBaoGia({ ...BG, ma_giam_loi: { code: 'MA_KHONG_TON_TAI', error: 'Mã không tồn tại' } });
     k('C6 báo giá giữ giam[].loai và ma_giam_loi { code, error }', !!b && b.giam[0].loai === 'hang' && b.maGiamLoi && b.maGiamLoi.error === 'Mã không tồn tại' && D.docBaoGia(BG).maGiamLoi === null);
     k('C6 tên dòng giảm theo demo: voucher / hạng / Giờ vàng / loại lạ', D.tenGiam('ma_giam') === 'Giảm giá (voucher)' && D.tenGiam('hang', 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam('gio_vang') === 'Giờ vàng' && D.tenGiam('khac') === 'Giảm giá');
