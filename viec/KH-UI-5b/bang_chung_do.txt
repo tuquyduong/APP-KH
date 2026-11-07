@@ -1,0 +1,23 @@
+Bài thử KH-UI-5b — bằng chứng ĐỎ trên code chưa sửa (HEAD 525e962 = PHIEU: KH-UI-5b; bản sao từ `git archive 525e962` + bài thử mới / sửa chép vào)
+
+$ node cong_cu/thu_KHUI5b.js
+✗ bài thử lỗi: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../src/kehoach.js' (gốc chưa có src/kehoach.js, src/noiDung/keHoach.js, màn Kế hoạch…)
+0 đạt · 1 hỏng
+
+Bài cũ sửa (E2) — mỗi bài ĐỎ đúng một ca trên code gốc (chạy KHÔNG đặt KHONG_TRINH_DUYET, bài không dùng trình duyệt):
+$ node cong_cu/thu_KHLINK1.js
+✗ /kehoach là trang thật (KH-UI-5b, hết giữ chỗ); /kehoach/<tiện ích lạ> → về /kehoach, không rơi vào khongthay; /tracnghiem/… …
+96 đạt · 1 hỏng
+$ node cong_cu/thu_KHUI5a.js
+✗ /kehoach là trang thật từ KH-UI-5b (hết giữ chỗ), cần đăng nhập, giữ tab Trang chủ
+356 đạt · 1 hỏng
+(Mỗi bài chỉ ĐỔI một ca; không bớt ca khác. thu_KHLUU1.js không cần sửa: không bài nào đòi danh sách khoá cũ — khoá mới do thu_KHUI5b D2 canh.)
+
+Đột biến chạy tay trên code đã vá (bài thử phải BẮT; đã khôi phục sau mỗi lần):
+  VS-NGAY-30   (src/kehoach.js upList: `j <= cuoi` → `j < cuoi`, ngày thứ 30 rơi khỏi "Sắp tới"):  70 đạt · 2 hỏng
+  VS-THU-HAI   (src/kehoach.js luoiThang: tuần bắt đầu thứ Hai `+ 6` → `+ 0`, lưới lệch cột):       70 đạt · 2 hỏng
+  BV-KHOA-LUU  (src/luuMay.js: bỏ KHOA_KE_HOACH khỏi KHOA_DU_LIEU, đăng xuất không xoá việc):       68 đạt · 4 hỏng
+
+SỐ CA thu_KHUI5b.js: 72
+SỐ CA thu_KHLINK1.js: 97
+SỐ CA thu_KHUI5a.js: 357
