@@ -1,0 +1,6650 @@
+{
+ "thang": {
+  "2023-3": {
+   "homNay": [
+    10,
+    3,
+    2023
+   ],
+   "tieuDe": "Tháng 3 · 2023",
+   "o": [
+    {
+     "d": 27,
+     "am": "8",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "9",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "15",
+     "tiet": "Kinh trập",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 9,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "30",
+     "tiet": "Xuân phân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "1/2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "11",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "12",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "8/3",
+     "chu": "Quốc tế Phụ nữ"
+    }
+   ]
+  },
+  "2023-4": {
+   "homNay": [
+    10,
+    4,
+    2023
+   ],
+   "tieuDe": "Tháng 4 · 2023",
+   "o": [
+    {
+     "d": 27,
+     "am": "6",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "7",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "8",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "9",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "10",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "15",
+     "tiet": "Thanh minh",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "1/3",
+     "tiet": "Cốc vũ",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 30,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": true,
+     "chamLe": true
+    }
+   ],
+   "le": [
+    {
+     "ngay": "29/4",
+     "chu": "Giỗ Tổ Hùng Vương (10/3 âm)"
+    },
+    {
+     "ngay": "30/4",
+     "chu": "Giải phóng miền Nam"
+    }
+   ]
+  },
+  "2024-2": {
+   "homNay": [
+    10,
+    2,
+    2024
+   ],
+   "tieuDe": "Tháng 2 · 2024",
+   "o": [
+    {
+     "d": 29,
+     "am": "19",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "20",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "21",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 3,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "25",
+     "tiet": "Lập xuân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "1/1",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 11,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 12,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 13,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 15,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "10",
+     "tiet": "Vũ thủy",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 25,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "21",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "22",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "23",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "2/2",
+     "chu": "Ông Công ông Táo (23/12 âm)"
+    },
+    {
+     "ngay": "10/2",
+     "chu": "Tết Nguyên đán (1/1 âm)"
+    },
+    {
+     "ngay": "14/2",
+     "chu": "Lễ Tình nhân"
+    },
+    {
+     "ngay": "24/2",
+     "chu": "Tết Nguyên tiêu (15/1 âm)"
+    }
+   ]
+  },
+  "2025-1": {
+   "homNay": [
+    10,
+    1,
+    2025
+   ],
+   "tieuDe": "Tháng 1 · 2025",
+   "o": [
+    {
+     "d": 30,
+     "am": "30",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "1/12",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 2,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "6",
+     "tiet": "Tiểu hàn",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "21",
+     "tiet": "Đại hàn",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 23,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "1/1",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 30,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 31,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 1,
+     "am": "4",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "5",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "1/1",
+     "chu": "Tết Dương lịch"
+    },
+    {
+     "ngay": "22/1",
+     "chu": "Ông Công ông Táo (23/12 âm)"
+    },
+    {
+     "ngay": "29/1",
+     "chu": "Tết Nguyên đán (1/1 âm)"
+    }
+   ]
+  },
+  "2025-2": {
+   "homNay": [
+    10,
+    2,
+    2025
+   ],
+   "tieuDe": "Tháng 2 · 2025",
+   "o": [
+    {
+     "d": 27,
+     "am": "28",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "29",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "1/1",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 30,
+     "am": "2",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 31,
+     "am": "3",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 1,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "6",
+     "tiet": "Lập xuân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 13,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 15,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "21",
+     "tiet": "Vũ thủy",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "1/2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "2",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "3",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "12/2",
+     "chu": "Tết Nguyên tiêu (15/1 âm)"
+    },
+    {
+     "ngay": "14/2",
+     "chu": "Lễ Tình nhân"
+    }
+   ]
+  },
+  "2025-7": {
+   "homNay": [
+    10,
+    7,
+    2025
+   ],
+   "tieuDe": "Tháng 7 · 2025",
+   "o": [
+    {
+     "d": 30,
+     "am": "6",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "13",
+     "tiet": "Tiểu thử",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "28",
+     "tiet": "Đại thử",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "1/6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "8",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "9",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "10",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": []
+  },
+  "2025-8": {
+   "homNay": [
+    10,
+    8,
+    2025
+   ],
+   "tieuDe": "Tháng 8 · 2025",
+   "o": [
+    {
+     "d": 28,
+     "am": "4",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "5",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "6",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "7",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "14",
+     "tiet": "Lập thu",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "1/7",
+     "tiet": "Xử thử",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": []
+  },
+  "2026-1": {
+   "homNay": [
+    10,
+    1,
+    2026
+   ],
+   "tieuDe": "Tháng 1 · 2026",
+   "o": [
+    {
+     "d": 29,
+     "am": "10",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "11",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "12",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 2,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "17",
+     "tiet": "Tiểu hàn",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "1/12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "2",
+     "tiet": "Đại hàn",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "14",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "1/1",
+     "chu": "Tết Dương lịch"
+    }
+   ]
+  },
+  "2026-2": {
+   "homNay": [
+    10,
+    2,
+    2026
+   ],
+   "tieuDe": "Tháng 2 · 2026",
+   "o": [
+    {
+     "d": 26,
+     "am": "8",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "9",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "10",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "11",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "12",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "13",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "17",
+     "tiet": "Lập xuân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 11,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 15,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "1/1",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 18,
+     "am": "2",
+     "tiet": "Vũ thủy",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 19,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 20,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "13",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "10/2",
+     "chu": "Ông Công ông Táo (23/12 âm)"
+    },
+    {
+     "ngay": "14/2",
+     "chu": "Lễ Tình nhân"
+    },
+    {
+     "ngay": "17/2",
+     "chu": "Tết Nguyên đán (1/1 âm)"
+    }
+   ]
+  },
+  "2026-9": {
+   "homNay": [
+    10,
+    9,
+    2026
+   ],
+   "tieuDe": "Tháng 9 · 2026",
+   "o": [
+    {
+     "d": 31,
+     "am": "19",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 3,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "26",
+     "tiet": "Bạch lộ",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "1/8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "13",
+     "tiet": "Thu phân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "14",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 26,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "21",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "22",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "23",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "24",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "2/9",
+     "chu": "Quốc khánh"
+    },
+    {
+     "ngay": "25/9",
+     "chu": "Tết Trung thu (15/8 âm)"
+    }
+   ]
+  },
+  "2026-11": {
+   "homNay": [
+    10,
+    11,
+    2026
+   ],
+   "tieuDe": "Tháng 11 · 2026",
+   "o": [
+    {
+     "d": 26,
+     "am": "17",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "18",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "19",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "20",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "21",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "22",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "29",
+     "tiet": "Lập đông",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "1/10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 21,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "14",
+     "tiet": "Tiểu tuyết",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "23",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "24",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "25",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "26",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "27",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "28",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "20/11",
+     "chu": "Nhà giáo Việt Nam"
+    }
+   ]
+  },
+  "2026-12": {
+   "homNay": [
+    10,
+    12,
+    2026
+   ],
+   "tieuDe": "Tháng 12 · 2026",
+   "o": [
+    {
+     "d": 30,
+     "am": "22",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "24",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "28",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "29",
+     "tiet": "Đại tuyết",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 8,
+     "am": "30",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 9,
+     "am": "1/11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 15,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 21,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "14",
+     "tiet": "Đông chí",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 25,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 29,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 30,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 31,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "24",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 2,
+     "am": "25",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "26",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "24/12",
+     "chu": "Đêm Giáng sinh"
+    }
+   ]
+  },
+  "2027-2": {
+   "homNay": [
+    10,
+    2,
+    2027
+   ],
+   "tieuDe": "Tháng 2 · 2027",
+   "o": [
+    {
+     "d": 1,
+     "am": "25",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "26",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "27",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "28",
+     "tiet": "Lập xuân",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "29",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "1/1",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 7,
+     "am": "2",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 8,
+     "am": "3",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 9,
+     "am": "4",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 10,
+     "am": "5",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": true,
+     "chon": true,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 11,
+     "am": "6",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 12,
+     "am": "7",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 13,
+     "am": "8",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 14,
+     "am": "9",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 15,
+     "am": "10",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 16,
+     "am": "11",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 17,
+     "am": "12",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 18,
+     "am": "13",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 19,
+     "am": "14",
+     "tiet": "Vũ thủy",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 20,
+     "am": "15",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": true,
+     "chamLe": true
+    },
+    {
+     "d": 21,
+     "am": "16",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 22,
+     "am": "17",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 23,
+     "am": "18",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 24,
+     "am": "19",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 25,
+     "am": "20",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 26,
+     "am": "21",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 27,
+     "am": "22",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 28,
+     "am": "23",
+     "tiet": "",
+     "ngoai": false,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 1,
+     "am": "24",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 2,
+     "am": "25",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 3,
+     "am": "26",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 4,
+     "am": "27",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 5,
+     "am": "28",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 6,
+     "am": "29",
+     "tiet": "Kinh trập",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": false,
+     "le": false,
+     "chamLe": false
+    },
+    {
+     "d": 7,
+     "am": "30",
+     "tiet": "",
+     "ngoai": true,
+     "homNay": false,
+     "chon": false,
+     "cn": true,
+     "le": false,
+     "chamLe": false
+    }
+   ],
+   "le": [
+    {
+     "ngay": "6/2",
+     "chu": "Tết Nguyên đán (1/1 âm)"
+    },
+    {
+     "ngay": "14/2",
+     "chu": "Lễ Tình nhân"
+    },
+    {
+     "ngay": "20/2",
+     "chu": "Tết Nguyên tiêu (15/1 âm)"
+    }
+   ]
+  }
+ },
+ "ngay": {
+  "2026-11-7@2026-11-7": {
+   "sel": [
+    7,
+    11,
+    2026
+   ],
+   "homNay": [
+    7,
+    11,
+    2026
+   ],
+   "thu": "Thứ Bảy · Hôm nay",
+   "lon": "7",
+   "thang": "Tháng 11/2026",
+   "am": "29/9",
+   "canChi": "Năm Bính Ngọ | Tháng Mậu Tuất · Ngày Ất Dậu",
+   "chip": "Mùa Đông · Tiết Lập đông",
+   "conLai": "Bắt đầu hôm nay",
+   "le": "",
+   "tip": "Bắt đầu mùa đông; ngủ sớm dậy muộn hơn chút, giữ ấm cơ thể, món hầm nóng.",
+   "tipTiet": "Dưỡng sinh tiết Lập đông"
+  },
+  "2026-2-17@2026-2-10": {
+   "sel": [
+    17,
+    2,
+    2026
+   ],
+   "homNay": [
+    10,
+    2,
+    2026
+   ],
+   "thu": "Thứ Ba",
+   "lon": "17",
+   "thang": "Tháng 2/2026",
+   "am": "1/1",
+   "canChi": "Năm Bính Ngọ | Tháng Canh Dần · Ngày Nhâm Tuất",
+   "chip": "Mùa Xuân · Tiết Lập xuân",
+   "conLai": "Mai sang tiết Vũ thủy",
+   "le": "Tết Nguyên đán",
+   "tip": "Bắt đầu mùa xuân; vận động nhẹ ngoài trời, ăn rau mầm, giữ tinh thần vui vẻ.",
+   "tipTiet": "Dưỡng sinh tiết Lập xuân"
+  },
+  "2026-2-4@2026-2-4": {
+   "sel": [
+    4,
+    2,
+    2026
+   ],
+   "homNay": [
+    4,
+    2,
+    2026
+   ],
+   "thu": "Thứ Tư · Hôm nay",
+   "lon": "4",
+   "thang": "Tháng 2/2026",
+   "am": "17/12",
+   "canChi": "Năm Ất Tỵ | Tháng Kỷ Sửu · Ngày Kỷ Dậu",
+   "chip": "Mùa Xuân · Tiết Lập xuân",
+   "conLai": "Bắt đầu hôm nay",
+   "le": "",
+   "tip": "Bắt đầu mùa xuân; vận động nhẹ ngoài trời, ăn rau mầm, giữ tinh thần vui vẻ.",
+   "tipTiet": "Dưỡng sinh tiết Lập xuân"
+  },
+  "2026-2-3@2026-2-4": {
+   "sel": [
+    3,
+    2,
+    2026
+   ],
+   "homNay": [
+    4,
+    2,
+    2026
+   ],
+   "thu": "Thứ Ba",
+   "lon": "3",
+   "thang": "Tháng 2/2026",
+   "am": "16/12",
+   "canChi": "Năm Ất Tỵ | Tháng Kỷ Sửu · Ngày Mậu Thân",
+   "chip": "Mùa Đông · Tiết Đại hàn",
+   "conLai": "Mai sang tiết Lập xuân",
+   "le": "",
+   "tip": "Lạnh nhất năm; giữ ấm toàn thân, uống trà nóng sau bữa ăn.",
+   "tipTiet": "Dưỡng sinh tiết Đại hàn"
+  },
+  "2026-9-25@2026-9-20": {
+   "sel": [
+    25,
+    9,
+    2026
+   ],
+   "homNay": [
+    20,
+    9,
+    2026
+   ],
+   "thu": "Thứ Sáu",
+   "lon": "25",
+   "thang": "Tháng 9/2026",
+   "am": "15/8",
+   "canChi": "Năm Bính Ngọ | Tháng Đinh Dậu · Ngày Nhâm Dần",
+   "chip": "Mùa Thu · Tiết Thu phân",
+   "conLai": "Còn 13 ngày tới Hàn lộ",
+   "le": "Tết Trung thu",
+   "tip": "Ngày đêm cân bằng; ăn uống điều hoà, thêm món nhuận như lê, nấm tuyết.",
+   "tipTiet": "Dưỡng sinh tiết Thu phân"
+  },
+  "2026-4-30@2026-5-1": {
+   "sel": [
+    30,
+    4,
+    2026
+   ],
+   "homNay": [
+    1,
+    5,
+    2026
+   ],
+   "thu": "Thứ Năm",
+   "lon": "30",
+   "thang": "Tháng 4/2026",
+   "am": "14/3",
+   "canChi": "Năm Bính Ngọ | Tháng Nhâm Thìn · Ngày Giáp Tuất",
+   "chip": "Mùa Xuân · Tiết Cốc vũ",
+   "conLai": "Còn 5 ngày tới Lập hạ",
+   "le": "Giải phóng miền Nam",
+   "tip": "Mưa xuân nhiều, độ ẩm cao; ăn thanh đạm, hạn chế đồ ngọt béo.",
+   "tipTiet": "Dưỡng sinh tiết Cốc vũ"
+  },
+  "2026-3-21@2026-3-21": {
+   "sel": [
+    21,
+    3,
+    2026
+   ],
+   "homNay": [
+    21,
+    3,
+    2026
+   ],
+   "thu": "Thứ Bảy · Hôm nay",
+   "lon": "21",
+   "thang": "Tháng 3/2026",
+   "am": "3/2",
+   "canChi": "Năm Bính Ngọ | Tháng Tân Mão · Ngày Giáp Ngọ",
+   "chip": "Mùa Xuân · Tiết Xuân phân",
+   "conLai": "Còn 15 ngày tới Thanh minh",
+   "le": "",
+   "tip": "Ngày đêm dài bằng nhau, giữ nếp ngủ dậy đều giờ; ăn uống cân bằng, không quá nóng hay quá lạnh.",
+   "tipTiet": "Dưỡng sinh tiết Xuân phân"
+  },
+  "2026-11-20@2026-11-7": {
+   "sel": [
+    20,
+    11,
+    2026
+   ],
+   "homNay": [
+    7,
+    11,
+    2026
+   ],
+   "thu": "Thứ Sáu",
+   "lon": "20",
+   "thang": "Tháng 11/2026",
+   "am": "12/10",
+   "canChi": "Năm Bính Ngọ | Tháng Kỷ Hợi · Ngày Mậu Tuất",
+   "chip": "Mùa Đông · Tiết Lập đông",
+   "conLai": "Còn 2 ngày tới Tiểu tuyết",
+   "le": "Nhà giáo Việt Nam",
+   "tip": "Bắt đầu mùa đông; ngủ sớm dậy muộn hơn chút, giữ ấm cơ thể, món hầm nóng.",
+   "tipTiet": "Dưỡng sinh tiết Lập đông"
+  },
+  "2026-12-31@2026-12-31": {
+   "sel": [
+    31,
+    12,
+    2026
+   ],
+   "homNay": [
+    31,
+    12,
+    2026
+   ],
+   "thu": "Thứ Năm · Hôm nay",
+   "lon": "31",
+   "thang": "Tháng 12/2026",
+   "am": "23/11",
+   "canChi": "Năm Bính Ngọ | Tháng Canh Tý · Ngày Kỷ Mão",
+   "chip": "Mùa Đông · Tiết Đông chí",
+   "conLai": "Còn 5 ngày tới Tiểu hàn",
+   "le": "",
+   "tip": "Đêm dài nhất năm; nghỉ ngơi nhiều hơn, món hầm ấm, giữ tinh thần an nhiên.",
+   "tipTiet": "Dưỡng sinh tiết Đông chí"
+  },
+  "2025-8-1@2025-8-1": {
+   "sel": [
+    1,
+    8,
+    2025
+   ],
+   "homNay": [
+    1,
+    8,
+    2025
+   ],
+   "thu": "Thứ Sáu · Hôm nay",
+   "lon": "1",
+   "thang": "Tháng 8/2025",
+   "am": "8/6 nhuận",
+   "canChi": "Năm Ất Tỵ | Tháng Quý Mùi · Ngày Nhâm Dần",
+   "chip": "Mùa Hạ · Tiết Đại thử",
+   "conLai": "Còn 6 ngày tới Lập thu",
+   "le": "",
+   "tip": "Nóng nhất năm; uống nước từng ngụm, ưu tiên món thanh, hạn chế đồ chiên.",
+   "tipTiet": "Dưỡng sinh tiết Đại thử"
+  },
+  "2025-1-29@2025-1-29": {
+   "sel": [
+    29,
+    1,
+    2025
+   ],
+   "homNay": [
+    29,
+    1,
+    2025
+   ],
+   "thu": "Thứ Tư · Hôm nay",
+   "lon": "29",
+   "thang": "Tháng 1/2025",
+   "am": "1/1",
+   "canChi": "Năm Ất Tỵ | Tháng Mậu Dần · Ngày Mậu Tuất",
+   "chip": "Mùa Đông · Tiết Đại hàn",
+   "conLai": "Còn 5 ngày tới Lập xuân",
+   "le": "Tết Nguyên đán",
+   "tip": "Lạnh nhất năm; giữ ấm toàn thân, uống trà nóng sau bữa ăn.",
+   "tipTiet": "Dưỡng sinh tiết Đại hàn"
+  },
+  "2023-3-20@2023-3-20": {
+   "sel": [
+    20,
+    3,
+    2023
+   ],
+   "homNay": [
+    20,
+    3,
+    2023
+   ],
+   "thu": "Thứ Hai · Hôm nay",
+   "lon": "20",
+   "thang": "Tháng 3/2023",
+   "am": "29/2",
+   "canChi": "Năm Quý Mão | Tháng Ất Mão · Ngày Đinh Sửu",
+   "chip": "Mùa Xuân · Tiết Kinh trập",
+   "conLai": "Mai sang tiết Xuân phân",
+   "le": "",
+   "tip": "Vạn vật thức giấc; ra ngoài trời nhiều hơn, ăn rau xanh, ngủ đủ giấc.",
+   "tipTiet": "Dưỡng sinh tiết Kinh trập"
+  }
+ },
+ "hol": {
+  "2026-1-2": [
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461082,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461086,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461089,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461103,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461108,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461157,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461161,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461162,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461193,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461211,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461280,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461286,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461309,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461334,
+    "cal": "Dương lịch 20/10"
+   },
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   }
+  ],
+  "2026-2-10": [
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461082,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461086,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461089,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461103,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461108,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461157,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461161,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461162,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461193,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461211,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461280,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461286,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461309,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461334,
+    "cal": "Dương lịch 20/10"
+   },
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   }
+  ],
+  "2026-2-20": [
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461103,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461108,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461157,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461161,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461162,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461193,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461211,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461280,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461286,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461309,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461334,
+    "cal": "Dương lịch 20/10"
+   },
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   },
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461436,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461443,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461451,
+    "cal": "Dương lịch 14/2"
+   }
+  ],
+  "2026-9-25": [
+   {
+    "n": "Tết Trung thu",
+    "j": 2461309,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461334,
+    "cal": "Dương lịch 20/10"
+   },
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   },
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461436,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461443,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461451,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461457,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461473,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461512,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461526,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461527,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461558,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461566,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461634,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461651,
+    "cal": "Dương lịch 2/9"
+   }
+  ],
+  "2026-11-20": [
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   },
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461436,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461443,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461451,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461457,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461473,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461512,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461526,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461527,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461558,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461566,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461634,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461651,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461664,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461699,
+    "cal": "Dương lịch 20/10"
+   }
+  ],
+  "2026-12-31": [
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   },
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461436,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461443,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461451,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461457,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461473,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461512,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461526,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461527,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461558,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461566,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461634,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461651,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461664,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461699,
+    "cal": "Dương lịch 20/10"
+   },
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461730,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461764,
+    "cal": "Dương lịch 24/12"
+   }
+  ],
+  "2026-11-7": [
+   {
+    "n": "Nhà giáo Việt Nam",
+    "j": 2461365,
+    "cal": "Dương lịch 20/11"
+   },
+   {
+    "n": "Đêm Giáng sinh",
+    "j": 2461399,
+    "cal": "Dương lịch 24/12"
+   },
+   {
+    "n": "Tết Dương lịch",
+    "j": 2461407,
+    "cal": "Dương lịch 1/1"
+   },
+   {
+    "n": "Ông Công ông Táo",
+    "j": 2461436,
+    "cal": "Âm lịch 23/12"
+   },
+   {
+    "n": "Tết Nguyên đán",
+    "j": 2461443,
+    "cal": "Âm lịch 1/1"
+   },
+   {
+    "n": "Lễ Tình nhân",
+    "j": 2461451,
+    "cal": "Dương lịch 14/2"
+   },
+   {
+    "n": "Tết Nguyên tiêu",
+    "j": 2461457,
+    "cal": "Âm lịch 15/1"
+   },
+   {
+    "n": "Quốc tế Phụ nữ",
+    "j": 2461473,
+    "cal": "Dương lịch 8/3"
+   },
+   {
+    "n": "Giỗ Tổ Hùng Vương",
+    "j": 2461512,
+    "cal": "Âm lịch 10/3"
+   },
+   {
+    "n": "Giải phóng miền Nam",
+    "j": 2461526,
+    "cal": "Dương lịch 30/4"
+   },
+   {
+    "n": "Quốc tế Lao động",
+    "j": 2461527,
+    "cal": "Dương lịch 1/5"
+   },
+   {
+    "n": "Quốc tế Thiếu nhi",
+    "j": 2461558,
+    "cal": "Dương lịch 1/6"
+   },
+   {
+    "n": "Tết Đoan ngọ",
+    "j": 2461566,
+    "cal": "Âm lịch 5/5"
+   },
+   {
+    "n": "Lễ Vu Lan",
+    "j": 2461634,
+    "cal": "Âm lịch 15/7"
+   },
+   {
+    "n": "Quốc khánh",
+    "j": 2461651,
+    "cal": "Dương lịch 2/9"
+   },
+   {
+    "n": "Tết Trung thu",
+    "j": 2461664,
+    "cal": "Âm lịch 15/8"
+   },
+   {
+    "n": "Phụ nữ Việt Nam",
+    "j": 2461699,
+    "cal": "Dương lịch 20/10"
+   }
+  ]
+ },
+ "up": {
+  "2026-11-7": {
+   "seed": [
+    {
+     "off": 0,
+     "t": "09:00",
+     "title": "Họp nhóm",
+     "rm": "Không nhắc",
+     "done": true
+    },
+    {
+     "off": 0,
+     "t": "17:30",
+     "title": "Đón con tan học",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 1,
+     "t": "07:00",
+     "title": "Đi bộ công viên",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 3,
+     "t": "19:00",
+     "title": "Sinh nhật mẹ",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 30,
+     "t": "08:00",
+     "title": "Đúng ngày thứ 30",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 31,
+     "t": "08:00",
+     "title": "Ngoài 30 ngày",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": -1,
+     "t": "08:00",
+     "title": "Hôm qua",
+     "rm": "Không nhắc",
+     "done": false
+    }
+   ],
+   "ra": [
+    {
+     "j": 2461352,
+     "t": "Đón con tan học",
+     "s": "17:30 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461353,
+     "t": "Đi bộ công viên",
+     "s": "07:00 · Không nhắc",
+     "k": "Việc"
+    },
+    {
+     "j": 2461355,
+     "t": "Sinh nhật mẹ",
+     "s": "19:00 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461365,
+     "t": "Nhà giáo Việt Nam",
+     "s": "Dương lịch 20/11",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461382,
+     "t": "Đúng ngày thứ 30",
+     "s": "08:00 · Không nhắc",
+     "k": "Việc"
+    }
+   ],
+   "badgeUp": "5 việc · 30 ngày",
+   "badgeHol": "20/11",
+   "badgeMua": "Mùa Đông"
+  },
+  "2026-2-10": {
+   "seed": [
+    {
+     "off": 0,
+     "t": "09:00",
+     "title": "Họp nhóm",
+     "rm": "Không nhắc",
+     "done": true
+    },
+    {
+     "off": 0,
+     "t": "17:30",
+     "title": "Đón con tan học",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 1,
+     "t": "07:00",
+     "title": "Đi bộ công viên",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 3,
+     "t": "19:00",
+     "title": "Sinh nhật mẹ",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 30,
+     "t": "08:00",
+     "title": "Đúng ngày thứ 30",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 31,
+     "t": "08:00",
+     "title": "Ngoài 30 ngày",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": -1,
+     "t": "08:00",
+     "title": "Hôm qua",
+     "rm": "Không nhắc",
+     "done": false
+    }
+   ],
+   "ra": [
+    {
+     "j": 2461082,
+     "t": "Đón con tan học",
+     "s": "17:30 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461082,
+     "t": "Ông Công ông Táo",
+     "s": "Âm lịch 23/12",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461083,
+     "t": "Đi bộ công viên",
+     "s": "07:00 · Không nhắc",
+     "k": "Việc"
+    },
+    {
+     "j": 2461085,
+     "t": "Sinh nhật mẹ",
+     "s": "19:00 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461086,
+     "t": "Lễ Tình nhân",
+     "s": "Dương lịch 14/2",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461103,
+     "t": "Tết Nguyên tiêu",
+     "s": "Âm lịch 15/1",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461108,
+     "t": "Quốc tế Phụ nữ",
+     "s": "Dương lịch 8/3",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461112,
+     "t": "Đúng ngày thứ 30",
+     "s": "08:00 · Không nhắc",
+     "k": "Việc"
+    }
+   ],
+   "badgeUp": "8 việc · 30 ngày",
+   "badgeHol": "10/2",
+   "badgeMua": "Mùa Xuân"
+  },
+  "2026-11-25": {
+   "seed": [
+    {
+     "off": 0,
+     "t": "09:00",
+     "title": "Họp nhóm",
+     "rm": "Không nhắc",
+     "done": true
+    },
+    {
+     "off": 0,
+     "t": "17:30",
+     "title": "Đón con tan học",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 1,
+     "t": "07:00",
+     "title": "Đi bộ công viên",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 3,
+     "t": "19:00",
+     "title": "Sinh nhật mẹ",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 30,
+     "t": "08:00",
+     "title": "Đúng ngày thứ 30",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 31,
+     "t": "08:00",
+     "title": "Ngoài 30 ngày",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": -1,
+     "t": "08:00",
+     "title": "Hôm qua",
+     "rm": "Không nhắc",
+     "done": false
+    }
+   ],
+   "ra": [
+    {
+     "j": 2461370,
+     "t": "Đón con tan học",
+     "s": "17:30 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461371,
+     "t": "Đi bộ công viên",
+     "s": "07:00 · Không nhắc",
+     "k": "Việc"
+    },
+    {
+     "j": 2461373,
+     "t": "Sinh nhật mẹ",
+     "s": "19:00 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461399,
+     "t": "Đêm Giáng sinh",
+     "s": "Dương lịch 24/12",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461400,
+     "t": "Đúng ngày thứ 30",
+     "s": "08:00 · Không nhắc",
+     "k": "Việc"
+    }
+   ],
+   "badgeUp": "5 việc · 30 ngày",
+   "badgeHol": "24/12",
+   "badgeMua": "Mùa Đông"
+  },
+  "2027-1-1": {
+   "seed": [
+    {
+     "off": 0,
+     "t": "09:00",
+     "title": "Họp nhóm",
+     "rm": "Không nhắc",
+     "done": true
+    },
+    {
+     "off": 0,
+     "t": "17:30",
+     "title": "Đón con tan học",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 1,
+     "t": "07:00",
+     "title": "Đi bộ công viên",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 3,
+     "t": "19:00",
+     "title": "Sinh nhật mẹ",
+     "rm": "Nhắc khi mở app",
+     "done": false
+    },
+    {
+     "off": 30,
+     "t": "08:00",
+     "title": "Đúng ngày thứ 30",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": 31,
+     "t": "08:00",
+     "title": "Ngoài 30 ngày",
+     "rm": "Không nhắc",
+     "done": false
+    },
+    {
+     "off": -1,
+     "t": "08:00",
+     "title": "Hôm qua",
+     "rm": "Không nhắc",
+     "done": false
+    }
+   ],
+   "ra": [
+    {
+     "j": 2461407,
+     "t": "Đón con tan học",
+     "s": "17:30 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461407,
+     "t": "Tết Dương lịch",
+     "s": "Dương lịch 1/1",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461408,
+     "t": "Đi bộ công viên",
+     "s": "07:00 · Không nhắc",
+     "k": "Việc"
+    },
+    {
+     "j": 2461410,
+     "t": "Sinh nhật mẹ",
+     "s": "19:00 · Nhắc khi mở app",
+     "k": "Việc"
+    },
+    {
+     "j": 2461436,
+     "t": "Ông Công ông Táo",
+     "s": "Âm lịch 23/12",
+     "k": "Lễ"
+    },
+    {
+     "j": 2461437,
+     "t": "Đúng ngày thứ 30",
+     "s": "08:00 · Không nhắc",
+     "k": "Việc"
+    }
+   ],
+   "badgeUp": "6 việc · 30 ngày",
+   "badgeHol": "1/1",
+   "badgeMua": "Mùa Đông"
+  }
+ },
+ "mua": {
+  "2026-2-3": {
+   "mua": "Đông",
+   "ic": "moon",
+   "tiet": "Đại hàn"
+  },
+  "2026-2-4": {
+   "mua": "Xuân",
+   "ic": "blossom",
+   "tiet": "Lập xuân"
+  },
+  "2026-5-4": {
+   "mua": "Xuân",
+   "ic": "blossom",
+   "tiet": "Cốc vũ"
+  },
+  "2026-5-5": {
+   "mua": "Hạ",
+   "ic": "sun",
+   "tiet": "Lập hạ"
+  },
+  "2026-8-6": {
+   "mua": "Hạ",
+   "ic": "sun",
+   "tiet": "Đại thử"
+  },
+  "2026-8-7": {
+   "mua": "Thu",
+   "ic": "fan",
+   "tiet": "Lập thu"
+  },
+  "2026-11-6": {
+   "mua": "Thu",
+   "ic": "fan",
+   "tiet": "Sương giáng"
+  },
+  "2026-11-7": {
+   "mua": "Đông",
+   "ic": "moon",
+   "tiet": "Lập đông"
+  },
+  "2026-3-20": {
+   "mua": "Xuân",
+   "ic": "blossom",
+   "tiet": "Xuân phân"
+  },
+  "2026-6-21": {
+   "mua": "Hạ",
+   "ic": "sun",
+   "tiet": "Hạ chí"
+  },
+  "2026-12-31": {
+   "mua": "Đông",
+   "ic": "moon",
+   "tiet": "Đông chí"
+  },
+  "2026-1-1": {
+   "mua": "Đông",
+   "ic": "moon",
+   "tiet": "Đông chí"
+  }
+ },
+ "huy": {}
+}
