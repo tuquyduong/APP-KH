@@ -30,7 +30,7 @@ Chạy với KHONG_TRINH_DUYET=1 (đúng cách GitHub chạy: không Chromium).
   26 đạt · 1 hỏng
 
 Số ca đếm trên code ĐÃ VÁ, KHONG_TRINH_DUYET=1 (đúng số GitHub đếm):
-SỐ CA cong_cu/thu_KHSOHD1.js: 38
+SỐ CA cong_cu/thu_KHSOHD1.js: 39
 SỐ CA cong_cu/thu_KHBAO1.js: 33
 SỐ CA cong_cu/thu_KHHD1.js: 26
 SỐ CA cong_cu/thu_KHMUA1.js: 56

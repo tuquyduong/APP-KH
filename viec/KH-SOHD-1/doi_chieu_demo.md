@@ -13,6 +13,8 @@ Chuẩn giao diện: `thiet_ke/app_kh_demo.html` (patch39). Demo CHƯA có màn 
 | Chữ cuối thẻ | không có | không có (bài thử D3 kiểm phần tử cuối là ô trắng) | giống mẫu |
 | Đồng hồ / hết hạn / dòng ví đã giữ | giữ nguyên | giữ nguyên (`.qr-chu`, "Tạo mã mới", "Đã giữ … trong ví") | giống app trước |
 
+Cặp ảnh: mẫu đã duyệt `viec/KH-SOHD-1/mau_the_QR_TQD.png` ↔ bản của app `so_anh/the-qr_360.png`, `the-qr_390.png`, `the-qr_430.png` (QR cả đơn) và `the-qr-vi_*.png` (ví + QR). Mẫu chỉ có một cỡ nên so bằng mắt cùng bố cục; lệch còn lại: đĩa logo nhỏ hơn mẫu (trần 20% của phiếu), `APP0016` thay `HD0016` (b). Không dựng ảnh tô chỗ lệch vì không còn chỗ lệch nào ngoài hai điểm này.
+
 Chưa kiểm quét máy (D6): máy làm việc không có `zbarimg` / `jsQR`, người gác chặn `npm install` → bài thử kiểm CẤU TRÚC (lưới bit dựng lại từ hình vẽ khớp ma trận mức H, đĩa logo ≤ 20% bề ngang, mất < 10% ô). Chủ quán quét thử MB / Vietcombank / Techcombank / MoMo (E4).
 
 ## Màn Theo dõi đơn — số đơn, tiền về muộn (`theodoi-da-tra_<rộng>.png`, `tien-ve-muon_<rộng>.png`)
