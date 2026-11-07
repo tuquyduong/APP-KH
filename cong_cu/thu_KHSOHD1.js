@@ -93,6 +93,7 @@ const MAU_CHUOI = [vietqr('TQDNOV06 APP0016'), vietqr('TQDNOV06 APP0016', 'x'.re
   const TQ = docTho('src/components/TheQR.jsx'), CSS = docTho('src/giaoDien/the_qr.css');
   k('D3 TheQR: finder vẽ khối TÔ ĐẶC (không vòng rỗng: không stroke / fill="none"); nền trắng; đĩa logo + logo_tqd_192.png', !/stroke|fill="none"/.test(TQ) && /rx="2"/.test(TQ) && /fill="#fff"/.test(TQ) && /logo_tqd_192\.png/.test(TQ) && fs.existsSync(path.join(GOC, 'public/anh/logo_tqd_192.png')));
   k('D3 TheQR: chữ "Tứ Quý Đường" + "Quét mã để thanh toán", dòng "<so_hd> · <nội dung CK>"; TheoDoiDon dùng TheQR thay VeQR', /Quét mã để thanh toán/.test(TQ) && /Tứ Quý Đường/.test(TQ) && /noiDungCK\(chuoi\)/.test(TQ) && /<TheQR /.test(nguon['src/pages/TheoDoiDon.jsx']) && !/VeQR/.test(nguon['src/pages/TheoDoiDon.jsx']));
+  k('D3 TheQR không làm trắng màn khi chuỗi quá dài: dungTheQR ném lỗi → TheQR bắt, bỏ mã, vẫn hiện số tiền / dòng', (() => { try { Q.dungTheQR('x'.repeat(3000)); return false; } catch { return true; } })() && /try \{ return dungTheQR\(chuoi\); \} catch/.test(TQ) && /\{m && <svg/.test(TQ));
   k('D4 ManQR.jsx (mã thành viên) không đổi: vẫn VeQR mức M, không TheQR', /export function VeQR/.test(docTho('src/pages/ManQR.jsx')) && /qrcode\(0, 'M'\)/.test(docTho('src/pages/ManQR.jsx')) && !/TheQR/.test(docTho('src/pages/ManQR.jsx')));
   const bay = ['#FBF3E6', '#B08028', '#7A1E18'], bon = ['#253A6E', '#966923', '#347042', '#B2342C'];
   const rai = [];
@@ -190,7 +191,7 @@ async function trinhDuyet(pw) {
       await doi(t, async () => (await t.locator('.the-qr svg').count()) === 1);
       const dong = await chu(t, '.the-qr-dong');
       k(`D3 [${rong}] thẻ: "Tứ Quý Đường", "Quét mã để thanh toán", số tiền 87.654đ, dòng "APP0016 · TQDNOV06 APP0016"`, /Tứ Quý Đường/.test(await chu(t, '.the-qr-dau')) && /Quét mã để thanh toán/.test(await chu(t, '.the-qr-dau')) && (await chu(t, '.the-qr-tien')) === '87.654đ' && dong === 'APP0016 · TQDNOV06 APP0016', dong);
-      k(`D3 [${rong}] không dòng chữ cuối thẻ; 3 ô góc đặc; mã QR có ≥ 300 chấm; đĩa logo`, (await t.locator('.the-qr > *').last().getAttribute('class')) === 'the-qr-o' && (await t.locator('.the-qr svg g').count()) === 3 && (await t.locator('.the-qr svg path').count()) === 4 && (await t.locator('.the-qr svg image').count()) === 1);
+      k(`D3 [${rong}] không dòng chữ cuối thẻ; 3 ô góc đặc; 4 nhóm chấm màu; đĩa logo`, (await t.locator('.the-qr > *').last().getAttribute('class')) === 'the-qr-o' && (await t.locator('.the-qr svg g').count()) === 3 && (await t.locator('.the-qr svg path').count()) === 4 && (await t.locator('.the-qr svg image').count()) === 1);
       k(`D3 [${rong}] giữ đồng hồ đếm ngược "còn 9:…" cạnh thẻ; thẻ không tràn ngang`, /còn (9:5\d|10:00)/.test(await chu(t, '.qr-chu')) && !(await tranNgang(t)));
       const hop = await t.locator('.the-qr').boundingBox();
       k(`D3 [${rong}] thẻ nằm trọn trong màn`, !!hop && hop.x >= 0 && hop.x + hop.width <= rong + 1, JSON.stringify(hop));

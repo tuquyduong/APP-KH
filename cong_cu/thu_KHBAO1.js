@@ -144,7 +144,7 @@ async function trinhDuyet(pw) {
     k('A2 Trang chủ 360 px: có dải, không tràn ngang', (await dai(t).count()) === 1 && !(await tranNgang(t)));
     await chup(t, 'bao-trangchu-360');
     await dai(t).getByText('Xem đơn').click();
-    k('A2 "Xem đơn" → /don/TQD50, dải mất, không báo lại', await doi(t, async () => /\/don\/TQD50$/.test(t.url())) && (await dai(t).count()) === 0 && !/^\(Xong\)/.test(await tieuDe(t)));
+    k('A2 "Xem đơn" → /don/TQD50, dải mất, không báo lại', await doi(t, async () => /\/don\/TQD50$/.test(t.url()) && (await dai(t).count()) === 0 && !/^\(Xong\)/.test(await tieuDe(t))));
   });
 
   them('xong-tu-truoc', { gio: [], S0: { v7: true, don: new Map([['CU1', DON('CU1', 'xong')], ['HUY', DON('HUY', 'da_huy')]]) } }, async ({ t, S, ctx }) => {

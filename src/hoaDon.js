@@ -1,4 +1,4 @@
-// Đọc tờ hoá đơn giao khách do POS dựng sẵn (`don.hoa_don[]`, hợp đồng v7). Hàm thuần: KHÔNG tính tiền, KHÔNG sắp lại, KHÔNG bỏ dòng.
+// Đọc tờ hoá đơn giao khách do POS dựng sẵn (`don.hoa_don[]`, hợp đồng v7). Hàm thuần: KHÔNG tính tiền, KHÔNG sắp lại, KHÔNG bỏ dòng (trừ `ghi_no`: App không bao giờ hiện nợ).
 const NHOM = {
   dau: ['ten_quan', 'dia_chi', 'so_bill', 'nhan', 'gio', 'khach'],
   canh_bao: ['canh_bao'],

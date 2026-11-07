@@ -8,9 +8,9 @@ import '../giaoDien/the_qr.css';
 const LOGO = '/anh/logo_tqd_192.png';
 
 export default function TheQR({ chuoi, soTien = null, soHd = null }) {
-  const m = useMemo(() => dungTheQR(chuoi), [chuoi]);
+  const m = useMemo(() => { try { return dungTheQR(chuoi); } catch { return null; } }, [chuoi]); // chuỗi quá dài cho mã: không vẽ mã, không làm trắng màn
   const dong = [soHd, noiDungCK(chuoi)].filter(Boolean).join(' · ');
-  const d = m.logo.r * 1.7;
+  const d = m ? m.logo.r * 1.7 : 0;
   return (
     <div className="the-qr">
       <div className="the-qr-dau">
@@ -19,7 +19,7 @@ export default function TheQR({ chuoi, soTien = null, soHd = null }) {
       </div>
       <div className="the-qr-o">
         {dinhDangGia(soTien) && <div className="the-qr-tien">{dinhDangGia(soTien)}</div>}
-        <svg viewBox={`${-m.vien} ${-m.vien} ${m.tong} ${m.tong}`} role="img" aria-label="Mã QR trả tiền">
+        {m && <svg viewBox={`${-m.vien} ${-m.vien} ${m.tong} ${m.tong}`} role="img" aria-label="Mã QR trả tiền">
           <rect x={-m.vien} y={-m.vien} width={m.tong} height={m.tong} fill="#fff" />
           {m.cham.map((g) => <path key={g.mau} d={g.d} fill={g.mau} />)}
           {m.finder.map((f) => (
@@ -31,7 +31,7 @@ export default function TheQR({ chuoi, soTien = null, soHd = null }) {
           ))}
           <circle cx={m.logo.cx} cy={m.logo.cy} r={m.logo.r} fill="#fff" />
           <image href={LOGO} x={m.logo.cx - d / 2} y={m.logo.cy - d / 2} width={d} height={d} />
-        </svg>
+        </svg>}
         {dong && <div className="the-qr-dong">{dong}</div>}
       </div>
     </div>
