@@ -16,8 +16,9 @@
 (không có)
 
 ## Phát hiện
-- `thu_KHHANG2` ca B1 trong trình duyệt xanh cả trên gốc (app còn vẽ lại `ChuongTrinhToi` do nguồn khác), nên bằng chứng đỏ của B1 là ca đọc nguồn `dungKho(khoGioHoatDong)`. Không ảnh hưởng tính đúng của bản vá (hook chỉ chặn việc vẽ lại phụ thuộc may rủi).
-- `thiet_ke/mau_*`/ảnh demo cùng cỡ để so ảnh chưa dựng (xem CHƯA KIỂM).
+- B1 CHƯA TÁI HIỆN ĐƯỢC LỖI GỐC: ca trình duyệt `b1-hien` / `b1-an` xanh cả trên gốc, vì `src/App.jsx:69` đã `dungKho(khoGioHoatDong)` ở cấp App nên cả cây vẽ lại khi giờ POS về. Dòng `dungKho(khoGioHoatDong)` trong `ChuongTrinhToi` là phòng thủ (không phụ thuộc cha); bằng chứng "đỏ" của nó chỉ là ca đọc nguồn (marker), chưa phải hành vi. Hai ca trình duyệt giữ lại làm hồi quy. Chủ quán / chat soát có thể bỏ dòng này nếu muốn gọn hơn.
+- (ngoài Phạm vi) `src/tomTatLuu.js:9-10`: `rutHang` ghi `het_han: chuoi(h.het_han)` → hạng mà POS không gửi `het_han` (undefined) bị bản tóm tắt cache đổi thành `null`, rồi `UuDai.jsx` hiện "Không thời hạn" khi khách dựng từ cache (`tuMay`). Hợp đồng v10 nói `het_han` = `null` khi không thời hạn nên POS thật luôn gửi; chưa đọc lại hợp đồng để chắc. Đề xuất: chat soát xem xét sửa `rutHang` giữ `undefined` ≠ `null` (phiếu riêng).
+- `laHangChiCap` cần `/hang` đã tải: chưa tải / lỗi thì khách hạng tặng chỉ thiếu dòng "Hạng dành tặng" (ẩn, không bịa số) — chấp nhận.
 
 ## Bảng chỗ vá → bài thử (không có đột biến VS-/BV-: việc giao diện, không tiền / bảo mật; không có `dot_bien.py`)
 | Chỗ vá | Bài thử bắt |
@@ -46,13 +47,14 @@
 2. ĐÃ SỬA: `src/giaHang.js` (+`laHangChiCap`, `dongGoi`, 2 hằng chữ, chú thích `thu_bac`); `src/pages/UuDai.jsx` (`TheHang`: "Không thời hạn", dòng hạng tặng, gói tháng, không đọc `gia_the`; `ChuongTrinhToi`: đăng ký kho giờ hoạt động, dòng chúc mừng/mời nhập chỉ ở thẻ sinh nhật đầu); `src/giaoDien/hang.css` mới (4 dòng); bài thử `thu_KHHANG2` mới, `thu_KHUI3d`, `thu_KHCT1` sửa.
 3. BÀI THỬ: xem `bang_chung_do.txt`; SỐ CA thu_KHHANG2 16, thu_KHUI3d 34, thu_KHCT1 19 (`KHONG_TRINH_DUYET=1`).
 4. ĐÃ RÀ K4: `grep gia_the` — `UuDai.jsx`, `giaHang.js` sạch; còn ở `src/kiemKhop/canTuPos.js` và bài thử việc khác (ngoài Phạm vi, thuộc KH-SOHD-1). `Thẻ hết hạn` / `het_han` chỉ ở `TheHang`. `sinhNhatHomNay` chỉ ở `ChuongTrinhToi`.
-5. CHƯA KIỂM: (i) so ảnh demo ↔ app cùng cỡ + ảnh tô chỗ lệch (chưa dựng; ảnh app đã lưu, chỉ thêm dòng chữ trong khuôn demo); (ii) POS thật: chưa thử với hạng `chi_cap` thật (D4); (iii) trình duyệt Zalo; (iv) soát kế hoạch bằng agent phụ.
+5. CHƯA KIỂM: (i) so ảnh demo ↔ app: ĐÃ làm ở vòng sửa 1 (`so_anh/demo_*`, `lech_*`, `doi_chieu_demo.md`); chat App KH so lại lần cuối khi gộp; (ii) POS thật: chưa thử với hạng `chi_cap` thật (D4); (iii) trình duyệt Zalo; (iv) soát kế hoạch bằng agent phụ.
 6. GIT: nhánh `viec/KH-HANG-2`, commit từng file; chưa merge, chưa tạo PR.
 7. BÀI HỌC: xem mục dưới.
 
 ## Bài học
 - BỎ: người gác chặn `git stash`, chặn bash chạy file có "token" khi chưa commit, và chặn `for` / gộp lệnh chạy bài thử → lệnh ghi bài thử dùng Write, commit trước, mỗi lệnh chạy bài thử đứng một mình. Một lần, đã có thông báo rõ từ người gác; không thêm luật.
-- BỎ: ca trình duyệt B1 xanh trên gốc — đỏ nhờ ca đọc nguồn; ghi ở Phát hiện.
+- NGUYÊN TẮC (đề xuất, ngoài Phạm vi — K3): ca "đọc nguồn" phải bỏ chú thích, chỉ xét thân hàm, tìm cách DÙNG (`{HANG}` trong JSX) chứ không tìm tên hằng (khớp ngay dòng import); bản vá về vẽ lại phải có ca đỏ hành vi thật, nếu chưa tái hiện được thì ghi thẳng "chưa tái hiện được lỗi". Do agent soát bắt ở vòng 1.
+- NGUYÊN TẮC (đề xuất): việc giao diện bắt buộc so ảnh demo không được để ở CHƯA KIỂM rồi coi là xong (CLAUDE.md §5) — vòng 1 phải bù.
 - NGUYÊN TẮC / KHOÁ: không đề xuất mới.
 
 ## Cổng (chạy ở HEAD 179bdc7, cây sạch, `KHONG_TRINH_DUYET=1`)
