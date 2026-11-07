@@ -98,6 +98,13 @@ const DUYET_NGOAI_DEMO = [
   { loai: 'mau', gia_tri: '#FBE3A2', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 — chủ quán chọn 30.10.2026' },
   { loai: 'mau', gia_tri: 'rgba(60,10,5,.35)', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 — chủ quán chọn 30.10.2026' },
   { loai: 'pho', gia_tri: 'EB Garamond', tep: ['src/giaoDien/khau_hieu.css'], nguon: 'khẩu hiệu mẫu B2.3 (SIL OFL) — chủ quán chọn 30.10.2026' },
+  { loai: 'mau', gia_tri: '#FBF3E6', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (nền kem) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#B08028', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (viền vàng kim) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#7A1E18', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (chữ đỏ đô) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#253A6E', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (phần tư trên trái) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#966923', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (phần tư trên phải) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#347042', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (phần tư dưới trái) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
+  { loai: 'mau', gia_tri: '#B2342C', tep: ['src/giaoDien/the_qr.css', 'src/qrThuongHieu.js'], nguon: 'thẻ mã QR thương hiệu (phần tư dưới phải) — chủ quán duyệt mẫu 06.11.2026 (POS GIAO-DIEN-1 F)' },
 ];
 const DUYET_MAU = new Map();
 for (const d of DUYET_NGOAI_DEMO.filter((x) => x.loai === 'mau')) for (const [kh] of docMau(d.gia_tri)) DUYET_MAU.set(kh, d.tep);

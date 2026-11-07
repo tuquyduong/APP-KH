@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 35,
-  "cap_nhat": "2026-11-05",
+  "phien_ban_so": 36,
+  "cap_nhat": "2026-11-06",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -89,12 +89,14 @@
       "ten": "Ke hoach va nhac viec theo demo (/kehoach): lich am duong, tiet khi, viec cua toi (luu tren may), van khan, ngay can nho, xe co, uong thuoc, chu ky (suc khoe chi luu tren may), 6 tien ich, the video huong dan (an toi khi co video); o khoa khi chua dang nhap",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-UI-5a (dung lai src/lich.js)",
         "KH-LUU-1 (dung src/luuMay.js)"
       ],
-      "han": "2026-11-01"
+      "han": "2026-11-08",
+      "ngay": "2026-11-06",
+      "ghi_chu": "06.11 mo (chu quan: tien ich ke hoach + banner anh sang chay qua \"nhu demo\"; chi can du 8 tien ich demo): lich + viec cua toi + Theo mua / Ngay le / Sap toi + banner hom nay ban nho fx-a o man Ke hoach / tien ich; 5 tien ich con lai = KH-UI-5c sau khi 5b gop. Chu cong tac: \"Nhac khi mo app\""
     },
     {
       "ma": "KH-UI-4",
@@ -396,15 +398,33 @@
       "commit": "cbca56e"
     },
     {
+      "ma": "KH-SOHD-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-BAO-1",
+        "KH-CT-1",
+        "POS CK-NOIDUNG-1 (v11)"
+      ],
+      "ten": "So don = so hoa don POS (so_hd APP0016) o moi cho hien cho khach; tien ve muon hien nguyen thong_bao_tien_ve; THE MA QR thuong hieu (mau chu quan duyet 06.11) cho QR tra tien; chep hop dong v11",
+      "ghi_chu": "06.11 mo: POS main v11 (HANG-1 v10 + CK-NOIDUNG-1 v11); mau the QR GIAO-DIEN-1 muc F (thu POS 06.11). Chay song song KH-HANG-2",
+      "ngay": "2026-11-06",
+      "han": "2026-11-07"
+    },
+    {
       "ma": "KH-HANG-2",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
-        "POS HANG-1 len hop dong"
+        "KH-CT-1",
+        "POS HANG-1 (v10)"
       ],
       "ten": "Hang theo HANG-1: chi_cap → \"Hang danh tang khach than thiet\", khong hien gia; het_han null → \"Khong thoi han\"; xep hang theo thu_bac; goi[] chi hien (nut mua the van la P3b sau khai truong)",
-      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip | 06.11 tu soat KH-CT-1 (lam kem vi cung sua UuDai.jsx): (1) ChuongTrinhToi doc \"hom nay\" luc ve — ve lai khi bay_gio POS ve (dungGia / bayGio), ca /toi ve truoc /gio-hoat-dong; (2) hai chuong trinh sinh_nhat cung luc → dong chuc mung chi o the dau"
+      "ghi_chu": "02.11: lam cung dot truoc khai truong neu POS kip | 06.11 tu soat KH-CT-1 (lam kem vi cung sua UuDai.jsx): (1) ChuongTrinhToi doc \"hom nay\" luc ve — ve lai khi bay_gio POS ve (dungGia / bayGio), ca /toi ve truoc /gio-hoat-dong; (2) hai chuong trinh sinh_nhat cung luc → dong chuc mung chi o the dau | 06.11 mo: POS main co HANG-1 (v10); kem 2 sua nho khoi chuong trinh tu soat KH-CT-1. Chay song song KH-SOHD-1",
+      "ngay": "2026-11-06",
+      "han": "2026-11-07"
     },
     {
       "ma": "KH-MUA-2",

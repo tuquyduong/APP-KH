@@ -3,6 +3,14 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 06.11.2026
+- **Thẻ mã QR thương hiệu** (chủ quán duyệt mẫu 06.11, POS GIAO-DIEN-1 mục F): mọi QR TRẢ TIỀN trên App dùng cùng mẫu với POS — thẻ kem #FBF3E6 viền vàng kim #B08028, chữ "Tứ Quý Đường" #7A1E18, mã mức H chấm tròn 4 màu phần tư (#253A6E · #966923 · #347042 · #B2342C), 3 ô góc tô đặc, logo giữa. 7 màu này duyệt ngoài demo (K9) chỉ cho `src/giaoDien/the_qr.css` + `src/qrThuongHieu.js`. Mã thành viên giữ như cũ. (KH-SOHD-1)
+- **Số đơn = số hoá đơn POS** (`so_hd`, ví dụ `APP0016`) ở mọi chỗ khách thấy; mã App `A…` chỉ để máy dùng. Tiền về muộn: App hiện NGUYÊN câu `thong_bao_tien_ve` của POS. (KH-SOHD-1)
+- **Hạng thẻ HANG-1** (POS v10): hạng chủ quán tặng ghi "Hạng dành tặng khách thân thiết", không giá; thẻ không thời hạn ghi "Không thời hạn"; Ưu đãi hiện gói tháng đang bán (mua thẻ trên App: sau khai trương). (KH-HANG-2)
+- **Cổng báo tiền Tingee** (POS TINGEE-1): App không đổi gì.
+- **Kế hoạch và tiện ích** (chủ quán 06.11): làm ĐỦ 8 tiện ích của demo (chưa thêm tiện ích ngoài demo); banner "hôm nay" có ánh sáng lướt hiện ở Trang chủ + bản nhỏ ở màn Kế hoạch và tiện ích, như demo (nút ✕ ẩn đến hết hôm nay). Công tắc nhắc ghi "Nhắc khi mở app" (chưa báo khi đã tắt app — KH-TB-1). (KH-UI-5b, KH-UI-5c)
+- **Sinh nhật 29/02** (POS trả lời 06.11): năm không nhuận tính 28/02 — CÙNG luật App và quầy.
+
 ## 05.11.2026
 - **Thanh toán: nút đặt nói cách trả, bỏ dòng "Chuyển khoản QR"** (chủ quán 05.11, thử trên iPhone): nút ghi "Thanh toán qua QR <tổng>" / "Trừ ví <tổng>" / "Trừ ví <số dư> + QR <còn thiếu>"; bấm vào BẤT KỲ chỗ nào của dòng "Trừ từ số dư ví" là bật / tắt; số dư đọc lỗi → "Bấm để thử lại" (KH-TT-1).
 - **Chi tiết đơn vẽ đúng tờ hoá đơn POS** (KH-HD-1 gộp 05.11): món, giá gạch, giảm hạng / Giờ vàng / mã, cách trả, điểm, lời cảm ơn; đơn chờ trả vẫn vẽ món + Tổng.
