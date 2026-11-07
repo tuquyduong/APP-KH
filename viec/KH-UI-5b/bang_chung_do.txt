@@ -18,6 +18,6 @@ $ node cong_cu/thu_KHUI5a.js
   VS-THU-HAI   (src/kehoach.js luoiThang: tuần bắt đầu thứ Hai `+ 6` → `+ 0`, lưới lệch cột):       70 đạt · 2 hỏng
   BV-KHOA-LUU  (src/luuMay.js: bỏ KHOA_KE_HOACH khỏi KHOA_DU_LIEU, đăng xuất không xoá việc):       68 đạt · 4 hỏng
 
-SỐ CA thu_KHUI5b.js: 72
-SỐ CA thu_KHLINK1.js: 97
-SỐ CA thu_KHUI5a.js: 357
+SỐ CA cong_cu/thu_KHUI5b.js: 72
+SỐ CA cong_cu/thu_KHLINK1.js: 97
+SỐ CA cong_cu/thu_KHUI5a.js: 357
