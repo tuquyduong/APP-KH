@@ -22,7 +22,8 @@ Chạy với KHONG_TRINH_DUYET=1 (đúng cách GitHub chạy: không Chromium).
 
 == cong_cu/thu_KHMUA1b.js (sửa) trên gốc ==
   ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v5 trở lên), từng byte
-  48 đạt · 1 hỏng
+  ✗ C5 (v11) đọc GET /don/:ma: so_hd → soHd (thiếu → null), mã App `ma` giữ nguyên
+  48 đạt · 2 hỏng
 
 == cong_cu/thu_KHMUA1c.js (sửa) trên gốc ==
   ✗ A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-SOHD-1/hop_dong_v11.md từng byte (v11 chứa v9)
@@ -33,7 +34,7 @@ SỐ CA cong_cu/thu_KHSOHD1.js: 38
 SỐ CA cong_cu/thu_KHBAO1.js: 33
 SỐ CA cong_cu/thu_KHHD1.js: 26
 SỐ CA cong_cu/thu_KHMUA1.js: 56
-SỐ CA cong_cu/thu_KHMUA1b.js: 49
+SỐ CA cong_cu/thu_KHMUA1b.js: 50
 SỐ CA cong_cu/thu_KHMUA1c.js: 27
 
 (Ở máy làm việc, đủ cả Chromium: thu_KHSOHD1 107 đạt (101 khi không chụp ảnh) · thu_KHBAO1 105 · thu_KHHD1 87 · thu_KHMUA1 129 · thu_KHMUA1b 256 · thu_KHMUA1c 111 — số này KHÔNG ghi ở dòng SỐ CA.)
