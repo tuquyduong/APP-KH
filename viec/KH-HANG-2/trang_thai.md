@@ -55,7 +55,15 @@
 - BỎ: người gác chặn `git stash`, chặn bash chạy file có "token" khi chưa commit, và chặn `for` / gộp lệnh chạy bài thử → lệnh ghi bài thử dùng Write, commit trước, mỗi lệnh chạy bài thử đứng một mình. Một lần, đã có thông báo rõ từ người gác; không thêm luật.
 - NGUYÊN TẮC (đề xuất, ngoài Phạm vi — K3): ca "đọc nguồn" phải bỏ chú thích, chỉ xét thân hàm, tìm cách DÙNG (`{HANG}` trong JSX) chứ không tìm tên hằng (khớp ngay dòng import); bản vá về vẽ lại phải có ca đỏ hành vi thật, nếu chưa tái hiện được thì ghi thẳng "chưa tái hiện được lỗi". Do agent soát bắt ở vòng 1.
 - NGUYÊN TẮC (đề xuất): việc giao diện bắt buộc so ảnh demo không được để ở CHƯA KIỂM rồi coi là xong (CLAUDE.md §5) — vòng 1 phải bù.
-- NGUYÊN TẮC / KHOÁ: không đề xuất mới.
+- BỎ: `npm test` chập chờn khi máy tải (thu_KHBAO1, thu_KHNHANH1 đỏ rồi xanh khi chạy riêng; trên bản gốc cũng đỏ thu_KHBAO1) — không do việc này; chạy lại thì 36/0.
+
+## Soát độc lập `/ra-soat` — vòng 1: KHÔNG ĐẠT → đã sửa
+Báo cáo của agent soát (tóm đủ ý, không bỏ mục): KHÔNG ĐẠT vì (1) C2 thiếu ảnh demo ↔ app + ảnh tô chỗ lệch, `doi_chieu_demo.md` thiếu dòng khối Chương trình đặc biệt; (2) B1 chỉ có bằng chứng regex (không bỏ chú thích, không giới hạn thân hàm), ca trình duyệt xanh cả trên gốc, `App.jsx:69` đã vẽ lại cả cây nên B1 có thể là no-op; (3) ca đọc nguồn A1 khớp ngay dòng import (`CHU_KHONG_THOI_HAN`). Nghi ngờ: `tomTatLuu.js:9-10` đổi `het_han` undefined → null (ngoài Phạm vi); `key={g}` trùng; `laHangChiCap` cần `/hang` đã tải. Đơn giản: import trước chú thích đầu `giaHang.js`; `dinhDangGia` gọi hai lần. NGHIỆM THU 11/12 (thiếu C2); D4 là việc tay chủ quán. K4/K5/đường tiền: không lỗi; không sửa ngoài Phạm vi. Chưa soát được: không chạy bài thử, không xem ảnh.
+Đã sửa ở vòng 1: (1) chụp demo + ảnh tô chỗ lệch + viết lại `doi_chieu_demo.md`; (2)(3) ca đọc nguồn bỏ chú thích, chỉ thân hàm, tìm `{HANG}` trong JSX, `i === dauTien` đếm 2 lần; B1 ghi thẳng "chưa tái hiện được lỗi gốc" ở Phát hiện; `tomTatLuu` ghi Phát hiện (ngoài Phạm vi); `giaHang.js` đưa import xuống sau chú thích + `flatMap` một lần gọi `dinhDangGia`; `key={i}`. Sau sửa: thu_KHHANG2 16 · 0 (73 · 0 có trình duyệt), thu_KHUI3d 34 · 0, thu_KHCT1 19 · 0; SỐ CA không đổi; ca đỏ trên gốc vẫn đỏ (bài chặt hơn).
+Chưa chạy vòng soát lần 2 (còn 2 vòng cho phép); chat soát có thể yêu cầu.
+
+## Cổng — kiểm lại sau vòng 1 (HEAD f3f2f61, cây sạch, `KHONG_TRINH_DUYET=1`)
+`npm test` 36 đạt · 0 hỏng; `--day-du` 38 đạt · 0 hỏng; ✓ CỔNG CHẠY ĐẠT (kèm CẢNH BÁO A16 như dưới, không chặn).
 
 ## Cổng (chạy ở HEAD 179bdc7, cây sạch, `KHONG_TRINH_DUYET=1`)
 ✓ CỔNG CHẠY ĐẠT
@@ -63,3 +71,5 @@
 Cổng `tinh` trước đó chỉ còn thiếu dòng "HEAD ĐÃ KIỂM" (A19), ghi dưới đây.
 
 HEAD ĐÃ KIỂM: 179bdc7
+
+HEAD ĐÃ KIỂM: f3f2f61
