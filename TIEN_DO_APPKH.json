@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 36,
-  "cap_nhat": "2026-11-06",
+  "phien_ban_so": 37,
+  "cap_nhat": "2026-11-07",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -401,16 +401,17 @@
       "ma": "KH-SOHD-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-BAO-1",
         "KH-CT-1",
         "POS CK-NOIDUNG-1 (v11)"
       ],
       "ten": "So don = so hoa don POS (so_hd APP0016) o moi cho hien cho khach; tien ve muon hien nguyen thong_bao_tien_ve; THE MA QR thuong hieu (mau chu quan duyet 06.11) cho QR tra tien; chep hop dong v11",
-      "ghi_chu": "06.11 mo: POS main v11 (HANG-1 v10 + CK-NOIDUNG-1 v11); mau the QR GIAO-DIEN-1 muc F (thu POS 06.11). Chay song song KH-HANG-2",
+      "ghi_chu": "06.11 mo: POS main v11 (HANG-1 v10 + CK-NOIDUNG-1 v11); mau the QR GIAO-DIEN-1 muc F (thu POS 06.11). Chay song song KH-HANG-2 | 07.11 chat soat cuoi DAT: dau nhanh 182ff71; cong tinh + chay kieu GitHub DAT; ghep thu main ab9fe0f + KH-SOHD-1 + KH-HANG-2 + KH-UI-5b sach, npm test co trinh duyet 38/0; chat giai ma the QR bang zbar (3 chuoi VietQR dai, 1x va 2x): doc dung ca 3. So don = so_hd, tien ve muon nguyen cau POS, the QR thuong hieu, hop dong v11. Gop PR #21 (dde525c)",
       "ngay": "2026-11-06",
-      "han": "2026-11-07"
+      "han": "2026-11-07",
+      "commit": "dde525c"
     },
     {
       "ma": "KH-HANG-2",
