@@ -114,9 +114,8 @@ function ChuongTrinhToi({ ds, moHoSo }) {
   return xep.map((c, i) => {
     const sn = c.loai === 'sinh_nhat';
     let ghiChu = null;
-    if (!sn || i !== dauTien) ghiChu = null;
-    else if (homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
-    else if (ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
+    if (sn && i === dauTien && homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
+    else if (sn && i === dauTien && ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
     return <TheChuongTrinh key={c.ma || c.ten} ct={c} noiBat={sn && homNay} ghiChu={ghiChu} />;
   });
 }
