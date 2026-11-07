@@ -15,7 +15,7 @@ const k = (ten, dung, them = '') => {
 const doc = (f) => fs.readFileSync(path.join(GOC, f), 'utf8');
 const nap = (f) => import(pathToFileURL(path.join(GOC, f)).href);
 const thu = async (ten, f) => { try { await f(); } catch (e) { k(`${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } };
-const boChuThich = (s) => s.replace(/\/\/.*$/gm, '');
+const boChuThich = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
 
 const BAY_GIO = '2026-11-05T20:30:00';
 const MENU = { success: true, data: [{ ma: 'TLB', ten: 'Trà Lục Bảo', nhom: 'Trà Đông Y', gia: 30000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [] }] };
