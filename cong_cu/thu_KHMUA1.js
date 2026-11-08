@@ -237,7 +237,7 @@ async function trinhDuyet(pw) {
   }
   const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
   const gop = async (t) => { await t.clock.fastForward(650); await yen(t); }; // đồng hồ giả: qua nhịp gộp báo giá 600 ms (MS_GOP)
-  const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
+  const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); await gop(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
   const chu = (t, s) => t.locator(s).first().innerText();
   const dem = (P, pt, duong) => P.goi.filter((g) => g.pt === pt && (typeof duong === 'string' ? g.duong === duong : duong.test(g.duong))).length;
   const GIO2 = [{ ma: 'TLB', so_luong: 2, ghi_chu: '' }];
