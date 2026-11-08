@@ -34,13 +34,15 @@ function tepCuaBan(html) {
 const laHtml = (res) => /text\/html/.test(res.headers.get('content-type') || '');
 const dung = (res) => res && res.ok && res.type === 'basic' && !res.redirected;
 
-/** Lưu đè vỏ mới; tệp /assets không thuộc vỏ cũ lẫn vỏ mới thì xoá (giữ 2 bản gần nhất). Trả html. */
+/** Lưu đè vỏ mới; ĐỔI bản thì tệp /assets không thuộc vỏ cũ lẫn vỏ mới bị xoá (giữ 2 bản gần nhất). Trả html. */
 async function luuVo(res) {
   const html = await res.clone().text();
   const kho = await caches.open(KHO);
   const cu = await kho.match(VO);
-  const giu = new Set([...tepCuaBan(html), ...tepCuaBan(cu ? await cu.text() : '')]);
+  const htmlCu = cu ? await cu.text() : '';
   await kho.put(VO, res);
+  if (tenBan(htmlCu) === tenBan(html)) return html; // cùng bản (lưu đè lần hai) → không dọn, kẻo mất bản trước
+  const giu = new Set([...tepCuaBan(html), ...tepCuaBan(htmlCu)]);
   for (const r of await kho.keys()) {
     const p = new URL(r.url).pathname;
     if (p.startsWith('/assets/') && !giu.has(p)) await kho.delete(r);

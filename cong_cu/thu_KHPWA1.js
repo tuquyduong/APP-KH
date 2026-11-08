@@ -115,7 +115,7 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     k('B3 đang mở hộp thoại → KHÔNG an toàn dù ở /menu', C('/menu', true) === false && C('/trangchu', true) === false);
     const nguon = doc('src/dangKySW.js');
     k('B3 hộp thoại = [role="dialog"], [aria-modal="true"] hoặc bảng nổi .sheet.show (Thêm việc của Kế hoạch không có role)', /\[role="dialog"\]/.test(nguon) && /\[aria-modal="true"\]/.test(nguon) && /\.sheet\.show/.test(nguon));
-    k('B2 chỉ tải lại khi trang đang hiện + nhớ bản đã tải lại (không tải lại liên tục)', /visibilityState === 'visible'/.test(nguon) && /sessionStorage/.test(nguon));
+    k('B2 chỉ tải lại khi trang đang hiện + nhớ bản đã tải lại (không tải lại liên tục)', /visibilityState !== 'visible' \|\| !coTheTaiLai\(/.test(nguon) && /sessionStorage/.test(nguon));
     k('A1 chỉ đăng ký khi import.meta.env.PROD và có serviceWorker; lỗi đăng ký → bỏ qua (.catch)',
       /import\.meta\.env\.PROD/.test(nguon) && /'serviceWorker' in navigator/.test(nguon) && /register\('\/sw\.js'[^)]*\)\.catch\(/.test(nguon));
     k('B2 lắng nghe visibilitychange', /visibilitychange/.test(nguon));
