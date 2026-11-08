@@ -24,6 +24,8 @@ export function dungKeHoach(san = true) {
 }
 
 // Bấm một việc ở "Sắp tới" → mở lịch đúng ngày đó (demo calPick + go('lich')). Đọc MỘT lần.
-let ngayMo = null;
-export const datNgayMo = (ngay) => { ngayMo = ngay; };
-export const layNgayMo = () => { const n = ngayMo; ngayMo = null; return n; };
+// `moBang` = mở luôn bảng việc của ngày đó (bấm "Xem" ở dải nhắc việc, hoặc kết quả tìm). Đọc MỘT lần.
+let ngayMo = null, moBangNgay = false;
+export const SU_KIEN_MO_NGAY = 'kh-mo-ngay'; // màn Kế hoạch đang mở thì nghe sự kiện này để nhảy tới ngày
+export const datNgayMo = (ngay, moBang = false) => { ngayMo = ngay; moBangNgay = moBang; if (typeof window !== 'undefined') window.dispatchEvent(new Event(SU_KIEN_MO_NGAY)); };
+export const layNgayMo = () => { const n = ngayMo, b = moBangNgay; ngayMo = null; moBangNgay = false; return { ngay: n, moBang: b }; };
