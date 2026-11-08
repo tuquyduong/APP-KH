@@ -275,7 +275,8 @@ async function trinhDuyet(pw) {
     }, { token, gieo, xemManDau });
     const S = { goi: [], diem: { 'tok-A': 1250, 'tok-B': 40 }, chet: {}, khach: { 'tok-A': { ...KHACH_A }, 'tok-B': { ...B } } };
     const loi = [];
-    await ctx.route(`${URL0}/**`, async (r) => {
+    S.dangGoi = 0; S.tongGoi = 0; // đếm yêu cầu mạng giả: `yen(t, S)` chờ tới khi hết yêu cầu và trang đã vẽ xong (thay chờ cố định)
+    const xuLy = async (r) => {
       const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method(), auth = (req.headers().authorization || '').replace('Bearer ', '');
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiApp });
@@ -302,11 +303,13 @@ async function trinhDuyet(pw) {
       if (duong === '/nhan-diem') { S.diem[auth] += 10; return json(200, { success: true, diem_cong: 10 }); }
       if (duong === '/gio/bao-gia') return json(200, BG);
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
-    });
+    };
+    await ctx.route(`${URL0}/**`, async (r) => { S.dangGoi++; S.tongGoi++; try { return await xuLy(r); } finally { S.dangGoi--; } });
     const trang = async () => { const t = await ctx.newPage(); t.on('pageerror', (e) => loi.push(e.message)); t.setDefaultTimeout(5000); return t; };
     try { await chay({ ctx, S, trang }); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     k(`ca ${ten}: trang không báo lỗi JS`, loi.length === 0, loi[0]);
   }
+  const yen = async (t, S) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!S.dangGoi && S.tongGoi === tong) return; tong = S.tongGoi; } };
   const dem = (S, duong, pt = 'GET') => S.goi.filter((g) => g.duong === duong && g.pt === pt).length;
   const demHet = (S) => KHUNG_CUA.map((d) => dem(S, d)).join(',');
   const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); };
@@ -323,7 +326,7 @@ async function trinhDuyet(pw) {
       const t = await trang();
       await mo(t, '/trangchu');
       await doiHet(t, '#home .points-card .num', /1\.250/);
-      await t.waitForTimeout(TRE + 400);
+      await yen(t, S);
       const lan = Object.fromEntries([...KHUNG_CUA, '/menu'].map((d) => [d, dem(S, d)]));
       k(`B1 [${rong}] đã đăng nhập mở app → /toi, /diem, /voucher, /don, /menu mỗi cửa đúng MỘT lần`, Object.values(lan).every((n) => n === 1), JSON.stringify(lan));
       k(`B1 [${rong}] /don tải trước là trang 1`, S.goi.some((g) => g.duong === '/don' && g.q === '?trang=1'));
@@ -339,7 +342,7 @@ async function trinhDuyet(pw) {
           if (await t.locator('.khung-tai').count()) cham.push(8888);
         }
       }
-      await t.waitForTimeout(TRE + 200);
+      await yen(t, S);
       const them = S.goi.slice(truoc).filter((g) => KHUNG_CUA.includes(g.duong) || g.duong === '/menu');
       k(`A3 [${rong}] qua lại Trang chủ ↔ Tài khoản ↔ Ưu đãi 3 vòng → KHÔNG gọi thêm cửa nào`, them.length === 0, them.map((g) => g.duong).join(','));
       k(`A3 [${rong}] mỗi lần chuyển tab nội dung có trong < 300 ms, không khung xám`, Math.max(...cham) < 300, cham.join(','));
@@ -356,7 +359,7 @@ async function trinhDuyet(pw) {
   // B3 + G — vãng lai
   await may(`vanglai-${rong}`, { rong, token: '' }, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/uudai'); await t.waitForTimeout(TRE + 500);
+    await mo(t, '/uudai'); await yen(t, S);
     k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
     const the = await chu(t, '#rewards .tier-card');
     k(`G1 [${rong}] bảng hạng vãng lai không hiện hạng 0% (Test0d), vẫn hiện Vàng 10%`, /Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
@@ -369,7 +372,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/trangchu');
     k('C1 lần mở đầu tiên trong ngày → có màn mở', (await t.locator('#splashOverlay').count()) === 1);
     await t.locator('#skipBtn').click();
-    await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(300);
+    await doiHet(t, '#home .points-card .num', /1\.250/); await yen(t, S);
     const luu = await t.evaluate(() => localStorage.getItem('kh_tom_tat'));
     k('E1 có bản tóm tắt sau khi lấy /toi, /diem; không sdt / qr / địa chỉ', !!luu && /1250/.test(luu) && !/0909123456|QR-A-BI-MAT|Lê Lợi/.test(luu), luu);
     await t.close();
@@ -395,7 +398,7 @@ async function trinhDuyet(pw) {
   // F1 — Thanh toán luôn lấy /toi mới; nút ví khoá tới khi /toi về, kể cả khi kho / bản lưu có số dư đủ
   await may(`thanh-toan-${rong}`, { rong, gieo: { kh_gio: JSON.stringify([{ ma: 'TLB', so_luong: 1, ghi_chu: '' }]), kh_chu: LM.dauVet(KHACH_A.sdt), kh_tom_tat: JSON.stringify({ chu: LM.dauVet(KHACH_A.sdt), luc: 1, ten: 'Nguyễn Linh', xung_ho: 'chi', hang: null, so_du_vi: 999999, points: 1 }) } }, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(TRE + 300);
+    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await yen(t, S);
     const n0 = dem(S, '/toi');
     await sang(t, '/thanhtoan'); await t.waitForTimeout(TRE - 400);
     const vi = t.locator('#checkout .the-vi'), cong = t.locator('#checkout .the-vi');
@@ -403,43 +406,43 @@ async function trinhDuyet(pw) {
     await chup(t, `ung-dung_thanhtoan-dang-cap-nhat_${rong}`);
     k(`F1 [${rong}] mở Thanh toán → /toi được gọi lại`, dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
     k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /the-vi-khoa/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
-    await t.waitForTimeout(TRE + 300);
+    await yen(t, S);
     k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/the-vi-khoa/.test(await cong.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
     k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
   });
   }));
 
   // E2 + D4 + B2 — đăng xuất xoá; 401 giữ nhưng không hiện; khách B không bao giờ thấy số của A
-  const dangNhapB = async (t) => {
+  const dangNhapB = async (t, S) => {
     await mo(t, '/dangnhap?tiep=/trangchu');
     await t.fill('#sdt', B.sdt); await t.locator('#login .checkout-btn').click();
     await t.waitForSelector('#ma'); await t.fill('#ma', '123456');
     await t.evaluate(() => { window.__thayA = []; const id = setInterval(() => { const s = document.body.innerText; if (/1\.250|Linh|100\.000/.test(s)) window.__thayA.push(s.slice(0, 80)); }, 20); setTimeout(() => clearInterval(id), 3000); });
     await t.locator('#login .checkout-btn').click();
-    await t.waitForTimeout(3100);
+    await yen(t, S);
     return t.evaluate(() => window.__thayA);
   };
   await Promise.all(CO_MAN.map(async (rong) => {
   await may(`dang-xuat-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/taikhoan'); await doiHet(t, '#account .acc-q', /1\.250/); await t.waitForTimeout(300);
+    await mo(t, '/taikhoan'); await doiHet(t, '#account .acc-q', /1\.250/); await yen(t, S);
     k('E2 trước đăng xuất có kh_tom_tat', !!(await t.evaluate(() => localStorage.getItem('kh_tom_tat'))));
-    await t.locator('.acc-out').click(); await t.waitForTimeout(200);
+    await t.locator('.acc-out').click(); await yen(t, S);
     k('E2 đăng xuất → không còn kh_tom_tat', (await t.evaluate(() => localStorage.getItem('kh_tom_tat'))) === null);
     const n0 = demHet(S);
-    const thay = await dangNhapB(t);
+    const thay = await dangNhapB(t, S);
     k('D4 đăng nhập khách B trên cùng máy → không lúc nào thấy số / tên của khách A', thay.length === 0, thay[0]);
     k('B2 vừa đăng nhập → tải trước /toi, /diem, /voucher, /don', KHUNG_CUA.every((d) => S.goi.some((g) => g.duong === d && g.auth === 'tok-B')), `${n0} → ${demHet(S)}`);
     k('B2 thấy điểm của B', /40/.test(await chu(t, '#home .points-card .num')), await chu(t, '#home .points-card .num'));
   });
   await may(`het-phien-roi-B-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await t.waitForTimeout(300);
+    await mo(t, '/trangchu'); await doiHet(t, '#home .points-card .num', /1\.250/); await yen(t, S);
     S.chet['tok-A'] = true;
-    await mo(t, '/trangchu'); await t.waitForTimeout(TRE + 600);
+    await mo(t, '/trangchu'); await yen(t, S);
     k('E2 hết phiên (401) → GIỮ kh_tom_tat', !!(await t.evaluate(() => localStorage.getItem('kh_tom_tat'))));
     k('E2 hết phiên → không hiện số của khách (chế độ khách)', !/1\.250|Linh/.test(await chu(t, '#home')), await chu(t, '#home .topbar'));
-    const thay = await dangNhapB(t);
+    const thay = await dangNhapB(t, S);
     k('E3/D4 sau 401, khách B đăng nhập → không lúc nào thấy số / tên của A', thay.length === 0, thay[0]);
     k('E2 khách B đăng nhập → bản tóm tắt của A bị thay', !/Linh|1250/.test(await t.evaluate(() => localStorage.getItem('kh_tom_tat') || '')));
   });
@@ -447,23 +450,23 @@ async function trinhDuyet(pw) {
   // D3 nhận mã; D1 ẩn / hiện; D2 mỗi 5 phút
   await may(`nhan-ma-an-hien-${rong}`, { rong }, async ({ ctx, S, trang }) => {
     const t = await trang();
-    await mo(t, '/uudai'); await doiHet(t, '#rewards .wallet-row', /1\.250/); await t.waitForTimeout(TRE + 300);
+    await mo(t, '/uudai'); await doiHet(t, '#rewards .wallet-row', /1\.250/); await yen(t, S);
     const d0 = [dem(S, '/diem'), dem(S, '/voucher'), dem(S, '/toi')];
     await t.fill('#ma-bill', 'ABC123'); await t.locator('.promo-box button').click();
-    await t.waitForTimeout(TRE * 2 + 500);
+    await yen(t, S);
     const d1 = [dem(S, '/diem'), dem(S, '/voucher'), dem(S, '/toi')];
     k('D3 nhận mã hoá đơn → /diem, /voucher, /toi được gọi lại', d1.every((n, i) => n === d0[i] + 1), `${d0} → ${d1}`);
     k('D3 điểm mới hiện (1.260)', /1\.260/.test(await chu(t, '#rewards .wallet-row')), await chu(t, '#rewards .wallet-row'));
     const a0 = demHet(S);
-    await anHien(t, true); await ctx.clock.fastForward(10000); await anHien(t, false); await t.waitForTimeout(TRE + 300);
+    await anHien(t, true); await ctx.clock.fastForward(10000); await anHien(t, false); await yen(t, S);
     // KH-BAO-1: dải báo đơn xong hỏi NGAY GET /don một lần khi khách quay lại tab (dùng chung lệnh với kho cuaDon) — ba cửa kia vẫn không gọi lại.
     const sau = demHet(S).split(',').map(Number), truoc = a0.split(',').map(Number);
     k('D1 ẩn 10 giây rồi hiện → /toi, /diem, /voucher không gọi lại; /don đúng +1 (dải báo đơn xong)', KHUNG_CUA.every((d, i) => (d === '/don' ? sau[i] === truoc[i] + 1 : sau[i] === truoc[i])), `${a0} → ${demHet(S)}`);
     const a1 = KHUNG_CUA.map((d) => dem(S, d));
-    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
+    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await yen(t, S);
     const a2 = KHUNG_CUA.map((d) => dem(S, d));
     k('D1 ẩn 61 giây rồi hiện lại → các kho được lấy lại', a2.every((n, i) => n === a1[i] + 1), `${a1} → ${a2}`);
-    await ctx.clock.fastForward(5 * 60000); await t.waitForTimeout(TRE + 400);
+    await ctx.clock.fastForward(5 * 60000); await yen(t, S);
     const a3 = KHUNG_CUA.map((d) => dem(S, d));
     k('D2 app đang hiện → làm mới các kho khách mỗi 5 phút', a3.every((n, i) => n >= a2[i] + 1), `${a2} → ${a3}`);
   });
@@ -478,23 +481,23 @@ async function trinhDuyet(pw) {
     const coTrang2 = (await doiHet(t, '#orderhistory', /TQD2/)) >= 0;
     k(`A4 [${rong}] "Xem thêm" → gọi /don?trang=2, hiện đơn trang 2`, coTrang2 && S.goi.some((g) => g.duong === '/don' && g.q === '?trang=2'));
     const n1 = S.goi.filter((g) => g.duong === '/don' && g.q === '?trang=1').length;
-    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
+    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await yen(t, S);
     const lai = S.goi.filter((g) => g.duong === '/don' && g.q === '?trang=1').length;
     k(`A4 [${rong}] làm mới ngầm trang 1 không có đơn mới → trang 2 khách đã mở VẪN còn`, lai === n1 + 1 && /TQD2/.test(await chu(t, '#orderhistory')), `${n1} → ${lai} | ${await chu(t, '#orderhistory')}`);
     S.donMoi = true;
-    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await t.waitForTimeout(TRE + 400);
+    await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await yen(t, S);
     const ch = await chu(t, '#orderhistory');
     k(`A4 [${rong}] có đơn mới ở trang 1 → hiện đơn mới, bỏ trang sau cũ (không hụt dòng), còn "Xem thêm"`, /TQD9/.test(ch) && !/TQD2/.test(ch) && /Xem thêm/.test(ch), ch);
   });
 
   await may(`ho-so-${rong}`, { rong }, async ({ S, trang }) => {
     const t = await trang();
-    await mo(t, '/taikhoan/thongtin'); await t.waitForSelector('#ten-toi'); await t.waitForTimeout(TRE + 300);
+    await mo(t, '/taikhoan/thongtin'); await t.waitForSelector('#ten-toi'); await yen(t, S);
     k('E3 Thông tin cá nhân hiện số điện thoại thật (không lấy bản lưu)', /0909/.test(await chu(t, '#profile .pf-lock')) || /090 xxx/.test(await chu(t, '#profile .pf-lock')), await chu(t, '#profile .pf-lock'));
     const n0 = dem(S, '/toi');
-    await t.locator('#profile .pf-chips button', { hasText: 'cô' }).click(); await t.waitForTimeout(TRE + 300);
+    await t.locator('#profile .pf-chips button', { hasText: 'cô' }).click(); await yen(t, S);
     k('D3 lưu xưng hô → PUT /toi, không GET /toi lại', dem(S, '/toi', 'PUT') === 1 && dem(S, '/toi') === n0, `${n0} → ${dem(S, '/toi')}`);
-    await sang(t, '/trangchu'); await t.waitForTimeout(100);
+    await sang(t, '/trangchu'); await yen(t, S);
     k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Nguyễn Linh!/.test(await chu(t, '#home h1')), await chu(t, '#home h1'));
   });
   }));
