@@ -236,6 +236,7 @@ async function trinhDuyet(pw) {
     try { await chay(t, loi, P); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
   }
   const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const gop = async (t) => { await t.clock.fastForward(650); await yen(t); }; // đồng hồ giả: qua nhịp gộp báo giá 600 ms (MS_GOP)
   const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
   const chu = (t, s) => t.locator(s).first().innerText();
   const dem = (P, pt, duong) => P.goi.filter((g) => g.pt === pt && (typeof duong === 'string' ? g.duong === duong : duong.test(g.duong))).length;
@@ -306,7 +307,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/giohang');
     k('A3 giỏ: món hết hàng được đánh dấu; Tiếp tục khoá', /Hết hàng/.test(await t.locator('.cart-item', { hasText: 'Trà Hết' }).innerText()) && /btn-disabled/.test(await t.locator('#cart .checkout-btn').getAttribute('class')));
     await t.evaluate(() => localStorage.setItem('kh_gio', '[{"ma":"TLB","so_luong":1,"ghi_chu":""}]')); // trên máy món còn bán, POS báo hết
-    await mo(t, '/thanhtoan');
+    await mo(t, '/thanhtoan'); await gop(t);
     k('B6 POS trả HET_HANG → hiện nguyên câu error, nút Xác nhận khoá, không hiện tổng', /Trà Hết đã hết hàng hôm nay/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .checkout-btn').getAttribute('class')) && /Tổng tiền sẽ hiện khi quán xác nhận/.test(await chu(t, '#checkout')));
   });
 
@@ -337,7 +338,7 @@ async function trinhDuyet(pw) {
 
   await ca('bam-doi-gop', { gio: GIO2 }, async (t, loi, P) => {
     await mo(t, '/giohang');
-    await t.locator('.promo-box input').fill('GIAM10'); await t.locator('.promo-box button').click(); await yen(t);
+    await t.locator('.promo-box input').fill('GIAM10'); await t.locator('.promo-box button').click(); await gop(t);
     const bg = P.goi.filter((g) => g.duong === '/gio/bao-gia');
     k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; bảng tiền có dòng "Giảm giá" của POS', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
@@ -351,7 +352,7 @@ async function trinhDuyet(pw) {
 
   await ca('ma-khong-giam', { gio: GIO2, pos: { bg: { ...BG, giam: [] } } }, async (t) => {
     await mo(t, '/giohang');
-    await t.locator('.promo-box input').fill('SAIMA'); await t.locator('.promo-box button').click(); await yen(t);
+    await t.locator('.promo-box input').fill('SAIMA'); await t.locator('.promo-box button').click(); await gop(t);
     k('B4 POS không giảm cho mã → không dòng giảm, không chữ "Đã áp dụng" (kết quả chỉ từ báo giá)', (await chu(t, '.promo-box button')) === 'Áp dụng' && !/Giảm giá|Đã áp dụng/.test(await chu(t, '#cart')), await chu(t, '#cart'));
   });
 
