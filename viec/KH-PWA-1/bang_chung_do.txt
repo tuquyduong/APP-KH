@@ -1,0 +1,21 @@
+KH-PWA-1 — bằng chứng đỏ trên code gốc (47fce03 = PHIEU: KH-PWA-1), xanh sau vá
+Cách chạy trên gốc: git archive 47fce03 ra thư mục nháp, chép bài thử MỚI (bản cuối) vào cong_cu/ của bản đó, nối node_modules, chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHPWA1.js (bài mới) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ A2 dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ A3/A4 dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ B2 tenBan dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ B dangKySW dừng giữa chừng  — Cannot find module '…/src/dangKySW.js'
+  ✗ A1 main.jsx thêm đúng 2 dòng: một import + một lời gọi  — []
+  ✗ A5 public/_headers đúng 3 luật (sw.js · index.html + / · assets), không thừa  — {}
+  ✗ C3 huong_dan_kiem_tay.md ≤ 10 dòng, đủ 3 bước (mở 2 lần · máy bay · bản mới)  — 1
+2 đạt · 7 hỏng
+   trên gốc CÓ Chromium (bản bài 9c81d9f+ chống treo): 9 đạt · 18 hỏng — vd ✗ C1 mở App → có service worker, ✗ C1 tắt mạng → tải lại vẫn thấy Trang chủ
+   (chrome-error://chromewebdata/), ✗ A2 mạng chậm > 3 giây → vỏ đã lưu (6227 ms), ✗ B2/B3 đóng hộp thoại ở /menu → tự tải lại, ✗ A3 kho chỉ còn 2 bản.
+   sau vá (vòng 1): KHONG_TRINH_DUYET=1 → 34 đạt · 0 hỏng · có Chromium → 52 đạt · 0 hỏng (26 giây)
+   vòng 2 (npm test đỏ: các bài khác dựng main.jsx bằng esbuild, không có import.meta.env → "Cannot read properties of undefined (reading 'PROD')"):
+   thêm ca "A1 không có import.meta.env … dangKySW() không ném" — đỏ với `import.meta.env.PROD` (đột biến VS-DK-ENV-KHONG-HOI), xanh với `import.meta.env?.PROD`.
+   chạy lại bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên — ca mới nằm trong khối "B dangKySW dừng giữa chừng").
+   sau vá: KHONG_TRINH_DUYET=1 → 35 đạt · 0 hỏng · có Chromium → 53 đạt · 0 hỏng (26 giây)
+
+SỐ CA thu_KHPWA1.js: 35
