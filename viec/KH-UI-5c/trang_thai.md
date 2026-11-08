@@ -20,7 +20,7 @@ Model: phiên chạy một model suốt (không có thông báo đổi model gi�
 - Nhắc việc chỉ khi App đang mở (thanh nhắc + dải báo + rung); App tắt = KH-TB-1 (thông báo đẩy), chưa làm. Chữ trên màn ghi đúng "Nhắc hiện khi bạn đang mở App."
 - Mốc đã báo của dải nhắc nhớ trong BỘ NHỚ trang (không thêm khoá `localStorage` vì cấm sửa `luuMay.js`): mở lại App sau mốc thì dải KHÔNG báo lại (đúng ý — mốc lúc App tắt không báo), thanh nhắc ở màn Kế hoạch lo phần đó.
 - Việc lặp lỡ: đếm lùi tối đa 400 ngày; lần xong giữ 24 lần gần nhất, lần cũ hơn coi như đã rà (mốc `moc`).
-- `TienIch.jsx` không phải sửa: "Sắp tới" gọi `upList` (đã dùng `cacLan`, việc lặp hiện đúng) và ô Trang chủ dùng `viecNgay` (lần ảo của việc lặp).
+- `TienIch.jsx`: "Sắp tới" gọi `upList` (đã dùng `cacLan`, việc lặp hiện đúng); chỉ phải gỡ prop `khiAn` chết truyền cho `BannerNho` (soát vòng 1 bắt) — đã gỡ.
 - Ba danh sách tiện ích (`duongDan.js` / `KeHoach.jsx` / `TienIch.jsx`) vẫn tách — thuộc KH-UI-5d.
 - Cờ Playwright: bài thử Chromium dùng `page.clock` (đồng hồ giả) nên bánh xoay (chờ 90 ms sau khi ngừng cuộn) phải `clock.runFor` — ghi trong bài thử.
 - Hợp lệ không chặn (K5): đọc được bản lưu 5b (nhac true/false, giờ bắt buộc); tên 120 ký tự; 29/2/2028; 500 việc báo đúng lý do.
@@ -36,6 +36,22 @@ Bảng "chỗ vá → đột biến" (việc chỉ đổi `src/`, không có `do
 | mốc đã rà nhích khi cắt 24 lần | `BV-MOC-KHONG-NHICH-KHI-CAT-24` | 49 đạt · 1 hỏng |
 | "sau khi xong N ngày" tính từ ngày bấm | `VS-SAU-KHI-XONG-TINH-TU-NGAY-HEN` | 49 đạt · 1 hỏng |
 | gõ ngày: qua 60 ngày → năm sau | `BV-GO-NGAY-KHONG-QUA-NAM-SAU` | 49 đạt · 1 hỏng |
+
+## Soát độc lập (`/ra-soat`, vòng 1) — KHÔNG ĐẠT → đã sửa (báo cáo rút gọn, nguyên ý)
+Lỗi tìm được và cách xử lý (commit `fd5635d`):
+1. `BangNgay.jsx` `them`/`luuSua` luôn trả '' dù `lam()` báo hỏng → mất chữ khách gõ khi kho chặn (K5; vế "giữ chữ" của ca D2 5b bị bỏ khi sửa H2). **Sửa**: trả lỗi khi `lam()` false, form giữ nguyên.
+2. `tickLan` không đảo được lần dưới mốc `moc` nhưng UI báo "Đã bỏ đánh dấu". **Sửa**: lần dưới mốc không đổi (ca mới trong `thu_KHUI5c`).
+3. `quaHan` lùi 400 ngày cho cả việc thường → việc thường quá hạn > 400 ngày biến mất, lệch chuông lịch. **Sửa**: chỉ việc lặp bị giới hạn (ca mới).
+4. `DaiNhacViec` báo mốc cũ sau khi máy ngủ / tab ẩn. **Sửa**: khoảng > 3 phút giữa hai lần hỏi thì bỏ qua mốc.
+5. Gỡ prop `khiAn` chết ở `TienIch.jsx`; bỏ nút "Bỏ qua lần này" trùng "Đã làm" khi chỉ lỡ 1 lần; bỏ hai biểu thức vô nghĩa trong bài thử.
+6. (Chromium, tự bắt khi sửa) bánh xoay lệch 1 dòng do thiếu `scroll-padding` → phút mở ra 05 thay vì 00, và hẹn giờ cuộn dùng giá trị cũ; sửa ở `BanhXoay.jsx` + `bang_ngay.css`, ca "vuốt tới 14 → 14:00" khoá.
+Nghi ngờ nhận, chưa làm (ghi để chủ quán biết): thanh nhắc "10 phút nữa" không tự đếm khi đứng yên ở màn (chỉ tính lại khi vẽ lại); "Uống 1/2" thành việc "Uống" 1/2; đổi việc đã xong sang có lặp thì hiện quá hạn.
+Nghiệm thu: 20/22 → H4 (dòng HEAD ĐÃ KIỂM) và H5 (thử tay) đã bổ sung ở dưới. Còn lại có bằng chứng ở `thu_KHUI5c.js` / `thu_KHUI5b.js` (xem bảng ca ↔ A1…G1 trong `ke_hoach.md`).
+
+## Chủ quán thử tay trên điện thoại (H5)
+1. Mở /kehoach, chạm ô ngày 20: bảng nổi lên → gõ "Mua hoa", chạm "🕘 Giờ sự kiện" xoay 09:00, "🔔 Hẹn giờ nhắc" → "Chọn ngày giờ khác…" → 2 ngày trước lúc 20:00 → Thêm → ô 20 có chuông. Gõ "Gọi điện" + Thêm → vào ngay (cả ngày). Vuốt thanh đầu bảng xuống để đóng.
+2. Thêm "Uống thuốc bổ" → "↻ Lặp lại" → "Sau khi xong…" 30 ngày → Thêm; tick → việc dời 30 ngày → bấm "Hoàn tác" (trong 5 giây) → về lại hôm nay.
+3. Thêm một việc ngày hôm qua → đầu màn hiện "⚠️ 1 việc quá hạn" → bấm → "→ Hôm nay". (Nhắc 15 phút trước: thêm việc 20 phút nữa, nhắc "Trước 15 phút", để App mở → sau 5 phút có dải nhắc.)
 
 ## Cổng
 `node tu_chay/cong.js tinh . 765b141^ HEAD viec/KH-UI-5c`: chỉ còn `✗ [A19]` (chờ dòng HEAD ĐÃ KIỂM — ghi ở cuối file này sau lần chạy `chay`).
