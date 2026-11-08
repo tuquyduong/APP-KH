@@ -61,4 +61,11 @@ Không commit nào đổi file ngoài `viec/KH-THU-1/` sau lần kiểm cuối n
 - KHOÁ (đề xuất, ngoài Phạm vi — `kiem_tra_truoc_khi_giao.js` chỉ được sửa ở vòng bài thử): thêm phép kiểm tĩnh "không `waitForTimeout(N)` với N ≥ 1000 trong cong_cu/thu_*.js"; ca đỏ trên gốc: thu_KHMUA1.js (10600 ×3) — làm ở việc `HOC-<n>`.
 - Dọn: không đề xuất xoá lời dặn nào.
 
-HEAD ĐÃ KIỂM: b3bcd78
+## Soát độc lập `/ra-soat` — vòng 1: KHÔNG ĐẠT → đã sửa (báo cáo tóm lược)
+- Lỗi 1: `clock.fastForward` chỉ bắn mỗi hẹn giờ một lần → ca đếm nhịp ở thu_KHMUA1.js yếu đi. SỬA: dùng `clock.runFor` (3100 / 10600 / 700 / 2100 / 650).
+- Lỗi 2: `yen` thoát sớm (1 lượt) và im lặng khi hết trần. SỬA: ổn định 4 lượt liền ở cả 7 bài, hết trần thì ném lỗi.
+- Nghi ngờ còn lại (ghi nhận, không sửa): `dangNhapB` (NHANH1) cửa sổ quan sát khách A ngắn hơn 3 s thật, chờ đến khi hết yêu cầu + 4 lượt ổn định; HANG2 `moTreGio` chờ `S.daToi` (khi /toi BẮT ĐẦU) + 4 khung; UI3a ca `e-gv-het-khung` thêm đồng hồ giả (`may`); `gop` kéo đồng hồ MUA1 650 ms mỗi lần mở trang; A4 `r.signal` gộp cả tín hiệu khác vào nhãn "QUÁ GIỜ"; MUA1b còn ~20 `waitForTimeout` (file không sửa, 36 s ≤ 40).
+- Sau sửa: `npm test` 38 đạt; số ca không đổi; thời gian: CT1 18 · HANG2 17 · MUA1 17 · MUA1b 36 · NHANH1 45 · UI3a 19 · UI3b **41** · UI3d 34 (UI3b chậm hơn 30→41 vì yên 4 lượt; > 40 nhưng ≤ 60). Cổng `chay` ĐẠT. A3 chưa chạy lại sau vòng sửa này (lần trước xanh, NHANH1 58 s).
+- Bài học bổ sung: đồng hồ giả chọn đúng loại — `fastForward` bắn mỗi hẹn một lần (mất khả năng đếm nhịp), ca đếm nhịp dùng `runFor`; hàm chờ phải ổn định nhiều lượt và không thoát im lặng khi hết trần.
+
+HEAD ĐÃ KIỂM: bb6adb7
