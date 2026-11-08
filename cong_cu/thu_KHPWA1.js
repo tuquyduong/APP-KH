@@ -30,7 +30,10 @@ const MIEN = 'https://tuquyduong.com';
 function napSW() {
   const nghe = {};
   const self = { location: { origin: MIEN }, addEventListener: (ten, f) => { nghe[ten] = f; }, skipWaiting: () => {}, clients: { claim: () => {} } };
-  const ctx = vm.createContext({ self, caches: {}, fetch: () => Promise.reject(new Error('không mạng')), Response, URL, setTimeout, clearTimeout, Promise });
+  const khoGia = { put: async () => {}, match: async () => undefined, keys: async () => [], delete: async () => true };
+  const caches = { match: async () => undefined, open: async () => khoGia, keys: async () => [], delete: async () => true };
+  // fetch giả không bao giờ trả lời: ca sự kiện chỉ đếm respondWith, không để lời hứa bị từ chối lơ lửng.
+  const ctx = vm.createContext({ self, caches, fetch: () => new Promise(() => {}), Response, URL, setTimeout, clearTimeout, Promise });
   vm.runInContext(fs.readFileSync(path.join(GOC, 'public/sw.js'), 'utf8'), ctx, { filename: 'sw.js' });
   return { ctx, nghe };
 }
