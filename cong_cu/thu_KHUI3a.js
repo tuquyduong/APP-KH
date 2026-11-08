@@ -178,7 +178,8 @@ async function trinhDuyet(pw) {
     await t.addInitScript(() => { try { sessionStorage.setItem('kh_da_xem_man_dau', '1'); } catch { /* bỏ qua */ } }); // đã xem màn mở: không che trang (CSS thật có màn mở)
     await t.addInitScript(({ dn }) => { if (dn && !sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); localStorage.setItem('kh_token', 'tok-A'); } }, { dn });
     const P = { toi: TOI(HANG_VANG, 85000), hang: HANG, menu: MENU, gioVang: GV_CHAY, gioHoatDong: GHD(), hong: {}, ...pos };
-    await t.route(`${URL0}/**`, async (r) => {
+    t.dangGoi = 0; t.tongGoi = 0; // đếm yêu cầu mạng giả: `yen(t)` chờ tới khi hết yêu cầu và trang đã vẽ xong (thay chờ cố định)
+    const xuLy = async (r) => {
       const u = new URL(r.request().url()), p = u.pathname, auth = r.request().headers().authorization || '';
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) });
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goi });
@@ -193,15 +194,17 @@ async function trinhDuyet(pw) {
       if (duong === '/diem') return json(200, { success: true, points: 1250, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [{ ma: 'V1' }, { ma: 'V2' }], ma_khach_moi: [] });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
-    });
+    };
+    await t.route(`${URL0}/**`, async (r) => { t.dangGoi++; t.tongGoi++; try { return await xuLy(r); } finally { t.dangGoi--; } });
     let kq;
     t.setDefaultTimeout(4000);
     try { kq = await chay(t, P, loi); } catch (e) { baoLoi(`ca ${ten} dừng giữa chừng`, e); } finally { await ctx.close(); }
     return kq;
   }
   const chu = (t) => t.locator('body').innerText();
-  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await t.waitForTimeout(700); };
-  const cho = (t, ms = 500) => t.waitForTimeout(ms);
+  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); };
+  const cho = (t) => yen(t);
   const khoaLuu = (t) => t.evaluate(() => JSON.stringify(Object.fromEntries(Object.keys(localStorage).map((x) => [x, localStorage.getItem(x)]))));
 
   await ca('a-hang-gv-chay', {}, async (t, P, loi) => {
@@ -264,10 +267,10 @@ async function trinhDuyet(pw) {
     k('D5 chưa tới giờ: món vẫn hiện bậc thang giá hạng bình thường', (await t.locator('.prod-card', { hasText: 'Trà Lục Bảo' }).locator('.lad').count()) === 1);
   });
 
-  await ca('e-gv-het-khung', { pos: { gioHoatDong: GHD({ bay_gio: BAY('21:59:57') }) } }, async (t) => {
+  await ca('e-gv-het-khung', { may: '2026-10-30T07:00:00+07:00', pos: { gioHoatDong: GHD({ bay_gio: BAY('21:59:57') }) } }, async (t) => {
     await mo(t, '/trangchu');
     const truoc = await t.locator('.hb-t-flash .hb-s').innerText();
-    await cho(t, 4200);
+    await t.clock.fastForward(4200); await cho(t); // đồng hồ giả thay chờ thật 4,2 giây
     const sau = await t.locator('.hb-t-flash .hb-s').innerText();
     k('E2 hết khung: tự đổi sang "Đã kết thúc", không tải lại', /^Còn 0:00:0\d$/.test(truoc) && sau === 'Đã kết thúc', `${truoc} → ${sau}`);
     k('E2 hết khung: ô Trang chủ bỏ trạng thái "đang giảm" (không còn "món đang giảm", hết màu live)', /cuối ngày/.test(await t.locator('.hb-t-flash .hb-h').innerText()) && (await t.locator('.hb-t-flash .hb-s.live').count()) === 0);
@@ -312,13 +315,13 @@ async function trinhDuyet(pw) {
     await mo(t, '/menu');
     const luu1 = await khoaLuu(t);
     k('D4 đang đăng nhập: localStorage KHÔNG chứa gia_hang của khách', !/gia_hang/.test(luu1), luu1.slice(0, 200));
-    await mo(t, '/taikhoan'); await t.getByText('Đăng xuất').click(); await cho(t, 700);
+    await mo(t, '/taikhoan'); await t.getByText('Đăng xuất').click(); await cho(t);
     const luu2 = await khoaLuu(t);
-    await t.locator('.tab', { hasText: 'Menu' }).dispatchEvent('click'); await cho(t, 900); // vào Menu bằng thao tác trong app: bộ nhớ trang còn menu của người trước
+    await t.locator('.tab', { hasText: 'Menu' }).dispatchEvent('click'); await cho(t); // vào Menu bằng thao tác trong app: bộ nhớ trang còn menu của người trước
     k('D4 đăng xuất: không còn gia_hang trên máy; Menu không còn bậc thang giá hạng của người trước', !/gia_hang/.test(luu2) && (await t.locator('.prod-card').count()) > 0 && (await t.locator('.lad').count()) === 0);
     P.toi = TOI(null, 0);
     await t.goto(URL0 + '/dangnhap'); await t.waitForSelector('.phone'); await cho(t);
-    await t.evaluate(() => localStorage.setItem('kh_token', 'tok-B')); await t.goto(URL0 + '/menu'); await t.waitForSelector('.phone'); await cho(t, 900);
+    await t.evaluate(() => localStorage.setItem('kh_token', 'tok-B')); await t.goto(URL0 + '/menu'); await t.waitForSelector('.phone'); await cho(t);
     const bac = t.locator('.prod-card', { hasText: 'Trà Phổ Nhĩ' }).locator('.lad .me');
     k('D4 khách khác (không hạng) vào sau: cột của mình là "Thường", không phải "Vàng" của người trước', (await bac.count()) === 1 && /thường/i.test(await bac.innerText()) && !/25\.200/.test(await t.locator('.prod-card', { hasText: 'Trà Phổ Nhĩ' }).locator('.lad .me').innerText()));
   });
