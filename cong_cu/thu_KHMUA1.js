@@ -235,8 +235,8 @@ async function trinhDuyet(pw) {
     t.setDefaultTimeout(4000);
     try { await chay(t, loi, P); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
   }
-  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
-  const gop = async (t) => { await t.clock.fastForward(650); await yen(t); }; // đồng hồ giả: qua nhịp gộp báo giá 600 ms (MS_GOP)
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
+  const gop = async (t) => { await t.clock.runFor(650); await yen(t); }; // đồng hồ giả (runFor: bắn MỌI hẹn giờ trong khoảng, giữ khả năng đếm nhịp): qua nhịp gộp báo giá 600 ms (MS_GOP)
   const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); await gop(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
   const chu = (t, s) => t.locator(s).first().innerText();
   const dem = (P, pt, duong) => P.goi.filter((g) => g.pt === pt && (typeof duong === 'string' ? g.duong === duong : duong.test(g.duong))).length;
@@ -266,7 +266,7 @@ async function trinhDuyet(pw) {
     k('B7 QR hiện + đếm ngược tới het_han theo giờ POS (~10 phút)', (await t.locator('.the-qr svg').count()) === 1 && /(9:5\d|10:00)/.test(await chu(t, '#tracking')), await chu(t, '#tracking'));
     const truoc = dem(P, 'GET', '/don/TQD42');
     P.tt = 'da_tra';
-    await t.clock.fastForward(3100); await yen(t); // đồng hồ giả: tới lượt hỏi trạng thái kế tiếp (3 giây)
+    await t.clock.runFor(3100); await yen(t); // đồng hồ giả: tới lượt hỏi trạng thái kế tiếp (3 giây)
     k('B7 hỏi trạng thái mỗi 3 giây khi chờ trả', dem(P, 'GET', '/don/TQD42') > truoc);
     k('B7/C1 da_tra → hết QR, bước "Đã thanh toán" xong, số đơn to #TQD42, giỏ được dọn (tab hết số)', (await t.locator('.the-qr').count()) === 0 && /#TQD42/.test(await chu(t, '.pick-num')) && (await t.locator('.tl-step.done').count()) >= 2 && (await t.locator('.tab .tab-so').count()) === 0);
     k('luong-qr: Lỗi JS = 0', loi.length === 0, loi.join('|'));
@@ -324,9 +324,9 @@ async function trinhDuyet(pw) {
     k('C1 mở thẳng /don/<ma>: bước "pha chế" là bước hiện tại, số đơn to', /pha chế/i.test(await chu(t, '.tl-step.cur')) && /#TQD42/.test(await chu(t, '.pick-num')));
     k('C2 đơn đã trả: không nút Huỷ đơn; chưa có số quán → ẩn nút gọi', (await t.locator('#tracking button', { hasText: 'Huỷ đơn' }).count()) === 0 && (await t.locator('a[href^="tel:"]').count()) === 0);
     const truoc = dem(P, 'GET', '/don/TQD42');
-    await t.clock.fastForward(10600); await yen(t); // đồng hồ giả: qua đúng một nhịp hỏi lại (10 giây)
+    await t.clock.runFor(10600); await yen(t); // đồng hồ giả: qua đúng một nhịp hỏi lại (10 giây)
     k('C1 hỏi lại mỗi 10 giây khi đơn chưa xong', dem(P, 'GET', '/don/TQD42') === truoc + 1, `${truoc} → ${dem(P, 'GET', '/don/TQD42')}`);
-    P.tt = 'xong'; await t.clock.fastForward(10600); await yen(t); const sau = dem(P, 'GET', '/don/TQD42'); await t.clock.fastForward(10600); await yen(t);
+    P.tt = 'xong'; await t.clock.runFor(10600); await yen(t); const sau = dem(P, 'GET', '/don/TQD42'); await t.clock.runFor(10600); await yen(t);
     k('C1 đơn xong → thôi hỏi lại', dem(P, 'GET', '/don/TQD42') === sau);
   });
 
@@ -343,7 +343,7 @@ async function trinhDuyet(pw) {
     k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; bảng tiền có dòng "Giảm giá" của POS', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
     const cong = t.locator('.cart-item .qty-ctrl button').nth(1);
-    await cong.click(); await cong.click(); await cong.click(); await t.clock.fastForward(700); await yen(t); // đồng hồ giả: qua nhịp gộp 600 ms
+    await cong.click(); await cong.click(); await cong.click(); await t.clock.runFor(700); await yen(t); // đồng hồ giả: qua nhịp gộp 600 ms
     k('B5 đổi số lượng 3 lần liền → ≤ 1 lần hỏi báo giá thêm (gộp 600 ms)', dem(P, 'POST', '/gio/bao-gia') - n0 <= 1 && dem(P, 'POST', '/gio/bao-gia') - n0 >= 1, String(dem(P, 'POST', '/gio/bao-gia') - n0));
     await mo(t, '/thanhtoan');
     await t.locator('#checkout .checkout-btn').dblclick(); await yen(t);
@@ -360,7 +360,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/thanhtoan');
     await yen(t); await t.locator('#checkout .switch').click();
     await t.locator('#checkout .nut-dat').click(); await yen(t);
-    await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await yen(t); await t.clock.fastForward(2100); } await yen(t); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
+    await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await yen(t); await t.clock.runFor(2100); } await yen(t); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
     k('B8 (v5) trả ví mà mất mạng: tự gửi lại CÙNG khoá 3 lần rồi đóng bảng PIN, báo "chưa rõ", nhắc xem Lịch sử đơn', (await t.locator('.pin-sheet').count()) === 0 && /Lịch sử đơn/.test(await chu(t, '#checkout')) && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && dem(P, 'POST', '/don') === 4 && new Set(P.goi.filter((g) => g.pt === 'POST' && g.duong === '/don').map((g) => g.than.khoa_gui)).size === 1, String(dem(P, 'POST', '/don')));
     await t.locator('#checkout .nut-dat').click({ force: true }); await yen(t);
     k('B8 … nút Xác nhận KHOÁ (bấm lại không mở PIN, không gửi đơn thứ hai); có nút "Xem Lịch sử đơn"', /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && (await t.locator('.pin-sheet').count()) === 0 && dem(P, 'POST', '/don') === 4 && (await t.locator('#checkout button', { hasText: 'Xem Lịch sử đơn' }).count()) === 1);
@@ -373,7 +373,7 @@ async function trinhDuyet(pw) {
       await mo(t, '/thanhtoan');
       await yen(t); await t.locator('#checkout .switch').click();
       await t.locator('#checkout .nut-dat').click(); await yen(t);
-      await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await yen(t); await t.clock.fastForward(2100); } await yen(t); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
+      await t.keyboard.type('1357'); await t.keyboard.press('Enter'); for (let i = 0; i < 4; i++) { await yen(t); await t.clock.runFor(2100); } await yen(t); // 3 lần tự gửi lại, mỗi lần chờ 2 giây
       await t.locator('#checkout .nut-dat').click({ force: true }); await yen(t);
       k(`B8 (v5) trả ví, POS ${ten}: chưa rõ — tự gửi lại cùng khoá (1 + 3 lần), rồi đóng PIN, khoá nút, không gửi thêm`, (await t.locator('.pin-sheet').count()) === 0 && /chưa rõ kết quả/.test(await chu(t, '#checkout')) && /btn-disabled/.test(await t.locator('#checkout .nut-dat').getAttribute('class')) && dem(P, 'POST', '/don') === 4, String(dem(P, 'POST', '/don')));
     });

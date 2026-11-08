@@ -202,7 +202,7 @@ async function trinhDuyet(pw) {
     return kq;
   }
   const chu = (t) => t.locator('body').innerText();
-  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
   const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); };
   const cho = (t) => yen(t);
   const khoaLuu = (t) => t.evaluate(() => JSON.stringify(Object.fromEntries(Object.keys(localStorage).map((x) => [x, localStorage.getItem(x)]))));

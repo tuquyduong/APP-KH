@@ -143,7 +143,7 @@ async function trinhDuyet(pw) {
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
   const veXong = (t) => t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x))));
-  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await veXong(t); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await veXong(t); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
   const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); };
   // Mở /uudai khi /gio-hoat-dong còn bị giữ: chờ /toi về và trang vẽ xong, rồi trả lời giờ POS (thay hai lần chờ thật 0,5 + 2,5 giây).
   const moTreGio = async (t, S) => { await t.goto(URL0 + '/uudai'); await t.waitForSelector('.phone'); for (let i = 0; i < 400 && !S.daToi; i++) await t.waitForTimeout(10); for (let i = 0; i < 4; i++) await veXong(t); };

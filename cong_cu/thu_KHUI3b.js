@@ -292,7 +292,7 @@ async function trinhDuyet(pw) {
     try { await chay(t, S, loi); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
-  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
   const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const chup = async (t, ten) => { if (luuAnh) await t.screenshot({ path: path.join(luuAnh, ten + '.png') }); };
