@@ -1,0 +1,53 @@
+# KH-THU-1 — trạng thái
+
+## Đối chiếu bản chụp (bước 1.4)
+HEAD lúc mở = `cf2c48e` · origin/viec/KH-THU-1 = `cf2c48e` (đã đủ, không kéo).
+```
+cf2c48e PHIEU: KH-THU-1
+2fe3e97 TIEN-DO: mo KH-THU-1 (rut thoi gian bai thu, bao qua gio) + KH-PWA-1 (mo nhanh, tu len ban moi lang le) chay song song KH-UI-5c
+4abbd0a TIEN-DO: mo KH-UI-5c (bam ngay -> bang viec cua ngay, viec lap, nhac truoc, qua han, hoan tac); quyet dinh 08.11 (the hang chung gio, hang co truoc, tich diem theo mon); them KH-THE-1 cho POS; thu App 07.11 + POS 08.11
+```
+
+## Bảng thời gian (giây, máy rảnh, `npm test` in từng bài — A4)
+Máy này chạy 2 lượt đo gần nhau; ghi lượt chậm hơn. TRƯỚC = lượt chạy trên gốc (chỉ thêm A4 in giây), SAU = HEAD.
+
+| Bài | TRƯỚC | SAU | Số ca (trước = sau) |
+|---|---|---|---|
+| thu_KHUI3b | 74 | 30 | 174 |
+| thu_KHUI3d | 56 | 26 | 174 |
+| thu_KHNHANH1 | 51 | 44 | 227 |
+| thu_KHMUA1b (không sửa) | 34 | 35–37 | 257 |
+| thu_KHMUA1 | 38 | 14 | 129 |
+| thu_KHUI3a | 39 | 16 | 84 |
+| thu_KHHANG2 | 35 | 15 | 73 |
+| thu_KHCT1 | 35 | 16 | 89 |
+| **Cả bộ `npm test` (24 bài)** | **≈ 527** | **≈ 362** | 38 phép tĩnh đạt |
+
+(Số 33 s của HANG2/CT1 chat đo = 35 s ở máy này.) 7/8 bài ≤ 40 s. **thu_KHNHANH1 44 s** (> 40, ≤ 60) — xem `## Phát hiện`.
+
+## A3 — ba bài lâu nhất chạy CÙNG LÚC (NHANH1 + MUA1b + UI3b)
+Lần cuối: NHANH1 **58 s** xanh 227/227 (số bài tự in) · MUA1b và UI3b xong trước NHANH1, ≤ 58 s (đo ngoài, không đo từng bài), xanh 257/257 và 174/174 → mỗi bài ≤ 80 s, XANH.
+Lần trước vá (2 lần chạy bận): NHANH1 hỏng 3 rồi 7 ca vì (a) `sau < S.tre` đo mili-giây, (b) các chờ hụt giữa hai chuỗi yêu cầu có trễ POS giả →
+đã sửa: cổng giữ POS giả (`S.cua`) thay đo ms; chờ đúng điều kiện (`doiHet`) trước các kiểm F1/B2/D3/A4; `yen` ổn định 4 lượt liền.
+
+## Việc đã làm
+- `kiem_tra_truoc_khi_giao.js` (A4): `QUÁ GIỜ 120 giây (máy bận? chạy riêng: node cong_cu/<file>)` khi `ETIMEDOUT`/`signal` (đã thử `spawnSync` với timeout nhỏ → `ETIMEDOUT SIGTERM null`); mỗi bài in `· N s`. Trần 120000 giữ nguyên.
+- 7 bài: `yen(t)` (chờ hết yêu cầu mạng giả + 2 khung vẽ, lặp tới ổn định) thay mọi `waitForTimeout` cố định; `clock.fastForward` thay chờ thật (UI3a 4,2 s · MUA1 3,6 s + 3×10,6 s + 4×0,3 s + 1 s · UI3b 5,2 s); cổng `S.cuaGio` cho POS giả trễ giờ (HANG2).
+- Chung một trình duyệt: các bài đã dùng sẵn một `chromium.launch` cho cả bài — giữ; không gộp context vì mỗi ca cần kho riêng (gộp sẽ lẫn localStorage → đổi hành vi, trái A2). Dựng app: `esbuild` đã MỘT lần/bài.
+- Không đổi lời `k(...)`, không bỏ ca, không nới điều kiện. Một điều kiện đổi DẠNG, cùng nghĩa: NHANH1 `sau < S.tre` ("hiện ngay trước khi POS trả") → `!S.daTra` (POS bị giữ tới khi ca cho phép) — kiểm chính xác điều đó không lệ thuộc tốc độ máy.
+
+## Đối chiếu nghiệm thu
+- A1: bảng trên; 7/8 ≤ 40 s, NHANH1 44 s (≤ 60, Phát hiện).
+- A2: số ca bằng nhau (bảng; `SỐ CA` KHONG_TRINH_DUYET=1 trong `bang_chung_do.txt`); mọi hunk nằm trong `trinhDuyet()` (đã xem `git diff -U0`).
+- A3: có (trên).
+- A4: có (trên).
+- A5: `npm test` 38 đạt · 0 hỏng; `npm test -- --day-du` 40 đạt · 0 hỏng (dựng + kiểm dist); tổng 527 → 362 s. Cổng `tinh` + `chay`: xem cuối file.
+
+## Phát hiện (không sửa — ngoài phạm vi)
+- `thu_KHNHANH1.js` 44 s: gần hết là độ trễ giả 700 ms (`TRE`) của POS cho MỌI yêu cầu, nhân chuỗi yêu cầu nối tiếp; ba ca "tab" đo < 300 ms nên phải chạy lần lượt. Hạ `TRE` (vd 300) hoặc chạy song song là ĐỔI cách đo — phiếu A2 không cho, để chat App KH quyết.
+- Bài ngoài danh sách phiếu còn chậm: thu_KHBAO1 30 s · thu_KHSINH1 30 s · thu_KHUI3c 29 s · thu_KHKHOP1 24 s (cùng khuôn `waitForTimeout`).
+
+## Câu hỏi
+(không)
+
+## Bài học (chờ bước 11)
