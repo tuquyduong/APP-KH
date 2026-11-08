@@ -5,7 +5,7 @@ import { IcoVe } from './BieuTuong.jsx';
 import { bam } from './bam.js';
 
 /** Ô "KẾ HOẠCH VÀ NHẮC VIỆC" ở Trang chủ (demo renderToday → #utilCal): ngày dương lớn + thứ, ngày âm, tiết khí, số việc hôm nay chưa xong. */
-export default function OKeHoach({ homNay, soViec, mo }) {
+export default function OKeHoach({ homNay, soViec, quaHan = 0, mo }) {
   const l = LUNAR.solar2lunar(homNay.d, homNay.m, homNay.y), tm = LUNAR.term(l.jd);
   return (
     <div className="util cal" {...bam(mo)}>
@@ -16,7 +16,7 @@ export default function OKeHoach({ homNay, soViec, mo }) {
       </div>
       <div className="u-k">Âm lịch {l.d}/{l.m}{l.leap ? ' nhuận' : ''}</div>
       <div className="u-h">Tiết {tm.name}</div>
-      {soViec !== null && <div className="u-s">{soViec} việc hôm nay ›</div>}
+      {soViec !== null && <div className="u-s">{soViec} việc hôm nay ›{quaHan > 0 && <span className="u-qh" aria-label={`${quaHan} việc quá hạn`}>{quaHan}</span>}</div>}
     </div>
   );
 }

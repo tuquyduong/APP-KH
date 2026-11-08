@@ -1,21 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../giaoDien/ke_hoach.css';
 import { bayGio } from '../bayGio.js';
 import { ghepMon } from '../tracNghiem.js';
 import { TU_KHOA_MON } from '../noiDung/theChat.js';
 import { BANNER, HOM_NAY } from '../noiDung/trangChu.js';
-import {
-  homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich, viecNgay, nhacHomNay, themViec, doiXong, xoaViec,
-  anBannerHomNay, bannerDangAn, CO_NHAC, KHONG_NHAC,
-} from '../kehoach.js';
+import { homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich, bannerDangAn } from '../kehoach.js';
+import { viecNgay, nhacDangCo, quaHan, danhDauNgay, timViec, tickLan, jd, dm } from '../kehoachLap.js';
 import Man from '../components/Man.jsx';
 import { Ico, DenLong } from '../components/BieuTuong.jsx';
 import { AnhMon } from '../components/MonO.jsx';
 import BannerNho from '../components/BannerNho.jsx';
-import ThemViec from '../components/ThemViec.jsx';
+import BangNgay, { HangViec } from '../components/BangNgay.jsx';
+import BangQuaHan from '../components/BangQuaHan.jsx';
+import ThongBaoHoanTac from '../components/ThongBaoHoanTac.jsx';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
-import { dungKeHoach, layNgayMo } from '../components/dungKeHoach.js';
+import { dungKeHoach, layNgayMo, SU_KIEN_MO_NGAY } from '../components/dungKeHoach.js';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
 const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
@@ -38,50 +38,65 @@ export function DauMan({ tieuDe, phu, lui, phai }) {
 }
 
 /** Màn Kế hoạch và nhắc việc (demo màn `lich`). `san` = đã biết khách là ai; `banner` = chữ banner "hôm nay" (mặc định của Trang chủ). */
-export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNghiem, coKetQuaTn = false, ds = [], chonMon, banner = { ...HOM_NAY, anh: BANNER.anh }, homNay: homNayCho }) {
+export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNghiem, coKetQuaTn = false, ds = [], chonMon, banner = { ...HOM_NAY, anh: BANNER.anh }, homNay: homNayCho, gio: gioCho }) {
   const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu, xoaHet } = dungKeHoach(san);
-  const [chon, datChon] = useState(() => docNgay(layNgayMo()) || homNay);
+  const [mo0] = useState(layNgayMo); // { ngay, moBang }: mở từ "Sắp tới" / dải nhắc việc / kết quả tìm
+  const [chon, datChon] = useState(() => docNgay(mo0.ngay) || homNay);
   const [thang, datThang] = useState(() => ({ y: chon.y, m: chon.m }));
-  const [them, datThem] = useState(false);
+  const [bangNgay, datBangNgay] = useState(mo0.moBang && !!docNgay(mo0.ngay));
+  const [bangQua, datBangQua] = useState(false);
+  const [hoan, datHoan] = useState(null); // { chu, truoc }: "Đã xong … · Hoàn tác" — `truoc` = bản Kế hoạch ngay trước đó
+  const [tim, datTim] = useState('');
   const [tb, datTb] = useState('');
   const [hoiXoa, datHoiXoa] = useState(false);
 
-  const luuVaBao = (moi, chu) => datTb(!san ? LOI_CHUA_BIET : luu(moi) ? chu : LOI_KHO);
+  // Lưu + báo. `hoanTac` có: báo kèm nút "Hoàn tác" 5 giây, trả đúng bản trước (kể cả việc "sau khi xong N ngày" về ngày hẹn cũ).
+  const lam = (moi, chu, hoanTac = false) => {
+    if (!san) { datTb(LOI_CHUA_BIET); return false; }
+    const truoc = bang;
+    if (!luu(moi)) { datTb(LOI_KHO); datHoan(null); return false; }
+    if (hoanTac) { datTb(''); datHoan({ chu, truoc }); } else { datHoan(null); datTb(chu); }
+    return true;
+  };
+  const hoanTacNut = () => { if (hoan && luu(hoan.truoc)) datTb('Đã hoàn tác'); datHoan(null); };
+  const moNgay = (d, m, y) => { chonNgay(d, m, y); datBangNgay(true); };
+  useEffect(() => {
+    const nhay = () => { const { ngay, moBang } = layNgayMo(); const n = docNgay(ngay); if (n) { datChon(n); datThang({ y: n.y, m: n.m }); datBangNgay(!!moBang); datBangQua(false); } };
+    window.addEventListener(SU_KIEN_MO_NGAY, nhay);
+    return () => window.removeEventListener(SU_KIEN_MO_NGAY, nhay);
+  }, []);
   const doiThang = (n) => { let m = thang.m + n, y = thang.y; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } datThang({ y, m }); };
   const chonNgay = (d, m, y) => { datChon({ d, m, y }); if (m !== thang.m) datThang({ y, m }); };
   const veHomNay = () => { datChon(homNay); datThang({ y: homNay.y, m: homNay.m }); };
-  const coViec = (d, m, y) => viecNgay(bang, ngayChuoi({ d, m, y })).length > 0;
+  const dauNgay = (() => { const l0 = jd({ d: 1, m: thang.m, y: thang.y }) - 7; return danhDauNgay(bang, l0, l0 + 50, homNay); })(); // phủ cả ô tháng trước / sau trên lưới
+  const coViec = (d, m, y) => dauNgay.get(jd({ d, m, y }));
 
   const the = theNgay(chon, homNay);
   const o = luoiThang(thang.y, thang.m, homNay, chon, coViec);
   const viec = viecNgay(bang, ngayChuoi(chon));
-  const nhac = nhacHomNay(bang, homNay);
+  const nhac = nhacDangCo(bang, gioCho || bayGio(), homNay);
+  const nQua = quaHan(bang, homNay).length, ketQuaTim = timViec(bang, tim).slice(0, 20);
   const monTiet = [];
   the.tip[1].forEach((id) => ghepMon(ds, [TU_KHOA_MON[id]], TU_KHOA_MON).forEach((m) => monTiet.includes(m) || monTiet.push(m)));
-
-  const luuViec = (v) => {
-    if (!san) return LOI_CHUA_BIET;
-    const moi = themViec(bang, v);
-    if (!moi) return !v.tieu.trim() ? 'Nhập tên việc trước nhé' : !docNgay(v.ngay) ? 'Ngày chưa đúng, chọn lại nhé' : 'Đã đủ số việc lưu trên máy này, xoá bớt việc cũ nhé';
-    const ok = luu(moi);
-    datThem(false);
-    const n = docNgay(v.ngay);
-    if (n) { datChon(n); datThang({ y: n.y, m: n.m }); }
-    datTb(ok ? (v.nhac ? 'Đã lưu · ' + CO_NHAC.toLowerCase() : 'Đã lưu việc') : LOI_KHO);
-    return '';
-  };
 
   return (
     <Man id="lich">
       <DauMan tieuDe="Kế Hoạch và Nhắc Việc" phu="Việc của tôi · âm dương lịch · dưỡng sinh theo tiết khí" lui={lui}
         phai={<div className="today-btn" {...bam(veHomNay)}>Hôm nay</div>} />
       <div id="calNoti">
-        {nhac.length > 0 && (
-          <div className="nt-bar on"><Ico ten="bell" s={14} /> <span>Hôm nay nhắc: {nhac.map((v) => v.gio + ' ' + v.tieu).join(' · ')}</span></div>
-        )}
+        {nhac.map((x) => <div key={x.v.id + x.ngay} className="nt-bar on" {...bam(() => { const n = docNgay(x.ngay); moNgay(n.d, n.m, n.y); })}><Ico ten="bell" s={14} /> <span>🔔 {x.chu}</span></div>)}
       </div>
-      <BannerNho banner={banner} an={bannerDangAn(bang, homNay)} khiAn={() => { luuVaBao(anBannerHomNay(bang, homNay), 'Ẩn ở Lịch và tiện ích đến hết hôm nay'); }} chon={moBanner} />
+      {nQua > 0 && <div className="nt-state qua-han" id="calQuaHan" role="button" tabIndex={0} {...bam(() => datBangQua(true))}><span>⚠️ {nQua} việc quá hạn</span><span>›</span></div>}
+      <BannerNho banner={banner} an={bannerDangAn(bang, homNay)} chon={moBanner} />
+      <div className="tim-viec"><input type="search" id="timViec" placeholder="Tìm việc theo tên…" aria-label="Tìm việc" value={tim} onChange={(e) => datTim(e.target.value)} /></div>
+      {tim.trim() && (
+        <div id="timKetQua">
+          {ketQuaTim.length
+            ? ketQuaTim.map((v) => <div key={v.id} className="tl-row" {...bam(() => { const n = docNgay(v.ngay); chonNgay(n.d, n.m, n.y); datBangNgay(true); })}><div className="tl-rt"><b>{v.tieu}</b><small>{dm(jd(docNgay(v.ngay)), null)}{v.gio ? ' · ' + v.gio : ''}{v.lap ? ' · ↻' : ''}</small></div></div>)
+            : <div className="empty-note">Không thấy việc nào tên như vậy.</div>}
+        </div>
+      )}
 
       <div className="cal-hero" id="calHero">
         <div className="ch-ring"><TranhTron ten={the.mua.ic} s={40} /></div>
@@ -108,13 +123,13 @@ export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNg
         <div className="cal-wd"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span className="sun">CN</span></div>
         <div className="cal-grid">
           {o.map((c) => (
-            <div key={`${c.y}-${c.m}-${c.d}`} className={`cd ${[c.ngoai ? 'out' : '', c.homNay ? 'today' : '', c.chon ? 'sel' : '', c.cn ? 'sun' : '', c.le ? 'hol' : ''].join(' ')}`} {...bam(() => chonNgay(c.d, c.m, c.y))}>
+            <div key={`${c.y}-${c.m}-${c.d}`} className={`cd ${[c.ngoai ? 'out' : '', c.homNay ? 'today' : '', c.chon ? 'sel' : '', c.cn ? 'sun' : '', c.le ? 'hol' : ''].join(' ')}`} {...bam(() => moNgay(c.d, c.m, c.y))}>
               <b>{c.d}</b><small>{c.am}</small>{c.tiet && <em>{c.tiet}</em>}
-              <span className="dots">{c.coViec && <i className="dm" />}{c.le && <i className="dh" />}</span>
+              <span className="dots">{c.coViec && <Ico ten="bell" s={10} lop={`cd-chuong ${c.coViec}`} />}{c.le && <i className="dh" />}</span>
             </div>
           ))}
         </div>
-        <div className="cal-legend"><span><i className="dm" />Việc của tôi</span><span><i className="dh" />Ngày lễ</span><span><em>Aa</em>Tiết khí</span></div>
+        <div className="cal-legend"><span><Ico ten="bell" s={10} lop="cd-chuong viec" />Việc của tôi</span><span><i className="dh" />Ngày lễ</span><span><em>Aa</em>Tiết khí</span></div>
       </div>
 
       <div className="ds-card" id="calTip">
@@ -129,15 +144,11 @@ export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNg
         {!coKetQuaTn && moTracNghiem && <div className="ds-tc cta" {...bam(moTracNghiem)}><TranhTron ten="fan" s={22} /> <span>Làm khảo sát thể chất để nhận gợi ý riêng cho bạn ›</span></div>}
       </div>
 
-      <div className="sec-head" id="calAgendaHead"><h2>Việc của tôi · {chon.d}/{chon.m}</h2><span className="more" {...bam(() => datThem(true))}><Ico ten="plus" s={13} /> Thêm việc</span></div>
+      <div className="sec-head" id="calAgendaHead"><h2>Việc của tôi · {chon.d}/{chon.m}</h2><span className="more" {...bam(() => datBangNgay(true))}><Ico ten="plus" s={13} /> Thêm việc</span></div>
       <div id="calAgenda">
         {viec.length ? viec.map((v) => (
-          <div key={v.id} className={`ag${v.xong ? ' done' : ''}`}>
-            <span className="ck" aria-label={v.xong ? 'Bỏ đánh dấu xong' : 'Đánh dấu xong'} {...bam(() => luuVaBao(doiXong(bang, v.id), v.xong ? 'Đã bỏ đánh dấu xong' : 'Đã đánh dấu xong'))}>{v.xong ? <Ico ten="check" s={12} /> : null}</span>
-            <span className="tm">{v.gio}</span>
-            <div className="ti"><b>{v.tieu}</b><small><Ico ten="bell" s={11} /> {v.nhac ? CO_NHAC : KHONG_NHAC}</small></div>
-            <span className="del" aria-label="Xoá việc" {...bam(() => luuVaBao(xoaViec(bang, v.id), 'Đã xoá việc'))}><Ico ten="close" s={12} /></span>
-          </div>
+          <HangViec key={v.id} v={v} homNay={homNay} mo={() => datBangNgay(true)}
+            tick={() => lam(tickLan(bang, v.id, v.ngay, homNay), v.xong ? 'Đã bỏ đánh dấu xong' : `Đã xong ${v.tieu}`, !v.xong)} />
         )) : <div className="empty-note">Chưa có việc nào. Bấm “Thêm việc” để ghi lại và nhận nhắc nhở.</div>}
       </div>
 
@@ -156,7 +167,9 @@ export default function KeHoach({ san = true, lui, moTienIch, moBanner, moTracNg
           : <span {...bam(() => datHoiXoa(true))}>Xoá toàn bộ dữ liệu Kế hoạch trên máy này</span>}
       </div>
 
-      {them && <ThemViec ngay={ngayChuoi(chon)} luu={luuViec} dong={() => datThem(false)} />}
+      {bangNgay && <BangNgay ngay={ngayChuoi(chon)} homNay={homNay} bang={bang} lam={lam} dong={() => datBangNgay(false)} />}
+      {bangQua && <BangQuaHan homNay={homNay} bang={bang} lam={lam} dong={() => datBangQua(false)} />}
+      <ThongBaoHoanTac chu={hoan && hoan.chu} hoanTac={hoanTacNut} het={() => datHoan(null)} />
       <Thongbao chu={tb} het={() => datTb('')} />
     </Man>
   );
