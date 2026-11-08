@@ -286,8 +286,8 @@ async function trinhDuyet(pw) {
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
-    t.setDefaultTimeout(4000);
-    try { await chay(t, S, loi); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
+    t.setDefaultTimeout(4000); const _t0 = Date.now();
+    try { await chay(t, S, loi); console.log('TG', ten, Date.now() - _t0); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
   const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await t.waitForTimeout(700); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await t.waitForTimeout(150); };
