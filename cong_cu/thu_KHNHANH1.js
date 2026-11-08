@@ -284,7 +284,8 @@ async function trinhDuyet(pw) {
       const duong = p.slice('/api/kh'.length);
       let than = null; try { than = req.postDataJSON(); } catch { /* không thân */ }
       S.goi.push({ pt, duong, auth, q: u.search, luc: Date.now() });
-      await cho(S.tre || TRE);
+      await cho(TRE);
+      if (S.cua) { await S.cua; S.daTra = true; }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1 }] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY, dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
@@ -309,7 +310,7 @@ async function trinhDuyet(pw) {
     try { await chay({ ctx, S, trang }); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     k(`ca ${ten}: trang không báo lỗi JS`, loi.length === 0, loi[0]);
   }
-  const yen = async (t, S) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!S.dangGoi && S.tongGoi === tong) return; tong = S.tongGoi; } };
+  const yen = async (t, S) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); on = !S.dangGoi && S.tongGoi === tong ? on + 1 : 0; tong = S.tongGoi; } }; // ổn định 4 lượt liền: giữa hai chuỗi yêu cầu (có độ trễ POS giả) máy bận không làm hụt
   const dem = (S, duong, pt = 'GET') => S.goi.filter((g) => g.duong === duong && g.pt === pt).length;
   const demHet = (S) => KHUNG_CUA.map((d) => dem(S, d)).join(',');
   const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); };
@@ -377,14 +378,13 @@ async function trinhDuyet(pw) {
     k('E1 có bản tóm tắt sau khi lấy /toi, /diem; không sdt / qr / địa chỉ', !!luu && /1250/.test(luu) && !/0909123456|QR-A-BI-MAT|Lê Lợi/.test(luu), luu);
     await t.close();
     S.diem['tok-A'] = 1300; S.khach['tok-A'].so_du_vi = 150000;
-    S.tre = 1500; // POS chậm hơn ở lần mở thứ hai: "hiện ngay từ bản lưu" đo được rõ cả khi máy chạy thử đang bận
+    S.cua = new Promise((x) => { S.moCua = x; }); S.daTra = false; // POS giữ trả lời tới khi ca cho phép: "hiện ngay từ bản lưu" kiểm được dù máy chạy thử bận
     const t2 = await trang();
-    const t0 = Date.now();
     await mo(t2, '/trangchu');
     const daiNgay = await chu(t2, '#home .points-card .num'); const chao = await chu(t2, '#home h1');
-    const sau = Date.now() - t0;
     k('C1 mở lần 2 cùng ngày → KHÔNG có màn mở', (await t2.locator('#splashOverlay').count()) === 0);
-    k('E3 điểm + tên hiện NGAY từ bản lưu (trước khi POS trả)', /1\.250/.test(daiNgay) && /Linh/.test(chao) && sau < S.tre, `${daiNgay} | ${chao} | ${sau} ms`);
+    k('E3 điểm + tên hiện NGAY từ bản lưu (trước khi POS trả)', /1\.250/.test(daiNgay) && /Linh/.test(chao) && !S.daTra, `${daiNgay} | ${chao} | POS đã trả: ${S.daTra}`);
+    S.moCua();
     k('E3 rồi đổi sang số POS mới', (await doiHet(t2, '#home .points-card .num', /1\.300/)) >= 0, await chu(t2, '#home .points-card .num'));
     await t2.locator('.tabbar .tab:nth-child(6)').click();
     k('E3 Tài khoản: số dư ví mới 150.000đ', (await doiHet(t2, '#account .acc-q', /150\.000/)) >= 0, await chu(t2, '#account .acc-q'));
@@ -407,6 +407,7 @@ async function trinhDuyet(pw) {
     k(`F1 [${rong}] mở Thanh toán → /toi được gọi lại`, dem(S, '/toi') === n0 + 1, `${n0} → ${dem(S, '/toi')}`);
     k(`F1 [${rong}] chờ /toi: nút ví khoá + "Đang cập nhật số dư…" (kho đã có 100.000đ, bản lưu 999.999đ)`, /the-vi-khoa/.test(lop) && /Đang cập nhật số dư…/.test(ch), `${lop} | ${ch}`);
     await yen(t, S);
+    await doiHet(t, '#checkout .the-vi', /100\.000/); // chờ đúng điều kiện: số dư mới hiện ra
     k(`F1 [${rong}] /toi về → ví mở, số dư mới`, !/the-vi-khoa/.test(await cong.getAttribute('class')) && /100\.000/.test(await vi.innerText()), await vi.innerText());
     k(`H1 [${rong}] Thanh toán không tràn ngang`, await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1));
   });
@@ -433,6 +434,7 @@ async function trinhDuyet(pw) {
     const thay = await dangNhapB(t, S);
     k('D4 đăng nhập khách B trên cùng máy → không lúc nào thấy số / tên của khách A', thay.length === 0, thay[0]);
     k('B2 vừa đăng nhập → tải trước /toi, /diem, /voucher, /don', KHUNG_CUA.every((d) => S.goi.some((g) => g.duong === d && g.auth === 'tok-B')), `${n0} → ${demHet(S)}`);
+    await doiHet(t, '#home .points-card .num', /40/); // chờ đúng điều kiện: điểm của B về
     k('B2 thấy điểm của B', /40/.test(await chu(t, '#home .points-card .num')), await chu(t, '#home .points-card .num'));
   });
   await may(`het-phien-roi-B-${rong}`, { rong }, async ({ S, trang }) => {
@@ -453,7 +455,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/uudai'); await doiHet(t, '#rewards .wallet-row', /1\.250/); await yen(t, S);
     const d0 = [dem(S, '/diem'), dem(S, '/voucher'), dem(S, '/toi')];
     await t.fill('#ma-bill', 'ABC123'); await t.locator('.promo-box button').click();
-    await yen(t, S);
+    await doiHet(t, '#rewards .wallet-row', /1\.260/); await yen(t, S); // chờ đúng điều kiện: điểm mới hiện, rồi hết yêu cầu
     const d1 = [dem(S, '/diem'), dem(S, '/voucher'), dem(S, '/toi')];
     k('D3 nhận mã hoá đơn → /diem, /voucher, /toi được gọi lại', d1.every((n, i) => n === d0[i] + 1), `${d0} → ${d1}`);
     k('D3 điểm mới hiện (1.260)', /1\.260/.test(await chu(t, '#rewards .wallet-row')), await chu(t, '#rewards .wallet-row'));
