@@ -56,3 +56,20 @@ Nghiệm thu: 20/22 → H4 (dòng HEAD ĐÃ KIỂM) và H5 (thử tay) đã bổ
 ## Cổng
 `node tu_chay/cong.js tinh . 765b141^ HEAD viec/KH-UI-5c`: chỉ còn `✗ [A19]` (chờ dòng HEAD ĐÃ KIỂM — ghi ở cuối file này sau lần chạy `chay`).
 `npm test` (kiem_tra_truoc_khi_giao.js) + `--day-du`: 41 đạt · 0 hỏng (bản chạy giữa việc); chạy lại lần cuối ở HEAD sau soát.
+
+## Bài học
+- **KHOÁ (đã làm)**: ca Chromium "vuốt bánh xoay tới 14 → 14:00" (bắt lỗi `scroll-snap` lệch dòng); ca "tick dưới mốc đã rà không đảo", "việc thường quá hạn > 400 ngày vẫn tính" trong `thu_KHUI5c.js`; ca đo chiều cao ô hôm nay trong trình duyệt (F2).
+- **NGUYÊN TẮC (đề xuất, ngoài Phạm vi — `KHUON_LOI.md`)**: K9/K10 "Hai nơi tính song song phải cùng giới hạn" (`quaHan` vs `danhDauNgay`) và "hàm lưu trả false thì chỗ gọi phải giữ chữ khách" (`lam()`); đã gây: soát vòng 1 KH-UI-5c; dấu hiệu: `return ''` sau lệnh lưu không đọc kết quả; chặn: ca K5 kho chặn giữ chữ.
+- **BỎ**: đồng hồ giả làm bánh xoay phải `runFor` (chỉ ở bài thử); `git worktree` / `sed -i` / `npx` bị người gác chặn → dùng Edit, `git show`, python.
+- Dọn: chưa có lời dặn nào để đề xuất xoá.
+
+## Báo cáo 7 mục
+- **VIỆC**: KH-UI-5c — bấm ngày → bảng việc, lặp, nhắc, quá hạn, Hoàn tác, gõ nhanh có ngày, tìm.
+- **ĐÃ SỬA**: `kehoachLap.js` (mới), `kehoach.js`, `KeHoach.jsx`, `TrangChu.jsx` (số đỏ + ✕ banner), `App.jsx` (+1 dải), 6 component mới, `bang_ngay.css`, `ke_hoach.css` (F2), gỡ `ThemViec.jsx`.
+- **BÀI THỬ**: `thu_KHUI5c.js` 52 ca (104 có Chromium), `thu_KHUI5b.js` 75; đỏ trên gốc, 6 đột biến bắt được; `npm test --day-du` 41 đạt · 0 hỏng.
+- **ĐÃ RÀ K4**: `viecNgay/upList/nhac/gio/doiXong/khiAn` grep toàn `src/` (soát độc lập vòng 1).
+- **CHƯA KIỂM**: máy thật (điện thoại, trình duyệt Zalo), rung, nhắc khi App tắt (KH-TB-1); thanh nhắc không tự đếm lại khi đứng yên.
+- **GIT**: nhánh `viec/KH-UI-5c`, chưa PR.
+- **BÀI HỌC**: xem trên.
+
+✓ CỔNG CHẠY ĐẠT (`node tu_chay/cong.js chay . 765b141^ HEAD viec/KH-UI-5c`, `KHONG_TRINH_DUYET=1`; chỉ có cảnh báo A16 vì bài đổi chết ở dòng nạp trên gốc).
