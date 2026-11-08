@@ -26,7 +26,7 @@ const docKho = () => { try { return sessionStorage.getItem(KHOA_DA_TAI); } catch
 const ghiKho = (v) => { try { sessionStorage.setItem(KHOA_DA_TAI, v); } catch { /* kho bị chặn */ } };
 
 export function dangKySW() {
-  if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return;
+  if (!import.meta.env?.PROD ||!('serviceWorker' in navigator)) return;
   navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(() => {});
   const the = document.querySelector('script[src*="/assets/index-"]');
   const dangChay = the ? new URL(the.src).pathname : '';
