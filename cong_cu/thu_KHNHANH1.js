@@ -486,6 +486,7 @@ async function trinhDuyet(pw) {
     k(`A4 [${rong}] làm mới ngầm trang 1 không có đơn mới → trang 2 khách đã mở VẪN còn`, lai === n1 + 1 && /TQD2/.test(await chu(t, '#orderhistory')), `${n1} → ${lai} | ${await chu(t, '#orderhistory')}`);
     S.donMoi = true;
     await anHien(t, true); await ctx.clock.fastForward(61000); await anHien(t, false); await yen(t, S);
+    await doiHet(t, '#orderhistory', /TQD9/); // chờ đúng điều kiện: đơn mới hiện ra
     const ch = await chu(t, '#orderhistory');
     k(`A4 [${rong}] có đơn mới ở trang 1 → hiện đơn mới, bỏ trang sau cũ (không hụt dòng), còn "Xem thêm"`, /TQD9/.test(ch) && !/TQD2/.test(ch) && /Xem thêm/.test(ch), ch);
   });
