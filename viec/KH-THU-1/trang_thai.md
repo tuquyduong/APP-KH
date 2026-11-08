@@ -50,4 +50,15 @@ Lần trước vá (2 lần chạy bận): NHANH1 hỏng 3 rồi 7 ca vì (a) `s
 ## Câu hỏi
 (không)
 
-## Bài học (chờ bước 11)
+## Cổng (bước 11.4)
+`node tu_chay/cong.js tinh` : chỉ còn `✗ [A19]` (chưa ghi HEAD ĐÃ KIỂM — ghi ở dòng cuối file này) · `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . cf2c48e^ HEAD viec/KH-THU-1`: `✓ CỔNG CHẠY ĐẠT`.
+Không commit nào đổi file ngoài `viec/KH-THU-1/` sau lần kiểm cuối ngoài các bài thử/`kiem_tra_truoc_khi_giao.js` đã nằm trong lần kiểm này.
+
+## Bài học
+- Sự cố: (1) người gác chặn chạy file có chữ TOKEN khi chưa commit (B-BIMAT-CHU) → phải commit trước mỗi lần chạy thử bài đang sửa; chặn vòng `for`, `$(( ))`, `time`, `sleep` (B-PHANTICH/B-CHUONGTRINH) → chạy từng bài một / dùng nền. (2) Bản đầu thay chờ cố định xanh khi máy rảnh nhưng đỏ khi chạy 3 bài cùng lúc (NHANH1: `sau < S.tre` đo ms; chờ hụt giữa hai chuỗi yêu cầu; hẹn giờ gộp báo giá 600 ms của app).
+- BỎ: người gác chặn lệnh — đã có hướng dẫn trong thông báo, không lặp lại.
+- NGUYÊN TẮC (đề xuất, ngoài Phạm vi — KHUON_LOI.md): K9 "Chờ cố định trong bài thử trình duyệt" — Đã gây: KH-THU-1 (bài chạy 74 s, đỏ oan ở máy bận). Dấu hiệu: `waitForTimeout(≥ 300)`, đo `Date.now()` so với số ms cố định. Chặn: chờ theo điều kiện (`yen`/`waitForFunction`), hẹn giờ của app dùng `clock.fastForward`, POS giả giữ trả lời bằng cổng (promise) thay `setTimeout`.
+- KHOÁ (đề xuất, ngoài Phạm vi — `kiem_tra_truoc_khi_giao.js` chỉ được sửa ở vòng bài thử): thêm phép kiểm tĩnh "không `waitForTimeout(N)` với N ≥ 1000 trong cong_cu/thu_*.js"; ca đỏ trên gốc: thu_KHMUA1.js (10600 ×3) — làm ở việc `HOC-<n>`.
+- Dọn: không đề xuất xoá lời dặn nào.
+
+HEAD ĐÃ KIỂM: b3bcd78
