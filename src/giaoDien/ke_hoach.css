@@ -50,7 +50,8 @@
 .cd.sun b{ color:#AB3F37; }
 .cd.hol b{ color:#AB3F37; }
 .cd.out{ opacity:.35; }
-.cd.today{ box-shadow:inset 0 0 0 1.5px #D7B981; }
+.cd.today{ box-shadow:inset 0 0 0 1.5px #D7B981; background:none; padding:5px 0 12px; margin:0; overflow:visible; isolation:auto; border-radius:12px; color:var(--ink); } /* KH-UI-5c F2: gỡ luật của banner `.today` (nền gradient, đệm 16, bo 20) lọt vào ô lịch — lỗi của demo, không chép */
+.cd.today b{ margin:0; line-height:normal; }
 .cd.sel{ background:var(--pink-dark); }
 .cd.sel b, .cd.sel small, .cd.sel em{ color:#fff !important; }
 .cd .dots{ position:absolute; top:4px; right:5px; display:flex; flex-direction:column; gap:2px; }
