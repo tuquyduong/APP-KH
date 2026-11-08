@@ -1,0 +1,36 @@
+Bài thử KH-UI-5c — bằng chứng ĐỎ trên code chưa sửa (HEAD 765b141 = PHIEU: KH-UI-5c; bản sao trong nháp: src/ đưa về 765b141 bằng `git show`, bài thử mới / sửa chép vào)
+
+$ node cong_cu/thu_KHUI5c.js        (bài MỚI — gốc chưa có src/kehoachLap.js)
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../src/kehoachLap.js'
+0 đạt · 1 hỏng
+
+Bài cũ sửa (H2) — thu_KHUI5b.js sửa đúng ca theo hành vi mới. Chạy KHONG_TRINH_DUYET=1 trên gốc, có cho `src/kehoachLap.js` vào (để bài nạp được và đỏ TỪNG CA chứ không chết ở dòng nạp):
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js
+✗ D1 thêm việc: cắt khoảng trắng, giữ dấu tiếng Việt, mặc định chưa xong            (nhac là phút, gốc là true/false)
+✗ D1 giờ trống / sai → việc cả ngày (gio rỗng), không nhắc (KH-UI-5c A4)               (gốc: mặc định 08:00)
+✗ C1 nhắc: đã tới mốc, chưa quá giờ, đã bật nhắc, chưa xong; không nhắc thì không hiện   (gốc chưa có nhacDangCo theo giờ POS)
+✗ B1 khối "Từ TQD" và chấm "Từ TQD" ẨN … chú giải chỉ 3 mục                          (chấm hồng → chuông)
+✗ B7 bản nhỏ KHÔNG có nút ✕ (đúng demo todayCard: mini ? '' : t-x) — KH-UI-5c F1       (gốc: ✕ ở bản nhỏ)
+✗ B2 việc trong ngày chọn: … chữ "Đúng giờ" (KH-UI-5c: nhắc theo phút), nút ✓
+✗ B2 chuông "Việc của tôi" trên lịch ở ngày có việc chưa xong …
+✗ C1 thanh nhắc đầu /kehoach nêu việc hôm nay bật nhắc CHƯA xong …
+✗ bài thử lỗi: ENOENT src/components/BangNgay.jsx (gốc chưa có bảng ngày)
+59 đạt · 9 hỏng
+(Mỗi ca sửa là ca ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1; số ca không đổi 75 → 75, không bớt ca khác.)
+
+Trên code đã vá:
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5c.js     50 đạt · 0 hỏng
+$ node cong_cu/thu_KHUI5c.js (có Chromium)           102 đạt · 0 hỏng
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js     75 đạt · 0 hỏng
+
+Đột biến chạy tay trên code đã vá (bài thử phải BẮT; mỗi lần sửa trên bản sao ở nháp rồi bỏ):
+  VS-LAP-KHONG-KEP-NGAY-CUOI-THANG   (kehoachLap.js cacLan: bỏ Math.min(s.d, ngày cuối tháng) → 31/1 hằng tháng vỡ ở tháng 2):   47 đạt · 3 hỏng
+  VS-NHAC-NGAY-TRUOC-CONG-THAY-TRU   (nhacRaPhut: `g - ngay*1440` → `g + ngay*1440`, nhắc "hôm trước" ra số dương):               48 đạt · 2 hỏng
+  VS-QUA-HAN-TINH-CA-HOM-NAY         (quaHan: lùi tới h-1 → h, việc hôm nay bị coi quá hạn):                                         45 đạt · 5 hỏng
+  BV-MOC-KHONG-NHICH-KHI-CAT-24      (tickLan: bỏ cập nhật mốc đã rà khi cắt còn 24 lần — lần cũ hiện lại là "lỡ"):                  49 đạt · 1 hỏng
+  VS-SAU-KHI-XONG-TINH-TU-NGAY-HEN   (tickLan "sau khi xong": N ngày sau NGÀY HẸN thay vì ngày bấm):                                 49 đạt · 1 hỏng
+  BV-GO-NGAY-KHONG-QUA-NAM-SAU       (tachNgayCuoi: bỏ luật "đã qua quá 60 ngày → năm sau"):                                         49 đạt · 1 hỏng
+(Việc chỉ đổi src/, không có dot_bien.py — như KH-UI-5b.)
+
+SỐ CA cong_cu/thu_KHUI5c.js: 50
+SỐ CA cong_cu/thu_KHUI5b.js: 75
