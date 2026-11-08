@@ -8,6 +8,8 @@
 - **Cài đặt POS báo lưu rõ** (chủ quán 08.11): POS CAIDAT-BAO-1 — dải thông báo chung, nút Lưu mờ khi thiếu PIN, báo đúng lý do lỗi.
 - **Kế hoạch — thêm việc** (chủ quán 08.11, đã xem bản xem trước): bấm một ngày trên lịch → bảng nổi việc của ngày đó (thêm / sửa / xong / xoá); ngày có việc có chuông nhỏ; tham khảo tab Việc app riêng của chủ quán: việc lặp (cả Mùng 1 & Rằm, "sau khi xong N ngày"), nhắc trước N ngày, cảnh báo + rà soát việc quá hạn, hoàn tác, gõ nhanh có ngày. (KH-UI-5c; 5 tiện ích còn lại: KH-UI-5d)
 - **Ví có điểm** (POS NAP-1): đơn trả bằng ví được tích điểm như tiền mặt; đơn nạp tiền ở quầy hiện trong Lịch sử đơn (0 điểm).
+- **Cập nhật App lặng lẽ** (chủ quán 08.11, KH-PWA-1): KHÔNG có nút "Cập nhật", không hỏi khách. Bản mới vào (1) mỗi lần mở App khi có mạng; (2) App để chạy nền ≥ 30 phút rồi quay lại mà đang ở màn an toàn → tự tải lại. KHÔNG BAO GIỜ tự tải lại ở Giỏ, Thanh toán, Theo dõi đơn, Đăng nhập, Thông tin cá nhân hay khi đang mở bảng nổi (PIN, QR trả tiền, bảng ngày). App lưu sẵn khung, phông, ảnh trên máy khách; KHÔNG lưu dữ liệu khách và không đụng /api.
+- **Chạy nhiều việc cùng lúc** (chủ quán 08.11): mở KH-THU-1 (rút thời gian bài thử để máy bận không báo đỏ oan) + KH-PWA-1 song song KH-UI-5c — ba việc không chung file.
 
 ## 06.11.2026
 - **Kế hoạch (KH-UI-5b gộp 07.11):** lưới tiện ích cuối cùng theo demo mới nhất (6 ô, "Ngày cần nhớ" gộp Ngày lễ + Sinh nhật & giỗ) và nút ✕ ẩn banner đặt đúng như demo — làm ở KH-UI-5c; ô "hôm nay" của lịch tháng giữ kích thước thường (demo lỗi CSS).

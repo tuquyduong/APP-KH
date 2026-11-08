@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 40,
+  "phien_ban_so": 41,
   "cap_nhat": "2026-11-08",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -220,19 +220,23 @@
       "ten": "Service worker cho PWA: khung app, phong chu, anh nam san tren may khach → mo app gan nhu tuc thi; luon nhan ban moi nhat (khong ket ban cu)",
       "loai": "Th",
       "model": "Opus",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-NHANH-1"
       ],
-      "ghi_chu": "01.11 tach khoi KH-NHANH-1 (can than cap nhat ban moi)"
+      "ghi_chu": "01.11 tach khoi KH-NHANH-1 (can than cap nhat ban moi) | 08.11 mo song song KH-UI-5c + KH-THU-1. Chu quan: cap nhat LANG LE, khong nut — ban moi vao moi lan mo App (trang: mang truoc 3s), App chay nen >= 30 phut quay lai o man an toan thi tu tai lai; khong bao gio tai lai o gio / thanh toan / don / dang nhap / khi mo bang noi",
+      "ngay": "2026-11-08",
+      "han": "2026-11-10"
     },
     {
       "ma": "KH-THU-1",
       "ten": "Bai thu thu_KHMUA1.js co Chromium chay ~116 giay, sat tran 120 giay cua kiem_tra_truoc_khi_giao.js → tach / rut ca de duoi ~60 giay (khong doi hanh vi canh)",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
-      "ghi_chu": "31.10 chat soat KH-UI-3b phat hien: may co trinh duyet bao do oan khi chay song song; GitHub khong bi (khong Playwright)"
+      "trang_thai": "dang_mo",
+      "ghi_chu": "31.10 chat soat KH-UI-3b phat hien: may co trinh duyet bao do oan khi chay song song; GitHub khong bi (khong Playwright) | 08.11 mo song song KH-UI-5c + KH-PWA-1: chat do 08.11 UI3b 74s, UI3d 55s, NHANH1 53s, MUA1b 40s, MUA1 39s; muc tieu moi bai <= 40s may ranh, khong doi ca, khong tang tran 120s; kiem_tra bao \"QUA GIO\" rieng + so giay moi bai",
+      "ngay": "2026-11-08",
+      "han": "2026-11-09"
     },
     {
       "ma": "KH-KHOP-1",
