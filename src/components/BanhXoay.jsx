@@ -9,13 +9,15 @@ export const DS_NGAY = Array.from({ length: 31 }, (_, i) => String(i));
 
 function Cot({ ds, gtri, doi, nhan }) {
   const ref = useRef(null), hen = useRef(0);
+  const moi = useRef(null);
+  moi.current = { gtri, doi }; // cuộn trễ 90 ms phải dùng giá trị MỚI NHẤT, không phải bản của lần vẽ cũ
   const chi = Math.max(0, ds.indexOf(gtri));
   useEffect(() => { const e = ref.current; if (e && Math.round(e.scrollTop / CAO) !== chi) e.scrollTop = chi * CAO; }, [chi]);
   useEffect(() => () => clearTimeout(hen.current), []);
   const khiCuon = (e) => {
     const t = e.currentTarget;
     clearTimeout(hen.current);
-    hen.current = setTimeout(() => { const x = ds[Math.min(ds.length - 1, Math.max(0, Math.round(t.scrollTop / CAO)))]; if (x !== gtri) doi(x); }, 90);
+    hen.current = setTimeout(() => { const x = ds[Math.min(ds.length - 1, Math.max(0, Math.round(t.scrollTop / CAO)))]; if (x !== moi.current.gtri) moi.current.doi(x); }, 90);
   };
   const phim = (e) => {
     const b = e.key === 'ArrowUp' ? -1 : e.key === 'ArrowDown' ? 1 : 0;

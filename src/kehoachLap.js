@@ -108,7 +108,8 @@ export function danhDauNgay(bang, tuJ, denJ, homNay) {
 export function quaHan(bang, homNay) {
   const h = jd(homNay), ra = [];
   bang.viec.forEach((v) => {
-    const lan = cacLan(v, Math.max(jdChuoi(v.ngay), h - TRA_LUI_TOI_DA), h - 1).filter((j) => !daXongLan(v, j));
+    const tu = v.lap && v.lap.k !== 'sau' ? Math.max(jdChuoi(v.ngay), h - TRA_LUI_TOI_DA) : jdChuoi(v.ngay); // chỉ việc lặp bị giới hạn lùi
+    const lan = cacLan(v, tu, h - 1).filter((j) => !daXongLan(v, j));
     if (lan.length) ra.push({ v, lan, soLan: lan.length });
   });
   return ra.sort((a, b) => a.lan[a.lan.length - 1] - b.lan[b.lan.length - 1]);
@@ -131,6 +132,8 @@ export function tickLan(bang, id, ngay, homNay) {
   return doiViec(bang, id, (v) => {
     if (!v.lap) return { ...v, xong: !v.xong };
     if (v.lap.k === 'sau') return { ...v, ngay: chuoiJd(jd(homNay) + v.lap.n) };
+    const mocRa = v.moc ? jdChuoi(v.moc) : null;
+    if (mocRa !== null && jdChuoi(ngay) < mocRa) return v; // lần dưới mốc đã rà: không đảo được
     if ((v.lanXong || []).includes(ngay)) return { ...v, lanXong: v.lanXong.filter((x) => x !== ngay) };
     let ds = sapNhoNhat([...(v.lanXong || []), ngay]), moc = v.moc || '';
     while (ds.length > LAN_XONG_TOI_DA) { const bo = ds.shift(); const sau = chuoiJd(jdChuoi(bo) + 1); if (!moc || sau > moc) moc = sau; } // bỏ lần cũ nhất → mốc đã rà nhích tới đó

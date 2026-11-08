@@ -21,7 +21,7 @@ function Dong({ q, homNay, lam, bang }) {
         {v.lap && v.lap.k !== 'sau' && (soLan > 1
           ? <button type="button" onClick={() => lam(raSoatDen(bang, v.id, homNay), `Đã đánh dấu ${soLan} lần ${v.tieu}`, true)}>✓ Đánh dấu cả {soLan} lần</button>
           : <button type="button" onClick={() => danhDau(cuoi)}>✓ Đã làm</button>)}
-        {v.lap && v.lap.k !== 'sau' && <button type="button" onClick={() => danhDau(cuoi)}>Bỏ qua lần này</button>}
+        {v.lap && v.lap.k !== 'sau' && soLan > 1 && <button type="button" onClick={() => danhDau(cuoi)}>Bỏ qua lần này</button>}
         {dichSau && <button type="button" onClick={() => lam(doiNgayViec(bang, v.id, dem2(0)), `Đã dời sang hôm nay: ${v.tieu}`, true)}>→ Hôm nay</button>}
         {dichSau && <button type="button" onClick={() => lam(doiNgayViec(bang, v.id, dem2(1)), `Đã dời sang mai: ${v.tieu}`, true)}>→ Mai</button>}
         {hoiXoa

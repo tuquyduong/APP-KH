@@ -129,13 +129,13 @@ export default function BangNgay({ ngay, homNay, bang, lam, bao, dong }) {
   const them = (nhap) => {
     const ngayViec = nhap.ngay || ngay, moi = themViec(bang, { ...nhap, ngay: ngayViec });
     if (!moi) return !String(nhap.tieu || '').trim() ? 'Nhập tên việc trước nhé' : 'Đã đủ số việc lưu trên máy này, xoá bớt việc cũ nhé';
-    lam(moi, ngayViec === ngay ? `Đã thêm: ${nhap.tieu.trim()}` : `Đã thêm vào ${dmNgan(jd(docNgay(ngayViec)))}`);
-    return '';
+    return lam(moi, ngayViec === ngay ? `Đã thêm: ${nhap.tieu.trim()}` : `Đã thêm vào ${dmNgan(jd(docNgay(ngayViec)))}`) ? '' : 'Chưa lưu được — chữ bạn gõ vẫn còn đây';
   };
   const luuSua = (id) => (nhap) => {
     const moi = suaViec(bang, id, nhap);
     if (!moi) return 'Nhập tên việc trước nhé';
-    lam(moi, 'Đã lưu việc'); datSua(null);
+    if (!lam(moi, 'Đã lưu việc')) return 'Chưa lưu được — chữ bạn gõ vẫn còn đây';
+    datSua(null);
     return '';
   };
   return (

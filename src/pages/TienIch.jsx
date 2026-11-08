@@ -6,7 +6,7 @@ import { TU_KHOA_MON } from '../noiDung/theChat.js';
 import { BANNER, HOM_NAY } from '../noiDung/trangChu.js';
 import { SS, SS_F, GIFT_HOL } from '../noiDung/keHoach.js';
 import {
-  homNayTuGio, holList, upList, muaNgay, conLai, dayThang, thuNgayNgan, bannerDangAn, anBannerHomNay, doiNhacLe, docNgay,
+  homNayTuGio, holList, upList, muaNgay, conLai, dayThang, thuNgayNgan, bannerDangAn, doiNhacLe, docNgay,
   tenTiet, CO_NHAC,
 } from '../kehoach.js';
 import Man from '../components/Man.jsx';
@@ -93,7 +93,7 @@ export default function TienIch({ id, san = true, veLich, moTienIch, moBanner, d
   return (
     <Man id="tool">
       <DauMan tieuDe={tieuDe} phu={phu} lui={veLich} />
-      <BannerNho banner={banner} an={bannerDangAn(bang, homNay)} khiAn={() => luuVaBao(anBannerHomNay(bang, homNay), 'Ẩn ở Lịch và tiện ích đến hết hôm nay')} chon={moBanner} />
+      <BannerNho banner={banner} an={bannerDangAn(bang, homNay)} chon={moBanner} />
       <div id="toolBody">
         {id === 'theomua' && <TheoMua homNay={homNay} ds={ds} chonMon={chonMon} veLich={veLich} />}
         {id === 'ngayle' && <NgayLe homNay={homNay} bang={bang} doiNhac={(ten) => luuVaBao(doiNhacLe(bang, ten), bang.leNhac[ten] ? 'Đã tắt nhắc' : 'Đã bật nhắc · hiện khi bạn mở app')} />}

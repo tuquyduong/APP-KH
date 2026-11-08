@@ -54,6 +54,8 @@ const khoGia = (d = {}, chan = false) => ({ d, getItem: (x) => { if (chan) throw
   k('C1 giữ tối đa 24 lần đã xong (30 ngày tick, bỏ sót 25/9); 5 lần cũ nhất rời danh sách nhưng KHÔNG hiện lại là "lỡ" (mốc đã rà nhích tới 6/9); chỉ 25/9 còn lỡ', vd.lanXong.length === 24 && vd.moc === '2026-09-06' && qd.length === 1 && bang(qd[0].lan.map(S), ['2026-09-25']));
   k('C1 "Đánh dấu cả N lần" (raSoatDen): mọi lần trước hôm nay coi như xong', LP.quaHan(LP.raSoatDen(day, 'd', N(1, 10, 2026)), N(1, 10, 2026)).length === 0);
 
+  const bm = LP.raSoatDen(day, 'd', N(1, 10, 2026));
+  k('C1 tick một lần dưới mốc đã rà (5/9) không đảo được (không báo sai "đã bỏ đánh dấu")', bang(LP.tickLan(bm, 'd', '2026-09-05', N(1, 10, 2026)), bm) && LP.daXongLan(LP.tickLan(bm, 'd', '2026-09-05', N(1, 10, 2026)).viec[0], J(5, 9, 2026)));
   console.log('D1 — Quá hạn');
   const qb = { viec: [viec({ id: 'a', ngay: '2026-11-07', gio: '10:00', tieu: 'Nộp hồ sơ' }), viec({ id: 'b', ngay: '2026-11-08', tieu: 'Hôm nay' }), viec({ id: 'c', ngay: '2026-11-01', xong: true }),
     viec({ id: 'w', ngay: '2026-10-11', lap: { k: 'tuan', n: 1, den: '' }, lanXong: ['2026-10-18'] })], leNhac: {}, anBanner: '' };
@@ -63,8 +65,9 @@ const khoGia = (d = {}, chan = false) => ({ d, getItem: (x) => { if (chan) throw
   const dh = LP.doiHetSangNay(qb, HN);
   k('D2 "Dời cả N việc sang hôm nay": chỉ việc thường (không lặp), việc lặp giữ nguyên', dh.so === 1 && dh.bang.viec[0].ngay === '2026-11-08' && dh.bang.viec[3].ngay === '2026-10-11');
   k('D3 hạn bằng chữ: hôm nay · quá hạn dd/mm · hạn dd/mm · chưa có hạn', LP.chuHan('2026-11-08', false, HN).chu === 'hạn hôm nay' && bang(LP.chuHan('2026-11-07', false, HN), { chu: 'quá hạn 7/11', qua: true }) && LP.chuHan('2026-11-20', false, HN).chu === 'hạn 20/11' && LP.chuHan('2026-11-07', true, HN).qua === false && LP.chuHan('', false, HN).chu === 'chưa có hạn');
+  k('D1 việc thường quá hạn hơn 400 ngày vẫn vào danh sách quá hạn (khớp chuông trên lịch); việc lặp mới bị giới hạn lùi', LP.quaHan({ viec: [viec({ id: 'o', ngay: '2024-01-01' })], leNhac: {}, anBanner: '' }, HN).length === 1);
   const dd = LP.danhDauNgay(qb, J(1, 11, 2026), J(30, 11, 2026), HN);
-  k('A5 chuông: ngày có việc chưa xong = "viec", ngày có việc quá hạn = "qua" (ưu tiên); việc đã xong không chấm', dd.get(J(7, 11, 2026)) === 'qua' && dd.get(J(8, 11, 2026)) === 'viec' && !dd.has(J(1, 11, 2026)) === false && dd.get(J(1, 11, 2026)) === 'qua' && !dd.has(J(9, 11, 2026)));
+  k('A5 chuông: ngày có việc chưa xong = "viec", ngày có việc quá hạn = "qua" (ưu tiên); việc đã xong không chấm', dd.get(J(7, 11, 2026)) === 'qua' && dd.get(J(8, 11, 2026)) === 'viec' && dd.get(J(1, 11, 2026)) === 'qua' && !dd.has(J(9, 11, 2026)));
 
   console.log('C2 — Hẹn giờ nhắc');
   const R = (kieu, gio) => LP.nhacRaPhut(kieu, gio);
@@ -114,7 +117,7 @@ const khoGia = (d = {}, chan = false) => ({ d, getItem: (x) => { if (chan) throw
   k('A3 sửa việc: đổi tên / giờ / lặp / nhắc, giữ nguyên ngày bắt đầu và id; tên trống → không sửa', sv.viec[0].tieu === 'Đổi tên' && sv.viec[0].gio === '' && !('lap' in sv.viec[0]) && sv.viec[0].ngay === '2026-11-08' && sv.viec[0].id === b0.viec[0].id && KH.suaViec(b0, b0.viec[0].id, { tieu: ' ' }) === null);
   k('A4 thêm chỉ với tên → việc cả ngày: gio rỗng, không nhắc, không lặp', (() => { const v = KH.themViec(KH.keHoachTrong(), { ngay: '2026-11-08', tieu: 'Gọi điện' }).viec[0]; return v.gio === '' && v.nhac === null && !('lap' in v) && v.xong === false; })());
   const chuAm = (d, m, y) => KH.amLichChu(N(d, m, y)), ngayAm = (ld) => { for (let d = 1; d <= 30; d++) if (LUNAR.solar2lunar(d, 11, 2026).d === ld) return chuAm(d, 11, 2026); return ''; };
-  k('A1 dòng âm lịch của bảng ngày: ngày rằm = "Rằm tháng N âm", mùng 1 = "Mùng 1 tháng N âm", ngày 12 = "Ngày 12 tháng N âm"; tháng nhuận ghi "nhuận" (6 nhuận 2025); tháng 29 ngày ghi "tháng thiếu"', /^Rằm tháng \d+ âm/.test(ngayAm(15)) && /^Mùng 1 tháng \d+ âm/.test(ngayAm(1)) && /^Ngày 12 tháng/.test(ngayAm(12)) && /nhuận/.test(chuAm(1, 8, 2025)) && !/nhuận/.test(chuAm(1, 11, 2026)) && /tháng thiếu/.test([1, 8, 2025].length ? [...Array(12)].map((_, i) => chuAm(10, i + 1, 2026)).join('|') : ''));
+  k('A1 dòng âm lịch của bảng ngày: ngày rằm = "Rằm tháng N âm", mùng 1 = "Mùng 1 tháng N âm", ngày 12 = "Ngày 12 tháng N âm"; tháng nhuận ghi "nhuận" (6 nhuận 2025); tháng 29 ngày ghi "tháng thiếu"', /^Rằm tháng \d+ âm/.test(ngayAm(15)) && /^Mùng 1 tháng \d+ âm/.test(ngayAm(1)) && /^Ngày 12 tháng/.test(ngayAm(12)) && /nhuận/.test(chuAm(1, 8, 2025)) && !/nhuận/.test(chuAm(1, 11, 2026)));
 
   console.log('E1 — Nguồn: nối vào App, không gửi dữ liệu đi, giờ VN');
   const app = doc('src/App.jsx'), tc = doc('src/pages/TrangChu.jsx'), moi = ['src/kehoachLap.js', 'src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BangQuaHan.jsx', 'src/components/BangNoi.jsx', 'src/components/BanhXoay.jsx', 'src/components/DaiNhacViec.jsx', 'src/components/ThongBaoHoanTac.jsx'].map(doc).join('\n');
@@ -216,8 +219,8 @@ async function trinhDuyet(pw) {
     await gio.focus(); await t.keyboard.press('ArrowDown');
     k('A4 phím ↓ trên bánh xoay giờ: 08 → 09, nút thành "🕘 09:00" và nhắc đúng giờ đi theo', (await gio.getAttribute('aria-valuetext')) === '09' && (await nutPill(t, '09:00').count()) === 1);
     await gio.evaluate((e) => { e.scrollTop = 36 * 14; });
-    await t.clock.runFor(200); // bánh xoay chờ 90 ms sau khi ngừng cuộn mới chốt giá trị — đồng hồ giả phải chạy
-    k('A4 vuốt (cuộn) bánh xoay giờ tới dòng 14 → "🕘 14:00"', (await nutPill(t, '14:00').count()) === 1);
+    for (let i = 0; i < 10 && (await gio.getAttribute('aria-valuetext')) !== '14'; i++) { await t.waitForTimeout(100); await t.clock.runFor(200); } // bánh xoay chờ 90 ms sau khi ngừng cuộn mới chốt giá trị — đồng hồ giả phải chạy
+    k('A4 vuốt (cuộn) bánh xoay giờ tới dòng 14 → "🕘 14:00"', (await nutPill(t, '14:00').count()) === 1, (await t.locator('.bn-hang').innerText()).replace(/\n/g, ' | ') + ' · giờ=' + (await gio.getAttribute('aria-valuetext')));
     await bangNgay(t).getByRole('button', { name: 'Cả ngày (không giờ)' }).click();
     k('A4 "Cả ngày (không giờ)" bỏ giờ: nút về "Giờ sự kiện" và bỏ nhắc kiểu "trước N phút"', (await nutPill(t, 'Giờ sự kiện').count()) === 1 && (await nutPill(t, 'Đúng giờ').count()) === 0);
     await nutPill(t, 'Giờ sự kiện').click(); await gio.waitFor(); await gio.focus(); await t.keyboard.press('ArrowDown');

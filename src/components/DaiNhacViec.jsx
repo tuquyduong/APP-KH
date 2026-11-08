@@ -17,6 +17,7 @@ export default function DaiNhacViec({ san, moNgay }) {
     const hoi = () => {
       const nay = phutTuGio(bayGio());
       if (Number.isNaN(nay) || nay <= truoc.current) return;
+      if (nay - truoc.current > 3) { truoc.current = nay; return; } // máy ngủ / tab ẩn lâu / giờ POS nhảy: mốc cũ không báo (3 phút ≫ nhịp 15 giây)
       const moi = mocNhacTrong(mayBang.current, truoc.current, nay).filter((x) => { const k = `${x.v.id}|${x.j}|${x.v.nhac}`; if (daBao.current.has(k)) return false; daBao.current.add(k); return true; });
       truoc.current = nay;
       if (moi.length) {

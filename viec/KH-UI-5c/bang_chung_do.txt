@@ -19,8 +19,8 @@ $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js
 (Mỗi ca sửa là ca ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1; số ca không đổi 75 → 75, không bớt ca khác.)
 
 Trên code đã vá:
-$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5c.js     50 đạt · 0 hỏng
-$ node cong_cu/thu_KHUI5c.js (có Chromium)           102 đạt · 0 hỏng
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5c.js     52 đạt · 0 hỏng   (sau vòng soát 1: thêm 2 ca — tick dưới mốc đã rà, việc thường quá hạn > 400 ngày)
+$ node cong_cu/thu_KHUI5c.js (có Chromium)           104 đạt · 0 hỏng
 $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js     75 đạt · 0 hỏng
 
 Đột biến chạy tay trên code đã vá (bài thử phải BẮT; mỗi lần sửa trên bản sao ở nháp rồi bỏ):
@@ -32,5 +32,5 @@ $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js     75 đạt · 0 hỏng
   BV-GO-NGAY-KHONG-QUA-NAM-SAU       (tachNgayCuoi: bỏ luật "đã qua quá 60 ngày → năm sau"):                                         49 đạt · 1 hỏng
 (Việc chỉ đổi src/, không có dot_bien.py — như KH-UI-5b.)
 
-SỐ CA cong_cu/thu_KHUI5c.js: 50
+SỐ CA cong_cu/thu_KHUI5c.js: 52
 SỐ CA cong_cu/thu_KHUI5b.js: 75
