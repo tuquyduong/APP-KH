@@ -196,9 +196,10 @@ async function trinhDuyet(pw) {
       Object.defineProperty(document, 'hidden', { configurable: true, get: () => !!window.__an });
     });
     const trang = await ctx.newPage();
+    trang.setDefaultTimeout(10000);
     await trang.goto(`${URL0}/trangchu`);
     const coSW = await trang.evaluate(async () => {
-      await navigator.serviceWorker.ready;
+      await Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(r, 5000))]);
       for (let i = 0; i < 50 && !navigator.serviceWorker.controller; i++) await new Promise((r) => setTimeout(r, 100));
       return !!navigator.serviceWorker.controller;
     }).catch(() => false);
