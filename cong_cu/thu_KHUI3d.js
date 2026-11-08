@@ -134,7 +134,8 @@ async function trinhDuyet(pw) {
     await t.addInitScript((tk) => { if (tk && !sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); localStorage.setItem('kh_token', tk); } }, token);
     const S = { goi: [], khach: { ...KHACH, ...pos.khach } };
     const hopLe = (a) => a === 'Bearer tok-A' || a === 'Bearer tok-N';
-    await t.route(`${URL0}/**`, async (r) => {
+    t.dangGoi = 0; t.tongGoi = 0; // đếm yêu cầu mạng giả: `yen(t)` chờ tới khi hết yêu cầu và trang đã vẽ xong (thay chờ cố định)
+    const xuLy = async (r) => {
       const u = new URL(r.request().url()), p = u.pathname, auth = r.request().headers().authorization || '';
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) });
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiApp });
@@ -155,12 +156,14 @@ async function trinhDuyet(pw) {
       if (duong === '/diem') return pos.het401 ? json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' }) : json(200, { success: true, points: 1250, history: [] });
       if (duong === '/voucher') return json(200, pos.voucher || { success: true, data: [], ma_khach_moi: [] });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
-    });
+    };
+    await t.route(`${URL0}/**`, async (r) => { t.dangGoi++; t.tongGoi++; try { return await xuLy(r); } finally { t.dangGoi--; } });
     t.setDefaultTimeout(4000);
     try { await chay(t, S, loi); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
-  const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await t.waitForTimeout(700); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await t.waitForTimeout(150); };
+  const yen = async (t) => { let tong = -1; for (let lan = 0; lan < 400; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); if (!t.dangGoi && t.tongGoi === tong) return; tong = t.tongGoi; } };
+  const mo = async (t, duong, co = '100%') => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130%}' }); await yen(t); };
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const chup = async (t, ten) => { if (luuAnh) await t.screenshot({ path: path.join(luuAnh, ten + '.png') }); };
   const them = (S, duong) => S.goi.filter((g) => g.duong === duong);
@@ -185,7 +188,7 @@ async function trinhDuyet(pw) {
         k(`B6 [${nhan}] không tràn ngang`, await khongTran(t));
         if (rong === 390 && cs === '100%') await chup(t, 'ung-dung_uudai-vanglai_390');
         if (rong === 360 && cs === '100%') await chup(t, 'ung-dung_uudai-vanglai_360');
-        await t.locator('#rewards .the-moi .nut').click(); await t.waitForTimeout(400);
+        await t.locator('#rewards .the-moi .nut').click(); await yen(t);
         k(`B2 [${nhan}] bấm khối khoá → /dangnhap?tiep=/uudai`, new URL(t.url()).pathname === '/dangnhap' && new URL(t.url()).searchParams.get('tiep') === '/uudai', t.url());
       });
     }
@@ -201,7 +204,7 @@ async function trinhDuyet(pw) {
     const bn = await chu(t, '#rewards .rw-ban');
     k('B2 POS có Giờ vàng đang chạy → banner với khung giờ + % của POS, không số mẫu', /20:00/.test(bn) && /22:00/.test(bn) && /30%/.test(bn) && !/50%|tháng này/.test(bn), bn);
     await chup(t, 'ung-dung_uudai-giovang_390');
-    await t.locator('#rewards .rw-b').click(); await t.waitForTimeout(600);
+    await t.locator('#rewards .rw-b').click(); await yen(t);
     k('B2 nút "Xem món Giờ vàng →" mở Menu nhóm Giờ vàng', new URL(t.url()).pathname === '/menu/gio-vang', t.url());
   });
   await ca('vanglai-giovang-truoc', { token: '', gio: '19:00:00', pos: { gv: { ...GV_DANG, dang_chay: false } } }, async (t) => {
@@ -243,25 +246,25 @@ async function trinhDuyet(pw) {
 
   // B3 — link QR hoá đơn khi chưa đăng nhập
   await ca('qr-ma', { token: '' }, async (t, S) => {
-    await t.goto(URL0 + '/?ma=AB12'); await t.waitForSelector('.phone'); await t.waitForTimeout(800);
+    await t.goto(URL0 + '/?ma=AB12'); await t.waitForSelector('.phone'); await yen(t);
     k('B3 mở link ?ma=AB12 chưa đăng nhập → vào thẳng màn đăng nhập, mã đã xoá khỏi thanh địa chỉ', new URL(t.url()).pathname === '/dangnhap' && !/ma=/.test(t.url()), t.url());
     k('B3 màn đăng nhập có dòng mã hoá đơn', /Đăng nhập để nhận điểm cho hoá đơn này/.test(await chu(t, '#login')));
     await t.locator('#sdt').fill('0909123456'); await t.getByRole('button', { name: 'Tiếp tục' }).click();
-    await t.locator('#ma').fill('123456'); await t.getByRole('button', { name: 'Xác nhận' }).click(); await t.waitForTimeout(900);
+    await t.locator('#ma').fill('123456'); await t.getByRole('button', { name: 'Xác nhận' }).click(); await yen(t);
     k('B3 đăng nhập xong → về /uudai, ô nhập mã điền sẵn AB12', new URL(t.url()).pathname === '/uudai' && (await t.locator('#ma-bill').inputValue()) === 'AB12', t.url());
   });
   await ca('qr-ma-dong-dn', { token: '' }, async (t) => {
-    await t.goto(URL0 + '/?ma=AB12'); await t.waitForSelector('.phone'); await t.waitForTimeout(800);
-    await t.getByRole('button', { name: 'Đóng' }).click(); await t.waitForTimeout(400);
+    await t.goto(URL0 + '/?ma=AB12'); await t.waitForSelector('.phone'); await yen(t);
+    await t.getByRole('button', { name: 'Đóng' }).click(); await yen(t);
     k('B3 đóng màn đăng nhập → Trang chủ (không đứng ở /uudai mất mã)', new URL(t.url()).pathname === '/trangchu', t.url());
   });
 
   // B5 — hết phiên khi đang ở /uudai
   await ca('het-phien', { pos: { het401: true } }, async (t) => {
     await mo(t, '/uudai');
-    await t.waitForTimeout(500);
+    await yen(t);
     k('B5 hết phiên (401) khi đang ở /uudai → về Trang chủ, chế độ khách ("Chào bạn!")', new URL(t.url()).pathname === '/trangchu' && (await chu(t, '#home h1')) === 'Chào bạn!', t.url());
-    await t.locator('.tabbar .tab', { hasText: 'Ưu đãi' }).click(); await t.waitForTimeout(500);
+    await t.locator('.tabbar .tab', { hasText: 'Ưu đãi' }).click(); await yen(t);
     k('B5 bấm tab Ưu đãi lần nữa → bản vãng lai (không đăng nhập)', new URL(t.url()).pathname === '/uudai' && (await co(t, '#rewards .the-moi')) && !(await co(t, '#rewards .wallet-row')));
   });
 
