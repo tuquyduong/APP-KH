@@ -73,3 +73,4 @@ Nghiệm thu: 20/22 → H4 (dòng HEAD ĐÃ KIỂM) và H5 (thử tay) đã bổ
 - **BÀI HỌC**: xem trên.
 
 ✓ CỔNG CHẠY ĐẠT (`node tu_chay/cong.js chay . 765b141^ HEAD viec/KH-UI-5c`, `KHONG_TRINH_DUYET=1`; chỉ có cảnh báo A16 vì bài đổi chết ở dòng nạp trên gốc).
+HEAD ĐÃ KIỂM: 2fdc785
