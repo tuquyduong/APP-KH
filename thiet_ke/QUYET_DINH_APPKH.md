@@ -3,6 +3,12 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 08.11.2026
+- **Thẻ hạng bán trên App** (chủ quán chốt 08.11, thư POS 08.11): thẻ là SẢN PHẨM (Menu nhóm "Thẻ thành viên", Ưu đãi nút Mua, Trang chủ nhắc gia hạn), cho vào CHUNG giỏ với đồ uống, trả một lần. Hạng phải CÓ TRƯỚC mới được giá hạng: đồ uống trong cùng đơn tính theo hạng đang có, hạng mới áp từ đơn sau; muốn giảm ngay → App gợi ý mua thẻ trước (đơn riêng). POS tự cấp hạng khi đơn có thẻ được ghi đã thu (mọi cách trả); huỷ / hoàn thu hồi thẻ. Hạng chỉ cấp: hiện, nút Mua mờ + "Hạng dành tặng khách thân thiết". Tích điểm theo TỪNG MÓN (công tắc ở POS). App làm sau khi POS lên hợp đồng (KH-THE-1).
+- **Cài đặt POS báo lưu rõ** (chủ quán 08.11): POS CAIDAT-BAO-1 — dải thông báo chung, nút Lưu mờ khi thiếu PIN, báo đúng lý do lỗi.
+- **Kế hoạch — thêm việc** (chủ quán 08.11, đã xem bản xem trước): bấm một ngày trên lịch → bảng nổi việc của ngày đó (thêm / sửa / xong / xoá); ngày có việc có chuông nhỏ; tham khảo tab Việc app riêng của chủ quán: việc lặp (cả Mùng 1 & Rằm, "sau khi xong N ngày"), nhắc trước N ngày, cảnh báo + rà soát việc quá hạn, hoàn tác, gõ nhanh có ngày. (KH-UI-5c; 5 tiện ích còn lại: KH-UI-5d)
+- **Ví có điểm** (POS NAP-1): đơn trả bằng ví được tích điểm như tiền mặt; đơn nạp tiền ở quầy hiện trong Lịch sử đơn (0 điểm).
+
 ## 06.11.2026
 - **Kế hoạch (KH-UI-5b gộp 07.11):** lưới tiện ích cuối cùng theo demo mới nhất (6 ô, "Ngày cần nhớ" gộp Ngày lễ + Sinh nhật & giỗ) và nút ✕ ẩn banner đặt đúng như demo — làm ở KH-UI-5c; ô "hôm nay" của lịch tháng giữ kích thước thường (demo lỗi CSS).
 - **Thẻ mã QR thương hiệu** (chủ quán duyệt mẫu 06.11, POS GIAO-DIEN-1 mục F): mọi QR TRẢ TIỀN trên App dùng cùng mẫu với POS — thẻ kem #FBF3E6 viền vàng kim #B08028, chữ "Tứ Quý Đường" #7A1E18, mã mức H chấm tròn 4 màu phần tư (#253A6E · #966923 · #347042 · #B2342C), 3 ô góc tô đặc, logo giữa. 7 màu này duyệt ngoài demo (K9) chỉ cho `src/giaoDien/the_qr.css` + `src/qrThuongHieu.js`. Mã thành viên giữ như cũ. (KH-SOHD-1)

@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 39,
-  "cap_nhat": "2026-11-07",
+  "phien_ban_so": 40,
+  "cap_nhat": "2026-11-08",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -98,6 +98,42 @@
       "ngay": "2026-11-06",
       "ghi_chu": "06.11 mo (chu quan: tien ich ke hoach + banner anh sang chay qua \"nhu demo\"; chi can du 8 tien ich demo): lich + viec cua toi + Theo mua / Ngay le / Sap toi + banner hom nay ban nho fx-a o man Ke hoach / tien ich; 5 tien ich con lai = KH-UI-5c sau khi 5b gop. Chu cong tac: \"Nhac khi mo app\" | 07.11 chat soat cuoi DAT: dau nhanh a2c6b95; cong tinh + chay kieu GitHub DAT; ghep thu dot 3 sach, npm test co trinh duyet 38/0; anh dat. Lich am duong, viec cua toi, Theo mua / Ngay le / Sap toi, banner nho fx-a. Chat quyet 3 cau hoi (lam o KH-UI-5c): nut ✕ dat dung nhu demo; luoi 6 o theo demo cuoi (\"Ngay can nho\" gop Ngay le + Sinh nhat & gio); o hom nay giu thuong. Gop PR #23 (ee67b65)",
       "commit": "ee67b65"
+    },
+    {
+      "ma": "KH-UI-5c",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-UI-5b"
+      ],
+      "ten": "Ke hoach: bam ngay -> bang noi viec cua ngay (them / sua / xong / xoa), ngay co viec co chuong; viec lap (hang ngay/tuan/thang/nam, mung 1 & ram, sau khi xong N ngay), nhac truoc N ngay, canh bao qua han + bang ra soat, hoan tac, go nhanh co ngay, tim viec; nut x an banner nhu demo",
+      "ghi_chu": "08.11 mo (chu quan: them viec la pop-up khi bam ngay, ngay co viec co bieu tuong — da xem ban xem truoc; tham khao tab Viec app rieng cua chu quan: luat lap, qua han, hoan tac)",
+      "ngay": "2026-11-08",
+      "han": "2026-11-10"
+    },
+    {
+      "ma": "KH-UI-5d",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-5c"
+      ],
+      "ten": "Ke hoach du tien ich theo demo cuoi: luoi 6 o (Theo mua, Van khan, Ngay can nho = Sinh nhat & gio + Ngay le, Xe co, Uong thuoc, Chu ky) + dai Sap toi; o Chu ky an voi xung ho anh/chu/bac",
+      "ghi_chu": "08.11 tach tu KH-UI-5c (cung file Ke hoach, lam sau 5c); 07.11 chat quyet: luoi theo demo cuoi (patch35)"
+    },
+    {
+      "ma": "KH-THE-1",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS DIEM-MON-1",
+        "POS KH-THE-1 (hop dong /api/kh dong the trong mon[])"
+      ],
+      "ten": "Ban the hang tren App: man Mua the hoi vien theo demo (buycard), nhom \"The thanh vien\" o Menu, nut Mua o Uu dai, Trang chu nhac gia han; the vao chung gio voi do uong; chi_cap → nut Mua mo + \"Hang danh tang khach than thiet\"",
+      "ghi_chu": "08.11 chu quan chot (thu POS 08.11): hang phai co truoc — don co the + do uong thi do uong tinh hang dang co; muon giam ngay → goi y mua the truoc (don rieng); POS tu cap hang khi da thu; tich diem theo tung mon (POS). App cho ban hop dong cua POS"
     },
     {
       "ma": "KH-UI-4",
