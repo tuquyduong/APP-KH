@@ -69,4 +69,13 @@
 
 F5 chủ quán thử tay trên điện thoại (1–3 thao tác mỗi mục): (1) lúc Giờ vàng chạy mở Menu / Giỏ hàng → thấy dải đỏ "Giờ vàng…", bấm → vào Menu; mở Thanh toán → không có dải. (2) Kế hoạch → bấm một việc → "Xoá việc" → hỏi lại → Xoá → mất, báo "Đã xoá «…»", không còn Hoàn tác. (3) bảng ngày gõ "Uống 1/2" → thấy "📅 Sẽ xếp vào ngày 1/2" → "Không phải ngày" → Thêm.
 
-HEAD ĐÃ KIỂM: d8bae8a
+
+## Soát độc lập (/ra-soat vòng 1)
+Báo cáo của agent soát: ĐẠT. Nghiệm thu 20/20 mục có bằng chứng (A2 PIN/QR, A5 đích mon/tracnghiem, D4 chỉ một phần / ca khoá; agent chưa tự chạy npm test / cổng).
+Lỗi tìm được: (1) App.jsx — dải "🎁→Ưu đãi" lệch theo lịch sử điều hướng, bấm mở chính trang đang đứng; (2) `daHoiCt` đặt trước khi gọi, lỗi mạng lần đầu thì không hỏi lại (phiếu cho phép bỏ nguồn); (3) TienIch không gọi dungPhut (không có chữ đếm ở đó — chưa đọc hết).
+Nghi ngờ: cuộn thừa ~50px ở màn ngắn (chưa đo); padding-top 14px chưa đo; chữ "Chuỗi lặp sẽ tính lại" hiện cả cho "sau khi xong"; ngày 31 → tháng 2 không nhớ lại; năm trong dòng "Sẽ xếp vào ngày".
+Đã sửa vòng 1: (1) ẩn dải khi đích là Ưu đãi mà đang ở Ưu đãi; chữ "Chuỗi lặp…" không hiện cho "sau khi xong". Giữ nguyên (2) (phiếu A3 cho bỏ nguồn khi lỗi mạng), (3) TienIch không có chữ đếm, các nghi ngờ nhẹ ghi vào CHƯA KIỂM: cuộn thừa / padding chưa đo bằng Chromium.
+Bài học (đề xuất ngoài phạm vi): đưa nguồn dùng chung lên vỏ App phải định rõ chủ sở hữu state; gắn phần tử trong luồng trên `.screen{min-height:100%}` cần ca đo scrollHeight ở màn ngắn.
+
+## Cổng sau vòng soát 1
+(ghi bên dưới)
