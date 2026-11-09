@@ -52,3 +52,21 @@
 - KHOÁ: `thu_KHCT1` đếm đúng MỘT lần `/chuong-trinh` ở Ưu đãi → dải hỏi lười (không hỏi trùng ở Ưu đãi). Không cần phép kiểm mới.
 - NGUYÊN TẮC (đề xuất, ngoài phạm vi): khi thêm một nguồn dữ liệu dùng chung ở vỏ App, tra các bài `thu_KH*` đếm số lần gọi cửa đó trước khi viết (K-mới: "đếm lần gọi cửa"). Chat soát quyết định có mở K9 hay không.
 - BỎ: mock `bay_gio` hằng số trong bài thử chặn đồng hồ giả (một lần, đã sửa bằng bỏ mock).
+
+## Cổng (tại HEAD d8bae8a, cây sạch)
+- `node tu_chay/cong.js tinh . 25aff61^ HEAD viec/KH-UI-5d` → chỉ `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi ngay bên dưới, bình thường ở bước này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 25aff61^ HEAD viec/KH-UI-5d` → `✓ CỔNG CHẠY ĐẠT`.
+- `node kiem_tra_truoc_khi_giao.js --day-du` → 42 đạt · 0 hỏng (vite build ok).
+
+## BÁO CÁO 7 MỤC
+1. VIỆC: KH-UI-5d — dải quảng cáo mảnh ở đầu các trang, bỏ ✕ banner, xoá hỏi lại một lần (không Hoàn tác ở Kế hoạch), 4 sửa nhỏ, sửa việc đổi được ngày.
+2. ĐÃ SỬA: mới `src/quangCao.js`, `components/DaiQuangCao.jsx`, `components/HoiXoa.jsx`, `giaoDien/dai_quang_cao.css`; sửa `App.jsx` (gắn dải một chỗ + hỏi /chuong-trinh lười), `BannerHomNay.jsx`, `TrangChu.jsx`, `TienIch.jsx`, `KeHoach.jsx`, `BangNgay.jsx`, `BangQuaHan.jsx`, `BanhXoay.jsx` (BanhNgay), `dungKeHoach.js` (dungPhut), `kehoach.js`, `kehoachLap.js`, CSS; xoá `BannerNho.jsx`, `ThongBaoHoanTac.jsx`. ~330 dòng app (vừa ngân sách).
+3. BÀI THỬ: thu_KHUI5d mới (31 ca thuần / 84 ca có Chromium), sửa thu_KHUI5b (75) / thu_KHUI5c (52). Đỏ trên gốc: 28/31, 9, 1. Đột biến 5 cái đều bắt được. `npm test` + `--day-du` 42 đạt · 0 hỏng; cổng `chay` ĐẠT.
+4. ĐÃ RÀ K4: grep `Hoàn tác` / `anBanner` / `bannerDangAn` / `BannerNho` / `ThongBaoHoanTac` / `new Date(` trong `src/`, `cong_cu/` — chỉ còn Giỏ hàng (giữ Hoàn tác theo phiếu), chú thích đổi, và bài thử nói về việc đã bỏ. Mọi nơi gọi `lam(…, true)` / `suaViec` / `BieuMau` đã chuyển theo.
+5. CHƯA KIỂM: (a) máy thật / điện thoại, trình duyệt Zalo; (b) bảng PIN / QR nổi trên dải — chỉ đọc CSS (dải không z-index, `.sheet` z-index 90), chưa mở PinSheet bằng Chromium; (c) đích `mon` / `tracnghiem` của dải (có hàm thuần, chưa có ca bấm trong Chromium); (d) ảnh màn rộng ≥ 1024 px; (e) D4 không đỏ trên gốc — ca khoá; (f) dải ở 360 px cắt "…" chữ Giờ vàng dài (phiếu cho phép).
+6. GIT: nhánh `viec/KH-UI-5d` đã push; không PR, không merge, không đụng `main`, không sửa `TIEN_DO_APPKH.json`.
+7. BÀI HỌC: xem mục `## Bài học` ở trên.
+
+F5 chủ quán thử tay trên điện thoại (1–3 thao tác mỗi mục): (1) lúc Giờ vàng chạy mở Menu / Giỏ hàng → thấy dải đỏ "Giờ vàng…", bấm → vào Menu; mở Thanh toán → không có dải. (2) Kế hoạch → bấm một việc → "Xoá việc" → hỏi lại → Xoá → mất, báo "Đã xoá «…»", không còn Hoàn tác. (3) bảng ngày gõ "Uống 1/2" → thấy "📅 Sẽ xếp vào ngày 1/2" → "Không phải ngày" → Thêm.
+
+HEAD ĐÃ KIỂM: d8bae8a
