@@ -198,3 +198,8 @@ BÀI HỌC: NGUYÊN TẮC — mỗi nhánh rẽ của bản vá phải có ca h�
 4. **Chạy dot_bien.py song song với `npm test`** → npm test đỏ giả (dot_bien sửa tệp tạm thời). **BỎ** — một lần; nhớ: dot_bien sửa tệp trong kho, không chạy song song.
 5. **Người gác chặn** (B-MANOI chạy bài chưa commit, SED-I, B-DICHCHU biến `$S`, B-PHANTICH `( … )` và lệnh script không đứng một mình): đều đúng luật đã ghi trong skill — **BỎ**.
 6. **SỐ CA thiếu `cong_cu/`** (cổng A16 đỏ lần đầu): cổng đã bắt — **BỎ** (đề xuất nhỏ: skill bước 4 ghi rõ dạng `SỐ CA cong_cu/<bài>.js: N`).
+
+## Cổng lần cuối (đứng ở 2177b3c, cây sạch)
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 47fce03^ HEAD viec/KH-PWA-1` → ✓ CỔNG CHẠY ĐẠT
+
+HEAD ĐÃ KIỂM: 2177b3c
