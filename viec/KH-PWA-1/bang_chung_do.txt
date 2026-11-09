@@ -1,0 +1,46 @@
+KH-PWA-1 — bằng chứng đỏ trên code gốc (47fce03 = PHIEU: KH-PWA-1), xanh sau vá
+Cách chạy trên gốc: git archive 47fce03 ra thư mục nháp, chép bài thử MỚI (bản cuối) vào cong_cu/ của bản đó, nối node_modules, chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHPWA1.js (bài mới) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ A2 dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ A3/A4 dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ B2 tenBan dừng giữa chừng  — ENOENT: no such file or directory, open '…/public/sw.js'
+  ✗ B dangKySW dừng giữa chừng  — Cannot find module '…/src/dangKySW.js'
+  ✗ A1 main.jsx thêm đúng 2 dòng: một import + một lời gọi  — []
+  ✗ A5 public/_headers đúng 3 luật (sw.js · index.html + / · assets), không thừa  — {}
+  ✗ C3 huong_dan_kiem_tay.md ≤ 10 dòng, đủ 3 bước (mở 2 lần · máy bay · bản mới)  — 1
+2 đạt · 7 hỏng
+   trên gốc CÓ Chromium (bản bài 9c81d9f+ chống treo): 9 đạt · 18 hỏng — vd ✗ C1 mở App → có service worker, ✗ C1 tắt mạng → tải lại vẫn thấy Trang chủ
+   (chrome-error://chromewebdata/), ✗ A2 mạng chậm > 3 giây → vỏ đã lưu (6227 ms), ✗ B2/B3 đóng hộp thoại ở /menu → tự tải lại, ✗ A3 kho chỉ còn 2 bản.
+   sau vá (vòng 1): KHONG_TRINH_DUYET=1 → 34 đạt · 0 hỏng · có Chromium → 52 đạt · 0 hỏng (26 giây)
+   vòng 2 (npm test đỏ: các bài khác dựng main.jsx bằng esbuild, không có import.meta.env → "Cannot read properties of undefined (reading 'PROD')"):
+   thêm ca "A1 không có import.meta.env … dangKySW() không ném" — đỏ với `import.meta.env.PROD` (đột biến VS-DK-ENV-KHONG-HOI), xanh với `import.meta.env?.PROD`.
+   chạy lại bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên — ca mới nằm trong khối "B dangKySW dừng giữa chừng").
+   sau vá: KHONG_TRINH_DUYET=1 → 35 đạt · 0 hỏng · có Chromium → 53 đạt · 0 hỏng (26 giây)
+   vòng 3 (09.11, Trả lời Câu hỏi 1 — /tracnghiem/lam không an toàn): thêm ca "B3 KHÔNG an toàn: /tracnghiem/lam và đường dẫn con".
+   trên code nhánh 75fb2f2 (trước khi sửa dangKySW.js): ✗ B3 KHÔNG an toàn: /tracnghiem/lam …  — /tracnghiem/lam, /tracnghiem/lam/, /tracnghiem/lam/3 → 35 đạt · 1 hỏng
+   bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên).
+   sau vá (c32ee1c+): KHONG_TRINH_DUYET=1 → 36 đạt · 0 hỏng · có Chromium → 54 đạt · 0 hỏng (28 giây)
+
+   vòng 4 (09.11, /ra-soat vòng 1 KHÔNG ĐẠT: đổi bản lúc mạng chậm / qua kiểm nền rồi mất mạng → TRẮNG MÀN; trang chờ luuVo → kho đầy trả vỏ cũ).
+   thêm 5 ca hành vi trong vm (kho + mạng giả) + 1 ca Chromium; bỏ 2 ca marker (`3000`, đếm `laHtml(`). Trên sw.js CHƯA vá (dca7a52, cây ở nháp):
+  ✗ A2 đổi bản mà chưa tải được /assets của vỏ mới → KHÔNG lưu đè vỏ (mất mạng mở lại không trắng màn)
+  ✗ A2 đổi bản → tải đủ /assets của vỏ mới rồi mới lưu vỏ mới (giữ cả bản trước)  — ["/","/assets/index-CU.js","/assets/index-CU.css"]
+  ✗ A2 trang: lưu kho lỗi (kho đầy) → vẫn trả trang mới từ mạng
+36 đạt · 3 hỏng   (KHONG_TRINH_DUYET=1, bài bản cuối 0d1dab8)
+   có Chromium (bài dca7a52): thêm ✗ A2 bản mới về ở nền rồi mất mạng → mở lại vẫn thấy khung App (không trắng màn)  — undefined · #root 0 → 55 đạt · 4 hỏng
+   bài bản cuối trên gốc 47fce03: 2 đạt · 8 hỏng (7 dòng ✗ cũ + "A2 hành vi (kho + mạng giả) dừng giữa chừng — ENOENT public/sw.js").
+   sau vá (aae0daf+): KHONG_TRINH_DUYET=1 → 39 đạt · 0 hỏng · có Chromium → 58 đạt · 0 hỏng (28 giây)
+
+   vòng 5 (09.11, /ra-soat vòng 2 ĐẠT, nêu 2 đột biến SỐNG): +2 ca hành vi vm — "A2 đổi bản: phông / manifest lỗi nhưng đủ /assets → vẫn lưu vỏ mới",
+   "A3 activate xoá kho cũ tqd-v0, giữ tqd-v1 và kho khác". Hai đột biến của người soát (VS-SW-NEM-KHI-PHONG-LOI, BV-SW-ACTIVATE-KHONG-XOA) nay ĐỎ (40 · 1 mỗi cái).
+   bài bản cuối (9ebbd9d) trên gốc 47fce03: 2 đạt · 8 hỏng. Sau vá: KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng · có Chromium → 60 đạt · 0 hỏng (29 giây)
+
+SỐ CA cong_cu/thu_KHPWA1.js: 41
+
+== thu_KHUI2.js (bài cũ — ca E2 đổi theo Trả lời Câu hỏi 1, chủ quán duyệt 08.11) — trên gốc 47fce03, KHONG_TRINH_DUYET=1
+  ✗ E2 service worker chỉ đăng ký qua src/dangKySW.js
+77 đạt · 1 hỏng
+   sau vá (7fafd2c): KHONG_TRINH_DUYET=1 → 78 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHUI2.js: 78
