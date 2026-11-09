@@ -3,6 +3,12 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 09.11.2026
+- **Banner và dải quảng cáo** (chủ quán 09.11, xem ảnh App thật + demo): Trang chủ GIỮ banner lớn "Hôm nay", BỎ HẲN nút ✕ (không ẩn banner ở đâu). Các trang Menu, Ưu đãi, Giỏ hàng, Kế hoạch và tiện ích, Tài khoản có **dải mảnh có ánh sáng lướt** (kiểu A) ở đầu trang, không nút tắt, không che thao tác; KHÔNG có ở Thanh toán, Theo dõi đơn, Đăng nhập, bảng PIN. Chữ phải chọn lọc, hấp dẫn, không ghi công dụng chữa bệnh. (KH-UI-5d)
+- **Chữ quảng cáo đặt trong Cài đặt POS** theo ngày / khung giờ, có thứ tự ưu tiên, bật / tắt, xem trước; Giờ vàng tự động (POS QC-APP-1, hợp đồng v14). Trong lúc chờ: dải lấy Giờ vàng đang chạy → chương trình đặc biệt → không có thì ẩn. (KH-UI-5d, KH-QC-1)
+- **Xoá việc ở Kế hoạch**: hỏi lại MỘT lần rồi xoá luôn, KHÔNG có Hoàn tác (cả tick / dời). Giỏ hàng giữ Hoàn tác như cũ. (KH-UI-5d)
+- **Bài thử chạy lâu** (KH-THU-1): chấp nhận 2 bài 41–45 giây (≤ 60 giây).
+
 ## 08.11.2026
 - **Kế hoạch — thêm việc gọn** (KH-UI-5c gộp 08.11): chỉ gõ tên + Thêm là xong; 3 nút Giờ sự kiện · Hẹn giờ nhắc · Lặp lại mở từng khung, bánh xoay 24 giờ; nhắc hiện khi khách đang mở App (App tắt: KH-TB-1).
 - **Thẻ hạng bán trên App** (chủ quán chốt 08.11, thư POS 08.11): thẻ là SẢN PHẨM (Menu nhóm "Thẻ thành viên", Ưu đãi nút Mua, Trang chủ nhắc gia hạn), cho vào CHUNG giỏ với đồ uống, trả một lần. Hạng phải CÓ TRƯỚC mới được giá hạng: đồ uống trong cùng đơn tính theo hạng đang có, hạng mới áp từ đơn sau; muốn giảm ngay → App gợi ý mua thẻ trước (đơn riêng). POS tự cấp hạng khi đơn có thẻ được ghi đã thu (mọi cách trả); huỷ / hoàn thu hồi thẻ. Hạng chỉ cấp: hiện, nút Mua mờ + "Hạng dành tặng khách thân thiết". Tích điểm theo TỪNG MÓN (công tắc ở POS). App làm sau khi POS lên hợp đồng (KH-THE-1).
