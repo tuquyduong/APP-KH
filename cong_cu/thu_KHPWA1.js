@@ -112,6 +112,8 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     k('B3 KHÔNG an toàn: /giohang, /thanhtoan, /don/…, /dangnhap…, /taikhoan/thongtin', khong.length === 0, khong.join(', '));
     const co = ['/trangchu', '/', '/menu', '/menu/tra', '/mon/tra-luc-bao', '/uudai', '/taikhoan', '/taikhoan/donhang', '/kehoach', '/tracnghiem/ketqua', '/mathanhvien'].filter((p) => C(p, false) !== true);
     k('B3 an toàn: Trang chủ, Menu, Món, Ưu đãi, Tài khoản, Đơn hàng (danh sách), Kế hoạch…', co.length === 0, co.join(', '));
+    const tn = ['/tracnghiem/lam', '/tracnghiem/lam/', '/tracnghiem/lam/3'].filter((p) => C(p, false) !== false);
+    k('B3 KHÔNG an toàn: /tracnghiem/lam và đường dẫn con (bài dở chỉ ở state — chủ quán 08.11)', tn.length === 0 && C('/tracnghiem', false) === true && C('/tracnghiem/lamthu', false) === true, tn.join(', '));
     k('B3 đang mở hộp thoại → KHÔNG an toàn dù ở /menu', C('/menu', true) === false && C('/trangchu', true) === false);
     const nguon = doc('src/dangKySW.js');
     k('B3 hộp thoại = [role="dialog"], [aria-modal="true"] hoặc bảng nổi .sheet.show (Thêm việc của Kế hoạch không có role)', /\[role="dialog"\]/.test(nguon) && /\[aria-modal="true"\]/.test(nguon) && /\.sheet\.show/.test(nguon));
