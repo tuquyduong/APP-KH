@@ -418,9 +418,10 @@ async function trinhDuyet(pw) {
     await mo(t, '/dangnhap?tiep=/trangchu');
     await t.fill('#sdt', B.sdt); await t.locator('#login .checkout-btn').click();
     await t.waitForSelector('#ma'); await t.fill('#ma', '123456');
-    await t.evaluate(() => { window.__thayA = []; const id = setInterval(() => { const s = document.body.innerText; if (/1\.250|Linh|100\.000/.test(s)) window.__thayA.push(s.slice(0, 80)); }, 20); setTimeout(() => clearInterval(id), 3000); });
+    await t.evaluate(() => { window.__thayA = []; const id = setInterval(() => { const s = document.body.innerText; if (/1\.250|Linh|100\.000/.test(s)) window.__thayA.push(s.slice(0, 80)); }, 20); setTimeout(() => { clearInterval(id); window.__xongTheo = true; }, 3000); });
     await t.locator('#login .checkout-btn').click();
     await yen(t, S);
+    await t.waitForFunction(() => window.__xongTheo === true, null, { timeout: 15000 }); // D4: theo dõi đủ 3 giây thật sau khi bấm đăng nhập (không cắt ngắn cửa sổ quan sát)
     return t.evaluate(() => window.__thayA);
   };
   await Promise.all(CO_MAN.map(async (rong) => {

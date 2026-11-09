@@ -69,3 +69,10 @@ Không commit nào đổi file ngoài `viec/KH-THU-1/` sau lần kiểm cuối n
 - Bài học bổ sung: đồng hồ giả chọn đúng loại — `fastForward` bắn mỗi hẹn một lần (mất khả năng đếm nhịp), ca đếm nhịp dùng `runFor`; hàm chờ phải ổn định nhiều lượt và không thoát im lặng khi hết trần.
 
 HEAD ĐÃ KIỂM: bb6adb7
+
+## Soát cuối của chat (09.11.2026)
+- Cổng `tinh` + `chay` kiểu GitHub (KHONG_TRINH_DUYET=1, mốc main 2fe3e97) ĐẠT trên 73262d8. Đọc diff 8 file: không bỏ ca, không nới điều kiện, trần 120 giây giữ.
+- A3 chat chạy (3 bài cùng lúc, có Chromium, 2 lần): thu_KHUI3d 44/41 s · thu_KHUI3b 52/49 s · thu_KHNHANH1 55/55 s — đều xanh.
+- Sửa trong commit này: ca D4 (`dangNhapB`) — bản máy dùng `yen()` nên cửa sổ theo dõi "khách B có thấy số của khách A không" ngắn hơn 3 giây của bản gốc → thêm chờ cờ `__xongTheo` (đặt khi hết 3 giây theo dõi). Không đổi ca, không đổi điều kiện; thu_KHNHANH1 vẫn ≤ 60 giây khi máy bận.
+- Chủ quán 09.11 chấp nhận 2 bài 41–45 s (≤ 60 s theo phiếu).
+- HEAD ĐÃ KIỂM: 73262d8 + commit này
