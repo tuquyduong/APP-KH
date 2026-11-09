@@ -131,7 +131,7 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const hong3 = khoGia(); hong3.o.kh_kehoach = '[1,2]';
   const d2 = KH.docKeHoach(hong2);
   k('D1 dữ liệu hỏng: JSON lỗi / mảng / null → bản trống, không ném lỗi', bang(KH.docKeHoach(hong1), KH.keHoachTrong()) && bang(KH.docKeHoach(hong3), KH.keHoachTrong()));
-  k('D1 dữ liệu sai dạng từng phần: giữ mục đúng, bỏ mục sai (việc lỗi, id trùng, lễ lạ, ngày ẩn sai)', d2.viec.length === 1 && d2.viec[0].tieu === 'Giữ' && bang(d2.leNhac, { 'Quốc khánh': true }) && d2.anBanner === '');
+  k('D1 dữ liệu sai dạng từng phần: giữ mục đúng, bỏ mục sai (việc lỗi, id trùng, lễ lạ; trường anBanner cũ bỏ qua)', d2.viec.length === 1 && d2.viec[0].tieu === 'Giữ' && bang(d2.leNhac, { 'Quốc khánh': true }) && !('anBanner' in d2));
   k('D1 kho bị chặn: đọc → bản trống; ghi / xoá → false (màn không được báo "đã lưu")', bang(KH.docKeHoach(khoChan), KH.keHoachTrong()) && KH.ghiKeHoach(b, khoChan) === false && KH.xoaKeHoach(khoChan) === false);
   k('D3 xoaKeHoach xoá khoá; đọc lại trống', KH.xoaKeHoach(ks) === true && !('kh_kehoach' in ks.o) && bang(KH.docKeHoach(ks), KH.keHoachTrong()));
   k('B7 (KH-UI-5d) không còn ẩn banner theo ngày: kho không có anBannerHomNay / bannerDangAn', !KH.anBannerHomNay && !KH.bannerDangAn);
@@ -242,7 +242,7 @@ async function manHinh(KH) {
   const app = doc('src/App.jsx');
   k('E1 App: dựng /kehoach và /kehoach/<tiện ích> chỉ khi đã đăng nhập, truyền san=daBiet; Trang chủ có moKeHoach', /dangNhap && trang === 'kehoach' && <KeHoach san=\{daBiet\}/.test(app) && /dangNhap && trang === 'tienich' && <TienIch[^>]*san=\{daBiet\}/.test(app) && /moKeHoach=\{\(\) => di\(taoDuongDan\('kehoach'\)\)\}/.test(app));
   k('E1 App: hết phiên / đăng xuất (donPhien) và đổi khách (docLaiGio) đều quên bản Kế hoạch trong bộ nhớ', /const donPhien = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app) && /const docLaiGio = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app));
-  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BannerNho.jsx', 'src/components/dungKeHoach.js'].map(doc);
+  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/dungKeHoach.js'].map(doc);
   const moiHet = moi.join('\n');
   k('E1 không gọi mạng: các tệp mới không import api.js, không fetch / XMLHttpRequest / sendBeacon', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon/.test(moiHet));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" lấy từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moiHet) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/KeHoach.jsx')));
