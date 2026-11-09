@@ -75,4 +75,4 @@ HEAD ĐÃ KIỂM: bb6adb7
 - A3 chat chạy (3 bài cùng lúc, có Chromium, 2 lần): thu_KHUI3d 44/41 s · thu_KHUI3b 52/49 s · thu_KHNHANH1 55/55 s — đều xanh.
 - Sửa trong commit này: ca D4 (`dangNhapB`) — bản máy dùng `yen()` nên cửa sổ theo dõi "khách B có thấy số của khách A không" ngắn hơn 3 giây của bản gốc → thêm chờ cờ `__xongTheo` (đặt khi hết 3 giây theo dõi). Không đổi ca, không đổi điều kiện; thu_KHNHANH1 vẫn ≤ 60 giây khi máy bận.
 - Chủ quán 09.11 chấp nhận 2 bài 41–45 s (≤ 60 s theo phiếu).
-- HEAD ĐÃ KIỂM: 73262d8 + commit này
+HEAD ĐÃ KIỂM: 868da7d
