@@ -15,7 +15,7 @@
 ```
 
 ## Quyết định trong phạm vi phiếu
-- **B2 hỏi index.html qua service worker**: bộ kiểm K1 (`kiem_tra_truoc_khi_giao.js:35-36`) cấm `fetch(` trong `src/` ngoài `src/api.js`, mà `api.js` CẤM sửa →
+- **B2 hỏi index.html qua service worker**: bộ kiểm K1 (`kiem_tra_truoc_khi_giao.js:36-37`) cấm `fetch(` trong `src/` ngoài `src/api.js`, mà `api.js` CẤM sửa →
   `src/dangKySW.js` nhắn SW (`postMessage` + `MessageChannel`), SW hỏi `/` (`cache: 'no-store'`), lưu đè vỏ, trả tên `/assets/index-*.js`.
 - **Luật A2 ở `public/sw.js`** (chỗ duy nhất dùng; `public/` chép nguyên, không `import` được `src/`). Bài thử nạp `sw.js` bằng `vm` → thử hàm thật, không chép luật hai chỗ.
 - **Màn an toàn thêm `.sheet.show`**: bảng "Thêm việc" của Kế hoạch (`src/components/ThemViec.jsx:22`) là bảng nổi nhưng không có `role="dialog"` (file CẤM sửa) — phiếu
@@ -40,6 +40,7 @@
 | dangKySW coTheTaiLai — /tracnghiem/lam (vòng 3, chủ quán 08.11) | BV-DK-BO-TRACNGHIEM-LAM, VS-DK-TRACNGHIEM-CA-GOC |
 | sw.js luuVo — đổi bản: tải đủ /assets TRƯỚC rồi mới lưu vỏ (vòng 4, /ra-soat 1) | BV-SW-VO-TRUOC-ASSETS, VS-SW-VO-TRUOC-KHI-TAI |
 | sw.js trang — trả mạng ngay, lưu vỏ ở nền (vòng 4) | VS-SW-TRANG-CHO-LUU |
+| sw.js luuVo — chỉ /assets thiếu mới chặn lưu vỏ; activate xoá kho cũ (vòng 5, /ra-soat 2) | VS-SW-NEM-KHI-PHONG-LOI, BV-SW-ACTIVATE-KHONG-XOA |
 | dangKySW denLucKiem — 30 phút | VS-DK-KIEM-MOI-LAN-HIEN |
 | dangKySW doiBan — tên rỗng không đổi | VS-DK-TEN-RONG-LA-DOI |
 | dangKySW — chỉ PROD, không ném khi không có import.meta.env | VS-DK-DANG-KY-CA-DEV, VS-DK-ENV-KHONG-HOI |
@@ -84,6 +85,11 @@
   chống tải lại liên tục (sessionStorage), `.sheet.show`, chỉ tải lại khi trang hiện, install `cache: 'reload'`.
 
 Ghi 08.11: dừng ở Câu hỏi 1 (bước 6 — `npm test` đỏ do bài cũ ngoài phạm vi).
+
+- `public/sw.js:54-58` dọn kho chỉ giữ tệp mà `index.html` trỏ tới. Hôm nay dist chỉ 1 JS + 1 CSS (`grep -rn "lazy(\|import(" src/` không ra) nên ổn. Sau này dùng
+  `React.lazy` / `import()` thì tệp tách bị dọn và không được tải trước → mất mạng mở màn đó vỡ. Việc đó phải sửa sw.js cùng lúc (người soát vòng 2 nêu).
+- Mạng trả 5xx/404 (không ném) cho trang → khách nhận trang lỗi, không phải vỏ đã lưu (phiếu A2 chỉ nói "mạng lỗi / quá 3 giây"). Cloudflare Pages ít khi 5xx; để chủ quán quyết nếu cần.
+- Vỏ lưu cả khi HTML 200 không có tệp App (`tenBan` rỗng) — trên HTTPS khó xảy ra; chặn gọn được bằng `tenBan(html) &&` nếu chủ quán muốn.
 
 ## Cổng (09.11, đứng ở ec00466, cây sạch)
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 47fce03^ HEAD viec/KH-PWA-1` → ✓ CỔNG CHẠY ĐẠT

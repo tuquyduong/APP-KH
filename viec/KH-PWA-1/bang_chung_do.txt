@@ -32,7 +32,11 @@ Cách chạy trên gốc: git archive 47fce03 ra thư mục nháp, chép bài th
    bài bản cuối trên gốc 47fce03: 2 đạt · 8 hỏng (7 dòng ✗ cũ + "A2 hành vi (kho + mạng giả) dừng giữa chừng — ENOENT public/sw.js").
    sau vá (aae0daf+): KHONG_TRINH_DUYET=1 → 39 đạt · 0 hỏng · có Chromium → 58 đạt · 0 hỏng (28 giây)
 
-SỐ CA cong_cu/thu_KHPWA1.js: 39
+   vòng 5 (09.11, /ra-soat vòng 2 ĐẠT, nêu 2 đột biến SỐNG): +2 ca hành vi vm — "A2 đổi bản: phông / manifest lỗi nhưng đủ /assets → vẫn lưu vỏ mới",
+   "A3 activate xoá kho cũ tqd-v0, giữ tqd-v1 và kho khác". Hai đột biến của người soát (VS-SW-NEM-KHI-PHONG-LOI, BV-SW-ACTIVATE-KHONG-XOA) nay ĐỎ (40 · 1 mỗi cái).
+   bài bản cuối (9ebbd9d) trên gốc 47fce03: 2 đạt · 8 hỏng. Sau vá: KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng · có Chromium → 60 đạt · 0 hỏng (29 giây)
+
+SỐ CA cong_cu/thu_KHPWA1.js: 41
 
 == thu_KHUI2.js (bài cũ — ca E2 đổi theo Trả lời Câu hỏi 1, chủ quán duyệt 08.11) — trên gốc 47fce03, KHONG_TRINH_DUYET=1
   ✗ E2 service worker chỉ đăng ký qua src/dangKySW.js
