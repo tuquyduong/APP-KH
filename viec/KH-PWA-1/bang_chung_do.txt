@@ -22,11 +22,11 @@ Cách chạy trên gốc: git archive 47fce03 ra thư mục nháp, chép bài th
    bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên).
    sau vá (c32ee1c+): KHONG_TRINH_DUYET=1 → 36 đạt · 0 hỏng · có Chromium → 54 đạt · 0 hỏng (28 giây)
 
-SỐ CA thu_KHPWA1.js: 36
+SỐ CA cong_cu/thu_KHPWA1.js: 36
 
 == thu_KHUI2.js (bài cũ — ca E2 đổi theo Trả lời Câu hỏi 1, chủ quán duyệt 08.11) — trên gốc 47fce03, KHONG_TRINH_DUYET=1
   ✗ E2 service worker chỉ đăng ký qua src/dangKySW.js
 77 đạt · 1 hỏng
    sau vá (7fafd2c): KHONG_TRINH_DUYET=1 → 78 đạt · 0 hỏng
 
-SỐ CA thu_KHUI2.js: 78
+SỐ CA cong_cu/thu_KHUI2.js: 78
