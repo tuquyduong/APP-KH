@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { dungCua, cuaToi, cuaDiem } from '../duLieuKhach.js';
 import { loiChao, dinhDangSo } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
@@ -17,9 +16,8 @@ import { IcoVe } from '../components/BieuTuong.jsx';
 import OKeHoach from '../components/OKeHoach.jsx';
 import KhoaTienIch from '../components/KhoaTienIch.jsx';
 import { dungKeHoach } from '../components/dungKeHoach.js';
-import { homNayTuGio, ngayChuoi, anBannerHomNay } from '../kehoach.js';
+import { homNayTuGio, ngayChuoi } from '../kehoach.js';
 import { viecNgay, quaHan } from '../kehoachLap.js';
-import Thongbao from '../components/Thongbao.jsx';
 import { taoDuongDan } from '../duongDan.js';
 import '../giaoDien/ke_hoach.css';
 import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
@@ -95,10 +93,7 @@ export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, 
   const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
   const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
   const coHomNay = !!HOM_NAY.tieuDe;
-  const { bang: keHoach, luu: luuKeHoach } = dungKeHoach(daBiet);
-  const [tb, datTb] = useState('');
-  // ✕ trên banner "hôm nay" (demo todayHide): ẩn bản nhỏ ở Lịch và tiện ích đến hết hôm nay; banner Trang chủ không đổi.
-  const anBanner = dangNhap && daBiet ? () => { datTb(luuKeHoach(anBannerHomNay(keHoach, homNayTuGio(bayGio()))) ? 'Ẩn ở Lịch và tiện ích đến hết hôm nay' : 'Trình duyệt không cho lưu trên máy này — chưa ẩn được'); } : null;
+  const { bang: keHoach } = dungKeHoach(daBiet);
 
   return (
     <Man id="home">
@@ -108,7 +103,7 @@ export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, 
 
       <div className="hb-one">
         {coHomNay ? (
-          <div id="todayHome"><BannerHomNay anh={BANNER.anh} tieuDe={HOM_NAY.tieuDe} phu={HOM_NAY.phu} nut={HOM_NAY.nut} chon={moMenu} khiAn={anBanner} /></div>
+          <div id="todayHome"><BannerHomNay anh={BANNER.anh} tieuDe={HOM_NAY.tieuDe} phu={HOM_NAY.phu} nut={HOM_NAY.nut} chon={moMenu} /></div>
         ) : (
           <div className="hero-banner" role="button" tabIndex={0} onClick={moMenu} onKeyDown={(e) => { if (e.key === 'Enter') moMenu(); }}>
             <img className="slot-img" src={BANNER.anh} alt="" />
@@ -144,7 +139,6 @@ export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, 
           <div className="more-l"><span role="button" tabIndex={0} onClick={moMenu} onKeyDown={(e) => { if (e.key === 'Enter') moMenu(); }}>Xem tất cả</span></div>
         </>
       )}
-      <Thongbao chu={tb} het={() => datTb('')} />
     </Man>
   );
 }
