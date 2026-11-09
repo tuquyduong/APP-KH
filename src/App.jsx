@@ -1,12 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { docToken, xoaToken, datKhiHetPhien, layChiTietDon } from './api.js';
+import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh } from './api.js';
 import { cuaToi, cuaDiem, cuaDon, CUA_KHACH, lamMoi, xoaKhoKhach, napTomTat, luuTomTat, dungLamMoiNgam } from './duLieuKhach.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungDuongDan, viTriCuonKhiDoiMan } from './dieuHuong.js';
 import { taoDuongDan, slugMon, timMonTheoSlug, tieuDeTrang } from './duongDan.js';
 import { dungMenu } from './dungMenu.js';
 import { dungTracNghiem } from './dungTracNghiem.js';
-import { dungHeThong, dungNguCanhGia, NguCanhGia } from './heThong.js';
+import { dungHeThong, dungNguCanhGia, NguCanhGia, khoGioVang } from './heThong.js';
+import { chonQuangCao, coDai } from './quangCao.js';
+import { docChuongTrinh } from './chuongTrinh.js';
 import { LIEN_HE, coLienHe } from './noiDung/lienHe.js';
 import { xoaMenuLuu } from './menuLuu.js';
 import { doiKhach, xoaTatCa } from './luuMay.js';
@@ -22,6 +24,7 @@ import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
 import BaoDonXong from './components/BaoDonXong.jsx';
 import DaiNhacViec from './components/DaiNhacViec.jsx';
+import DaiQuangCao from './components/DaiQuangCao.jsx';
 import GioHang from './pages/GioHang.jsx';
 import ThanhToan from './pages/ThanhToan.jsx';
 import TheoDoiDon from './pages/TheoDoiDon.jsx';
@@ -81,6 +84,15 @@ export default function App() {
   const klLuu = dangNhap ? tn.klLuu : null;
   const ds = menu.dl ? menu.dl.data : RONG;
   const nguCanhGia = dungNguCanhGia(ds, hangToi);
+  const gioVangPos = dungKho(khoGioVang);
+  // /chuong-trinh cho dải: tối đa MỘT lần mỗi lần mở App, hỏi khi tới trang có dải đầu tiên (Ưu đãi tự hỏi lấy rồi; dải ở đó thừa nên không hỏi trùng); lỗi mạng → bỏ nguồn này, không báo
+  const [chuongTrinh, datChuongTrinh] = useState([]);
+  const daHoiCt = useRef(false);
+  useEffect(() => {
+    if (daHoiCt.current || !coDai(trang) || trang === 'uudai') return;
+    daHoiCt.current = true;
+    layChuongTrinh().then((d) => datChuongTrinh(docChuongTrinh(d)), () => {});
+  }, [trang]);
   const [daVaoMenu, datDaVaoMenu] = useState(false);
   const [lanVaoMenu, datLanVaoMenu] = useState(0);
   const [nhuCau, datNhuCau] = useState('');
@@ -146,6 +158,7 @@ export default function App() {
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
   const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
+  const quangCao = coDai(trang) && (dangNhap || !r.canDN) ? chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio() }) : null;
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
   const chonMon = (mon) => {
@@ -157,6 +170,10 @@ export default function App() {
   const moUuDai = () => chonTab('uudai');
   const moMenu = () => chonTab('menu');
   const moGioVang = () => { quayLaiMenu.current = false; datNhuCau(''); di(taoDuongDan('menu', { nhom: 'gio-vang' })); datLanVaoMenu((n) => n + 1); };
+  const moDichQuangCao = ({ dich, maMon }) => {
+    const mon = dich === 'mon' ? ds.find((m) => m.ma === maMon) : null;
+    if (dich === 'uudai') moUuDai(); else if (dich === 'tracnghiem') moTracNghiem(); else if (mon) chonMon(mon); else moMenu();
+  };
   const taiTab = (t) => trang === t;
   const vaoGio = (chu) => { datThongBao(chu); di(taoDuongDan('giohang')); };
   // Thêm món xong QUAY LẠI trang trước (QĐ 31.10; mở thẳng link món → /menu, cha của /mon) — không nhảy vào giỏ.
@@ -179,12 +196,13 @@ export default function App() {
     <NguCanhGia.Provider value={nguCanhGia}>
     <div className="phone">
       <div className="screens" ref={khungCuon}>
+        {quangCao && <DaiQuangCao chu={quangCao.chu} chon={quangCao.dich ? () => moDichQuangCao(quangCao) : null} />}
         {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} />}
         {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} monLoi={monLoi} />}
         {dangNhap && trang === 'thanhtoan' && <ThanhToan gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} veGio={() => di(taoDuongDan('giohang'))} danhDauMon={datMonLoi} sauHuy={daHuy} />}
         {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} lui={luiVe} daTra={daTra} daHuy={daHuy} veThanhToan={() => di(taoDuongDan('thanhtoan'))} />}
-        {dangNhap && trang === 'kehoach' && <KeHoach san={daBiet} lui={luiVe} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} moBanner={moMenu} moTracNghiem={moTracNghiem} coKetQuaTn={!!klLuu} ds={ds} chonMon={chonMon} />}
-        {dangNhap && trang === 'tienich' && <TienIch key={r.tham.tienich} id={r.tham.tienich} san={daBiet} veLich={() => di(taoDuongDan('kehoach'))} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} moBanner={moMenu} ds={ds} chonMon={chonMon} />}
+        {dangNhap && trang === 'kehoach' && <KeHoach san={daBiet} lui={luiVe} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} moTracNghiem={moTracNghiem} coKetQuaTn={!!klLuu} ds={ds} chonMon={chonMon} />}
+        {dangNhap && trang === 'tienich' && <TienIch key={r.tham.tienich} id={r.tham.tienich} san={daBiet} veLich={() => di(taoDuongDan('kehoach'))} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} ds={ds} chonMon={chonMon} />}
         {taiTab('trangchu') && <TrangChu menu={menu} dangNhap={dangNhap} daBiet={daBiet} moKeHoach={() => di(taoDuongDan('kehoach'))} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moGioVang={moGioVang} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} />}
         {taiTab('uudai') && <UuDai dangNhap={dangNhap} maSan={maCho} khiNhanXong={() => datMaCho('')} moQR={moQR} moGioVang={moGioVang} moDangNhap={() => moDangNhap('/uudai')} moHoSo={() => di(taoDuongDan('thongtin'))} />}
         {dangNhap && taiTab('taikhoan') && <TaiKhoan luu={tn.luu} klLuu={klLuu} moTracNghiem={moTracNghiem} moQR={moQR} moDon={() => di(taoDuongDan('donhang'))} moHoSo={() => di(taoDuongDan('thongtin'))} moHoTro={() => di(taoDuongDan('hotro'))} moUuDai={moUuDai} dangXuat={dangXuat} />}
