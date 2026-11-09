@@ -21,6 +21,8 @@ DOT_BIEN = [
     ('VS-SW-TENBAN-HONG', SW, "  return m ? m[1] : '';", "  return m ? m[1] : 'hong';", False),
     ('VS-DK-BO-HOP-THOAI', DK, "  if (dangMoHopThoai) return false;\n", "", False),
     ('VS-DK-THANHTOAN-AN-TOAN', DK, "giohang|thanhtoan|don", "giohang|don", True),
+    ('BV-DK-BO-TRACNGHIEM-LAM', DK, "|tracnghiem\\/lam(\\/.*)?)", ")", False),
+    ('VS-DK-TRACNGHIEM-CA-GOC', DK, "tracnghiem\\/lam(\\/.*)?)", "tracnghiem.*)", False),
     ('VS-DK-KIEM-MOI-LAN-HIEN', DK, "return lucAn > 0 && bayGio - lucAn >= n && bayGio - lanKiem >= n;", "return lucAn > 0;", True),
     ('VS-DK-TEN-RONG-LA-DOI', DK, "!!tenMoi && !!tenDangChay && tenMoi !== tenDangChay", "tenMoi !== tenDangChay", False),
     ('VS-DK-DANG-KY-CA-DEV', DK, "if (!import.meta.env?.PROD || !('serviceWorker' in navigator)) return;", "if (!('serviceWorker' in navigator)) return;", False),

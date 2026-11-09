@@ -17,5 +17,16 @@ Cách chạy trên gốc: git archive 47fce03 ra thư mục nháp, chép bài th
    thêm ca "A1 không có import.meta.env … dangKySW() không ném" — đỏ với `import.meta.env.PROD` (đột biến VS-DK-ENV-KHONG-HOI), xanh với `import.meta.env?.PROD`.
    chạy lại bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên — ca mới nằm trong khối "B dangKySW dừng giữa chừng").
    sau vá: KHONG_TRINH_DUYET=1 → 35 đạt · 0 hỏng · có Chromium → 53 đạt · 0 hỏng (26 giây)
+   vòng 3 (09.11, Trả lời Câu hỏi 1 — /tracnghiem/lam không an toàn): thêm ca "B3 KHÔNG an toàn: /tracnghiem/lam và đường dẫn con".
+   trên code nhánh 75fb2f2 (trước khi sửa dangKySW.js): ✗ B3 KHÔNG an toàn: /tracnghiem/lam …  — /tracnghiem/lam, /tracnghiem/lam/, /tracnghiem/lam/3 → 35 đạt · 1 hỏng
+   bài bản cuối trên gốc 47fce03: 2 đạt · 7 hỏng (cùng 7 dòng ✗ trên).
+   sau vá (c32ee1c+): KHONG_TRINH_DUYET=1 → 36 đạt · 0 hỏng · có Chromium → 54 đạt · 0 hỏng (28 giây)
 
-SỐ CA thu_KHPWA1.js: 35
+SỐ CA thu_KHPWA1.js: 36
+
+== thu_KHUI2.js (bài cũ — ca E2 đổi theo Trả lời Câu hỏi 1, chủ quán duyệt 08.11) — trên gốc 47fce03, KHONG_TRINH_DUYET=1
+  ✗ E2 service worker chỉ đăng ký qua src/dangKySW.js
+77 đạt · 1 hỏng
+   sau vá (7fafd2c): KHONG_TRINH_DUYET=1 → 78 đạt · 0 hỏng
+
+SỐ CA thu_KHUI2.js: 78
