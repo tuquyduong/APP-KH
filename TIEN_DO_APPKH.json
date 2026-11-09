@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 41,
+  "phien_ban_so": 42,
   "cap_nhat": "2026-11-08",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -103,14 +103,15 @@
       "ma": "KH-UI-5c",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-5b"
       ],
       "ten": "Ke hoach: bam ngay -> bang noi viec cua ngay (them / sua / xong / xoa), ngay co viec co chuong; viec lap (hang ngay/tuan/thang/nam, mung 1 & ram, sau khi xong N ngay), nhac truoc N ngay, canh bao qua han + bang ra soat, hoan tac, go nhanh co ngay, tim viec; nut x an banner nhu demo",
-      "ghi_chu": "08.11 mo (chu quan: them viec la pop-up khi bam ngay, ngay co viec co bieu tuong — da xem ban xem truoc; tham khao tab Viec app rieng cua chu quan: luat lap, qua han, hoan tac)",
+      "ghi_chu": "08.11 mo (chu quan: them viec la pop-up khi bam ngay, ngay co viec co bieu tuong — da xem ban xem truoc; tham khao tab Viec app rieng cua chu quan: luat lap, qua han, hoan tac) | 08.11 chat soat cuoi DAT: dau nhanh ce7c73e; cong tinh + chay kieu GitHub DAT voi main 2fe3e97; ghep thu sach, npm test co trinh duyet 39/0; anh 360/390/430 dat. Bam ngay -> bang noi (them / sua / xong / xoa), 3 nut Gio su kien / Hen gio nhac / Lap lai + banh xoay 24h, lap (ca Mung 1 & Ram, sau khi xong N ngay), nhac khi App mo, qua han + ra soat, hoan tac, go nhanh co ngay, tim bo dau. Chat dong y 4 cau hoi: X o banner Trang chu (an ban nho den het hom nay); ThongBaoHoanTac rieng; viec lap o bang qua han khong doi ngay; sua viec chua doi duoc ngay bat dau. Gop PR #24 (d9842c2)",
       "ngay": "2026-11-08",
-      "han": "2026-11-10"
+      "han": "2026-11-10",
+      "commit": "d9842c2"
     },
     {
       "ma": "KH-UI-5d",
@@ -121,7 +122,7 @@
         "KH-UI-5c"
       ],
       "ten": "Ke hoach du tien ich theo demo cuoi: luoi 6 o (Theo mua, Van khan, Ngay can nho = Sinh nhat & gio + Ngay le, Xe co, Uong thuoc, Chu ky) + dai Sap toi; o Chu ky an voi xung ho anh/chu/bac",
-      "ghi_chu": "08.11 tach tu KH-UI-5c (cung file Ke hoach, lam sau 5c); 07.11 chat quyet: luoi theo demo cuoi (patch35)"
+      "ghi_chu": "08.11 tach tu KH-UI-5c (cung file Ke hoach, lam sau 5c); 07.11 chat quyet: luoi theo demo cuoi (patch35) | 08.11 tu soat KH-UI-5c, lam kem (nho): sua viec doi duoc ngay bat dau; thanh nhac tu dem lai moi phut (\"10 phut nua\"); dai nhac bo mot chuong thua (dang hien 2 bieu tuong); \"Uong 1/2\" khong hieu la ngay 1/2 khi phia truoc chi 1 tu; DaiNhacViec bam Xem mo dung bang ngay cua viec"
     },
     {
       "ma": "KH-THE-1",

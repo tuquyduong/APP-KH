@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 08.11.2026
+- **Kế hoạch — thêm việc gọn** (KH-UI-5c gộp 08.11): chỉ gõ tên + Thêm là xong; 3 nút Giờ sự kiện · Hẹn giờ nhắc · Lặp lại mở từng khung, bánh xoay 24 giờ; nhắc hiện khi khách đang mở App (App tắt: KH-TB-1).
 - **Thẻ hạng bán trên App** (chủ quán chốt 08.11, thư POS 08.11): thẻ là SẢN PHẨM (Menu nhóm "Thẻ thành viên", Ưu đãi nút Mua, Trang chủ nhắc gia hạn), cho vào CHUNG giỏ với đồ uống, trả một lần. Hạng phải CÓ TRƯỚC mới được giá hạng: đồ uống trong cùng đơn tính theo hạng đang có, hạng mới áp từ đơn sau; muốn giảm ngay → App gợi ý mua thẻ trước (đơn riêng). POS tự cấp hạng khi đơn có thẻ được ghi đã thu (mọi cách trả); huỷ / hoàn thu hồi thẻ. Hạng chỉ cấp: hiện, nút Mua mờ + "Hạng dành tặng khách thân thiết". Tích điểm theo TỪNG MÓN (công tắc ở POS). App làm sau khi POS lên hợp đồng (KH-THE-1).
 - **Cài đặt POS báo lưu rõ** (chủ quán 08.11): POS CAIDAT-BAO-1 — dải thông báo chung, nút Lưu mờ khi thiếu PIN, báo đúng lý do lỗi.
 - **Kế hoạch — thêm việc** (chủ quán 08.11, đã xem bản xem trước): bấm một ngày trên lịch → bảng nổi việc của ngày đó (thêm / sửa / xong / xoá); ngày có việc có chuông nhỏ; tham khảo tab Việc app riêng của chủ quán: việc lặp (cả Mùng 1 & Rằm, "sau khi xong N ngày"), nhắc trước N ngày, cảnh báo + rà soát việc quá hạn, hoàn tác, gõ nhanh có ngày. (KH-UI-5c; 5 tiện ích còn lại: KH-UI-5d)
