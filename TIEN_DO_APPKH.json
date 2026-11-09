@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 42,
-  "cap_nhat": "2026-11-08",
+  "phien_ban_so": 43,
+  "cap_nhat": "2026-11-09",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -234,10 +234,11 @@
       "ten": "Bai thu thu_KHMUA1.js co Chromium chay ~116 giay, sat tran 120 giay cua kiem_tra_truoc_khi_giao.js → tach / rut ca de duoi ~60 giay (khong doi hanh vi canh)",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
-      "ghi_chu": "31.10 chat soat KH-UI-3b phat hien: may co trinh duyet bao do oan khi chay song song; GitHub khong bi (khong Playwright) | 08.11 mo song song KH-UI-5c + KH-PWA-1: chat do 08.11 UI3b 74s, UI3d 55s, NHANH1 53s, MUA1b 40s, MUA1 39s; muc tieu moi bai <= 40s may ranh, khong doi ca, khong tang tran 120s; kiem_tra bao \"QUA GIO\" rieng + so giay moi bai",
+      "trang_thai": "xong",
+      "ghi_chu": "31.10 chat soat KH-UI-3b phat hien: may co trinh duyet bao do oan khi chay song song; GitHub khong bi (khong Playwright) | 08.11 mo song song KH-UI-5c + KH-PWA-1: chat do 08.11 UI3b 74s, UI3d 55s, NHANH1 53s, MUA1b 40s, MUA1 39s; muc tieu moi bai <= 40s may ranh, khong doi ca, khong tang tran 120s; kiem_tra bao \"QUA GIO\" rieng + so giay moi bai | 09.11 chat soat cuoi DAT: dau nhanh 73262d8 + 1 commit soat cua chat (D4 thu_KHNHANH1 theo doi du 3 giay); cong tinh + chay kieu GitHub DAT; A3 chat chay 3 bai cung luc 2 lan xanh (UI3d 44 s, UI3b 52 s, NHANH1 55 s). Ca bo ~527 s -> ~360 s; 6/8 bai <= 40 s, UI3b 41 s + NHANH1 45 s chu quan chap nhan (<= 60 s). kiem_tra bao \"QUA GIO\" rieng + so giay. Gop PR #25 (aad5082)",
       "ngay": "2026-11-08",
-      "han": "2026-11-09"
+      "han": "2026-11-09",
+      "commit": "aad5082"
     },
     {
       "ma": "KH-KHOP-1",
