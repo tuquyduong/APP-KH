@@ -78,7 +78,7 @@ function BieuMau({ homNay, viec, gui, xoa, thoat }) {
       {viec && (
         <div className="bn-ngay-sua">
           <small>Ngày</small><BanhNgay ngay={ngay} homNay={homNay} doi={datNgay} />
-          {lap && ngay !== viec.ngay && <small>Chuỗi lặp sẽ tính lại từ ngày mới</small>}
+          {lap && lap.k !== 'sau' && ngay !== viec.ngay && <small>Chuỗi lặp sẽ tính lại từ ngày mới</small>}
         </div>
       )}
       <div className="bn-hang">

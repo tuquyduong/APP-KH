@@ -158,7 +158,8 @@ export default function App() {
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
   const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
-  const quangCao = coDai(trang) && (dangNhap || !r.canDN) ? chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio() }) : null;
+  const quangCaoTho = coDai(trang) && (dangNhap || !r.canDN) ? chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio() }) : null;
+  const quangCao = quangCaoTho && !(quangCaoTho.dich === 'uudai' && trang === 'uudai') ? quangCaoTho : null; // dải dẫn tới chính trang đang đứng thì thừa
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
   const chonMon = (mon) => {
