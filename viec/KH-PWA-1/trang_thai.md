@@ -78,3 +78,10 @@
   chống tải lại liên tục (sessionStorage), `.sheet.show`, chỉ tải lại khi trang hiện, install `cache: 'reload'`.
 
 Ghi 08.11: dừng ở Câu hỏi 1 (bước 6 — `npm test` đỏ do bài cũ ngoài phạm vi).
+
+## Cổng (09.11, đứng ở ec00466, cây sạch)
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 47fce03^ HEAD viec/KH-PWA-1` → ✓ CỔNG CHẠY ĐẠT
+  (lần đầu ✗ [A16] ×2: dòng `SỐ CA` thiếu `cong_cu/` ở đầu tên bài — sửa ec00466).
+- `node tu_chay/cong.js tinh …` trước dòng HEAD ĐÃ KIỂM: chỉ còn ✗ [A19] (thiếu dòng này) — A17 đã ghi 2 tên đột biến mới.
+
+HEAD ĐÃ KIỂM: ec00466
