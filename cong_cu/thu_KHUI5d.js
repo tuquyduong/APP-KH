@@ -121,7 +121,6 @@ async function trinhDuyet(pw) {
       if (p === '/api/kh/toi') return json(200, { khach: { sdt: SDT, ten: 'Khách thử', ngay_tao: '2026-01-01 00:00:00', qr: 'QR' } });
       if (p === '/api/kh/gio-vang') return json(200, gv);
       if (p === '/api/kh/chuong-trinh') return json(200, { success: true, data: ct });
-      if (p === '/api/kh/gio-hoat-dong') return json(200, { success: true, bay_gio: '2026-11-08T09:00:00', dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     });
     try { await chay(t, loi, hop); } finally { await ctx.close(); }
@@ -185,7 +184,7 @@ async function trinhDuyet(pw) {
 
   // ----- 2. Trang chủ: banner không ✕
   await ca('banner', {}, async (t) => {
-    await mo(t, '/trangchu'); await t.locator('#todayHome .today').waitFor();
+    await mo(t, '/trangchu'); await t.locator('.hb-one').waitFor();
     k('B1 banner lớn Trang chủ KHÔNG có nút ✕ và không có thông báo "Ẩn ở Lịch và tiện ích"', (await t.locator('.t-x').count()) === 0 && !/Ẩn ở Lịch/.test(await t.locator('body').innerText()));
     await mo(t, '/kehoach'); await t.getByText('Tháng 11 · 2026').waitFor();
     k('B2 Kế hoạch không còn banner nhỏ chồng với dải', (await t.locator('.today-slot, .today.mini').count()) === 0 && (await dai(t).count()) === 1);
