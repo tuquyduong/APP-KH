@@ -21,6 +21,7 @@ import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import Thongbao from './components/Thongbao.jsx';
 import BaoDonXong from './components/BaoDonXong.jsx';
+import DaiNhacViec from './components/DaiNhacViec.jsx';
 import GioHang from './pages/GioHang.jsx';
 import ThanhToan from './pages/ThanhToan.jsx';
 import TheoDoiDon from './pages/TheoDoiDon.jsx';
@@ -202,6 +203,7 @@ export default function App() {
       <ThanhTab tab={r.tab || tabCuoi.current} chon={chonTab} soMon={demMon(gio)} />
       <Thongbao chu={thongBao} het={() => datThongBao('')} />
       {dangNhap && <BaoDonXong moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} datTieuDe={datTieuXong} />}
+      {dangNhap && <DaiNhacViec san={daBiet} moNgay={() => di(taoDuongDan('kehoach'))} />}
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: SPRITE_MUA }} />
       <ManDau />
     </div>

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 // Banner khuyến mãi "Hôm nay" (demo todayCard, bản trên ảnh thật): chữ lấy từ noiDung/trangChu.js. Không hiện ngày vì chưa có giờ POS (bay_gio — KH-API-2 v2).
 // Ánh sáng lướt chéo (demo glMeasure): đo toạ độ chữ trong thẻ để CSS tính vệt sáng; đo lại khi đổi cỡ màn.
-// Bản nhỏ `mini` (demo todayCard(true)) ở đầu màn Kế hoạch và tiện ích: nhãn chỉ "HÔM NAY", nút "Xem ›"; `khiAn` = nút ✕ "Ẩn ở Lịch và tiện ích đến hết hôm nay".
+// Bản nhỏ `mini` (demo todayCard(true)) ở đầu màn Kế hoạch và tiện ích: nhãn chỉ "HÔM NAY", nút "Xem ›"; `khiAn` = nút ✕ "Ẩn ở Lịch và tiện ích đến hết hôm nay" — chỉ banner LỚN ở Trang chủ có (demo todayCard: `mini ? '' : t-x`).
 export default function BannerHomNay({ anh, tieuDe, phu, nut, chon, mini = false, khiAn = null }) {
   const the = useRef(null);
 
@@ -32,7 +32,7 @@ export default function BannerHomNay({ anh, tieuDe, phu, nut, chon, mini = false
       <div className="t-bg"><img className="t-img" src={anh} alt="" /></div>
       <div className="t-shade" />
       <i className="gl gl-a" />
-      {khiAn && <button type="button" className="t-x" aria-label="Ẩn ở Lịch và tiện ích đến hết hôm nay" onClick={(e) => { e.stopPropagation(); khiAn(); }} onKeyDown={(e) => e.stopPropagation()}>✕</button>}
+      {khiAn && !mini && <button type="button" className="t-x" aria-label="Ẩn ở Lịch và tiện ích đến hết hôm nay" onClick={(e) => { e.stopPropagation(); khiAn(); }} onKeyDown={(e) => e.stopPropagation()}>✕</button>}
       <div className="t-txt">
         <div className="t-k gl gl-t"><span className="dot" />HÔM NAY</div>
         <b className="gl gl-t">{tieuDe}</b>

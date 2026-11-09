@@ -4,32 +4,22 @@
 // Dữ liệu tĩnh ở noiDung/keHoach.js; LUNAR + TERM_TIPS ở lich.js.
 import { LUNAR, TERM_TIPS } from './lich.js';
 import { SOLAR_HOL, LUNAR_HOL, SEASON, WD } from './noiDung/keHoach.js';
+import { docNgay, ngayChuoi, viecNgay, cacLan, daXongLan as daXong, jd as jdNgay, chuoiJd, GIO_RE, HAN_NHAC, LAN_XONG_TOI_DA, chuNhac, nhacTuPhut, gioPhut } from './kehoachLap.js';
 
 export { TERM_TIPS };
 export const KHOA_KE_HOACH = 'kh_kehoach';
 export const SO_NGAY_SAP_TOI = 30;
 export const KHONG_NHAC = 'Không nhắc';
 export const CO_NHAC = 'Nhắc khi mở app'; // chữ cạnh công tắc: nhắc chỉ hiện khi khách MỞ app, chưa tự báo khi đóng app (chủ quán duyệt 06.11)
-const GIO_MAC_DINH = '08:00';
 const DAI_TIEU_DE = 120;
 const TOI_DA_VIEC = 500;
 const KHONG_VAO_SAP_TOI = /Tết Nguyên đán|Trung thu|Đoan ngọ|Vu Lan/; // demo upList: các lễ này đã có ở tiện ích Cúng (việc sau)
 
-const pad = (n) => String(n).padStart(2, '0');
-/** { d, m, y } → "YYYY-MM-DD". */
-export const ngayChuoi = ({ d, m, y }) => `${y}-${pad(m)}-${pad(d)}`;
-/** "YYYY-MM-DD" hợp lệ (có thật trong lịch) → { d, m, y }; không thì null. */
-export function docNgay(chuoi) {
-  const t = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(chuoi || ''));
-  if (!t) return null;
-  const r = { d: +t[3], m: +t[2], y: +t[1] };
-  const x = LUNAR.jdToDate(LUNAR.jdFromDate(r.d, r.m, r.y));
-  return x.d === r.d && x.m === r.m && x.y === r.y ? r : null;
-}
+export { ngayChuoi, docNgay, viecNgay };
 /** Giờ VN "YYYY-MM-DD…" (bayGio()) → { d, m, y }; không đọc được → null. */
 export const homNayTuGio = (gio) => docNgay(String(gio || '').slice(0, 10));
 
-const jd = (n) => LUNAR.jdFromDate(n.d, n.m, n.y);
+const jd = jdNgay;
 const tuJd = (j) => LUNAR.jdToDate(j);
 const thuCua = (d, m, y) => new Date(y, m - 1, d).getDay(); // dựng từ thành phần ngày → không lệ thuộc múi giờ máy
 const lichAm = (j) => { const x = tuJd(j); return LUNAR.solar2lunar(x.d, x.m, x.y); };
@@ -59,7 +49,7 @@ export function theNgay(chon, homNay) {
 }
 
 /**
- * Lưới tháng của demo (tuần bắt đầu thứ Hai, 35 hoặc 42 ô). `coViec(d, m, y)` cho biết ngày đó có việc không (chấm "Việc của tôi").
+ * Lưới tháng của demo (tuần bắt đầu thứ Hai, 35 hoặc 42 ô). `coViec(d, m, y)` cho biết ngày đó có việc chưa xong ('viec'), có việc quá hạn ('qua') hay không (rỗng) — chuông "Việc của tôi".
  * Chấm "Từ TQD" không có (POS chưa có dữ liệu).
  */
 export function luoiThang(y, m, homNay, chon, coViec = () => false) {
@@ -74,7 +64,7 @@ export function luoiThang(y, m, homNay, chon, coViec = () => false) {
     o.push({
       d: dt.d, m: dt.m, y: dt.y, ngoai: !trong, homNay: dt.d === homNay.d && dt.m === homNay.m && dt.y === homNay.y,
       chon: dt.d === chon.d && dt.m === chon.m && dt.y === chon.y, cn: i % 7 === 6, le,
-      am: l.d === 1 ? l.d + '/' + l.m : String(l.d), tiet: tk.startsToday ? tk.name : '', coViec: !!coViec(dt.d, dt.m, dt.y),
+      am: l.d === 1 ? l.d + '/' + l.m : String(l.d), tiet: tk.startsToday ? tk.name : '', coViec: coViec(dt.d, dt.m, dt.y) || '',
     });
   }
   return o;
@@ -140,12 +130,10 @@ export const dayThang = (j) => { const x = tuJd(j); return x.d + '/' + x.m; };
  */
 export function upList(homNay, viec = []) {
   const out = [], tj = jd(homNay), cuoi = tj + SO_NGAY_SAP_TOI;
-  viec.forEach((v) => {
-    const n = docNgay(v.ngay);
-    if (!n || v.xong) return;
-    const j = jd(n);
-    if (j >= tj && j <= cuoi) out.push({ j, t: v.tieu, s: v.gio + ' · ' + (v.nhac ? CO_NHAC : KHONG_NHAC), k: 'Việc', ngay: v.ngay });
-  });
+  viec.forEach((v) => cacLan(v, tj, cuoi).forEach((j) => {
+    if (daXong(v, j)) return;
+    out.push({ j, t: v.tieu, s: (v.gio || 'Cả ngày') + ' · ' + (typeof v.nhac === 'number' ? chuNhac(nhacTuPhut(v.nhac, v.gio)) : KHONG_NHAC), k: 'Việc', ngay: chuoiJd(j) });
+  }));
   holList(homNay).filter((h) => h.j <= cuoi && !KHONG_VAO_SAP_TOI.test(h.n)).forEach((h) => out.push({ j: h.j, t: h.n, s: h.cal, k: 'Lễ' }));
   return out.sort((a, b) => a.j - b.j);
 }
@@ -159,16 +147,35 @@ export function chuThich(id, homNay, viec) {
 }
 
 // ----- LƯU TRÊN MÁY (D1) -----
-// Một bản duy nhất ở khoá kh_kehoach: { v:1, viec:[{ id, ngay, gio, tieu, nhac, xong }], leNhac:{ <tên lễ>:true }, anBanner:'YYYY-MM-DD' }.
-// Không gửi gì lên máy chủ. Quy tắc xoá (đăng xuất / đổi khách) ở luuMay.js. Kho tiêm vào để thử.
+// Một bản duy nhất ở khoá kh_kehoach: { v:1, viec:[{ id, ngay, gio ('' = cả ngày), tieu, nhac (phút từ 00:00 của ngày việc, âm = trước; null = không), xong,
+// lap:{ k, n, den }|null, lanXong:['YYYY-MM-DD'…≤24], moc }], leNhac:{ <tên lễ>:true }, anBanner:'YYYY-MM-DD' }.
+// Bản 5b cũ (không có lap / lanXong; nhac là true / false) đọc được: nhac true → đúng giờ của việc. Không gửi gì lên máy chủ.
+// Quy tắc xoá (đăng xuất / đổi khách) ở luuMay.js. Kho tiêm vào để thử.
 const kho = () => localStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 const TEN_LE = new Set([...Object.values(SOLAR_HOL), ...Object.values(LUNAR_HOL)]);
 export const keHoachTrong = () => ({ viec: [], leNhac: {}, anBanner: '' });
+const LOAI_LAP = ['ngay', 'tuan', 'thang', 'nam', 'amlich', 'sau'];
 
+const nhacHopLe = (n) => n === null || typeof n === 'boolean' || (Number.isInteger(n) && n >= HAN_NHAC[0] && n <= HAN_NHAC[1]);
+/** Kiểu lặp đọc từ bản lưu: hỏng → undefined (việc coi như không lặp). */
+function lapDoc(l) {
+  if (!l || typeof l !== 'object' || !LOAI_LAP.includes(l.k) || !Number.isInteger(l.n) || l.n < 1 || l.n > 365) return undefined;
+  return { k: l.k, n: l.k === 'amlich' ? 1 : l.n, den: docNgay(l.den) ? l.den : '' };
+}
 function viecHopLe(v) {
-  return v && typeof v === 'object' && typeof v.id === 'string' && v.id && !!docNgay(v.ngay) && /^([01]\d|2[0-3]):[0-5]\d$/.test(v.gio)
-    && typeof v.tieu === 'string' && v.tieu.trim() && v.tieu.length <= DAI_TIEU_DE && typeof v.nhac === 'boolean' && typeof v.xong === 'boolean';
+  return v && typeof v === 'object' && typeof v.id === 'string' && v.id && !!docNgay(v.ngay) && (v.gio === '' || GIO_RE.test(v.gio))
+    && typeof v.tieu === 'string' && v.tieu.trim() && v.tieu.length <= DAI_TIEU_DE && nhacHopLe(v.nhac) && typeof v.xong === 'boolean';
+}
+function viecDoc(v) {
+  const ra = { id: v.id, ngay: v.ngay, gio: v.gio, tieu: v.tieu.trim(), nhac: v.nhac === true ? (gioPhut(v.gio) ?? 480) : typeof v.nhac === 'number' ? v.nhac : null, xong: v.xong };
+  const lap = lapDoc(v.lap);
+  if (lap) {
+    ra.lap = lap;
+    ra.lanXong = (Array.isArray(v.lanXong) ? v.lanXong.filter((x) => !!docNgay(x)) : []).sort().slice(-LAN_XONG_TOI_DA);
+    if (docNgay(v.moc)) ra.moc = v.moc;
+  }
+  return ra;
 }
 
 /** Đọc bản lưu; thiếu / hỏng / sai dạng → bỏ phần hỏng (không vỡ màn). */
@@ -179,7 +186,7 @@ export function docKeHoach(k = kho) {
   if (!tho || typeof tho !== 'object' || Array.isArray(tho)) return bang;
   if (Array.isArray(tho.viec)) {
     const ids = new Set();
-    tho.viec.filter(viecHopLe).forEach((v) => { if (!ids.has(v.id) && bang.viec.length < TOI_DA_VIEC) { ids.add(v.id); bang.viec.push({ id: v.id, ngay: v.ngay, gio: v.gio, tieu: v.tieu.trim(), nhac: v.nhac, xong: v.xong }); } });
+    tho.viec.filter(viecHopLe).forEach((v) => { if (!ids.has(v.id) && bang.viec.length < TOI_DA_VIEC) { ids.add(v.id); bang.viec.push(viecDoc(v)); } });
   }
   if (tho.leNhac && typeof tho.leNhac === 'object' && !Array.isArray(tho.leNhac)) Object.keys(tho.leNhac).forEach((n) => { if (tho.leNhac[n] === true && TEN_LE.has(n)) bang.leNhac[n] = true; });
   if (docNgay(tho.anBanner)) bang.anBanner = tho.anBanner;
@@ -195,14 +202,27 @@ export function xoaKeHoach(k = kho) {
 }
 
 const idMoi = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-/** Thêm việc (demo saveAdd): tiêu đề trống → null (màn nhắc "Nhập tên việc trước nhé"); giờ trống → 08:00. */
-export function themViec(bang, { ngay, gio, tieu, nhac }) {
-  const t = String(tieu || '').trim().slice(0, DAI_TIEU_DE);
-  if (!t || !docNgay(ngay) || bang.viec.length >= TOI_DA_VIEC) return null;
-  const v = { id: idMoi(), ngay, gio: /^([01]\d|2[0-3]):[0-5]\d$/.test(gio) ? gio : GIO_MAC_DINH, tieu: t, nhac: !!nhac, xong: false };
-  return { ...bang, viec: [...bang.viec, v] };
+/** Chuẩn hoá phần nhập của một việc; tiêu đề trống / ngày sai → null (màn nhắc lại). `nhac` = phút hoặc null; `lap` = { k, n, den }|null. */
+function viecTuNhap({ ngay, gio, tieu, nhac, lap }) {
+  const t = String(tieu || '').trim().slice(0, DAI_TIEU_DE), g = GIO_RE.test(gio) ? gio : '';
+  const l = lap ? lapDoc(lap) : undefined, nh = typeof nhac === 'number' && nhacHopLe(nhac) ? nhac : null;
+  if (!t || !docNgay(ngay)) return null;
+  return { ngay, gio: g, tieu: t, nhac: nh, xong: false, ...(l ? { lap: l, lanXong: [] } : {}) };
 }
-export const doiXong = (bang, id) => ({ ...bang, viec: bang.viec.map((v) => (v.id === id ? { ...v, xong: !v.xong } : v)) });
+/** Thêm việc: tiêu đề trống → null; không giờ = việc cả ngày. */
+export function themViec(bang, nhap) {
+  const v = viecTuNhap(nhap);
+  if (!v || bang.viec.length >= TOI_DA_VIEC) return null;
+  return { ...bang, viec: [...bang.viec, { id: idMoi(), ...v }] };
+}
+/** Sửa tên / giờ / lặp / nhắc của một việc (ngày bắt đầu giữ nguyên; đổi kiểu lặp thì làm lại danh sách lần đã xong). */
+export function suaViec(bang, id, nhap) {
+  const goc = bang.viec.find((x) => x.id === id), v = goc && viecTuNhap({ ...nhap, ngay: goc.ngay });
+  if (!v) return null;
+  const giuLan = goc.lap && v.lap && goc.lap.k === v.lap.k && goc.lap.n === v.lap.n;
+  const moi = { id, ...v, xong: goc.xong, ...(giuLan ? { lanXong: goc.lanXong, ...(goc.moc ? { moc: goc.moc } : {}) } : {}) };
+  return { ...bang, viec: bang.viec.map((x) => (x.id === id ? moi : x)) };
+}
 export const xoaViec = (bang, id) => ({ ...bang, viec: bang.viec.filter((v) => v.id !== id) });
 export const doiNhacLe = (bang, ten) => {
   const le = { ...bang.leNhac };
@@ -211,10 +231,6 @@ export const doiNhacLe = (bang, ten) => {
 };
 export const anBannerHomNay = (bang, homNay) => ({ ...bang, anBanner: ngayChuoi(homNay) });
 export const bannerDangAn = (bang, homNay) => bang.anBanner === ngayChuoi(homNay);
-/** Việc của một ngày, sắp theo giờ (demo calAgenda). */
-export const viecNgay = (bang, ngay) => bang.viec.filter((v) => v.ngay === ngay).sort((a, b) => a.gio.localeCompare(b.gio));
-/** C1: việc HÔM NAY đã bật nhắc và chưa xong, theo giờ — thanh `calNoti`. */
-export const nhacHomNay = (bang, homNay) => viecNgay(bang, ngayChuoi(homNay)).filter((v) => v.nhac && !v.xong);
 
 const THU_NGAN = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 /** Demo fJ: "T7, 20/11" (kèm /năm nếu khác năm nay). */
@@ -223,3 +239,11 @@ export function thuNgayNgan(j, homNay) { const x = tuJd(j); return THU_NGAN[thuC
 export const tenTiet =(homNay) => LUNAR.term(jd(homNay)).name;
 /** Thứ trong tuần của một ngày { d, m, y }: 0 = Chủ nhật … 6 = Thứ Bảy (chỉ số của WD). */
 export const thuTrongTuan = (n) => thuCua(n.d, n.m, n.y);
+
+/** Dòng âm lịch của bảng ngày: "Rằm tháng 10 âm" · "Mùng 5 tháng 11 âm · nhuận · tháng thiếu". */
+export function amLichChu(n) {
+  const l = LUNAR.solar2lunar(n.d, n.m, n.y), dau = l.jd - l.d + 1;
+  const x = tuJd(dau + 29), thieu = LUNAR.solar2lunar(x.d, x.m, x.y).d === 1; // ngày thứ 30 đã sang tháng sau = tháng thiếu (29 ngày)
+  const ngay = l.d === 15 ? 'Rằm' : l.d <= 10 ? 'Mùng ' + l.d : 'Ngày ' + l.d;
+  return `${ngay} tháng ${l.m} âm${l.leap ? ' · nhuận' : ''}${thieu ? ' · tháng thiếu' : ''}`;
+}

@@ -51,7 +51,7 @@ function hangDemo(ten) {
 const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng Chromium không nằm trong bài này; biến giữ cho đúng luật CLAUDE.md §9
 
 (async () => {
-  const KH = await nap('src/kehoach.js');
+  const KH = await nap('src/kehoach.js'), LP = await nap('src/kehoachLap.js');
   const ND = await nap('src/noiDung/keHoach.js');
   const mau = json('cong_cu/thu_KHUI5b_mau.json');
 
@@ -96,8 +96,8 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const homNayUp = Object.entries(mau.up);
   for (const [t, u] of homNayUp) {
     const [y, m, d] = t.split('-').map(Number), hn = { d, m, y }, j0 = L2.LUNAR.jdFromDate(d, m, y);
-    const viec = u.seed.map((s, i) => { const x = L2.LUNAR.jdToDate(j0 + s.off); return { id: 'v' + i, ngay: `${x.y}-${String(x.m).padStart(2, '0')}-${String(x.d).padStart(2, '0')}`, gio: s.t, tieu: s.title, nhac: s.rm === KH.CO_NHAC, xong: s.done }; });
-    const ra = KH.upList(hn, viec).map((e) => ({ j: e.j, t: e.t, s: e.s, k: e.k }));
+    const viec = u.seed.map((s, i) => { const x = L2.LUNAR.jdToDate(j0 + s.off); return { id: 'v' + i, ngay: `${x.y}-${String(x.m).padStart(2, '0')}-${String(x.d).padStart(2, '0')}`, gio: s.t, tieu: s.title, nhac: s.rm === KH.CO_NHAC ? +s.t.slice(0, 2) * 60 + +s.t.slice(3) : null, xong: s.done }; });
+    const ra = KH.upList(hn, viec).map((e) => ({ j: e.j, t: e.t, s: e.s.replace(' · Đúng giờ', ' · ' + KH.CO_NHAC), k: e.k })); // KH-UI-5c: việc nhắc đúng giờ ghi "Đúng giờ" (không còn "Nhắc khi mở app")
     if (!bang(ra, u.ra)) upLech.push(t);
     if (KH.chuThich('up', hn, viec) !== u.badgeUp || KH.chuThich('hol', hn, viec) !== u.badgeHol || KH.chuThich('mua', hn, viec) !== u.badgeMua) bLech.push(t);
   }
@@ -117,15 +117,15 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const ks = khoGia();
   let b = KH.docKeHoach(ks);
   k('D1 chưa lưu gì → bản trống', bang(b, { viec: [], leNhac: {}, anBanner: '' }));
-  b = KH.themViec(b, { ngay: '2026-11-08', gio: '17:30', tieu: '  Đón con tan học  ', nhac: true });
-  k('D1 thêm việc: cắt khoảng trắng, giữ dấu tiếng Việt, mặc định chưa xong', b && b.viec.length === 1 && b.viec[0].tieu === 'Đón con tan học' && b.viec[0].xong === false && b.viec[0].nhac === true);
+  b = KH.themViec(b, { ngay: '2026-11-08', gio: '17:30', tieu: '  Đón con tan học  ', nhac: 1050 });
+  k('D1 thêm việc: cắt khoảng trắng, giữ dấu tiếng Việt, mặc định chưa xong', b && b.viec.length === 1 && b.viec[0].tieu === 'Đón con tan học' && b.viec[0].xong === false && b.viec[0].nhac === 1050);
   k('D1 tiêu đề trống / ngày sai → không thêm (null)', KH.themViec(b, { ngay: '2026-11-08', gio: '09:00', tieu: '   ' }) === null && KH.themViec(b, { ngay: '2026-13-40', gio: '09:00', tieu: 'x' }) === null);
-  k('D1 giờ trống / sai → mặc định 08:00 (demo saveAdd)', KH.themViec(b, { ngay: '2026-11-08', gio: '', tieu: 'a' }).viec[1].gio === '08:00' && KH.themViec(b, { ngay: '2026-11-08', gio: '25:99', tieu: 'a' }).viec[1].gio === '08:00');
-  b = KH.doiNhacLe(KH.doiXong(b, b.viec[0].id), 'Nhà giáo Việt Nam');
+  k('D1 giờ trống / sai → việc cả ngày (gio rỗng), không nhắc (KH-UI-5c A4)', KH.themViec(b, { ngay: '2026-11-08', gio: '', tieu: 'a' }).viec[1].gio === '' && KH.themViec(b, { ngay: '2026-11-08', gio: '25:99', tieu: 'a' }).viec[1].gio === '' && KH.themViec(b, { ngay: '2026-11-08', gio: '', tieu: 'a' }).viec[1].nhac === null);
+  b = KH.doiNhacLe(LP.tickLan(b, b.viec[0].id, b.viec[0].ngay, { d: 8, m: 11, y: 2026 }), 'Nhà giáo Việt Nam');
   b = KH.anBannerHomNay(b, { d: 7, m: 11, y: 2026 });
   k('D1 ghi trả true; đọc lại đúng từng trường (việc, cờ nhắc lễ, ngày ẩn banner)', KH.ghiKeHoach(b, ks) === true && bang(KH.docKeHoach(ks), b) && b.viec[0].xong === true && b.leNhac['Nhà giáo Việt Nam'] === true && b.anBanner === '2026-11-07');
   k('D1 khoá đúng tên kh_kehoach; nội dung không có số điện thoại / token', KH.KHOA_KE_HOACH === 'kh_kehoach' && Object.keys(ks.o).join() === 'kh_kehoach' && !/token|sdt|phone|\b0\d{9}\b/i.test(ks.o.kh_kehoach));
-  k('D1 doiXong lần hai trả lại chưa xong; xoaViec bỏ đúng việc', KH.doiXong(b, b.viec[0].id).viec[0].xong === false && KH.xoaViec(b, b.viec[0].id).viec.length === 0);
+  k('D1 tick lần hai trả lại chưa xong; xoaViec bỏ đúng việc', LP.tickLan(b, b.viec[0].id, b.viec[0].ngay, { d: 8, m: 11, y: 2026 }).viec[0].xong === false && KH.xoaViec(b, b.viec[0].id).viec.length === 0);
   k('D1 doiNhacLe lần hai tắt; tên lễ lạ không ghi', !KH.doiNhacLe(b, 'Nhà giáo Việt Nam').leNhac['Nhà giáo Việt Nam'] && bang(KH.doiNhacLe(KH.keHoachTrong(), 'Lễ bịa').leNhac, {}));
   const hong1 = khoGia(); hong1.o.kh_kehoach = '{không phải json';
   const hong2 = khoGia(); hong2.o.kh_kehoach = JSON.stringify({ viec: [{ id: 'a', ngay: '2026-11-08', gio: '09:00', tieu: 'Giữ', nhac: false, xong: false }, { id: 'b', ngay: 'xx', gio: '09:00', tieu: 'Bỏ', nhac: false, xong: false }, 5, null, { id: 'a', ngay: '2026-11-09', gio: '09:00', tieu: 'Trùng id', nhac: false, xong: false }, { id: 'c', ngay: '2026-11-08', gio: '9h', tieu: 'Bỏ giờ', nhac: false, xong: false }], leNhac: { 'Lễ bịa': true, 'Quốc khánh': true, 'Tết Dương lịch': 'có' }, anBanner: 'hôm qua' });
@@ -137,8 +137,9 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   k('D3 xoaKeHoach xoá khoá; đọc lại trống', KH.xoaKeHoach(ks) === true && !('kh_kehoach' in ks.o) && bang(KH.docKeHoach(ks), KH.keHoachTrong()));
   const ngayAn = KH.anBannerHomNay(KH.keHoachTrong(), { d: 7, m: 11, y: 2026 });
   k('B7 banner nhỏ ẩn tới hết hôm nay (theo ngày POS): hôm nay ẩn, ngày mai hiện lại', KH.bannerDangAn(ngayAn, { d: 7, m: 11, y: 2026 }) && !KH.bannerDangAn(ngayAn, { d: 8, m: 11, y: 2026 }) && !KH.bannerDangAn(KH.keHoachTrong(), { d: 7, m: 11, y: 2026 }));
-  const nh = KH.themViec(KH.themViec(KH.themViec(KH.keHoachTrong(), { ngay: '2026-11-07', gio: '17:30', tieu: 'B', nhac: true }), { ngay: '2026-11-07', gio: '07:00', tieu: 'A', nhac: true }), { ngay: '2026-11-07', gio: '09:00', tieu: 'C', nhac: false });
-  k('C1 nhắc hôm nay: chỉ việc hôm nay, đã bật nhắc, chưa xong, theo giờ', bang(KH.nhacHomNay(nh, { d: 7, m: 11, y: 2026 }).map((v) => v.tieu), ['A', 'B']) && KH.nhacHomNay(nh, { d: 8, m: 11, y: 2026 }).length === 0 && KH.nhacHomNay(KH.doiXong(nh, nh.viec[1].id), { d: 7, m: 11, y: 2026 }).length === 1);
+  const nh = KH.themViec(KH.themViec(KH.themViec(KH.keHoachTrong(), { ngay: '2026-11-07', gio: '17:30', tieu: 'B', nhac: 1050 }), { ngay: '2026-11-07', gio: '07:00', tieu: 'A', nhac: 420 }), { ngay: '2026-11-07', gio: '09:00', tieu: 'C', nhac: null });
+  const ngayBay = { d: 7, m: 11, y: 2026 }, dangCo = (bg, bang2 = nh) => LP.nhacDangCo(bang2, bg, ngayBay).map((x) => x.v.tieu);
+  k('C1 nhắc: đã tới mốc, chưa quá giờ, đã bật nhắc, chưa xong; không nhắc thì không hiện', bang(dangCo('2026-11-07 07:10:00'), ['A']) && bang(dangCo('2026-11-07 17:40:00'), ['B']) && bang(dangCo('2026-11-07 06:00:00'), []) && !dangCo('2026-11-07 09:00:00').includes('C') && dangCo('2026-11-07 07:10:00', LP.tickLan(nh, nh.viec[1].id, '2026-11-07', ngayBay)).length === 0);
   k('C2 chữ công tắc đúng sự thật: "Nhắc khi mở app", không hứa báo về điện thoại', KH.CO_NHAC === 'Nhắc khi mở app' && !/sẽ báo|thông báo đẩy|về điện thoại/i.test(doc('src/kehoach.js').replace(/\/\/.*$/gm, '')));
 
   console.log('D2 — luuMay.js');
@@ -186,16 +187,17 @@ async function manHinh(KH) {
   const trong = veKH({ ...cb, homNay: HN, banner: KB });
   k('B1 /kehoach: tiêu đề, thẻ ngày, thẻ dưỡng sinh theo tiết, "Việc của tôi · 7/11", "Ngày lễ trong tháng", dòng miễn trừ, nút Hôm nay', ['Kế Hoạch và Nhắc Việc', 'id="calHero"', 'id="calTip"', 'Dưỡng sinh tiết Lập đông', 'Việc của tôi · 7/11', 'Ngày lễ trong tháng', 'Lịch hiển thị âm dương lịch', 'Tháng 11 · 2026', '>Hôm nay</div>'].every((t) => trong.includes(t)));
   k('B1 lưới tháng 11/2026 có 42 ô (1.11 là Chủ nhật → 6 ô đầu thuộc tháng trước, như demo); ô hôm nay có lớp today và sel', dem(trong, /class="cd /g) === 42 && /class="cd [^"]*\btoday\b[^"]*\bsel\b/.test(trong));
-  k('B1 khối "Từ TQD" và chấm "Từ TQD" ẨN (POS chưa có dữ liệu): chú giải chỉ 3 mục', !/Từ TQD|Từ Tứ Quý Đường|calTqd|class="dq"/.test(trong) && dem(trong, /<span><i class="d[mh]"/g) === 2 && trong.includes('Tiết khí'));
+  k('B1 khối "Từ TQD" và chấm "Từ TQD" ẨN (POS chưa có dữ liệu): chú giải chỉ 3 mục', !/Từ TQD|Từ Tứ Quý Đường|calTqd|class="dq"/.test(trong) && dem(trong, /<span><i class="dh"/g) === 1 && dem(trong, /<span><svg class="ico cd-chuong viec"/g) === 1 && trong.includes('Tiết khí')); // KH-UI-5c: chấm hồng "Việc của tôi" thành chuông
   k('B3 lưới tiện ích CHỈ ba ô (Theo mùa, Ngày lễ, Sắp tới) kèm dòng nhỏ "Mùa Đông", "20/11", "1 việc · 30 ngày" (hôm nay 7.11.2026: chỉ có lễ 20/11 trong 30 ngày, như demo)', dem(trong, /class="tl"/g) === 3 && ['Theo mùa', 'Ngày lễ', 'Sắp tới', 'Mùa Đông', '20/11', '1 việc · 30 ngày'].every((t) => trong.includes(t)));
   k('B3 năm ô của KH-UI-5c KHÔNG hiện (không ô mờ, không "sắp có")', !/Văn khấn|Sinh nhật|Xe cộ|Uống thuốc|Chu kỳ|sắp có/i.test(trong));
   k('B6 không có thẻ video hướng dẫn', !/guide-card|Xem cách dùng/.test(trong));
   k('B7 chưa có chữ khuyến mãi "hôm nay" → không có banner nhỏ', khongBanner(trong));
   const co = veKH({ ...cb, homNay: HN, banner: BAN });
   k('B7 có banner: bản nhỏ "today fx-a photo mini", nhãn "HÔM NAY" (không ngày), nút "Xem ›", ánh sáng gl-a, cùng chữ banner Trang chủ', /class="today fx-a photo mini"/.test(co) && co.includes('HÔM NAY') && co.includes('Xem ›') && co.includes('gl gl-a') && co.includes('Giờ vàng hôm nay') && co.includes('Giảm đến 30%') && !/HÔM NAY ·/.test(co));
-  k('B7 bản nhỏ có nút ✕ "Ẩn ở Lịch và tiện ích đến hết hôm nay"', co.includes('class="t-x"') && co.includes('aria-label="Ẩn ở Lịch và tiện ích đến hết hôm nay"'));
+  k('B7 bản nhỏ KHÔNG có nút ✕ (đúng demo todayCard: mini ? \'\' : t-x) — KH-UI-5c F1', !co.includes('t-x'));
   const lon = thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {} });
-  k('B7 banner Trang chủ (không mini) KHÔNG đổi: không lớp mini, không ✕, nút giữ chữ của nó', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<'));
+  k('B7 banner Trang chủ (không mini): không lớp mini, nút giữ chữ của nó; ✕ chỉ hiện khi có khiAn (KH-UI-5c F1)', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<')
+    && thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {}, khiAn() {} }).includes('aria-label="Ẩn ở Lịch và tiện ích đến hết hôm nay"'));
   globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, viec: [], leNhac: {}, anBanner: KH.ngayChuoi(HN) }));
   const an = veKH({ ...cb, homNay: HN, banner: BAN });
   k('B7 đã bấm ✕ hôm nay → bản nhỏ ẩn ở /kehoach; sang ngày mai hiện lại', khongBanner(an) && /class="today fx-a photo mini"/.test(veKH({ ...cb, homNay: { d: 8, m: 11, y: 2026 }, banner: BAN })));
@@ -203,10 +205,10 @@ async function manHinh(KH) {
   globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, anBanner: '', leNhac: { 'Nhà giáo Việt Nam': true }, viec: [
     { id: 'a', ngay: '2026-11-07', gio: '17:30', tieu: 'Đón con tan học', nhac: true, xong: false }, { id: 'b', ngay: '2026-11-07', gio: '09:00', tieu: 'Họp nhóm', nhac: true, xong: true },
     { id: 'c', ngay: '2026-11-10', gio: '19:00', tieu: 'Sinh nhật mẹ', nhac: false, xong: false }] }));
-  const cv = veKH({ ...cb, homNay: HN, banner: KB });
-  k('B2 việc trong ngày chọn: sắp theo giờ, việc xong gạch, chữ "Nhắc khi mở app", nút ✓ và ✕', cv.indexOf('Họp nhóm') < cv.indexOf('Đón con tan học', cv.indexOf('id="calAgenda"')) && cv.includes('class="ag done"') && cv.includes('Nhắc khi mở app') && cv.includes('aria-label="Xoá việc"') && cv.includes('Đánh dấu xong') && cv.includes('Bỏ đánh dấu xong'));
-  k('B2 chấm "Việc của tôi" trên lịch ở ngày có việc (7 và 10, thêm một chấm ở chú giải)', dem(cv, /<i class="dm"><\/i>/g) === 3);
-  k('C1 thanh nhắc đầu /kehoach nêu việc hôm nay bật nhắc CHƯA xong (17:30 Đón con) — không nêu việc đã xong / ngày khác; không việc thì không có thanh', cv.includes('nt-bar on') && cv.includes('Hôm nay nhắc: 17:30 Đón con tan học') && !/Hôm nay nhắc:[^<]*(Họp nhóm|Sinh nhật mẹ)/.test(cv) && !trong.includes('nt-bar'));
+  const cv = veKH({ ...cb, homNay: HN, gio: '2026-11-07 17:40:00', banner: KB });
+  k('B2 việc trong ngày chọn: sắp theo giờ, việc xong gạch, chữ "Đúng giờ" (KH-UI-5c: nhắc theo phút), nút ✓', cv.indexOf('Họp nhóm') < cv.indexOf('Đón con tan học', cv.indexOf('id="calAgenda"')) && cv.includes('class="ag done"') && cv.includes('Đúng giờ') && !cv.includes('Nhắc khi mở app</small>') && cv.includes('Đánh dấu xong') && cv.includes('Bỏ đánh dấu xong'));
+  k('B2 chuông "Việc của tôi" trên lịch ở ngày có việc chưa xong (7 và 10, thêm một chuông ở chú giải)', dem(cv, /class="ico cd-chuong/g) === 3);
+  k('C1 thanh nhắc đầu /kehoach nêu việc hôm nay bật nhắc CHƯA xong (17:30 Đón con) — không nêu việc đã xong / ngày khác; không việc thì không có thanh', cv.includes('nt-bar on') && cv.includes('Đón con tan học (17:30)') && !/(Họp nhóm|Sinh nhật mẹ)/.test(cv.slice(0, cv.indexOf('id="calAgenda"')).slice(cv.indexOf('nt-bar on'))) && !trong.includes('nt-bar'));
   k('C2 không hứa báo về điện thoại: không chữ "sẽ nhắc / sẽ báo / thông báo đẩy" ở màn', !/sẽ nhắc|sẽ báo|thông báo đẩy|push/i.test(cv + co) && cv.includes('Nhắc hiện khi bạn mở app'));
   k('D3 có nút "Xoá toàn bộ dữ liệu Kế hoạch trên máy này" và dòng "chỉ lưu trên máy này"', cv.includes('Xoá toàn bộ dữ liệu Kế hoạch trên máy này') && cv.includes('chỉ lưu trên máy này'));
   const chuaBiet = veKH({ ...cb, homNay: HN, san: false, banner: KB });
@@ -242,7 +244,7 @@ async function manHinh(KH) {
   const app = doc('src/App.jsx');
   k('E1 App: dựng /kehoach và /kehoach/<tiện ích> chỉ khi đã đăng nhập, truyền san=daBiet; Trang chủ có moKeHoach', /dangNhap && trang === 'kehoach' && <KeHoach san=\{daBiet\}/.test(app) && /dangNhap && trang === 'tienich' && <TienIch[^>]*san=\{daBiet\}/.test(app) && /moKeHoach=\{\(\) => di\(taoDuongDan\('kehoach'\)\)\}/.test(app));
   k('E1 App: hết phiên / đăng xuất (donPhien) và đổi khách (docLaiGio) đều quên bản Kế hoạch trong bộ nhớ', /const donPhien = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app) && /const docLaiGio = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app));
-  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/ThemViec.jsx', 'src/components/BannerNho.jsx', 'src/components/dungKeHoach.js'].map(doc);
+  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BannerNho.jsx', 'src/components/dungKeHoach.js'].map(doc);
   const moiHet = moi.join('\n');
   k('E1 không gọi mạng: các tệp mới không import api.js, không fetch / XMLHttpRequest / sendBeacon', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon/.test(moiHet));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" lấy từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moiHet) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/KeHoach.jsx')));
@@ -250,8 +252,8 @@ async function manHinh(KH) {
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
   const kehoachJsx = doc('src/pages/KeHoach.jsx');
-  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu", sheet giữ nguyên chữ khách đã gõ', /if \(!san\) return LOI_CHUA_BIET;\s*\n\s*const moi = themViec/.test(kehoachJsx) && /!san \? LOI_CHUA_BIET : luu\(moi\)/.test(kehoachJsx) && /!san \? 'Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
-  k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(kehoachJsx));
+  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu" (KH-UI-5c: mọi thay đổi qua lam())', /const lam = [^\n]*\n\s*if \(!san\) \{ datTb\(LOI_CHUA_BIET\); return false; \}/.test(kehoachJsx) && /LOI_KHO/.test(kehoachJsx) && /!san \? 'Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
+  k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(doc('src/components/BangNgay.jsx')));
   k('E1 không còn ngày dự phòng bịa cho "hôm nay" (K3)', !/y: 2026 \}/.test(kehoachJsx + doc('src/pages/TienIch.jsx')) && !/if \(!homNay\) return null/.test(tc));
   void khong;
 }
