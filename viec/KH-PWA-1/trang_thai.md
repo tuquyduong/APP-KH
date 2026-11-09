@@ -7,6 +7,12 @@
 2fe3e97 TIEN-DO: mo KH-THU-1 (rut thoi gian bai thu, bao qua gio) + KH-PWA-1 (mo nhanh, tu len ban moi lang le) chay song song KH-UI-5c
 4abbd0a TIEN-DO: mo KH-UI-5c (bam ngay -> bang viec cua ngay, viec lap, nhac truoc, qua han, hoan tac); quyet dinh 08.11 (the hang chung gio, hang co truoc, tich diem theo mon); them KH-THE-1 cho POS; thu App 07.11 + POS 08.11
 ```
+- Phiên làm tiếp 09.11 (sau Trả lời Câu hỏi 1): nhánh `viec/KH-PWA-1`, cây sạch. HEAD `0eeb22d` · FETCH_HEAD `0eeb22d` (bằng nhau → không kéo; hook mở phiên đã kéo 47fce03 → 0eeb22d).
+```
+0eeb22d PHIEU: KH-PWA-1 - tra loi Cau hoi 1 (chu quan duyet 08.11): them cong_cu/thu_KHUI2.js vao Pham vi (ca E2 -> SW chi dang ky qua dangKySW.js); /tracnghiem/lam khong an toan
+1fef4cc KH-PWA-1: Cau hoi - bai cu thu_KHUI2 E2 cam service worker
+3b727fb KH-PWA-1: bang chung do + trang thai
+```
 
 ## Quyết định trong phạm vi phiếu
 - **B2 hỏi index.html qua service worker**: bộ kiểm K1 (`kiem_tra_truoc_khi_giao.js:35-36`) cấm `fetch(` trong `src/` ngoài `src/api.js`, mà `api.js` CẤM sửa →
@@ -31,6 +37,7 @@
 | sw.js tenBan — HTML hỏng → '' | VS-SW-TENBAN-HONG |
 | sw.js install lưu sẵn vỏ / activate claim | BV-SW-BO-LUU-SAN, BV-SW-BO-CLAIM |
 | dangKySW coTheTaiLai — hộp thoại, /thanhtoan | VS-DK-BO-HOP-THOAI, VS-DK-THANHTOAN-AN-TOAN |
+| dangKySW coTheTaiLai — /tracnghiem/lam (vòng 3, chủ quán 08.11) | BV-DK-BO-TRACNGHIEM-LAM, VS-DK-TRACNGHIEM-CA-GOC |
 | dangKySW denLucKiem — 30 phút | VS-DK-KIEM-MOI-LAN-HIEN |
 | dangKySW doiBan — tên rỗng không đổi | VS-DK-TEN-RONG-LA-DOI |
 | dangKySW — chỉ PROD, không ném khi không có import.meta.env | VS-DK-DANG-KY-CA-DEV, VS-DK-ENV-KHONG-HOI |
@@ -43,7 +50,17 @@
 - `node kiem_tra_truoc_khi_giao.js --day-du`: **40 đạt · 1 hỏng** — `✗ thu_KHUI2.js xanh (77 đạt · 1 hỏng)` — ca `✗ E2 không service worker` (xem Câu hỏi).
 - `node tu_chay/cong.js tinh . 47fce03^ HEAD viec/KH-PWA-1`: `✗ [A17]` (tên đột biến — đã ghi bảng trên), `✗ [A19]` (chưa tới bước 11.4 — bình thường).
 
+## Kết quả kiểm vòng 3 (09.11 — sau Trả lời Câu hỏi 1)
+- `thu_KHPWA1.js`: ca mới "B3 KHÔNG an toàn: /tracnghiem/lam…" đỏ trên 75fb2f2 (35 đạt · 1 hỏng), xanh sau c32ee1c: KHONG_TRINH_DUYET=1 → 36 đạt · 0 hỏng;
+  có Chromium → 54 đạt · 0 hỏng (28 giây).
+- `thu_KHUI2.js`: ca E2 đổi → `E2 service worker chỉ đăng ký qua src/dangKySW.js` (đủ 4 điều của Trả lời Câu hỏi 1); trên gốc 47fce03 77 đạt · 1 hỏng (✗ E2), sau vá 78 đạt · 0 hỏng.
+- `dot_bien.py`: 23/23 đột biến bị bắt ("TẤT CẢ ĐỘT BIẾN ĐỀU BỊ BẮT"). Lần chạy đầu vòng 3: VS-DK-DANG-KY-CA-DEV "KHÔNG ÁP ĐƯỢC" — nguồn thiếu dấu cách `||!(`;
+  sửa khoảng trắng (cd99941) → áp được, ĐỎ.
+- `npm test`: 39 đạt · 0 hỏng. `node kiem_tra_truoc_khi_giao.js --day-du`: 41 đạt · 0 hỏng.
+- Ngân sách: app 161 dòng (sw.js 102 + dangKySW.js 59; phiếu ~150), thử 291 dòng (phiếu ~250) — dưới 1,5 lần.
+
 ## Câu hỏi
+(Câu hỏi 1 — ĐÃ TRẢ LỜI ở phiếu 0eeb22d, đã làm vòng 3. Giữ lại để tra.)
 1. **Bài cũ `cong_cu/thu_KHUI2.js:119` chặn đúng việc phiếu này giao.** Ca `k('E2 không service worker', !/serviceWorker/.test(main.jsx + App.jsx + index.html) && !fs.existsSync('public/sw.js'))`
    (luật của KH-UI-2 hồi trước) nay ĐỎ vì KH-PWA-1 A1 bắt buộc có `public/sw.js` và đăng ký service worker. File này ngoài `## Phạm vi`, và `## Cấm` không cho sửa
    bài thử khác → máy KHÔNG sửa. Xin chủ quán (chat soát) sửa phiếu:
@@ -54,7 +71,7 @@
    Mọi thứ khác đã xong và xanh; sau khi phiếu được sửa, máy làm tiếp: sửa ca E2, `--day-du`, cổng `chay`, `/ra-soat`, báo cáo 7 mục.
 
 ## Phát hiện
-- `/tracnghiem/lam` (đang làm trắc nghiệm): câu trả lời dở chỉ nằm trong state (`src/pages/TracNghiemLam.jsx` — "bài chưa làm xong không được lưu"). Phiếu B3 xếp màn này
+- [ĐÃ LÀM vòng 3 theo Trả lời Câu hỏi 1 — `/tracnghiem/lam` và đường con nay KHÔNG an toàn] `/tracnghiem/lam` (đang làm trắc nghiệm): câu trả lời dở chỉ nằm trong state (`src/pages/TracNghiemLam.jsx` — "bài chưa làm xong không được lưu"). Phiếu B3 xếp màn này
   "an toàn" → khách bỏ App chạy nền ≥ 30 phút giữa bài, có bản mới, quay lại sẽ mất bài dở. Máy làm ĐÚNG phiếu; nếu chủ quán muốn giữ bài dở thì thêm `/tracnghiem/lam` vào danh sách
   không an toàn (một chữ trong `KHONG_AN_TOAN` của `src/dangKySW.js`).
 - Agent soát kế hoạch (bước 3) nêu 7 điểm; đã làm: vỏ chỉ lưu text/html, /assets không lưu HTML, phản hồi chuyển hướng không lưu, mạng về muộn vẫn lưu đè vỏ (`waitUntil`),
