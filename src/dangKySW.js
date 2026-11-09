@@ -5,9 +5,9 @@
 export const PHUT_KIEM = 30;
 const KHOA_DA_TAI = 'kh_ban_da_tai_lai';
 const HOP_THOAI = '[role="dialog"],[aria-modal="true"],.sheet.show';
-const KHONG_AN_TOAN = /^\/(giohang|thanhtoan|don\/.+|dangnhap.*|taikhoan\/thongtin)$/;
+const KHONG_AN_TOAN = /^\/(giohang|thanhtoan|don\/.+|dangnhap.*|taikhoan\/thongtin|tracnghiem\/lam(\/.*)?)$/;
 
-/** Được tự tải lại không: KHÔNG khi đang mở bảng nổi / hộp thoại, hoặc ở giỏ hàng, thanh toán, đơn, đăng nhập, sửa thông tin. */
+/** Được tự tải lại không: KHÔNG khi đang mở bảng nổi / hộp thoại, hoặc ở giỏ hàng, thanh toán, đơn, đăng nhập, sửa thông tin, đang làm trắc nghiệm (bài dở chỉ ở state). */
 export function coTheTaiLai(duongDan, dangMoHopThoai) {
   if (dangMoHopThoai) return false;
   return !KHONG_AN_TOAN.test(String(duongDan || '').toLowerCase().replace(/\/+$/, ''));
