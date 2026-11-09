@@ -120,14 +120,14 @@ const khoGia = (d = {}, chan = false) => ({ d, getItem: (x) => { if (chan) throw
   k('A1 dòng âm lịch của bảng ngày: ngày rằm = "Rằm tháng N âm", mùng 1 = "Mùng 1 tháng N âm", ngày 12 = "Ngày 12 tháng N âm"; tháng nhuận ghi "nhuận" (6 nhuận 2025); tháng 29 ngày ghi "tháng thiếu"', /^Rằm tháng \d+ âm/.test(ngayAm(15)) && /^Mùng 1 tháng \d+ âm/.test(ngayAm(1)) && /^Ngày 12 tháng/.test(ngayAm(12)) && /nhuận/.test(chuAm(1, 8, 2025)) && !/nhuận/.test(chuAm(1, 11, 2026)));
 
   console.log('E1 — Nguồn: nối vào App, không gửi dữ liệu đi, giờ VN');
-  const app = doc('src/App.jsx'), tc = doc('src/pages/TrangChu.jsx'), moi = ['src/kehoachLap.js', 'src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BangQuaHan.jsx', 'src/components/BangNoi.jsx', 'src/components/BanhXoay.jsx', 'src/components/DaiNhacViec.jsx', 'src/components/ThongBaoHoanTac.jsx'].map(doc).join('\n');
+  const app = doc('src/App.jsx'), tc = doc('src/pages/TrangChu.jsx'), moi = ['src/kehoachLap.js', 'src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BangQuaHan.jsx', 'src/components/BangNoi.jsx', 'src/components/BanhXoay.jsx', 'src/components/DaiNhacViec.jsx'].map(doc).join('\n');
   k('E1 App gắn đúng MỘT dải nhắc việc cạnh BaoDonXong, chỉ khi đã đăng nhập, truyền san=daBiet', (app.match(/<DaiNhacViec /g) || []).length === 1 && /dangNhap && <DaiNhacViec san=\{daBiet\}/.test(app) && app.indexOf('<DaiNhacViec') > app.indexOf('<BaoDonXong'));
   k('E1 không gọi mạng, không gửi việc đi: không import api.js, fetch, XMLHttpRequest, sendBeacon, Notification', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon|new Notification|serviceWorker/.test(moi));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); bảng quá hạn / dải nhắc / thanh nhắc lấy giờ từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String|ngay)/.test(moi) && /bayGio\(\)/.test(doc('src/components/DaiNhacViec.jsx')) && /gioCho \|\| bayGio\(\)/.test(doc('src/pages/KeHoach.jsx')));
   k('E1 chỉ kehoach.js chạm localStorage; các tệp mới không lưu khoá mới', !/localStorage|sessionStorage/.test(moi.replace(/const kho = \(\) => localStorage;/, '')));
   k('K3 không có chữ "nợ", không số mẫu của demo', !/\bnợ\b/i.test(moi) && !/1\.250|1900|support@/.test(moi));
   k('D1 Trang chủ chỉ thêm số đỏ quá hạn trên ô Kế hoạch (+ ✕ banner, F1): dùng quaHan() chỉ khi đã đăng nhập và biết khách', /dangNhap && daBiet \? quaHan\(bang, homNay\)\.length : 0/.test(tc) && /quaHan=\{qua\}/.test(tc));
-  k('F1 ✕ ẩn banner đặt ở banner LỚN Trang chủ (demo todayHide): gọi anBannerHomNay + báo "Ẩn ở Lịch và tiện ích đến hết hôm nay"; bản nhỏ không có ✕', /khiAn=\{anBanner\}/.test(tc) && /anBannerHomNay\(keHoach/.test(tc) && /khiAn && !mini/.test(doc('src/components/BannerHomNay.jsx')) && !/khiAn/.test(doc('src/components/BannerNho.jsx').replace(/\/\*[^]*?\*\//, '')));
+  k('F1 (đổi ở KH-UI-5d) KHÔNG còn ✕ ẩn banner: Trang chủ không khiAn / anBannerHomNay, BannerHomNay không nút ✕, không còn BannerNho', !/khiAn|anBannerHomNay/.test(tc) && !/khiAn|t-x/.test(doc('src/components/BannerHomNay.jsx')) && !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')));
   k('F2 ô "hôm nay" của lưới giữ cỡ thường: ke_hoach.css không đặt chiều cao 150px cho .cd.today', !/\.cd\.today[^}]*height\s*:\s*150/.test(doc('src/giaoDien/ke_hoach.css') + doc('src/giaoDien/bang_ngay.css')));
   k('D1 ThemViec cũ đã gỡ (không code chết): không còn import', !fs.existsSync(path.join(GOC, 'src/components/ThemViec.jsx')) && !/ThemViec/.test(doc('src/pages/KeHoach.jsx')));
 
@@ -240,7 +240,7 @@ async function trinhDuyet(pw) {
     k('A3 dòng việc trong bảng: giờ · tên · hạn bằng chữ ("hạn 20/11") · 🔔 chữ nhắc', /09:00/.test(await bangNgay(t).locator('.ag').innerText()) && /hạn 20\/11/.test(await bangNgay(t).locator('.ag').innerText()) && /Trước 2 ngày lúc 20:00/.test(await bangNgay(t).locator('.ag').innerText()));
   });
 
-  // ----- 3. Gõ nhanh có ngày; lặp "Sau khi xong 30 ngày" + Hoàn tác
+  // ----- 3. Gõ nhanh có ngày; lặp "Sau khi xong 30 ngày"
   await ca('lap', {}, async (t) => {
     await mo(t, '/kehoach'); await t.getByText('Tháng 11 · 2026').waitFor();
     await t.locator('.cd.today').first().click(); await bangNgay(t).waitFor();
@@ -255,18 +255,12 @@ async function trinhDuyet(pw) {
     await t.locator('.bn-khung').getByRole('button', { name: 'Xong', exact: true }).click();
     await bangNgay(t).getByRole('button', { name: 'Thêm', exact: true }).click(); await bangNgay(t).getByText('Việc của tôi · 1 việc').waitFor();
     await bangNgay(t).getByRole('button', { name: 'Đánh dấu xong' }).click();
-    await t.locator('.toast.co-nut').waitFor();
+    await t.waitForFunction(() => document.querySelector('.toast.show'));
     const sau = (await luuTho(t)).find((x) => x.tieu === 'Uống thuốc bổ');
-    k('C1+E1 tick "Uống thuốc bổ" (sau khi xong 30 ngày) → dời sang 8/12; thông báo "Đã xong Uống thuốc bổ · Hoàn tác"', sau.ngay === '2026-12-08' && /Đã xong Uống thuốc bổ · Hoàn tác/.test(await t.locator('.toast.co-nut').innerText()));
-    await t.locator('.toast.co-nut button', { hasText: 'Hoàn tác' }).click();
-    const lai = (await luuTho(t)).find((x) => x.tieu === 'Uống thuốc bổ');
-    k('E1 Hoàn tác trả việc về đúng ngày hẹn cũ 8/11 (không phải 8/12) và chưa xong', lai.ngay === '2026-11-08' && lai.xong === false && (await t.locator('.toast.co-nut').count()) === 0);
-    await bangNgay(t).getByRole('button', { name: 'Đánh dấu xong' }).click(); await t.locator('.toast.co-nut').waitFor();
-    await t.clock.runFor(5200);
-    k('E1 thông báo Hoàn tác tự mất sau 5 giây', (await t.locator('.toast.co-nut').count()) === 0);
+    k('C1+E1 tick "Uống thuốc bổ" (sau khi xong 30 ngày) → dời sang 8/12; thông báo "Đã xong Uống thuốc bổ" KHÔNG nút Hoàn tác (đổi ở KH-UI-5d)', sau.ngay === '2026-12-08' && /Đã xong Uống thuốc bổ/.test(await t.locator('.toast').first().innerText()) && (await t.locator('.toast.co-nut, .toast button').count()) === 0);
   });
 
-  // ----- 4. Xoá + Hoàn tác, sửa việc, tìm
+  // ----- 4. Xoá (hỏi lại một lần, không Hoàn tác — KH-UI-5d), sửa việc, tìm
   await ca('sua', { luu: { kh_kehoach: JSON.stringify({ v: 1, viec: [{ id: 'a', ngay: '2026-11-08', gio: '10:00', tieu: 'Đi khám răng', nhac: 585, xong: false }, { id: 'b', ngay: '2026-11-12', gio: '', tieu: 'Cà phê với bạn', nhac: null, xong: false }], leNhac: {}, anBanner: '' }) } }, async (t) => {
     await mo(t, '/kehoach'); await t.getByText('Tháng 11 · 2026').waitFor();
     await t.locator('#timViec').fill('ca phe');
@@ -280,13 +274,12 @@ async function trinhDuyet(pw) {
     await t.getByLabel('Tên việc').fill('Đi khám mắt'); await bangNgay(t).getByRole('button', { name: 'Lưu', exact: true }).click();
     k('A3 sửa tên → lưu "Đi khám mắt", giữ giờ + nhắc', (await luuTho(t)).find((x) => x.id === 'a').tieu === 'Đi khám mắt' && (await luuTho(t)).find((x) => x.id === 'a').nhac === 585);
     await bangNgay(t).locator('.ti', { hasText: 'Đi khám mắt' }).click(); await bangNgay(t).getByRole('button', { name: 'Xoá việc' }).click();
-    await t.locator('.toast.co-nut').waitFor();
-    k('E1 xoá việc → "Đã xoá Đi khám mắt · Hoàn tác"; việc mất khỏi máy', /Đã xoá Đi khám mắt · Hoàn tác/.test(await t.locator('.toast.co-nut').innerText()) && !(await luuTho(t)).some((x) => x.id === 'a'));
-    await t.locator('.toast.co-nut button').click();
-    k('E1 Hoàn tác xoá → việc trở lại đúng như trước (giờ 10:00, nhắc 585)', (await luuTho(t)).some((x) => x.id === 'a' && x.gio === '10:00' && x.nhac === 585));
+    await bangNgay(t).getByRole('button', { name: 'Xoá', exact: true }).click();
+    await t.waitForFunction(() => document.querySelector('.toast.show'));
+    k('E1 xoá việc → hỏi lại một lần rồi xoá luôn: "Đã xoá «Đi khám mắt»" không Hoàn tác; việc mất khỏi máy', /Đã xoá «Đi khám mắt»/.test(await t.locator('.toast').first().innerText()) && (await t.locator('.toast button').count()) === 0 && !(await luuTho(t)).some((x) => x.id === 'a'));
   });
 
-  // ----- 5. Quá hạn: dải, bảng rà soát, Xoá thật?, Dời cả
+  // ----- 5. Quá hạn: dải, bảng rà soát, hỏi xoá, Dời cả
   const qua = (id, tieu, ngay, them = {}) => ({ id, ngay, gio: '', tieu, nhac: null, xong: false, ...them });
   await ca('qua', { luu: { kh_kehoach: JSON.stringify({ v: 1, viec: [qua('a', 'Nộp hồ sơ', '2026-11-07', { gio: '10:00' }), qua('b', 'Trả sách', '2026-11-03'), qua('c', 'Tập thể dục', '2026-10-25', { lap: { k: 'tuan', n: 1, den: '' }, lanXong: [] })], leNhac: {}, anBanner: '' }) } }, async (t, loi, hop) => {
     await mo(t, '/trangchu');
@@ -300,9 +293,9 @@ async function trinhDuyet(pw) {
     k('D2 việc lặp có "✓ Đánh dấu cả 2 lần" + "Bỏ qua lần này"; có "Dời cả 2 việc sang hôm nay" (2 việc thường)', bq.includes('✓ Đánh dấu cả 2 lần') && bq.includes('Bỏ qua lần này') && bq.includes('Dời cả 2 việc sang hôm nay'));
     const the = (ten) => bangNgay(t).locator('.qh-the', { hasText: ten });
     await the('Trả sách').getByRole('button', { name: 'Xoá', exact: true }).click();
-    k('D2 "Xoá" bấm một lần chỉ hỏi lại "Xoá thật?" (không xoá, không hộp thoại trình duyệt)', (await the('Trả sách').getByRole('button', { name: 'Xoá thật?' }).count()) === 1 && (await luuTho(t)).some((x) => x.id === 'b') && hop.length === 0);
-    await the('Trả sách').getByRole('button', { name: 'Xoá thật?' }).click();
-    k('D2 bấm "Xoá thật?" → xoá (kèm Hoàn tác)', !(await luuTho(t)).some((x) => x.id === 'b') && (await t.locator('.toast.co-nut').count()) === 1);
+    k('D2 "Xoá" bấm một lần chỉ hỏi lại «Trả sách» ngay trong bảng (không xoá, không hộp thoại trình duyệt)', (await the('Trả sách').getByText('Xoá việc «Trả sách»?').count()) === 1 && (await luuTho(t)).some((x) => x.id === 'b') && hop.length === 0);
+    await the('Trả sách').getByRole('button', { name: 'Xoá', exact: true }).click();
+    k('D2 bấm Xoá lần hai → xoá, không Hoàn tác', !(await luuTho(t)).some((x) => x.id === 'b') && (await t.locator('.toast button').count()) === 0);
     await the('Nộp hồ sơ').getByRole('button', { name: '→ Hôm nay' }).click();
     k('D2 "→ Hôm nay": việc dời sang 8/11 và rời bảng quá hạn', (await luuTho(t)).find((x) => x.id === 'a').ngay === '2026-11-08' && (await the('Nộp hồ sơ').count()) === 0);
     await the('Tập thể dục').getByRole('button', { name: '✓ Đánh dấu cả 2 lần' }).click();
