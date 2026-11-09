@@ -137,3 +137,64 @@ BÀI HỌC: KHOÁ — "Service worker lưu vỏ HTML thì mọi tệp vỏ đó 
 - Cổng (đứng ở 0ce15f4, cây sạch): `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 47fce03^ HEAD viec/KH-PWA-1` → ✓ CỔNG CHẠY ĐẠT; `tinh` chỉ ✗ [A19] (dòng dưới).
 
 HEAD ĐÃ KIỂM: 0ce15f4
+
+## /ra-soat vòng 2 (09.11, agent độc lập, soát 47fce03^..0ce15f4+) — báo cáo chép nguyên (rút phần "đã chạy" thành một dòng)
+```
+ĐẠT
+LỖI TÌM ĐƯỢC:  không có lỗi nào làm sai nghiệm thu hay hỏng luồng thật (đã đọc code và chạy thật).
+NGHI NGỜ:
+- K3, ca marker vẫn làm bài xanh được (đột biến trên bản sao, có Chromium):
+  (1) ACTIVATE-KHONG-XOA: `&& false` vào bộ lọc public/sw.js:80 → 58 · 0 (SỐNG); A3 "xoá kho cũ" chỉ canh bằng regex `caches\.delete\(` (thu_KHPWA1.js:91).
+  (2) NEM-KHI-PHONG-LOI: ném khi BẤT KỲ tệp nào thiếu (public/sw.js:49) → 58 · 0 (SỐNG); chưa có ca "phông / ảnh 404 mà vỏ mới vẫn lưu".
+  (3) A4 skipWaiting chỉ ca regex canh (:94); clients.claim có ca Chromium canh thật.
+  Phiếu C1 không đòi riêng → không chặn gộp; mỗi chỗ thêm 1 ca vm là bắt được.
+- public/sw.js:94-100: mạng trả 5xx/404 (không ném) → khách nhận trang lỗi, không vỏ đã lưu (vòng 1 đã nêu; phiếu chỉ nói "mạng lỗi").
+- public/sw.js:8 (TINH, :103-106): Range cho /am_thanh/man_dau.mp3 nhận "200 82330" (bỏ Range); Chromium chịu được, Safari/iOS có thể câm. Đã ở Câu hỏi 2.
+- public/sw.js:54-58: dọn kho chỉ giữ tệp index.html trỏ tới; hôm nay không có tệp tách (grep `lazy(|import(` rỗng). Sau này dùng React.lazy → vỡ khi mất mạng. Nên ghi Phát hiện.
+- public/sw.js:44-52: vỏ lưu cả khi tenBan(html) rỗng (HTML 200 không phải App); trên HTTPS khó xảy ra. Chặn gọn: thêm `tenBan(html) &&`.
+- K1: trang_thai.md dẫn kiem_tra_truoc_khi_giao.js:35-36, thực tế :36-37.
+- cong_cu/thu_KHPWA1.js:296-299: ca "B3 ở /thanhtoan" thực chất đứng ở /dangnhap (cả hai không an toàn; hàm thuần :142 có thử /thanhtoan).
+NGHIỆM THU:    12/12 mục có bằng chứng · mục thiếu: không
+  (A1 main.jsx +2 dòng, dangKySW.js:28 · A2 chienLuoc sw.js:11-19, ca vm (a)–(e); kịch bản Chromium riêng S1 mạng chậm 6 giây đổi bản → mất mạng có khung; S2 phông 404 → vỏ mới vẫn lưu;
+   S3 JS mới 404 → giữ vỏ cũ, mất mạng có khung — hai lỗi chặn vòng 1 đã hết · A3 'tqd-v1', 2 bản · A4 :75, :80 · A5 · B1–B4 Chromium 58 · 0 (29 giây) ·
+   C1 39 · 0 / 58 · 0 · C2 npm test 39 · 0, cổng chay ĐẠT · C3 6 dòng · Câu hỏi 1: thu_KHUI2 chỉ đổi E2, đủ 4 điều.)
+CHƯA SOÁT ĐƯỢC: Safari/iOS (Range mp3, PWA chạy nền), trình duyệt Zalo, Cloudflare Pages thật (_headers, /index.html → /), kho đầy trên máy thật, `--day-du` (không chạy lại), dot_bien.py (không chạy vì sửa tệp trong kho; tự chạy 5 đột biến trên bản sao: 3 bắt, 2 SỐNG như trên).
+  Kiểm riêng: luuVo chỉ ném khi /assets thiếu (:49); Promise.all lỗi sớm để lại tệp mồ côi — vô hại, lần đổi bản sau dọn; cài lần đầu một /assets lỗi → không vỏ, lần mở sau lưu lại;
+  res.clone() trong trang() chạy trước khi respondWith đọc thân; 4 chỗ waitUntil gọi đồng bộ; mọi đường lưu vỏ qua luuVo; không vòng lặp tải lại; Vite 7 đổi CHỈ CSS vẫn đổi tên JS → so tên JS đủ;
+  SW không lưu /api, khác miền, token; vite build chạy; sw.js 109 + dangKySW.js 59 dòng, không phức tạp thừa.
+BÀI HỌC: NGUYÊN TẮC — mỗi nhánh rẽ của bản vá phải có ca hành vi riêng cho TỪNG nhánh (một ca "mọi thứ hỏng" + một ca "mọi thứ được" không bắt đột biến gộp hai nhánh).
+  KHOÁ (đề xuất) — mỗi luật ghi trong phiếu, chạy một đột biến "gỡ luật"; còn SỐNG mà chỉ có ca regex canh thì chưa tính là bằng chứng.
+```
+
+## Vá vòng 2 (sau /ra-soat 2 — làm 2 nghi ngờ rẻ, trong Phạm vi)
+- +2 ca hành vi vm: "A2 đổi bản: phông / manifest lỗi nhưng đủ /assets → vẫn lưu vỏ mới", "A3 activate xoá kho cũ tqd-v0, giữ tqd-v1 và kho khác".
+  Hai đột biến của người soát thêm vào dot_bien.py (VS-SW-NEM-KHI-PHONG-LOI, BV-SW-ACTIVATE-KHONG-XOA) — ĐỎ. Tổng 28/28 bị bắt.
+- K1 sửa `:35-36` → `:36-37`. Ghi Phát hiện: tệp tách (React.lazy) sau này, 5xx/404, vỏ không có tệp App.
+- Không làm: skipWaiting vẫn chỉ ca regex (bỏ skipWaiting thì SW mới chờ tab đóng — đột biến đã bị đúng ca đó bắt; ca hành vi cần hai bản SW trong Chromium, thêm ~5 giây, ngân sách thử đã 1,49 lần).
+- Kiểm (đứng ở e459b18): thu_KHPWA1 41 · 0 (KHONG_TRINH_DUYET=1), 60 · 0 (Chromium, 29 giây); `npm test` 39 · 0; `--day-du` 41 · 0.
+
+## Báo cáo 7 mục
+- **VIỆC**: KH-PWA-1 — App mở gần như tức thì (service worker tự viết lưu sẵn vỏ, JS/CSS băm, phông, ảnh) và tự lên bản mới lặng lẽ ở màn an toàn.
+- **ĐÃ SỬA**: `public/sw.js` (109 dòng, mới) — 3 luật + không đụng /api / khác miền / không GET / /kiemkhop / /sw.js; vỏ mới chỉ lưu khi đủ /assets; giữ 2 bản; kiemBan.
+  `src/dangKySW.js` (59, mới) — đăng ký khi PROD, kiểm sau ≥ 30 phút ẩn, tải lại chỉ ở màn an toàn (thêm /tracnghiem/lam theo chủ quán 08.11).
+  `src/main.jsx` +2 dòng. `public/_headers` 3 luật. `cong_cu/thu_KHPWA1.js` (373, mới). `cong_cu/thu_KHUI2.js` ca E2 (theo Trả lời Câu hỏi 1).
+- **BÀI THỬ**: thu_KHPWA1 đỏ trên gốc (2 · 8), xanh 41 · 0 / 60 · 0 có Chromium; thu_KHUI2 đỏ trên gốc (77 · 1 ✗ E2), xanh 78 · 0; đột biến 28/28 bị bắt;
+  `npm test` 39 · 0; `--day-du` 41 · 0; cổng `chay` + `tinh` (dòng dưới).
+- **ĐÃ RÀ K4**: 3 chỗ respondWith trong sw.js đều sau `if (!luat) return`; mọi đường lưu vỏ (install, trang, kiemBan) qua luuVo; 3 bảng nổi trong src/ đều `.sheet.show` / role="dialog".
+- **CHƯA KIỂM**: Safari / iPhone (âm thanh màn mở qua SW — Câu hỏi 2; PWA chạy nền quay lại), trình duyệt Zalo, Cloudflare Pages thật (đọc `_headers`, `/index.html` → `/`),
+  kho đầy / riêng tư trên máy thật. Chủ quán thử tay theo `huong_dan_kiem_tay.md`.
+- **GIT**: nhánh `viec/KH-PWA-1`, push `git push -u origin viec/KH-PWA-1`; không PR, không merge.
+- **BÀI HỌC**: dưới.
+- Nghiệm thu đếm: A1 (thu_KHPWA1 "A1 main.jsx…", "A1 chỉ đăng ký khi PROD…", "A1 không có import.meta.env…") · A2 (chienLuoc + sự kiện fetch + 6 ca vm (a)–(f) + Chromium mất mạng / mạng chậm / bản mới về nền) ·
+  A3 (tqd-v1, activate (g), Chromium "2 bản gần nhất") · A4 (regex + Chromium có SW điều khiển) · A5 (_headers) · B1 (Chromium moi1) · B2 (denLucKiem, doiBan, Chromium ẩn 10 / 31 phút, mất mạng) ·
+  B3 (coTheTaiLai + /tracnghiem/lam + hộp thoại + Chromium /thanhtoan) · B4 (Chromium vẫn /menu, không chữ) · C1 (bài này) · C2 (dòng dưới) · C3 (huong_dan_kiem_tay.md 6 dòng). 12/12.
+
+## Bài học
+1. **Lưu vỏ HTML trước khi có tệp nó trỏ tới → trắng màn khi mất mạng** (ra-soat 1 bắt). Ngăn **KHOÁ** — đã làm trong Phạm vi: ca vm (a)(b)(f) + ca Chromium "bản mới về nền → mất mạng".
+   Đề xuất ngoài Phạm vi: mục KHUON_LOI.md mới "K? — Bộ nhớ đệm lưu vỏ trước phần thân: Đã gây KH-PWA-1 (vòng 1, trắng màn); Dấu hiệu: put('/') trước khi các tệp vỏ trỏ tới có trong kho; Chặn: thu_KHPWA1 ca (a)".
+2. **Ca marker (khớp hằng số / đếm tên hàm) để đột biến sống** (VS-SW-ASSETS-LUU-HTML sống khi thêm một `laHtml(`; 2 đột biến của người soát vòng 2). **NGUYÊN TẮC** — đề xuất ngoài Phạm vi:
+   KHUON_LOI.md "ca hành vi cho TỪNG nhánh rẽ; marker không tính là bằng chứng hành vi" (gộp vào K3 hiện có, không mở mục mới — giữ ≤ 120 dòng).
+3. **Đột biến "KHÔNG ÁP ĐƯỢC" bị tính SỐNG** (VS-DK-DANG-KY-CA-DEV, do sửa khoảng trắng ở vòng 2): dot_bien.py đã báo đúng — **BỎ** (công cụ đã bắt, chỉ một lần).
+4. **Chạy dot_bien.py song song với `npm test`** → npm test đỏ giả (dot_bien sửa tệp tạm thời). **BỎ** — một lần; nhớ: dot_bien sửa tệp trong kho, không chạy song song.
+5. **Người gác chặn** (B-MANOI chạy bài chưa commit, SED-I, B-DICHCHU biến `$S`, B-PHANTICH `( … )` và lệnh script không đứng một mình): đều đúng luật đã ghi trong skill — **BỎ**.
+6. **SỐ CA thiếu `cong_cu/`** (cổng A16 đỏ lần đầu): cổng đã bắt — **BỎ** (đề xuất nhỏ: skill bước 4 ghi rõ dạng `SỐ CA cong_cu/<bài>.js: N`).
