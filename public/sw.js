@@ -34,14 +34,23 @@ function tepCuaBan(html) {
 const laHtml = (res) => /text\/html/.test(res.headers.get('content-type') || '');
 const dung = (res) => res && res.ok && res.type === 'basic' && !res.redirected;
 
-/** Lưu đè vỏ mới; ĐỔI bản thì tệp /assets không thuộc vỏ cũ lẫn vỏ mới bị xoá (giữ 2 bản gần nhất). Trả html. */
+/** Lưu đè vỏ mới; ĐỔI bản thì tải đủ tệp /assets của vỏ mới TRƯỚC (thiếu → ném, giữ vỏ cũ: mất mạng mở lại không trắng màn),
+ *  rồi xoá tệp /assets không thuộc vỏ cũ lẫn vỏ mới (giữ 2 bản gần nhất). Trả html. */
 async function luuVo(res) {
   const html = await res.clone().text();
   const kho = await caches.open(KHO);
   const cu = await kho.match(VO);
   const htmlCu = cu ? await cu.text() : '';
+  const doi = tenBan(htmlCu) !== tenBan(html);
+  if (doi) {
+    await Promise.all([...tepCuaBan(html)].map(async (p) => {
+      if (await kho.match(p)) return;
+      const r = await luuTep(p, 'reload').catch(() => null);
+      if (p.startsWith('/assets/') && !(r && dung(r) && !laHtml(r))) throw new Error('thiếu ' + p);
+    }));
+  }
   await kho.put(VO, res);
-  if (tenBan(htmlCu) === tenBan(html)) return html; // cùng bản (lưu đè lần hai) → không dọn, kẻo mất bản trước
+  if (!doi) return html; // cùng bản (lưu đè lần hai) → không dọn, kẻo mất bản trước
   const giu = new Set([...tepCuaBan(html), ...tepCuaBan(htmlCu)]);
   for (const r of await kho.keys()) {
     const p = new URL(r.url).pathname;
@@ -64,7 +73,7 @@ async function luuTep(p, cach) {
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
-  e.waitUntil(layVo('reload').then((html) => Promise.all([...tepCuaBan(html)].map((p) => luuTep(p, 'reload').catch(() => {})))).catch(() => {}));
+  e.waitUntil(layVo('reload').catch(() => {}));
 });
 
 self.addEventListener('activate', (e) => {
@@ -72,11 +81,9 @@ self.addEventListener('activate', (e) => {
 });
 
 function trang(e) {
-  const mang = fetch(e.request).then(async (res) => {
-    if (dung(res) && laHtml(res)) await luuVo(res.clone());
-    return res;
-  });
-  e.waitUntil(mang.catch(() => {}));
+  // Trả phản hồi mạng ngay; lưu vỏ ở nền — lưu lỗi (kho đầy…) không làm khách mất trang mới.
+  const mang = fetch(e.request);
+  e.waitUntil(mang.then((res) => (dung(res) && laHtml(res) ? luuVo(res.clone()) : 0)).catch(() => {}));
   const het = new Promise((r) => setTimeout(r, CHO_MANG));
   const voLuu = () => caches.match(VO);
   return Promise.race([mang, het.then(voLuu)]).then((res) => res || mang).catch(() => voLuu().then((res) => res || mang));
