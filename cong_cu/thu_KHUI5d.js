@@ -236,9 +236,9 @@ async function trinhDuyet(pw) {
     await t.clock.runFor(60 * 1000);
     await t.waitForFunction(() => /29 phút nữa/.test(document.querySelector('#calNoti').innerText), null, { timeout: 3000 }).catch(() => {});
     k('D2 sau 1 phút (đồng hồ giả) tự đổi thành "29 phút nữa" — không cần tải lại', /29 phút nữa/.test(await t.locator('#calNoti').innerText()), await t.locator('#calNoti').innerText());
-    await t.clock.runFor(30 * 60 * 1000);
+    await t.clock.runFor(90 * 60 * 1000); // việc 09:30 + 60 phút = hết thời gian nhắc (10:30)
     await t.waitForFunction(() => !document.querySelector('#calNoti .nt-bar'), null, { timeout: 3000 }).catch(() => {});
-    k('D2 qua giờ việc (09:30) → thanh nhắc tự ẩn', (await t.locator('#calNoti .nt-bar').count()) === 0);
+    k('D2 qua hết thời gian nhắc (10:30) → thanh nhắc tự ẩn', (await t.locator('#calNoti .nt-bar').count()) === 0);
   });
 
   // ----- 5. D3: gõ nhanh có ngày
