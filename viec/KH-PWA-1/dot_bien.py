@@ -16,7 +16,7 @@ DOT_BIEN = [
     ('VS-SW-KIEMKHOP', SW, " || p === '/kiemkhop'", "", False),
     ('VS-SW-TRANG-LUU-TRUOC', SW, "if (cach.mode === 'navigate') return 'trang';", "if (cach.mode === 'navigate') return 'luuTruoc';", False),
     ('VS-SW-KHONG-CHO-3-GIAY', SW, "const het = new Promise((r) => setTimeout(r, CHO_MANG));", "const het = new Promise(() => {});", True),
-    ('VS-SW-DON-KHI-LUU-DE-CUNG-BAN', SW, "  if (tenBan(htmlCu) === tenBan(html)) return html;", "", True),
+    ('VS-SW-DON-KHI-LUU-DE-CUNG-BAN', SW, "  if (!doi) return html;", "", True),
     ('VS-SW-ASSETS-LUU-HTML', SW, "if (dung(res) && !laHtml(res)) await", "if (dung(res)) await", False),
     ('VS-SW-TENBAN-HONG', SW, "  return m ? m[1] : '';", "  return m ? m[1] : 'hong';", False),
     ('VS-DK-BO-HOP-THOAI', DK, "  if (dangMoHopThoai) return false;\n", "", False),

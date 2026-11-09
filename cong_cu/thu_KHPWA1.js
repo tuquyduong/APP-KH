@@ -94,9 +94,6 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     k('A2 sự kiện fetch: /api, khác miền, POST, /kiemkhop, /sw.js → KHÔNG respondWith', typeof nghe.fetch === 'function' && goiRespond === 0, String(goiRespond));
     if (typeof nghe.fetch === 'function') nghe.fetch(suKien(MIEN + '/assets/index-a.js'));
     k('A2 sự kiện fetch: /assets → có respondWith (đối chứng)', goiRespond === 1, String(goiRespond));
-    const sw = doc('public/sw.js');
-    k('A2 trang: chờ mạng tối đa 3 giây', /\b3000\b/.test(sw));
-    k('A2 chỉ lưu khi đúng loại: vỏ là text/html, /assets KHÔNG lưu text/html (Cloudflare trả index.html cho tệp băm đã xoá)', /laHtml\(/.test(sw) && (sw.match(/laHtml\(/g) || []).length >= 3);
   });
 
   await thu('A3/A4', async () => {
@@ -142,6 +139,13 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     d.nghe.fetch({ request: { url: MIEN + '/trangchu', method: 'GET', mode: 'navigate' }, respondWith: (p) => { traD = p; }, waitUntil: () => {} });
     const rd = traD ? await Promise.race([traD, cho(1000).then(() => null)]) : null;
     k('A2 trang: mạng treo → sau 3000 ms trả vỏ đã lưu', hen.includes(3000) && !!rd && (await rd.text()) === CU, JSON.stringify(hen));
+    // (e) chỉ lưu đúng loại: Cloudflare trả index.html 200 cho tệp băm đã xoá → /assets KHÔNG lưu HTML; vỏ chỉ lưu khi là text/html.
+    const e1 = napSWKho({ mang: async () => resGia('<!DOCTYPE html>', 'text/html') });
+    await e1.ctx.luuTep('/assets/index-XOA.js', 'default');
+    const e2 = napSWKho({ mang: async () => resGia('{"error":"x"}', 'application/json') });
+    await e2.ctx.layVo('no-store');
+    k('A2 chỉ lưu khi đúng loại: /assets KHÔNG lưu text/html, vỏ KHÔNG lưu khi không phải text/html', !e1.kho.m.has('/assets/index-XOA.js') && !e2.kho.m.has('/'),
+      JSON.stringify([...e1.kho.m.keys(), ...e2.kho.m.keys()]));
   });
 
   await thu('B2 tenBan', async () => {
