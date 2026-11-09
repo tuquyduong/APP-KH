@@ -124,7 +124,7 @@ export function chuHan(ngay, xong, homNay) {
   return j < h && !xong ? { chu: 'quá hạn ' + dmNgan(j), qua: true } : { chu: 'hạn ' + dmNgan(j), qua: false };
 }
 
-// ----- ĐỔI TRẠNG THÁI (trả bản mới, không sửa bản cũ → "Hoàn tác" chỉ cần giữ bản cũ) -----
+// ----- ĐỔI TRẠNG THÁI (trả bản mới, không sửa bản cũ) -----
 const doiViec = (bang, id, f) => ({ ...bang, viec: bang.viec.map((v) => (v.id === id ? f(v) : v)) });
 const sapNhoNhat = (ds) => [...ds].sort();
 /** Tick một lần (`ngay` 'YYYY-MM-DD') của việc: không lặp → đảo xong; lặp → đảo lần đó; "sau khi xong N ngày" → dời sang N ngày sau hôm nay. */
