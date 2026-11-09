@@ -115,7 +115,8 @@ async function trinhDuyet(pw) {
     await t.addInitScript(() => { try { sessionStorage.setItem('kh_da_xem_man_dau', '1'); } catch { /* bỏ qua */ } });
     if (dn) await t.addInitScript(() => { if (!sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); localStorage.setItem('kh_token', 'tok-A'); } });
     const S = { goi: [], khach: { ...KHACH, ...khach } };
-    await t.route(`${URL0}/**`, async (r) => {
+    t.dangGoi = 0; t.tongGoi = 0; // đếm yêu cầu mạng giả: `yen(t)` chờ tới khi hết yêu cầu và trang đã vẽ xong (thay chờ cố định)
+    const xuLy = async (r) => {
       const u = new URL(r.request().url()), p = u.pathname, auth = r.request().headers().authorization || '';
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) });
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiApp });
@@ -135,12 +136,14 @@ async function trinhDuyet(pw) {
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
       if (duong.startsWith('/don')) return json(200, { success: true, data: [], tong: 0, trang: 1 });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
-    });
+    };
+    await t.route(`${URL0}/**`, async (r) => { t.dangGoi++; t.tongGoi++; try { return await xuLy(r); } finally { t.dangGoi--; } });
     t.setDefaultTimeout(4000);
     try { await chay(t, S, loi); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
-  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await t.waitForTimeout(800); };
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x)))); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
+  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); };
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const chup = async (t, ten) => { if (luuAnh) await t.screenshot({ path: path.join(luuAnh, ten + '.png') }); };
   const manText = (t) => t.locator('#rewards').innerText();
@@ -217,7 +220,7 @@ async function trinhDuyet(pw) {
       await chup(t, `chua-nhap-ngay-sinh_${rong}`);
       if (rong === 390) {
         await t.getByText(MOI_NHAP).click();
-        await t.waitForTimeout(500);
+        await yen(t);
         k('B4 bấm dòng mời → mở màn Thông tin cá nhân (/taikhoan/thongtin)', new URL(t.url()).pathname === '/taikhoan/thongtin' && /Thông tin/.test(await t.locator('.phone').innerText()), t.url());
       }
     });

@@ -1,0 +1,12 @@
+KH-THU-1 — việc chỉ rút thời gian bài thử, không đổi hành vi ca nào → KHÔNG có bài đỏ trên code gốc (phiếu: "## Bài thử đỏ — không").
+Bằng chứng thay cho bài đỏ: số ca TRƯỚC = SAU (trước: log npm test trên gốc cf2c48e; sau: log npm test ở HEAD; mọi thay đổi nằm trong hàm trinhDuyet()
+nên số ca khi KHONG_TRINH_DUYET=1 không đổi — đã đếm lại ở HEAD bên dưới).
+Số ca có Chromium (TRƯỚC = SAU): UI3b 174 · UI3d 174 · NHANH1 227 · MUA1b 257 (không sửa) · MUA1 129 · UI3a 84 · HANG2 73 · CT1 89.
+
+SỐ CA cong_cu/thu_KHUI3b.js: 57
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+SỐ CA cong_cu/thu_KHNHANH1.js: 83
+SỐ CA cong_cu/thu_KHMUA1.js: 56
+SỐ CA cong_cu/thu_KHUI3a.js: 42
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHCT1.js: 19

@@ -113,7 +113,9 @@ async function trinhDuyet(pw) {
     await t.addInitScript(() => { try { sessionStorage.setItem('kh_da_xem_man_dau', '1'); } catch { /* bỏ qua */ } });
     if (dn) await t.addInitScript(() => { if (!sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); localStorage.setItem('kh_token', 'tok-A'); } });
     const S = { khach: { ...KHACH, ...khach } };
-    await t.route(`${URL0}/**`, async (r) => {
+    t.dangGoi = 0; t.tongGoi = 0; // đếm yêu cầu mạng giả: `yen(t)` chờ tới khi hết yêu cầu và trang đã vẽ xong (thay chờ cố định)
+    S.cuaGio = new Promise((x) => { S.moGio = x; }); // treGio: /gio-hoat-dong giữ lại tới khi ca gọi S.moGio() (thay chờ thật 1,8 giây)
+    const xuLy = async (r) => {
       const u = new URL(r.request().url()), p = u.pathname, auth = r.request().headers().authorization || '';
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) });
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiApp });
@@ -123,23 +125,29 @@ async function trinhDuyet(pw) {
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: hang });
       if (duong === '/gio-hoat-dong') {
-        if (treGio) await new Promise((x) => setTimeout(x, treGio));
+        if (treGio) await S.cuaGio;
         return json(200, { success: true, bay_gio: bayGio, dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       }
       if (duong === '/menu') return json(200, MENU);
       if (auth !== 'Bearer tok-A') return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-12-05T08:00:00' });
-      if (duong === '/toi') return json(200, { success: true, khach: S.khach });
+      if (duong === '/toi') { S.daToi = true; return json(200, { success: true, khach: S.khach }); }
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
       if (duong.startsWith('/don')) return json(200, { success: true, data: [], tong: 0, trang: 1 });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
-    });
+    };
+    await t.route(`${URL0}/**`, async (r) => { t.dangGoi++; t.tongGoi++; try { return await xuLy(r); } finally { t.dangGoi--; } });
     t.setDefaultTimeout(4000);
     try { await chay(t, S, loi); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
     if (loi.length) k(`ca ${ten}: trang không báo lỗi JS`, false, loi[0]);
   }
-  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await t.waitForTimeout(800); };
+  const veXong = (t) => t.evaluate(() => new Promise((x) => requestAnimationFrame(() => requestAnimationFrame(x))));
+  const yen = async (t) => { let tong = -1, on = 0; for (let lan = 0; lan < 800 && on < 4; lan++) { await veXong(t); on = !t.dangGoi && t.tongGoi === tong ? on + 1 : 0; tong = t.tongGoi; } if (on < 4) throw new Error('trang chưa yên sau 800 lượt'); }; // ổn định 4 lượt liền, hết trần thì báo (không bỏ qua lặng lẽ)
+  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); await yen(t); };
+  // Mở /uudai khi /gio-hoat-dong còn bị giữ: chờ /toi về và trang vẽ xong, rồi trả lời giờ POS (thay hai lần chờ thật 0,5 + 2,5 giây).
+  const moTreGio = async (t, S) => { await t.goto(URL0 + '/uudai'); await t.waitForSelector('.phone'); for (let i = 0; i < 400 && !S.daToi; i++) await t.waitForTimeout(10); for (let i = 0; i < 4; i++) await veXong(t); };
+  const veGio = async (t, S) => { S.moGio(); await yen(t); };
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const chup = async (t, ten) => { if (luuAnh) await t.screenshot({ path: path.join(luuAnh, ten + '.png') }); };
   const manText = (t) => t.locator('#rewards').innerText();
@@ -199,16 +207,16 @@ async function trinhDuyet(pw) {
   });
 
   // B1 — /toi về TRƯỚC giờ POS; đồng hồ máy lệch ngày
-  await ca('b1-hien', { khach: { ngay_sinh: '1990-11-05' }, treGio: 1800, bayGio: '2026-11-05T09:00:00', may: '2026-03-01T09:00:00+07:00' }, async (t) => {
-    await t.goto(URL0 + '/uudai'); await t.waitForSelector('.phone'); await t.waitForTimeout(500);
+  await ca('b1-hien', { khach: { ngay_sinh: '1990-11-05' }, treGio: 1800, bayGio: '2026-11-05T09:00:00', may: '2026-03-01T09:00:00+07:00' }, async (t, S) => {
+    await moTreGio(t, S);
     k('B1 trước khi giờ POS về: chưa chúc mừng (đồng hồ máy 03-01 ≠ 11-05)', !(await manText(t)).includes(MOI_SN));
-    await t.waitForTimeout(2500);
+    await veGio(t, S);
     k('B1 giờ POS (11-05) về sau /toi → dòng chúc mừng HIỆN, không cần tải lại', (await manText(t)).includes(MOI_SN), (await manText(t)).slice(0, 200));
   });
-  await ca('b1-an', { khach: { ngay_sinh: '1990-03-01' }, treGio: 1800, bayGio: '2026-11-05T09:00:00', may: '2026-03-01T09:00:00+07:00' }, async (t) => {
-    await t.goto(URL0 + '/uudai'); await t.waitForSelector('.phone'); await t.waitForTimeout(500);
+  await ca('b1-an', { khach: { ngay_sinh: '1990-03-01' }, treGio: 1800, bayGio: '2026-11-05T09:00:00', may: '2026-03-01T09:00:00+07:00' }, async (t, S) => {
+    await moTreGio(t, S);
     k('B1 trước giờ POS: máy nói 03-01 = ngày sinh → đang chúc mừng tạm', (await manText(t)).includes(MOI_SN));
-    await t.waitForTimeout(2500);
+    await veGio(t, S);
     k('B1 giờ POS (11-05) về → dòng chúc mừng ẨN đúng theo ngày POS', !(await manText(t)).includes(MOI_SN), (await manText(t)).slice(0, 200));
   });
 

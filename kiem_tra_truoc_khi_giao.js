@@ -140,9 +140,13 @@ console.log('— Bài thử cong_cu/thu_*.js');
 const baiThu = fs.existsSync(path.join(GOC, 'cong_cu')) ? fs.readdirSync(path.join(GOC, 'cong_cu')).filter((f) => /^thu_.*\.js$/.test(f)).sort() : [];
 k('có ít nhất một bài thử', baiThu.length > 0);
 for (const f of baiThu) {
+  const batDau = Date.now();
   const r = spawnSync(process.execPath, [path.join('cong_cu', f)], { cwd: GOC, encoding: 'utf8', timeout: 120000 });
+  const giay = Math.round((Date.now() - batDau) / 1000);
+  const quaGio = (r.error && r.error.code === 'ETIMEDOUT') || !!r.signal;
   const cuoi = (r.stdout || '').trim().split('\n').pop() || '';
-  k(`${f} xanh (${cuoi})`, r.status === 0, ((r.stdout || '') + (r.stderr || '')).trim().split('\n').slice(-6).join(' | '));
+  if (quaGio) k(`${f} QUÁ GIỜ 120 giây (máy bận? chạy riêng: node cong_cu/${f})`, false);
+  else k(`${f} xanh (${cuoi} · ${giay} s)`, r.status === 0, ((r.stdout || '') + (r.stderr || '')).trim().split('\n').slice(-6).join(' | '));
 }
 
 if (DAY_DU) {
