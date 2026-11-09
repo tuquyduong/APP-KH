@@ -53,6 +53,7 @@ Khách mở App lần thứ hai trở đi thấy giao diện gần như ngay l�
 - src/dangKySW.js
 - src/main.jsx
 - cong_cu/thu_KHPWA1.js
+- cong_cu/thu_KHUI2.js
 
 ## Ngân sách
 ~150 dòng app (sw.js + dangKySW.js) + ~250 dòng thử. **Phương án đơn giản nhất đã xét:** thư viện vite-plugin-pwa / Workbox — KHÔNG chọn: thêm thư viện, luật cập nhật
@@ -73,3 +74,16 @@ không
 - KHÔNG lưu / chặn / sửa bất kỳ yêu cầu `/api/…` hay khác tên miền; KHÔNG lưu dữ liệu khách (đơn, điểm, ví, token) trong kho service worker.
 - KHÔNG làm thông báo đẩy (KH-TB-1), nút "Cài App" / "Thêm vào màn hình chính", màn ngoại tuyến riêng, nút "Có bản mới".
 - Chỉ push `git push -u origin viec/KH-PWA-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời Câu hỏi 1 (chủ quán duyệt 08.11, chat App KH soạn)
+- ĐỒNG Ý thêm `cong_cu/thu_KHUI2.js` vào Phạm vi, CHỈ để đổi ca `E2 không service worker` (dòng ~119). KHÔNG đổi ca nào khác, không bớt ca.
+- Ca E2 mới, cùng chỗ, đổi tên thành `E2 service worker chỉ đăng ký qua src/dangKySW.js`, đạt khi CẢ BỐN đúng:
+  (1) có `public/sw.js`; (2) có `src/dangKySW.js` và trong đó có `serviceWorker.register(`; (3) `src/App.jsx` và `index.html` KHÔNG có chữ `serviceWorker`;
+  (4) `src/main.jsx` KHÔNG có chữ `serviceWorker` (chỉ import + gọi hàm của `dangKySW.js`).
+  → Ca này ĐỎ trên code gốc (gốc chưa có `src/dangKySW.js`), kể cả `KHONG_TRINH_DUYET=1` — đó là bài đỏ hợp lệ của file này cho A11.
+- KHÔNG dùng `## Bài thử cũ sửa` cho `thu_KHUI2.js`: việc này CỐ Ý đổi điều bài cũ canh (bản gốc của file sẽ đỏ trên code mới — đúng như luật mẫu phiếu nói, không được miễn).
+  Ghi `SỐ CA thu_KHUI2.js: <N>` (đếm với `KHONG_TRINH_DUYET=1`) vào `bang_chung_do.txt`.
+- Phát hiện trắc nghiệm dở: ĐỒNG Ý xếp `/tracnghiem/lam` (và mọi đường dẫn con của nó) vào màn KHÔNG an toàn ở `src/dangKySW.js`, thêm ca thử trong `thu_KHPWA1.js`
+  (đỏ trên code hiện tại của nhánh — tức là trước khi sửa dòng đó — là được; trên gốc bài vẫn đỏ vì chưa có file). Ghi vào báo cáo.
+- 4 chỗ máy tự chọn (nhờ service worker hỏi `index.html` vì K1; `.sheet.show` tính là không an toàn; `import.meta.env?.PROD`; không dọn khi vỏ cùng bản lưu đè): chat ĐỒNG Ý cả bốn.
+- Làm xong: chạy lại `npm test`, `--day-du`, cổng `tinh` + `chay` (`KHONG_TRINH_DUYET=1`), ghi "HEAD ĐÃ KIỂM", `/ra-soat`, báo cáo 7 mục. Chỉ push nhánh `viec/KH-PWA-1`.
