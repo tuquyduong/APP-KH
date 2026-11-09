@@ -116,7 +116,8 @@ function kichThuocPng(f) {
   k('index.html: apple-touch-icon 180', /rel="apple-touch-icon"[^>]*180x180[^>]*bieu-tuong-180\.png/.test(html));
   k('index.html: theme-color + viewport-fit=cover', /name="theme-color"/.test(html) && /viewport-fit=cover/.test(html));
   k('index.html: chỉ phông Inter (display=swap) ngoài app', (html.match(/https:\/\/[^"'\s)]+/g) || []).every((u) => /^https:\/\/fonts\.(googleapis|gstatic)\.com/.test(u)) && /family=Inter[^"]*display=swap/.test(html));
-  k('E2 không service worker', !/serviceWorker/.test(['src/main.jsx', 'src/App.jsx', 'index.html'].map(doc).join('\n')) && !fs.existsSync(path.join(GOC, 'public', 'sw.js')));
+  k('E2 service worker chỉ đăng ký qua src/dangKySW.js', fs.existsSync(path.join(GOC, 'public', 'sw.js')) && fs.existsSync(path.join(GOC, 'src', 'dangKySW.js'))
+    && /serviceWorker\.register\(/.test(doc('src/dangKySW.js')) && !/serviceWorker/.test(['src/App.jsx', 'index.html', 'src/main.jsx'].map(doc).join('\n')));
 
   console.log('— D1 ảnh');
   const tepAnh = fs.readdirSync(path.join(GOC, 'public', 'anh'));
