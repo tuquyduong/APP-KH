@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 44,
+  "phien_ban_so": 45,
   "cap_nhat": "2026-11-09",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -246,13 +246,14 @@
       "ten": "Service worker cho PWA: khung app, phong chu, anh nam san tren may khach → mo app gan nhu tuc thi; luon nhan ban moi nhat (khong ket ban cu)",
       "loai": "Th",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-NHANH-1"
       ],
-      "ghi_chu": "01.11 tach khoi KH-NHANH-1 (can than cap nhat ban moi) | 08.11 mo song song KH-UI-5c + KH-THU-1. Chu quan: cap nhat LANG LE, khong nut — ban moi vao moi lan mo App (trang: mang truoc 3s), App chay nen >= 30 phut quay lai o man an toan thi tu tai lai; khong bao gio tai lai o gio / thanh toan / don / dang nhap / khi mo bang noi",
+      "ghi_chu": "01.11 tach khoi KH-NHANH-1 (can than cap nhat ban moi) | 08.11 mo song song KH-UI-5c + KH-THU-1. Chu quan: cap nhat LANG LE, khong nut — ban moi vao moi lan mo App (trang: mang truoc 3s), App chay nen >= 30 phut quay lai o man an toan thi tu tai lai; khong bao gio tai lai o gio / thanh toan / don / dang nhap / khi mo bang noi | 09.11 chat soat cuoi DAT: dau nhanh 124dd89; cong tinh + chay kieu GitHub DAT voi main 4e1366d; ghep thu sach (main co 5c + THU-1 + mo 5d), npm test co trinh duyet 40/0; doc sw.js + dangKySW.js. Service worker tu viet: trang mang truoc 3 s, /assets luu truoc, phong/anh/am thanh luu roi cap nhat; khong dung /api, khac mien. Tu len ban moi lang le (>= 30 phut, chi man an toan, ke ca /tracnghiem/lam). Soat may vong 1 bat loi trang man (vo moi luu truoc tep JS) da va. Con de: am thanh man mo tren iPhone qua SW, 5xx/404 chua tra vo da luu, HTML la co the bi luu (de xuat KH-PWA-2). Gop PR #26 (9f102d0)",
       "ngay": "2026-11-08",
-      "han": "2026-11-10"
+      "han": "2026-11-10",
+      "commit": "9f102d0"
     },
     {
       "ma": "KH-THU-1",
