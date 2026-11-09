@@ -38,6 +38,26 @@ function napSW() {
   return { ctx, nghe };
 }
 
+/** Bản sw.js chạy với kho + mạng giả (Map theo đường dẫn) — thử HÀNH VI luuVo / trang không cần trình duyệt. */
+function napSWKho({ mang, putLoi = false, henGio = setTimeout }) {
+  const m = new Map();
+  const khoa = (x) => (typeof x === 'string' ? x : new URL(x.url).pathname);
+  const kho = {
+    m, put: async (x, r) => { if (putLoi) throw new Error('QuotaExceededError'); m.set(khoa(x), r); },
+    match: async (x) => m.get(khoa(x)), keys: async () => [...m.keys()].map((p) => ({ url: MIEN + p })), delete: async (x) => m.delete(khoa(x)),
+  };
+  const caches = { open: async () => kho, match: (x) => kho.match(x), keys: async () => ['tqd-v1'], delete: async () => true };
+  const nghe = {};
+  const self = { location: { origin: MIEN }, addEventListener: (ten, f) => { nghe[ten] = f; }, skipWaiting: () => {}, clients: { claim: () => {} } };
+  const ctx = vm.createContext({ self, caches, fetch: (x) => mang(khoa(x)), URL, setTimeout: henGio, clearTimeout, Promise });
+  vm.runInContext(fs.readFileSync(path.join(GOC, 'public/sw.js'), 'utf8'), ctx, { filename: 'sw.js' });
+  return { ctx, kho, nghe };
+}
+const resGia = (than, loai = 'text/html') => ({
+  ok: true, status: 200, type: 'basic', redirected: false, headers: { get: (h) => (/content-type/i.test(h) ? loai : null) },
+  clone: () => resGia(than, loai), text: async () => than,
+});
+
 const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" href="/manifest.webmanifest" /><link rel="preload" href="/fonts/a.woff2" as="font" />
 <script type="module" crossorigin src="${js}"></script><link rel="stylesheet" crossorigin href="${css}"><link rel="stylesheet" href="https://fonts.googleapis.com/x"></head><body><div id="root"></div></body></html>`;
 
@@ -88,6 +108,40 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     k('A3 tepCuaBan(html) → các tệp cùng miền vỏ trỏ tới (assets, fonts, manifest), không Google',
       JSON.stringify(ds) === JSON.stringify(['/assets/index-A1.js', '/assets/index-C1.css', '/fonts/a.woff2', '/manifest.webmanifest']), JSON.stringify(ds));
     k('A4 skipWaiting() + clients.claim()', /self\.skipWaiting\(\)/.test(sw) && /self\.clients\.claim\(\)/.test(sw));
+  });
+
+  await thu('A2 hành vi (kho + mạng giả)', async () => {
+    const CU = HTML_BAN('/assets/index-CU.js', '/assets/index-CU.css'), MOI = HTML_BAN('/assets/index-MOI.js', '/assets/index-MOI.css');
+    const khoCu = (kho) => { kho.m.set('/', resGia(CU)); kho.m.set('/assets/index-CU.js', resGia('cu', 'text/javascript')); kho.m.set('/assets/index-CU.css', resGia('cu', 'text/css')); };
+    const voTrongKho = async (kho) => (kho.m.get('/') ? kho.m.get('/').text() : '');
+    // (a) bản mới về nhưng tệp /assets của nó chưa tải được (mạng rớt) → vỏ cũ giữ nguyên: mất mạng mở lại vẫn chạy bản cũ, không trắng màn.
+    const a = napSWKho({ mang: async () => { throw new Error('mất mạng'); } });
+    khoCu(a.kho);
+    await a.ctx.luuVo(resGia(MOI)).catch(() => {});
+    k('A2 đổi bản mà chưa tải được /assets của vỏ mới → KHÔNG lưu đè vỏ (mất mạng mở lại không trắng màn)', (await voTrongKho(a.kho)) === CU);
+    // (b) tải được → tệp /assets mới vào kho TRƯỚC, rồi vỏ mới; bản cũ vẫn giữ (2 bản).
+    const b = napSWKho({ mang: async (p) => (p.startsWith('/assets/') ? resGia('x', p.endsWith('.css') ? 'text/css' : 'text/javascript') : resGia('x', 'font/woff2')) });
+    khoCu(b.kho);
+    await b.ctx.luuVo(resGia(MOI)).catch(() => {});
+    const coDu = ['/assets/index-MOI.js', '/assets/index-MOI.css', '/assets/index-CU.js'].every((p) => b.kho.m.has(p));
+    k('A2 đổi bản → tải đủ /assets của vỏ mới rồi mới lưu vỏ mới (giữ cả bản trước)', coDu && (await voTrongKho(b.kho)) === MOI, JSON.stringify([...b.kho.m.keys()]));
+    // (c) trang: mạng trả vỏ mới nhưng lưu kho lỗi (kho đầy) → khách vẫn nhận trang MỚI từ mạng, không phải vỏ cũ.
+    const c = napSWKho({ mang: async () => resGia(MOI), putLoi: true });
+    khoCu(c.kho);
+    let traVe = null;
+    const doi = [];
+    c.nghe.fetch({ request: { url: MIEN + '/menu', method: 'GET', mode: 'navigate' }, respondWith: (p) => { traVe = p; }, waitUntil: (p) => doi.push(p) });
+    const r = traVe ? await traVe : null;
+    await Promise.all(doi);
+    k('A2 trang: lưu kho lỗi (kho đầy) → vẫn trả trang mới từ mạng', !!r && (await r.text()) === MOI);
+    // (d) trang: mạng treo → hẹn đúng 3000 ms rồi trả vỏ đã lưu (đồng hồ giả chạy ngay).
+    const hen = [];
+    const d = napSWKho({ mang: () => new Promise(() => {}), henGio: (f, ms) => { hen.push(ms); f(); } });
+    khoCu(d.kho);
+    let traD = null;
+    d.nghe.fetch({ request: { url: MIEN + '/trangchu', method: 'GET', mode: 'navigate' }, respondWith: (p) => { traD = p; }, waitUntil: () => {} });
+    const rd = traD ? await Promise.race([traD, cho(1000).then(() => null)]) : null;
+    k('A2 trang: mạng treo → sau 3000 ms trả vỏ đã lưu', hen.includes(3000) && !!rd && (await rd.text()) === CU, JSON.stringify(hen));
   });
 
   await thu('B2 tenBan', async () => {
@@ -282,6 +336,16 @@ async function trinhDuyet(pw) {
     const jsTrongKho = await trang.evaluate(async () => (await (await caches.open('tqd-v1')).keys()).map((r) => new URL(r.url).pathname).filter((p) => /\/assets\/index-.*\.js$/.test(p)).sort()).catch(() => []);
     k('A3 kho chỉ còn JS của 2 bản gần nhất (moi2, moi3)', jsTrongKho.length === 2 && jsTrongKho.every((p) => /-moi[23]\.js$/.test(p)), JSON.stringify(jsTrongKho));
     k('A2 KHÔNG lưu yêu cầu /api trong kho', await trang.evaluate(async () => (await (await caches.open('tqd-v1')).keys()).every((r) => !new URL(r.url).pathname.startsWith('/api'))).catch(() => false));
+
+    // A2 / C3 — bản mới moi4 về qua lần kiểm nền khi khách ở /thanhtoan (chưa tải lại), rồi mất mạng → mở lại vẫn dựng App (không trắng màn).
+    S.ban = 'moi4';
+    await trang.evaluate(() => { history.pushState({}, '', '/thanhtoan'); dispatchEvent(new PopStateEvent('popstate')); });
+    await anHien(31); await cho(2500);
+    S.tat = true; await ctx.setOffline(true);
+    await trang.reload({ timeout: 15000 }).catch(() => {});
+    const coKhung = await trang.waitForSelector('.screen', { timeout: 8000 }).then(() => true).catch(() => false);
+    k('A2 bản mới về ở nền rồi mất mạng → mở lại vẫn thấy khung App (không trắng màn)', coKhung, await trang.evaluate(() => `${window.__BAN} · #root ${document.getElementById('root')?.children.length}`).catch(() => ''));
+    S.tat = false; await ctx.setOffline(false);
     await ctx.close();
   } finally {
     await trinh.close();
