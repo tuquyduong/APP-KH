@@ -128,3 +128,6 @@ BÀI HỌC: KHOÁ — "Service worker lưu vỏ HTML thì mọi tệp vỏ đó 
 - `npm test` 39 · 0; `--day-du` 41 · 0. Ngân sách: app 168 dòng (sw 109 + dangKySW 59; ~150 → 1,12 lần); thử 359 dòng (~250 → 1,44 lần, dưới 1,5) — thêm do ca hành vi vm.
 - KHÔNG làm (ghi lại cho chủ quán): NGHI NGỜ mp3 Range trên iOS (bỏ /am_thanh khỏi luật là đổi A2 → cần chủ quán); 5xx/404 không trả vỏ (phiếu chỉ nói "mạng lỗi");
   tải lại 2 giây sau khi sang màn an toàn (đúng B2/B3). Xem `## Câu hỏi` 2.
+- Cổng (đứng ở 0ce15f4, cây sạch): `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 47fce03^ HEAD viec/KH-PWA-1` → ✓ CỔNG CHẠY ĐẠT; `tinh` chỉ ✗ [A19] (dòng dưới).
+
+HEAD ĐÃ KIỂM: 0ce15f4
