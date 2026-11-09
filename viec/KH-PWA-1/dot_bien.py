@@ -30,6 +30,8 @@ DOT_BIEN = [
     ('BV-SW-BO-LUU-SAN', SW, "  e.waitUntil(layVo('reload').catch", "  if (0) e.waitUntil(layVo('reload').catch", True),
     ('BV-SW-VO-TRUOC-ASSETS', SW, "      if (p.startsWith('/assets/') && !(r && dung(r) && !laHtml(r))) throw new Error('thiếu ' + p);\n", "", False),
     ('VS-SW-VO-TRUOC-KHI-TAI', SW, "  const doi = tenBan(htmlCu) !== tenBan(html);\n", "  const doi = tenBan(htmlCu) !== tenBan(html);\n  await kho.put(VO, res.clone());\n", False),
+    ('VS-SW-NEM-KHI-PHONG-LOI', SW, "      if (p.startsWith('/assets/') && !(r", "      if (!(r", False),
+    ('BV-SW-ACTIVATE-KHONG-XOA', SW, "t.startsWith('tqd-') && t !== KHO", "t.startsWith('tqd-') && t !== KHO && false", False),
     ('VS-SW-TRANG-CHO-LUU', SW, "  const mang = fetch(e.request);\n", "  const mang = fetch(e.request).then(async (res) => { if (dung(res) && laHtml(res)) await luuVo(res.clone()); return res; });\n", False),
     ('BV-SW-BO-CLAIM', SW, ".then(() => self.clients.claim())", "", True),
     ('BV-SW-BO-DON-ASSETS', SW, "    if (p.startsWith('/assets/') && !giu.has(p)) await kho.delete(r);\n", "", True),

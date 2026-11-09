@@ -51,7 +51,7 @@ function napSWKho({ mang, putLoi = false, henGio = setTimeout }) {
   const self = { location: { origin: MIEN }, addEventListener: (ten, f) => { nghe[ten] = f; }, skipWaiting: () => {}, clients: { claim: () => {} } };
   const ctx = vm.createContext({ self, caches, fetch: (x) => mang(khoa(x)), URL, setTimeout: henGio, clearTimeout, Promise });
   vm.runInContext(fs.readFileSync(path.join(GOC, 'public/sw.js'), 'utf8'), ctx, { filename: 'sw.js' });
-  return { ctx, kho, nghe };
+  return { ctx, kho, nghe, caches };
 }
 const resGia = (than, loai = 'text/html') => ({
   ok: true, status: 200, type: 'basic', redirected: false, headers: { get: (h) => (/content-type/i.test(h) ? loai : null) },
@@ -139,6 +139,20 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     d.nghe.fetch({ request: { url: MIEN + '/trangchu', method: 'GET', mode: 'navigate' }, respondWith: (p) => { traD = p; }, waitUntil: () => {} });
     const rd = traD ? await Promise.race([traD, cho(1000).then(() => null)]) : null;
     k('A2 trang: mạng treo → sau 3000 ms trả vỏ đã lưu', hen.includes(3000) && !!rd && (await rd.text()) === CU, JSON.stringify(hen));
+    // (f) bản mới trỏ một phông / ảnh hỏng (404, mạng rớt) nhưng /assets tải được → vỏ mới VẪN lưu (phông lỗi không chặn lên bản).
+    const f = napSWKho({ mang: async (p) => { if (!p.startsWith('/assets/')) throw new Error('404'); return resGia('x', p.endsWith('.css') ? 'text/css' : 'text/javascript'); } });
+    khoCu(f.kho);
+    await f.ctx.luuVo(resGia(MOI)).catch(() => {});
+    k('A2 đổi bản: phông / manifest lỗi nhưng đủ /assets → vẫn lưu vỏ mới', (await voTrongKho(f.kho)) === MOI);
+    // (g) activate: xoá kho tqd-* cũ, giữ kho hiện tại và kho không phải của App.
+    const g = napSWKho({ mang: async () => { throw new Error('x'); } });
+    const xoa = [];
+    g.caches.keys = async () => ['tqd-v0', 'tqd-v1', 'khac'];
+    g.caches.delete = async (t) => { xoa.push(t); return true; };
+    const doiG = [];
+    g.nghe.activate({ waitUntil: (p) => doiG.push(p) });
+    await Promise.all(doiG);
+    k('A3 activate xoá kho cũ tqd-v0, giữ tqd-v1 và kho khác', JSON.stringify(xoa) === '["tqd-v0"]', JSON.stringify(xoa));
     // (e) chỉ lưu đúng loại: Cloudflare trả index.html 200 cho tệp băm đã xoá → /assets KHÔNG lưu HTML; vỏ chỉ lưu khi là text/html.
     const e1 = napSWKho({ mang: async () => resGia('<!DOCTYPE html>', 'text/html') });
     await e1.ctx.luuTep('/assets/index-XOA.js', 'default');
