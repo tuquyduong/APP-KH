@@ -78,4 +78,6 @@ Nghi ngờ: cuộn thừa ~50px ở màn ngắn (chưa đo); padding-top 14px ch
 Bài học (đề xuất ngoài phạm vi): đưa nguồn dùng chung lên vỏ App phải định rõ chủ sở hữu state; gắn phần tử trong luồng trên `.screen{min-height:100%}` cần ca đo scrollHeight ở màn ngắn.
 
 ## Cổng sau vòng soát 1
-(ghi bên dưới)
+`--day-du` 42 đạt · 0 hỏng; `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay …` → ✓ CỔNG CHẠY ĐẠT (HEAD ae366a4); cổng `tinh` chạy sau commit này.
+
+HEAD ĐÃ KIỂM: ae366a4
