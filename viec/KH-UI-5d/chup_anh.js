@@ -44,6 +44,8 @@ const doc = (f) => fs.readFileSync(path.join(GOC, f), 'utf8');
     const chup = async (ten) => { await t.waitForTimeout(400); await t.screenshot({ path: path.join(RA, `${rong}_${ten}.png`) }); };
     const di = (duong) => t.evaluate((d) => { window.history.pushState({ kh: 1 }, '', d); window.dispatchEvent(new PopStateEvent('popstate')); }, duong);
     await t.goto(URL0 + '/trangchu'); await t.waitForSelector('.phone');
+    const boQua = t.getByText('Bỏ qua'); if (await boQua.count()) await boQua.first().click(); // màn mở
+    await t.waitForTimeout(800);
     await chup('trang_chu_banner_khong_x');
     for (const [duong, ten] of [['/menu', 'menu_co_dai'], ['/uudai', 'uudai_co_dai'], ['/giohang', 'giohang_co_dai'], ['/kehoach', 'kehoach_co_dai'], ['/taikhoan', 'taikhoan_co_dai'], ['/thanhtoan', 'thanhtoan_khong_dai']]) {
       await di(duong); await chup(ten);
