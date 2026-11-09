@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { soNgayThang } from '../kehoachLap.js';
 
 // Bánh xoay (KH-UI-5c): cột số vuốt được, dừng ở dòng giữa; phím ↑ ↓ cũng đổi. Không dùng ô giờ AM/PM của trình duyệt.
 const CAO = 36; // px mỗi dòng (khớp .bx-cot trong bang_ngay.css)
@@ -44,6 +45,25 @@ export function BanhNhac({ k, doi }) {
       <Cot ds={DS_NGAY} gtri={n} doi={(x) => doi({ ngay: +x, g: k.g })} nhan="Số ngày trước" /><span>ngày trước · lúc</span>
       <Cot ds={DS_GIO} gtri={g} doi={(x) => doi({ ngay: k.ngay, g: `${x}:${p}` })} nhan="Giờ nhắc" /><b>:</b>
       <Cot ds={DS_PHUT} gtri={p} doi={(x) => doi({ ngay: k.ngay, g: `${g}:${x}` })} nhan="Phút nhắc" />
+    </div>
+  );
+}
+
+const DS_THANG = Array.from({ length: 12 }, (_, i) => String(i + 1));
+const DS_THU = Array.from({ length: 31 }, (_, i) => String(i + 1));
+
+/** Ngày của việc (KH-UI-5d E1): ngày · tháng · năm, KHÔNG ô type=date của trình duyệt. `ngay` = 'YYYY-MM-DD' hợp lệ; `doi('YYYY-MM-DD')`; ngày quá cuối tháng tự lùi về ngày cuối. */
+export function BanhNgay({ ngay, homNay, doi }) {
+  const y = +ngay.slice(0, 4), m = +ngay.slice(5, 7), d = +ngay.slice(8, 10);
+  const nam = Array.from({ length: 7 }, (_, i) => String(homNay.y - 1 + i));
+  if (!nam.includes(String(y))) nam.push(String(y));
+  nam.sort();
+  const ghi = (dd, mm, yy) => doi(`${yy}-${pad(mm)}-${pad(Math.min(dd, soNgayThang(mm, yy)))}`);
+  return (
+    <div className="bx">
+      <Cot ds={DS_THU} gtri={String(d)} doi={(x) => ghi(+x, m, y)} nhan="Ngày" /><span>/</span>
+      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => ghi(d, +x, y)} nhan="Tháng" /><span>/</span>
+      <Cot ds={nam} gtri={String(y)} doi={(x) => ghi(d, m, +x)} nhan="Năm" />
     </div>
   );
 }

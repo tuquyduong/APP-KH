@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Ico } from './BieuTuong.jsx';
 import { bam } from './bam.js';
 import BangNoi from './BangNoi.jsx';
-import { BanhGio, BanhNhac } from './BanhXoay.jsx';
+import HoiXoa from './HoiXoa.jsx';
+import { BanhGio, BanhNhac, BanhNgay } from './BanhXoay.jsx';
 import { WD } from '../noiDung/keHoach.js';
 import { amLichChu, docNgay, ngayChuoi, thongTinNgay, themViec, suaViec, xoaViec } from '../kehoach.js';
 import {
-  SAU_NGAY, NHAC_CO_GIO, NHAC_CA_NGAY, chuLap, chuNhac, chuHan, moTaLap, nhacRaPhut, nhacTuPhut, tachNgayCuoi, tickLan, viecNgay, jd, dm, dmNgan,
+  SAU_NGAY, NHAC_CO_GIO, NHAC_CA_NGAY, chuLap, chuNhac, chuHan, moTaLap, nhacRaPhut, nhacTuPhut, tachNhanh, tickLan, viecNgay, jd, dm, dmNgan,
 } from '../kehoachLap.js';
 
 const GIO_MAC_DINH = '08:00';
@@ -43,6 +44,9 @@ function BieuMau({ homNay, viec, gui, xoa, thoat }) {
   const [khac, datKhac] = useState(false);
   const [moiN, datMoiN] = useState(!!(viec && viec.lap && viec.lap.n > 1 && viec.lap.k !== 'sau'));
   const [loi, datLoi] = useState('');
+  const [ngay, datNgay] = useState(viec ? viec.ngay : ''); // ô Ngày (chỉ khi sửa)
+  const [boNgay, datBoNgay] = useState(false); // "Không phải ngày": giữ nguyên chữ đã gõ
+  const [hoiXoa, datHoiXoa] = useState(false);
   const oTen = useRef(null);
   useEffect(() => { const h = setTimeout(() => oTen.current && !viec && oTen.current.focus(), 50); return () => clearTimeout(h); }, []);
 
@@ -52,13 +56,14 @@ function BieuMau({ homNay, viec, gui, xoa, thoat }) {
   };
   const boGio = () => { datGio(''); datMo(''); if (nhac && nhac.k === 'truoc') datNhac(null); };
   const luu = () => {
-    const nhap = viec ? { tieu, gio, nhac: nhacRaPhut(nhac, gio), lap } : { ...tachNgayCuoi(tieu, homNay), gio, nhac: nhacRaPhut(nhac, gio), lap };
+    const nhap = viec ? { tieu, ngay, gio, nhac: nhacRaPhut(nhac, gio), lap } : { ...tachNhanh(tieu, homNay, boNgay), gio, nhac: nhacRaPhut(nhac, gio), lap };
     const l = gui(nhap);
     if (l) { datLoi(l); return; }
-    if (!viec) { datTieu(''); datGio(''); datNhac(null); datLap(null); datMo(''); datMoiN(false); datLoi(''); if (oTen.current) oTen.current.focus(); }
+    if (!viec) { datTieu(''); datGio(''); datNhac(null); datLap(null); datMo(''); datMoiN(false); datLoi(''); datBoNgay(false); if (oTen.current) oTen.current.focus(); }
   };
   const datL = (k, n) => datLap({ k, n, den: lap ? lap.den : '' });
   const modeLap = !lap ? 'khong' : lap.k === 'amlich' ? 'amlich' : lap.k === 'sau' ? 'sau' : moiN || lap.n > 1 ? 'moi' : 'hang';
+  const hieuNgay = !viec && !boNgay ? tachNhanh(tieu, homNay, false).ngay : ''; // gõ "Uống 1/2": báo trước ngày App hiểu
   const nhanNut = [gio ? `🕘 ${gio}` : '🕘 Giờ sự kiện', nhac ? `🔔 ${chuNhac(nhac)}` : '🔔 Hẹn giờ nhắc', lap ? `↻ ${chuLap(lap)}` : '↻ Lặp lại'];
   const dangDat = [!!gio, !!nhac, !!lap], khungDong = <button type="button" className="bn-xong" onClick={() => datMo('')}>Xong</button>;
 
@@ -66,9 +71,16 @@ function BieuMau({ homNay, viec, gui, xoa, thoat }) {
     <div className="bn-them">
       <div className="bn-o">
         <input type="text" id="addTitle" ref={oTen} placeholder="+ Thêm việc…  (vd: Mua quà 20/11)" maxLength={120} aria-label="Tên việc" value={tieu}
-          onChange={(e) => { datTieu(e.target.value); datLoi(''); }} onKeyDown={(e) => { if (e.key === 'Enter') luu(); }} />
+          onChange={(e) => { datTieu(e.target.value); datLoi(''); datBoNgay(false); }} onKeyDown={(e) => { if (e.key === 'Enter') luu(); }} />
         <button type="button" className="bn-them-nut" onClick={luu}>{viec ? 'Lưu' : 'Thêm'}</button>
       </div>
+      {hieuNgay && <div className="bn-xem-ngay">📅 Sẽ xếp vào ngày {dm(jd(docNgay(hieuNgay)), homNay)} · <button type="button" onClick={() => datBoNgay(true)}>Không phải ngày</button></div>}
+      {viec && (
+        <div className="bn-ngay-sua">
+          <small>Ngày</small><BanhNgay ngay={ngay} homNay={homNay} doi={datNgay} />
+          {lap && ngay !== viec.ngay && <small>Chuỗi lặp sẽ tính lại từ ngày mới</small>}
+        </div>
+      )}
       <div className="bn-hang">
         {['gio', 'nhac', 'lap'].map((k, i) => <div key={k} className={`filter-pill${dangDat[i] ? ' dat' : ''}${mo === k ? ' active' : ''}`} {...tuongTac(() => moKhung(k))}>{nhanNut[i]}</div>)}
       </div>
@@ -114,13 +126,15 @@ function BieuMau({ homNay, viec, gui, xoa, thoat }) {
         </div>
       )}
       {loi && <div className="loi-nho" role="alert" style={{ fontSize: 12, color: 'var(--pink-dark)', margin: '6px 2px' }}>{loi}</div>}
-      {viec && <div className="bn-cuoi"><button type="button" className="bn-phu" onClick={thoat}>Huỷ</button><button type="button" className="bn-phu bn-xoa" onClick={xoa}>Xoá việc</button></div>}
+      {viec && (hoiXoa
+        ? <HoiXoa tieu={viec.tieu} lap={!!viec.lap && viec.lap.k !== 'sau'} xoa={xoa} huy={() => datHoiXoa(false)} />
+        : <div className="bn-cuoi"><button type="button" className="bn-phu" onClick={thoat}>Huỷ</button><button type="button" className="bn-phu bn-xoa" onClick={() => datHoiXoa(true)}>Xoá việc</button></div>)}
     </div>
   );
 }
 
-/** Bảng việc của MỘT ngày (bấm ngày trên lịch). `lam(bangMoi, chữ, hoanTac)` lưu + báo; `bao(chữ)` chỉ báo. */
-export default function BangNgay({ ngay, homNay, bang, lam, bao, dong }) {
+/** Bảng việc của MỘT ngày (bấm ngày trên lịch). `lam(bangMoi, chữ)` lưu + báo. */
+export default function BangNgay({ ngay, homNay, bang, lam, dong }) {
   const n = docNgay(ngay), x = thongTinNgay(n.d, n.m, n.y);
   const [sua, datSua] = useState(null); // id việc đang sửa
   const viec = viecNgay(bang, ngay), homNayChuoi = ngayChuoi(homNay);
@@ -148,9 +162,9 @@ export default function BangNgay({ ngay, homNay, bang, lam, bao, dong }) {
         {viec.length === 0 && <div className="empty-note">Chưa có việc nào cho ngày này.</div>}
         {viec.map((v) => (sua === v.id
           ? <BieuMau key={v.id} homNay={homNay} viec={nhapSua(bang, v)} gui={luuSua(v.id)} thoat={() => datSua(null)}
-            xoa={() => { lam(xoaViec(bang, v.id), `Đã xoá ${v.tieu}`, true); datSua(null); }} />
+            xoa={() => { lam(xoaViec(bang, v.id), `Đã xoá «${v.tieu}»`); datSua(null); }} />
           : <HangViec key={v.id} v={v} homNay={homNay} mo={() => datSua(v.id)}
-            tick={() => lam(tickLan(bang, v.id, v.ngay, homNay), v.xong ? 'Đã bỏ đánh dấu xong' : `Đã xong ${v.tieu}`, !v.xong)} />))}
+            tick={() => lam(tickLan(bang, v.id, v.ngay, homNay), v.xong ? 'Đã bỏ đánh dấu xong' : `Đã xong ${v.tieu}`)} />))}
       </div>
       {sua === null && <BieuMau homNay={homNay} gui={them} />}
     </BangNoi>
