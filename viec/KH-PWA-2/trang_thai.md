@@ -38,3 +38,10 @@
 ## Bài học
 - BỎ: người gác chặn chạy bài thử đang sửa tới khi commit (B-MANOI) và chặn `$BIẾN` / `&&` nối sau lệnh node (B-DICHCHU, B-PHANTICH) — chỉ một lần, đã có trong skill.
 - BỎ: ca đối chứng A3 đầu tiên đỏ do sai bài thử (fetch giả trả HTML cho cả /assets), sửa ở `626b41b`.
+
+## Cổng (KHONG_TRINH_DUYET=1)
+- `npm test` 41 đạt · 0 hỏng; `--day-du` 43 đạt · 0 hỏng.
+- `cong.js tinh`: chỉ còn A17/A19 trước khi ghi file này; sau đó xem dòng dưới.
+- ✓ CỔNG CHẠY ĐẠT (lần đầu đỏ A16 vì chạy KHÔNG đặt KHONG_TRINH_DUYET=1 → đếm 72 ca; chạy lại đúng → đạt).
+
+HEAD ĐÃ KIỂM: c6808ce
