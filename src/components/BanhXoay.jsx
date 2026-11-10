@@ -67,3 +67,14 @@ export function BanhNgay({ ngay, homNay, doi }) {
     </div>
   );
 }
+
+/** Ngày + tháng (không năm) của sinh nhật / giỗ (KH-UI-5e B3). `cal` 'am' → ngày tối đa 30; 'duong' → theo tháng (tháng 2 tối đa 29). `doi(ngày, tháng)`; ngày quá cuối tháng tự lùi về ngày cuối. */
+export function BanhNgayThang({ d, m, cal, doi }) {
+  const toiDa = (mm) => (cal === 'am' ? 30 : soNgayThang(mm, 2000));
+  return (
+    <div className="bx">
+      <Cot ds={DS_THU.slice(0, toiDa(m))} gtri={String(d)} doi={(x) => doi(+x, m)} nhan="Ngày" /><span>/</span>
+      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => doi(Math.min(d, toiDa(+x)), +x)} nhan="Tháng" />
+    </div>
+  );
+}

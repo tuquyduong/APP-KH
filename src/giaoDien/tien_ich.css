@@ -1,0 +1,29 @@
+/* KH-UI-5e — Văn khấn & lễ cúng, dải Sắp tới: luật CSS CHÉP NGUYÊN từ thiet_ke/app_kh_demo.html (patch34 dòng 1632–1649, patch35 dòng 1685–1689). Không thêm màu / phông ngoài demo. */
+.vk-hero{ border-radius:18px; padding:16px; margin-bottom:12px; cursor:pointer; color:#FDE69B; background:linear-gradient(140deg,#9E281B,#68140C); box-shadow:inset 0 0 0 1px rgba(248,215,137,.45); }
+.vk-k{ font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; opacity:.85; } .vk-hero b{ display:block; font-size:19px; color:#fff; margin:4px 0; }
+.vk-hero span{ display:block; font-size:12.5px; } .vk-hero em{ display:inline-block; margin-top:10px; font-style:normal; font-size:12.5px; font-weight:700; color:#68140C; background:#F8D789; padding:7px 12px; border-radius:12px; }
+.vk-info{ display:grid; grid-template-columns:1fr 1fr; gap:8px; background:#FFFDFB; border-radius:16px; padding:12px; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+.vk-ii.w{ grid-column:1 / -1; } .vk-ii small{ display:block; font-size:10.5px; color:var(--muted); margin-bottom:3px; }
+.vk-ii input{ width:100%; box-sizing:border-box; font:inherit; font-size:13px; padding:8px 10px; border-radius:10px; border:1px solid rgba(215,185,129,.6); background:#fff; }
+.vk-info .tl-note{ grid-column:1 / -1; }
+.vk-le{ display:flex; flex-direction:column; gap:6px; position:relative; }
+.vk-le label{ display:flex; align-items:center; gap:10px; font-size:13.5px; background:#FFFDFB; border-radius:12px; padding:10px 12px; box-shadow:0 0 0 1px rgba(215,185,129,.35); cursor:pointer; }
+.vk-le label i{ flex:none; width:20px; height:20px; border-radius:6px; border:1.5px solid #C38C40; display:grid; place-items:center; color:#fff; }
+.vk-le label.ok{ color:var(--muted); text-decoration:line-through; } .vk-le label.ok i{ background:#C38C40; }
+.vk-shop{ display:flex; align-items:center; gap:10px; margin-top:10px; padding:10px 12px; border-radius:14px; background:#F0FAF5; cursor:pointer; box-shadow:0 0 0 1px rgba(65,106,67,.25); }
+.vk-shop span{ flex:1; } .vk-shop b{ display:block; font-size:13px; color:#2F5A34; } .vk-shop small{ font-size:11px; color:var(--muted); } .vk-shop em{ font-style:normal; color:#2F5A34; font-weight:800; }
+.vk-cach{ font-size:13.5px; line-height:1.6; background:#FFFDFB; border-radius:14px; padding:12px 14px; box-shadow:0 0 0 1px rgba(215,185,129,.35); position:relative; }
+.vk-txt{ line-height:1.75; color:#3A2A22; background:#FFFBF2; border-radius:16px; padding:16px 16px; box-shadow:inset 0 0 0 1px rgba(195,140,64,.45); font-family:Georgia,'Times New Roman',serif; position:relative; }
+.vk-txt mark{ background:#FBE7B8; color:inherit; border-radius:4px; padding:0 3px; }
+.vk-fs{ display:flex; gap:6px; } .vk-fs button{ border:none; font:inherit; font-size:12px; font-weight:800; padding:5px 10px; border-radius:10px; background:#F3EEE9; color:var(--ink); cursor:pointer; }
+.vk-btns{ display:flex; gap:8px; margin:12px 0; } .vk-btns > button:first-child{ flex:1; border:none; font:inherit; font-size:13px; font-weight:800; padding:11px; border-radius:14px; background:var(--pink-deep); color:#fff; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; }
+.up-h{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; } .up-h b{ font-size:13.5px; color:var(--pink-deep); } .up-h span{ font-size:12px; font-weight:700; color:var(--pink-dark); cursor:pointer; }
+.up-r{ display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid #F4E6EA; cursor:pointer; font-size:13px; }
+.up-r i{ font-style:normal; font-weight:800; color:var(--pink-deep); width:40px; flex:none; } .up-r span{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .up-r small{ font-size:11px; color:var(--muted); flex:none; }
+.up-r .muted{ color:var(--muted); }
+/* Bảng thêm người thân (KH-UI-5e B3): .pf-chips.sm (dòng 1416), .tl-lb / .tl-in (dòng 1629–1630) chép nguyên từ demo */
+.pf-chips.sm button{ font-size:12px; padding:6px 12px; }
+.tl-lb{ display:block; font-size:12px; font-weight:700; color:var(--muted); margin:12px 0 5px; }
+.tl-in{ width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:11px 12px; border-radius:12px; border:1px solid rgba(215,185,129,.7); background:#fff; color:var(--ink); }
+/* Chữ trong nút chia tab (Người thân · Ngày lễ) canh giữa như demo — nút mặc định của trình duyệt trong app đang canh trái */
+.ss-tabs button{ text-align:center; }
