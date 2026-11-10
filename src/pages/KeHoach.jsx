@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import '../giaoDien/ke_hoach.css';
+import '../giaoDien/tien_ich.css';
 import { bayGio } from '../bayGio.js';
 import { ghepMon } from '../tracNghiem.js';
 import { TU_KHOA_MON } from '../noiDung/theChat.js';
-import { homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich } from '../kehoach.js';
+import { homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich, upList, bangCoNhac, coChuKy, conLai, dayThang } from '../kehoach.js';
 import { viecNgay, nhacDangCo, quaHan, danhDauNgay, timViec, tickLan, jd, dm } from '../kehoachLap.js';
 import Man from '../components/Man.jsx';
 import { Ico, DenLong } from '../components/BieuTuong.jsx';
@@ -12,11 +13,15 @@ import BangNgay, { HangViec } from '../components/BangNgay.jsx';
 import BangQuaHan from '../components/BangQuaHan.jsx';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
-import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY } from '../components/dungKeHoach.js';
+import { TranhTienIch } from '../components/BieuTuongTienIch.jsx';
+import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapToi } from '../components/dungKeHoach.js';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
 const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
-const TIEN_ICH = [['theomua', 'Theo mùa', 'fan'], ['ngayle', 'Ngày lễ', 'lantern'], ['saptoi', 'Sắp tới', 'sprig']]; // 5 tiện ích của KH-UI-5c chưa hiện
+const LOI_SAP_CO = 'Tiện ích này sắp có';
+// Lưới 6 ô của demo (patch35 TOOLS): [mã, tên, biểu tượng, nhãn chuThich | null = chưa làm — bấm chỉ báo "sắp có" (KH-UI-5f làm)].
+const TIEN_ICH = [['theomua', 'Theo mùa', 'fan', 'mua'], ['vankhan', 'Văn khấn', 'book', 'vk'], ['ngaycannho', 'Ngày cần nhớ', 'gift', 'ngay'],
+  ['xe', 'Xe cộ', 'scooter', null], ['thuoc', 'Uống thuốc', 'mortar', null], ['chuky', 'Chu kỳ', 'moon', null]];
 
 /** Biểu tượng tranh tròn (demo EN): file the-chat-<tên>.svg tách từ demo; đèn lồng vẽ thẳng. */
 export function TranhTron({ ten, s }) {
@@ -35,7 +40,7 @@ export function DauMan({ tieuDe, phu, lui, phai }) {
 }
 
 /** Màn Kế hoạch và nhắc việc (demo màn `lich`). `san` = đã biết khách là ai. */
-export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKetQuaTn = false, ds = [], chonMon, homNay: homNayCho, gio: gioCho }) {
+export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKetQuaTn = false, ds = [], chonMon, homNay: homNayCho, gio: gioCho, xungHo: xungCho }) {
   dungPhut(); // chữ đếm "10 phút nữa" vẽ lại mỗi khi phút (giờ POS) đổi
   const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu, xoaHet } = dungKeHoach(san);
@@ -64,14 +69,16 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
   const doiThang = (n) => { let m = thang.m + n, y = thang.y; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } datThang({ y, m }); };
   const chonNgay = (d, m, y) => { datChon({ d, m, y }); if (m !== thang.m) datThang({ y, m }); };
   const veHomNay = () => { datChon(homNay); datThang({ y: homNay.y, m: homNay.m }); };
-  const dauNgay = (() => { const l0 = jd({ d: 1, m: thang.m, y: thang.y }) - 7; return danhDauNgay(bang, l0, l0 + 50, homNay); })(); // phủ cả ô tháng trước / sau trên lưới
+  const bangNhac = bangCoNhac(bang, homNay); // + sinh nhật, giỗ, dịp cúng đã bật nhắc (việc ảo chỉ để tính chuông / nhắc)
+  const dauNgay = (() => { const l0 = jd({ d: 1, m: thang.m, y: thang.y }) - 7; return danhDauNgay(bangNhac, l0, l0 + 50, homNay); })(); // phủ cả ô tháng trước / sau trên lưới
   const coViec = (d, m, y) => dauNgay.get(jd({ d, m, y }));
 
   const the = theNgay(chon, homNay);
   const o = luoiThang(thang.y, thang.m, homNay, chon, coViec);
   const viec = viecNgay(bang, ngayChuoi(chon));
-  const nhac = nhacDangCo(bang, gioCho || bayGio(), homNay);
+  const nhac = nhacDangCo(bangNhac, gioCho || bayGio(), homNay);
   const nQua = quaHan(bang, homNay).length, ketQuaTim = timViec(bang, tim).slice(0, 20);
+  const sapToi = upList(homNay, bang), xung = xungCho !== undefined ? xungCho : hoSoKhach().xung_ho;
   const monTiet = [];
   the.tip[1].forEach((id) => ghepMon(ds, [TU_KHOA_MON[id]], TU_KHOA_MON).forEach((m) => monTiet.includes(m) || monTiet.push(m)));
 
@@ -104,11 +111,20 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
       <div className="tl-grid" id="toolGrid">
         <div className="tl-h">Tiện ích</div>
         <div className="tl-g six">
-          {TIEN_ICH.map(([id, ten, ic]) => (
-            <div key={id} className="tl" {...bam(() => moTienIch(id))}>
-              <div className="tl-ic"><TranhTron ten={ic} s={38} /></div><b>{ten}</b><small>{chuThich(id === 'ngayle' ? 'hol' : id === 'saptoi' ? 'up' : 'mua', homNay, bang.viec)}</small>
+          {TIEN_ICH.filter(([id]) => id !== 'chuky' || coChuKy(xung)).map(([id, ten, ic, nhan]) => (
+            <div key={id} className="tl" {...bam(() => (nhan ? moTienIch(id) : datTb(LOI_SAP_CO)))}>
+              <div className="tl-ic"><TranhTienIch ten={ic} s={38} /></div><b>{ten}</b><small>{chuThich(nhan || id, homNay, bang)}</small>
             </div>
           ))}
+        </div>
+        <div className="up-strip">
+          <div className="up-h"><b>Sắp tới</b>{sapToi.length ? <span {...bam(() => moTienIch('saptoi'))}>Xem tất cả {sapToi.length} ›</span> : <span />}</div>
+          {sapToi.slice(0, 3).map((e, i) => (
+            <div className="up-r" key={`${e.j}-${i}`} {...bam(() => moMucSapToi(e, { moViec: (ngay) => { const n = docNgay(ngay); chonNgay(n.d, n.m, n.y); }, moTienIch }))}>
+              <i>{dayThang(e.j)}</i><span>{e.t}</span><small>{conLai(e.j, homNay)}</small>
+            </div>
+          ))}
+          {!sapToi.length && <div className="up-r"><span className="muted">30 ngày tới chưa có việc gì</span></div>}
         </div>
       </div>
 

@@ -1,19 +1,24 @@
 import { useState } from 'react';
 import '../giaoDien/ke_hoach.css';
+import '../giaoDien/tien_ich.css';
 import { bayGio } from '../bayGio.js';
 import { ghepMon } from '../tracNghiem.js';
 import { TU_KHOA_MON } from '../noiDung/theChat.js';
 import { SS, SS_F, GIFT_HOL } from '../noiDung/keHoach.js';
 import {
   homNayTuGio, holList, upList, muaNgay, conLai, dayThang, thuNgayNgan, doiNhacLe, docNgay,
-  tenTiet, CO_NHAC,
+  tenTiet, CO_NHAC, datThongTinVk,
 } from '../kehoach.js';
 import Man from '../components/Man.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import { AnhMon } from '../components/MonO.jsx';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
-import { dungKeHoach, datNgayMo } from '../components/dungKeHoach.js';
+import { dungKeHoach, datNgayMo, diDen, luiDen, hoSoKhach, moMucSapToi } from '../components/dungKeHoach.js';
+import { DanhSachNguoi, FormNguoi } from '../components/NguoiThan.jsx';
+import MotDip, { DanhSachDip, dauDip } from '../components/VanKhanMan.jsx';
+import { timDip } from '../vanKhan.js';
+import { docDuongDan, taoDuongDan } from '../duongDan.js';
 import { DauMan } from './KeHoach.jsx';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — chưa lưu được';
@@ -63,12 +68,12 @@ function NgayLe({ homNay, bang, doiNhac }) {
   );
 }
 
-// "Sắp tới" (nhánh 'up'): việc của tôi + ngày lễ trong 30 ngày. Bấm việc → mở lịch đúng ngày; bấm lễ → Ngày lễ.
-function SapToi({ homNay, bang, moViec, moLe }) {
-  const ds = upList(homNay, bang.viec);
+// "Sắp tới" (nhánh 'up'): việc của tôi, sinh nhật, giỗ, ngày cúng, ngày lễ trong 30 ngày. Bấm một dòng → mở đúng chỗ (moMucSapToi).
+function SapToi({ homNay, bang, mo }) {
+  const ds = upList(homNay, bang);
   if (!ds.length) return <div className="empty-note">30 ngày tới chưa có việc gì.</div>;
   return ds.map((e, i) => (
-    <div className="tl-row" key={`${e.j}-${i}`} {...bam(() => (e.k === 'Việc' ? moViec(e.ngay) : moLe()))}>
+    <div className="tl-row" key={`${e.j}-${i}`} {...bam(() => mo(e))}>
       <div className="tl-date"><b>{dayThang(e.j)}</b><small>{conLai(e.j, homNay)}</small></div>
       <div className="tl-rt"><b>{e.t}</b><small>{e.s}</small></div><span className="up-tag">{e.k}</span>
     </div>
@@ -77,25 +82,51 @@ function SapToi({ homNay, bang, moViec, moLe }) {
 
 const DAU = {
   theomua: ['Chăm sóc theo mùa', 'Dưỡng sinh theo bốn mùa · Ngũ hành'],
-  ngayle: ['Ngày lễ trong năm', 'Bật nhắc những ngày bạn muốn chuẩn bị'],
+  ngayle: ['Ngày cần nhớ', 'Bật nhắc ngày bạn muốn chuẩn bị'],
+  ngaycannho: ['Ngày cần nhớ', 'Sinh nhật, ngày giỗ · âm hay dương lịch đều nhắc đúng'],
+  vankhan: ['Văn khấn & lễ cúng', 'Ngày cúng, lễ vật, bài khấn tự điền tên của bạn'],
   saptoi: ['Sắp tới', '30 ngày tới · gộp từ mọi tiện ích'],
 };
+const DUONG_VAN_KHAN = taoDuongDan('tienich', { tienich: 'vankhan' });
 
-/** Màn tiện ích của Kế hoạch (demo màn `tool`): `id` = theomua | ngayle | saptoi. Nút quay lại về /kehoach (`veLich`). */
-export default function TienIch({ id, san = true, veLich, moTienIch, ds = [], chonMon, homNay: homNayCho }) {
+/** Màn tiện ích của Kế hoạch (demo màn `tool`): `id` = theomua | ngayle | ngaycannho | vankhan | saptoi. Nút quay lại về /kehoach (`veLich`).
+ *  `dip` = dịp cúng đang mở (/kehoach/vankhan/<dịp>): không truyền thì đọc từ địa chỉ trình duyệt (App chỉ truyền `id`). */
+export default function TienIch({ id, san = true, veLich, moTienIch, ds = [], chonMon, homNay: homNayCho, dip: dipCho, tenKhach: tenCho }) {
   const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu } = dungKeHoach(san);
   const [tb, datTb] = useState('');
-  const [tieuDe, phu] = DAU[id];
-  const luuVaBao = (moi, chu) => datTb(!san ? 'Đang lấy thông tin tài khoản, thử lại sau ít giây' : luu(moi) ? chu : LOI_KHO);
+  const [tab, datTab] = useState(id === 'ngayle' ? 'hol' : 'ppl'); // Ngày cần nhớ: 'ppl' Người thân · 'hol' Ngày lễ
+  const [form, datForm] = useState(null); // null | { nguoi? } — bảng thêm / sửa người thân
+  const dipId = id === 'vankhan' ? (dipCho !== undefined ? dipCho : typeof window !== 'undefined' ? docDuongDan(window.location.pathname).tham.dip : '') : '';
+  const dipMo = dipId ? timDip(dipId) : null;
+  const luuVaBao = (moi, chu) => {
+    if (!san) { datTb('Đang lấy thông tin tài khoản, thử lại sau ít giây'); return false; }
+    const ok = luu(moi);
+    if (!ok) datTb(LOI_KHO); else if (chu) datTb(chu); // chu rỗng = lưu lặng lẽ (gõ chữ, tick lễ vật)
+    return ok;
+  };
+  const gio = id === 'ngayle' || id === 'ngaycannho';
+  const [tieuDe, phu] = dipMo ? dauDip(dipMo, homNay, bang) : gio && tab === 'hol' ? ['Ngày cần nhớ', 'Bật nhắc ngày bạn muốn chuẩn bị'] : DAU[id];
+  const them = gio && tab === 'ppl' ? <div className="today-btn" {...bam(() => datForm({}))}>＋ Thêm</div> : null;
+  const moVanKhanGio = (ten) => { luuVaBao(datThongTinVk(bang, { nm: ten }), ''); diDen(taoDuongDan('tienich', { tienich: 'vankhan', dip: 'gio' })); };
+  const moDip = (dipMoi) => diDen(taoDuongDan('tienich', { tienich: 'vankhan', dip: dipMoi }));
   return (
     <Man id="tool">
-      <DauMan tieuDe={tieuDe} phu={phu} lui={veLich} />
+      <DauMan tieuDe={tieuDe} phu={phu} lui={dipMo ? () => luiDen(DUONG_VAN_KHAN) : veLich} phai={them} />
       <div id="toolBody">
         {id === 'theomua' && <TheoMua homNay={homNay} ds={ds} chonMon={chonMon} veLich={veLich} />}
-        {id === 'ngayle' && <NgayLe homNay={homNay} bang={bang} doiNhac={(ten) => luuVaBao(doiNhacLe(bang, ten), bang.leNhac[ten] ? 'Đã tắt nhắc' : 'Đã bật nhắc · hiện khi bạn mở app')} />}
-        {id === 'saptoi' && <SapToi homNay={homNay} bang={bang} moViec={(ngay) => { if (docNgay(ngay)) datNgayMo(ngay); veLich(); }} moLe={() => moTienIch('ngayle')} />}
+        {gio && (
+          <>
+            <div className="ss-tabs">{[['ppl', 'Người thân'], ['hol', 'Ngày lễ']].map(([k, ten]) => <button type="button" key={k} className={k === tab ? 'on' : ''} onClick={() => datTab(k)}>{ten}</button>)}</div>
+            {tab === 'ppl' && <DanhSachNguoi homNay={homNay} bang={bang} luu={luuVaBao} moSua={(nguoi) => datForm({ nguoi })} moVanKhanGio={moVanKhanGio} />}
+            {tab === 'hol' && <NgayLe homNay={homNay} bang={bang} doiNhac={(ten) => luuVaBao(doiNhacLe(bang, ten), bang.leNhac[ten] ? 'Đã tắt nhắc' : 'Đã bật nhắc · hiện khi bạn mở app')} />}
+          </>
+        )}
+        {id === 'vankhan' && !dipMo && <DanhSachDip homNay={homNay} bang={bang} luu={luuVaBao} moDip={moDip} />}
+        {dipMo && <MotDip dip={dipMo.id} homNay={homNay} bang={bang} tenKhach={tenCho !== undefined ? tenCho : hoSoKhach().ten} luu={luuVaBao} />}
+        {id === 'saptoi' && <SapToi homNay={homNay} bang={bang} mo={(e) => moMucSapToi(e, { moViec: (ngay) => { if (docNgay(ngay)) datNgayMo(ngay); veLich(); }, moTienIch })} />}
       </div>
+      {form && <FormNguoi homNay={homNay} bang={bang} nguoi={form.nguoi} luu={luuVaBao} dong={() => datForm(null)} />}
       <Thongbao chu={tb} het={() => datTb('')} />
     </Man>
   );

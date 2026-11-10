@@ -6,8 +6,10 @@ import { boDau } from './menuLoc.js';
 
 const HAU_TO_TIEU_DE = ' · Tứ Quý Đường';
 const TRANG_CHU = '/trangchu';
-/** Tiện ích của Kế hoạch (KH-UI-5b): chỉ ba cái này; năm cái còn lại là KH-UI-5c — đường dẫn lạ dưới /kehoach về /kehoach. */
-const TIEN_ICH =['theomua', 'ngayle', 'saptoi'];
+import { MA_DIP } from './noiDung/vanKhan.js';
+
+/** Tiện ích của Kế hoạch (KH-UI-5b, 5e): Xe cộ · Uống thuốc · Chu kỳ là KH-UI-5f — đường dẫn lạ dưới /kehoach về /kehoach. */
+const TIEN_ICH =['theomua', 'ngayle', 'saptoi', 'ngaycannho', 'vankhan'];
 
 const BANG = [
   { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'Trang chủ' },
@@ -31,6 +33,7 @@ const BANG = [
   { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'Kiểm khớp POS', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
   { trang: 'kehoach', mau: '/kehoach', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc' },
   { trang: 'tienich', mau: '/kehoach/:tienich', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc', cha: '/kehoach', cho: TIEN_ICH },
+  { trang: 'tienich', mau: '/kehoach/:tienich/:dip', tab: 'trangchu', canDN: true, tieuDe: 'Văn khấn và lễ cúng', cha: '/kehoach/vankhan', cho: { tienich: ['vankhan'], dip: MA_DIP } },
 ];
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);
 const tenThamSo = (e) => [...e.mau.matchAll(/:(\w+)/g)].map((m) => m[1]);
@@ -78,7 +81,7 @@ export function docDuongDan(diaChi) {
     const khop = mau.every((m, j) => {
       if (m[0] !== ':') return m === doan[j].toLowerCase();
       tham[m.slice(1)] = m === ':ma' ? doan[j] : slug(doan[j]);
-      return !!tham[m.slice(1)] && (!e.cho || e.cho.includes(tham[m.slice(1)]));
+      return !!tham[m.slice(1)] && (!e.cho || (Array.isArray(e.cho) ? e.cho : e.cho[m.slice(1)] || []).includes(tham[m.slice(1)]));
     });
     if (!khop) continue;
     if (e.trang === 'dangnhap') { const t = tiepHopLe(truyVan.get('tiep')); if (t) tham.tiep = t; }
