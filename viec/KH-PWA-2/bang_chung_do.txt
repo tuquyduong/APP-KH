@@ -1,0 +1,20 @@
+KH-PWA-2 — bằng chứng đỏ trên code gốc (c7e0116 = PHIEU: KH-PWA-2), xanh sau vá
+Cách chạy trên gốc: git archive c7e0116 ra thư mục nháp, chép bài thử MỚI (bản cuối) vào cong_cu/ của bản đó, nối node_modules, chạy với KHONG_TRINH_DUYET=1.
+
+== thu_KHPWA1.js (bài cũ sửa, thêm ca) — trên gốc, KHONG_TRINH_DUYET=1
+  ✗ KH-PWA-2 A1 /am_thanh/* → null (đi thẳng mạng, Safari iPhone phát nhạc bằng yêu cầu Range)
+  ✗ A2 sự kiện fetch: /api, khác miền, POST, /kiemkhop, /sw.js → KHÔNG respondWith  — 1
+  ✗ A2 sự kiện fetch: /assets → có respondWith (đối chứng)  — 2
+  ✗ A3 kho tên kèm số bản tqd-v2 (KH-PWA-2 A4)
+  ✗ A3 activate xoá kho cũ tqd-v0, giữ tqd-v2 và kho khác; KH-PWA-2 A1/A4 tqd-v1 (có nhạc đã lưu) cũng bị xoá  — ["tqd-v0","tqd-v2"]
+  ✗ KH-PWA-2 A2 trang: mạng trả 5xx (503) → dùng vỏ đã lưu, không lưu phản hồi lỗi
+  ✗ KH-PWA-2 A2 trang: mạng trả 500 → dùng vỏ đã lưu, không lưu phản hồi lỗi
+  ✗ KH-PWA-2 A2 trang: mạng trả 599 → dùng vỏ đã lưu, không lưu phản hồi lỗi
+  ✗ KH-PWA-2 A2 trang: mạng trả 404 của đường dẫn trang → dùng vỏ đã lưu, không lưu phản hồi lỗi
+  ✗ KH-PWA-2 A2 trang: mạng trả 200 không phải HTML → dùng vỏ đã lưu, không lưu phản hồi lỗi
+  ✗ KH-PWA-2 A3 HTML không có /assets/index-*.js → KHÔNG lưu, giữ vỏ cũ
+  ✗ KH-PWA-2 A3 trang lạ khi chưa có vỏ → cũng không lưu
+41 đạt · 12 hỏng
+   sau vá (a05a8cb): KHONG_TRINH_DUYET=1 → 53 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHPWA1.js: 53
