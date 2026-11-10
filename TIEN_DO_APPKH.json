@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 49,
+  "phien_ban_so": 50,
   "cap_nhat": "2026-11-10",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -273,14 +273,15 @@
       "ma": "KH-PWA-2",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-PWA-1"
       ],
       "ngay": "2026-11-09",
       "han": "2026-11-10",
       "ten": "Service worker: /am_thanh khong qua SW (iPhone Range), trang 5xx / 404 / khong phai HTML -> vo da luu, chi luu vo co tep JS chinh cua App; kho tqd-v2",
-      "ghi_chu": "09.11 chu quan dong y ca 3 de xuat chat sau soat cuoi KH-PWA-1. Chay song song KH-UI-5d / 5e"
+      "ghi_chu": "09.11 chu quan dong y ca 3 de xuat chat sau soat cuoi KH-PWA-1. Chay song song KH-UI-5d / 5e | 10.11 chat soat cuoi DAT: dau nhanh 80bf6b7; cong tinh + chay kieu GitHub DAT voi main 707e4f8; ghep thu cung KH-UI-5e sach, npm test co trinh duyet xanh; doc sw.js. /am_thanh khong qua SW, kho tqd-v2 (xoa tqd-v1), trang 5xx / 404 / khong phai HTML -> vo da luu, chi luu vo co tep JS chinh. Phat hien may de lai (chua lam): duong dan tep khong co (/robots.txt...) go thang cung nhan vo App khi da co vo — vo hai; nen them ca kiem tenBan tren dist/index.html o --day-du. Gop PR #28 (582896d)",
+      "commit": "582896d"
     },
     {
       "ma": "KH-THU-1",
