@@ -97,12 +97,13 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   for (const [t, u] of homNayUp) {
     const [y, m, d] = t.split('-').map(Number), hn = { d, m, y }, j0 = L2.LUNAR.jdFromDate(d, m, y);
     const viec = u.seed.map((s, i) => { const x = L2.LUNAR.jdToDate(j0 + s.off); return { id: 'v' + i, ngay: `${x.y}-${String(x.m).padStart(2, '0')}-${String(x.d).padStart(2, '0')}`, gio: s.t, tieu: s.title, nhac: s.rm === KH.CO_NHAC ? +s.t.slice(0, 2) * 60 + +s.t.slice(3) : null, xong: s.done }; });
-    const ra = KH.upList(hn, viec).map((e) => ({ j: e.j, t: e.t, s: e.s.replace(' · Đúng giờ', ' · ' + KH.CO_NHAC), k: e.k })); // KH-UI-5c: việc nhắc đúng giờ ghi "Đúng giờ" (không còn "Nhắc khi mở app")
+    const ra = KH.upList(hn, { ...KH.keHoachTrong(), viec }).filter((e) => e.k === 'Việc' || e.k === 'Lễ').map((e) => ({ j: e.j, t: e.t, s: e.s.replace(' · Đúng giờ', ' · ' + KH.CO_NHAC), k: e.k })); // KH-UI-5c: việc nhắc đúng giờ ghi "Đúng giờ" (không còn "Nhắc khi mở app")
     if (!bang(ra, u.ra)) upLech.push(t);
-    if (KH.chuThich('up', hn, viec) !== u.badgeUp || KH.chuThich('hol', hn, viec) !== u.badgeHol || KH.chuThich('mua', hn, viec) !== u.badgeMua) bLech.push(t);
+    const ngayDau = KH.holList(hn)[0], chuNgay = KH.chuThich('ngay', hn, { ...KH.keHoachTrong(), viec }); // KH-UI-5e: ô Ngày cần nhớ thay ô Ngày lễ; ô Sắp tới thành dải
+    if (!chuNgay.startsWith(ngayDau.n.replace('Tết ', '') + ' · ') || KH.chuThich('mua', hn, { ...KH.keHoachTrong(), viec }) !== u.badgeMua) bLech.push(t);
   }
   k(`A3 upList ở ${homNayUp.length} "hôm nay" (việc chưa xong trong 30 ngày + lễ; ngày thứ 30 vào, thứ 31 và hôm qua không) khớp demo`, upLech.length === 0 && homNayUp.length >= 4, upLech.join(', '));
-  k('A3 dòng nhỏ dưới ô tiện ích (Mùa …, 20/11, "n việc · 30 ngày") khớp demo', bLech.length === 0, bLech.join(', '));
+  k('A3 dòng nhỏ dưới ô tiện ích (Mùa …, lễ gần nhất · N ng) khớp demo', bLech.length === 0, bLech.join(', '));
   let muaLech = [];
   for (const [t, m] of Object.entries(mau.mua)) {
     const [y, mo, d] = t.split('-').map(Number);
@@ -116,7 +117,7 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const khoChan = { getItem() { throw new Error('chặn'); }, setItem() { throw new Error('chặn'); }, removeItem() { throw new Error('chặn'); } };
   const ks = khoGia();
   let b = KH.docKeHoach(ks);
-  k('D1 chưa lưu gì → bản trống (KH-UI-5d: không còn trường ẩn banner)', bang(b, { viec: [], leNhac: {} }));
+  k('D1 chưa lưu gì → bản trống (KH-UI-5d: không còn trường ẩn banner)', bang(b, KH.keHoachTrong()) && bang(b.nguoi, []) && b.vk.fs === 17);
   b = KH.themViec(b, { ngay: '2026-11-08', gio: '17:30', tieu: '  Đón con tan học  ', nhac: 1050 });
   k('D1 thêm việc: cắt khoảng trắng, giữ dấu tiếng Việt, mặc định chưa xong', b && b.viec.length === 1 && b.viec[0].tieu === 'Đón con tan học' && b.viec[0].xong === false && b.viec[0].nhac === 1050);
   k('D1 tiêu đề trống / ngày sai → không thêm (null)', KH.themViec(b, { ngay: '2026-11-08', gio: '09:00', tieu: '   ' }) === null && KH.themViec(b, { ngay: '2026-13-40', gio: '09:00', tieu: 'x' }) === null);
@@ -161,7 +162,7 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const ra = (p) => DD.docDuongDan(p);
   k('B5 /kehoach là trang thật: cần đăng nhập, không giữ chỗ, tab Trang chủ', ra('/kehoach').trang === 'kehoach' && ra('/kehoach').canDN === true && ra('/kehoach').giuCho === false && ra('/kehoach').tab === 'trangchu' && ra('/kehoach').chuan === '/kehoach' && DD.taoDuongDan('kehoach') === '/kehoach');
   k('B5 ba đường tiện ích /kehoach/theomua, /ngayle, /saptoi: cần đăng nhập, cha = /kehoach, tab Trang chủ', [['theomua', 'theomua'], ['ngayle', 'ngayle'], ['saptoi', 'saptoi']].every(([s, t]) => { const r = ra('/kehoach/' + s); return r.trang === 'tienich' && r.tham.tienich === t && r.canDN && r.cha === '/kehoach' && r.chuan === '/kehoach/' + s && r.tab === 'trangchu' && DD.taoDuongDan('tienich', { tienich: t }) === '/kehoach/' + s; }));
-  k('B5 /kehoach/<lạ> (kể cả tiện ích của 5c chưa làm) → về /kehoach, không rơi vào "không tìm thấy"', ['/kehoach/la', '/kehoach/vankhan', '/kehoach/xe'].every((p) => ra(p).trang === 'kehoach' && ra(p).chuan === '/kehoach'));
+  k('B5 /kehoach/<lạ> (kể cả tiện ích của 5f chưa làm) → về /kehoach, không rơi vào "không tìm thấy"', ['/kehoach/la', '/kehoach/xe', '/kehoach/thuoc'].every((p) => ra(p).trang === 'kehoach' && ra(p).chuan === '/kehoach'));
   k('B5 đăng nhập xong quay lại đúng /kehoach/<tiện ích> (tiepHopLe)', DD.tiepHopLe('/kehoach/ngayle') === '/kehoach/ngayle' && DD.tiepHopLe('/kehoach') === '/kehoach' && DD.trangCanDangNhap('kehoach') && DD.trangCanDangNhap('tienich'));
 
   await manHinh(KH, ND);
@@ -186,8 +187,8 @@ async function manHinh(KH) {
   k('B1 /kehoach: tiêu đề, thẻ ngày, thẻ dưỡng sinh theo tiết, "Việc của tôi · 7/11", "Ngày lễ trong tháng", dòng miễn trừ, nút Hôm nay', ['Kế Hoạch và Nhắc Việc', 'id="calHero"', 'id="calTip"', 'Dưỡng sinh tiết Lập đông', 'Việc của tôi · 7/11', 'Ngày lễ trong tháng', 'Lịch hiển thị âm dương lịch', 'Tháng 11 · 2026', '>Hôm nay</div>'].every((t) => trong.includes(t)));
   k('B1 lưới tháng 11/2026 có 42 ô (1.11 là Chủ nhật → 6 ô đầu thuộc tháng trước, như demo); ô hôm nay có lớp today và sel', dem(trong, /class="cd /g) === 42 && /class="cd [^"]*\btoday\b[^"]*\bsel\b/.test(trong));
   k('B1 khối "Từ TQD" và chấm "Từ TQD" ẨN (POS chưa có dữ liệu): chú giải chỉ 3 mục', !/Từ TQD|Từ Tứ Quý Đường|calTqd|class="dq"/.test(trong) && dem(trong, /<span><i class="dh"/g) === 1 && dem(trong, /<span><svg class="ico cd-chuong viec"/g) === 1 && trong.includes('Tiết khí')); // KH-UI-5c: chấm hồng "Việc của tôi" thành chuông
-  k('B3 lưới tiện ích CHỈ ba ô (Theo mùa, Ngày lễ, Sắp tới) kèm dòng nhỏ "Mùa Đông", "20/11", "1 việc · 30 ngày" (hôm nay 7.11.2026: chỉ có lễ 20/11 trong 30 ngày, như demo)', dem(trong, /class="tl"/g) === 3 && ['Theo mùa', 'Ngày lễ', 'Sắp tới', 'Mùa Đông', '20/11', '1 việc · 30 ngày'].every((t) => trong.includes(t)));
-  k('B3 năm ô của KH-UI-5c KHÔNG hiện (không ô mờ, không "sắp có")', !/Văn khấn|Sinh nhật|Xe cộ|Uống thuốc|Chu kỳ|sắp có/i.test(trong));
+  k('B3 (KH-UI-5e) lưới tiện ích SÁU ô đúng thứ tự Theo mùa · Văn khấn · Ngày cần nhớ · Xe cộ · Uống thuốc · Chu kỳ, dòng nhỏ "Mùa Đông", "Nhà giáo Việt Nam · 13 ng" và "Sắp có" ở ba ô chưa làm', dem(trong, /class="tl"/g) === 6 && ['Theo mùa', 'Văn khấn', 'Ngày cần nhớ', 'Xe cộ', 'Uống thuốc', 'Chu kỳ', 'Mùa Đông', 'Nhà giáo Việt Nam · 13 ng', 'Sắp có'].every((t) => trong.includes(t)) && trong.indexOf('Theo mùa') < trong.indexOf('Văn khấn') && trong.indexOf('Văn khấn') < trong.indexOf('Ngày cần nhớ') && trong.indexOf('Ngày cần nhớ') < trong.indexOf('Xe cộ') && trong.indexOf('Xe cộ') < trong.indexOf('Uống thuốc') && trong.indexOf('Uống thuốc') < trong.indexOf('Chu kỳ'));
+  k('B3 (KH-UI-5e) ô "Sắp tới" và "Ngày lễ" KHÔNG còn trong lưới (Sắp tới thành dải up-strip; Ngày lễ là tab của Ngày cần nhớ)', !/<b>Sắp tới<\/b><small>|<b>Ngày lễ<\/b>/.test(trong) && trong.includes('class="up-strip"'));
   k('B6 không có thẻ video hướng dẫn', !/guide-card|Xem cách dùng/.test(trong));
   k('B7 chưa có chữ khuyến mãi "hôm nay" → không có banner nhỏ', khongBanner(trong));
   const co = veKH({ ...cb, homNay: HN, banner: BAN });
@@ -206,7 +207,7 @@ async function manHinh(KH) {
   const cv = veKH({ ...cb, homNay: HN, gio: '2026-11-07 17:40:00', banner: KB });
   k('B2 việc trong ngày chọn: sắp theo giờ, việc xong gạch, chữ "Đúng giờ" (KH-UI-5c: nhắc theo phút), nút ✓', cv.indexOf('Họp nhóm') < cv.indexOf('Đón con tan học', cv.indexOf('id="calAgenda"')) && cv.includes('class="ag done"') && cv.includes('Đúng giờ') && !cv.includes('Nhắc khi mở app</small>') && cv.includes('Đánh dấu xong') && cv.includes('Bỏ đánh dấu xong'));
   k('B2 chuông "Việc của tôi" trên lịch ở ngày có việc chưa xong (7 và 10, thêm một chuông ở chú giải)', dem(cv, /class="ico cd-chuong/g) === 3);
-  k('C1 thanh nhắc đầu /kehoach nêu việc hôm nay bật nhắc CHƯA xong (17:30 Đón con) — không nêu việc đã xong / ngày khác; không việc thì không có thanh', cv.includes('nt-bar on') && cv.includes('Đón con tan học (17:30)') && !/(Họp nhóm|Sinh nhật mẹ)/.test(cv.slice(0, cv.indexOf('id="calAgenda"')).slice(cv.indexOf('nt-bar on'))) && !trong.includes('nt-bar'));
+  k('C1 thanh nhắc đầu /kehoach nêu việc hôm nay bật nhắc CHƯA xong (17:30 Đón con) — không nêu việc đã xong / ngày khác; không việc thì không có thanh', cv.includes('nt-bar on') && cv.includes('Đón con tan học (17:30)') && !/(Họp nhóm|Sinh nhật mẹ)/.test(cv.slice(cv.indexOf('id="calNoti"'), cv.indexOf('class="tim-viec"'))) && !trong.includes('nt-bar'));
   k('C2 không hứa báo về điện thoại: không chữ "sẽ nhắc / sẽ báo / thông báo đẩy" ở màn', !/sẽ nhắc|sẽ báo|thông báo đẩy|push/i.test(cv + co) && cv.includes('Nhắc hiện khi bạn mở app'));
   k('D3 có nút "Xoá toàn bộ dữ liệu Kế hoạch trên máy này" và dòng "chỉ lưu trên máy này"', cv.includes('Xoá toàn bộ dữ liệu Kế hoạch trên máy này') && cv.includes('chỉ lưu trên máy này'));
   const chuaBiet = veKH({ ...cb, homNay: HN, san: false, banner: KB });
@@ -250,7 +251,7 @@ async function manHinh(KH) {
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
   const kehoachJsx = doc('src/pages/KeHoach.jsx');
-  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu" (KH-UI-5c: mọi thay đổi qua lam())', /const lam = [^\n]*\n\s*if \(!san\) \{ datTb\(LOI_CHUA_BIET\); return false; \}/.test(kehoachJsx) && /LOI_KHO/.test(kehoachJsx) && /!san \? 'Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
+  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu" (KH-UI-5c: mọi thay đổi qua lam())', /const lam = [^\n]*\n\s*if \(!san\) \{ datTb\(LOI_CHUA_BIET\); return false; \}/.test(kehoachJsx) && /LOI_KHO/.test(kehoachJsx) && /if \(!san\) \{ datTb\('Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
   k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(doc('src/components/BangNgay.jsx')));
   k('E1 không còn ngày dự phòng bịa cho "hôm nay" (K3)', !/y: 2026 \}/.test(kehoachJsx + doc('src/pages/TienIch.jsx')) && !/if \(!homNay\) return null/.test(tc));
   void khong;
