@@ -1,6 +1,8 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { bayGio } from '../bayGio.js';
 import { docKeHoach, ghiKeHoach, xoaKeHoach, keHoachTrong } from '../kehoach.js';
+import { cuaToi } from '../duLieuKhach.js';
+import { taoDuongDan } from '../duongDan.js';
 
 // Bản Kế hoạch (kh_kehoach) giữ ở MỘT chỗ trong bộ nhớ trang để ô Trang chủ, màn Kế hoạch, màn tiện ích cùng thấy một bản.
 // `san` = đã biết khách là ai (luuMay.doiKhach xong, như trắc nghiệm): chưa biết thì CHƯA hiện / CHƯA ghi bản của người trước.
@@ -38,4 +40,28 @@ export function dungPhut() {
     const id = setInterval(() => ve((p) => { const n = bayGio().slice(0, 16); return n === p ? p : n; }), 5000);
     return () => clearInterval(id);
   }, []);
+}
+
+/** Mở một địa chỉ của app từ màn không nhận hàm điều hướng riêng (vd. /kehoach/vankhan/<dịp>): đẩy lịch sử rồi báo cho bộ định tuyến (dieuHuong.js nghe `popstate`). */
+export function diDen(duong) {
+  const buoc = (window.history.state && window.history.state.kh) || 0;
+  window.history.pushState({ kh: buoc + 1 }, '', duong);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+/** Quay lại: có lịch sử trong app → Back; mở thẳng (không lịch sử) → thay bằng `veNeuHet`. */
+export function luiDen(veNeuHet) {
+  if (((window.history.state && window.history.state.kh) || 0) > 0) { window.history.back(); return; }
+  window.history.replaceState({ kh: 0 }, '', veNeuHet);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+/** Hồ sơ khách đang đăng nhập đã có sẵn trong kho chung của App (không gọi mạng): { ten, xung_ho }; chưa biết → {}. */
+export const hoSoKhach = () => { const s = cuaToi.kho.lay(); return (s.dl && s.dl.khach) || {}; };
+
+/** Bấm một dòng của "Sắp tới" (`upList`) → mở đúng chỗ. `moViec(ngay)` mở việc trên lịch; `moTienIch(id)` mở một tiện ích. */
+export function moMucSapToi(e, { moViec, moTienIch }) {
+  if (e.di === 'viec') moViec(e.ngay);
+  else if (e.di === 'nguoi') moTienIch('ngaycannho');
+  else if (e.di === 'cung') diDen(taoDuongDan('tienich', { tienich: 'vankhan', dip: e.dip }));
+  else moTienIch('ngayle');
 }

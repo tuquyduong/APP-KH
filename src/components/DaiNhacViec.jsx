@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { bayGio } from '../bayGio.js';
 import { dungKeHoach, datNgayMo } from './dungKeHoach.js';
 import { mocNhacTrong, phutTuGio, chuoiJd, dmNgan } from '../kehoachLap.js';
+import { bangCoNhac, homNayTuGio } from '../kehoach.js';
 import { Ico } from './BieuTuong.jsx';
 import '../giaoDien/bao_don.css';
 
@@ -18,7 +19,7 @@ export default function DaiNhacViec({ san, moNgay }) {
       const nay = phutTuGio(bayGio());
       if (Number.isNaN(nay) || nay <= truoc.current) return;
       if (nay - truoc.current > 3) { truoc.current = nay; return; } // máy ngủ / tab ẩn lâu / giờ POS nhảy: mốc cũ không báo (3 phút ≫ nhịp 15 giây)
-      const moi = mocNhacTrong(mayBang.current, truoc.current, nay).filter((x) => { const k = `${x.v.id}|${x.j}|${x.v.nhac}`; if (daBao.current.has(k)) return false; daBao.current.add(k); return true; });
+      const moi = mocNhacTrong(bangCoNhac(mayBang.current, homNayTuGio(bayGio())), truoc.current, nay).filter((x) => { const k = `${x.v.id}|${x.j}|${x.v.nhac}`; if (daBao.current.has(k)) return false; daBao.current.add(k); return true; });
       truoc.current = nay;
       if (moi.length) {
         const x = moi[moi.length - 1];
