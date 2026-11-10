@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 10.11.2026
+- **Tiện ích: Ngày cần nhớ + Văn khấn** (KH-UI-5e gộp 10.11): lưới 6 ô + dải Sắp tới; sinh nhật / giỗ âm-dương nhắc đúng ngày; 11 dịp cúng có lễ vật, cách sắp lễ, bài khấn tự điền tên.
 - **Tiện ích Kế hoạch theo demo cuối** (chủ quán 06.11 "đủ 8 cái demo"): lưới 6 ô Theo mùa · Văn khấn · Ngày cần nhớ · Xe cộ · Uống thuốc · Chu kỳ + dải Sắp tới. Làm 2 việc nối nhau: KH-UI-5e (lưới, Ngày cần nhớ, Văn khấn — 3 ô còn lại hiện "Sắp có") rồi KH-UI-5f (Xe cộ, Uống thuốc, Chu kỳ). Chưa làm: Đọc to, Đặt hoa quả dâng lễ, Tặng thẻ quà.
 - **Giới thiệu bạn bè** (chủ quán 10.11; POS GIOI-THIEU-1, sau khai trương): chỉ qua App. Mời bằng link / mã → bạn đăng ký là khách mới thật (SĐT chưa từng có trong POS) nhận voucher chào mừng → đơn đầu của bạn hoàn tất thì người mời nhận voucher thưởng. Thưởng = voucher (giảm tiền hoặc %, áp dụng món / nhóm, đơn tối thiểu, hạn dùng) chọn từ Mẫu voucher trong Cài đặt POS; mức thưởng, trần mỗi tháng, bật / tắt đều trong Cài đặt. App hiện nguyên câu POS, không tự tính. (KH-GT-1)
 - **Voucher / mã giảm KHÔNG áp lên thẻ hạng, nạp tiền, gói trả trước, thẻ quà**; giỏ có món thường thì mã chỉ tính trên món thường (POS 10.11).

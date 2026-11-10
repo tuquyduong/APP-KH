@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 50,
+  "phien_ban_so": 51,
   "cap_nhat": "2026-11-10",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -131,14 +131,15 @@
       "ma": "KH-UI-5e",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-5d"
       ],
       "ten": "Tien ich: luoi 6 o (Theo mua, Van khan, Ngay can nho, Xe co, Uong thuoc, Chu ky — 3 o cuoi \"Sap co\") + dai Sap toi; Ngay can nho (Nguoi than: sinh nhat / gio am-duong + Ngay le); Van khan & le cung 11 dip (le vat, cach sap le, bai khan tu dien ten); o Chu ky an voi xung ho anh/chu/bac/ong",
-      "ghi_chu": "09.11 tach tu KH-UI-5d (cung file Ke hoach / tien ich — lam SAU 5d) | 10.11 mo; chat chia: Xe co + Uong thuoc + Chu ky sang KH-UI-5f. Khong lam: Doc to, Dat hoa qua dang le, Tang the qua",
+      "ghi_chu": "09.11 tach tu KH-UI-5d (cung file Ke hoach / tien ich — lam SAU 5d) | 10.11 mo; chat chia: Xe co + Uong thuoc + Chu ky sang KH-UI-5f. Khong lam: Doc to, Dat hoa qua dang le, Tang the qua | 10.11 chat soat cuoi DAT: dau nhanh 246ab2e; cong tinh + chay kieu GitHub DAT voi main 707e4f8; ghep thu cung KH-PWA-2 sach, npm test co trinh duyet xanh; doc code + anh dat. Luoi 6 o (3 cot x 2 hang nhu demo) + dai Sap toi; Ngay can nho (Nguoi than / Ngay le); Van khan 11 dip tu dien ten, to mau, le vat da sam, A-/A+. Chat duyet: them dong khop cho trong docDuongDan; mo mot dip bang pushState (chua thu trinh duyet Zalo). Gop PR #29 (347cf07)",
       "ngay": "2026-11-10",
-      "han": "2026-11-12"
+      "han": "2026-11-12",
+      "commit": "347cf07"
     },
     {
       "ma": "KH-UI-5f",
@@ -149,7 +150,7 @@
         "KH-UI-5e"
       ],
       "ten": "Tien ich theo demo cuoi: Xe co (nhieu xe, lich bao duong, giay to), Uong thuoc (gio uong, danh dau, 7 ngay), Chu ky (rieng tu, khoa PIN, an voi anh/chu/bac/ong)",
-      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to"
+      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to | 10.11 tu soat KH-UI-5e: 3 o Xe co / Uong thuoc / Chu ky dang \"Sap co\" (BieuTuongTienIch.jsx, TienIch.jsx) — 5f thay; thu mo mot dip van khan trong trinh duyet Zalo"
     },
     {
       "ma": "KH-QC-1",
