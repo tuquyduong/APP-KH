@@ -46,16 +46,16 @@ function napSWKho({ mang, putLoi = false, henGio = setTimeout }) {
     m, put: async (x, r) => { if (putLoi) throw new Error('QuotaExceededError'); m.set(khoa(x), r); },
     match: async (x) => m.get(khoa(x)), keys: async () => [...m.keys()].map((p) => ({ url: MIEN + p })), delete: async (x) => m.delete(khoa(x)),
   };
-  const caches = { open: async () => kho, match: (x) => kho.match(x), keys: async () => ['tqd-v1'], delete: async () => true };
+  const caches = { open: async () => kho, match: (x) => kho.match(x), keys: async () => ['tqd-v2'], delete: async () => true };
   const nghe = {};
   const self = { location: { origin: MIEN }, addEventListener: (ten, f) => { nghe[ten] = f; }, skipWaiting: () => {}, clients: { claim: () => {} } };
   const ctx = vm.createContext({ self, caches, fetch: (x) => mang(khoa(x)), URL, setTimeout: henGio, clearTimeout, Promise });
   vm.runInContext(fs.readFileSync(path.join(GOC, 'public/sw.js'), 'utf8'), ctx, { filename: 'sw.js' });
   return { ctx, kho, nghe, caches };
 }
-const resGia = (than, loai = 'text/html') => ({
-  ok: true, status: 200, type: 'basic', redirected: false, headers: { get: (h) => (/content-type/i.test(h) ? loai : null) },
-  clone: () => resGia(than, loai), text: async () => than,
+const resGia = (than, loai = 'text/html', status = 200) => ({
+  ok: status < 400, status, type: 'basic', redirected: false, headers: { get: (h) => (/content-type/i.test(h) ? loai : null) },
+  clone: () => resGia(than, loai, status), text: async () => than,
 });
 
 const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" href="/manifest.webmanifest" /><link rel="preload" href="/fonts/a.woff2" as="font" />
@@ -71,8 +71,9 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     const G = (p, them = {}) => L(p.startsWith('http') ? p : MIEN + p, { method: 'GET', mode: 'cors', ...them });
     k('A2 trang (navigate) → mạng trước', G('/menu', { mode: 'navigate' }) === 'trang' && G('/', { mode: 'navigate' }) === 'trang' && G('/mon/tra-luc-bao?x=1', { mode: 'navigate' }) === 'trang');
     k('A2 /assets/* → lưu trước', G('/assets/index-B8g27Zcw.js') === 'luuTruoc' && G('/assets/index-CKEsnr98.css') === 'luuTruoc');
-    k('A2 /fonts, /anh, /am_thanh, /manifest.webmanifest → trả bản lưu + lấy mới ở nền',
-      ['/fonts/eb-garamond-600-latin.woff2', '/anh/logo.webp', '/am_thanh/man_dau.mp3', '/manifest.webmanifest'].every((p) => G(p) === 'luuRoiCapNhat'));
+    k('A2 /fonts, /anh, /manifest.webmanifest → trả bản lưu + lấy mới ở nền',
+      ['/fonts/eb-garamond-600-latin.woff2', '/anh/logo.webp', '/manifest.webmanifest'].every((p) => G(p) === 'luuRoiCapNhat'));
+    k('KH-PWA-2 A1 /am_thanh/* → null (đi thẳng mạng, Safari iPhone phát nhạc bằng yêu cầu Range)', G('/am_thanh/man_dau.mp3') === null && G('/AM_THANH/a.mp3') === null);
     const khongDung = [
       ['/api/kh/menu', G('/api/kh/menu')], ['/API/kh/toi', G('/API/kh/toi')], ['/api', G('/api')],
       ['navigate /api/kh/x', G('/api/kh/x', { mode: 'navigate' })],
@@ -87,7 +88,7 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     let goiRespond = 0;
     const suKien = (url, them = {}) => ({ request: { url, method: 'GET', mode: 'cors', ...them }, respondWith: () => { goiRespond++; }, waitUntil: () => {} });
     if (typeof nghe.fetch === 'function') {
-      for (const u of ['/api/kh/menu', '/kiemkhop', '/sw.js']) nghe.fetch(suKien(MIEN + u, u === '/kiemkhop' ? { mode: 'navigate' } : {}));
+      for (const u of ['/api/kh/menu', '/kiemkhop', '/sw.js', '/am_thanh/man_dau.mp3']) nghe.fetch(suKien(MIEN + u, u === '/kiemkhop' ? { mode: 'navigate' } : {}));
       nghe.fetch(suKien('https://pos-tuquyduong.io.vn/api/kh/toi'));
       nghe.fetch(suKien(MIEN + '/anh/x.webp', { method: 'POST' }));
     }
@@ -99,7 +100,7 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
   await thu('A3/A4', async () => {
     const { ctx } = napSW();
     const sw = doc('public/sw.js');
-    k('A3 kho tên kèm số bản tqd-v1', /'tqd-v1'/.test(sw));
+    k('A3 kho tên kèm số bản tqd-v2 (KH-PWA-2 A4)', /'tqd-v2'/.test(sw));
     k('A3 activate xoá kho cũ (caches.delete)', /addEventListener\('activate'/.test(sw) && /caches\.delete\(/.test(sw));
     const ds = typeof ctx.tepCuaBan === 'function' ? [...ctx.tepCuaBan(HTML_BAN('/assets/index-A1.js', '/assets/index-C1.css'))].sort() : null;
     k('A3 tepCuaBan(html) → các tệp cùng miền vỏ trỏ tới (assets, fonts, manifest), không Google',
@@ -147,12 +148,12 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     // (g) activate: xoá kho tqd-* cũ, giữ kho hiện tại và kho không phải của App.
     const g = napSWKho({ mang: async () => { throw new Error('x'); } });
     const xoa = [];
-    g.caches.keys = async () => ['tqd-v0', 'tqd-v1', 'khac'];
+    g.caches.keys = async () => ['tqd-v0', 'tqd-v1', 'tqd-v2', 'khac'];
     g.caches.delete = async (t) => { xoa.push(t); return true; };
     const doiG = [];
     g.nghe.activate({ waitUntil: (p) => doiG.push(p) });
     await Promise.all(doiG);
-    k('A3 activate xoá kho cũ tqd-v0, giữ tqd-v1 và kho khác', JSON.stringify(xoa) === '["tqd-v0"]', JSON.stringify(xoa));
+    k('A3 activate xoá kho cũ tqd-v0, giữ tqd-v2 và kho khác; KH-PWA-2 A1/A4 tqd-v1 (có nhạc đã lưu) cũng bị xoá', JSON.stringify(xoa) === '["tqd-v0","tqd-v1"]', JSON.stringify(xoa));
     // (e) chỉ lưu đúng loại: Cloudflare trả index.html 200 cho tệp băm đã xoá → /assets KHÔNG lưu HTML; vỏ chỉ lưu khi là text/html.
     const e1 = napSWKho({ mang: async () => resGia('<!DOCTYPE html>', 'text/html') });
     await e1.ctx.luuTep('/assets/index-XOA.js', 'default');
@@ -160,6 +161,47 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     await e2.ctx.layVo('no-store');
     k('A2 chỉ lưu khi đúng loại: /assets KHÔNG lưu text/html, vỏ KHÔNG lưu khi không phải text/html', !e1.kho.m.has('/assets/index-XOA.js') && !e2.kho.m.has('/'),
       JSON.stringify([...e1.kho.m.keys(), ...e2.kho.m.keys()]));
+  });
+
+  await thu('KH-PWA-2 trang lỗi + trang lạ', async () => {
+    const CU = HTML_BAN('/assets/index-CU.js', '/assets/index-CU.css');
+    const coVo = (kho) => { kho.m.set('/', resGia(CU)); kho.m.set('/assets/index-CU.js', resGia('cu', 'text/javascript')); };
+    const diTrang = async (sw, url) => {
+      let tv = null;
+      const doi = [];
+      sw.nghe.fetch({ request: { url: MIEN + url, method: 'GET', mode: 'navigate' }, respondWith: (p) => { tv = p; }, waitUntil: (p) => doi.push(p) });
+      const res = tv ? await tv : null;
+      await Promise.all(doi);
+      return res;
+    };
+    const mangTra = (than, loai, status) => napSWKho({ mang: async () => resGia(than, loai, status) });
+    for (const [ten, than, loai, st] of [['5xx (503)', 'Lỗi', 'text/html', 503], ['500', 'Lỗi', 'text/html', 500], ['599', 'Lỗi', 'text/html', 599], ['404 của đường dẫn trang', 'Không có', 'text/html', 404], ['200 không phải HTML', '{"a":1}', 'application/json', 200]]) {
+      const sw = mangTra(than, loai, st);
+      coVo(sw.kho);
+      const res = await diTrang(sw, '/menu');
+      k(`KH-PWA-2 A2 trang: mạng trả ${ten} → dùng vỏ đã lưu, không lưu phản hồi lỗi`, !!res && (await res.text()) === CU && (await sw.kho.m.get('/').text()) === CU);
+    }
+    const khongVo = mangTra('Lỗi', 'text/html', 503);
+    const rk = await diTrang(khongVo, '/menu');
+    k('KH-PWA-2 A2 trang: 5xx khi chưa có vỏ → trả nguyên phản hồi mạng, không lưu', !!rk && rk.status === 503 && !khongVo.kho.m.has('/'));
+    const tot = mangTra(CU, 'text/html', 200);
+    coVo(tot.kho);
+    const rt = await diTrang(tot, '/menu');
+    k('KH-PWA-2 A2 đối chứng: trang 200 HTML → trả trang mạng (không chặn oan)', !!rt && rt.status === 200 && (await rt.text()) === CU);
+    // A3: HTML 200 nhưng không có tệp JS chính (trang đăng nhập wifi…) → không lưu, vỏ cũ nguyên.
+    const LA = '<!DOCTYPE html><html><body>Đăng nhập wifi</body></html>';
+    const la = mangTra(LA, 'text/html', 200);
+    coVo(la.kho);
+    await diTrang(la, '/menu');
+    await la.ctx.luuVo(resGia(LA)).catch(() => {});
+    await la.ctx.layVo('reload').catch(() => {});
+    k('KH-PWA-2 A3 HTML không có /assets/index-*.js → KHÔNG lưu, giữ vỏ cũ', (await la.kho.m.get('/').text()) === CU);
+    const lanDau = mangTra(LA, 'text/html', 200);
+    await lanDau.ctx.layVo('reload').catch(() => {});
+    k('KH-PWA-2 A3 trang lạ khi chưa có vỏ → cũng không lưu', !lanDau.kho.m.has('/'));
+    const dung = mangTra(HTML_BAN('/assets/index-NEW.js', '/assets/index-NEW.css'), 'text/html', 200);
+    await dung.ctx.layVo('reload').catch(() => {});
+    k('KH-PWA-2 A3 đối chứng: HTML đúng của App → vẫn lưu vỏ', dung.kho.m.has('/'));
   });
 
   await thu('B2 tenBan', async () => {
@@ -290,7 +332,7 @@ async function trinhDuyet(pw) {
     }, JS0).catch(() => false);
     k('A2 vỏ "/" và tệp JS băm đã lưu sẵn trong kho sau lần mở đầu', daLuu);
     const tenKho = await trang.evaluate(() => caches.keys()).catch(() => []);
-    k('A3 đúng một kho tqd-v1', JSON.stringify(tenKho) === '["tqd-v1"]', JSON.stringify(tenKho));
+    k('A3 đúng một kho tqd-v2', JSON.stringify(tenKho) === '["tqd-v2"]', JSON.stringify(tenKho));
 
     // C1 — mất mạng (giả lập + máy chủ tắt thật) → tải lại vẫn thấy Trang chủ.
     S.tat = true; await ctx.setOffline(true);
@@ -351,9 +393,9 @@ async function trinhDuyet(pw) {
 
     // A3 — sau nhiều bản, kho chỉ giữ tệp JS của 2 bản gần nhất.
     await cho(500);
-    const jsTrongKho = await trang.evaluate(async () => (await (await caches.open('tqd-v1')).keys()).map((r) => new URL(r.url).pathname).filter((p) => /\/assets\/index-.*\.js$/.test(p)).sort()).catch(() => []);
+    const jsTrongKho = await trang.evaluate(async () => (await (await caches.open('tqd-v2')).keys()).map((r) => new URL(r.url).pathname).filter((p) => /\/assets\/index-.*\.js$/.test(p)).sort()).catch(() => []);
     k('A3 kho chỉ còn JS của 2 bản gần nhất (moi2, moi3)', jsTrongKho.length === 2 && jsTrongKho.every((p) => /-moi[23]\.js$/.test(p)), JSON.stringify(jsTrongKho));
-    k('A2 KHÔNG lưu yêu cầu /api trong kho', await trang.evaluate(async () => (await (await caches.open('tqd-v1')).keys()).every((r) => !new URL(r.url).pathname.startsWith('/api'))).catch(() => false));
+    k('A2 KHÔNG lưu yêu cầu /api trong kho', await trang.evaluate(async () => (await (await caches.open('tqd-v2')).keys()).every((r) => !new URL(r.url).pathname.startsWith('/api'))).catch(() => false));
 
     // A2 / C3 — bản mới moi4 về qua lần kiểm nền khi khách ở /thanhtoan (chưa tải lại), rồi mất mạng → mở lại vẫn dựng App (không trắng màn).
     S.ban = 'moi4';
