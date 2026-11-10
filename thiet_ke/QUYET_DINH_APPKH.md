@@ -4,6 +4,7 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 09.11.2026
+- **Dải quảng cáo + Kế hoạch gọn** (KH-UI-5d gộp 09.11): dải mảnh ánh sáng lướt ở Menu, Ưu đãi, Giỏ hàng, Kế hoạch, Tài khoản (chữ tạm: Giờ vàng → chương trình); Trang chủ không còn ✕; Kế hoạch xoá hỏi lại một lần, không Hoàn tác.
 - **App mở nhanh + tự lên bản mới** (KH-PWA-1 gộp 09.11): lần mở thứ hai hiện gần như ngay, mất mạng vẫn thấy khung App; bản mới tự vào lặng lẽ, không bao giờ tải lại ở Giỏ / Thanh toán / Đơn / Đăng nhập / đang làm trắc nghiệm / đang mở bảng.
 - **Banner và dải quảng cáo** (chủ quán 09.11, xem ảnh App thật + demo): Trang chủ GIỮ banner lớn "Hôm nay", BỎ HẲN nút ✕ (không ẩn banner ở đâu). Các trang Menu, Ưu đãi, Giỏ hàng, Kế hoạch và tiện ích, Tài khoản có **dải mảnh có ánh sáng lướt** (kiểu A) ở đầu trang, không nút tắt, không che thao tác; KHÔNG có ở Thanh toán, Theo dõi đơn, Đăng nhập, bảng PIN. Chữ phải chọn lọc, hấp dẫn, không ghi công dụng chữa bệnh. (KH-UI-5d)
 - **Chữ quảng cáo đặt trong Cài đặt POS** theo ngày / khung giờ, có thứ tự ưu tiên, bật / tắt, xem trước; Giờ vàng tự động (POS QC-APP-1, hợp đồng v14). Trong lúc chờ: dải lấy Giờ vàng đang chạy → chương trình đặc biệt → không có thì ẩn. (KH-UI-5d, KH-QC-1)

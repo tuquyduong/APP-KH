@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 46,
+  "phien_ban_so": 47,
   "cap_nhat": "2026-11-09",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -117,14 +117,15 @@
       "ma": "KH-UI-5d",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-5c"
       ],
       "ten": "Dai quang cao manh co anh sang luot o dau Menu / Uu dai / Gio hang / Ke hoach + tien ich / Tai khoan (nguon tam: Gio vang -> chuong trinh -> an); bo nut X banner; Ke hoach: xoa hoi lai 1 lan, bo Hoan tac; 4 sua nho sau 5c; sua viec doi duoc ngay",
-      "ghi_chu": "08.11 tach tu KH-UI-5c (cung file Ke hoach, lam sau 5c); 07.11 chat quyet: luoi theo demo cuoi (patch35) | 08.11 tu soat KH-UI-5c, lam kem (nho): sua viec doi duoc ngay bat dau; thanh nhac tu dem lai moi phut (\"10 phut nua\"); dai nhac bo mot chuong thua (dang hien 2 bieu tuong); \"Uong 1/2\" khong hieu la ngay 1/2 khi phia truoc chi 1 tu; DaiNhacViec bam Xem mo dung bang ngay cua viec | 09.11 mo (chu quan duyet anh + demo kieu A). Phan luoi 6 o + 5 tien ich chuyen sang KH-UI-5e",
+      "ghi_chu": "08.11 tach tu KH-UI-5c (cung file Ke hoach, lam sau 5c); 07.11 chat quyet: luoi theo demo cuoi (patch35) | 08.11 tu soat KH-UI-5c, lam kem (nho): sua viec doi duoc ngay bat dau; thanh nhac tu dem lai moi phut (\"10 phut nua\"); dai nhac bo mot chuong thua (dang hien 2 bieu tuong); \"Uong 1/2\" khong hieu la ngay 1/2 khi phia truoc chi 1 tu; DaiNhacViec bam Xem mo dung bang ngay cua viec | 09.11 mo (chu quan duyet anh + demo kieu A). Phan luoi 6 o + 5 tien ich chuyen sang KH-UI-5e | 09.11 chat soat cuoi DAT: dau nhanh e9a95d9; cong tinh + chay kieu GitHub DAT voi main 4e1366d; ghep thu cung KH-PWA-1 sach, npm test co trinh duyet 41/0; anh dat. Dai quang cao kieu A gan o vo App (Menu / Uu dai / Gio hang / Ke hoach + tien ich / Tai khoan; nguon tam Gio vang -> chuong trinh -> an); bo X banner + banner nho; Ke hoach xoa hoi lai 1 lan, bo Hoan tac; 4 sua nho; sua viec doi duoc ngay. Gop PR #27 (af7f1cb)",
       "ngay": "2026-11-09",
-      "han": "2026-11-11"
+      "han": "2026-11-11",
+      "commit": "af7f1cb"
     },
     {
       "ma": "KH-UI-5e",
@@ -147,7 +148,7 @@
         "POS QC-APP-1 (hop dong v14)"
       ],
       "ten": "Dai quang cao + banner Trang chu doc GET /quang-cao (chu quan dat trong Cai dat POS theo ngay / khung gio); dong id gio_vang uu tien 0",
-      "ghi_chu": "09.11 POS nhan QC-APP-1, du kien 12-13.11, hop dong v14 (sau KH-THE-1 v13)"
+      "ghi_chu": "09.11 POS nhan QC-APP-1, du kien 12-13.11, hop dong v14 (sau KH-THE-1 v13) | 09.11 tu soat KH-UI-5d: chonQuangCao (src/quangCao.js) dang xep dong quangCao theo uu_tien LON truoc va de dong thuong truoc dong gio_vang — POS chot uu_tien NHO = uu tien cao, dong id gio_vang uu_tien 0: khi noi /quang-cao phai xep TANG dan, gop dong gio_vang vao cung mot thu tu (chi dung khi Gio vang dang chay) + sua ca thu"
     },
     {
       "ma": "KH-THE-1",
