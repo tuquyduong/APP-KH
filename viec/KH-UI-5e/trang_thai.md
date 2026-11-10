@@ -18,7 +18,12 @@
 - `dist/` / `.nhap_thu/` do bài thử dựng — không commit (đã không có trong `git status` sau commit).
 - Chu kỳ / Xe cộ / Uống thuốc: ô chỉ báo "Tiện ích này sắp có" — KH-UI-5f thay; chưa có đường dẫn riêng (đúng phiếu A3).
 - Màn rộng ≥ 1024 px: chưa có mẫu màn to cho các màn này (`thiet_ke/mau_man_to/`), chưa đối chiếu.
-- Plan chưa nhờ agent phụ soát (bước 3): ghi ở CHƯA KIỂM.
+- Kế hoạch (bước 3) chưa nhờ agent phụ soát riêng (đã có `/ra-soat` bản code): ghi ở CHƯA KIỂM.
+- `duongDan.js`: ngoài việc thêm tiện ích + mẫu `/kehoach/:tienich/:dip`, SỬA MỘT dòng khớp `cho` trong `docDuongDan` (cho phép `cho` là bảng theo tham số; nếu không `/kehoach/r/r` khớp với tienich='r') và đổi chú thích `TIEN_ICH`, đặt `import { MA_DIP }` — cần chủ quán duyệt, vì Cấm ghi "không sửa dòng khác".
+- Sắp tới trùng ngày giữa "Cúng" và "Lễ" (vd Ông Công Ông Táo 23/12 âm, Rằm tháng Giêng) vì `KHONG_VAO_SAP_TOI` chép nguyên regex của demo chỉ loại 4 lễ — đúng demo, để nguyên.
+- `coChuKy` có mã 'ong' nhưng hợp đồng `/api/kh` chỉ có anh · chi · co · chu · bac · em · ban (vô hại).
+- `tronTuoi` lấy năm dương của lần tới trừ năm sinh (như demo) → sinh nhật tính theo ÂM có thể lệch 1 tuổi quanh Tết.
+- Nút nhắc người thân bật lại luôn đặt "1 ngày trước" (mất mức đã chọn như 3 ngày).
 
 ## Chỗ vá → bài thử → đột biến (việc chỉ đổi `src/`, không có `dot_bien.py` — cổng A17/A18 chỉ áp cho `server/`, `client/src/`; đột biến chạy tay trên bản sao ở nháp, mỗi cái ĐỎ)
 | Chỗ vá | Bài thử | Đột biến |
@@ -52,10 +57,14 @@ Kết quả chạy: 11 đột biến bắt được bằng chạy KHONG_TRINH_DU
 - C3 không Đọc to / Đặt hoa quả; có dòng lưu ý cuối: thu_KHUI5e "C3 không Đọc to…" (nguồn, bỏ chú thích), "C2 một dịp… KHÔNG Đọc to", Chromium "C3 không có Đọc to, Đặt hoa quả; có dòng lưu ý cuối".
 - C4 nhắc dịp cúng → Sắp tới, chuông, dải nhắc: thu_KHUI5e "C4 dịp cúng bật nhắc → mốc nhắc tối hôm trước", "C4 việc ảo chỉ từ hôm nay → không quá hạn", "A4 mỗi dòng… Cúng"; Chromium "C4 bật nhắc dịp Mùng 1 & Rằm → kho ghi vk.nhac.r".
 - D1 lưu: thu_KHUI5e "D1 bản của 5d đọc được", "D1 bản hỏng từng phần", "D1 bản lưu không phải JSON…", "D1 ghi → đọc lại đủ", "D1 ghi vào kho bị chặn → false", "D1 đủ 100 người", "D1 không thêm khoá lưu mới"; xoá khi đăng xuất / đổi khách: luật `luuMay.js` hiện có áp cho khoá `kh_kehoach` (thu_KHLUU1 xanh; không đổi `luuMay.js`).
-- E1 bài mới thu_KHUI5e: 69 ca thuần + dựng (KHONG_TRINH_DUYET=1) / 118 ca có Chromium. E2: thu_KHUI5b sửa 6 chỗ (đỏ trên gốc), thu_KHUI5c / 5d không phải sửa (vẫn xanh trong Chromium), không `## Bài thử cũ sửa`, không bớt ca (75 → 75).
+- E1 bài mới thu_KHUI5e: 71 ca thuần + dựng (KHONG_TRINH_DUYET=1) / 120 ca có Chromium. E2: thu_KHUI5b sửa 6 chỗ (đỏ trên gốc), thu_KHUI5c / 5d không phải sửa (vẫn xanh trong Chromium), không `## Bài thử cũ sửa`, không bớt ca (75 → 75).
 - E3 ảnh 360 / 390 / 430: `so_anh/` (8 màn × 3 cỡ × demo / app / lệch) + `doi_chieu_demo.md`.
 - E4 `npm test`, `--day-du`, cổng `tinh` + `chay`: xem mục "Cổng" bên dưới.
 - E5 chủ quán thử tay: xem BÁO CÁO · mục CHƯA KIỂM.
 
+
+## Soát độc lập `/ra-soat` (vòng 1) — KHÔNG ĐẠT, đã sửa
+Báo cáo (tóm): 5 lỗi + nghi ngờ. Đã sửa: (2) `doiLoai` không kẹp ngày ≤ 30 khi tự chuyển sang Âm → kẹp (thu_KHUI5e "B3 đổi loại… kẹp"); (3) ô Tín chủ / Người được giỗ không xoá trắng được → `vk.ten`/`vk.nm` mặc định `null` (chưa nhập → gợi ý), `''` = khách chủ ý trống (ca "C2 xoá trắng…"); (4) ca C4 "không quá hạn" dùng `||` che vế sai → viết lại hai vế `every`, cùng `homNay`; (1) E4 chưa có kết quả cổng lúc soát (nay có, bên dưới). (5) trùng Cúng / Lễ: đúng demo, ghi ở Phát hiện. Nghi ngờ duongDan / 'ong' / tuổi âm / nút nhắc: ghi ở Phát hiện.
+Báo cáo không về dạng tệp: agent trả qua tin nhắn nộp; E5 là bước chủ quán thử tay (xem dưới).
+
 ## Cổng
-(điền sau khi chạy)

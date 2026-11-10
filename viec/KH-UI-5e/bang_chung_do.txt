@@ -16,6 +16,6 @@ $ node cong_cu/thu_KHUI5b.js
 thu_KHUI5c.js, thu_KHUI5d.js: KHÔNG sửa — chạy nguyên bản trên code mới vẫn xanh cả trong Chromium (101 đạt · 0 hỏng; 84 đạt · 0 hỏng): không ca nào của hai bài phụ thuộc lưới cũ / ô Sắp tới.
 
 == 3. Sau khi sửa (HEAD) — XANH
-SỐ CA cong_cu/thu_KHUI5e.js: 69
+SỐ CA cong_cu/thu_KHUI5e.js: 71
 SỐ CA cong_cu/thu_KHUI5b.js: 75
-(đếm khi chạy với KHONG_TRINH_DUYET=1 — đúng số cổng GitHub đếm; ở máy có Chromium: thu_KHUI5e 118 đạt · 0 hỏng, thu_KHUI5b 75 · 0, thu_KHUI5c 101 · 0, thu_KHUI5d 84 · 0)
+(đếm khi chạy với KHONG_TRINH_DUYET=1 — đúng số cổng GitHub đếm; ở máy có Chromium: thu_KHUI5e 120 đạt · 0 hỏng, thu_KHUI5b 75 · 0, thu_KHUI5c 101 · 0, thu_KHUI5d 84 · 0)

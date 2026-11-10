@@ -48,8 +48,8 @@ export default function MotDip({ dip, homNay, bang, tenKhach, luu }) {
   const v = timDip(dip);
   if (!v) return null;
   const j = vkNext(v, homNay, bang.nguoi), jj = j || jd(homNay), vk = bang.vk;
-  const nm = vk.nm || (v.gio ? (gioSapToi(bang.nguoi, homNay) || {}).ten : '') || '';
-  const ten = vk.ten || tenKhach || '';
+  const nm = vk.nm ?? ((v.gio ? (gioSapToi(bang.nguoi, homNay) || {}).ten : '') || '');
+  const ten = vk.ten ?? (tenKhach || '');
   const bai = dienBai(v, { ten, dc: vk.dc, ho: vk.ho, nm }, jj);
   const le = v.le.split('\n').filter(Boolean), nam = tuJd(jj).y, dat = vk.tick[`${v.id}:${nam}`] || [];
   const o = (nhan, gtri, truong, rong = false, goiY = '') => (

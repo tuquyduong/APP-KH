@@ -165,7 +165,7 @@ export const TOI_DA_NGUOI = 100;
 export const TEN_NGUOI_TOI_DA = 40;
 export const CO_CHU = { nho: 14, lon: 26, mac: 17, buoc: 2 };
 const TOI_DA_TICK = 60; // số cặp dịp:năm giữ lại
-const vkTrong = () => ({ ten: '', ho: '', dc: '', nm: '', fs: CO_CHU.mac, tick: {}, nhac: {} });
+const vkTrong = () => ({ ten: null, ho: '', dc: '', nm: null, fs: CO_CHU.mac, tick: {}, nhac: {} });
 export const keHoachTrong = () => ({ viec: [], leNhac: {}, nguoi: [], vk: vkTrong() });
 export const NHAC_NGUOI = [['Không nhắc', null], ['Đúng ngày', 480], ['1 ngày trước', -240], ['3 ngày trước', -3840]];
 const LOAI_LAP = ['ngay', 'tuan', 'thang', 'nam', 'amlich', 'sau'];
@@ -204,7 +204,8 @@ function nguoiDoc(p) {
 function vkDoc(o) {
   const vk = vkTrong();
   if (!o || typeof o !== 'object' || Array.isArray(o)) return vk;
-  vk.ten = chuoiNgan(o.ten, 80); vk.ho = chuoiNgan(o.ho, 40); vk.dc = chuoiNgan(o.dc, 300); vk.nm = chuoiNgan(o.nm, 80);
+  const chuoiHoacNull = (x, dai) => (typeof x === 'string' ? x.slice(0, dai) : null); // null = chưa nhập (hiện gợi ý); '' = khách chủ ý để trống
+  vk.ten = chuoiHoacNull(o.ten, 80); vk.ho = chuoiNgan(o.ho, 40); vk.dc = chuoiNgan(o.dc, 300); vk.nm = chuoiHoacNull(o.nm, 80);
   if (so(o.fs, CO_CHU.nho, CO_CHU.lon)) vk.fs = o.fs;
   if (o.tick && typeof o.tick === 'object' && !Array.isArray(o.tick)) {
     Object.keys(o.tick).slice(-TOI_DA_TICK).forEach((k) => {

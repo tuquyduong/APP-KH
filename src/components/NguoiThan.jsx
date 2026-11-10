@@ -48,7 +48,7 @@ export function FormNguoi({ homNay, bang, nguoi, luu, dong }) {
   const [f, datF] = useState(() => (nguoi ? { loai: nguoi.loai, ten: nguoi.ten, cal: nguoi.cal, nam: nguoi.nam ? String(nguoi.nam) : '', nhac: nguoi.nhac, d: nguoi.d, m: nguoi.m } : { ...MAC_DINH, d: homNay.d, m: homNay.m }));
   const [loi, datLoi] = useState('');
   const doi = (o) => datF({ ...f, ...o });
-  const doiLoai = (loai) => doi({ loai, ...(nguoi ? {} : { cal: loai === 'gio' ? 'am' : 'duong' }) }); // giỗ mặc định Âm, sinh nhật mặc định Dương (B3)
+  const doiLoai = (loai) => { const cal = nguoi ? f.cal : loai === 'gio' ? 'am' : 'duong'; doi({ loai, cal, d: Math.min(f.d, cal === 'am' ? 30 : soNgayThang(f.m, 2000)) }); }; // giỗ mặc định Âm, sinh nhật mặc định Dương (B3)
   const doiLich = (cal) => doi({ cal, d: Math.min(f.d, cal === 'am' ? 30 : soNgayThang(f.m, 2000)) });
   const gui = () => {
     const nhap = { ...f, nam: f.loai === 'sn' ? f.nam : '' };
