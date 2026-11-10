@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 48,
+  "phien_ban_so": 49,
   "cap_nhat": "2026-11-10",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -149,7 +149,7 @@
         "KH-UI-5e"
       ],
       "ten": "Tien ich theo demo cuoi: Xe co (nhieu xe, lich bao duong, giay to), Uong thuoc (gio uong, danh dau, 7 ngay), Chu ky (rieng tu, khoa PIN, an voi anh/chu/bac/ong)",
-      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung"
+      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to"
     },
     {
       "ma": "KH-QC-1",
@@ -173,7 +173,7 @@
         "POS KH-THE-1 (hop dong /api/kh dong the trong mon[])"
       ],
       "ten": "Ban the hang tren App: man Mua the hoi vien theo demo (buycard), nhom \"The thanh vien\" o Menu, nut Mua o Uu dai, Trang chu nhac gia han; the vao chung gio voi do uong; chi_cap → nut Mua mo + \"Hang danh tang khach than thiet\"",
-      "ghi_chu": "08.11 chu quan chot (thu POS 08.11): hang phai co truoc — don co the + do uong thi do uong tinh hang dang co; muon giam ngay → goi y mua the truoc (don rieng); POS tu cap hang khi da thu; tich diem theo tung mon (POS). App cho ban hop dong cua POS"
+      "ghi_chu": "08.11 chu quan chot (thu POS 08.11): hang phai co truoc — don co the + do uong thi do uong tinh hang dang co; muon giam ngay → goi y mua the truoc (don rieng); POS tu cap hang khi da thu; tich diem theo tung mon (POS). App cho ban hop dong cua POS | 10.11 POS: ma giam / voucher KHONG ap len the hang, nap, goi tra truoc, the qua; gio co mon thuong thi ma chi tinh tren mon thuong — App lay so giam tu bao gia"
     },
     {
       "ma": "KH-UI-4",
@@ -425,7 +425,7 @@
         "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
       ],
       "ten": "Khach tu nap tien vao vi tren App bang QR: chon goi (GET /goi-nap), tao phien nap co khoa_gui + luat 4xx/5xx nhu dat don, man QR doc lai duoc khi tai lai, nap xong lam moi so du; Lich su vi (nap · tang · tra don · het han tien tang)",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Dung lai co che gui lai / khoa cua KH-MUA-1b | 03.11: vi 0d → cong tac \"Tru tu so du vi\" xam + nut \"Nap vi\" (KH-MUA-1b dang an cong tac)"
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Dung lai co che gui lai / khoa cua KH-MUA-1b | 03.11: vi 0d → cong tac \"Tru tu so du vi\" xam + nut \"Nap vi\" (KH-MUA-1b dang an cong tac) | 10.11 POS: nap tien (va the qua) CHI tra bang tien that (QR) — App an \"Tru tai khoan\" + o ma giam khi gio co nap / the qua; may chu POS chan"
     },
     {
       "ma": "KH-VI-2",
@@ -607,6 +607,28 @@
       "loai": "chat",
       "trang_thai": "xong",
       "ngay": "2026-10-30"
+    },
+    {
+      "ma": "KH-GT-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS GIOI-THIEU-1 (sau VOUCHER-2, sau khai truong)"
+      ],
+      "ten": "Gioi thieu ban be (chi qua App): man Moi ban be (ma, Chia se, 3 so), the nho Trang chu, link ?ref= giu qua dang ky, man dang ky \"<ten> moi ban — <voucher>\", bao khi nhan thuong; cau thuong lay nguyen tu POS (*_mo_ta); bat:false -> an het",
+      "ghi_chu": "10.11 POS nhan, ten truong theo thu App 10.11; thuong = voucher tu Mau voucher (VOUCHER-2) cai trong Cai dat POS"
+    },
+    {
+      "ma": "KH-QUA-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS QUA-TANG-1 (lam sau cung)"
+      ],
+      "ten": "The qua tang: mua the qua (chi tien that), muc \"Qua da mua\" + Chia se (Zalo / copy link, loi chuc), man nhan qua (nhap ma / link, dang ky OTP neu chua co)",
+      "ghi_chu": "10.11 POS bao truoc; App chua lam gi toi khi POS gui hop dong"
     }
   ]
 }
