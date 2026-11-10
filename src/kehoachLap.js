@@ -39,6 +39,33 @@ export function phutTuGio(gio) {
   return t ? LUNAR.jdFromDate(+t[3], +t[2], +t[1]) * 1440 + +t[4] * 60 + +t[5] : NaN;
 }
 
+// ----- NGÀY ÂM → DƯƠNG, NGÀY KẾ TIẾP (KH-UI-5e B4; demo l2s, nextLunar, nextSolar) -----
+const L2S = {};
+/** Ngày âm (tháng THƯỜNG, bỏ qua tháng nhuận) → số ngày Julius dương; không có ngày đó trong năm âm → null. */
+export function amSangDuong(ld, lm, ly) {
+  const k = ld + '/' + lm + '/' + ly;
+  if (k in L2S) return L2S[k];
+  const g = LUNAR.jdFromDate(1, 1, ly) + 35 + Math.round((lm - 1) * 29.53) + ld - 1;
+  for (let j = g - 30; j <= g + 62; j++) {
+    const x = tuJd(j), l = LUNAR.solar2lunar(x.d, x.m, x.y);
+    if (l.d === ld && l.m === lm && l.y === ly && !l.leap) return (L2S[k] = j);
+  }
+  return (L2S[k] = null);
+}
+/** Như amSangDuong nhưng ngày 30 âm mà tháng đó thiếu → ngày 29 (giỗ không bị mất năm đó). */
+export const amNgay = (ld, lm, ly) => { const j = amSangDuong(ld, lm, ly); return j === null && ld === 30 ? amSangDuong(29, lm, ly) : j; };
+export const lichAm = (j) => { const x = tuJd(j); return LUNAR.solar2lunar(x.d, x.m, x.y); };
+/** Lần tới (từ `homNay` tính cả hôm nay) của ngày d/m: `cal` 'am' → âm lịch; 'duong' → dương lịch, 29/02 năm không nhuận → 28/02. Không tính được → null. */
+export function ngayKeTiep(cal, d, m, homNay) {
+  const h = jd(homNay);
+  if (cal === 'am') {
+    for (let i = 0, y = lichAm(h).y; i < 3; i++, y++) { const j = amNgay(d, m, y); if (j !== null && j >= h) return j; }
+    return null;
+  }
+  for (let y = homNay.y; y <= homNay.y + 1; y++) { const j = LUNAR.jdFromDate(Math.min(d, soNgayThang(m, y)), m, y); if (j >= h) return j; }
+  return null;
+}
+
 // ----- LẶP LẠI -----
 const DON_VI = { ngay: 'ngày', tuan: 'tuần', thang: 'tháng', nam: 'năm' };
 const HANG = { ngay: 'Hằng ngày', tuan: 'Hằng tuần', thang: 'Hằng tháng', nam: 'Hằng năm' };
