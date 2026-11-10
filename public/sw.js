@@ -1,11 +1,13 @@
 // Service worker App KH (KH-PWA-1) — tự viết, không thư viện. Tệp này chép nguyên vào dist/ (Cloudflare: /sw.js không đệm — public/_headers).
 // Ba luật: trang = mạng trước (chờ 3 giây, rồi vỏ đã lưu) · /assets (tên có mã băm, không bao giờ đổi nội dung) = lưu trước ·
-// phông / ảnh / âm thanh / manifest = trả bản lưu, lấy mới ở nền. KHÔNG đụng /api, khác miền, không GET, /kiemkhop, /sw.js.
+// phông / ảnh / manifest = trả bản lưu, lấy mới ở nền. KHÔNG đụng /api, khác miền, không GET, /kiemkhop, /sw.js, /am_thanh (nhạc: Safari iPhone
+// phát bằng yêu cầu Range — đi thẳng mạng, KH-PWA-2). Trang mà mạng trả 5xx / 404 / không phải HTML → mở vỏ đã lưu; HTML không có tệp JS chính thì không lưu.
+// SAU NÀY: nếu App chia code tải dần (React.lazy / import động) thì tepCuaBan phải biết các tệp tải dần đó, kẻo mất mạng là thiếu tệp.
 // Bài thử cong_cu/thu_KHPWA1.js nạp tệp này bằng vm với `self` giả và thử thẳng các hàm dưới.
-const KHO = 'tqd-v1';
+const KHO = 'tqd-v2';
 const VO = '/';
 const CHO_MANG = 3000;
-const TINH = /^\/(fonts|anh|am_thanh)\/|^\/manifest\.webmanifest$/;
+const TINH = /^\/(fonts|anh)\/|^\/manifest\.webmanifest$/;
 
 /** Luật cho một yêu cầu: 'trang' | 'luuTruoc' | 'luuRoiCapNhat' | null (không đụng — đi thẳng mạng). */
 function chienLuoc(url, cach) {
@@ -38,6 +40,7 @@ const dung = (res) => res && res.ok && res.type === 'basic' && !res.redirected;
  *  rồi xoá tệp /assets không thuộc vỏ cũ lẫn vỏ mới (giữ 2 bản gần nhất). Trả html. */
 async function luuVo(res) {
   const html = await res.clone().text();
+  if (!tenBan(html)) return ''; // trang lạ (wifi quán, lỗi nhà mạng…): không lưu, giữ vỏ cũ
   const kho = await caches.open(KHO);
   const cu = await kho.match(VO);
   const htmlCu = cu ? await cu.text() : '';
@@ -80,13 +83,17 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ds) => Promise.all(ds.filter((t) => t.startsWith('tqd-') && t !== KHO).map((t) => caches.delete(t)))).then(() => self.clients.claim()));
 });
 
+// Phản hồi trang không dùng được: 5xx, 404, không phải HTML (chuyển hướng giữ nguyên cho trình duyệt tự đi).
+const trangHong = (res) => res.type !== 'opaqueredirect' && (res.status >= 500 || res.status === 404 || !laHtml(res));
+
 function trang(e) {
   // Trả phản hồi mạng ngay; lưu vỏ ở nền — lưu lỗi (kho đầy…) không làm khách mất trang mới.
   const mang = fetch(e.request);
   e.waitUntil(mang.then((res) => (dung(res) && laHtml(res) ? luuVo(res.clone()) : 0)).catch(() => {}));
   const het = new Promise((r) => setTimeout(r, CHO_MANG));
   const voLuu = () => caches.match(VO);
-  return Promise.race([mang, het.then(voLuu)]).then((res) => res || mang).catch(() => voLuu().then((res) => res || mang));
+  const chon = (res) => (trangHong(res) ? voLuu().then((vo) => vo || res) : res);
+  return Promise.race([mang, het.then(voLuu)]).then((res) => res || mang).then(chon).catch(() => voLuu().then((res) => res || mang));
 }
 
 self.addEventListener('fetch', (e) => {
