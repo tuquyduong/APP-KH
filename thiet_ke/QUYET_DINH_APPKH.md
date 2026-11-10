@@ -9,6 +9,7 @@
 - **Chữ quảng cáo đặt trong Cài đặt POS** theo ngày / khung giờ, có thứ tự ưu tiên, bật / tắt, xem trước; Giờ vàng tự động (POS QC-APP-1, hợp đồng v14). Trong lúc chờ: dải lấy Giờ vàng đang chạy → chương trình đặc biệt → không có thì ẩn. (KH-UI-5d, KH-QC-1)
 - **Xoá việc ở Kế hoạch**: hỏi lại MỘT lần rồi xoá luôn, KHÔNG có Hoàn tác (cả tick / dời). Giỏ hàng giữ Hoàn tác như cũ. (KH-UI-5d)
 - **Bài thử chạy lâu** (KH-THU-1): chấp nhận 2 bài 41–45 giây (≤ 60 giây).
+- **App mở nhanh — vá thêm** (chủ quán 09.11, KH-PWA-2): nhạc màn mở không lưu sẵn (iPhone hay câm); máy chủ báo lỗi thì App mở khung đã lưu như khi mất mạng; chỉ lưu đúng trang của App (không lưu nhầm trang wifi / trang lỗi nhà mạng).
 
 ## 08.11.2026
 - **Kế hoạch — thêm việc gọn** (KH-UI-5c gộp 08.11): chỉ gõ tên + Thêm là xong; 3 nút Giờ sự kiện · Hẹn giờ nhắc · Lặp lại mở từng khung, bánh xoay 24 giờ; nhắc hiện khi khách đang mở App (App tắt: KH-TB-1).

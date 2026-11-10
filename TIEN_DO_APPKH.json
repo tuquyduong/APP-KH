@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 45,
+  "phien_ban_so": 46,
   "cap_nhat": "2026-11-09",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -254,6 +254,19 @@
       "ngay": "2026-11-08",
       "han": "2026-11-10",
       "commit": "9f102d0"
+    },
+    {
+      "ma": "KH-PWA-2",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-PWA-1"
+      ],
+      "ngay": "2026-11-09",
+      "han": "2026-11-10",
+      "ten": "Service worker: /am_thanh khong qua SW (iPhone Range), trang 5xx / 404 / khong phai HTML -> vo da luu, chi luu vo co tep JS chinh cua App; kho tqd-v2",
+      "ghi_chu": "09.11 chu quan dong y ca 3 de xuat chat sau soat cuoi KH-PWA-1. Chay song song KH-UI-5d / 5e"
     },
     {
       "ma": "KH-THU-1",
