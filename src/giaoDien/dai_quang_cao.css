@@ -1,0 +1,10 @@
+/* KH-UI-5d — dải quảng cáo mảnh (chủ quán chọn kiểu A, 09.11.2026; KHÔNG có trong demo). Màu = màu đã có trong demo; vệt sáng lướt dùng lớp .fx-a của banner
+   Trang chủ (demo_1.css) nên prefers-reduced-motion tắt luôn (demo_2.css). Dải nằm trong luồng trang, không dính, không đè nút nào. */
+.dai-qc{ position:relative; overflow:hidden; isolation:isolate; display:flex; align-items:center; gap:8px; height:38px; margin:12px 18px 0; padding:0 10px; border-radius:12px;
+  background:linear-gradient(125deg,#8E1B4C 0%,#B2365F 100%); color:#fff; }
+.dai-qc.fx-a{ --dur:3.5s; }
+.dai-qc[role="button"]{ cursor:pointer; }
+.dai-qc-nhan{ flex:none; font-size:10px; font-weight:800; letter-spacing:.1em; color:#FDE69B; }
+.dai-qc-chu{ flex:1; min-width:0; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dai-qc-xem{ flex:none; font-size:12px; font-weight:800; color:#FDE69B; }
+.dai-qc ~ .screen{ padding-top:14px; }

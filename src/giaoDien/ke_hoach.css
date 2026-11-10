@@ -144,5 +144,4 @@
 .u-as{ min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
 .u-as b{ font-size:12px; line-height:1.2; font-weight:800; color:var(--navy); }
 .u-as span{ font-size:9.5px; font-weight:800; letter-spacing:.04em; color:#2F6B3A; background:#E3F2E1; border:1px solid #BFDDBB; border-radius:999px; padding:1px 8px; }
-.today .t-x{ position:absolute; top:8px; right:8px; z-index:3; width:26px; height:26px; border:none; border-radius:50%; background:rgba(255,255,255,.18); color:#fff; font-size:12px; cursor:pointer; }
 .sheet .two{ display:grid; grid-template-columns:1.3fr 1fr; gap:10px; }

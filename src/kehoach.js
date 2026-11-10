@@ -148,13 +148,13 @@ export function chuThich(id, homNay, viec) {
 
 // ----- LƯU TRÊN MÁY (D1) -----
 // Một bản duy nhất ở khoá kh_kehoach: { v:1, viec:[{ id, ngay, gio ('' = cả ngày), tieu, nhac (phút từ 00:00 của ngày việc, âm = trước; null = không), xong,
-// lap:{ k, n, den }|null, lanXong:['YYYY-MM-DD'…≤24], moc }], leNhac:{ <tên lễ>:true }, anBanner:'YYYY-MM-DD' }.
+// lap:{ k, n, den }|null, lanXong:['YYYY-MM-DD'…≤24], moc }], leNhac:{ <tên lễ>:true } }. (Bản cũ có trường anBanner — nút ✕ đã bỏ ở KH-UI-5d — đọc bỏ qua.)
 // Bản 5b cũ (không có lap / lanXong; nhac là true / false) đọc được: nhac true → đúng giờ của việc. Không gửi gì lên máy chủ.
 // Quy tắc xoá (đăng xuất / đổi khách) ở luuMay.js. Kho tiêm vào để thử.
 const kho = () => localStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 const TEN_LE = new Set([...Object.values(SOLAR_HOL), ...Object.values(LUNAR_HOL)]);
-export const keHoachTrong = () => ({ viec: [], leNhac: {}, anBanner: '' });
+export const keHoachTrong = () => ({ viec: [], leNhac: {} });
 const LOAI_LAP = ['ngay', 'tuan', 'thang', 'nam', 'amlich', 'sau'];
 
 const nhacHopLe = (n) => n === null || typeof n === 'boolean' || (Number.isInteger(n) && n >= HAN_NHAC[0] && n <= HAN_NHAC[1]);
@@ -189,12 +189,11 @@ export function docKeHoach(k = kho) {
     tho.viec.filter(viecHopLe).forEach((v) => { if (!ids.has(v.id) && bang.viec.length < TOI_DA_VIEC) { ids.add(v.id); bang.viec.push(viecDoc(v)); } });
   }
   if (tho.leNhac && typeof tho.leNhac === 'object' && !Array.isArray(tho.leNhac)) Object.keys(tho.leNhac).forEach((n) => { if (tho.leNhac[n] === true && TEN_LE.has(n)) bang.leNhac[n] = true; });
-  if (docNgay(tho.anBanner)) bang.anBanner = tho.anBanner;
   return bang;
 }
 /** Ghi bản lưu; kho bị chặn → false (màn KHÔNG được báo "đã lưu"). */
 export function ghiKeHoach(bang, k = kho) {
-  try { lay(k).setItem(KHOA_KE_HOACH, JSON.stringify({ v: 1, viec: bang.viec, leNhac: bang.leNhac, anBanner: bang.anBanner })); return true; } catch { return false; }
+  try { lay(k).setItem(KHOA_KE_HOACH, JSON.stringify({ v: 1, viec: bang.viec, leNhac: bang.leNhac })); return true; } catch { return false; }
 }
 /** Nút "Xoá toàn bộ dữ liệu Kế hoạch trên máy này". Kho chặn → false. */
 export function xoaKeHoach(k = kho) {
@@ -215,9 +214,10 @@ export function themViec(bang, nhap) {
   if (!v || bang.viec.length >= TOI_DA_VIEC) return null;
   return { ...bang, viec: [...bang.viec, { id: idMoi(), ...v }] };
 }
-/** Sửa tên / giờ / lặp / nhắc của một việc (ngày bắt đầu giữ nguyên; đổi kiểu lặp thì làm lại danh sách lần đã xong). */
+/** Sửa tên / ngày / giờ / lặp / nhắc của một việc (`nhap.ngay` sai / thiếu → giữ ngày cũ; việc lặp: ngày mới là ngày BẮT ĐẦU, lần đã xong giữ nguyên;
+ *  đổi kiểu lặp thì làm lại danh sách lần đã xong). */
 export function suaViec(bang, id, nhap) {
-  const goc = bang.viec.find((x) => x.id === id), v = goc && viecTuNhap({ ...nhap, ngay: goc.ngay });
+  const goc = bang.viec.find((x) => x.id === id), v = goc && viecTuNhap({ ...nhap, ngay: docNgay(nhap.ngay) ? nhap.ngay : goc.ngay });
   if (!v) return null;
   const giuLan = goc.lap && v.lap && goc.lap.k === v.lap.k && goc.lap.n === v.lap.n;
   const moi = { id, ...v, xong: goc.xong, ...(giuLan ? { lanXong: goc.lanXong, ...(goc.moc ? { moc: goc.moc } : {}) } : {}) };
@@ -229,8 +229,6 @@ export const doiNhacLe = (bang, ten) => {
   if (le[ten]) delete le[ten]; else if (TEN_LE.has(ten)) le[ten] = true;
   return { ...bang, leNhac: le };
 };
-export const anBannerHomNay = (bang, homNay) => ({ ...bang, anBanner: ngayChuoi(homNay) });
-export const bannerDangAn = (bang, homNay) => bang.anBanner === ngayChuoi(homNay);
 
 const THU_NGAN = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 /** Demo fJ: "T7, 20/11" (kèm /năm nếu khác năm nay). */

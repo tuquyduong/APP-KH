@@ -1,4 +1,5 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { bayGio } from '../bayGio.js';
 import { docKeHoach, ghiKeHoach, xoaKeHoach, keHoachTrong } from '../kehoach.js';
 
 // Bản Kế hoạch (kh_kehoach) giữ ở MỘT chỗ trong bộ nhớ trang để ô Trang chủ, màn Kế hoạch, màn tiện ích cùng thấy một bản.
@@ -29,3 +30,12 @@ let ngayMo = null, moBangNgay = false;
 export const SU_KIEN_MO_NGAY = 'kh-mo-ngay'; // màn Kế hoạch đang mở thì nghe sự kiện này để nhảy tới ngày
 export const datNgayMo = (ngay, moBang = false) => { ngayMo = ngay; moBangNgay = moBang; if (typeof window !== 'undefined') window.dispatchEvent(new Event(SU_KIEN_MO_NGAY)); };
 export const layNgayMo = () => { const n = ngayMo, b = moBangNgay; ngayMo = null; moBangNgay = false; return { ngay: n, moBang: b }; };
+
+/** Vẽ lại màn mỗi khi PHÚT theo giờ POS (`bayGio`) đổi — để chữ đếm "10 phút nữa" / "Còn 2 giờ" chạy, hết giờ thì tự đổi / ẩn. Hỏi 5 giây một lần, chỉ vẽ khi đổi phút. */
+export function dungPhut() {
+  const [, ve] = useState(bayGio().slice(0, 16));
+  useEffect(() => {
+    const id = setInterval(() => ve((p) => { const n = bayGio().slice(0, 16); return n === p ? p : n; }), 5000);
+    return () => clearInterval(id);
+  }, []);
+}

@@ -1,0 +1,45 @@
+Bài thử KH-UI-5d — bằng chứng ĐỎ trên code chưa sửa (HEAD 25aff61 = PHIEU: KH-UI-5d; bản sao nguyên cây ở nháp bằng `git archive 25aff61`, bài thử mới / sửa chép vào đó)
+
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5d.js        (bài MỚI)
+  ✗ A3 Giờ vàng ĐANG chạy → "⏰ Giờ vàng: giảm 30% đến 10:00" … (gốc chưa có src/quangCao.js) — 14 ca A2–A5 đỏ
+  ✗ D3 "Uống 1/2" … "Không phải ngày"      ✗ E1 việc lặp / việc thường đổi ngày
+  ✗ B1 đọc bản lưu CŨ có anBanner … ✗ B1 kho không còn anBannerHomNay ✗ B1 BannerHomNay không khiAn / t-x ✗ B2 BannerNho đã xoá ✗ B1 ke_hoach.css không .t-x
+  ✗ C2 không Hoàn tác ✗ C1 HoiXoa ✗ D1 một chuông ✗ A2 dải gắn một chỗ ✗ A1 css ✗ A3 chỉ layChuongTrinh
+  3 đạt · 28 hỏng          (3 ca xanh là ca bảo vệ luồng cũ: ngày sai giữ ngày cũ; Giỏ hàng GIỮ Hoàn tác; không câu quảng cáo mẫu)
+
+Bài cũ sửa — mỗi bài sửa có ca ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1 (bài sửa chép vào bản sao gốc):
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js
+  ✗ D1 chưa lưu gì → bản trống (không còn trường ẩn banner)
+  ✗ D1 ghi trả true; đọc lại đúng từng trường; không ghi trường ẩn banner
+  ✗ D1 dữ liệu sai dạng từng phần … trường anBanner cũ bỏ qua
+  ✗ B7 không còn ẩn banner theo ngày: kho không có anBannerHomNay / bannerDangAn
+  ✗ B7 dù truyền chữ banner, /kehoach KHÔNG còn banner nhỏ
+  ✗ B7 bản nhỏ và nút ✕ đã bỏ hẳn
+  ✗ B7 banner Trang chủ: không mini, KHÔNG ✕ kể cả khi truyền khiAn
+  ✗ B7 bản lưu CŨ có anBanner: /kehoach vẫn dựng được, không banner nhỏ
+  ✗ B7 màn tiện ích cũng không banner nhỏ
+  66 đạt · 9 hỏng          (số ca không đổi: 75 → 75)
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5c.js
+  ✗ F1 (đổi ở KH-UI-5d) KHÔNG còn ✕ ẩn banner: Trang chủ không khiAn / anBannerHomNay, BannerHomNay không nút ✕, không còn BannerNho
+  51 đạt · 1 hỏng          (số ca không đổi: 52 → 52; ca trình duyệt "Hoàn tác" / "Xoá thật?" đổi sang hành vi mới, chạy có Chromium: 101 đạt · 0 hỏng)
+
+Trên code đã vá:
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5d.js     31 đạt · 0 hỏng
+$ node cong_cu/thu_KHUI5d.js (có Chromium)           84 đạt · 0 hỏng
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5c.js     52 đạt · 0 hỏng
+$ node cong_cu/thu_KHUI5c.js (có Chromium)           101 đạt · 0 hỏng
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js     75 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHUI5d.js: 31
+SỐ CA cong_cu/thu_KHUI5c.js: 52
+SỐ CA cong_cu/thu_KHUI5b.js: 75
+
+Ca trình duyệt của D4 ("Xem" ở dải nhắc → mở đúng bảng ngày, 2 ca d4a / d4b): xanh trên code đã vá; KHÔNG kiểm được trên gốc (bản gốc không dựng được cả bài trình duyệt vì chưa có dải → ca đầu hỏng, các ca sau không chạy).
+Đọc code gốc (DaiNhacViec.jsx + KeHoach.jsx `layNgayMo` / `SU_KIEN_MO_NGAY`) thì đường này đã đúng → D4 coi là ca KHOÁ hành vi, không tính vào "đỏ"; ghi trung thực ở CHƯA KIỂM.
+
+Đột biến chạy tay trên code đã vá (bản sao ở nháp, bài thử phải BẮT):
+  VS-QC-GIO-VANG-CHUA-TOI-VAN-HIEN   (quangCao.js: `tt.pha === 'dang'` → `tt`; Giờ vàng chưa tới / đã hết vẫn hiện dải):   28 đạt · 3 hỏng
+  BV-DAI-TRANG-THANH-TOAN            (quangCao.js: thêm 'thanhtoan' vào danh sách trang có dải):                           30 đạt · 1 hỏng
+  BV-SUA-VIEC-DOI-NGAY               (kehoach.js suaViec: bỏ ngày mới, luôn giữ goc.ngay):                                 29 đạt · 2 hỏng
+  VS-GO-NHANH-BO-QUA-KHONG-PHAI-NGAY (kehoachLap.js tachNhanh: `boNgay ?` → `false ?`, bấm "Không phải ngày" vô tác dụng):  30 đạt · 1 hỏng
+  BV-HOI-XOA-XOA-LUON                (BangNgay.jsx: nút "Xoá việc" gọi xoa trực tiếp, không hỏi lại):                      56 đạt · 2 hỏng (có Chromium)

@@ -116,14 +116,13 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const khoChan = { getItem() { throw new Error('chặn'); }, setItem() { throw new Error('chặn'); }, removeItem() { throw new Error('chặn'); } };
   const ks = khoGia();
   let b = KH.docKeHoach(ks);
-  k('D1 chưa lưu gì → bản trống', bang(b, { viec: [], leNhac: {}, anBanner: '' }));
+  k('D1 chưa lưu gì → bản trống (KH-UI-5d: không còn trường ẩn banner)', bang(b, { viec: [], leNhac: {} }));
   b = KH.themViec(b, { ngay: '2026-11-08', gio: '17:30', tieu: '  Đón con tan học  ', nhac: 1050 });
   k('D1 thêm việc: cắt khoảng trắng, giữ dấu tiếng Việt, mặc định chưa xong', b && b.viec.length === 1 && b.viec[0].tieu === 'Đón con tan học' && b.viec[0].xong === false && b.viec[0].nhac === 1050);
   k('D1 tiêu đề trống / ngày sai → không thêm (null)', KH.themViec(b, { ngay: '2026-11-08', gio: '09:00', tieu: '   ' }) === null && KH.themViec(b, { ngay: '2026-13-40', gio: '09:00', tieu: 'x' }) === null);
   k('D1 giờ trống / sai → việc cả ngày (gio rỗng), không nhắc (KH-UI-5c A4)', KH.themViec(b, { ngay: '2026-11-08', gio: '', tieu: 'a' }).viec[1].gio === '' && KH.themViec(b, { ngay: '2026-11-08', gio: '25:99', tieu: 'a' }).viec[1].gio === '' && KH.themViec(b, { ngay: '2026-11-08', gio: '', tieu: 'a' }).viec[1].nhac === null);
   b = KH.doiNhacLe(LP.tickLan(b, b.viec[0].id, b.viec[0].ngay, { d: 8, m: 11, y: 2026 }), 'Nhà giáo Việt Nam');
-  b = KH.anBannerHomNay(b, { d: 7, m: 11, y: 2026 });
-  k('D1 ghi trả true; đọc lại đúng từng trường (việc, cờ nhắc lễ, ngày ẩn banner)', KH.ghiKeHoach(b, ks) === true && bang(KH.docKeHoach(ks), b) && b.viec[0].xong === true && b.leNhac['Nhà giáo Việt Nam'] === true && b.anBanner === '2026-11-07');
+  k('D1 ghi trả true; đọc lại đúng từng trường (việc, cờ nhắc lễ); không ghi trường ẩn banner', KH.ghiKeHoach(b, ks) === true && bang(KH.docKeHoach(ks), b) && b.viec[0].xong === true && b.leNhac['Nhà giáo Việt Nam'] === true && !/anBanner/.test(ks.o.kh_kehoach));
   k('D1 khoá đúng tên kh_kehoach; nội dung không có số điện thoại / token', KH.KHOA_KE_HOACH === 'kh_kehoach' && Object.keys(ks.o).join() === 'kh_kehoach' && !/token|sdt|phone|\b0\d{9}\b/i.test(ks.o.kh_kehoach));
   k('D1 tick lần hai trả lại chưa xong; xoaViec bỏ đúng việc', LP.tickLan(b, b.viec[0].id, b.viec[0].ngay, { d: 8, m: 11, y: 2026 }).viec[0].xong === false && KH.xoaViec(b, b.viec[0].id).viec.length === 0);
   k('D1 doiNhacLe lần hai tắt; tên lễ lạ không ghi', !KH.doiNhacLe(b, 'Nhà giáo Việt Nam').leNhac['Nhà giáo Việt Nam'] && bang(KH.doiNhacLe(KH.keHoachTrong(), 'Lễ bịa').leNhac, {}));
@@ -132,11 +131,10 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const hong3 = khoGia(); hong3.o.kh_kehoach = '[1,2]';
   const d2 = KH.docKeHoach(hong2);
   k('D1 dữ liệu hỏng: JSON lỗi / mảng / null → bản trống, không ném lỗi', bang(KH.docKeHoach(hong1), KH.keHoachTrong()) && bang(KH.docKeHoach(hong3), KH.keHoachTrong()));
-  k('D1 dữ liệu sai dạng từng phần: giữ mục đúng, bỏ mục sai (việc lỗi, id trùng, lễ lạ, ngày ẩn sai)', d2.viec.length === 1 && d2.viec[0].tieu === 'Giữ' && bang(d2.leNhac, { 'Quốc khánh': true }) && d2.anBanner === '');
+  k('D1 dữ liệu sai dạng từng phần: giữ mục đúng, bỏ mục sai (việc lỗi, id trùng, lễ lạ; trường anBanner cũ bỏ qua)', d2.viec.length === 1 && d2.viec[0].tieu === 'Giữ' && bang(d2.leNhac, { 'Quốc khánh': true }) && !('anBanner' in d2));
   k('D1 kho bị chặn: đọc → bản trống; ghi / xoá → false (màn không được báo "đã lưu")', bang(KH.docKeHoach(khoChan), KH.keHoachTrong()) && KH.ghiKeHoach(b, khoChan) === false && KH.xoaKeHoach(khoChan) === false);
   k('D3 xoaKeHoach xoá khoá; đọc lại trống', KH.xoaKeHoach(ks) === true && !('kh_kehoach' in ks.o) && bang(KH.docKeHoach(ks), KH.keHoachTrong()));
-  const ngayAn = KH.anBannerHomNay(KH.keHoachTrong(), { d: 7, m: 11, y: 2026 });
-  k('B7 banner nhỏ ẩn tới hết hôm nay (theo ngày POS): hôm nay ẩn, ngày mai hiện lại', KH.bannerDangAn(ngayAn, { d: 7, m: 11, y: 2026 }) && !KH.bannerDangAn(ngayAn, { d: 8, m: 11, y: 2026 }) && !KH.bannerDangAn(KH.keHoachTrong(), { d: 7, m: 11, y: 2026 }));
+  k('B7 (KH-UI-5d) không còn ẩn banner theo ngày: kho không có anBannerHomNay / bannerDangAn', !KH.anBannerHomNay && !KH.bannerDangAn);
   const nh = KH.themViec(KH.themViec(KH.themViec(KH.keHoachTrong(), { ngay: '2026-11-07', gio: '17:30', tieu: 'B', nhac: 1050 }), { ngay: '2026-11-07', gio: '07:00', tieu: 'A', nhac: 420 }), { ngay: '2026-11-07', gio: '09:00', tieu: 'C', nhac: null });
   const ngayBay = { d: 7, m: 11, y: 2026 }, dangCo = (bg, bang2 = nh) => LP.nhacDangCo(bang2, bg, ngayBay).map((x) => x.v.tieu);
   k('C1 nhắc: đã tới mốc, chưa quá giờ, đã bật nhắc, chưa xong; không nhắc thì không hiện', bang(dangCo('2026-11-07 07:10:00'), ['A']) && bang(dangCo('2026-11-07 17:40:00'), ['B']) && bang(dangCo('2026-11-07 06:00:00'), []) && !dangCo('2026-11-07 09:00:00').includes('C') && dangCo('2026-11-07 07:10:00', LP.tickLan(nh, nh.viec[1].id, '2026-11-07', ngayBay)).length === 0);
@@ -193,15 +191,15 @@ async function manHinh(KH) {
   k('B6 không có thẻ video hướng dẫn', !/guide-card|Xem cách dùng/.test(trong));
   k('B7 chưa có chữ khuyến mãi "hôm nay" → không có banner nhỏ', khongBanner(trong));
   const co = veKH({ ...cb, homNay: HN, banner: BAN });
-  k('B7 có banner: bản nhỏ "today fx-a photo mini", nhãn "HÔM NAY" (không ngày), nút "Xem ›", ánh sáng gl-a, cùng chữ banner Trang chủ', /class="today fx-a photo mini"/.test(co) && co.includes('HÔM NAY') && co.includes('Xem ›') && co.includes('gl gl-a') && co.includes('Giờ vàng hôm nay') && co.includes('Giảm đến 30%') && !/HÔM NAY ·/.test(co));
-  k('B7 bản nhỏ KHÔNG có nút ✕ (đúng demo todayCard: mini ? \'\' : t-x) — KH-UI-5c F1', !co.includes('t-x'));
+  k('B7 (KH-UI-5d) dù truyền chữ banner, /kehoach KHÔNG còn banner nhỏ (đã thay bằng dải quảng cáo ở vỏ App)', khongBanner(co) && !co.includes('Giờ vàng hôm nay') && !/photo mini/.test(co));
+  k('B7 bản nhỏ và nút ✕ đã bỏ hẳn (KH-UI-5d): không t-x, không BannerNho', !co.includes('t-x') && !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')));
   const lon = thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {} });
-  k('B7 banner Trang chủ (không mini): không lớp mini, nút giữ chữ của nó; ✕ chỉ hiện khi có khiAn (KH-UI-5c F1)', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<')
-    && thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {}, khiAn() {} }).includes('aria-label="Ẩn ở Lịch và tiện ích đến hết hôm nay"'));
-  globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, viec: [], leNhac: {}, anBanner: KH.ngayChuoi(HN) }));
+  k('B7 banner Trang chủ: không lớp mini, nút giữ chữ của nó, KHÔNG có ✕ (kể cả khi truyền khiAn — KH-UI-5d)', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<')
+    && !thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {}, khiAn() {} }).includes('t-x'));
+  globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, viec: [], leNhac: {}, anBanner: KH.ngayChuoi(HN) })); // bản cũ có trường ẩn banner: đọc không lỗi
   const an = veKH({ ...cb, homNay: HN, banner: BAN });
-  k('B7 đã bấm ✕ hôm nay → bản nhỏ ẩn ở /kehoach; sang ngày mai hiện lại', khongBanner(an) && /class="today fx-a photo mini"/.test(veKH({ ...cb, homNay: { d: 8, m: 11, y: 2026 }, banner: BAN })));
-  k('B7 ẩn ở /kehoach thì cũng ẩn ở màn tiện ích (cùng một cờ); ngày mai hiện lại', khongBanner(veTI({ ...cb, id: 'ngayle', homNay: HN, banner: BAN })) && /class="today fx-a photo mini"/.test(veTI({ ...cb, id: 'ngayle', homNay: { d: 9, m: 11, y: 2026 }, banner: BAN })));
+  k('B7 bản lưu CŨ có anBanner của hôm nay: /kehoach vẫn dựng được và vẫn không banner nhỏ', khongBanner(an) && khongBanner(veKH({ ...cb, homNay: { d: 8, m: 11, y: 2026 }, banner: BAN })));
+  k('B7 màn tiện ích cũng không banner nhỏ (cả hôm nay lẫn ngày mai)', khongBanner(veTI({ ...cb, id: 'ngayle', homNay: HN, banner: BAN })) && khongBanner(veTI({ ...cb, id: 'ngayle', homNay: { d: 9, m: 11, y: 2026 }, banner: BAN })));
   globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, anBanner: '', leNhac: { 'Nhà giáo Việt Nam': true }, viec: [
     { id: 'a', ngay: '2026-11-07', gio: '17:30', tieu: 'Đón con tan học', nhac: true, xong: false }, { id: 'b', ngay: '2026-11-07', gio: '09:00', tieu: 'Họp nhóm', nhac: true, xong: true },
     { id: 'c', ngay: '2026-11-10', gio: '19:00', tieu: 'Sinh nhật mẹ', nhac: false, xong: false }] }));
@@ -244,7 +242,7 @@ async function manHinh(KH) {
   const app = doc('src/App.jsx');
   k('E1 App: dựng /kehoach và /kehoach/<tiện ích> chỉ khi đã đăng nhập, truyền san=daBiet; Trang chủ có moKeHoach', /dangNhap && trang === 'kehoach' && <KeHoach san=\{daBiet\}/.test(app) && /dangNhap && trang === 'tienich' && <TienIch[^>]*san=\{daBiet\}/.test(app) && /moKeHoach=\{\(\) => di\(taoDuongDan\('kehoach'\)\)\}/.test(app));
   k('E1 App: hết phiên / đăng xuất (donPhien) và đổi khách (docLaiGio) đều quên bản Kế hoạch trong bộ nhớ', /const donPhien = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app) && /const docLaiGio = \(\) => \{[^\n]*quenKeHoach\(\)/.test(app));
-  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/BannerNho.jsx', 'src/components/dungKeHoach.js'].map(doc);
+  const moi = ['src/kehoach.js', 'src/pages/KeHoach.jsx', 'src/pages/TienIch.jsx', 'src/components/OKeHoach.jsx', 'src/components/BangNgay.jsx', 'src/components/dungKeHoach.js'].map(doc);
   const moiHet = moi.join('\n');
   k('E1 không gọi mạng: các tệp mới không import api.js, không fetch / XMLHttpRequest / sendBeacon', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon/.test(moiHet));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" lấy từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moiHet) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/KeHoach.jsx')));

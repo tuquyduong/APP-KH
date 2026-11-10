@@ -27,7 +27,7 @@ export const jd = (n) => LUNAR.jdFromDate(n.d, n.m, n.y);
 export const tuJd = (j) => LUNAR.jdToDate(j);
 export const chuoiJd = (j) => ngayChuoi(tuJd(j));
 const jdChuoi = (s) => { const n = docNgay(s); return n ? jd(n) : null; };
-const soNgayThang = (m, y) => new Date(y, m, 0).getDate();
+export const soNgayThang = (m, y) => new Date(y, m, 0).getDate();
 /** "d/m" hoặc "d/m/yyyy" của một ngày Julius (kèm năm khi khác `homNay.y`). */
 export const dm = (j, homNay) => { const x = tuJd(j); return `${x.d}/${x.m}${homNay && x.y === homNay.y ? '' : '/' + x.y}`; };
 export const dmNgan = (j) => { const x = tuJd(j); return `${x.d}/${x.m}`; };
@@ -124,7 +124,7 @@ export function chuHan(ngay, xong, homNay) {
   return j < h && !xong ? { chu: 'quá hạn ' + dmNgan(j), qua: true } : { chu: 'hạn ' + dmNgan(j), qua: false };
 }
 
-// ----- ĐỔI TRẠNG THÁI (trả bản mới, không sửa bản cũ → "Hoàn tác" chỉ cần giữ bản cũ) -----
+// ----- ĐỔI TRẠNG THÁI (trả bản mới, không sửa bản cũ) -----
 const doiViec = (bang, id, f) => ({ ...bang, viec: bang.viec.map((v) => (v.id === id ? f(v) : v)) });
 const sapNhoNhat = (ds) => [...ds].sort();
 /** Tick một lần (`ngay` 'YYYY-MM-DD') của việc: không lặp → đảo xong; lặp → đảo lần đó; "sau khi xong N ngày" → dời sang N ngày sau hôm nay. */
@@ -220,6 +220,9 @@ export function tachNgayCuoi(chu, homNay) {
   const ngay = ngayChuoi({ d, m, y });
   return docNgay(ngay) ? { tieu: t[1].trim(), ngay } : { tieu: goc, ngay: '' };
 }
+
+/** Ô tên của bảng ngày: hiểu ngày cuối chữ, trừ khi khách bấm "Không phải ngày" (`boNgay`) → giữ nguyên chữ. */
+export const tachNhanh = (chu, homNay, boNgay) => (boNgay ? { tieu: String(chu || '').trim(), ngay: '' } : tachNgayCuoi(chu, homNay));
 
 // ----- TÌM -----
 /** Bỏ dấu tiếng Việt, chữ thường (đ → d) để so tìm. */

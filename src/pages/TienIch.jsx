@@ -3,16 +3,14 @@ import '../giaoDien/ke_hoach.css';
 import { bayGio } from '../bayGio.js';
 import { ghepMon } from '../tracNghiem.js';
 import { TU_KHOA_MON } from '../noiDung/theChat.js';
-import { BANNER, HOM_NAY } from '../noiDung/trangChu.js';
 import { SS, SS_F, GIFT_HOL } from '../noiDung/keHoach.js';
 import {
-  homNayTuGio, holList, upList, muaNgay, conLai, dayThang, thuNgayNgan, bannerDangAn, doiNhacLe, docNgay,
+  homNayTuGio, holList, upList, muaNgay, conLai, dayThang, thuNgayNgan, doiNhacLe, docNgay,
   tenTiet, CO_NHAC,
 } from '../kehoach.js';
 import Man from '../components/Man.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import { AnhMon } from '../components/MonO.jsx';
-import BannerNho from '../components/BannerNho.jsx';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
 import { dungKeHoach, datNgayMo } from '../components/dungKeHoach.js';
@@ -84,7 +82,7 @@ const DAU = {
 };
 
 /** Màn tiện ích của Kế hoạch (demo màn `tool`): `id` = theomua | ngayle | saptoi. Nút quay lại về /kehoach (`veLich`). */
-export default function TienIch({ id, san = true, veLich, moTienIch, moBanner, ds = [], chonMon, banner = { ...HOM_NAY, anh: BANNER.anh }, homNay: homNayCho }) {
+export default function TienIch({ id, san = true, veLich, moTienIch, ds = [], chonMon, homNay: homNayCho }) {
   const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu } = dungKeHoach(san);
   const [tb, datTb] = useState('');
@@ -93,7 +91,6 @@ export default function TienIch({ id, san = true, veLich, moTienIch, moBanner, d
   return (
     <Man id="tool">
       <DauMan tieuDe={tieuDe} phu={phu} lui={veLich} />
-      <BannerNho banner={banner} an={bannerDangAn(bang, homNay)} chon={moBanner} />
       <div id="toolBody">
         {id === 'theomua' && <TheoMua homNay={homNay} ds={ds} chonMon={chonMon} veLich={veLich} />}
         {id === 'ngayle' && <NgayLe homNay={homNay} bang={bang} doiNhac={(ten) => luuVaBao(doiNhacLe(bang, ten), bang.leNhac[ten] ? 'Đã tắt nhắc' : 'Đã bật nhắc · hiện khi bạn mở app')} />}
