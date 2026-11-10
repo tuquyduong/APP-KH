@@ -39,6 +39,15 @@
 - BỎ: người gác chặn chạy bài thử đang sửa tới khi commit (B-MANOI) và chặn `$BIẾN` / `&&` nối sau lệnh node (B-DICHCHU, B-PHANTICH) — chỉ một lần, đã có trong skill.
 - BỎ: ca đối chứng A3 đầu tiên đỏ do sai bài thử (fetch giả trả HTML cho cả /assets), sửa ở `626b41b`.
 
+## Báo cáo /ra-soat (agent độc lập, vòng 1) — ĐẠT, nghiệm thu 7/7
+- Lỗi nhẹ (K5): `public/sw.js:87,95` `trangHong` coi phản hồi navigate "không phải HTML" là hỏng → gõ thẳng /robots.txt, /sitemap.xml, PDF… khi đã có vỏ sẽ nhận trang App. Phiếu A2 viết đúng như vậy → không sửa, ghi `## Phát hiện`.
+- Nghi ngờ: (a) `tenBan` đòi `src="/assets/index-….js"` nháy kép — Vite đổi cách ghi thì vỏ không bao giờ được lưu (âm thầm); nên có ca `tenBan(dist/index.html)` khác rỗng. (b) `doiBan('', x)` = false đã có ca B2 (thu_KHPWA1.js) nên đường cập nhật không hỏng. (c) Chromium + iPhone thật chưa chạy; `dot_bien.py` agent không tự chạy (máy chính đã chạy 12/12).
+- K3 đạt (12 ca đỏ trên gốc, kiểm hành vi qua vm); K4 không sót (`am_thanh` còn ở `src/components/ManDau.jsx:100` đúng vì nay đi thẳng mạng).
+
+## Phát hiện (ngoài phạm vi, không làm)
+- Thu hẹp `trangHong` chỉ khi phản hồi là trang thật (HTML hoặc rỗng) để không nuốt tệp tĩnh mở thẳng — cần chủ quán sửa phiếu A2.
+- Thêm ca `tenBan(dist/index.html) !== ''` vào `kiem_tra_truoc_khi_giao.js --day-du` (ngoài Phạm vi).
+
 ## Cổng (KHONG_TRINH_DUYET=1)
 - `npm test` 41 đạt · 0 hỏng; `--day-du` 43 đạt · 0 hỏng.
 - `cong.js tinh`: chỉ còn A17/A19 trước khi ghi file này; sau đó xem dòng dưới.
