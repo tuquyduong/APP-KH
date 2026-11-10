@@ -68,3 +68,24 @@ Báo cáo (tóm): 5 lỗi + nghi ngờ. Đã sửa: (2) `doiLoai` không kẹp n
 Báo cáo không về dạng tệp: agent trả qua tin nhắn nộp; E5 là bước chủ quán thử tay (xem dưới).
 
 ## Cổng
+- `npm test`: 42 đạt · 0 hỏng (gồm thu_KHUI5e 120 · thu_KHUI5b 75 · thu_KHUI5c 101 · thu_KHUI5d 84, có Chromium).
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 44 đạt · 0 hỏng (K9 màu / phông, vite build).
+- `node tu_chay/cong.js chay . 390c2e0^ HEAD viec/KH-UI-5e` với KHONG_TRINH_DUYET=1: ✓ CỔNG CHẠY ĐẠT (hai CẢNH BÁO A16 "chạy trên gốc in 8 / 1 ca" là do bài dừng sớm trên gốc — bình thường).
+- Cổng `tinh`: ✓ (chạy lại sau commit cuối, xem cuối file).
+
+## BÁO CÁO 7 MỤC
+1. **VIỆC** KH-UI-5e: lưới 6 ô + dải Sắp tới; Ngày cần nhớ (Người thân + Ngày lễ); Văn khấn & lễ cúng.
+2. **ĐÃ SỬA** `kehoachLap.js` (âm→dương, `ngayKeTiep`), `kehoach.js` (người thân, văn khấn trong `kh_kehoach`, `upList` gộp, `chuThich`, `bangCoNhac`), `vanKhan.js` + `noiDung/vanKhan.js` (mới, 11 dịp chép demo), `duongDan.js`, `KeHoach.jsx`, `TienIch.jsx`, components `NguoiThan` · `VanKhanMan` · `BieuTuongTienIch` (mới) · `BanhXoay` · `HoiXoa` · `DaiNhacViec` · `dungKeHoach`, `giaoDien/tien_ich.css`. ~690 dòng app (phiếu ~650 → 1,06×), ~375 dòng thử (phiếu ~400).
+3. **BÀI THỬ** thu_KHUI5e mới (71 ca / 120 có Chromium), thu_KHUI5b sửa (75 → 75), 5c/5d không đổi; đột biến 12/12 bị bắt (bảng trên); đỏ trên gốc: xem `bang_chung_do.txt`.
+4. **ĐÃ RÀ K4** mọi nơi gọi `upList` / `chuThich` / `keHoachTrong` / `ghiKeHoach` / `docKeHoach` (`grep`): chỉ KeHoach.jsx, TienIch.jsx, thu_KHUI5b — đã đổi chữ ký đồng bộ; `moTienIch('ngayle'|'saptoi')` còn dùng; khoá lưu vẫn chỉ `kh_kehoach`.
+5. **CHƯA KIỂM** (a) E5 chủ quán thử tay trên điện thoại; (b) màn rộng ≥ 1024 px; (c) kế hoạch chưa nhờ agent phụ soát riêng (chỉ có `/ra-soat` bản code); (d) POS thật: không đụng; (e) chuyển trang dịp cúng bằng `pushState` + `popstate` đã thử trong Chromium nhưng trong trình duyệt Zalo chưa thử; (f) `duongDan.js` sửa một dòng khớp `cho` — chờ duyệt.
+6. **GIT** nhánh `viec/KH-UI-5e`, commit theo từng nhóm file, đã push; không PR, không merge.
+7. **BÀI HỌC** xem mục dưới.
+
+## Bài học
+- **KHOÁ (đã làm)**: ca "C2 xoá trắng ô Tín chủ", "B3 đổi loại kẹp ngày", "C4 không quá hạn" trong thu_KHUI5e — lỗi người soát bắt: ô có giá trị mặc định lấy từ nguồn khác (`a || mặc định`) làm khách không xoá trắng được; hàm đổi chế độ phải kẹp lại giá trị phụ thuộc; ca "không bao giờ" viết `A || B` che vế sai.
+- **NGUYÊN TẮC (đề xuất, ngoài Phạm vi `KHUON_LOI.md`)**: K10 "Ô nhập có mặc định phải phân biệt chưa nhập (null) với chủ ý để trống ('')". Đã gây: KH-UI-5e vòng soát 1. Dấu hiệu: `value = luu || macDinh`. Chặn: lưu null cho "chưa nhập", ca thử xoá trắng.
+- **BỎ**: chạy `npm test` > 2 phút phải chạy nền; người gác chặn lệnh ghép (`python3 <<EOF` + `node`, `for`, `$HOME`…) — chạy từng lệnh riêng. Một lần, không thành luật.
+- Dọn: không có lời dặn nào trong `KHUON_LOI.md` / `CLAUDE.md` cần xoá.
+
+HEAD ĐÃ KIỂM: 9820f68
