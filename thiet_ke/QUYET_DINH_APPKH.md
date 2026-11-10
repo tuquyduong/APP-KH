@@ -3,6 +3,9 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 10.11.2026
+- **Tiện ích Kế hoạch theo demo cuối** (chủ quán 06.11 "đủ 8 cái demo"): lưới 6 ô Theo mùa · Văn khấn · Ngày cần nhớ · Xe cộ · Uống thuốc · Chu kỳ + dải Sắp tới. Làm 2 việc nối nhau: KH-UI-5e (lưới, Ngày cần nhớ, Văn khấn — 3 ô còn lại hiện "Sắp có") rồi KH-UI-5f (Xe cộ, Uống thuốc, Chu kỳ). Chưa làm: Đọc to, Đặt hoa quả dâng lễ, Tặng thẻ quà.
+
 ## 09.11.2026
 - **Dải quảng cáo + Kế hoạch gọn** (KH-UI-5d gộp 09.11): dải mảnh ánh sáng lướt ở Menu, Ưu đãi, Giỏ hàng, Kế hoạch, Tài khoản (chữ tạm: Giờ vàng → chương trình); Trang chủ không còn ✕; Kế hoạch xoá hỏi lại một lần, không Hoàn tác.
 - **App mở nhanh + tự lên bản mới** (KH-PWA-1 gộp 09.11): lần mở thứ hai hiện gần như ngay, mất mạng vẫn thấy khung App; bản mới tự vào lặng lẽ, không bao giờ tải lại ở Giỏ / Thanh toán / Đơn / Đăng nhập / đang làm trắc nghiệm / đang mở bảng.

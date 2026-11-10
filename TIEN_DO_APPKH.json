@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 47,
-  "cap_nhat": "2026-11-09",
+  "phien_ban_so": 48,
+  "cap_nhat": "2026-11-10",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -131,12 +131,25 @@
       "ma": "KH-UI-5e",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-UI-5d"
       ],
-      "ten": "Ke hoach du tien ich theo demo cuoi: luoi 6 o (Theo mua, Van khan, Ngay can nho = Sinh nhat & gio + Ngay le, Xe co, Uong thuoc, Chu ky) + dai Sap toi; o Chu ky an voi xung ho anh/chu/bac",
-      "ghi_chu": "09.11 tach tu KH-UI-5d (cung file Ke hoach / tien ich — lam SAU 5d)"
+      "ten": "Tien ich: luoi 6 o (Theo mua, Van khan, Ngay can nho, Xe co, Uong thuoc, Chu ky — 3 o cuoi \"Sap co\") + dai Sap toi; Ngay can nho (Nguoi than: sinh nhat / gio am-duong + Ngay le); Van khan & le cung 11 dip (le vat, cach sap le, bai khan tu dien ten); o Chu ky an voi xung ho anh/chu/bac/ong",
+      "ghi_chu": "09.11 tach tu KH-UI-5d (cung file Ke hoach / tien ich — lam SAU 5d) | 10.11 mo; chat chia: Xe co + Uong thuoc + Chu ky sang KH-UI-5f. Khong lam: Doc to, Dat hoa qua dang le, Tang the qua",
+      "ngay": "2026-11-10",
+      "han": "2026-11-12"
+    },
+    {
+      "ma": "KH-UI-5f",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-UI-5e"
+      ],
+      "ten": "Tien ich theo demo cuoi: Xe co (nhieu xe, lich bao duong, giay to), Uong thuoc (gio uong, danh dau, 7 ngay), Chu ky (rieng tu, khoa PIN, an voi anh/chu/bac/ong)",
+      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung"
     },
     {
       "ma": "KH-QC-1",
