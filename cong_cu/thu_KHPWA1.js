@@ -199,7 +199,7 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     const lanDau = mangTra(LA, 'text/html', 200);
     await lanDau.ctx.layVo('reload').catch(() => {});
     k('KH-PWA-2 A3 trang lạ khi chưa có vỏ → cũng không lưu', !lanDau.kho.m.has('/'));
-    const dung = mangTra(HTML_BAN('/assets/index-NEW.js', '/assets/index-NEW.css'), 'text/html', 200);
+    const dung = napSWKho({ mang: async (p) => (p === '/' ? resGia(HTML_BAN('/assets/index-NEW.js', '/assets/index-NEW.css')) : resGia('x', /css$/.test(p) ? 'text/css' : 'text/javascript')) });
     await dung.ctx.layVo('reload').catch(() => {});
     k('KH-PWA-2 A3 đối chứng: HTML đúng của App → vẫn lưu vỏ', dung.kho.m.has('/'));
   });
