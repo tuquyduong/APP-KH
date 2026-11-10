@@ -5,7 +5,7 @@ import BangNoi from './BangNoi.jsx';
 import HoiXoa from './HoiXoa.jsx';
 import { BanhNgayThang } from './BanhXoay.jsx';
 import { soNgayThang } from '../kehoachLap.js';
-import { themNguoi, suaNguoi, xoaNguoi, nguoiSapXep, tronTuoi, thuNgayNgan, dayThang, conLai, CO_NHAC, NHAC_NGUOI, TEN_NGUOI_TOI_DA } from '../kehoach.js';
+import { themNguoi, suaNguoi, xoaNguoi, nguoiSapXep, tronTuoi, thuNgayNgan, dayThang, conLai, CO_NHAC, NHAC_NGUOI, TEN_NGUOI_TOI_DA, TOI_DA_NGUOI } from '../kehoach.js';
 
 const MAC_DINH = { loai: 'sn', ten: '', cal: 'duong', nam: '', nhac: -240 }; // demo pplForm: Sinh nhật · Dương lịch · nhắc 1 ngày trước
 const Chip = ({ on, f, children }) => <button type="button" className={on ? 'on' : ''} aria-pressed={on} onClick={f}>{children}</button>;
@@ -53,7 +53,7 @@ export function FormNguoi({ homNay, bang, nguoi, luu, dong }) {
   const gui = () => {
     const nhap = { ...f, nam: f.loai === 'sn' ? f.nam : '' };
     const moi = nguoi ? suaNguoi(bang, nguoi.id, nhap) : themNguoi(bang, nhap);
-    if (!moi) { datLoi(!f.ten.trim() ? 'Nhập tên trước nhé' : bang.nguoi.length >= 100 && !nguoi ? 'Đã đủ số người lưu trên máy này, xoá bớt nhé' : 'Ngày hoặc tháng chưa đúng'); return; }
+    if (!moi) { datLoi(!f.ten.trim() ? 'Nhập tên trước nhé' : bang.nguoi.length >= TOI_DA_NGUOI && !nguoi ? 'Đã đủ số người lưu trên máy này, xoá bớt nhé' : 'Ngày hoặc tháng chưa đúng'); return; }
     if (luu(moi, nguoi ? 'Đã lưu' : `Đã thêm: ${chuLoai(nhap)}`)) dong(); else datLoi('Chưa lưu được — chữ bạn gõ vẫn còn đây');
   };
   return (
