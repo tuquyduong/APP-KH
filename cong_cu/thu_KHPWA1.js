@@ -188,6 +188,10 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     coVo(tot.kho);
     const rt = await diTrang(tot, '/menu');
     k('KH-PWA-2 A2 đối chứng: trang 200 HTML → trả trang mạng (không chặn oan)', !!rt && rt.status === 200 && (await rt.text()) === CU);
+    const cd = napSWKho({ mang: async () => ({ ...resGia(''), type: 'opaqueredirect', status: 0, ok: false, headers: { get: () => null } }) });
+    coVo(cd.kho);
+    const rcd = await diTrang(cd, '/index.html');
+    k('KH-PWA-2 A2 đối chứng: chuyển hướng (opaqueredirect) → trả nguyên cho trình duyệt tự đi, không thay bằng vỏ', !!rcd && rcd.type === 'opaqueredirect');
     // A3: HTML 200 nhưng không có tệp JS chính (trang đăng nhập wifi…) → không lưu, vỏ cũ nguyên.
     const LA = '<!DOCTYPE html><html><body>Đăng nhập wifi</body></html>';
     const la = mangTra(LA, 'text/html', 200);
