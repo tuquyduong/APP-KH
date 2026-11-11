@@ -121,6 +121,8 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   k('B3/C4 việc ảo riêng tư KHÔNG hiện chuông trên lịch (danhDauNgay bỏ qua)', LP.danhDauNgay(nhacB, hn - 3, hn + 10, HN).size === 0);
   k('B3 thanh nhắc lúc 09:00: "… Đến giờ uống thuốc (09:00)" — không tên thuốc', (() => { const r = LP.nhacDangCo(nhacB, '2026-11-10T09:00:00', HN); return r.some((x) => x.chu.includes('Đến giờ uống thuốc (09:00)')) && !r.some((x) => x.chu.includes('Hoàng Kỳ')); })());
   k('C4 xưng hô "anh" → không nhắc chu kỳ; tắt nhắc → không; đã uống giờ đó → hết nhắc thuốc; tắt nhắc thuốc → hết', !KH.bangCoNhac(bRieng, HN, 'anh').viec.some((v) => v.id === 'ck') && !KH.bangCoNhac(KH.doiNhacChuKy(bRieng), HN, 'chi').viec.some((v) => v.id === 'ck') && !KH.bangCoNhac(KH.doiUong(bRieng, 'ta', '09:00', NAY), HN, 'chi').viec.some((v) => v.id === 'th:09:00') && !KH.bangCoNhac(KH.doiNhacThuoc(bRieng, 'ta'), HN, 'chi').viec.some((v) => v.id === 'th:09:00'));
+  const DK = await nap('src/components/dungKeHoach.js');
+  k('D2 việc ảo của dải / thanh nhắc → đúng tiện ích (thuốc · xe · chu kỳ); việc thường và sinh nhật / giỗ → null (mở bảng ngày)', DK.tienIchCuaNhac({ ao: true, id: 'th:09:00' }) === 'uongthuoc' && DK.tienIchCuaNhac({ ao: true, id: 'xea1h0:20400' }) === 'xeco' && DK.tienIchCuaNhac({ ao: true, id: 'ck' }) === 'chuky' && DK.tienIchCuaNhac({ ao: true, id: 'ngabc:5' }) === null && DK.tienIchCuaNhac({ id: 'xe123' }) === null);
   const up = (bb, x) => KH.upList(HN, bb, x);
   k('C4 Sắp tới: KHÔNG khoá → "Kỳ kinh dự kiến" · "Chu kỳ 28 ngày"; khoá → "Lời nhắc riêng tư" (không chữ kinh / chu kỳ)', (() => { const a = up(bRieng, 'chi').find((e) => e.di === 'chuky'), kb = up(KH.datKhoaChuKy(bRieng, kh1), 'chi').find((e) => e.di === 'chuky'); return a.t === 'Kỳ kinh dự kiến' && a.s === 'Chu kỳ 28 ngày' && a.j === hn + 2 && kb.t === 'Lời nhắc riêng tư' && !/kinh|chu kỳ/i.test(kb.t + kb.s + kb.k) && kb.k === 'Riêng tư'; })());
   k('C4 Sắp tới: xưng hô "anh" hoặc kỳ tới ngoài 30 ngày → không có dòng Chu kỳ', !up(bRieng, 'anh').some((e) => e.di === 'chuky') && !up({ ...bRieng, chuKy: ck({ bd: NAY, dai: 40 }) }, 'chi').some((e) => e.di === 'chuky'));
@@ -328,7 +330,9 @@ async function trinhDuyet(pw, { LP, LM, KH, IDX_KHOA }) {
     await t.locator('.dai-nhac').waitFor({ timeout: 8000 });
     const banner = await t.locator('.dai-nhac').innerText();
     k('B3 20:30 dải nhắc mở app chỉ nói "Đến giờ uống thuốc (20:30)" — KHÔNG tên thuốc, KHÔNG liều', banner.includes('Đến giờ uống thuốc (20:30)') && !banner.includes('Hoàng Kỳ') && !banner.includes('chén'), banner);
-    await t.goto(GOC_URL + '/kehoach/uongthuoc'); await t.waitForSelector('.phone');
+    await t.locator('.bao-don-xem').click(); await t.waitForURL('**/kehoach/uongthuoc');
+    k('D2 bấm "Xem" ở dải nhắc thuốc → mở đúng Uống thuốc (không mở bảng ngày trống)', duong(t) === '/kehoach/uongthuoc');
+    await t.waitForSelector('.med-card');
     await t.locator('.med-card').getByText('Xoá thuốc này').click();
     k('B1 xoá thuốc → hỏi lại một lần; Xoá → hết thuốc, dấu đã uống cũng xoá', (await t.locator('.hoi-xoa').innerText()).includes('Xoá thuốc «Thuốc sắc Hoàng Kỳ»?') && (await luuTho(t)).thuoc.length === 1);
     await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();

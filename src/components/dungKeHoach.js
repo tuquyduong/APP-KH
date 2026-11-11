@@ -72,6 +72,9 @@ export function luiDen(veNeuHet) {
 /** Hồ sơ khách đang đăng nhập đã có sẵn trong kho chung của App (không gọi mạng): { ten, xung_ho }; chưa biết → {}. */
 export const hoSoKhach = () => { const s = cuaToi.kho.lay(); return (s.dl && s.dl.khach) || {}; };
 
+/** Việc ảo của dải / thanh nhắc → tiện ích cần mở (thuốc · xe · chu kỳ); việc khác → null (mở bảng ngày). */
+export const tienIchCuaNhac = (v) => (!v.ao ? null : /^th:/.test(v.id) ? 'uongthuoc' : /^xe/.test(v.id) ? 'xeco' : v.id === 'ck' ? 'chuky' : null);
+
 /** Bấm một dòng của "Sắp tới" (`upList`) → mở đúng chỗ. `moViec(ngay)` mở việc trên lịch; `moTienIch(id)` mở một tiện ích. */
 export function moMucSapToi(e, { moViec, moTienIch }) {
   if (e.di === 'viec') moViec(e.ngay);

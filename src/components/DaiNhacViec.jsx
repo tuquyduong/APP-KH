@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { bayGio } from '../bayGio.js';
-import { dungKeHoach, datNgayMo, hoSoKhach } from './dungKeHoach.js';
+import { dungKeHoach, datNgayMo, hoSoKhach, tienIchCuaNhac, diDen } from './dungKeHoach.js';
+import { taoDuongDan } from '../duongDan.js';
 import { mocNhacTrong, phutTuGio, chuoiJd, dmNgan } from '../kehoachLap.js';
 import { bangCoNhac, homNayTuGio } from '../kehoach.js';
 import { Ico } from './BieuTuong.jsx';
@@ -23,7 +24,7 @@ export default function DaiNhacViec({ san, moNgay }) {
       truoc.current = nay;
       if (moi.length) {
         const x = moi[moi.length - 1];
-        datDai({ ngay: chuoiJd(x.j), chu: moi.length > 1 ? `${moi.length} việc cần nhớ — ${x.v.tieu}` : `${x.v.tieu} (${x.v.gio || dmNgan(x.j)})` });
+        datDai({ di: moi.length > 1 ? null : tienIchCuaNhac(x.v), ngay: chuoiJd(x.j), chu: moi.length > 1 ? `${moi.length} việc cần nhớ — ${x.v.tieu}` : `${x.v.tieu} (${x.v.gio || dmNgan(x.j)})` });
         if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch { /* máy không cho rung */ } }
       }
     };
@@ -36,7 +37,7 @@ export default function DaiNhacViec({ san, moNgay }) {
     <div className="nt-state on bao-don dai-nhac" role="status">
       <Ico ten="bell" s={18} />
       <div>Nhắc việc: {dai.chu}</div>
-      <button type="button" className="bao-don-xem" onClick={() => { datNgayMo(dai.ngay, true); moNgay(); datDai(null); }}>Xem</button>
+      <button type="button" className="bao-don-xem" onClick={() => { if (dai.di) diDen(taoDuongDan('tienich', { tienich: dai.di })); else { datNgayMo(dai.ngay, true); moNgay(); } datDai(null); }}>Xem</button>
       <button type="button" className="bao-don-tat" aria-label="Tắt thông báo" onClick={() => datDai(null)}><Ico ten="close" s={14} /></button>
     </div>
   );

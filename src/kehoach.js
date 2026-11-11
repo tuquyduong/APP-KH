@@ -5,7 +5,7 @@
 import { LUNAR, TERM_TIPS } from './lich.js';
 import { nd } from './noiDung/nd.js';
 import { SOLAR_HOL, LUNAR_HOL, SEASON, WD } from './noiDung/keHoach.js';
-import { docNgay, ngayChuoi, viecNgay, cacLan, daXongLan as daXong, jd as jdNgay, chuoiJd, GIO_RE, HAN_NHAC, LAN_XONG_TOI_DA, chuNhac, nhacTuPhut, gioPhut, amSangDuong, ngayKeTiep, soNgayThang, lichAm, jdChuoi, LOAI_XE, CHU_KY, lichTheoLoai, sapHang, trangThaiHang, trangThaiGiay, homNayThuoc, bayNgayThuoc, thuocConHan, chuKyHomNay, trangThaiXe, chuHang, chuGiay, gioThuocChuaUong, chuKyTrong } from './kehoachLap.js';
+import { docNgay, ngayChuoi, viecNgay, cacLan, daXongLan as daXong, jd as jdNgay, chuoiJd, GIO_RE, HAN_NHAC, LAN_XONG_TOI_DA, chuNhac, nhacTuPhut, gioPhut, amSangDuong, ngayKeTiep, soNgayThang, lichAm, jdChuoi, LOAI_XE, CHU_KY, lichTheoLoai, sapHang, trangThaiHang, trangThaiGiay, homNayThuoc, bayNgayThuoc, chuKyHomNay, trangThaiXe, chuHang, chuGiay, gioThuocChuaUong, chuKyTrong } from './kehoachLap.js';
 export { chuHang, chuGiay, chuLich, chuXe, gioThuocChuaUong, chuKyTrong, batChuKy, tatChuKy, ghiKyMoi, doiDaiChuKy, doiHanhChuKy, doiNhacChuKy, datKhoaChuKy, datThuChuKy, taoKhoa, kiemKhoa, thuMa, conChoGiay, SAI_TOI_DA, CHO_GIAY } from './kehoachLap.js';
 import { VK, MA_DIP } from './noiDung/vanKhan.js';
 import { vkNext, dipSapXep, tenNganDip } from './vanKhan.js';

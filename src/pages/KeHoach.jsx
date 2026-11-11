@@ -15,7 +15,7 @@ import { ndHien } from '../noiDung/nd.js';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
 import { TranhTienIch } from '../components/BieuTuongTienIch.jsx';
-import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapToi } from '../components/dungKeHoach.js';
+import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapToi, tienIchCuaNhac } from '../components/dungKeHoach.js';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
 const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
@@ -89,7 +89,7 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
       <DauMan tieuDe="Kế Hoạch và Nhắc Việc" phu="Việc của tôi · âm dương lịch · dưỡng sinh theo tiết khí" lui={lui}
         phai={<div className="today-btn" {...bam(veHomNay)}>Hôm nay</div>} />
       <div id="calNoti">
-        {nhac.map((x) => <div key={x.v.id + x.ngay} className="nt-bar on" {...bam(() => { const n = docNgay(x.ngay); moNgay(n.d, n.m, n.y); })}><span>🔔 {x.chu}</span></div>)}
+        {nhac.map((x) => <div key={x.v.id + x.ngay} className="nt-bar on" {...bam(() => { const di = tienIchCuaNhac(x.v); if (di) { moTienIch(di); return; } const n = docNgay(x.ngay); moNgay(n.d, n.m, n.y); })}><span>🔔 {x.chu}</span></div>)}
       </div>
       {nQua > 0 && <div className="nt-state qua-han" id="calQuaHan" role="button" tabIndex={0} {...bam(() => datBangQua(true))}><span>⚠️ {nQua} việc quá hạn</span><span>›</span></div>}
       <div className="tim-viec"><input type="search" id="timViec" placeholder="Tìm việc theo tên…" aria-label="Tìm việc" value={tim} onChange={(e) => datTim(e.target.value)} /></div>
