@@ -72,7 +72,7 @@ node tu_chay/cong.js chay . <base> <head> <nhánh>   # cổng như GitHub chạy
 - **Đường dẫn thật cho mọi trang** (chủ quán chốt 29.10): tuquyduong.com/trangchu, /menu, /mon/<tên-món>, /uudai, /taikhoan, /mathanhvien, /dangnhap…
   — khai báo ở MỘT chỗ `src/duongDan.js`; màn mới phải thêm đường dẫn vào bảng đó; mở thẳng, tải lại, Back / Tiến đều đúng.
 - **Không có mục quản trị trong app khách.** Khu quản trị (chế độ sửa nội dung…) ở `/admin`, đăng nhập bằng TÀI KHOẢN POS (tên đăng nhập + mật khẩu,
-  theo quyền POS) — việc KH-ADMIN-1 sau khai trương. Trước đó `/admin` chuyển về `/trangchu`.
+  theo quyền POS) — việc KH-ADMIN-1, làm TRƯỚC khai trương (chủ quán 10.11 — xem §11). Trước khi có, `/admin` chuyển về `/trangchu`.
 - Khẩu hiệu thương hiệu: **"Đông Y Dưỡng Thể"** (chủ quán chốt 29.10; 30.10 chốt thêm: ĐỔI HẾT mọi chỗ từng ghi "Sức khỏe mỗi ngày" — Trang chủ, màn đăng nhập nếu có, chân trang màn rộng). Chữ đặt ở một chỗ `src/noiDung/thuongHieu.js` (`KHAU_HIEU`). Ở MÀN MỞ (điện thoại + màn rộng) khẩu hiệu dùng kiểu **B2.3** (chủ quán chọn 30.10): phông EB Garamond 600 tự lưu ở `public/fonts/`, màu `#FBE3A2`, bóng `rgba(60,10,5,.35)`, in hoa, giãn chữ — CSS ở `src/giaoDien/khau_hieu.css` (lớp `.khau-hieu`, nạp sau `demo*.css`). Đây là ngoại lệ DUY NHẤT ngoài demo của K9 (xem `DUYET_NGOAI_DEMO` trong bộ kiểm); các chỗ khác vẫn kiểu chữ demo.
 - Tên miền `tuquyduong.com` là trang MỚI (chủ quán 30.10): gắn thẳng vào Pages `app-kh` (KH-CF-1), không phải giữ trang cũ.
 - Cần POS làm gì → chat App KH tự soạn file `thiet_ke/trao_doi/YEU_CAU_APPKH_GUI_POS_<ngày>.md` để chủ quán chuyển (chủ quán dặn 30.10: tự giao tiếp, không hỏi lại).
@@ -110,3 +110,35 @@ GitHub chạy cổng KHÔNG có trình duyệt (Playwright). Máy làm việc c�
 - Bảng tính năng App KH ↔ POS: `thiet_ke/DOI_CHIEU_TINH_NANG.md`. Trao đổi với POS: `thiet_ke/trao_doi/`.
 - Sửa §8 theo quyết định 30.10: kết quả trắc nghiệm gửi về POS KHI khách đồng ý ở màn hỏi chia sẻ (sau bài, trước kết quả); không đồng ý → chỉ trên máy như §8.
 - Chỉ 3 thứ cần đăng nhập: Kế hoạch, trắc nghiệm, tích điểm. Mọi thứ khác mở cho khách vãng lai (menu, combo, ưu đãi, Giờ vàng, giá từng hạng).
+
+## 11. Nội dung sửa được — mọi chữ / ảnh cho khách phải sửa được ở /admin (chủ quán chốt 10.11.2026)
+- **Ranh giới — mỗi thứ CHỈ có một chỗ sửa:**
+  | Nhóm | Gồm | Sửa ở đâu |
+  |---|---|---|
+  | A. POS | món, giá, size, topping, nhóm món, tồn · giá hạng, gói thẻ, quyền lợi hạng · Giờ vàng · chương trình · voucher · điểm, ví, đơn, hoá đơn · giờ mở cửa · quảng cáo theo giờ (QC-APP-1) · thông tin ngắn của món (KH-ND-2) · giới thiệu bạn bè | **POS** — App chỉ đọc; ở /admin hiện 🔒 "Lấy từ POS — sửa ở POS › …" |
+  | B. App tự tính | lịch âm, can chi, tiết khí, đếm ngược, tổng tiền, phần buổi / xưng hô trong lời chào | không ai sửa — 🔒 "App tự tính" |
+  | C. Dữ liệu khách | việc, người thân, tín chủ, thuốc, chu kỳ, xe… | khách, trên máy khách — không hiện ở /admin |
+  | D. Nội dung App | MỌI chữ, ảnh, nút, danh sách trình bày cho khách — kể cả chữ nút, tên màn, câu báo lỗi (chủ quán 10.11: "mở hết") | **/admin — Chế độ sửa của App KH** |
+  Nội dung trắc nghiệm thể trạng (câu hỏi, cách chấm, 9 thể) là chuyên môn → 🔒, chỉ thay bằng "tải bản mới".
+- **Khuôn duy nhất:** mỗi nội dung nhóm D là MỘT mục trong danh mục `src/noiDung/nd/<nhóm màn>.js` — `{ khoa, man, ten, loai, macDinh, … }` (loại: chu · doan · anh · nut · danhsach · battat;
+  chỗ điền `{bien}`; trường máy cần thì `khoaCauTruc`). Khoá đặt theo demo (`data-cms`) nếu demo có. Màn hình CHỈ đọc qua `nd()` / `ndNut()` / `ndAnh()` / `ndDs()` / `ndHien()` /
+  `<Chu k=…>` và gắn `data-nd`; phần nhóm A / B gắn `data-nd-khoa`. **KHÔNG viết chữ / ảnh cho khách thẳng trong màn hình.**
+- **Bộ kiểm K10 "chỉ được giảm":** số chữ tiếng Việt viết thẳng trong `src/` (ngoài `src/noiDung/**`) của mỗi tệp không được tăng (`cong_cu/no_chu_cung.txt`); giảm thì hạ số nợ bằng
+  `node cong_cu/ha_no_chu.js`. Tệp mới phải 0.
+- **Mỗi phiếu có nội dung mới** ghi khoá thêm vào danh mục trong nghiệm thu; danh mục kiểm bằng `kiemDanhMuc` (bài thử chung).
+- **Chế độ sửa (/admin, KH-ADMIN-1, TRƯỚC khai trương):** đăng nhập tài khoản POS · bật Chế độ sửa: chỗ sửa được có viền vàng + nút bút ✎, chỗ khoá có 🔒 + lý do · bấm ✎ → bảng sửa hiện lên
+  (bảng TỰ SINH từ danh mục, không làm tay từng màn) · **mỗi bảng có nút "Lưu"** (lưu nháp, khách chưa thấy) · **"Cập nhật toàn bộ"** mới đổi giao diện khách (thành một PHIÊN BẢN mới) ·
+  **mọi phiên bản trước được giữ**: xem lại, so cũ ↔ mới, **quay lại bản cũ** bất cứ lúc nào · ẩn / hiện từng khối.
+- **Quyền sửa** (chủ quán 11.11): ai được làm gì ở /admin nằm trong **Cài đặt › Phân quyền của POS** (một chỗ cấp quyền cho mọi tài khoản): "Xem Chế độ sửa App" ·
+  "Sửa nội dung App (Lưu nháp)" · "Cập nhật toàn bộ + quay lại phiên bản" · "Xuất / nhập toàn bộ" (chỉ chủ quán). Thu quyền có hiệu lực ngay. Mọi Lưu / Cập nhật / Quay lại có nhật ký.
+- **Đang sửa vẫn dùng App như khách:** mỗi chỗ sửa có nút bút ✎ riêng (chạm ✎ mới mở bảng sửa; chạm chỗ khác thì nút, thẻ vẫn chuyển màn như thường) · "Đi tới màn" nhảy tới mọi màn,
+  kể cả trạng thái hiếm (dữ liệu mẫu) · "Danh sách chữ của màn này" để sửa chữ chỉ thỉnh thoảng mới hiện (thông báo, báo lỗi) · trong Chế độ sửa, nút làm thật (đặt đơn, trả tiền,
+  đăng xuất, xoá) bị khoá — chỉ đi tới màn kế.
+- **Kho nội dung — ở nhờ POS nhưng xây như nhà riêng** (chủ quán 11.11, để sau này tách máy chủ chỉ là: dựng máy mới → Nhập toàn bộ → đổi 1 địa chỉ):
+  App nói chuyện với kho qua MỘT tệp (`src/noiDung/khoNoiDung.js`, địa chỉ là một biến) · kho có bảng riêng + đường riêng `/api/nd/*`, không dính bảng tiền / khách / đơn ·
+  dữ liệu JSON thuần; mỗi phiên bản = bản ĐẦY ĐỦ các chỗ đã sửa (so với `macDinh`), giữ MỌI phiên bản; "Quay lại" = tạo bản mới bằng nội dung bản cũ (không xoá gì) ·
+  ảnh đặt tên theo mã băm nội dung · đăng nhập bằng vé POS cấp (kho chỉ kiểm vé) · có sẵn "Xuất toàn bộ" / "Nhập toàn bộ" / "Tải phiên bản về máy".
+  Khách: App giữ bản gần nhất trên máy, mỗi lần mở chỉ hỏi "có số bản mới không" (không có thì không tải gì).
+- **Sao lưu App KH** (chủ quán hỏi 11.11): code + lịch sử ở GitHub; mỗi bản dựng ở Cloudflare Pages (quay lại bản dựng trước bằng một nút) · nội dung: mọi phiên bản trong kho +
+  sao lưu POS + MỖI ĐÊM tự xuất toàn bộ (khoá sao lưu chỉ đọc) cất vào nhánh sao lưu của kho App (KH-SL-1) · dữ liệu riêng của khách chỉ trên máy khách (riêng tư) — không sao lưu
+  lên máy chủ trừ khi chủ quán chốt việc đồng bộ theo tài khoản.

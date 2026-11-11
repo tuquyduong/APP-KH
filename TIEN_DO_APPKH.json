@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 51,
-  "cap_nhat": "2026-11-10",
+  "phien_ban_so": 52,
+  "cap_nhat": "2026-11-11",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -142,15 +142,82 @@
       "commit": "347cf07"
     },
     {
+      "ma": "KH-ND-3a",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "dang_mo",
+      "ngay": "2026-11-10",
+      "han": "2026-11-12",
+      "phu_thuoc": [
+        "KH-UI-5e",
+        "KH-PWA-2"
+      ],
+      "ten": "Nen noi dung sua duoc: danh muc src/noiDung/nd/ (khoa, loai, macDinh, bien, khoaCauTruc), nd()/ndNut/ndAnh/ndDs/ndHien + <Chu> + data-nd, nguon ban noi dung, muc khoa POS / tu tinh / khach, bo kiem K10 \"chi duoc giam\" (cong_cu/no_chu_cung.txt); chuyen mau Trang chu, thanh tab, man mo, ten man, cau bao loi chung",
+      "ghi_chu": "10.11 chu quan: noi dung sua truc tiep o App KH, khong dung phan POS; mo het chu (ke ca nut, bao loi); /admin truoc khai truong; luu tung phan + cap nhat toan bo + phien ban"
+    },
+    {
+      "ma": "KH-ND-3b",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-ND-3a"
+      ],
+      "ten": "Gom noi dung ve danh muc: Menu, Trang mon, Gio hang (khong doi giao dien, ha so no K10)"
+    },
+    {
+      "ma": "KH-ND-3c",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-ND-3a"
+      ],
+      "ten": "Gom noi dung ve danh muc: Uu dai, Tai khoan, Ho so, Ho tro, Dang nhap, Ma thanh vien, Trac nghiem (phan chu man; noi dung chuyen mon khoa)"
+    },
+    {
+      "ma": "KH-ND-3d",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-ND-3a",
+        "KH-UI-5f"
+      ],
+      "ten": "Gom noi dung ve danh muc: Ke hoach + moi tien ich (loi khuyen tiet khi, theo mua, ngay le, van khan dang danh sach); ten can chi / tiet khi sang noiDung/coDinh"
+    },
+    {
+      "ma": "KH-ND-3e",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-ND-3a"
+      ],
+      "ten": "Gom noi dung ve danh muc: Thanh toan, Theo doi don, Chi tiet don, PIN, the QR, bao don xong, trang thai don"
+    },
+    {
+      "ma": "KH-SL-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS ND-API-1 (khoa sao luu chi doc)"
+      ],
+      "ten": "Sao luu noi dung App moi dem: tac vu tu dong (GitHub Actions) goi GET /api/nd/xuat bang khoa sao luu chi doc, cat tep noi dung + anh vao nhanh sao luu rieng cua kho App",
+      "ghi_chu": "11.11 chu quan hoi sao luu App KH; code o GitHub, ban dung o Cloudflare Pages (rollback), du lieu khach chi tren may"
+    },
+    {
       "ma": "KH-UI-5f",
       "loai": "Th",
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-UI-5e"
+        "KH-UI-5e",
+        "KH-ND-3a"
       ],
       "ten": "Tien ich theo demo cuoi: Xe co (nhieu xe, lich bao duong, giay to), Uong thuoc (gio uong, danh dau, 7 ngay), Chu ky (rieng tu, khoa PIN, an voi anh/chu/bac/ong)",
-      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to | 10.11 tu soat KH-UI-5e: 3 o Xe co / Uong thuoc / Chu ky dang \"Sap co\" (BieuTuongTienIch.jsx, TienIch.jsx) — 5f thay; thu mo mot dip van khan trong trinh duyet Zalo"
+      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to | 10.11 tu soat KH-UI-5e: 3 o Xe co / Uong thuoc / Chu ky dang \"Sap co\" (BieuTuongTienIch.jsx, TienIch.jsx) — 5f thay; thu mo mot dip van khan trong trinh duyet Zalo | 10.11 lam SAU KH-ND-3a: chu / anh moi viet qua danh muc + nd() ngay tu dau (CLAUDE.md muc 11) | 11.11 chu quan (anh chup Van khan Ong Tao): Tin chu / Dia chi phai co o nhap ro + MAC DINH cho moi bai khan — o \"Thong tin gia dinh khi khan\" o dau man Van khan (dien mot lan, moi bai dung chung) + dong gon \"Tin chu: … · Dia chi: … Sua ›\" o dau moi bai; mac dinh Tin chu = ho ten khach (ten POS, KHONG kem xung ho), Dia chi = dia chi da luu (dia_chi POS), Ho gia tien = chu dau cua ho ten — sua duoc, chi luu tren may; trong bai: cho trong hien \"(cham de dien dia chi)\", cham vao cho to mau bat ky → o nhap dung muc do; thieu thi nhac nhe"
     },
     {
       "ma": "KH-QC-1",
@@ -599,9 +666,11 @@
       "trang_thai": "cho",
       "phu_thuoc": [
         "KH-TACH-1",
-        "POS: cua xac nhan tai khoan nhan vien (D9)"
+        "POS: cua xac nhan tai khoan nhan vien (D9)",
+        "KH-ND-3a",
+        "POS ND-API-1 (kho noi dung /api/nd + quyen trong Phan quyen)"
       ],
-      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai"
+      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai | 10.11 chu quan: lam TRUOC khai truong; bang sua TU SINH tu danh muc; moi bang co nut \"Luu\" (nhap) + nut \"Cap nhat toan bo\" moi doi giao dien khach; giu moi phien ban, so cu-moi, quay lai ban cu; an/hien khoi; mo het chu (ke ca nut, bao loi); phan POS / tu tinh hien khoa co chi duong | 11.11 chu quan: kho noi dung o nho POS (/api/nd, nha rieng — tach sau chi doi 1 dia chi), quyen trong Cai dat › Phan quyen POS; nut but ✎ rieng, cham cho khac van chuyen man; \"Di toi man\" + \"Danh sach chu cua man\"; nut lam that bi khoa khi sua; App noi kho qua MOT tep src/noiDung/khoNoiDung.js"
     },
     {
       "ma": "KH-ND-1",

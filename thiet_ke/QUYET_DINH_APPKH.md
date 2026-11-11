@@ -3,6 +3,14 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 11.11.2026
+- **Kho nội dung App ở nhờ POS nhưng xây như nhà riêng** (chủ quán 11.11): bảng riêng + đường riêng `/api/nd/*`, JSON thuần, mỗi phiên bản là bản đầy đủ, giữ mọi bản, quay lại = tạo bản mới; ảnh tên theo mã băm; đăng nhập bằng vé POS; Xuất / Nhập toàn bộ → sau này tách máy chủ: dựng máy mới, nhập toàn bộ, đổi 1 địa chỉ. "Lưu" = lưu tiến độ (nháp).
+- **Quyền sửa App nằm trong Cài đặt › Phân quyền POS** (chủ quán 11.11): Xem / Sửa (Lưu) / Cập nhật + quay lại / Xuất-Nhập (chủ quán). Có nhật ký.
+- **Đang sửa vẫn bấm chuyển màn được** (chủ quán 11.11): nút bút ✎ riêng ở mỗi chỗ sửa, chạm chỗ khác App chạy như khách; "Đi tới màn" (cả trạng thái hiếm); "Danh sách chữ của màn này"; nút làm thật bị khoá khi sửa.
+- **Sao lưu App KH** (chủ quán hỏi 11.11): code ở GitHub; bản đang chạy ở Cloudflare Pages (quay lại bản dựng trước một nút); nội dung = mọi phiên bản + sao lưu POS + mỗi đêm tự xuất cất vào nhánh sao lưu của kho App (KH-SL-1, khoá sao lưu chỉ đọc) + chủ quán tải về máy khi muốn; dữ liệu riêng của khách chỉ trên máy khách.
+- **Văn khấn** (chủ quán 11.11): Tín chủ / Địa chỉ có ô nhập rõ + mặc định cho mọi bài (tên đầy đủ + địa chỉ đã lưu của khách, sửa được); chạm chỗ tô màu trong bài để điền. (KH-UI-5f)
+- **POS** (tư vấn chat 11.11, gửi POS): không làm Chế độ sửa cho màn nhân viên; mọi chữ POS gửi tới KHÁCH (hoá đơn, tem, tin Zalo, nội dung chuyển khoản, lời mời đánh giá…) phải ở Cài đặt POS có xem trước; mọi màn Cài đặt POS có nhật ký thay đổi. Thư YEU_CAU_APPKH_GUI_POS_11112026.md.
+
 ## 10.11.2026
 - **Tiện ích: Ngày cần nhớ + Văn khấn** (KH-UI-5e gộp 10.11): lưới 6 ô + dải Sắp tới; sinh nhật / giỗ âm-dương nhắc đúng ngày; 11 dịp cúng có lễ vật, cách sắp lễ, bài khấn tự điền tên.
 - **Tiện ích Kế hoạch theo demo cuối** (chủ quán 06.11 "đủ 8 cái demo"): lưới 6 ô Theo mùa · Văn khấn · Ngày cần nhớ · Xe cộ · Uống thuốc · Chu kỳ + dải Sắp tới. Làm 2 việc nối nhau: KH-UI-5e (lưới, Ngày cần nhớ, Văn khấn — 3 ô còn lại hiện "Sắp có") rồi KH-UI-5f (Xe cộ, Uống thuốc, Chu kỳ). Chưa làm: Đọc to, Đặt hoa quả dâng lễ, Tặng thẻ quà.
@@ -12,6 +20,8 @@
 - **Thẻ quà tặng** (POS QUA-TANG-1, làm sau cùng): mua thẻ mệnh giá có thể khuyến mãi, mỗi thẻ một mã quà + link, "Quà đã mua" + Chia sẻ, người nhận nhập mã / bấm link → tiền vào tài khoản. (KH-QUA-1)
 - **Văn khấn**: không "Đọc to" (người làm lễ tự đọc); "hoa quả, trà dâng lễ" chỉ là dòng gợi ý (KH-UI-5f).
 - **Yêu cầu chung** (chủ quán 10.11): hệ thống phải thông minh, code chuẩn, đơn giản, không lằng nhằng — mỗi thứ một luồng, dùng lại cái đã có (voucher, báo giá, đơn, đăng ký OTP).
+- **Nội dung sửa được** (chủ quán 10.11 — "rất quan trọng"): mọi chữ / ảnh / nút trình bày cho khách sửa TRỰC TIẾP ở App KH (/admin, Chế độ sửa), MỞ HẾT kể cả chữ nút, câu báo lỗi; KHÔNG đụng phần lấy từ POS (giá, gói, hạng, voucher…) — hiện 🔒 chỉ đường sang POS. Chữ cứng trong code phải chuyển hết về danh mục nội dung (KH-ND-3a nền + 3b…3e gom theo nhóm màn); bộ kiểm chặn chữ cứng mới. Luật: CLAUDE.md §11; phương án: thiet_ke/PHUONG_AN_NOI_DUNG_SUA_DUOC.md.
+- **/admin làm TRƯỚC khai trương** (KH-ADMIN-1): mỗi phần sửa có nút "Lưu" (nháp), nút "Cập nhật toàn bộ" mới đổi giao diện khách; giữ MỌI phiên bản trước, so cũ ↔ mới, quay lại bản cũ được. (Thay "sau khai trương" ở CLAUDE.md §5.)
 
 ## 09.11.2026
 - **Dải quảng cáo + Kế hoạch gọn** (KH-UI-5d gộp 09.11): dải mảnh ánh sáng lướt ở Menu, Ưu đãi, Giỏ hàng, Kế hoạch, Tài khoản (chữ tạm: Giờ vàng → chương trình); Trang chủ không còn ✕; Kế hoạch xoá hỏi lại một lần, không Hoàn tác.
