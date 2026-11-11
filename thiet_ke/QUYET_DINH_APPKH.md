@@ -10,6 +10,8 @@
 - **Sao lưu App KH** (chủ quán hỏi 11.11): code ở GitHub; bản đang chạy ở Cloudflare Pages (quay lại bản dựng trước một nút); nội dung = mọi phiên bản + sao lưu POS + mỗi đêm tự xuất cất vào nhánh sao lưu của kho App (KH-SL-1, khoá sao lưu chỉ đọc) + chủ quán tải về máy khi muốn; dữ liệu riêng của khách chỉ trên máy khách.
 - **Văn khấn** (chủ quán 11.11): Tín chủ / Địa chỉ có ô nhập rõ + mặc định cho mọi bài (tên đầy đủ + địa chỉ đã lưu của khách, sửa được); chạm chỗ tô màu trong bài để điền. (KH-UI-5f)
 - **POS** (tư vấn chat 11.11, gửi POS): không làm Chế độ sửa cho màn nhân viên; mọi chữ POS gửi tới KHÁCH (hoá đơn, tem, tin Zalo, nội dung chuyển khoản, lời mời đánh giá…) phải ở Cài đặt POS có xem trước; mọi màn Cài đặt POS có nhật ký thay đổi. Thư YEU_CAU_APPKH_GUI_POS_11112026.md.
+- **Đăng nhập bằng mật khẩu** (chủ quán 11.11): đăng ký xong khách tạo mật khẩu (≥ 6 ký tự, có "Để sau"); đăng nhập SĐT + mật khẩu, quên thì đăng nhập bằng mã rồi đặt lại; PIN 4 số giữ để xác nhận trả bằng ví. Duy trì đăng nhập: tự gia hạn mỗi lần mở App (đề nghị POS token 90 ngày). (KH-MK-1, thư POS 11.11 b)
+- **Đổi điểm — kho quà ở POS** (chủ quán 11.11): kho quà (voucher theo mẫu hoặc quà hiện vật có tồn) cài ở POS, App đọc; đổi quà sinh MỘT phiếu quà ở POS — voucher dùng được cả khi đặt trên App lẫn ở quầy, quà hiện vật có QR để quầy quét "Đã trao"; quầy và App cùng một hàm, trạng thái luôn khớp; hết hạn chưa dùng: chủ quán chọn hoàn điểm / không. (KH-DOI-1)
 
 ## 10.11.2026
 - **Tiện ích: Ngày cần nhớ + Văn khấn** (KH-UI-5e gộp 10.11): lưới 6 ô + dải Sắp tới; sinh nhật / giỗ âm-dương nhắc đúng ngày; 11 dịp cúng có lễ vật, cách sắp lễ, bài khấn tự điền tên.

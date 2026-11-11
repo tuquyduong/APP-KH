@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 52,
+  "phien_ban_so": 53,
   "cap_nhat": "2026-11-11",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -700,6 +700,29 @@
       ],
       "ten": "The qua tang: mua the qua (chi tien that), muc \"Qua da mua\" + Chia se (Zalo / copy link, loi chuc), man nhan qua (nhap ma / link, dang ky OTP neu chua co)",
       "ghi_chu": "10.11 POS bao truoc; App chua lam gi toi khi POS gui hop dong"
+    },
+    {
+      "ma": "KH-MK-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS mat khau KH (thu App 11.11 b)"
+      ],
+      "ten": "Dang nhap bang mat khau: buoc \"Tao mat khau\" sau dang ky (co De sau), Ho so › Bao mat tao / doi mat khau, man dang nhap SDT -> mat khau hoac ma, quen mat khau = dang nhap bang ma roi dat lai; PIN 4 so giu cho xac nhan tra vi",
+      "ghi_chu": "11.11 chu quan: muon khach tao mat khau sau dang ky + duy tri dang nhap (moi lan thu phai lay ma o POS). Truoc khai truong. De nghi POS token 90 ngay"
+    },
+    {
+      "ma": "KH-DOI-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS doi diem (thu App 11.11 b)",
+        "POS VOUCHER-2"
+      ],
+      "ten": "Doi diem lay qua: Uu dai › Diem -> man \"Doi qua bang diem\" theo demo; KHO QUA tu POS (GET /kho-qua), POST /doi-diem -> phieu qua o POS; \"Qua cua toi\" (GET /qua-cua-toi): voucher dung khi dat mon, qua hien vat co QR de quay quet \"Da trao\"",
+      "ghi_chu": "11.11 chu quan: kho qua lay tu POS, doi qua thi 2 he thong thong nhau (mot phieu qua o POS, quay + App cung doc / ghi); het han chua dung: de nghi hoan diem (chu quan chon trong Cai dat)"
     }
   ]
 }
