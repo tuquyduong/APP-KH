@@ -53,7 +53,7 @@ const DONG_KHOA = 'Đăng nhập để mở khoá chức năng';
     const maGvTrong = veGv({ mo() {} }, { tt: { pha: 'dang', conLai: 100, phanTram: 50 }, coMenu: true, maGv: new Set(), soMon: 3 });
     k('B1 có chương trình nhưng không món ghép được trong menu → cũng ô mờ', /hb-mo/.test(maGvTrong) && !/50/.test(maGvTrong));
     // Ô sáng dùng GvDem (đếm ngược, kho ngoài) nên không dựng được bằng react-dom/server — chữ giữ nguyên đọc ở nguồn, chạy thật ở phần 2.
-    k('B1 có chương trình: chữ KH-UI-3a giữ nguyên trong nguồn (món đang giảm / món cuối ngày, đếm ngược, bấm được)', /món đang giảm/.test(gv) && /món cuối ngày/.test(gv) && /GvDem kieu="short"/.test(gv) && /\{\.\.\.bam\(mo\)\}/.test(gv));
+    k('B1 có chương trình: chữ KH-UI-3a giữ nguyên trong nguồn (món đang giảm / món cuối ngày, đếm ngược, bấm được)', /'home\.gv\.dang'/.test(gv) && /'home\.gv\.cuoi'/.test(gv) && /'\{so\} món đang giảm'/.test(doc('src/noiDung/nd/trangChu.js')) && /'\{so\} món cuối ngày'/.test(doc('src/noiDung/nd/trangChu.js')) && /GvDem kieu="short"/.test(gv) && /\{\.\.\.bam\(mo\)\}/.test(gv));
   } catch (e) { k('dựng OGioVang', false, String(e && e.message).split('\n')[0]); }
   try {
     const veTn = dungO('components/OTracNghiem.jsx');

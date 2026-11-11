@@ -100,8 +100,11 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
   const r = D.docDuongDan('/kiemkhop');
   k('B1 /kiemkhop là trang riêng trong bảng đường dẫn, không cần đăng nhập, không thuộc tab nào', r.trang === 'kiemkhop' && !r.canDN && r.tab === null && r.giuCho === true && r.chuan === '/kiemkhop' && D.taoDuongDan('kiemkhop') === '/kiemkhop', JSON.stringify(r));
   k('B1 /Kiemkhop/ chuẩn hoá về /kiemkhop; tiêu đề tab có tên trang', D.docDuongDan('/Kiemkhop/').chuan === '/kiemkhop' && /Kiểm khớp/.test(D.tieuDeTrang('kiemkhop')));
-  const loiVao = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f) && !/^kiemKhop[\\/]|KiemKhop\.jsx$|duongDan\.js$|^main\.jsx$/.test(f)).filter((f) => /kiemkhop/i.test(doc('src/' + f)));
+  const loiVao = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f) && !/^kiemKhop[\\/]|KiemKhop\.jsx$|duongDan\.js$|^main\.jsx$|^noiDung[\\/]nd[\\/]khungChung\.js$/.test(f)).filter((f) => /kiemkhop/i.test(doc('src/' + f)));
   k('B1 không file nào khác của app nhắc /kiemkhop (không lối vào từ tab, menu, tài khoản)', loiVao.length === 0, loiVao.join(','));
+  const ndKhung = fs.existsSync(path.join(GOC, 'src/noiDung/nd/khungChung.js')) ? doc('src/noiDung/nd/khungChung.js') : '';
+  const soNhacNd = (ndKhung.match(/kiemkhop/gi) || []).length;
+  k('B1 (KH-ND-3a) danh mục nội dung chỉ nhắc kiemkhop ở MỘT chỗ: tên màn tieuDe.kiemkhop (không phải lối vào)', soNhacNd === 1 && /tieuDe\('kiemkhop', 'Kiểm khớp POS'\)/.test(ndKhung), `${soNhacNd} chỗ`);
   const mj = doc('src/main.jsx');
   k('B1/B4 main.jsx chọn trang KiemKhop riêng cho /kiemkhop (vỏ App không chạy → không tự gọi cửa nào, không gọi theo giờ)', /KiemKhop/.test(mj) && /kiemkhop/i.test(mj));
 

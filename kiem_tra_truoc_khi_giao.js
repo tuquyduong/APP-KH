@@ -135,6 +135,21 @@ if (demo) {
   }
   k('K9b phông chỉ dùng họ chữ của demo (+ phông hệ thống dự phòng)', sai.length === 0, sai.join(' · '));
 }
+// K10 — chữ cứng "chỉ được giảm" (CLAUDE.md §11, KH-ND-3a): số chữ tiếng Việt viết thẳng của MỖI tệp src/ (ngoài noiDung/, kiemKhop/) phải BẰNG số nợ
+//       trong cong_cu/no_chu_cung.txt. Bộ đếm + số nợ: cong_cu/ha_no_chu.js (bản chép thiếu tệp đó → K10 đỏ riêng, các phép kiểm khác vẫn chạy).
+let noChu = null;
+try { noChu = require('./cong_cu/ha_no_chu.js'); } catch { /* thiếu */ }
+const soNo = noChu && noChu.docNo(GOC);
+if (!soNo) k('K10 đọc được cong_cu/ha_no_chu.js + cong_cu/no_chu_cung.txt', false);
+else {
+  const dem = noChu.demTatCa(GOC), tang = [], giam = [];
+  for (const f of [...new Set([...Object.keys(dem), ...Object.keys(soNo)])].sort()) {
+    const a = dem[f] || 0, b = soNo[f] || 0;
+    if (a > b) tang.push(`${f} (+${a - b})`); else if (a < b) giam.push(`${f} (−${b - a})`);
+  }
+  k('K10 chữ cứng chỉ được giảm', !tang.length && !giam.length, [tang.length ? `chữ cứng mới ở ${tang.join(', ')}: dùng nd() — CLAUDE.md §11` : '',
+    giam.length ? `đã giảm ${giam.join(', ')} — chạy \`node cong_cu/ha_no_chu.js\` để hạ số nợ` : ''].filter(Boolean).join(' · '));
+}
 
 console.log('— Bài thử cong_cu/thu_*.js');
 const baiThu = fs.existsSync(path.join(GOC, 'cong_cu')) ? fs.readdirSync(path.join(GOC, 'cong_cu')).filter((f) => /^thu_.*\.js$/.test(f)).sort() : [];

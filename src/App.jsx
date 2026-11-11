@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh } from './api.js';
 import { cuaToi, cuaDiem, cuaDon, CUA_KHACH, lamMoi, xoaKhoKhach, napTomTat, luuTomTat, dungLamMoiNgam } from './duLieuKhach.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
@@ -21,6 +21,7 @@ import { docGio, ghiGio, themMon, demMon } from './gio.js';
 import { banGhiCuaDon, ghiGuiDo, moTheoDoi, monDatLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
+import { ngheNoiDung, phienNoiDung } from './noiDung/nd.js';
 import Thongbao from './components/Thongbao.jsx';
 import BaoDonXong from './components/BaoDonXong.jsx';
 import DaiNhacViec from './components/DaiNhacViec.jsx';
@@ -69,6 +70,7 @@ export default function App() {
   const [maCho, datMaCho] = useState(MA_TU_LINK);
   const { duong: r, di, thay, lui } = dungDuongDan();
   const trang = r.trang;
+  const banNoiDung = useSyncExternalStore(ngheNoiDung, phienNoiDung); // bản nội dung mới (noiDung/nd.js) → vẽ lại cả cây, đổi tên tab trình duyệt
   const menu = dungMenu(dangNhap);
   const tnGoc = dungTracNghiem();
   dungHeThong(); // hạng, Giờ vàng, giờ hoạt động + "bây giờ" của POS: nạp một lần ở đây, các màn chỉ đọc
@@ -142,7 +144,7 @@ export default function App() {
     if (dangNhap && ((trang === 'tracnghiemlam' && !tn.bai) || (trang === 'tracnghiemketqua' && !tn.hien))) thay(taoDuongDan('tracnghiem'));
   }, [trang, dangNhap, tn.bai, tn.hien]);
 
-  useEffect(() => { document.title = tieuDeTrang(trang, monLink && monLink.ten); if (tieuXong) document.title = tieuXong; }, [trang, monLink, tieuXong]);
+  useEffect(() => { document.title = tieuDeTrang(trang, monLink && monLink.ten); if (tieuXong) document.title = tieuXong; }, [trang, monLink, tieuXong, banNoiDung]);
 
   useLayoutEffect(() => {
     if (khungCuon.current) khungCuon.current.scrollTop = viTriCuonKhiDoiMan({ tab: trang, coManCon: false, quayLaiMenu: quayLaiMenu.current, daLuu: viTriMenu.current });

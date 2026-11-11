@@ -1,0 +1,59 @@
+KH-ND-3a — bằng chứng ĐỎ trên code gốc (commit fd5d70e = "PHIEU: KH-ND-3a"), rồi XANH sau khi sửa.
+Cách làm: `git archive` cây gốc vào thư mục nháp (node_modules dùng chung), chép ĐÚNG bài thử mới / đã sửa vào đó, chạy với KHONG_TRINH_DUYET=1 ở cả hai cây.
+
+== 1. Bài MỚI cong_cu/thu_KHND3a.js — trên GỐC (chưa có src/noiDung/nd*, Chu.jsx, cong_cu/ha_no_chu.js, K10)
+0 đạt · 26 hỏng
+  ✗ A1 có src/noiDung/nd/khungChung.js · nd/trangChu.js · nd/index.js · nd.js · components/Chu.jsx
+  ✗ A1 danh mục gộp có ≥ 80 mục — 0 mục · Cannot find module '.../src/noiDung/nd.js'
+  ✗ A1 dùng lại khoá demo data-cms (home.needs, home.bb, brand.slogan…) · đủ 6 loại · nút { chu, dich } · battat hien.<SECS> · danhsach nhu cầu · macDinh = chữ đang chạy · bien
+  ✗ A2 có mục khoá pos + tutinh · home.diem.so khoá bởi POS
+  ✗ A3 kiemDanhMuc(toàn bộ danh mục) = 0 lỗi — thiếu hàm
+  ✗ B1 src/noiDung/nd.js xuất nd() · B3 dựng Chu.jsx / nd.js · B1 không vòng nạp · B2 vỏ App nghe nguồn nội dung
+  ✗ C1 cong_cu/ha_no_chu.js xuất demChuCung
+  ✗ D1 noiDung/trangChu.js cũ đã gộp vào danh mục · Trang chủ không đọc thẳng NHU_CAU / KHAU_HIEU / THE_MOI · ẩn / hiện qua ndHien · data-nd-khoa
+(Lần chạy trên cây làm việc, khi ha_no_chu.js đã viết mà src CHƯA sửa: 4 đạt · 33 hỏng — chỉ 4 ca bộ đếm thuần xanh; K10 bản chép, số nợ, D1 đều đỏ.)
+
+== 2. Bài CŨ sửa vì chữ đã chuyển chỗ (phiếu E2: sửa cho tìm đúng chỗ mới; không đổi điều canh, không bớt ca) — trên GỐC, mỗi bài ≥ 1 ca ĐỎ
+thu_KHKHOP1.js  48 đạt · 1 hỏng   ✗ B1 (KH-ND-3a) danh mục nội dung chỉ nhắc kiemkhop ở MỘT chỗ: tên màn tieuDe.kiemkhop — 0 chỗ
+                (ca "không file nào khác nhắc /kiemkhop" thêm miễn trừ đúng một tệp noiDung/nd/khungChung.js; ca mới canh tệp đó chỉ có tên màn)
+thu_KHUI2.js    77 đạt · 1 hỏng   ✗ B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1)   (tên tab ở danh mục tab.giohang)
+thu_KHMUA1.js   55 đạt · 1 hỏng   ✗ A1 tab Giỏ hàng: huy hiệu nhA-kim, màu demo #7C8696     (mảng tab không còn cột tên)
+thu_KHUI3c.js   15 đạt · 1 hỏng   ✗ B1 có chương trình: chữ KH-UI-3a giữ nguyên (món đang giảm / món cuối ngày …)   (chữ ở danh mục home.gv.dang / home.gv.cuoi)
+thu_KHUI5a.js   354 đạt · 3 hỏng  ✗ Trang chủ: ô nằm trong khối Hôm nay … · ✗ S1 màn mở "Đông Y Dưỡng Thể" (thêm data-nd) · ✗ S1 chữ một chỗ (brand.slogan = KHAU_HIEU)
+thu_KHUI5b.js   74 đạt · 1 hỏng   ✗ B5 Trang chủ: ô nằm trong .top-row cạnh thẻ …          (top-row có ndHien từng khối)
+thu_KHUI5d.js   30 đạt · 1 hỏng   ✗ B1 BannerHomNay … chon=…                               (nút banner Hôm nay đi theo today.cta.dich)
+thu_KHXEM1.js   60 đạt · 1 hỏng   ✗ thẻ mời có đủ chữ                                      (chữ thẻ mời chuyển hẳn vào danh mục home.moi.* — xem mục 4)
+thu_KHSLOGAN1.js 13 đạt · 3 hỏng  ✗ B1 phần tử khẩu hiệu có lớp khau-hieu · ✗ B2 chữ lấy từ KHAU_HIEU qua brand.slogan · ✗ C1 Trang chủ home.sub điền brand.slogan
+
+== 3. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
+thu_KHND3a.js 68 đạt · 0 hỏng · thu_KHXEM1.js 61 · 0 · thu_KHKHOP1.js 49 · 0 · thu_KHUI2.js 78 · 0 · thu_KHMUA1.js 56 · 0 · thu_KHUI3c.js 16 · 0 · thu_KHUI5a.js 357 · 0
+thu_KHUI5b.js 75 · 0 · thu_KHUI5d.js 31 · 0 · thu_KHSLOGAN1.js 16 · 0 (bài nay đọc KHONG_TRINH_DUYET theo CLAUDE.md §9 — trước đây máy có Chromium vẫn chạy 4 ca phông, đếm 20 ≠ GitHub 16, cổng A16 bắt; chạy đủ ở máy: 20 · 0)
+
+SỐ CA cong_cu/thu_KHND3a.js: 68
+SỐ CA cong_cu/thu_KHXEM1.js: 61
+SỐ CA cong_cu/thu_KHKHOP1.js: 49
+SỐ CA cong_cu/thu_KHUI2.js: 78
+SỐ CA cong_cu/thu_KHMUA1.js: 56
+SỐ CA cong_cu/thu_KHUI3c.js: 16
+SỐ CA cong_cu/thu_KHUI5a.js: 357
+SỐ CA cong_cu/thu_KHUI5b.js: 75
+SỐ CA cong_cu/thu_KHUI5d.js: 31
+SỐ CA cong_cu/thu_KHSLOGAN1.js: 16
+(đếm như cổng GitHub: không trình duyệt. Ở máy có Chromium: thu_KHND3a 74 · 0 (thêm 6 ca E1), --day-du 46 đạt · 0 hỏng.)
+
+== 4. Lỗi tự bắt giữa việc: vòng nạp mô-đun
+dinhDang.js → noiDung/nd.js → nd/index.js → nd/trangChu.js → noiDung/dangNhap.js → dinhDang.js. App chạy được chỉ nhờ thứ tự nạp (main → api → dinhDang);
+nạp danh mục hoặc dangNhap.js làm đầu vào → ReferenceError (TDZ). Thêm ca "B1 không vòng nạp" — trên bản có vòng (commit 452e629):
+thu_KHND3a.js 60 đạt · 1 hỏng   ✗ B1 không vòng nạp … — src/noiDung/nd/index.js, src/noiDung/nd/trangChu.js, src/noiDung/dangNhap.js
+Vá: chữ thẻ mời (chỉ Trang chủ dùng) chuyển hẳn vào danh mục, bỏ THE_MOI khỏi dangNhap.js → 61 đạt · 0 hỏng.
+
+== 5. Vòng soát 1 (/ra-soat) bắt lỗi bộ đếm K10: "/" đứng sau "}" bị hiểu là mở regex → thẻ tự đóng có thuộc tính {…} (<Ico s={11} /> Chữ)
+và phép chia JSX ({a}/{b} chữ) làm bộ đếm nuốt chữ phía sau. Thêm ca từ mẫu thật + phép đối chứng đếm thứ hai trên src. Trên bản trước vá (HEAD 41aa09a+trang_thai):
+thu_KHND3a.js 63 đạt · 5 hỏng
+  ✗ B2 danhsach có ảnh rỗng / trùng tên lọc (khoá React) → macDinh
+  ✗ C1 thẻ tự đóng có {…} rồi chữ JSX: <Ico s={11} /> Chữ → 1
+  ✗ C1 phép chia trong JSX {a}/{b} và {a} / {b} rồi chữ → 1 mỗi ca
+  ✗ C1 chuỗi sau thẻ tự đóng có {…}: <X a={b} />{'Khác'} → 1
+  ✗ C1 đối chứng: không dòng chữ có dấu nào (ngoài chú thích / regex) bị bộ đếm bỏ sót — src/components/NguoiThan.jsx:37
+Sau vá: 68 đạt · 0 hỏng. Số nợ lập lại bằng bộ đếm đã vá (cùng việc, lần lập đầu): gốc 841 / 58 tệp → sau 766 / 50 tệp.
+(Số SLOGAN1 ở §2 là lần chạy bản bài cuối — đọc KHONG_TRINH_DUYET — trên gốc: 13 đạt · 3 hỏng.)

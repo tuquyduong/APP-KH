@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { KHAU_HIEU } from '../noiDung/thuongHieu.js';
+import { nd, ndAnh, ndDau } from '../noiDung/nd.js';
+import Chu from './Chu.jsx';
 import { canHienManDau, docNgayDaXem, ghiNgayDaXem, homNayMay } from '../ngayManDau.js';
 
 // Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu tiên MỖI NGÀY (ngayManDau.js; đã xem trong phiên này thì cũng thôi), chạm hoặc "Bỏ qua" để vào app.
@@ -70,7 +71,7 @@ export default function ManDau() {
     if (!tat && dangPhat) { datTat(true); ghi(KHOA_AM_THANH, 'off'); dungAm(); } else { datTat(false); ghi(KHOA_AM_THANH, 'on'); phatAm(); }
   };
   const lopAm = `e3-snd${tat ? ' muted' : ''}${dangPhat ? ' playing' : ''}`;
-  const chu = (lop) => <span className={`e3-w ${lop}${chuXong ? ' done' : ''}`}><img src="/anh/logo-chu.webp" alt="" /></span>;
+  const chu = (lop) => <span className={`e3-w ${lop}${chuXong ? ' done' : ''}`}><img src={ndAnh('splash.chu')} alt="" {...ndDau('splash.chu')} /></span>;
 
   return (
     <div className={`splash-screen e3s${an ? ' hide' : ''}`} id="splashOverlay" role="presentation" onClick={vao}>
@@ -91,18 +92,18 @@ export default function ManDau() {
         </svg>
       </span>
       <span className="e3-col l" /><span className="e3-col r" />
-      <button type="button" className="e3-skip" id="skipBtn" onClick={(e) => { e.stopPropagation(); vao(); }}>Bỏ qua ›</button>
-      <div className={lopAm} id="sndBtn" role="button" tabIndex={0} aria-label="Âm thanh" onClick={doiAm} onKeyDown={(e) => { if (e.key === 'Enter') doiAm(e); }}>
+      <button type="button" className="e3-skip" id="skipBtn" onClick={(e) => { e.stopPropagation(); vao(); }} {...ndDau('splash.boQua')}>{nd('splash.boQua')}</button>
+      <div className={lopAm} id="sndBtn" role="button" tabIndex={0} aria-label={nd('splash.am')} onClick={doiAm} onKeyDown={(e) => { if (e.key === 'Enter') doiAm(e); }}>
         <svg className="on" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fillOpacity=".25" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" /></g></svg>
         <svg className="off" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fillOpacity=".25" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></g></svg>
-        <span>Bật âm thanh</span>
+        <Chu k="splash.batAm" />
       </div>
       <audio ref={amThanh} preload="none" src="/am_thanh/man_dau.mp3" />
       <div className="e3-brand">
-        <div className="e3-em"><img src="/anh/logo-bieu-tuong.webp" alt="" /></div>
-        <div className="e3-tw" role="img" aria-label="Tứ Quý Đường">{chu('w1')}{chu('w2')}{chu('w3')}</div>
+        <div className="e3-em"><img src={ndAnh('splash.logo')} alt="" {...ndDau('splash.logo')} /></div>
+        <div className="e3-tw" role="img" aria-label={nd('brand.ten')}>{chu('w1')}{chu('w2')}{chu('w3')}</div>
         <div className="e3-dv" aria-hidden="true"><i /><b /><i /></div>
-        <div className="e3-tg khau-hieu">{KHAU_HIEU}</div>
+        <div className="e3-tg khau-hieu" {...ndDau('brand.slogan')}>{nd('brand.slogan')}</div>
       </div>
       <div className="e3-prog"><i /></div>
       <div className="e3-veil" />

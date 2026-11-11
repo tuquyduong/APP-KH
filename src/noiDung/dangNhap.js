@@ -21,8 +21,7 @@ export const BUOC_THONG_TIN = {
 };
 export const DONG_MA_HOA_DON = 'Đăng nhập để nhận điểm cho hoá đơn này';
 
-// Thẻ mời (dáng thẻ vàng points-card) cho khách chưa đăng nhập ở Trang chủ.
-export const THE_MOI = { tieuDe: 'Thành viên Tứ Quý Đường', phu: 'Đăng nhập / Đăng ký để tích điểm, nhận ưu đãi', nut: 'Đăng nhập' };
+// Thẻ mời ở Trang chủ: danh mục nội dung home.moi.* (src/noiDung/nd/trangChu.js — KH-ND-3a).
 // Khối khoá ở Ưu đãi cho khách vãng lai (điểm, ví, voucher là của riêng khách).
 export const THE_MOI_UU_DAI = { tieuDe: 'Điểm, ví và voucher', phu: 'Đăng nhập để xem điểm, ví và voucher', nut: 'Đăng nhập' };
 

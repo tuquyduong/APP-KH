@@ -63,7 +63,7 @@ const khoGia = (d = {}) => ({ getItem: (x) => (x in d ? d[x] : null), setItem: (
   k('B1 đọc bản lưu CŨ có trường anBanner không lỗi và không giữ lại; ghi không còn trường đó', Array.isArray(cu.viec) && !('anBanner' in cu) && (KH.ghiKeHoach(cu, khoGia(d)), !/anBanner/.test(d.kh_kehoach)) && !('anBanner' in KH.keHoachTrong()));
   k('B1 kho không còn anBannerHomNay / bannerDangAn', !KH.anBannerHomNay && !KH.bannerDangAn);
   const bn = doc('src/components/BannerHomNay.jsx'), tc = doc('src/pages/TrangChu.jsx');
-  k('B1 BannerHomNay không còn khiAn / nút ✕ (t-x) / bản mini; Trang chủ không còn khiAn / thông báo "Ẩn ở Lịch và tiện ích"', !/khiAn|t-x|mini/.test(bn) && !/khiAn|anBanner|Ẩn ở Lịch/.test(tc) && /<BannerHomNay[^>]*chon=\{moMenu\}/.test(tc));
+  k('B1 BannerHomNay không còn khiAn / nút ✕ (t-x) / bản mini; Trang chủ không còn khiAn / thông báo "Ẩn ở Lịch và tiện ích"', !/khiAn|t-x|mini/.test(bn) && !/khiAn|anBanner|Ẩn ở Lịch/.test(tc) && /<BannerHomNay[^>]*chon=\{di\(homNay\.nut\.dich\)\}/.test(tc) && /\{ khoa: 'today\.cta'[^}]*macDinh: \{ chu: '', dich: 'menu' \}/.test(doc('src/noiDung/nd/trangChu.js')));
   k('B2 BannerNho.jsx đã xoá và không ai import; Kế hoạch / tiện ích không còn banner nhỏ', !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')) && !/BannerNho|bannerDangAn/.test(doc('src/pages/KeHoach.jsx') + doc('src/pages/TienIch.jsx')));
   k('B1 ke_hoach.css không còn luật .t-x của ✕', !/\.t-x/.test(doc('src/giaoDien/ke_hoach.css')));
 

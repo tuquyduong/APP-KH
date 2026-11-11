@@ -82,7 +82,9 @@ const khoGia = (dau = {}, nem = false) => {
   k('chữ bước 1: một dòng nhỏ Zalo, không nhắc quầy', /Zalo/.test(nd.BUOC_SDT.phu) && !/quầy/.test(nd.BUOC_SDT.phu));
   k('xưng hô đủ 7 lựa chọn, GỬI mã không dấu', JSON.stringify(nd.XUNG_HO.map((x) => x.ten)) === JSON.stringify(['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']) && nd.XUNG_HO.map((x) => x.ma).join() === 'anh,chi,co,chu,bac,em,ban');
   k('địa chỉ tối đa 300 ký tự', nd.DIA_CHI_TOI_DA === 300);
-  k('thẻ mời có đủ chữ', nd.THE_MOI.tieuDe === 'Thành viên Tứ Quý Đường' && /Đăng nhập \/ Đăng ký/.test(nd.THE_MOI.phu) && nd.THE_MOI.nut === 'Đăng nhập');
+  const nds = await nap('src/noiDung/nd.js').catch(() => ({})); // KH-ND-3a: chữ thẻ mời ở danh mục nội dung home.moi.*
+  const moi = nds.nd ? { tieuDe: nds.nd('home.moi.t'), phu: nds.nd('home.moi.p'), nut: nds.nd('home.moi.nut') } : {};
+  k('thẻ mời có đủ chữ', moi.tieuDe === 'Thành viên Tứ Quý Đường' && /Đăng nhập \/ Đăng ký/.test(moi.phu) && moi.nut === 'Đăng nhập');
   k('không hề có chữ "nợ" trong nội dung đăng nhập', !/\bnợ\b/i.test(JSON.stringify(nd)));
 
   console.log('— A6 chuyển bước 1→2→3');

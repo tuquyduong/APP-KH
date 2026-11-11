@@ -1,5 +1,6 @@
 import { THE_CHAT } from '../noiDung/theChat.js';
-import { O_TRAC_NGHIEM as CHU } from '../noiDung/tracNghiemChu.js';
+import { ndAnh, ndDau } from '../noiDung/nd.js';
+import Chu from './Chu.jsx';
 import { taoDuongDan } from '../duongDan.js';
 import AnhTheChat from './AnhTheChat.jsx';
 import { DongKhoa } from './KhoaTienIch.jsx';
@@ -14,11 +15,11 @@ export default function OTracNghiem({ dangNhap, klLuu, mo, moDangNhap }) {
   const the = dangNhap && klLuu ? THE_CHAT[klLuu.picks[0]] : null;
   return (
     <div className={`hb-tile hb-t-quiz${dangNhap ? '' : ' hb-mo'}`} {...bam(dangNhap ? mo : () => moDangNhap(taoDuongDan('tracnghiem')))}>
-      <div className="hb-ic">{the ? <AnhTheChat khoa={klLuu.picks[0]} s={36} /> : <img className="en" src="/anh/the-chat-scale.svg" width="36" height="36" alt="" />}</div>
+      <div className="hb-ic">{the ? <AnhTheChat khoa={klLuu.picks[0]} s={36} /> : <img className="en" src={ndAnh('home.q.anh')} width="36" height="36" alt="" {...ndDau('home.q.anh')} />}</div>
       <div className="hb-tx">
         {the
-          ? <><div className="hb-k">{CHU.ketQua}</div><div className="hb-h">{the.ten}</div><div className="hb-s">{CHU.xemKetQua}</div></>
-          : <><div className="hb-k">{CHU.nhan}</div>{dangNhap ? <div className="hb-h two">{CHU.hoi}</div> : <div className="hb-h hb-khoa"><DongKhoa /></div>}</>}
+          ? <><Chu k="home.q.kq" as="div" className="hb-k" /><div className="hb-h">{the.ten}</div><Chu k="home.q.xem" as="div" className="hb-s" /></>
+          : <><Chu k="home.qk" as="div" className="hb-k" />{dangNhap ? <Chu k="home.qh" as="div" className="hb-h two" /> : <div className="hb-h hb-khoa"><DongKhoa /></div>}</>}
       </div>
     </div>
   );

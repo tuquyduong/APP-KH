@@ -38,7 +38,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
   const tab = doc('src/components/ThanhTab.jsx');
   const thuTu = [...tab.matchAll(/\['([a-z]+)', '/g)].map((m) => m[1]).join(',');
   k('A1 thanh tab đủ 5 mục đúng thứ tự demo', thuTu === 'trangchu,menu,giohang,uudai,taikhoan', thuTu);
-  k('A1 tab Giỏ hàng: huy hiệu nhA-kim, màu demo #7C8696', /\['giohang', 'Giỏ hàng', 'nhA-kim', '#7C8696'\]/.test(tab));
+  k('A1 tab Giỏ hàng: huy hiệu nhA-kim, màu demo #7C8696', /\['giohang', 'nhA-kim', '#7C8696'\]/.test(tab));
   k('A1 tab hiện số món khi giỏ có hàng (tab-so)', /tab-so/.test(tab));
   const gh = DD.docDuongDan('/giohang'), tt = DD.docDuongDan('/thanhtoan'), td = DD.docDuongDan('/don/TQD42');
   k('A1 /giohang: trang giohang, tab giohang, KHÔNG cần đăng nhập', gh.trang === 'giohang' && gh.tab === 'giohang' && !gh.canDN, JSON.stringify(gh));

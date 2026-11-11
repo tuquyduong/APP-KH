@@ -136,7 +136,7 @@ function kichThuocPng(f) {
   k('F3 nút chạm ≥ 44px (nới vùng bấm nút tròn 36px) + safe-area', /\.back-btn::after[^{]*\{[^}]*inset:-4px/.test(riengApp) && /env\(safe-area-inset-bottom/.test(css));
   k('F4 100dvh có dự phòng 100vh', /height:\s*100vh;\s*height:\s*100dvh/.test(css));
   k('B1 tôn trọng prefers-reduced-motion', /prefers-reduced-motion:\s*reduce/.test(css));
-  k('B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1)', (() => { const t = doc('src/components/ThanhTab.jsx'); return (t.match(/\['[a-z]+', '/g) || []).length === 5 && /'Giỏ hàng'/.test(t); })());
+  k('B3 thanh tab 5 mục như demo, có Giỏ hàng (KH-MUA-1)', (() => { const t = doc('src/components/ThanhTab.jsx'); return (t.match(/\['[a-z]+', 'nhA-/g) || []).length === 5 && /chu\('tab\.giohang', [^,]+, 'Giỏ hàng'\)/.test(doc('src/noiDung/nd/khungChung.js')); })()); // KH-ND-3a: tên tab ở danh mục nội dung
   k('B11 không new Date(chuỗi giờ POS) trong src/', !/new Date\(/.test(tepSrc.map(doc).join('\n')));
   k('C1 mã ?ma= xoá khỏi địa chỉ, không lưu localStorage', /replaceState/.test(doc('src/App.jsx')) && !/localStorage[^\n]*(ma|MA)\b/.test(doc('src/App.jsx')));
 

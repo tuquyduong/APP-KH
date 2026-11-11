@@ -189,13 +189,14 @@ function hangDemo(ten) {
   const klKhi = kl_(mau.tracNghiem.find((c) => c.picks[0] === 'kh' && c.kind === 'main'));
   k('đã có kết quả lưu: ô đổi thành "Thể trạng · <tên> · Xem kết quả ›"', nho(O({ dangNhap: true, klLuu: klKhi, mo() {}, moDangNhap() {} })) === 'Thể trạng Khí hư Xem kết quả ›');
   const tc = doc('src/pages/TrangChu.jsx');
-  k('Trang chủ: ô nằm trong khối Hôm nay (.hb-one > .hb-tiles), bọc KhoaTienIch qua OTracNghiem', /<div className="hb-tiles"><OGioVang mo=\{moGioVang\} \/><OTracNghiem /.test(tc) && /OTracNghiem dangNhap=\{dangNhap\}/.test(tc) && /DongKhoa/.test(doc('src/components/OTracNghiem.jsx')));
+  k('Trang chủ: ô nằm trong khối Hôm nay (.hb-one > .hb-tiles), bọc KhoaTienIch qua OTracNghiem', /<div className="hb-tiles">\{ndHien\('hien\.home\.gv'\) && <OGioVang mo=\{moGioVang\} \/>\}\{ndHien\('hien\.home\.quiz'\) && <OTracNghiem /.test(tc) && /OTracNghiem dangNhap=\{dangNhap\}/.test(tc) && /DongKhoa/.test(doc('src/components/OTracNghiem.jsx')));
   const tk = doc('src/pages/TaiKhoan.jsx'), chu = doc('src/noiDung/tracNghiemChu.js');
   k('Tài khoản: nhóm "Sức khỏe" nằm giữa "Của tôi" và "Cài đặt", dòng "Thể trạng của tôi"', /DONG_TAI_KHOAN = \{ ten: 'Thể trạng của tôi'.*nhom: 'Sức khỏe'/.test(chu)
     && tk.indexOf('Của tôi') < tk.indexOf('DONG_TAI_KHOAN.nhom') && tk.indexOf('DONG_TAI_KHOAN.nhom') < tk.indexOf('>Cài đặt<') && /moTracNghiem/.test(tk));
   const manDau = ve('components/ManDau.jsx')({});
-  k('S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở', /<div class="e3-tg khau-hieu">Đông Y Dưỡng Thể<\/div>/.test(manDau) && !/Sức khỏe mỗi ngày/.test(manDau));
-  k('S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); Trang chủ cũng lấy KHAU_HIEU, không còn "Sức khỏe mỗi ngày" (KH-SLOGAN-1)', doc('src/noiDung/thuongHieu.js').includes("KHAU_HIEU = 'Đông Y Dưỡng Thể'") && /Tứ Quý Đường — \{KHAU_HIEU\}/.test(tc) && !/Sức khỏe mỗi ngày/.test(tc));
+  k('S1: màn mở ghi "Đông Y Dưỡng Thể" dưới TỨ QUÝ ĐƯỜNG, không còn "Sức khỏe mỗi ngày" ở màn mở', /<div class="e3-tg khau-hieu" data-nd="brand\.slogan">Đông Y Dưỡng Thể<\/div>/.test(manDau) && !/Sức khỏe mỗi ngày/.test(manDau));
+  k('S1: chữ đặt ở một chỗ (noiDung/thuongHieu.js); Trang chủ cũng lấy KHAU_HIEU, không còn "Sức khỏe mỗi ngày" (KH-SLOGAN-1)', doc('src/noiDung/thuongHieu.js').includes("KHAU_HIEU = 'Đông Y Dưỡng Thể'") && /chu\('brand\.slogan', '[^']*', KHAU_HIEU/.test(((t) => { try { return doc(t); } catch { return ''; } })('src/noiDung/nd/khungChung.js')) && /'Tứ Quý Đường — \{khauHieu\}'/.test(((t) => { try { return doc(t); } catch { return ''; } })('src/noiDung/nd/trangChu.js'))
+    && /<Chu k="home\.sub"[^>]*bien=\{\{ khauHieu: nd\('brand\.slogan'\) \}\}/.test(tc) && !/Sức khỏe mỗi ngày/.test(tc)); // KH-ND-3a: qua danh mục nội dung
 
   console.log('— B1/B2 màn giới thiệu và màn câu hỏi (dựng thật)');
   const TNg = ve('pages/TracNghiem.jsx'), TNl = ve('pages/TracNghiemLam.jsx'), TNk = ve('pages/TracNghiemKetQua.jsx');
