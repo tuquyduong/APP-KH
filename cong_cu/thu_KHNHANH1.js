@@ -223,7 +223,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 
   await thu('H2', async () => {
     const DD = await nap('src/dinhDang.js');
-    k('D3 lời chào dùng đủ tên khách nhập (hàm thuần, chạy cả khi không trình duyệt)', DD.chiaLoiChao('2026-11-05T19:00:00', 'chi', 'Nguyễn Linh').ten === 'Nguyễn Linh', JSON.stringify(DD.chiaLoiChao('2026-11-05T19:00:00', 'chi', 'Nguyễn Linh')));
+    k('D3 lời chào có xưng hô gọi chữ cuối của tên khách nhập (KH-UI-5g; hàm thuần, chạy cả khi không trình duyệt)', DD.chiaLoiChao('2026-11-05T19:00:00', 'chi', 'Nguyễn Linh').ten === 'Linh', JSON.stringify(DD.chiaLoiChao('2026-11-05T19:00:00', 'chi', 'Nguyễn Linh')));
     k('H2 bài đọc KHONG_TRINH_DUYET', /process\.env\.KHONG_TRINH_DUYET === '1'/.test(doc('cong_cu/thu_KHNHANH1.js')));
   });
 

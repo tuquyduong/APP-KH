@@ -44,7 +44,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     const p = d.chiaLoiChao(G, 'anh', 'Nam');
     k('A1 chiaLoiChao: xung chữ thường', p.xung === 'anh' && p.ten === 'Nam' && p.dau === 'Chào buổi chiều', JSON.stringify(p));
     k('A2 tên đủ như khách nhập (KH-SINH-1): gộp khoảng trắng, giữ hoa / thường', c('', null, '  trần   văn  nAm ') === 'Chào trần văn nAm!' && c('', null, 'Anh Linh') === 'Chào Anh Linh!', [c('', null, '  trần   văn  nAm '), c('', null, 'Anh Linh')].join('|'));
-    k('A2 "nguyễn linh" + "chị" → "Chào chị nguyễn linh!"', c('', 'chị', 'nguyễn linh') === 'Chào chị nguyễn linh!', c('', 'chị', 'nguyễn linh'));
+    k('A2 "nguyễn linh" + "chị" → "Chào chị linh!" (KH-UI-5g: chữ cuối, không viết hoa thêm)', c('', 'chị', 'nguyễn linh') === 'Chào chị linh!', c('', 'chị', 'nguyễn linh'));
   });
 
   await thu('A3', async () => {
