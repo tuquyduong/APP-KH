@@ -115,3 +115,10 @@ BÀI HỌC:
   Lần chạy trước (HEAD 0f…/trước 41aa09a) bắt ✗ [A16] SỐ CA thu_KHSLOGAN1 16 ≠ 20 → đã vá bài cho đọc KHONG_TRINH_DUYET (§9).
 
 HEAD ĐÃ KIỂM: 41aa09a
+
+## Kiểm sau vòng soát 1
+- `node kiem_tra_truoc_khi_giao.js --day-du` (máy có Chromium, HEAD 1c4f423 trừ trang_thai): 46 đạt · 0 hỏng.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fd5d70e^ HEAD viec/KH-ND-3a` (HEAD 1c4f423): ✓ CỔNG CHẠY ĐẠT
+  (· CẢNH BÁO A16: thu_KHND3a trên gốc in 28 ca ≠ 68 — gốc thiếu cong_cu/ha_no_chu.js nên khối C dừng sớm).
+
+HEAD ĐÃ KIỂM: 1c4f423
