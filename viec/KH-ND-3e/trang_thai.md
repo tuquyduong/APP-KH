@@ -104,3 +104,10 @@ BÀI HỌC: bài đếm khoá thừa nên kiểm data-nd ở chỗ hiện; chỗ
 - NGUYÊN TẮC (đề xuất K11): chỗ hiện lẫn chữ App và lời POS (thongBao, pin-msg, khung lỗi) phải chọn khoá `data-nd` từ chữ / nơi chọn, không gán một mục khoá `pos` cho cả chỗ.
 - NGUYÊN TẮC (đề xuất): so ảnh phải khoá hoạt ảnh (nền hoạ tiết lệch 700–19.000 điểm giữa hai lần chụp cùng mã); tách một câu thành nhiều nút chữ cạnh phần tử inline làm đổi khử răng cưa (99 điểm) — giữ MỘT nút chữ.
 - BỎ: lệnh bị người gác chặn (cd giữa lệnh, vòng for, sed -i, git worktree, glob git add, here-doc cộng chạy file) — chỉ gây làm lại lệnh, không phải lỗi mã.
+
+## Kiểm sau vòng soát 1
+- `node kiem_tra_truoc_khi_giao.js --day-du` (HEAD c2d1e1d trở đi, chỉ đổi trang_thai sau đó): không ✗ (vite build + Chromium qua).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fe752c3^ HEAD viec/KH-ND-3e` (HEAD 51c071c): ✓ CỔNG CHẠY ĐẠT.
+- Soát vòng 2: chưa chạy (tối đa 3 vòng; các lỗi vòng 1 đã vá hoặc ghi Phát hiện / CHƯA KIỂM) — chat soát cuối quyết định.
+
+HEAD ĐÃ KIỂM: 51c071c
