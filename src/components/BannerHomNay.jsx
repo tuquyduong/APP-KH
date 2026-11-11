@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { nd, ndDau } from '../noiDung/nd.js';
+import { ndDau } from '../noiDung/nd.js';
+import Chu from './Chu.jsx';
 
 // Banner khuyến mãi "Hôm nay" (demo todayCard, bản trên ảnh thật): chữ lấy từ danh mục nội dung today.* (src/noiDung/nd/trangChu.js). Không hiện ngày vì chưa có giờ POS (bay_gio — KH-API-2 v2).
 // Ánh sáng lướt chéo (demo glMeasure): đo toạ độ chữ trong thẻ để CSS tính vệt sáng; đo lại khi đổi cỡ màn.
@@ -34,7 +35,7 @@ export default function BannerHomNay({ anh, tieuDe, phu, nut, chon }) {
       <div className="t-shade" />
       <i className="gl gl-a" />
       <div className="t-txt">
-        <div className="t-k gl gl-t"><span className="dot" /><span {...ndDau('today.k')}>{nd('today.k')}</span></div>
+        <div className="t-k gl gl-t"><span className="dot" /><Chu k="today.k" /></div>
         <b className="gl gl-t" {...ndDau('today.t')}>{tieuDe}</b>
         {phu && <span className="t-s gl gl-t" {...ndDau('today.s')}>{phu}</span>}
       </div>

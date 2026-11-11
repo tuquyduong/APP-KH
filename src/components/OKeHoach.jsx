@@ -11,7 +11,7 @@ export default function OKeHoach({ homNay, soViec, quaHan = 0, mo }) {
   const l = LUNAR.solar2lunar(homNay.d, homNay.m, homNay.y), tm = LUNAR.term(l.jd);
   return (
     <div className="util cal" {...bam(mo)}>
-      <div className="u-tag" style={{ display: 'flex' }}><IcoVe ten="clock" s={11} /> <span {...ndDau('home.cal.tag')}>{nd('home.cal.tag')}</span></div>
+      <div className="u-tag" style={{ display: 'flex' }}><IcoVe ten="clock" s={11} /> <Chu k="home.cal.tag" /></div>
       <div className="u-row">
         <div className="u-cal" {...ndDau('home.lich')}><b>{homNay.d}</b><span>{WD[thuTrongTuan(homNay)]}</span></div>
         <div className="u-as"><Chu k="home.cala" as="b" /><Chu k="home.calb" /></div>

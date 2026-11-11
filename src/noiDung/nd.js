@@ -31,8 +31,10 @@ function hopLe(m, gt) {
     case 'danhsach': {
       if (!Array.isArray(gt) || !laDoiTuong(m.truong)) return false;
       const goc = new Set((Array.isArray(m.macDinh) ? m.macDinh : []).map((x) => cauTruc(m, x)));
-      return gt.every((x) => laDoiTuong(x) && Object.keys(x).every((t) => t in m.truong) && Object.keys(m.truong).every((t) => laChuoi(x[t]))
-        && (!(m.khoaCauTruc || []).length || goc.has(cauTruc(m, x))));
+      const kc = (m.khoaCauTruc || []).length > 0;
+      return gt.every((x) => laDoiTuong(x) && Object.keys(x).every((t) => t in m.truong)
+        && Object.keys(m.truong).every((t) => laChuoi(x[t]) && (m.truong[t] !== 'anh' || x[t].length > 0)) && (!kc || goc.has(cauTruc(m, x))))
+        && (!kc || new Set(gt.map((x) => cauTruc(m, x))).size === gt.length); // mỗi ô một khoá cấu trúc (khoá React, lọc món)
     }
     default: return false;
   }

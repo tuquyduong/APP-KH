@@ -72,11 +72,11 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
       the={(
         <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
           <div className="card-top">
-            <div className="hang-logo"><img className="tqd-logo tqd-mini" src={ndAnh('home.logo')} alt="" {...ndDau('home.logo')} /><div className="brand"><span {...ndDau('home.the.nhan')}>{nd('home.the.nhan')}</span><Chu k="home.the.phu" as="small" /></div></div>
+            <div className="hang-logo"><img className="tqd-logo tqd-mini" src={ndAnh('home.logo')} alt="" {...ndDau('home.logo')} /><div className="brand"><Chu k="home.the.nhan" /><Chu k="home.the.phu" as="small" /></div></div>
           </div>
           <div className="card-bottom">
             <div>
-              {hang && <div className="tier" {...ndDau('home.hang.ten')}><IcoVe ten="crown" s={12} /> <span {...ndDau('home.hang')}>{nd('home.hang', { hang: hang.ten })}</span></div>}
+              {hang && <div className="tier" {...ndDau('home.hang.ten')}><IcoVe ten="crown" s={12} /> <Chu k="home.hang" bien={{ hang: hang.ten }} /></div>}
               <div className="num" {...ndDau('home.diem.so')}>{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <Chu k="home.diem" /></div>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, 
     <Man id="home">
       {dangNhap
         ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} ke={ke} />
-        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={moi} khoa={{ tieuDe: 'home.moi.t', phu: 'home.moi.p', nut: 'home.moi.nut' }} anh={ndAnh('home.logo')} moDangNhap={moDangNhap} />} ke={ke} />}
+        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={moi} khoa={{ tieuDe: 'home.moi.t', phu: 'home.moi.p', nut: 'home.moi.nut', anh: 'home.logo' }} anh={ndAnh('home.logo')} moDangNhap={moDangNhap} />} ke={ke} />}
 
       {ndHien('hien.home.hb') && (
       <div className="hb-one">

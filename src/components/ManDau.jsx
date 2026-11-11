@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { nd, ndAnh, ndDau } from '../noiDung/nd.js';
+import Chu from './Chu.jsx';
 import { canHienManDau, docNgayDaXem, ghiNgayDaXem, homNayMay } from '../ngayManDau.js';
 
 // Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu tiên MỖI NGÀY (ngayManDau.js; đã xem trong phiên này thì cũng thôi), chạm hoặc "Bỏ qua" để vào app.
@@ -95,7 +96,7 @@ export default function ManDau() {
       <div className={lopAm} id="sndBtn" role="button" tabIndex={0} aria-label={nd('splash.am')} onClick={doiAm} onKeyDown={(e) => { if (e.key === 'Enter') doiAm(e); }}>
         <svg className="on" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fillOpacity=".25" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" /></g></svg>
         <svg className="off" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fillOpacity=".25" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></g></svg>
-        <span {...ndDau('splash.batAm')}>{nd('splash.batAm')}</span>
+        <Chu k="splash.batAm" />
       </div>
       <audio ref={amThanh} preload="none" src="/am_thanh/man_dau.mp3" />
       <div className="e3-brand">

@@ -1,7 +1,8 @@
 // Thanh tab như demo: nền lụa + huy hiệu ngũ hành, 5 mục (Giỏ hàng từ KH-MUA-1). Màu chữ khi chọn lấy từ demo (--c).
 // `soMon` > 0 → số món trên tab Giỏ hàng (phiếu KH-MUA-1 A1; demo không vẽ — xem viec/KH-MUA-1/doi_chieu_demo.md).
 // Tên tab: danh mục nội dung `tab.<mã>` (src/noiDung/nd/khungChung.js).
-import { nd, ndDau } from '../noiDung/nd.js';
+import { nd } from '../noiDung/nd.js';
+import Chu from './Chu.jsx';
 
 const CAC_TAB = [
   ['trangchu', 'nhA-tho', '#C98712'],
@@ -28,7 +29,7 @@ export default function ThanhTab({ tab, chon, soMon = 0 }) {
       {CAC_TAB.map(([ma, bt, mau]) => (
         <button key={ma} type="button" className={`tab${ma === tab ? ' active' : ''}`} style={{ '--c': mau }} aria-current={ma === tab ? 'page' : undefined} onClick={() => chon(ma)}>
           <svg className="med tabmed" width="32" height="32" viewBox="0 0 64 64" aria-hidden="true"><use href={`#${bt}`} /></svg>
-          <span {...ndDau(`tab.${ma}`)}>{nd(`tab.${ma}`)}</span>
+          <Chu k={`tab.${ma}`} />
           {ma === 'giohang' && soMon > 0 && <span className="tab-so" aria-label={nd('tab.soMon', { so: soMon })}>{soMon}</span>}
         </button>
       ))}
