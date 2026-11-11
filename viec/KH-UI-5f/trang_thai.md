@@ -88,3 +88,9 @@ Kết quả: **24 / 24 đột biến bị bắt** (22 bắt được cả khi `K
 - F4 sửa được ở /admin: mục trên; `npm test` / `--day-du` / cổng: xem mục "Cổng" dưới.
 - F5 trình duyệt Zalo (User-Agent có "Zalo"): Chromium "F5 trình duyệt Zalo: mở thẳng /kehoach/vankhan/r…", "F5 nút quay lại → /kehoach/vankhan" (giả lập UA; chưa thử trên Zalo thật — xem CHƯA KIỂM).
 - F6 chủ quán thử tay: xem BÁO CÁO · CHƯA KIỂM.
+
+## Cổng (trước `/ra-soat`)
+- `npm test` (có Chromium): 45 đạt · 0 hỏng. Trong đó thu_KHUI5f 180 ca (Chromium) / 85 ca (`KHONG_TRINH_DUYET=1`), thu_KHUI5e 120 / 71, thu_KHUI5b 75, các bài 5c / 5d / MUA… không đổi và xanh.
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 47 đạt · 0 hỏng (K9 màu / phông, K10 chữ cứng, vite build) — chạy lại sau commit cuối ở dưới.
+- `node tu_chay/cong.js tinh . 64757e0^ HEAD viec/KH-UI-5f`: ✓ (chỉ còn A19 chờ dòng `HEAD ĐÃ KIỂM`, đã ghi cuối tệp).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 64757e0^ HEAD viec/KH-UI-5f`: ✓ CỔNG CHẠY ĐẠT (một CẢNH BÁO A16 "thu_KHUI5f.js chạy trên gốc in 1 ca ≠ 85" — bình thường: bài mới đổ ngay ở ca đầu trên gốc vì chưa có mục danh mục `xe.macdinh`).
