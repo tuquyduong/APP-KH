@@ -47,7 +47,6 @@
 - `src/pages/HoSo.jsx:42` (ngoài phạm vi) còn so `dau === 'Chào'` để đặt dấu phẩy. Nay `chiaLoiChao` trả thêm `coBuoi`; nếu chủ quán đổi chữ `chao.dau` ở /admin thì Hồ sơ đặt sai dấu phẩy.
   Đề xuất KH-ND-3c dùng `coBuoi` (một dòng).
 - `src/gioVang.js` (`chuGioVang`: "Còn …") và `src/components/GvDem.jsx` vẽ chữ đếm ngược trong ô Giờ vàng Trang chủ — ngoài D1, chưa chuyển; `MonO.jsx` ("Hết hàng") dùng chung Menu — để KH-ND-3b.
-- `thu_KHSLOGAN1.js` không đọc `KHONG_TRINH_DUYET` (máy có Chromium vẫn chạy 4 ca phông) → `SỐ CA` ghi 16 (số GitHub đếm, không Playwright), máy đếm 20.
 - `src/noiDung/tracNghiemChu.js` `O_TRAC_NGHIEM` nay chỉ làm macDinh cho danh mục (`home.qk/qh/q.kq/q.xem`) — KH-ND-3c có thể chuyển hẳn vào danh mục như đã làm với thẻ mời.
 
 ## Câu hỏi

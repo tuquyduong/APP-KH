@@ -27,7 +27,7 @@ thu_KHSLOGAN1.js 17 đạt · 3 hỏng  ✗ B1 phần tử khẩu hiệu có l�
 
 == 3. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
 thu_KHND3a.js 61 đạt · 0 hỏng · thu_KHXEM1.js 61 · 0 · thu_KHKHOP1.js 49 · 0 · thu_KHUI2.js 78 · 0 · thu_KHMUA1.js 56 · 0 · thu_KHUI3c.js 16 · 0 · thu_KHUI5a.js 357 · 0
-thu_KHUI5b.js 75 · 0 · thu_KHUI5d.js 31 · 0 · thu_KHSLOGAN1.js 20 · 0 (bài này không đọc KHONG_TRINH_DUYET: ở máy có Chromium vẫn chạy 4 ca phông; GitHub không có Playwright → BỎ QUA 4 ca → 16)
+thu_KHUI5b.js 75 · 0 · thu_KHUI5d.js 31 · 0 · thu_KHSLOGAN1.js 16 · 0 (bài nay đọc KHONG_TRINH_DUYET theo CLAUDE.md §9 — trước đây máy có Chromium vẫn chạy 4 ca phông, đếm 20 ≠ GitHub 16, cổng A16 bắt; chạy đủ ở máy: 20 · 0)
 
 SỐ CA cong_cu/thu_KHND3a.js: 61
 SỐ CA cong_cu/thu_KHXEM1.js: 61

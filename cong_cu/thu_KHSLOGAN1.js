@@ -48,8 +48,9 @@ const CHU = 'ĐÔNG Y DƯỠNG THỂ';
 
   console.log('— B3. Chromium: phông EB Garamond vẽ thật, dấu tiếng Việt đủ');
   let pw = null;
-  try { pw = require('playwright'); } catch { /* không có */ }
-  if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này — ca B3 (phông vẽ thật) CHƯA chạy (GitHub không có Chromium; máy có Chromium thì chạy)');
+  if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — ca B3 (phông vẽ thật) không chạy ở đây (CLAUDE.md §9)');
+  else try { pw = require('playwright'); } catch { /* không có */ }
+  if (!pw && process.env.KHONG_TRINH_DUYET !== '1') console.log('  BỎ QUA: không có Playwright ở máy này — ca B3 (phông vẽ thật) CHƯA chạy (GitHub không có Chromium; máy có Chromium thì chạy)');
   if (pw) {
     const lay = {};
     const may = http.createServer((q, r) => {
