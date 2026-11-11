@@ -27,3 +27,55 @@
 .tl-in{ width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:11px 12px; border-radius:12px; border:1px solid rgba(215,185,129,.7); background:#fff; color:var(--ink); }
 /* Chữ trong nút chia tab (Người thân · Ngày lễ) canh giữa như demo — nút mặc định của trình duyệt trong app đang canh trái */
 .ss-tabs button{ text-align:center; }
+
+/* KH-UI-5f — Xe cộ, Uống thuốc, Chu kỳ: luật CSS CHÉP NGUYÊN từ thiet_ke/app_kh_demo.html (dòng 1650–1675, 1690–1701). */
+.car-card{ background:#FFFDFB; border-radius:18px; padding:14px; box-shadow:0 0 0 1px rgba(215,185,129,.5); }
+.car-top{ display:flex; align-items:center; gap:10px; } .car-top > div:nth-child(2){ flex:1; } .car-top b{ display:block; font-size:15px; } .car-top small{ font-size:11.5px; color:var(--muted); }
+.car-km{ text-align:right; } .car-km input{ width:92px; font:inherit; font-size:15px; font-weight:800; text-align:right; border:1px solid rgba(215,185,129,.6); border-radius:10px; padding:6px 8px; color:var(--pink-deep); }
+.car-km small{ display:block; font-size:10px; color:var(--muted); }
+.car-due{ margin-top:12px; padding:10px 12px; border-radius:12px; background:#F0FAF5; } .car-due.soon{ background:#FFF1DC; } .car-due b{ display:block; font-size:13.5px; } .car-due small{ font-size:11.5px; color:var(--muted); }
+.car-bar{ height:6px; border-radius:6px; background:#EFE7DF; margin:8px 0 12px; overflow:hidden; } .car-bar i{ display:block; height:100%; background:linear-gradient(90deg,#5E9A6B,#C38C40); border-radius:6px; }
+.car-docs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; } .car-docs div{ background:#F7F2EC; border-radius:12px; padding:9px 10px; } .car-docs small{ display:block; font-size:10.5px; color:var(--muted); } .car-docs b{ font-size:13px; }
+.med-sum{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 14px; background:#FFFDFB; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+.med-sum > div:first-child b{ font-size:22px; color:var(--pink-deep); } .med-sum > div:first-child small{ display:block; font-size:11px; color:var(--muted); }
+.med-7{ flex:1; display:flex; justify-content:flex-end; gap:5px; } .med-7 i{ width:16px; height:16px; border-radius:50%; background:#EFE7DF; } .med-7 i.f{ background:#5E9A6B; } .med-7 i.h{ background:linear-gradient(90deg,#5E9A6B 50%,#EFE7DF 50%); }
+.med-7 i.td{ box-shadow:0 0 0 2px #fff, 0 0 0 3.5px #C38C40; } .med-7l{ width:100%; text-align:right; font-size:10px; color:var(--muted); }
+.med-card{ background:#FFFDFB; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+.med-h{ display:flex; gap:10px; align-items:flex-start; } .med-h > div{ flex:1; } .med-h b{ display:block; font-size:14px; } .med-h small{ font-size:11.5px; color:var(--muted); }
+.med-times{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.med-times button{ flex:1; min-width:90px; border:none; font:inherit; font-size:15px; font-weight:800; padding:9px 8px; border-radius:12px; background:#F3EEE9; color:var(--ink); cursor:pointer; display:flex; flex-direction:column; align-items:center; }
+.med-times button small{ font-size:10.5px; font-weight:600; color:var(--muted); } .med-times button.ok{ background:#E5F2E4; color:#2F5A34; } .med-times button.ok small{ color:#2F5A34; }
+.cyc-off{ text-align:center; padding:24px 16px; background:#FFFDFB; border-radius:18px; box-shadow:0 0 0 1px rgba(215,185,129,.45); } .cyc-off b{ display:block; font-size:16px; margin:8px 0 4px; } .cyc-off p{ font-size:13px; color:var(--muted); line-height:1.55; }
+.cyc-card{ background:#FFFDFB; border-radius:18px; padding:14px; box-shadow:0 0 0 1px rgba(215,185,129,.5); margin-bottom:10px; }
+.cyc-top{ display:flex; justify-content:space-between; gap:10px; } .cyc-top small{ display:block; font-size:10.5px; color:var(--muted); } .cyc-top b{ display:block; font-size:20px; color:var(--ink); } .cyc-top span{ font-size:12px; font-weight:700; color:var(--muted); }
+.cyc-strip{ display:flex; gap:2px; margin:14px 0 6px; } .cyc-strip i{ flex:1; height:14px; border-radius:3px; } .cyc-strip i.now{ height:22px; margin-top:-4px; box-shadow:0 0 0 2px #fff, 0 0 0 3px #2E2430; }
+.cyc-lg{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:10.5px; color:var(--muted); } .cyc-lg i{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px; vertical-align:-1px; }
+.cyc-tip{ margin-top:12px; border-left:3px solid; padding:6px 0 6px 12px; font-size:13px; line-height:1.55; } .cyc-tip b{ display:block; font-size:12px; color:var(--muted); margin-bottom:2px; }
+.cyc-btns button{ width:100%; margin-top:12px; border:none; font:inherit; font-size:13.5px; font-weight:800; padding:11px; border-radius:14px; background:#F7E7EC; color:var(--pink-deep); cursor:pointer; }
+.cyc-set{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; } .cyc-set > div{ background:#FFFDFB; border-radius:14px; padding:10px; box-shadow:0 0 0 1px rgba(215,185,129,.4); }
+.cyc-set small{ display:block; font-size:10.5px; color:var(--muted); margin-bottom:6px; } .cyc-set span{ display:flex; align-items:center; justify-content:space-between; } .cyc-set b{ font-size:13.5px; }
+.cyc-set button{ width:30px; height:30px; border:none; border-radius:50%; font:inherit; font-size:16px; font-weight:800; background:#F3EEE9; cursor:pointer; }
+.veh{ display:flex; align-items:center; gap:12px; background:#FFFDFB; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 0 0 1px rgba(215,185,129,.5); cursor:pointer; }
+.veh-t{ flex:1; min-width:0; } .veh-t b{ display:block; font-size:14.5px; } .veh-t small{ display:block; font-size:11.5px; color:var(--muted); }
+.veh-s{ display:inline-block; margin-top:5px; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:10px; background:#E5F2E4; color:#2F5A34; } .veh-s.soon{ background:#FFF1DC; color:#9A5B0E; }
+.veh em{ font-style:normal; font-weight:800; color:var(--muted); }
+.sch{ background:#FFFDFB; border-radius:14px; padding:11px 13px; margin-bottom:8px; box-shadow:0 0 0 1px rgba(215,185,129,.4); }
+.sch.soon{ box-shadow:0 0 0 1.5px #E3B26B; } .sch.over{ box-shadow:0 0 0 1.5px #D9748A; background:#FFF8F9; }
+.sch-h{ display:flex; justify-content:space-between; gap:8px; cursor:pointer; } .sch-h b{ font-size:13.5px; } .sch-h small{ font-size:11px; color:var(--muted); white-space:nowrap; }
+.sch-s{ font-size:12px; color:var(--muted); margin-top:3px; } .sch.over .sch-s{ color:#B42A3A; font-weight:700; } .sch.soon .sch-s{ color:#9A5B0E; font-weight:700; }
+.sch .car-bar{ margin:7px 0 6px; } .sch-do{ border:none; font:inherit; font-size:12px; font-weight:700; padding:6px 11px; border-radius:10px; background:#F3EEE9; color:var(--ink); cursor:pointer; margin-top:4px; }
+.doc-in{ font:inherit; font-size:12.5px; padding:7px 8px; border-radius:10px; border:1px solid rgba(215,185,129,.6); background:#fff; max-width:140px; }
+.cl-add{ display:flex; gap:8px; margin-top:10px; } .cl-add .tl-in{ flex:1; min-width:0; } .cl-add button{ border:none; font:inherit; font-size:13px; font-weight:800; padding:0 14px; border-radius:12px; background:#F7E7EC; color:var(--pink-deep); cursor:pointer; white-space:nowrap; }
+.pf-chips button:disabled{ opacity:.45; }
+/* Màu giai đoạn Chu kỳ = CYC_PH của demo (dòng 4822–4827), đặt theo lớp thay cho style tại chỗ; ô chưa tới mờ 1/3 như demo (đuôi hex 55). */
+.p0{ --ph:#C0546B; } .p1{ --ph:#D88A5A; } .p2{ --ph:#5E9A6B; } .p3{ --ph:#8E6BB8; } .p4{ --ph:#9A6A2E; }
+.cyc-strip i[class^="p"]{ background:var(--ph); opacity:.333; } .cyc-strip i.now{ opacity:1; }
+.cyc-lg i[class^="p"]{ background:var(--ph); } .cyc-tip[class*=" p"]{ border-color:var(--ph); } .cyc-top span[class^="p"]{ color:var(--ph); }
+/* Khoá mã riêng của Chu kỳ (KH-UI-5f C3): dùng lại bàn phím số .pin-pad / .pin-dots của bảng PIN. */
+.cyc-khoa{ text-align:center; } .cyc-khoa .pin-dots{ justify-content:center; } .cyc-khoa .pin-pad{ max-width:300px; margin:0 auto; }
+.vk-dong{ display:flex; align-items:center; gap:8px; font-size:12.5px; background:#FFFDFB; border-radius:12px; padding:9px 12px; margin-bottom:10px; box-shadow:0 0 0 1px rgba(215,185,129,.35); }
+.vk-dong span{ flex:1; min-width:0; overflow-wrap:anywhere; } .vk-dong em{ font-style:normal; font-weight:800; color:var(--pink-dark); cursor:pointer; flex:none; }
+.vk-txt mark.trong{ color:var(--muted); cursor:pointer; } .vk-txt mark.cham{ cursor:pointer; }
+.vk-goiy{ font-size:12px; color:var(--muted); margin:8px 2px 0; }
+.thuoc-gio{ display:flex; align-items:center; gap:10px; margin-top:8px; } .thuoc-gio .bx{ flex:1; }
+.vk-khung{ margin-bottom:12px; }

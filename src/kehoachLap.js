@@ -2,6 +2,7 @@
 // "Hôm nay" luôn là tham số { d, m, y }, "bây giờ" là chuỗi giờ VN của POS (bayGio()) — CLAUDE.md §6.
 // Luật lặp (chép từ app tham khảo của chủ quán): mọi lần lặp tính THẲNG từ ngày bắt đầu, không cộng dồn → không trôi ngày.
 // Một lần (ngày) của việc lặp đã xử lý khi: ngày < `moc` (mốc "đã rà đến") HOẶC có trong `lanXong` (tối đa 24 lần gần nhất).
+import { nd } from './noiDung/nd.js';
 import { LUNAR } from './lich.js';
 
 export const LAN_XONG_TOI_DA = 24;
@@ -26,7 +27,7 @@ export function docNgay(chuoi) {
 export const jd = (n) => LUNAR.jdFromDate(n.d, n.m, n.y);
 export const tuJd = (j) => LUNAR.jdToDate(j);
 export const chuoiJd = (j) => ngayChuoi(tuJd(j));
-const jdChuoi = (s) => { const n = docNgay(s); return n ? jd(n) : null; };
+export const jdChuoi = (s) => { const n = docNgay(s); return n ? jd(n) : null; };
 export const soNgayThang = (m, y) => new Date(y, m, 0).getDate();
 /** "d/m" hoặc "d/m/yyyy" của một ngày Julius (kèm năm khi khác `homNay.y`). */
 export const dm = (j, homNay) => { const x = tuJd(j); return `${x.d}/${x.m}${homNay && x.y === homNay.y ? '' : '/' + x.y}`; };
@@ -127,7 +128,7 @@ export function viecNgay(bang, ngay) {
 /** Chấm từng ngày trong [tuJ, denJ]: Map(ngày Julius → 'viec' | 'qua') — có việc chưa xong / có việc quá hạn (ưu tiên). */
 export function danhDauNgay(bang, tuJ, denJ, homNay) {
   const h = jd(homNay), bd = new Map();
-  bang.viec.forEach((v) => cacLan(v, tuJ, denJ).forEach((j) => { if (!daXongLan(v, j)) bd.set(j, j < h || bd.get(j) === 'qua' ? 'qua' : 'viec'); }));
+  bang.viec.forEach((v) => !v.rieng && cacLan(v, tuJ, denJ).forEach((j) => { if (!daXongLan(v, j)) bd.set(j, j < h || bd.get(j) === 'qua' ? 'qua' : 'viec'); }));
   return bd;
 }
 
@@ -259,3 +260,154 @@ export function timViec(bang, q) {
   const k = boDau(q).trim();
   return k ? bang.viec.filter((v) => boDau(v.tieu).includes(k)).sort((a, b) => a.ngay.localeCompare(b.ngay)) : [];
 }
+
+// ----- XE CỘ · UỐNG THUỐC · CHU KỲ (KH-UI-5f): hàm THUẦN chép logic demo (itemState, docState, vehState, medToday, cycNow); trả số liệu, KHÔNG chữ (chữ ở noiDung/nd/tienIch.js) -----
+export const LOAI_XE = ['xm', 'oto', 'xdd', 'khac'];
+export const NGAY_MOT_THANG = 30.4;
+export const XE_SAP = { km: 150, tiLe: 0.1, ngay: 7, giay: 30 };
+export const CHU_KY = { dai: [21, 40], hanh: [2, 9], macDai: 28, macHanh: 5, nhacTruoc: 2, toiDaLs: 12, soKy: 6 };
+
+/** Lịch bảo dưỡng + giấy tờ mặc định của một loại xe, từ mục danh mục `xe.macdinh` ({ loai, lich: 'Tên:km:tháng;…', giay: 'Tên;…' }). */
+export function lichTheoLoai(mau, loai) {
+  const m = (mau || []).find((x) => x.loai === loai) || {};
+  const tach = (s) => String(s || '').split(';').map((x) => x.trim()).filter(Boolean);
+  return {
+    lich: tach(m.lich).map((x) => { const [ten, km, thang] = x.split(':'); return { ten: ten.trim(), km: +km || 0, thang: +thang || 0 }; }),
+    giayTo: tach(m.giay).map((ten) => ({ ten, ngay: '' })),
+  };
+}
+
+/** Demo itemState: hạng mục `hang` { ten, km, thang } của xe — tới hạn theo km HOẶC tháng, cái nào đến trước. `hn` = hôm nay (ngày Julius). */
+export function trangThaiHang(xe, hang, hn) {
+  const lan = xe.nhatKy.filter((l) => l.viec.includes(hang.ten)).map((l) => ({ ...l, j: jdChuoi(l.ngay) })).filter((l) => l.j !== null).sort((a, b) => b.j - a.j)[0];
+  if (!lan) return { none: true, over: false, soon: false, pct: 0, kmCon: null, ngayCon: null, denJ: null, lan: null };
+  const kmCon = hang.km ? lan.km + hang.km - xe.km : null;
+  const denJ = hang.thang ? lan.j + Math.round(hang.thang * NGAY_MOT_THANG) : null, ngayCon = denJ !== null ? denJ - hn : null;
+  const pk = hang.km ? (xe.km - lan.km) / hang.km : 0, pd = hang.thang ? (hn - lan.j) / (hang.thang * NGAY_MOT_THANG) : 0;
+  const over = (kmCon !== null && kmCon <= 0) || (ngayCon !== null && ngayCon <= 0);
+  const soon = over || (kmCon !== null && kmCon <= Math.max(XE_SAP.km, hang.km * XE_SAP.tiLe)) || (ngayCon !== null && ngayCon <= XE_SAP.ngay);
+  return { none: false, over, soon, pct: Math.max(0, Math.min(1, Math.max(pk, pd))), kmCon, ngayCon, denJ, lan };
+}
+/** Demo docState: giấy tờ có hạn { ten, ngay }; chưa nhập ngày → none. ≤ 30 ngày là sắp hết. */
+export function trangThaiGiay(giay, hn) {
+  const j = jdChuoi(giay.ngay);
+  if (j === null) return { none: true, soon: false, j: null, con: null, het: false };
+  return { none: false, soon: j - hn <= XE_SAP.giay, j, con: j - hn, het: j - hn < 0 };
+}
+/** Hạng mục của xe, sắp tới hạn lên đầu rồi tới phần trăm cao hơn: [{ hang, k (chỉ số trong lịch), st }]. */
+export const sapHang = (xe, hn) => xe.lich.map((hang, k) => ({ hang, k, st: trangThaiHang(xe, hang, hn) })).sort((a, b) => (b.st.soon - a.st.soon) || (b.st.pct - a.st.pct));
+/** Demo vehState: { soon, bad (số hạng mục + giấy tờ sắp hạn), hang + st (hạng mục tệ nhất), giay (tên giấy tờ sắp hết đầu tiên) }. */
+export function trangThaiXe(xe, hn) {
+  const a = sapHang(xe, hn), g = xe.giayTo.map((x) => ({ x, st: trangThaiGiay(x, hn) }));
+  const toi = a.filter((x) => x.st.soon), gSoon = g.filter((x) => x.st.soon), tuoi = toi[0];
+  return { soon: toi.length + gSoon.length > 0, bad: toi.length + gSoon.length, hang: tuoi ? tuoi.hang : null, st: tuoi ? tuoi.st : null, giay: gSoon[0] ? gSoon[0].x.ten : null };
+}
+export const tongPhiXe = (xe) => xe.nhatKy.reduce((t, l) => t + (l.phi || 0), 0);
+
+/** Thuốc còn trong đợt uống tại ngày Julius `j` (không hạn = dài ngày). */
+export const thuocConHan = (t, j) => !t.den || (jdChuoi(t.den) ?? Infinity) >= j;
+/** Demo medToday: { all, done } số lần uống hôm nay (thuốc hết đợt không tính). */
+export function homNayThuoc(bang, hn) {
+  const xong = bang.thuocXong[chuoiJd(hn)] || [];
+  let all = 0, done = 0;
+  bang.thuoc.forEach((t) => { if (thuocConHan(t, hn)) t.gio.forEach((g) => { all++; if (xong.includes(`${t.id}@${g}`)) done++; }); });
+  return { all, done };
+}
+/** 7 ngày trước hôm nay (cũ → mới): 'f' đủ · 'h' một phần · 'k' không uống lần nào · '' không có lần nào phải uống (chưa thêm thuốc / đã hết đợt). */
+export function bayNgayThuoc(bang, hn) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const j = hn - 7 + i, xong = bang.thuocXong[chuoiJd(j)] || [];
+    let all = 0, done = 0;
+    bang.thuoc.forEach((t) => { if ((jdChuoi(t.bd) ?? 0) > j || !thuocConHan(t, j)) return; t.gio.forEach((g) => { all++; if (xong.includes(`${t.id}@${g}`)) done++; }); });
+    return !all ? '' : done === all ? 'f' : done ? 'h' : 'k';
+  });
+}
+
+/** Demo cycNow: ngày thứ mấy của chu kỳ, ngày kỳ tới, ngày rụng trứng dự kiến, giai đoạn 0 hành kinh · 1 sau kỳ · 2 giữa chu kỳ · 3 trước kỳ · 4 chậm kinh. */
+export function chuKyHomNay(ck, hn) {
+  const day = hn - jdChuoi(ck.bd) + 1, nextJ = jdChuoi(ck.bd) + ck.dai, ov = ck.dai - 14;
+  const ph = day <= ck.hanh ? 0 : day < ov - 2 ? 1 : day <= ov + 1 ? 2 : day <= ck.dai ? 3 : 4;
+  return { day, nextJ, ov, ph };
+}
+/** Giai đoạn (0–3) của từng ngày 1…dai để tô dải ngày. */
+export const dayChuKy = (ck) => Array.from({ length: ck.dai }, (_, i) => { const d = i + 1, ov = ck.dai - 14; return d <= ck.hanh ? 0 : d < ov - 2 ? 1 : d <= ov + 1 ? 2 : 3; });
+/** Trung bình các chu kỳ gần nhất (tối đa 6), làm tròn; chưa có → null. */
+export const trungBinhKy = (ls) => { const g = ls.slice(-CHU_KY.soKy); return g.length ? Math.round(g.reduce((a, b) => a + b, 0) / g.length) : null; };
+
+// ----- Chữ trạng thái (xe, thuốc) và Chu kỳ: đổi trạng thái + khoá mã (KH-UI-5f) -----
+/** Chữ trạng thái một hạng mục xe (demo itemState.txt): "còn 300 km hoặc 12 ngày" · "Đã tới hạn" · chưa ghi lần nào. */
+export function chuHang(st) {
+  if (st.none) return nd('xe.chuaGhi');
+  if (st.over) return nd('xe.toiHan');
+  const ra = [];
+  if (st.kmCon !== null) ra.push(nd('xe.conKm', { so: Math.max(0, st.kmCon).toLocaleString('vi-VN') }));
+  if (st.ngayCon !== null) ra.push(nd(ra.length ? 'xe.hoacNgay' : 'xe.conNgay', { so: Math.max(0, st.ngayCon) }));
+  return ra.join(' ');
+}
+/** Chữ giấy tờ có hạn (demo docState.txt). */
+export function chuGiay(st, homNay) {
+  if (st.none) return nd('xe.giayChua');
+  const ngay = dm(st.j, homNay);
+  return st.het ? nd('xe.giayHet', { ngay }) : nd('xe.giayCon', { ngay, so: st.con });
+}
+/** Chữ "mỗi X km hoặc Y tháng" của một hạng mục. */
+export const chuLich = (h) => [h.km ? nd('xe.moiKm', { so: h.km.toLocaleString('vi-VN') }) : '', h.thang ? nd('xe.moiThang', { so: h.thang }) : ''].filter(Boolean).join(nd('xe.hoac'));
+/** Chữ tóm tắt của một xe (demo vehState.txt). */
+export function chuXe(x, hn) {
+  const v = trangThaiXe(x, hn);
+  if (!v.soon) return nd('xe.on');
+  return v.hang ? nd('xe.hangSap', { ten: v.hang.ten, tt: chuHang(v.st).toLowerCase() }) : nd('xe.giaySapHet', { ten: v.giay });
+}
+/** Giờ uống còn phải uống HÔM NAY (chưa đánh dấu), tăng dần, mỗi giờ một mục (các thuốc cùng giờ gộp). Hết đợt → không tính. */
+export function gioThuocChuaUong(bang, hn) {
+  const xong = bang.thuocXong[chuoiJd(hn)] || [], ra = new Set();
+  bang.thuoc.forEach((t) => { if (thuocConHan(t, hn)) t.gio.forEach((g) => { if (!xong.includes(`${t.id}@${g}`)) ra.add(g); }); });
+  return [...ra].sort();
+}
+
+
+export const chuKyTrong = () => ({ bat: false, bd: '', dai: CHU_KY.macDai, hanh: CHU_KY.macHanh, ls: [], nhac: true, khoa: null, thu: { sai: 0, den: 0 } });
+// ----- CHU KỲ (C1–C3): chỉ lưu trên máy, có thể khoá bằng mã riêng -----
+const capChuKy = (bang, f) => ({ ...bang, chuKy: f(bang.chuKy) });
+/** Bật Chu kỳ với ngày bắt đầu kỳ gần nhất `bd` ('YYYY-MM-DD', không ở tương lai, không quá 120 ngày trước). */
+export function batChuKy(bang, bd, nay) {
+  const j = jdChuoi(bd), h = jdChuoi(nay);
+  return j === null || h === null || j > h || h - j > 120 ? null : { ...bang, chuKy: { ...chuKyTrong(), bat: true, bd } };
+}
+export const tatChuKy = (bang) => ({ ...bang, chuKy: chuKyTrong() });
+/** "Kỳ kinh bắt đầu hôm nay": ghi độ dài chu kỳ vừa qua (nếu hợp lý 10–120 ngày) rồi bắt đầu kỳ mới. */
+export function ghiKyMoi(bang, nay) {
+  const ck = bang.chuKy, h = jdChuoi(nay), d = h === null || !ck.bat ? null : h - jdChuoi(ck.bd);
+  return d === null ? bang : capChuKy(bang, (c) => ({ ...c, bd: nay, ls: d >= 10 && d <= 120 ? [...c.ls, d].slice(-CHU_KY.toiDaLs) : c.ls }));
+}
+const kep = (x, [tu, den]) => Math.min(den, Math.max(tu, x));
+export const doiDaiChuKy = (bang, buoc) => capChuKy(bang, (c) => ({ ...c, dai: kep(c.dai + buoc, CHU_KY.dai) }));
+export const doiHanhChuKy = (bang, buoc) => capChuKy(bang, (c) => ({ ...c, hanh: kep(c.hanh + buoc, CHU_KY.hanh) }));
+export const doiNhacChuKy = (bang) => capChuKy(bang, (c) => ({ ...c, nhac: !c.nhac }));
+export const datKhoaChuKy = (bang, khoa) => capChuKy(bang, (c) => ({ ...c, khoa: khoa || null, thu: { sai: 0, den: 0 } }));
+export const datThuChuKy = (bang, thu) => capChuKy(bang, (c) => ({ ...c, thu }));
+
+// Khoá mã 4 số của Chu kỳ: lưu SHA-256(muối ':' mã) + muối, KHÔNG lưu mã gốc. Khác mã PIN ví (PIN ví do POS kiểm, cần mạng).
+export const SAI_TOI_DA = 5, CHO_GIAY = 60;
+const hex = (u8) => [...u8].map((b) => b.toString(16).padStart(2, '0')).join('');
+const bamMa = async (ma, muoi) => hex(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${muoi}:${ma}`))));
+/** Mã 4 chữ số → { muoi, bam }; mã sai dạng / máy không có crypto.subtle → null. */
+export async function taoKhoa(ma) {
+  try {
+    if (!/^\d{4}$/.test(ma)) return null;
+    const muoi = hex(globalThis.crypto.getRandomValues(new Uint8Array(16)));
+    return { muoi, bam: await bamMa(ma, muoi) };
+  } catch { return null; }
+}
+export async function kiemKhoa(ma, khoa) {
+  try { return !!khoa && /^\d{4}$/.test(ma) && (await bamMa(ma, khoa.muoi)) === khoa.bam; } catch { return false; }
+}
+/** Trạng thái thử mã sau một lần nhập (`dung` đúng / sai) lúc `ms`: sai đủ 5 lần → chờ 60 giây; đang chờ thì không tính lần nào. */
+export function thuMa(tt, dung, ms) {
+  if (ms < tt.den) return tt;
+  if (dung) return { sai: 0, den: 0 };
+  const sai = tt.sai + 1;
+  return sai >= SAI_TOI_DA ? { sai: 0, den: ms + CHO_GIAY * 1000 } : { sai, den: 0 };
+}
+export const conChoGiay = (tt, ms) => Math.max(0, Math.ceil((tt.den - ms) / 1000));
+

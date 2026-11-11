@@ -11,6 +11,7 @@ import { Ico, DenLong } from '../components/BieuTuong.jsx';
 import { AnhMon } from '../components/MonO.jsx';
 import BangNgay, { HangViec } from '../components/BangNgay.jsx';
 import BangQuaHan from '../components/BangQuaHan.jsx';
+import { ndHien } from '../noiDung/nd.js';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
 import { TranhTienIch } from '../components/BieuTuongTienIch.jsx';
@@ -18,10 +19,10 @@ import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapT
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
 const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
-const LOI_SAP_CO = 'Tiện ích này sắp có';
-// Lưới 6 ô của demo (patch35 TOOLS): [mã, tên, biểu tượng, nhãn chuThich | null = chưa làm — bấm chỉ báo "sắp có" (KH-UI-5f làm)].
+// Lưới 6 ô của demo (patch35 TOOLS): [mã tiện ích, tên, biểu tượng, mã nhãn chuThich].
 const TIEN_ICH = [['theomua', 'Theo mùa', 'fan', 'mua'], ['vankhan', 'Văn khấn', 'book', 'vk'], ['ngaycannho', 'Ngày cần nhớ', 'gift', 'ngay'],
-  ['xe', 'Xe cộ', 'scooter', null], ['thuoc', 'Uống thuốc', 'mortar', null], ['chuky', 'Chu kỳ', 'moon', null]];
+  ['xeco', 'Xe cộ', 'scooter', 'xe'], ['uongthuoc', 'Uống thuốc', 'mortar', 'thuoc'], ['chuky', 'Chu kỳ', 'moon', 'chuky']];
+const HIEN_O = { xeco: () => ndHien('hien.ocXe'), uongthuoc: () => ndHien('hien.ocThuoc'), chuky: () => ndHien('hien.ocChuKy') }; // công tắc ẩn / hiện ô ở /admin (CLAUDE.md §11)
 
 /** Biểu tượng tranh tròn (demo EN): file the-chat-<tên>.svg tách từ demo; đèn lồng vẽ thẳng. */
 export function TranhTron({ ten, s }) {
@@ -69,7 +70,8 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
   const doiThang = (n) => { let m = thang.m + n, y = thang.y; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } datThang({ y, m }); };
   const chonNgay = (d, m, y) => { datChon({ d, m, y }); if (m !== thang.m) datThang({ y, m }); };
   const veHomNay = () => { datChon(homNay); datThang({ y: homNay.y, m: homNay.m }); };
-  const bangNhac = bangCoNhac(bang, homNay); // + sinh nhật, giỗ, dịp cúng đã bật nhắc (việc ảo chỉ để tính chuông / nhắc)
+  const xungKh = xungCho !== undefined ? xungCho : hoSoKhach().xung_ho;
+  const bangNhac = bangCoNhac(bang, homNay, xungKh); // + sinh nhật, giỗ, dịp cúng đã bật nhắc (việc ảo chỉ để tính chuông / nhắc)
   const dauNgay = (() => { const l0 = jd({ d: 1, m: thang.m, y: thang.y }) - 7; return danhDauNgay(bangNhac, l0, l0 + 50, homNay); })(); // phủ cả ô tháng trước / sau trên lưới
   const coViec = (d, m, y) => dauNgay.get(jd({ d, m, y }));
 
@@ -78,7 +80,7 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
   const viec = viecNgay(bang, ngayChuoi(chon));
   const nhac = nhacDangCo(bangNhac, gioCho || bayGio(), homNay);
   const nQua = quaHan(bang, homNay).length, ketQuaTim = timViec(bang, tim).slice(0, 20);
-  const sapToi = upList(homNay, bang), xung = xungCho !== undefined ? xungCho : hoSoKhach().xung_ho;
+  const xung = xungKh, sapToi = upList(homNay, bang, xung);
   const monTiet = [];
   the.tip[1].forEach((id) => ghepMon(ds, [TU_KHOA_MON[id]], TU_KHOA_MON).forEach((m) => monTiet.includes(m) || monTiet.push(m)));
 
@@ -111,9 +113,9 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
       <div className="tl-grid" id="toolGrid">
         <div className="tl-h">Tiện ích</div>
         <div className="tl-g six">
-          {TIEN_ICH.filter(([id]) => id !== 'chuky' || coChuKy(xung)).map(([id, ten, ic, nhan]) => (
-            <div key={id} className="tl" {...bam(() => (nhan ? moTienIch(id) : datTb(LOI_SAP_CO)))}>
-              <div className="tl-ic"><TranhTienIch ten={ic} s={38} /></div><b>{ten}</b><small>{chuThich(nhan || id, homNay, bang)}</small>
+          {TIEN_ICH.filter(([id]) => (id !== 'chuky' || coChuKy(xung)) && (!HIEN_O[id] || HIEN_O[id]())).map(([id, ten, ic, nhan]) => (
+            <div key={id} className="tl" {...bam(() => moTienIch(id))}>
+              <div className="tl-ic"><TranhTienIch ten={ic} s={38} /></div><b>{ten}</b><small>{chuThich(nhan, homNay, bang)}</small>
             </div>
           ))}
         </div>

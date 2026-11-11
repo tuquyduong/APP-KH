@@ -35,7 +35,7 @@ export const dipSapXep = (homNay, nguoi = []) => VK.map((v) => ({ v, j: vkNext(v
 
 /**
  * Bài khấn đã điền: mảng dòng, mỗi dòng là mảng đoạn { t, mark } (mark = chỗ tự điền, tô màu). `tt` = { ten, dc, ho, nm }; `j` = ngày cúng.
- * Thiếu thông tin → đoạn tô màu để TRỐNG (không bịa); "Người được giỗ / Hương linh" trống → "các cụ Tổ tiên" (như demo). Giao thừa: {ny} năm mới, {nyc} năm cũ.
+ * `p` = tên chỗ điền (ten · ho · dc · nm · ld · lm · ny · nyc) để chạm vào mở đúng ô nhập. Thiếu thông tin → đoạn tô màu để TRỐNG (không bịa); "Người được giỗ / Hương linh" trống → "các cụ Tổ tiên" (như demo). Giao thừa: {ny} năm mới, {nyc} năm cũ.
  */
 export function dienBai(v, tt, j) {
   const l = lichAm(j);
@@ -43,7 +43,7 @@ export function dienBai(v, tt, j) {
     ten: tt.ten || '', dc: tt.dc || '', ho: tt.ho || '', ld: l.d <= 10 ? 'mùng ' + l.d : String(l.d), lm: LNUM[l.m] || String(l.m),
     ny: LUNAR.yearName(v.newYear ? l.y + 1 : l.y), nyc: LUNAR.yearName(l.y), nm: tt.nm || 'các cụ Tổ tiên',
   };
-  return v.vk.join('\n').split('\n').map((dong) => dong.split(/\{(\w+)\}/g).map((p, i) => (i % 2 ? { t: gia[p] ?? `{${p}}`, mark: true } : { t: p, mark: false })).filter((d) => d.mark || d.t));
+  return v.vk.join('\n').split('\n').map((dong) => dong.split(/\{(\w+)\}/g).map((p, i) => (i % 2 ? { t: gia[p] ?? `{${p}}`, mark: true, p } : { t: p, mark: false })).filter((d) => d.mark || d.t));
 }
 
 /** Ngày cúng bằng chữ cho tiêu đề / thẻ: "Rằm" · "Mùng 1" · tên dịp (phần trước dấu ·). */
