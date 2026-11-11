@@ -94,3 +94,4 @@ Kết quả: **24 / 24 đột biến bị bắt** (22 bắt được cả khi `K
 - `node kiem_tra_truoc_khi_giao.js --day-du`: 47 đạt · 0 hỏng (K9 màu / phông, K10 chữ cứng, vite build) — chạy lại sau commit cuối ở dưới.
 - `node tu_chay/cong.js tinh . 64757e0^ HEAD viec/KH-UI-5f`: ✓ (chỉ còn A19 chờ dòng `HEAD ĐÃ KIỂM`, đã ghi cuối tệp).
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 64757e0^ HEAD viec/KH-UI-5f`: ✓ CỔNG CHẠY ĐẠT (một CẢNH BÁO A16 "thu_KHUI5f.js chạy trên gốc in 1 ca ≠ 85" — bình thường: bài mới đổ ngay ở ca đầu trên gốc vì chưa có mục danh mục `xe.macdinh`).
+HEAD ĐÃ KIỂM: e5526be
