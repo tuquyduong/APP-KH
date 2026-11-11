@@ -24,6 +24,6 @@ cong_cu/thu_KHUI5f.js  KHONG_TRINH_DUYET=1 → 85 đạt · 0 hỏng ; có Chrom
 cong_cu/thu_KHUI5e.js  KHONG_TRINH_DUYET=1 → 71 đạt · 0 hỏng (không bớt ca: 71 → 71)
 cong_cu/thu_KHUI5b.js  KHONG_TRINH_DUYET=1 → 75 đạt · 0 hỏng (không bớt ca: 75 → 75)
 
-SỐ CA thu_KHUI5f: 85
-SỐ CA thu_KHUI5e: 71
-SỐ CA thu_KHUI5b: 75
+SỐ CA cong_cu/thu_KHUI5f.js: 85
+SỐ CA cong_cu/thu_KHUI5e.js: 71
+SỐ CA cong_cu/thu_KHUI5b.js: 75
