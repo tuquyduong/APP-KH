@@ -1,7 +1,7 @@
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { noiDungMon, bieuTuongNhom } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
-import { NHU_CAU } from '../noiDung/nhuCau.js';
+import { nd, ndPhan, ndDau, ndDs } from '../noiDung/nd.js';
 import { Ico, En } from './BieuTuong.jsx';
 import { dungGia } from '../heThong.js';
 import { bacThang } from '../giaHang.js';
@@ -16,14 +16,15 @@ export function AnhMon({ mon, s }) {
 
 /** Nhãn của món (demo prod-tags): nhãn Giờ vàng (nếu món đang trong Giờ vàng) rồi nhãn nhu cầu khi nội dung món khai `nhuCau`. */
 export function NhanNhuCau({ mon, gv }) {
-  const ds = (noiDungMon(MON, mon.ma)?.nhuCau || []).map((t) => NHU_CAU.find((n) => n.ten === t)).filter(Boolean);
+  const goc = ndDs('home.need'); // MỘT nguồn nhãn nhu cầu: `ten` để khớp với món, `nhan` để hiện
+  const ds = (noiDungMon(MON, mon.ma)?.nhuCau || []).map((t) => goc.find((n) => n.ten === t)).filter(Boolean);
   if (!ds.length && !gv) return null;
-  return <div className="prod-tags">{gv && <NhanGioVang tt={gv} />}{ds.map((n) => <span className="pill" key={n.ten}><Ico ten={n.bieuTuong} s={11} /> {n.ten}</span>)}</div>;
+  return <div className="prod-tags">{gv && <NhanGioVang tt={gv} />}{ds.map((n) => <span className="pill" key={n.ten}><Ico ten={n.bieuTuong} s={11} /> {n.nhan}</span>)}</div>;
 }
 
 /** Dòng "theo số lúc …" khi tồn là số cũ. */
 export function DongTonCu({ mon }) {
-  return mon.ton_cu && mon.ton_luc ? <div className="care-disclaimer">theo số lúc {dinhDangNgay(mon.ton_luc)}</div> : null;
+  return mon.ton_cu && mon.ton_luc ? <div className="care-disclaimer" {...ndDau('mon.tonCu')}>{ndPhan('mon.tonCu', { ngay: dinhDangNgay(mon.ton_luc) })}</div> : null;
 }
 
 /** Thẻ món trong lưới Menu / Trang chủ (demo prodCard). con_hang === false → "Hết hàng"; null / true → không hiện chữ. */
@@ -39,10 +40,10 @@ export default function MonO({ mon, chon }) {
       <div className={`prod-img${het ? ' dim' : ''}`} style={{ background: bieuTuongNhom(mon.nhom).bg }}>
         <AnhMon mon={mon} s={64} />
         {dangGv && <span className="prod-tag">-{gv.phanTram}%</span>}
-        {het && <div className="stock-out">Hết hàng</div>}
+        {het && <div className="stock-out" {...ndDau('mon.hetHang')}>{nd('mon.hetHang')}</div>}
       </div>
       <div className="prod-body">
-        <div className="prod-name">{mon.ten}</div>
+        <div className="prod-name" {...ndDau('menu.mon')}>{mon.ten}</div>
         {bac ? <BacGia bac={bac} /> : gia && <div className="prod-price"><span className="now">{gia}</span></div>}
         <NhanNhuCau mon={mon} gv={gv} />
         <DongTonCu mon={mon} />

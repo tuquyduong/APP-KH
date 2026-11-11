@@ -2,6 +2,7 @@
 // App KHÔNG tự quyết Giờ vàng có đang giảm hay không: đúng cờ `dang_chay` của POS mới là "đang giảm". Đồng hồ chỉ dùng để đếm ngược / đổi sang "đã kết thúc".
 // POS không đếm suất → không có chữ nào về suất. Khung giờ nhận cả dạng giờ đầy đủ (YYYY-MM-DDTHH:mm:ss) lẫn "HH:mm" (hợp đồng chưa ghi dạng).
 import { mocTuChuoi } from './bayGio.js';
+import { nd } from './noiDung/nd.js';
 
 const NGAY_GIAY = 86400;
 
@@ -46,17 +47,17 @@ export function chuDemNguoc(giay) {
 
 /** Chữ trạng thái (demo gvText): kieu 'tile' (ô nhóm Menu) · 'short' (ô Trang chủ, ghi chú món) · 'long' (đầu khối Giờ vàng). */
 export function chuGioVang(tt, kieu) {
-  if (tt.pha === 'dang') return `Còn ${kieu === 'tile' ? chuDemNguoc(tt.conLai).replace(/:\d\d$/, '') : chuDemNguoc(tt.conLai)}`;
-  if (tt.pha === 'truoc') return kieu === 'tile' ? tt.batDau : kieu === 'long' ? `Mở lúc ${tt.batDau} · sau ${chuDemNguoc(tt.conLai)}` : `Mở lúc ${tt.batDau}`;
-  if (tt.pha === 'cho') return 'Sắp bắt đầu';
-  return 'Đã kết thúc';
+  if (tt.pha === 'dang') return nd('gv.dem.con', { gio: kieu === 'tile' ? chuDemNguoc(tt.conLai).replace(/:\d\d$/, '') : chuDemNguoc(tt.conLai) });
+  if (tt.pha === 'truoc') return kieu === 'tile' ? tt.batDau : kieu === 'long' ? nd('gv.dem.moSau', { batDau: tt.batDau, gio: chuDemNguoc(tt.conLai) }) : nd('gv.dem.mo', { batDau: tt.batDau });
+  if (tt.pha === 'cho') return nd('gv.dem.sap');
+  return nd('gv.dem.xong');
 }
 
 /** Nhãn trên ô món (demo gvTag, bỏ "còn N suất"): đang → "Giờ vàng −50%"; chưa tới → "… từ 20:00"; tới giờ chờ POS → "… sắp bắt đầu"; hết khung → "Giờ vàng đã kết thúc". */
 export function chuNhanMon(tt) {
-  if (tt.pha === 'dang') return `Giờ vàng −${tt.phanTram}%`;
-  if (tt.pha === 'sau') return 'Giờ vàng đã kết thúc';
-  return tt.pha === 'cho' ? `Giờ vàng −${tt.phanTram}% sắp bắt đầu` : `Giờ vàng −${tt.phanTram}% từ ${tt.batDau}`;
+  if (tt.pha === 'dang') return nd('gv.nhan.dang', { phanTram: tt.phanTram });
+  if (tt.pha === 'sau') return nd('gv.nhan.sau');
+  return tt.pha === 'cho' ? nd('gv.nhan.cho', { phanTram: tt.phanTram }) : nd('gv.nhan.truoc', { phanTram: tt.phanTram, batDau: tt.batDau });
 }
 
 /** Mã món Giờ vàng CÓ trong menu (E4: mã không có trong menu → bỏ qua, không lỗi). */
