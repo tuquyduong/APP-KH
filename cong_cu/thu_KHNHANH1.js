@@ -128,7 +128,8 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
   await thu('A4-A5', async () => {
     const uu = doc('src/pages/UuDai.jsx'), dn = doc('src/pages/Don.jsx');
     k('A4 "Xem tất cả" voucher vẫn gọi layVoucher(true) khi bấm', /layVoucher\(true\)/.test(uu) && /dungCua\(cuaVoucher\)/.test(uu));
-    k('A4 Lịch sử đơn trang ≥ 2 vẫn gọi layDon khi bấm "Xem thêm"', /layDon\(/.test(dn) && /Xem thêm/.test(dn));
+    k('A4 Lịch sử đơn trang ≥ 2 vẫn gọi layDon khi bấm "Xem thêm"', /layDon\(/.test(dn) && /Xem thêm/.test(doc('src/noiDung/nd/donHang.js')) && /nd\('dh\.xemThem'\)/.test(dn));
+    k('ND3e A4 chữ "Xem thêm" / "Bạn chưa có đơn nào." nằm ở danh mục (dh.xemThem, dh.rong), Don.jsx không viết thẳng', /Bạn chưa có đơn nào\./.test(doc('src/noiDung/nd/donHang.js')) && !/Xem thêm|Bạn chưa có đơn nào/.test(dn));
     const tep = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? tep(path.join(d, e.name)) : [path.join(d, e.name)]));
     const goiMang = tep('src').filter((f) => /\.(js|jsx)$/.test(f) && f !== path.join('src', 'api.js') && /\bfetch\(/.test(doc(f)));
     k('A5 api.js vẫn là chỗ DUY NHẤT gọi mạng', goiMang.length === 0, goiMang.join(','));
@@ -211,7 +212,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 
   await thu('F-G', async () => {
     const tt = doc('src/pages/ThanhToan.jsx');
-    k('F1 trong lúc chờ /toi: "Đang cập nhật số dư…"', /toi\.dangTai \? 'Đang cập nhật số dư…'/.test(tt));
+    k('F1 trong lúc chờ /toi: "Đang cập nhật số dư…"', /toi\.dangTai \? \['tt\.vi\.dangTai'\]/.test(tt) && /Đang cập nhật số dư…/.test(doc('src/noiDung/nd/donHang.js')));
     k('F1 (KH-MUA-1b) Thanh toán dùng cửa đặt đơn thật của api.js — không còn cổng tiêm datCongDatDon (bài thử dựng app nguyên bản)', !/datCongDatDon/.test(doc('src/datDon.js') + tt) && /baoGiaGio/.test(doc('src/datDon.js')));
     k('F2 Theo dõi đơn, Chi tiết đơn không đọc kho', !/duLieuKhach|dungCua/.test(doc('src/pages/TheoDoiDon.jsx')) && /dungTai\(useCallback\(\(\) => layChiTietDon/.test(doc('src/pages/Don.jsx')));
     const GH = await nap('src/giaHang.js');
