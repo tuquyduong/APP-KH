@@ -67,7 +67,9 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     && theo.get('home.bh')?.macDinh === 'Hôm nay bạn muốn\nuống gì?');
   k('A1 bien khai đúng chỗ điền (tab.soMon: so)', JSON.stringify(theo.get('tab.soMon')?.bien) === '["so"]' && /\{so\}/.test(theo.get('tab.soMon')?.macDinh || ''));
   const khoa = DM.filter((m) => m.khoaBoi);
-  k('A1 danh mục không có chữ "nợ" (quán không có công nợ — CLAUDE.md §5)', DM.length > 0 && !/\bnợ\b/i.test(JSON.stringify(DM)));
+  // Không dùng \b: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp (soát vòng 2). Ca giả "công nợ" chứng minh phép kiểm đỏ được.
+  const khongNo = (x) => !/nợ/i.test(JSON.stringify(x));
+  k('A1 danh mục không có chữ "nợ" (quán không có công nợ — CLAUDE.md §5); bản giả "Công nợ" bị bắt', DM.length > 0 && khongNo(DM) && !khongNo([{ macDinh: 'Công nợ' }]));
   k('A2 có mục khoá pos + tutinh, mỗi mục có chiDuong', ['pos', 'tutinh'].every((b) => khoa.some((m) => m.khoaBoi === b)) && khoa.every((m) => m.chiDuong && m.man && m.ten));
   k('A2 home.diem.so khoá bởi POS, chỉ đường sang POS', theo.get('home.diem.so')?.khoaBoi === 'pos' && /POS/.test(theo.get('home.diem.so')?.chiDuong || ''));
   k('A3 kiemDanhMuc(toàn bộ danh mục) = 0 lỗi', typeof ND.kiemDanhMuc === 'function' && ND.kiemDanhMuc(DM).length === 0, ND.kiemDanhMuc ? ND.kiemDanhMuc(DM).join(' | ') : 'thiếu hàm');
