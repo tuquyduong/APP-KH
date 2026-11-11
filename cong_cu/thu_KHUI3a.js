@@ -9,6 +9,9 @@ const { execFileSync } = require('child_process');
 const { pathToFileURL } = require('url');
 
 const GOC = path.join(__dirname, '..');
+// Không dùng \b cho chữ có dấu: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp và ca "không có chữ nợ" luôn xanh (KH-ND-3b B3).
+// Mỗi ca kèm bản giả "Công nợ" chứng minh phép kiểm ĐỎ được.
+const khongNo = (x) => !/nợ/i.test(String(x));
 let dat = 0, hong = 0;
 const k = (ten, dung, them = '') => {
   if (dung) { dat++; console.log(`  ✓ ${ten}`); } else { hong++; console.log(`  ✗ ${ten}${them ? '  — ' + them : ''}`); }
@@ -145,6 +148,7 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
   }
 
   console.log('Phần 2 — App thật trong Chromium');
+  k('C2 phép kiểm chữ "nợ" bắt được bản giả "Công nợ" (dùng cho màn Tài khoản, phần trình duyệt bên dưới)', !khongNo('Tài khoản · Công nợ') && khongNo('Tài khoản · Ví'));
   let pw = null;
   if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } }
   if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này — các ca trong trình duyệt CHƯA chạy');
@@ -237,7 +241,8 @@ async function trinhDuyet(pw) {
     await mo(t, '/taikhoan');
     const ak = await chu(t);
     k('C2 Tài khoản: thẻ đầu có tên + "Hạng Vàng"; ô nhanh Ví 85.000đ · Điểm 1.250 · Voucher 2', /Linh/.test(ak) && /Hạng Vàng/.test(ak) && /85\.000đ\s*\n?\s*Ví/.test(ak) && /1\.250\s*\n?\s*Điểm/.test(ak) && /2\s*\n?\s*Voucher/.test(ak), ak.slice(0, 260));
-    k('C2 không bao giờ chữ "nợ"', !/\bnợ\b/i.test(ak) && !/\bnợ\b/i.test(tx + m + tm));
+    k('C2 không bao giờ chữ "nợ"', khongNo(ak) && khongNo(tx + m + tm));
+    k('C2 phép kiểm "nợ" bắt được bản giả "Công nợ" trong màn Tài khoản', !khongNo(ak + 'Công nợ'));
   });
 
   await ca('b-khong-hang-vi-0', { pos: { toi: TOI(null, 0) } }, async (t, P, loi) => {

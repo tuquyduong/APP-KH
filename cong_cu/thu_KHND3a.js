@@ -142,6 +142,42 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     k('C1 thẻ tự đóng có {…} rồi chữ JSX: <Ico s={11} /> Chữ → 1', H.demChuCung('<p><Ico s={11} /> Chữ cứng</p>') === 1);
     k('C1 phép chia trong JSX {a}/{b} và {a} / {b} rồi chữ → 1 mỗi ca', H.demChuCung('<p>{a}/{b} Chữ mới</p>') === 1 && H.demChuCung('<p>{a} / {b} Chữ mới</p>') === 1);
     k("C1 chuỗi sau thẻ tự đóng có {…}: <X a={b} />{'Khác'} → 1", H.demChuCung("<p><X a={b} />{x ? 'Khác' : ''}</p>") === 1);
+    // KH-ND-3b B1: ba dạng bộ đếm cũ đếm sót (soát KH-ND-3a vòng 2) — mỗi dạng một ca, ĐỎ trên bộ đếm cũ.
+    k('B1 chữ JSX có địa chỉ web: <p>Xem https://… chữ</p> → 1 (// sau : không phải chú thích); chú thích thật vẫn bỏ', H.demChuCung('<p>Xem https://tuquyduong.com/menu chữ</p>') === 1
+      && H.demChuCung('const a = 1; // Chào bạn\nconst b = 2; /* Đó */') === 0);
+    k('B1 chữ JSX có "/" ngay sau ( = ? - : <p>(/ngày) chữ</p> … → 1 mỗi ca (không phải regex); regex thật vẫn bỏ', ['(/ngày) chữ', '= /ngày chữ', '? /ngày chữ', '- /ngày chữ']
+      .every((t) => H.demChuCung(`<p>${t}</p>`) === 1) && H.demChuCung('const r = /ngày/g.test(x) ? /đêm/i : 0;') === 0 && H.demChuCung('const m = x.replace(/Đ+/g, "d");') === 0);
+    k('B1 chuỗi có dấu lồng trong ${…} của mẫu chuỗi: mỗi chuỗi lồng có dấu = 1 (cộng 1 nếu phần chữ của mẫu có dấu)', H.demChuCung("const s = `${a ? 'Có' : 'Không'}`;") === 2
+      && H.demChuCung("const s = `Chào ${a ? 'Có' : 'x'}`;") === 2 && H.demChuCung("const s = `Chào ${f(`Tên ${y}`)}`;") === 2 && H.demChuCung('const s = `${a} món`;') === 1);
+    // Đối chứng bằng cách đếm thứ hai ĐỘC LẬP: @babel/parser (có sẵn trong node_modules qua vite, KHÔNG nằm trong package.json) đếm trên cây cú pháp của MỌI tệp src.
+    let BP = null;
+    try { BP = require('@babel/parser'); } catch { /* không có */ }
+    if (!BP) console.log('  BỎ QUA: không có @babel/parser trong node_modules — ca đối chứng bộ đếm thứ hai CHƯA chạy (chạy npm ci)');
+    else {
+      const demCay = (nguon) => {
+        let n = 0;
+        const duyet = (x) => {
+          if (!x || typeof x !== 'object') return;
+          if (Array.isArray(x)) { x.forEach(duyet); return; }
+          if (x.type === 'StringLiteral') { if (coDauThu(x.value)) n++; return; }
+          if (x.type === 'JSXText') { if (coDauThu(x.value)) n++; return; }
+          if (x.type === 'TemplateLiteral') { if (coDauThu(x.quasis.map((q) => q.value.raw).join(''))) n++; x.expressions.forEach(duyet); return; }
+          for (const t of Object.keys(x)) if (t !== 'loc' && t !== 'leadingComments' && t !== 'trailingComments' && t !== 'innerComments') duyet(x[t]);
+        };
+        duyet(BP.parse(nguon, { sourceType: 'module', plugins: ['jsx'] }).program);
+        return n;
+      };
+      const coDauThu = (s) => /[̀-ͯ]|[đĐ]/.test(String(s).normalize('NFD'));
+      const lech = [], hong2 = [];
+      const lietKe = (d) => fs.readdirSync(tep(d), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? lietKe(`${d}/${e.name}`) : /\.jsx?$/.test(e.name) ? [`${d}/${e.name}`] : []));
+      let tong = 0;
+      for (const f of lietKe('src').filter((x) => !/^src\/(noiDung|kiemKhop)\/|^src\/pages\/KiemKhop\.jsx$/.test(x))) {
+        try { const a = H.demChuCung(doc(f)), b = demCay(doc(f)); tong++; if (a !== b) lech.push(`${f} (bộ đếm ${a} · cây cú pháp ${b})`); } catch (e) { hong2.push(`${f}: ${String(e.message).split('\n')[0]}`); }
+      }
+      k(`B2 đối chứng: bộ đếm K10 và cây cú pháp @babel/parser cho CÙNG số chữ cứng ở mọi tệp src (${tong} tệp), tổng lệch 0`, lech.length === 0 && hong2.length === 0 && tong > 50, lech.concat(hong2).slice(0, 6).join(' · '));
+      k('B2 đối chứng đỏ được: bản giả có đủ ba dạng B1 → hai cách đếm giống nhau; bản giả chữ lạ đếm khác → bị phát hiện', demCay('const a = <p>Xem https://x.vn chữ <b>{`${y ? \'Có\' : \'Không\'}`}</b></p>;') === H.demChuCung('const a = <p>Xem https://x.vn chữ <b>{`${y ? \'Có\' : \'Không\'}`}</b></p>;')
+        && demCay("const a = 'Chào';") !== H.demChuCung("const a = 'Chao';"));
+    }
     const tam = fs.mkdtempSync(path.join(os.tmpdir(), 'k10-'));
     try {
       for (const f of ['kiem_tra_truoc_khi_giao.js', 'cong_cu/ha_no_chu.js', 'cong_cu/no_chu_cung.txt', 'package.json', 'package-lock.json', 'index.html', 'thiet_ke/app_kh_demo.html',

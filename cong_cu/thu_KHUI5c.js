@@ -9,6 +9,9 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 
 const GOC = path.join(__dirname, '..');
+// Không dùng \b cho chữ có dấu: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp và ca "không có chữ nợ" luôn xanh (KH-ND-3b B3).
+// Mỗi ca kèm bản giả "Công nợ" chứng minh phép kiểm ĐỎ được.
+const khongNo = (x) => !/nợ/i.test(String(x));
 let dat = 0, hong = 0;
 const k = (ten, dung, them = '') => {
   if (dung) { dat++; console.log(`  ✓ ${ten}`); } else { hong++; console.log(`  ✗ ${ten}${them ? '  — ' + them : ''}`); }
@@ -125,7 +128,7 @@ const khoGia = (d = {}, chan = false) => ({ d, getItem: (x) => { if (chan) throw
   k('E1 không gọi mạng, không gửi việc đi: không import api.js, fetch, XMLHttpRequest, sendBeacon, Notification', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon|new Notification|serviceWorker/.test(moi));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); bảng quá hạn / dải nhắc / thanh nhắc lấy giờ từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String|ngay)/.test(moi) && /bayGio\(\)/.test(doc('src/components/DaiNhacViec.jsx')) && /gioCho \|\| bayGio\(\)/.test(doc('src/pages/KeHoach.jsx')));
   k('E1 chỉ kehoach.js chạm localStorage; các tệp mới không lưu khoá mới', !/localStorage|sessionStorage/.test(moi.replace(/const kho = \(\) => localStorage;/, '')));
-  k('K3 không có chữ "nợ", không số mẫu của demo', !/\bnợ\b/i.test(moi) && !/1\.250|1900|support@/.test(moi));
+  k('K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo', khongNo(moi) && !khongNo(moi + 'Công nợ') && !/1\.250|1900|support@/.test(moi));
   k('D1 Trang chủ chỉ thêm số đỏ quá hạn trên ô Kế hoạch (+ ✕ banner, F1): dùng quaHan() chỉ khi đã đăng nhập và biết khách', /dangNhap && daBiet \? quaHan\(bang, homNay\)\.length : 0/.test(tc) && /quaHan=\{qua\}/.test(tc));
   k('F1 (đổi ở KH-UI-5d) KHÔNG còn ✕ ẩn banner: Trang chủ không khiAn / anBannerHomNay, BannerHomNay không nút ✕, không còn BannerNho', !/khiAn|anBannerHomNay/.test(tc) && !/khiAn|t-x/.test(doc('src/components/BannerHomNay.jsx')) && !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')));
   k('F2 ô "hôm nay" của lưới giữ cỡ thường: ke_hoach.css không đặt chiều cao 150px cho .cd.today', !/\.cd\.today[^}]*height\s*:\s*150/.test(doc('src/giaoDien/ke_hoach.css') + doc('src/giaoDien/bang_ngay.css')));
