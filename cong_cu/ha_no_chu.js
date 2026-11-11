@@ -15,7 +15,7 @@ const coDau = (s) => /[̀-ͯ]|[đĐ]/.test(s.normalize('NFD'));
 function demChuCung(nguon) {
   let n = 0, code = '', i = 0;
   const L = nguon.length;
-  const truocLaRegex = () => { const t = code.replace(/\s+$/, ''); return !t || /[(,=:[!&|?{};+\-*%~^]$/.test(t) || /=>$|\breturn$/.test(t); };
+  const truocLaRegex = () => { const t = code.replace(/\s+$/, ''); return !t || /[(,=:[!&|?{;+\-*%~^]$/.test(t) || /=>$|\breturn$/.test(t); };
   while (i < L) {
     const c = nguon[i], c2 = nguon[i + 1];
     if (c === '/' && c2 === '/') { while (i < L && nguon[i] !== '\n') i++; continue; }
