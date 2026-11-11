@@ -7,15 +7,17 @@ import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan } from '../gio.js';
 import { soDon } from '../hoaDon.js';
 import {
-  CHU_CHUA_MO, KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
+import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
 import { docDungVi, ghiDungVi } from '../luuMay.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import PinSheet from '../components/PinSheet.jsx';
 import { Ico, Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
+import Chu from '../components/Chu.jsx';
 import { BangTien } from './GioHang.jsx';
 import '../giaoDien/thanh_toan.css';
 
@@ -27,7 +29,7 @@ import '../giaoDien/thanh_toan.css';
 // Mở màn hỏi GET /don — có đơn chờ trả thì mời tiếp tục / huỷ trước.
 const MA_PIN = ['PIN_SAI', 'PIN_DANG_KHOA'];      // bảng PIN hiện lời POS, khách nhập lại
 const MA_NGOAI_GIO = ['NGOAI_GIO', 'QUA_GIO_NHAN_DON'];
-const MA_MON = { HET_HANG: 'Hết hàng', MON_KHONG_BAN: 'Không còn bán' };
+const MA_MON = { HET_HANG: 'tt.monHetHang', MON_KHONG_BAN: 'tt.monKhongBan' }; // mã POS → khoá chữ nhãn món (danh mục nội dung)
 const layDonDau = () => layDon(1);
 
 export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon, veGio, danhDauMon, sauHuy }) {
@@ -85,13 +87,13 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
 
   function xuLyLoi(e) {
     const dl = e.duLieu || {};
-    if (e.code === 'GIA_DA_DOI') { const b = docBaoGia(dl.bao_gia); if (b) datBg(b); datThongBao('Giá vừa thay đổi, mời bạn xem lại'); return; }
+    if (e.code === 'GIA_DA_DOI') { const b = docBaoGia(dl.bao_gia); if (b) datBg(b); datThongBao(nd('loi.GIA_DA_DOI')); return; }
     if (e.code === 'QUA_NHIEU_LAN') { datHetLuc(Date.now() + (Number(dl.thu_lai_sau_giay) || 60) * 1000); datThongBao(e.message); return; }
     if (MA_NGOAI_GIO.includes(e.code)) { datChanPos(e.message); return; }
     if (MA_MON[e.code]) {
       const m = ds.find((x) => x.ma === dl.ma);
       datMonLoi(true); datThongBao(m ? `${e.message} — ${m.ten}` : e.message);
-      danhDauMon({ ma: dl.ma, chu: MA_MON[e.code] });
+      danhDauMon({ ma: dl.ma, chu: nd(MA_MON[e.code]) });
       return;
     }
     if (e.code === 'CHUA_CO_PIN') datCanPin(true);
@@ -130,7 +132,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       ghiGuiDo(null);
       datMoPin(null);
       // Gửi lại đơn CŨ mà giá đã đổi: báo giá POS kèm theo là của giỏ cũ → KHÔNG đè bảng tiền của giỏ đang xem.
-      if (cu && e.code === 'GIA_DA_DOI') { datThongBao('Giá đã đổi so với lần đặt trước — đơn đó chưa tạo, mời bạn đặt lại'); return; }
+      if (cu && e.code === 'GIA_DA_DOI') { datThongBao(nd('loi.GIA_DA_DOI_CU')); return; }
       xuLyLoi(e);
     });
   };
@@ -151,79 +153,82 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   // Số dư quyết định cách trả CHỈ lấy từ /toi gọi SAU khi mở màn (KH-NHANH-1 F1); chờ thì công tắc khoá.
   const viBat = cachTra !== 'qr';
   const loiSoDu = !toi.dangTai && soDu === null; // /toi lỗi: bấm dòng để đọc lại, KHÔNG tự đặt cách trả
-  const dongVi = toi.dangTai ? 'Đang cập nhật số dư…' : loiSoDu ? 'Chưa đọc được số dư · Bấm để thử lại' : !viBat ? `Số dư ${dinhDangGia(soDu)}`
-    : cachTra === 'vi' ? `Số dư ${dinhDangGia(soDu)} — đủ trả cả đơn` : `Dùng hết ${dinhDangGia(soDu)} trong ví, còn thiếu ${dinhDangGia(thieu)} → quét QR`;
+  const [kVi, bienVi] = toi.dangTai ? ['tt.vi.dangTai'] : loiSoDu ? ['tt.vi.loi'] : !viBat ? ['tt.vi.soDu', { gia: dinhDangGia(soDu) }]
+    : cachTra === 'vi' ? ['tt.vi.du', { gia: dinhDangGia(soDu) }] : ['tt.vi.thieu', { gia: dinhDangGia(soDu), thieu: dinhDangGia(thieu) }];
+  const dongVi = nd(kVi, bienVi);
   const batDuocVi = duoc.vi || duoc.viQr;
-  const chuNut = !DAT_ONLINE ? CHU_CHUA_MO : dang ? (guiLai ? 'Mạng chậm, đang gửi lại…' : 'Đang gửi…') : dsDon.dangTai ? 'Đang kiểm tra đơn trước…'
-    : chuaRo || donKhac || donCho ? 'Xử lý đơn trước rồi đặt tiếp' : conGiay ? `Thử lại sau ${conGiay} giây` : !bg ? 'Xác nhận'
-      : cachTra === 'qr' ? `Thanh toán qua QR ${dinhDangGia(bg.tong)}` : cachTra === 'vi' ? `Trừ ví ${dinhDangGia(bg.tong)}` : `Trừ ví ${dinhDangGia(soDu)} + QR ${dinhDangGia(thieu)}`;
+  const [kNut, bienNut] = !DAT_ONLINE ? ['loi.CHUA_MO'] : dang ? [guiLai ? 'tt.nut.guiLai' : 'tt.nut.dangGui'] : dsDon.dangTai ? ['tt.nut.kiemTra']
+    : chuaRo || donKhac || donCho ? ['tt.nut.xuLyTruoc'] : conGiay ? ['tt.nut.thuLai', { giay: conGiay }] : !bg ? ['tt.nut.xacNhan']
+      : cachTra === 'qr' ? ['tt.nut.qr', { tong: dinhDangGia(bg.tong) }] : cachTra === 'vi' ? ['tt.nut.vi', { tong: dinhDangGia(bg.tong) }] : ['tt.nut.viQr', { vi: dinhDangGia(soDu), qr: dinhDangGia(thieu) }];
+  const [kGuiLai, bienGuiLai] = !DAT_ONLINE ? ['loi.CHUA_MO'] : conGiay ? ['tt.guiLai.cho', { giay: conGiay }] : ['tt.guiLai.nut'];
   // Khối cảnh báo / chờ: khuôn .nt-state của demo (biểu tượng + dòng đậm + dòng nhỏ).
-  const canhBao = (tieuDe, phu) => <div className="nt-state" role="alert"><Ico ten="warning" s={18} /><div>{tieuDe}{phu && <small>{phu}</small>}</div></div>;
+  // kT / kP = khoá chữ của dòng đậm / dòng nhỏ (danh mục nội dung) để gắn data-nd.
+  const canhBao = (tieuDe, phu, kT, kP) => <div className="nt-state" role="alert"><Ico ten="warning" s={18} /><div {...(kT ? ndDau(kT) : {})}>{tieuDe}{phu && <small {...(kP ? ndDau(kP) : {})}>{phu}</small>}</div></div>;
 
   return (
     <Man id="checkout">
-      <DauManCon tieuDe="Thanh toán" phu="Chọn cách nhận hàng & trả tiền" lui={lui} canTrai />
+      <DauManCon tieuDe={nd('tt.tieuDe')} phu={nd('tt.phu')} lui={lui} canTrai />
       {chuaRo && (
         <>
-          {guiDo.da_dung ? canhBao('Đơn này có thể đã đặt trước đó — mời bạn xem Lịch sử đơn')
-            : guiDo.quaHan ? canhBao('Lần đặt trước (hơn 24 giờ) chưa rõ kết quả', 'Bạn xem Lịch sử đơn trước khi đặt đơn mới nhé.')
-              : canhBao('Lần đặt trước chưa rõ kết quả', 'Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai.')}
+          {guiDo.da_dung ? canhBao(nd('tt.daDung.t'), '', 'tt.daDung.t')
+            : guiDo.quaHan ? canhBao(nd('tt.quaHan.t'), nd('tt.quaHan.p'), 'tt.quaHan.t', 'tt.quaHan.p')
+              : canhBao(nd('tt.chuaRo.t'), nd('tt.chuaRo.p'), 'tt.chuaRo.t', 'tt.chuaRo.p')}
           <div className="card bang-tien">
-            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
-            {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
+            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau('tt.so')}>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
+            {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><Chu k="tt.tong" /><span {...ndDau('tt.so')}>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
           {/* 429 khi gửi lại: khoá nút tới hết đếm ngược (cùng luật nút đặt) — bấm sớm chỉ thêm lượt bị chặn. */}
-          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay || !DAT_ONLINE ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0 || !DAT_ONLINE} onClick={guiLaiDungDon}><span>{!DAT_ONLINE ? CHU_CHUA_MO : conGiay ? `Gửi lại sau ${conGiay} giây` : 'Gửi lại đúng đơn này'}</span><span>→</span></button>}
-          <button type="button" className="ghost-btn" onClick={moLichSu}>Xem Lịch sử đơn</button>
-          {khongGuiLai && <button type="button" className="ghost-btn" onClick={boQua}>Bỏ qua, đặt đơn mới</button>}
+          {!khongGuiLai && <button type="button" className={`checkout-btn${conGiay || !DAT_ONLINE ? ' btn-disabled' : ''}`} aria-disabled={conGiay > 0 || !DAT_ONLINE} onClick={guiLaiDungDon}><span {...ndDau(kGuiLai)}>{nd(kGuiLai, bienGuiLai)}</span><span>→</span></button>}
+          <Chu k="tt.lichSu" as="button" type="button" className="ghost-btn" onClick={moLichSu} />
+          {khongGuiLai && <Chu k="tt.boQua" as="button" type="button" className="ghost-btn" onClick={boQua} />}
         </>
       )}
       {!chuaRo && donKhac && (
         <>
-          {canhBao(`Bạn vừa đặt đơn ${nhanDon(donKhac)} ở cửa sổ khác`, 'Bạn xem đơn đó trước khi đặt thêm nhé.')}
-          <button type="button" className="checkout-btn" onClick={() => moDon(donKhac)}><span>Xem đơn {nhanDon(donKhac)}</span><span>→</span></button>
-          <button type="button" className="ghost-btn" onClick={datThem}>Đặt thêm đơn mới</button>
+          {canhBao(nd('tt.donKhac.t', { don: nhanDon(donKhac) }), nd('tt.donKhac.p'), 'tt.donKhac.t', 'tt.donKhac.p')}
+          <button type="button" className="checkout-btn" onClick={() => moDon(donKhac)}><Chu k="tt.donKhac.xem" bien={{ don: nhanDon(donKhac) }} /><span>→</span></button>
+          <Chu k="tt.donKhac.them" as="button" type="button" className="ghost-btn" onClick={datThem} />
         </>
       )}
       {!chuaRo && !donKhac && donCho && (
         <>
-          {canhBao(`Bạn có đơn ${nhanDon(donCho.ma)} đang chờ trả`, 'Bạn trả tiếp hoặc huỷ đơn đó rồi đặt đơn mới nhé.')}
-          <button type="button" className="checkout-btn" onClick={() => moDon(donCho.ma)}><span>Tiếp tục trả đơn {nhanDon(donCho.ma)}</span><span>→</span></button>
-          <button type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho}>Huỷ đơn đó</button>
+          {canhBao(nd('tt.donCho.t', { don: nhanDon(donCho.ma) }), nd('tt.donCho.p'), 'tt.donCho.t', 'tt.donCho.p')}
+          <button type="button" className="checkout-btn" onClick={() => moDon(donCho.ma)}><Chu k="tt.donCho.tiep" bien={{ don: nhanDon(donCho.ma) }} /><span>→</span></button>
+          <Chu k="tt.donCho.huy" as="button" type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho} />
         </>
       )}
-      <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><h2>Hình thức nhận hàng</h2></div>
+      <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><Chu k="tt.nhan.tieuDe" as="h2" /></div>
       <div className="mode-row">
-        <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><b>Giao tận nơi</b><span>Giao qua Ahamove · Sắp có</span></div>
-        <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><b>Lấy tại quầy</b><span>Miễn phí giao</span></div>
+        <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><Chu k="tt.nhan.giao" as="b" /><Chu k="tt.nhan.giao.phu" /></div>
+        <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><Chu k="tt.nhan.quay" as="b" /><Chu k="tt.nhan.quay.phu" /></div>
       </div>
       <div className="card the-quay">
-        <div className="quay-ten"><Ico ten="store" s={16} lop="ico-mint" /> Quán Tứ Quý Đường</div>
-        <div className="quay-chu">Khi tới quầy, bạn đọc <b>số đơn</b> hiện trong app cho nhân viên.</div>
+        <div className="quay-ten"><Ico ten="store" s={16} lop="ico-mint" /> <Chu k="tt.quay.ten" /></div>
+        <div className="quay-chu" {...ndDau('tt.quay.chu')}>{ndPhan('tt.quay.chu', { so: <b key="so" {...ndDau('tt.quay.so')}>{nd('tt.quay.so')}</b> })}</div>
       </div>
 
       {soDu !== 0 && (
         <>
-          <div className="sec-head"><h2>Cách trả tiền</h2></div>
+          <div className="sec-head"><Chu k="tt.tra.tieuDe" as="h2" /></div>
           {/* CẢ dòng là chỗ bấm (ngón tay trên iPhone không trúng ô 42×24); .switch chỉ là hình. */}
           <div className={`notif-row the-vi${batDuocVi || loiSoDu ? '' : ' the-vi-khoa'}`} {...(loiSoDu ? bam(toi.taiLai) : batDuocVi ? bam(() => datDungVi(!dungVi)) : {})}
-            role={loiSoDu ? 'button' : 'switch'} aria-label={loiSoDu ? undefined : 'Trừ từ số dư ví'} aria-checked={loiSoDu ? undefined : viBat} aria-disabled={loiSoDu ? undefined : !batDuocVi}>
-            <div><div className="t">Trừ từ số dư ví</div><div className="s">{dongVi}</div></div>
+            role={loiSoDu ? 'button' : 'switch'} aria-label={loiSoDu ? undefined : nd('tt.vi.nhan')} aria-checked={loiSoDu ? undefined : viBat} aria-disabled={loiSoDu ? undefined : !batDuocVi}>
+            <div><Chu k="tt.vi.nhan" as="div" className="t" /><div className="s" {...ndDau(kVi)}>{dongVi}</div></div>
             <div className={`switch${viBat ? ' on' : ''}`} aria-hidden="true" />
           </div>
         </>
       )}
 
       <BangTien bg={bg} loi={loi} />
-      {chan && canhBao(chan)}
-      {dang && guiLai && canhBao('Mạng chậm, đang gửi lại…', 'Bạn chờ chút nhé, không cần bấm lại.')}
-      {thongBao && canhBao(thongBao)}
+      {chan && canhBao(chan, '', 'tt.thongBao')}
+      {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}
+      {thongBao && canhBao(thongBao, '', 'tt.thongBao')}
       <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
-        <span>{chuNut}</span><span>→</span>
+        <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
       </button>
-      {monLoi && <button type="button" className="ghost-btn" onClick={veGio}>Về giỏ hàng</button>}
-      {canPin && <button type="button" className="ghost-btn" onClick={() => datMoDatPin(true)}>Đặt mã PIN</button>}
+      {monLoi && <Chu k="tt.veGio" as="button" type="button" className="ghost-btn" onClick={veGio} />}
+      {canPin && <Chu k="tt.datPin" as="button" type="button" className="ghost-btn" onClick={() => datMoDatPin(true)} />}
       {moPin && <PinSheet gui={(pin) => guiDon(pin, moPin.cu)} dong={() => datMoPin(null)} />}
       {moDatPin && <PinSheet dong={() => { datMoDatPin(false); datCanPin(false); }} />}
     </Man>

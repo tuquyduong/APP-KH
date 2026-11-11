@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { datPin } from '../api.js';
+import Chu from './Chu.jsx';
+import { nd, ndDau } from '../noiDung/nd.js';
 
 // Bảng đặt / đổi mã PIN 4 số theo demo (PATCH29): chấm tròn + bàn phím số, nhập hai lần. Gửi `PUT /pin { pin, pin_lai }`;
 // POS tự kiểm số dễ đoán / đã có PIN — app chỉ hiện nguyên lời POS (máy chủ mới là nơi giữ quy tắc).
 // `gui(pin)` có → chế độ NHẬP PIN để trả ví (KH-MUA-1): nhập MỘT lần, gọi gui(pin); POS từ chối → hiện nguyên lời, nhập lại. PIN không lưu ở đâu.
 // Hàng cuối "Xoá" (lùi một số) · 0 · "Xác nhận" (bật khi đủ 4 số): KHÔNG tự gửi khi vừa đủ số — khách bấm Xác nhận / Enter (chủ quán chốt 05.11, KH-MUA-1c).
 const DO_DAI = 4;
-const LOI_KHONG_KHOP = 'Hai lần nhập không khớp, đặt lại nhé';
-const LOI_TEXT = { moi: ['Đặt mã PIN mới', '4 số, không dùng số dễ đoán'], lai: ['Nhập lại mã PIN mới', 'Để chắc chắn bạn nhớ'], tra: ['Nhập mã PIN', 'Để trả bằng Ví nội bộ'] };
+const KHOA_BUOC = { moi: ['pin.moi.t', 'pin.moi.p'], lai: ['pin.lai.t', 'pin.lai.p'], tra: ['pin.tra.t', 'pin.tra.p'] }; // khoá chữ (danh mục nội dung) của tiêu đề + dòng nhỏ từng bước
 
 export default function PinSheet({ dong, gui }) {
   const [buoc, datBuoc] = useState(gui ? 'tra' : 'moi');
@@ -40,7 +41,7 @@ export default function PinSheet({ dong, gui }) {
       return;
     }
     if (buoc === 'moi') { datDau(so); datSo(''); datBuoc('lai'); datThongBao(''); return; }
-    if (so !== dau) { datSo(''); datDau(''); datBuoc('moi'); datThongBao(LOI_KHONG_KHOP); return; }
+    if (so !== dau) { datSo(''); datDau(''); datBuoc('moi'); datThongBao(nd('pin.khongKhop')); return; }
     datDang(true);
     datPin(dau, so).then(
       () => { datDang(false); datXong(true); },
@@ -48,27 +49,27 @@ export default function PinSheet({ dong, gui }) {
     );
   }
 
-  const [tieuDe, phu] = LOI_TEXT[buoc];
+  const [kTieuDe, kPhu] = KHOA_BUOC[buoc];
   const noi = (
     <div className="sheet pin-sheet show" role="presentation" onClick={(e) => { if (e.target === e.currentTarget) dongNeuRanh(); }}>
-      <div className="panel" role="dialog" aria-modal="true" aria-label="Mã PIN">
+      <div className="panel" role="dialog" aria-modal="true" aria-label={nd('pin.aria')} {...ndDau('pin.aria')}>
         {xong ? (
           <>
-            <h3 style={{ textAlign: 'center' }}>Đã lưu mã PIN</h3>
-            <div className="pin-sub">Mã PIN mới đã có hiệu lực.</div>
-            <button type="button" className="checkout-btn giua" onClick={dong}>Xong</button>
+            <Chu k="pin.luu.t" as="h3" style={{ textAlign: 'center' }} />
+            <Chu k="pin.luu.p" as="div" className="pin-sub" />
+            <Chu k="pin.xong" as="button" type="button" className="checkout-btn giua" onClick={dong} />
           </>
         ) : (
           <>
-            <h3 style={{ textAlign: 'center' }}>{tieuDe}</h3>
-            <div className="pin-sub">{phu}</div>
+            <Chu k={kTieuDe} as="h3" style={{ textAlign: 'center' }} />
+            <Chu k={kPhu} as="div" className="pin-sub" />
             <div className="pin-dots">{Array.from({ length: DO_DAI }, (_, i) => <i key={i} className={i < so.length ? 'on' : ''} />)}</div>
-            <div className="pin-msg" role="alert">{thongBao}</div>
+            <div className="pin-msg" role="alert" {...ndDau('pin.loiPos')}>{thongBao}</div>
             <div className="pin-pad">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <button type="button" key={k} onClick={() => nhan(String(k))}>{k}</button>)}
-              <button type="button" className="lk" onClick={xoa}>Xoá</button>
+              <Chu k="pin.xoa" as="button" type="button" className="lk" onClick={xoa} />
               <button type="button" onClick={() => nhan('0')}>0</button>
-              <button type="button" className="lk pin-ok" disabled={dang || so.length < DO_DAI} onClick={xacNhan}>{dang ? 'Đang gửi…' : 'Xác nhận'}</button>
+              <button type="button" className="lk pin-ok" disabled={dang || so.length < DO_DAI} onClick={xacNhan} {...ndDau(dang ? 'pin.dangGui' : 'pin.xacNhan')}>{nd(dang ? 'pin.dangGui' : 'pin.xacNhan')}</button>
             </div>
           </>
         )}

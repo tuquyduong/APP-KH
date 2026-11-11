@@ -1,11 +1,13 @@
 import { Ico } from './BieuTuong.jsx';
+import Chu from './Chu.jsx';
+import { ndDau } from '../noiDung/nd.js';
 
 // Khung chung cho màn tải dữ liệu: đang tải (khung xám nhẹ) / lỗi (có nút thử lại) / nội dung. Không bao giờ trắng màn.
 export function KhungLoi({ loi, thuLai }) {
   return (
     <div>
-      <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>
-      <button type="button" className="ghost-btn" onClick={thuLai}>Thử lại</button>
+      <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('khung.loi')}>{loi}</div></div>
+      <Chu k="khung.thuLai" as="button" type="button" className="ghost-btn" onClick={thuLai} />
     </div>
   );
 }
