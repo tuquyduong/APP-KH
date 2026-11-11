@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../giaoDien/ke_hoach.css';
 import '../giaoDien/tien_ich.css';
 import { nd, ndDau, ndDs } from '../noiDung/nd.js';
-import { ngayChuoi, themThuoc, xoaThuoc, doiNhacThuoc, doiUong, ngayNgan } from '../kehoach.js';
+import { ngayChuoi, themThuoc, xoaThuoc, doiNhacThuoc, doiUong, thuNgayNgan } from '../kehoach.js';
 import { jd, jdChuoi, thuocConHan, homNayThuoc, bayNgayThuoc } from '../kehoachLap.js';
 import { dungLuuBao } from './dungKeHoach.js';
 import { DauMan } from '../pages/KeHoach.jsx';
@@ -30,21 +30,21 @@ function FormThuoc({ bang, nay, luuBao, datTb, dong }) {
   };
   return (
     <BangNoi tieuDe={nd('thuoc.formTieu')} phu={nd('thuoc.formPhu')} dong={dong} nhan={nd('thuoc.formTieu')}>
-      <label className="tl-lb">{nd('thuoc.ten')}</label><input className="tl-in" aria-label={nd('thuoc.ten')} placeholder={nd('thuoc.tenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
-      <label className="tl-lb">{nd('thuoc.lieu')}</label><input className="tl-in" aria-label={nd('thuoc.lieu')} placeholder={nd('thuoc.lieuGoiY')} maxLength={40} value={f.lieu} onChange={(e) => doi({ lieu: e.target.value })} />
-      <label className="tl-lb">{nd('thuoc.gio')}</label>
+      <label className="tl-lb" {...ndDau('thuoc.ten')}>{nd('thuoc.ten')}</label><input {...ndDau('thuoc.tenGoiY')} className="tl-in" aria-label={nd('thuoc.ten')} placeholder={nd('thuoc.tenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
+      <label className="tl-lb" {...ndDau('thuoc.lieu')}>{nd('thuoc.lieu')}</label><input {...ndDau('thuoc.lieuGoiY')} className="tl-in" aria-label={nd('thuoc.lieu')} placeholder={nd('thuoc.lieuGoiY')} maxLength={40} value={f.lieu} onChange={(e) => doi({ lieu: e.target.value })} />
+      <label className="tl-lb" {...ndDau('thuoc.gio')}>{nd('thuoc.gio')}</label>
       {f.gio.map((g, i) => (
         <div className="thuoc-gio" key={i}>
           <BanhGio gio={g} doi={(moi) => doi({ gio: f.gio.map((x, j) => (j === i ? moi : x)) })} />
-          {f.gio.length > 1 && <button type="button" className="tl-rm" onClick={() => doi({ gio: f.gio.filter((_, j) => j !== i) })}>{nd('thuoc.gioBo')}</button>}
+          {f.gio.length > 1 && <button type="button" className="tl-rm" onClick={() => doi({ gio: f.gio.filter((_, j) => j !== i) })} {...ndDau('thuoc.gioBo')}>{nd('thuoc.gioBo')}</button>}
         </div>
       ))}
-      {f.gio.length < GIO_TOI_DA && <div className="tl-acts"><span {...bam(() => doi({ gio: [...f.gio, GIO_MAC_DINH] }))}>{nd('thuoc.gioThem')}</span></div>}
-      <label className="tl-lb">{nd('thuoc.ghi')}</label><input className="tl-in" aria-label={nd('thuoc.ghi')} placeholder={nd('thuoc.ghiGoiY')} maxLength={80} value={f.ghi} onChange={(e) => doi({ ghi: e.target.value })} />
-      <label className="tl-lb">{nd('thuoc.trongLb')}</label>
+      {f.gio.length < GIO_TOI_DA && <div className="tl-acts"><span {...bam(() => doi({ gio: [...f.gio, GIO_MAC_DINH] }))} {...ndDau('thuoc.gioThem')}>{nd('thuoc.gioThem')}</span></div>}
+      <label className="tl-lb" {...ndDau('thuoc.ghi')}>{nd('thuoc.ghi')}</label><input {...ndDau('thuoc.ghiGoiY')} className="tl-in" aria-label={nd('thuoc.ghi')} placeholder={nd('thuoc.ghiGoiY')} maxLength={80} value={f.ghi} onChange={(e) => doi({ ghi: e.target.value })} />
+      <label className="tl-lb" {...ndDau('thuoc.trongLb')}>{nd('thuoc.trongLb')}</label>
       <div className="pf-chips sm">{ndDs('thuoc.dot').map((d) => <button type="button" key={d.ngay} className={f.trong === +d.ngay ? 'on' : ''} onClick={() => doi({ trong: +d.ngay })}>{d.ten}</button>)}</div>
-      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui}>{nd('thuoc.luu')}</button>
-      <div className="tl-note">{nd('thuoc.ghiNho')}</div>
+      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui} {...ndDau('thuoc.luu')}>{nd('thuoc.luu')}</button>
+      <div className="tl-note" {...ndDau('thuoc.ghiNho')}>{nd('thuoc.ghiNho')}</div>
     </BangNoi>
   );
 }
@@ -57,7 +57,7 @@ export default function UongThuoc({ homNay, san = true, veLich }) {
   const hn = jd(homNay), nay = ngayChuoi(homNay), t = homNayThuoc(bang, hn), bay = bayNgayThuoc(bang, hn);
   return (
     <Man id="tool">
-      <DauMan tieuDe={nd('thuoc.tieuDe')} phu={nd('thuoc.phu')} lui={veLich} phai={<div className="today-btn" {...bam(() => datMoForm(true))}>{nd('thuoc.them')}</div>} />
+      <DauMan tieuDe={nd('thuoc.tieuDe')} phu={nd('thuoc.phu')} lui={veLich} phai={<div className="today-btn" {...bam(() => datMoForm(true))} {...ndDau('thuoc.them')}>{nd('thuoc.them')}</div>} />
       <div id="toolBody">
         {bang.thuoc.length === 0 && <div className="empty-note" {...ndDau('thuoc.trong')}>{nd('thuoc.trong')}</div>}
         {bang.thuoc.length > 0 && (
@@ -70,7 +70,7 @@ export default function UongThuoc({ homNay, san = true, veLich }) {
           return (
             <div className="med-card" key={m.id}>
               <div className="med-h">
-                <div><b>{m.ten}</b><small>{[m.lieu, m.ghi].filter(Boolean).join(' · ')}{m.den ? ' · ' + nd('thuoc.den', { ngay: ngayNgan(jdChuoi(m.den), homNay) }) : ''}{con ? '' : ' · ' + nd('thuoc.xong')}</small></div>
+                <div><b>{m.ten}</b><small>{[m.lieu, m.ghi].filter(Boolean).join(' · ')}{m.den ? ' · ' + nd('thuoc.den', { ngay: thuNgayNgan(jdChuoi(m.den), homNay) }) : ''}{con ? '' : ' · ' + nd('thuoc.xong')}</small></div>
                 {con && <NutNhac bat={m.nhac} doi={() => luuBao(doiNhacThuoc(bang, m.id), nd(m.nhac ? 'thuoc.daTat' : 'thuoc.daBat'))} />}
               </div>
               {con && (
@@ -81,7 +81,7 @@ export default function UongThuoc({ homNay, san = true, veLich }) {
               )}
               {hoiXoa === m.id
                 ? <HoiXoa tieu={m.ten} loai={nd('thuoc.loaiXoa')} xoa={() => { luuBao(xoaThuoc(bang, m.id), ''); datHoiXoa(null); }} huy={() => datHoiXoa(null)} />
-                : <div className="tl-acts"><span {...bam(() => datHoiXoa(m.id))}>{nd('thuoc.xoa')}</span></div>}
+                : <div className="tl-acts"><span {...bam(() => datHoiXoa(m.id))} {...ndDau('thuoc.xoa')}>{nd('thuoc.xoa')}</span></div>}
             </div>
           );
         })}

@@ -179,14 +179,14 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   let pw = null;
   if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } } // CLAUDE.md §9
   if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này (hoặc KHONG_TRINH_DUYET=1) — các ca trình duyệt CHƯA chạy');
-  else await trinhDuyet(pw, { LP, LM, KH });
+  else await trinhDuyet(pw, { LP, LM, KH, IDX_KHOA: IDX.DANH_MUC.map((m) => m.khoa) });
 
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
 
-async function trinhDuyet(pw, { LP, LM, KH }) {
+async function trinhDuyet(pw, { LP, LM, KH, IDX_KHOA }) {
   const esbuild = require('esbuild');
   const kq = esbuild.buildSync({
     entryPoints: [path.join(GOC, 'src/main.jsx')], bundle: true, write: false, outdir: path.join(GOC, '.nhap_thu'), format: 'iife', jsx: 'automatic', logLevel: 'silent', external: ['/anh/*', '/fonts/*'],
@@ -442,6 +442,19 @@ async function trinhDuyet(pw, { LP, LM, KH }) {
     k('D2 Sắp tới có hạng mục xe sắp tới hạn + giấy tờ ≤ 30 ngày (nhãn Xe), bấm mở Xe cộ', noi.includes('Thay dầu máy · Wave') && noi.includes('Đăng kiểm · Wave') && noi.includes('còn 100 km') && (await t.locator('.up-tag', { hasText: /^Xe$/ }).count()) === 2);
     await t.locator('.tl-row', { hasText: 'Đăng kiểm · Wave' }).click(); await t.waitForURL('**/kehoach/xeco');
     k('D2 bấm dòng xe → /kehoach/xeco', duong(t) === '/kehoach/xeco');
+  });
+
+  await ca('dataNd', { luu: kho({ xe: [{ id: 'a', ten: 'Wave', bien: '', loai: 'xm', km: 12200, nhac: true, lich: [{ ten: 'Thay dầu máy', km: 1500, thang: 2 }], giayTo: [{ ten: 'Đăng kiểm', ngay: ngay(5) }], nhatKy: [{ ngay: ngay(-20), km: 10800, viec: ['Thay dầu máy'], phi: 0, noi: '' }] }], thuoc: [{ id: 't', ten: 'Canxi', lieu: '1', ghi: '', gio: ['08:00'], den: '', bd: ngay(-3), nhac: true }], chuKy: { bat: true, bd: ngay(-5), dai: 28, hanh: 5, ls: [28], nhac: true } }) }, async (t) => {
+    const khoa = (p) => mo(t, p).then(() => t.waitForTimeout(150)).then(() => t.evaluate(() => [...document.querySelectorAll('[data-nd]')].map((e) => e.getAttribute('data-nd'))));
+    const kx = await khoa('/kehoach/xeco');
+    await t.locator('.veh').first().click(); await t.waitForTimeout(150);
+    const k1 = await t.evaluate(() => [...document.querySelectorAll('[data-nd]')].map((e) => e.getAttribute('data-nd')));
+    const kt = await khoa('/kehoach/uongthuoc'), kc = await khoa('/kehoach/chuky'), kv = await khoa('/kehoach/vankhan');
+    const co = (ds, ...ks) => ks.every((x) => ds.includes(x));
+    k('F4 data-nd gắn ở mọi chữ sửa được: Xe cộ (danh sách + một xe: lịch, vừa làm, nhắc, giấy tờ, lịch sử, sửa / xoá)', co(kx, 'xe.ghiChu') && co(k1, 'xe.lichTieu', 'xe.vuaLam', 'xe.nhacTieu', 'xe.giayTieu', 'xe.lsTieu', 'xe.suaXe', 'xe.xoaXe', 'xe.themHang'), JSON.stringify([kx, k1]));
+    k('F4 data-nd: Uống thuốc (ô tổng, xoá thuốc, ghi chú riêng tư) · Chu kỳ (giai đoạn, dưỡng sinh cyc.N, khoá, ghi chú, tắt) · Văn khấn (khung thông tin gia đình)', co(kt, 'thuoc.tongNhan', 'thuoc.xoa', 'thuoc.ghiChu') && co(kc, 'chuky.kyBatDau', 'chuky.khoaTieu', 'chuky.ghiChu', 'chuky.tat', 'chuky.duongSinh') && kc.some((x) => /^cyc\.\d$/.test(x)) && kc.some((x) => /^chuky\.ph\d$/.test(x)) && co(kv, 'vk.khungTieu', 'vk.khungNote'), JSON.stringify([kt, kc, kv]));
+    const khoaDanhMuc = new Set(IDX_KHOA);
+    k('F4 mọi data-nd trên các màn này đều có trong danh mục (không khoá mồ côi)', [...kx, ...k1, ...kt, ...kc, ...kv].every((x) => khoaDanhMuc.has(x)));
   });
 
   await ca('zalo', { ua: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 Zalo/22.11.1' }, async (t, loi) => {

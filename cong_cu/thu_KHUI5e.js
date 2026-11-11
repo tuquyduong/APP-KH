@@ -247,6 +247,7 @@ async function trinhDuyet(pw, { LP, LUNAR, nap }) {
     await mo(t, '/kehoach'); await t.locator('#toolGrid').waitFor();
     await t.locator('#toolGrid .tl', { hasText: 'Chu kỳ' }).click(); await t.waitForURL('**/kehoach/chuky');
     k('A3 (KH-UI-5f) Chu kỳ mở /kehoach/chuky', duong(t) === '/kehoach/chuky');
+    await mo(t, '/kehoach'); await t.locator('#toolGrid').waitFor();
     const st = await t.evaluate(() => { const s = document.querySelector('.up-strip'); return { n: s.querySelectorAll('.up-r').length, ct: s.innerText, xem: !!s.querySelector('.up-h span') && s.querySelector('.up-h span').innerText }; });
     k('A4 dải Sắp tới có tối đa 3 dòng "d/m · tên · N ngày", có "Xem tất cả N ›"', st.n >= 1 && st.n <= 3 && /20\/11\s*Nhà giáo Việt Nam\s*10 ngày/.test(st.ct) && /Xem tất cả \d+ ›/.test(st.xem), st.ct);
     await t.locator('.up-h span').click(); await t.waitForURL('**/kehoach/saptoi');
@@ -321,8 +322,8 @@ async function trinhDuyet(pw, { LP, LUNAR, nap }) {
     const ds = await toolBody(t).innerText();
     k('C1 danh sách: thẻ lớn Sắp tới = Mùng 1 & Rằm (còn 13 ngày), 10 dịp còn lại, Cúng giỗ nhắc thêm ngày giỗ', ds.includes('Mùng 1 & Rằm hằng tháng') && ds.includes('Còn 13 ngày') && (await t.locator('#toolBody .tl-row').count()) === 10 && ds.includes('Thêm ngày giỗ ở “Ngày cần nhớ”'));
     await t.locator('.vk-hero').click(); await t.waitForURL('**/kehoach/vankhan/r');
-    k('C2 bấm thẻ lớn → /kehoach/vankhan/r; Tín chủ mặc định là tên khách "Khách thử"', duong(t) === '/kehoach/vankhan/r' && (await t.getByLabel('Tín chủ').inputValue()) === 'Khách thử' && (await t.locator('.vk-txt mark', { hasText: 'Khách thử' }).count()) >= 1);
-    await t.getByLabel('Tín chủ').fill('Trần Văn B'); await t.getByLabel('Địa chỉ').fill('12 Lê Lợi');
+    k('C2 bấm thẻ lớn → /kehoach/vankhan/r; dòng gọn "Tín chủ: Khách thử" (mặc định là tên khách; khung nhập chuyển lên danh sách — KH-UI-5f)', duong(t) === '/kehoach/vankhan/r' && (await t.locator('.vk-dong').innerText()).includes('Tín chủ: Khách thử') && (await t.locator('.vk-txt mark', { hasText: 'Khách thử' }).count()) >= 1);
+    await t.locator('.vk-dong em').click(); await t.locator('[role=dialog]').waitFor(); await t.getByLabel('Tín chủ').fill('Trần Văn B'); await t.getByLabel('Địa chỉ').fill('12 Lê Lợi'); await t.locator('.bn-x').click();
     k('C2 điền Tín chủ + Địa chỉ → bài khấn có tên và địa chỉ TÔ MÀU ngay', (await t.locator('.vk-txt mark', { hasText: 'Trần Văn B' }).count()) >= 1 && (await t.locator('.vk-txt mark', { hasText: '12 Lê Lợi' }).count()) >= 1 && (await t.locator('.vk-txt').innerText()).includes('Tín chủ con là Trần Văn B, ngụ tại 12 Lê Lợi.'));
     const nenMark = await t.locator('.vk-txt mark').first().evaluate((e) => getComputedStyle(e).backgroundColor);
     k('C2 chỗ tự điền tô màu vàng nhạt của demo (#FBE7B8)', nenMark === 'rgb(251, 231, 184)', nenMark);
@@ -334,7 +335,7 @@ async function trinhDuyet(pw, { LP, LUNAR, nap }) {
     const cs1 = await t.locator('.vk-txt').evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
     k('C2 A+ → chữ bài khấn to thêm 2px (17 → 19)', cs0 === 17 && cs1 === 19, `${cs0} → ${cs1}`);
     await t.reload(); await t.locator('.vk-txt').waitFor();
-    k('C2 TẢI LẠI trang: vẫn "1/6 đã sắm", cỡ chữ 19px, Tín chủ "Trần Văn B", địa chỉ còn', (await t.locator('.sec-head .more', { hasText: 'đã sắm' }).innerText()) === '1/6 đã sắm' && (await t.locator('.vk-txt').evaluate((e) => parseFloat(getComputedStyle(e).fontSize))) === 19 && (await t.getByLabel('Tín chủ').inputValue()) === 'Trần Văn B' && (await t.getByLabel('Địa chỉ').inputValue()) === '12 Lê Lợi');
+    k('C2 TẢI LẠI trang: vẫn "1/6 đã sắm", cỡ chữ 19px, Tín chủ "Trần Văn B", địa chỉ còn', (await t.locator('.sec-head .more', { hasText: 'đã sắm' }).innerText()) === '1/6 đã sắm' && (await t.locator('.vk-txt').evaluate((e) => parseFloat(getComputedStyle(e).fontSize))) === 19 && (await t.locator('.vk-dong').innerText()).includes('Tín chủ: Trần Văn B · Địa chỉ: 12 Lê Lợi'));
     await t.getByRole('button', { name: /Nhắc khi mở app/ }).click();
     k('C4 bật nhắc dịp Mùng 1 & Rằm → kho ghi vk.nhac.r', (await luuTho(t)).vk.nhac.r === true && (await t.getByRole('button', { name: /Đang nhắc/ }).count()) === 1);
     k('C3 không có "Đọc to", "Đặt hoa quả, trà"; có dòng lưu ý cuối', !/Đọc to|Đặt hoa quả/.test(await t.locator('body').innerText()) && (await t.locator('body').innerText()).includes('Phần tô màu là chỗ tự điền'));

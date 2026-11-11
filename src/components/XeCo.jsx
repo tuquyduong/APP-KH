@@ -39,13 +39,13 @@ function FormXe({ xe, bang, luuBao, datTb, dong, chon }) {
   };
   return (
     <BangNoi tieuDe={nd(xe ? 'xe.suaXe' : 'xe.formThem')} phu={xe ? xe.ten : nd('xe.formPhu')} dong={dong} nhan={nd(xe ? 'xe.suaXe' : 'xe.formThem')}>
-      <label className="tl-lb">{nd('xe.loai')}</label>
+      <label className="tl-lb" {...ndDau('xe.loai')}>{nd('xe.loai')}</label>
       <div className="pf-chips sm">{LOAI_XE.map((l) => <Chip key={l} on={f.loai === l} off={!!xe} f={() => doi({ loai: l })}>{tenLoai(l)}</Chip>)}</div>
-      <label className="tl-lb">{nd('xe.ten')}</label><input className="tl-in" aria-label={nd('xe.ten')} placeholder={nd('xe.tenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
-      <label className="tl-lb">{nd('xe.bien')}</label><input className="tl-in" aria-label={nd('xe.bien')} placeholder={nd('xe.bienGoiY')} maxLength={20} value={f.bien} onChange={(e) => doi({ bien: e.target.value })} />
-      <label className="tl-lb">{nd('xe.kmLb')}</label><input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.kmLb')} placeholder={nd('xe.kmGoiY')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
+      <label className="tl-lb" {...ndDau('xe.ten')}>{nd('xe.ten')}</label><input {...ndDau('xe.tenGoiY')} className="tl-in" aria-label={nd('xe.ten')} placeholder={nd('xe.tenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
+      <label className="tl-lb" {...ndDau('xe.bien')}>{nd('xe.bien')}</label><input {...ndDau('xe.bienGoiY')} className="tl-in" aria-label={nd('xe.bien')} placeholder={nd('xe.bienGoiY')} maxLength={20} value={f.bien} onChange={(e) => doi({ bien: e.target.value })} />
+      <label className="tl-lb" {...ndDau('xe.kmLb')}>{nd('xe.kmLb')}</label><input {...ndDau('xe.kmGoiY')} className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.kmLb')} placeholder={nd('xe.kmGoiY')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
       {!xe && (
-        <div className="tl-note">{nd('xe.mauNote', { loai: tenLoai(f.loai), lich: lich.join('; ') || nd('xe.mauKhong') })}{mau.giay ? ' ' + nd('xe.mauGiay', { giay: mau.giay.split(';').join(', ') }) : ''}</div>
+        <div className="tl-note" {...ndDau('xe.mauNote')}>{nd('xe.mauNote', { loai: tenLoai(f.loai), lich: lich.join('; ') || nd('xe.mauKhong') })}{mau.giay ? ' ' + nd('xe.mauGiay', { giay: mau.giay.split(';').join(', ') }) : ''}</div>
       )}
       <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui}>{nd(xe ? 'ti.luu' : 'xe.nutThem')}</button>
     </BangNoi>
@@ -65,15 +65,15 @@ function FormHang({ xe, k, bang, luuBao, datTb, dong }) {
   };
   return (
     <BangNoi tieuDe={nd(k === null ? 'xe.hangThem' : 'xe.hangSua')} phu={xe.ten} dong={dong} nhan={nd(k === null ? 'xe.hangThem' : 'xe.hangSua')}>
-      <label className="tl-lb">{nd('xe.hangTen')}</label><input className="tl-in" aria-label={nd('xe.hangTen')} placeholder={nd('xe.hangTenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
+      <label className="tl-lb" {...ndDau('xe.hangTen')}>{nd('xe.hangTen')}</label><input {...ndDau('xe.hangTenGoiY')} className="tl-in" aria-label={nd('xe.hangTen')} placeholder={nd('xe.hangTenGoiY')} maxLength={60} value={f.ten} onChange={(e) => doi({ ten: e.target.value })} />
       <div className="pf-chips sm" style={{ marginTop: 8 }}>{ndDs('xe.hangGoiY').map((g) => <Chip key={g.ten} on={false} f={() => doi({ ten: g.ten })}>{g.ten}</Chip>)}</div>
-      <label className="tl-lb">{nd('xe.hangNhacLb')}</label>
+      <label className="tl-lb" {...ndDau('xe.hangNhacLb')}>{nd('xe.hangNhacLb')}</label>
       <div className="two">
-        <input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.hangKm')} placeholder={nd('xe.hangKm')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
-        <input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.hangThang')} placeholder={nd('xe.hangThang')} value={f.thang} onChange={(e) => doi({ thang: e.target.value })} />
+        <input {...ndDau('xe.hangKm')} className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.hangKm')} placeholder={nd('xe.hangKm')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
+        <input {...ndDau('xe.hangThang')} className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.hangThang')} placeholder={nd('xe.hangThang')} value={f.thang} onChange={(e) => doi({ thang: e.target.value })} />
       </div>
-      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui}>{nd('ti.luu')}</button>
-      {k !== null && <div className="tl-acts" style={{ justifyContent: 'center', marginTop: 12 }}><span {...bam(() => { if (luuBao(xoaHang(bang, xe.id, k), nd('xe.daXoaHang'))) dong(); })}>{nd('xe.hangXoa')}</span></div>}
+      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui} {...ndDau('ti.luu')}>{nd('ti.luu')}</button>
+      {k !== null && <div className="tl-acts" style={{ justifyContent: 'center', marginTop: 12 }}><span {...bam(() => { if (luuBao(xoaHang(bang, xe.id, k), nd('xe.daXoaHang'))) dong(); })} {...ndDau('xe.hangXoa')}>{nd('xe.hangXoa')}</span></div>}
     </BangNoi>
   );
 }
@@ -95,16 +95,16 @@ function FormLog({ xe, bang, homNay, luuBao, datTb, dong }) {
   };
   return (
     <BangNoi tieuDe={nd('xe.logTieu')} phu={xe.ten + (xe.bien ? ' · ' + xe.bien : '')} dong={dong} nhan={nd('xe.logTieu')}>
-      <label className="tl-lb">{nd('xe.logNgay')}</label><BanhNgay ngay={f.ngay} homNay={homNay} doi={(ngay) => doi({ ngay })} />
-      <label className="tl-lb">{nd('xe.logKm')}</label><input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.logKm')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
-      <label className="tl-lb">{nd('xe.logViec')}</label>
+      <label className="tl-lb" {...ndDau('xe.logNgay')}>{nd('xe.logNgay')}</label><BanhNgay ngay={f.ngay} homNay={homNay} doi={(ngay) => doi({ ngay })} />
+      <label className="tl-lb" {...ndDau('xe.logKm')}>{nd('xe.logKm')}</label><input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.logKm')} value={f.km} onChange={(e) => doi({ km: e.target.value })} />
+      <label className="tl-lb" {...ndDau('xe.logViec')}>{nd('xe.logViec')}</label>
       <div className="pf-chips sm">{ds.map((t) => <Chip key={t} on={chon.includes(t)} f={() => bat(t)}>{t}</Chip>)}</div>
-      <div className="cl-add"><input className="tl-in" aria-label={nd('xe.logViecKhac')} placeholder={nd('xe.logViecKhac')} maxLength={60} value={f.them} onChange={(e) => doi({ them: e.target.value })} /><button type="button" onClick={themViec}>{nd('xe.logThemNut')}</button></div>
+      <div className="cl-add"><input {...ndDau('xe.logViecKhac')} className="tl-in" aria-label={nd('xe.logViecKhac')} placeholder={nd('xe.logViecKhac')} maxLength={60} value={f.them} onChange={(e) => doi({ them: e.target.value })} /><button type="button" onClick={themViec} {...ndDau('xe.logThemNut')}>{nd('xe.logThemNut')}</button></div>
       <div className="two">
-        <div><label className="tl-lb">{nd('xe.logPhi')}</label><input className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.logPhi')} placeholder={nd('xe.logPhiGoiY')} value={f.phi} onChange={(e) => doi({ phi: e.target.value })} /></div>
-        <div><label className="tl-lb">{nd('xe.logNoi')}</label><input className="tl-in" aria-label={nd('xe.logNoi')} placeholder={nd('xe.logNoiGoiY')} maxLength={80} value={f.noi} onChange={(e) => doi({ noi: e.target.value })} /></div>
+        <div><label className="tl-lb" {...ndDau('xe.logPhi')}>{nd('xe.logPhi')}</label><input {...ndDau('xe.logPhiGoiY')} className="tl-in" type="number" inputMode="numeric" min="0" aria-label={nd('xe.logPhi')} placeholder={nd('xe.logPhiGoiY')} value={f.phi} onChange={(e) => doi({ phi: e.target.value })} /></div>
+        <div><label className="tl-lb" {...ndDau('xe.logNoi')}>{nd('xe.logNoi')}</label><input {...ndDau('xe.logNoiGoiY')} className="tl-in" aria-label={nd('xe.logNoi')} placeholder={nd('xe.logNoiGoiY')} maxLength={80} value={f.noi} onChange={(e) => doi({ noi: e.target.value })} /></div>
       </div>
-      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui}>{nd('ti.luu')}</button>
+      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={gui} {...ndDau('ti.luu')}>{nd('ti.luu')}</button>
       <div className="tl-note" {...ndDau('xe.logNote')}>{nd('xe.logNote')}</div>
     </BangNoi>
   );
@@ -116,8 +116,8 @@ function FormNgay({ xe, k, bang, homNay, luuBao, dong }) {
   return (
     <BangNoi tieuDe={nd('xe.giayNgayTieu')} phu={`${xe.giayTo[k].ten} · ${xe.ten}`} dong={dong} nhan={nd('xe.giayNgayTieu')}>
       <BanhNgay ngay={ngay} homNay={homNay} doi={datNgay} />
-      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={() => { if (luuBao(datNgayGiay(bang, xe.id, k, ngay), nd('xe.daLuu'))) dong(); }}>{nd('ti.luu')}</button>
-      {xe.giayTo[k].ngay && <div className="tl-acts" style={{ justifyContent: 'center', marginTop: 12 }}><span {...bam(() => { if (luuBao(datNgayGiay(bang, xe.id, k, ''), nd('xe.daLuu'))) dong(); })}>{nd('ti.xoaNgay')}</span></div>}
+      <button type="button" className="checkout-btn giua" style={{ marginTop: 14 }} onClick={() => { if (luuBao(datNgayGiay(bang, xe.id, k, ngay), nd('xe.daLuu'))) dong(); }} {...ndDau('ti.luu')}>{nd('ti.luu')}</button>
+      {xe.giayTo[k].ngay && <div className="tl-acts" style={{ justifyContent: 'center', marginTop: 12 }}><span {...bam(() => { if (luuBao(datNgayGiay(bang, xe.id, k, ''), nd('xe.daLuu'))) dong(); })} {...ndDau('ti.xoaNgay')}>{nd('ti.xoaNgay')}</span></div>}
     </BangNoi>
   );
 }
@@ -145,19 +145,19 @@ function MotXe({ xe, bang, hn, homNay, nay, luuBao, moHang, moNgay, moSua, hoiXo
   const luuKm = (e) => { if (e.target.value !== '' && +e.target.value !== xe.km) luuBao(datKmXe(bang, xe.id, e.target.value), nd('xe.daKm')); };
   return (
     <>
-      <div className="car-card"><div className="car-top"><BieuTuongXe loai={xe.loai} /><div><b>{nd('xe.kmNhan')}</b><small>{nd('xe.kmPhu')}</small></div>
-        <div className="car-km"><input type="number" inputMode="numeric" min="0" aria-label={nd('xe.kmNhan')} key={xe.km} defaultValue={xe.km} onBlur={luuKm} onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }} /><small>{nd('xe.km')}</small></div></div></div>
-      <div className="sec-head"><h2 {...ndDau('xe.lichTieu')}>{nd('xe.lichTieu')}</h2><span className="more" {...bam(() => moHang(null))}>{nd('xe.themHang')}</span></div>
+      <div className="car-card"><div className="car-top"><BieuTuongXe loai={xe.loai} /><div><b {...ndDau('xe.kmNhan')}>{nd('xe.kmNhan')}</b><small {...ndDau('xe.kmPhu')}>{nd('xe.kmPhu')}</small></div>
+        <div className="car-km"><input type="number" inputMode="numeric" min="0" aria-label={nd('xe.kmNhan')} key={xe.km} defaultValue={xe.km} onBlur={luuKm} onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }} /><small {...ndDau('xe.km')}>{nd('xe.km')}</small></div></div></div>
+      <div className="sec-head"><h2 {...ndDau('xe.lichTieu')}>{nd('xe.lichTieu')}</h2><span className="more" {...bam(() => moHang(null))} {...ndDau('xe.themHang')}>{nd('xe.themHang')}</span></div>
       {xe.lich.length === 0 && <div className="empty-note" {...ndDau('xe.chuaHang')}>{nd('xe.chuaHang')}</div>}
       {sapHang(xe, hn).map(({ hang, k, st }) => (
         <div className={`sch${st.over ? ' over' : st.soon ? ' soon' : ''}`} key={k}>
           <div className="sch-h" {...bam(() => moHang(k))}><b>{hang.ten}</b><small>{chuLich(hang)} ›</small></div>
           <div className="sch-s">{chuHang(st)}{st.lan ? nd('xe.lanCuoi', { ngay: ngayNgan(st.lan.j, homNay) }) : ''}</div>
           {!st.none && <div className="car-bar"><i style={{ width: `${Math.round(st.pct * 100)}%` }} /></div>}
-          <button type="button" className="sch-do" onClick={() => luuBao(ghiXongHang(bang, xe.id, hang.ten, nay), nd('xe.daGhiHang', { ten: hang.ten, km: so(xe.km) }))}>{nd('xe.vuaLam')}</button>
+          <button type="button" className="sch-do" onClick={() => luuBao(ghiXongHang(bang, xe.id, hang.ten, nay), nd('xe.daGhiHang', { ten: hang.ten, km: so(xe.km) }))} {...ndDau('xe.vuaLam')}>{nd('xe.vuaLam')}</button>
         </div>
       ))}
-      <div className="tl-row" style={{ cursor: 'default' }}><div className="tl-rt"><b {...ndDau('xe.nhacTieu')}>{nd('xe.nhacTieu')}</b><small>{nd('xe.nhacPhu')}</small></div>
+      <div className="tl-row" style={{ cursor: 'default' }}><div className="tl-rt"><b {...ndDau('xe.nhacTieu')}>{nd('xe.nhacTieu')}</b><small {...ndDau('xe.nhacPhu')}>{nd('xe.nhacPhu')}</small></div>
         <NutNhac bat={xe.nhac} doi={() => luuBao(doiNhacXe(bang, xe.id), '')} /></div>
       {xe.giayTo.length > 0 && <div className="sec-head"><h2 {...ndDau('xe.giayTieu')}>{nd('xe.giayTieu')}</h2></div>}
       {xe.giayTo.map((g, k) => {
@@ -176,12 +176,12 @@ function MotXe({ xe, bang, hn, homNay, nay, luuBao, moHang, moNgay, moSua, hoiXo
         return (
           <div className="tl-row" key={i} style={{ cursor: 'default' }}>
             <div className="tl-date"><b>{d}/{m}</b><small>{y}</small></div>
-            <div className="tl-rt"><b>{l.viec.join(', ')}</b><small>{nd('xe.logSapTheo', { km: so(l.km), phi: l.phi ? ' · ' + dinhDangGia(l.phi) : '', noi: l.noi ? ' · ' + l.noi : '' })}</small></div>
+            <div className="tl-rt"><b>{l.viec.join(', ')}</b><small {...ndDau('xe.logSapTheo')}>{nd('xe.logSapTheo', { km: so(l.km), phi: l.phi ? ' · ' + dinhDangGia(l.phi) : '', noi: l.noi ? ' · ' + l.noi : '' })}</small></div>
           </div>
         );
       })}
       {hoiXoa ? <HoiXoa tieu={xe.ten} loai={nd('xe.loaiXoa')} xoa={xoa} huy={() => datHoiXoa(false)} />
-        : <div className="tl-acts" style={{ justifyContent: 'center', margin: '14px 0' }}><span {...bam(moSua)}>{nd('xe.suaXe')}</span><span {...bam(() => datHoiXoa(true))}>{nd('xe.xoaXe')}</span></div>}
+        : <div className="tl-acts" style={{ justifyContent: 'center', margin: '14px 0' }}><span {...bam(moSua)} {...ndDau('xe.suaXe')}>{nd('xe.suaXe')}</span><span {...bam(() => datHoiXoa(true))} {...ndDau('xe.xoaXe')}>{nd('xe.xoaXe')}</span></div>}
     </>
   );
 }
@@ -194,7 +194,7 @@ export default function XeCo({ homNay, san = true, veLich }) {
   const [hoiXoa, datHoiXoa] = useState(false);
   const hn = jd(homNay), nay = ngayChuoi(homNay), xe = man && bang.xe.find((x) => x.id === man);
   const tieuDe = xe ? xe.ten : nd('xe.tieuDe'), phu = xe ? `${xe.bien ? xe.bien + ' · ' : ''}${tenLoai(xe.loai)}` : nd('xe.phu');
-  const them = xe ? <div className="today-btn" {...bam(() => datForm({ loai: 'log' }))}>{nd('xe.ghiSua')}</div> : <div className="today-btn" {...bam(() => datForm({ loai: 'xe' }))}>{nd('xe.them')}</div>;
+  const them = xe ? <div className="today-btn" {...bam(() => datForm({ loai: 'log' }))} {...ndDau('xe.ghiSua')}>{nd('xe.ghiSua')}</div> : <div className="today-btn" {...bam(() => datForm({ loai: 'xe' }))} {...ndDau('xe.them')}>{nd('xe.them')}</div>;
   const dong = () => datForm(null);
   return (
     <Man id="tool">
