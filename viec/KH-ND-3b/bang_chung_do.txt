@@ -1,0 +1,43 @@
+KH-ND-3b — bằng chứng ĐỎ trên code gốc (commit 21d5df0 = "PHIEU: KH-ND-3b"), rồi XANH sau khi sửa.
+Cách làm: `git archive HEAD` cây gốc vào thư mục nháp (node_modules dùng chung), chép ĐÚNG bài thử mới / đã sửa vào đó, chạy với KHONG_TRINH_DUYET=1 ở cả hai cây.
+
+== 1. Bài MỚI cong_cu/thu_KHND3b.js — trên GỐC (menu.js còn rỗng, các màn còn chữ cứng, MonO/TrangMon còn đọc NHU_CAU)
+7 đạt · 13 hỏng
+  ✗ A1 menu.js xuất MẢNG ≥ 80 mục, đã gộp vào danh mục chung — 0 mục
+  ✗ A1 man của mục: Menu · Trang món · Giỏ hàng · Khung chung
+  ✗ A1 phần POS có mục khoá pos + chỉ đường …; phần tự tính có mục tutinh
+  ✗ A1 macDinh = chữ đang chạy (26 khoá kiểm lại với chữ cũ) — menu.tieuDe, menu.giaCu, … thu.t8 (cả 26 khoá chưa có)
+  ✗ A1 bien khai đúng chỗ điền · ✗ A1 thuộc đúng nhóm man, 7 khoá thu.t2…t8
+  ✗ C1 12 tệp A1: số chữ cứng = 0 — Menu.jsx (18) · TrangMon.jsx (14) · GioHang.jsx (22) · MonTheoDuong.jsx (3) · KhongTimThay.jsx (1) · MonO.jsx (2) · gioVang.js (9) · menuLoc.js (1) · gioHoatDong.js (7) · GiaMon.jsx (7, phép 1) · giaHang.js (4, phép 3)
+  ✗ C1 mọi khoá các tệp A1 dùng đều có trong danh mục — 0 khoá · ✗ C1 các khoá ghép chuỗi (gv.nhan.<pha>, thu.t<N>)
+  ✗ A2 MonO / TrangMon / Menu không còn đọc NHU_CAU — MonO.jsx, TrangMon.jsx · ✗ A2 không tệp nào ngoài noiDung đọc NHU_CAU
+  ✗ A1 Menu / Trang món / Giỏ hàng gắn data-nd · data-nd-khoa
+  ✗ B1 bản giả đổi chữ → hàm thuần đổi theo (Giờ vàng, bậc giá, nhóm khác, tên thứ)
+
+== 2. Bài MỚI cong_cu/thu_KHND3a.js (thêm ca B1/B2 bộ đếm) — trên GỐC (bộ đếm cũ ha_no_chu.js, nợ kehoach.js 41)
+68 đạt · 5 hỏng
+  ✗ B1 chữ JSX có địa chỉ web: <p>Xem https://… chữ</p> → 1          (bộ đếm cũ coi `//` là chú thích → 0)
+  ✗ B1 chữ JSX có "/" ngay sau ( = ? - : <p>(/ngày) chữ</p> …          (bộ đếm cũ coi là regex → 0)
+  ✗ B1 chuỗi có dấu lồng trong ${…} của mẫu chuỗi: mỗi chuỗi lồng có dấu = 1  (bộ đếm cũ đếm cả mẫu = 1)
+  ✗ B2 đối chứng: bộ đếm K10 và cây cú pháp @babel/parser … lệch 0   — src/kehoach.js (bộ đếm 41 · cây cú pháp 43)
+  ✗ B2 đối chứng đỏ được: bản giả có đủ ba dạng B1 → hai cách đếm giống nhau
+(Hai ca bản giả "Công nợ" của vòng 2 KH-ND-3a vẫn xanh: không đổi.)
+
+== 3. Bài CŨ B3 — bỏ \b ở ca "không có chữ nợ" (phiếu B3: mỗi ca kèm bản giả chứng minh ĐỎ được; C2: mỗi bài ≥ 1 ca ĐỎ)
+Bản chứng minh: chép bài mới vào cây gốc nhưng đặt lại `khongNo` kiểu cũ `/\bnợ\b/i` (\b của JS không hiểu chữ có dấu → không bao giờ khớp) — ca bản giả "Công nợ" ĐỎ:
+thu_KHUI5e.js  70 đạt · 1 hỏng   ✗ C3 … K3 không chữ "nợ" (bản giả "Công nợ" bị bắt)
+thu_KHUI5c.js  51 đạt · 1 hỏng   ✗ K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo
+thu_KHUI3a.js  42 đạt · 1 hỏng   ✗ C2 phép kiểm chữ "nợ" bắt được bản giả "Công nợ" (ca này nằm NGOÀI phần trình duyệt nên KHONG_TRINH_DUYET=1 cũng chạy)
+thu_KHUI5b.js  74 đạt · 1 hỏng   ✗ K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo (1.250, 1900, support@)
+thu_KHXEM1.js  — cùng khuôn (`khongNo` + bản giả); không chạy được bản `\b` vì người gác chặn tệp có cụm TOKEN chưa commit. Bản thật (đã commit) xanh: 61 đạt · 0 hỏng.
+
+== 4. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
+thu_KHND3b.js 20 đạt · 0 hỏng · thu_KHND3a.js 73 · 0 · thu_KHXEM1.js 61 · 0 · thu_KHUI5e.js 71 · 0 · thu_KHUI5c.js 52 · 0 · thu_KHUI3a.js 43 · 0 · thu_KHUI5b.js 75 · 0
+
+SỐ CA cong_cu/thu_KHND3b.js: 20
+SỐ CA cong_cu/thu_KHND3a.js: 73
+SỐ CA cong_cu/thu_KHXEM1.js: 61
+SỐ CA cong_cu/thu_KHUI5e.js: 71
+SỐ CA cong_cu/thu_KHUI5c.js: 52
+SỐ CA cong_cu/thu_KHUI3a.js: 43
+SỐ CA cong_cu/thu_KHUI5b.js: 75
