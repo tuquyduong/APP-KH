@@ -14,8 +14,6 @@ src/components/BaoDonXong.jsx 4
 
 src/components/DaiNhacViec.jsx 3
 
-src/components/DaiQuangCao.jsx 1
-
 src/components/GiaMon.jsx 7
 
 src/components/HoaDonKhach.jsx 1
@@ -91,8 +89,6 @@ src/pages/TracNghiemLam.jsx 4
 src/pages/TrangMon.jsx 14
 
 src/pages/UuDai.jsx 34
-
-src/quangCao.js 1
 
 src/tracNghiem.js 62
 
