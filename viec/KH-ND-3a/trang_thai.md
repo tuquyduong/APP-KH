@@ -51,3 +51,12 @@
 
 ## Câu hỏi
 (không có)
+
+## Kiểm (E4)
+- `npm test` / `node kiem_tra_truoc_khi_giao.js --day-du` (máy có Chromium, HEAD f100ec3+): 46 đạt · 0 hỏng (có K10 và vite build). Sau đó chỉ đổi thu_KHSLOGAN1 (đọc KHONG_TRINH_DUYET) — chạy riêng 16 · 0 (không trình duyệt), 20 · 0 (Chromium).
+- `node tu_chay/cong.js tinh . fd5d70e^ HEAD viec/KH-ND-3a`: chỉ ✗ [A19] (chưa có dòng HEAD ĐÃ KIỂM — bình thường trước bước này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fd5d70e^ HEAD viec/KH-ND-3a` (HEAD 41aa09a): ✓ CỔNG CHẠY ĐẠT
+  (· CẢNH BÁO A16: thu_KHND3a trên gốc in 26 ca ≠ 61 — trên gốc thiếu cong_cu/ha_no_chu.js nên khối C dừng sớm, đúng dạng "bài dừng sớm trên gốc").
+  Lần chạy trước (HEAD 0f…/trước 41aa09a) bắt ✗ [A16] SỐ CA thu_KHSLOGAN1 16 ≠ 20 → đã vá bài cho đọc KHONG_TRINH_DUYET (§9).
+
+HEAD ĐÃ KIỂM: 41aa09a
