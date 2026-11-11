@@ -125,7 +125,10 @@ GitHub chạy cổng KHÔNG có trình duyệt (Playwright). Máy làm việc c�
   `<Chu k=…>` và gắn `data-nd`; phần nhóm A / B gắn `data-nd-khoa`. **KHÔNG viết chữ / ảnh cho khách thẳng trong màn hình.**
 - **Bộ kiểm K10 "chỉ được giảm":** số chữ tiếng Việt viết thẳng trong `src/` (ngoài `src/noiDung/**`) của mỗi tệp không được tăng (`cong_cu/no_chu_cung.txt`); giảm thì hạ số nợ bằng
   `node cong_cu/ha_no_chu.js`. Tệp mới phải 0.
-- **Mỗi phiếu có nội dung mới** ghi khoá thêm vào danh mục trong nghiệm thu; danh mục kiểm bằng `kiemDanhMuc` (bài thử chung).
+- **Thêm gì cũng phải sửa được ở /admin** (chủ quán 11.11): mọi thứ MỚI khách thấy — chữ, ảnh, nút, danh sách, khối, tiện ích, màn — khai mục danh mục NGAY trong việc thêm nó
+  (không để "việc sau"): chữ / ảnh / nút / danh sách là mục sửa được, khối mới có mục `hien.<khối>` để ẩn / hiện, phần lấy từ POS / App tự tính là mục khoá có chỉ đường.
+  Phiếu có giao diện mới PHẢI có dòng nghiệm thu "mọi thứ mới có khoá + `data-nd`, sửa được ở /admin" và ghi các khoá đã thêm; danh mục kiểm bằng `kiemDanhMuc` (bài thử chung);
+  chat soát cuối kiểm — thiếu là KHÔNG ĐẠT.
 - **Chế độ sửa (/admin, KH-ADMIN-1, TRƯỚC khai trương):** đăng nhập tài khoản POS · bật Chế độ sửa: chỗ sửa được có viền vàng + nút bút ✎, chỗ khoá có 🔒 + lý do · bấm ✎ → bảng sửa hiện lên
   (bảng TỰ SINH từ danh mục, không làm tay từng màn) · **mỗi bảng có nút "Lưu"** (lưu nháp, khách chưa thấy) · **"Cập nhật toàn bộ"** mới đổi giao diện khách (thành một PHIÊN BẢN mới) ·
   **mọi phiên bản trước được giữ**: xem lại, so cũ ↔ mới, **quay lại bản cũ** bất cứ lúc nào · ẩn / hiện từng khối.

@@ -4,6 +4,11 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 11.11.2026
+- **Khai trương sớm nhất khoảng thứ Bảy 28.11.2026** (POS 11.11). Trước khai trương phía POS: MATKHAU-1, BO-MAN-CU-1, QUET-1; cuối danh sách: DOI-DIEM-1 → QUET-2 → GIOI-THIEU-1 → QUA-TANG-1.
+- **Đăng nhập bằng mật khẩu — POS chốt** (MATKHAU-1): KHÔNG có cửa hỏi "số này đăng nhập kiểu gì" → màn như nhau cho mọi SĐT (SĐT + mật khẩu + "Đăng nhập bằng mã"); đăng nhập giữ 90 ngày; quên PIN đặt lại bằng mã; màn đăng ký / "Đăng nhập bằng mã" ghi "Nhập số điện thoại có dùng Zalo — mã xác nhận gửi qua Zalo" (chủ quán dặn).
+- **Đổi điểm** (chủ quán 11.11, POS DOI-DIEM-1): voucher đổi ở App hoặc quầy; quà hiện vật đổi + nhận ở quầy (khách nhập PIN) — App vẫn hiện quà hiện vật với nút "Đổi tại quầy"; quà hết hạn chưa dùng → hoàn điểm.
+- **Quét mã ở quầy** (POS 11.11): QUET-1 — quầy quét mã thành viên / phiếu quà trên điện thoại khách → App làm mã to, nền trắng, giữ màn sáng (web không tự tăng độ sáng được, App nhắc khách tăng). QUET-2 — khách quét mã đơn ở màn quầy để tự gắn voucher: chủ quán "vẫn làm như POS xếp" (KH-QUET-2, cuối danh sách).
+- **Thêm gì cũng phải sửa được ở /admin** (chủ quán 11.11, ghi vào CLAUDE.md §11): mọi thứ MỚI khách thấy (chữ, ảnh, nút, danh sách, khối, tiện ích, màn) khai mục danh mục NGAY trong việc thêm nó; khối mới có mục ẩn / hiện; phiếu có giao diện mới phải có nghiệm thu "sửa được ở /admin"; chat soát cuối kiểm, thiếu là KHÔNG ĐẠT.
 - **Nội dung sửa được — nền xong** (KH-ND-3a gộp 11.11): danh mục `src/noiDung/nd/` (107 khoá), `nd()` / `<Chu>` / `data-nd`, K10 chữ cứng chỉ được giảm (nợ 766 chuỗi / 50 tệp); Trang chủ, thanh tab, màn mở, tên màn, câu báo lỗi chung đọc qua danh mục; khách thấy y hệt.
 - **Ánh sáng lướt như demo** (chủ quán 11.11, KH-UI-5g): dải các trang = kiểu A (dải mảnh 40px, chữ loé sáng + quầng + nút "Xem" vàng); Trang chủ LUÔN có banner "Hôm nay" chạy ánh sáng ("lúc nào cũng có chương trình") — cùng nguồn với dải: Giờ vàng đang chạy → chương trình → (sau) quảng cáo POS → câu mặc định sửa được.
 - **Lời chào gọi xưng hô + chữ cuối của tên** (chủ quán 11.11, ảnh "anh Anh Linh"): "anh Linh"; không có xưng hô thì giữ tên; nơi khác giữ tên đầy đủ.
