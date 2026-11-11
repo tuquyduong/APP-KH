@@ -37,13 +37,13 @@ const CHU = 'ĐÔNG Y DƯỠNG THỂ';
 
   console.log('— B. Màn mở');
   const manDau = doc('src/components/ManDau.jsx');
-  k('B1 phần tử khẩu hiệu có lớp khau-hieu', /<div className="e3-tg khau-hieu">\{KHAU_HIEU\}<\/div>/.test(manDau));
+  k('B1 phần tử khẩu hiệu có lớp khau-hieu', /<div className="e3-tg khau-hieu" \{\.\.\.ndDau\('brand\.slogan'\)\}>\{nd\('brand\.slogan'\)\}<\/div>/.test(manDau));
   const main = doc('src/main.jsx');
   const vt = (ten) => main.indexOf(`'./giaoDien/${ten}'`);
   k('B1 main.jsx nạp khau_hieu.css SAU mọi demo*.css và giaoDien.css', vt('khau_hieu.css') > 0 && ['demo.css', 'demo_tracnghiem.css', 'giaoDien.css'].every((t) => vt(t) >= 0 && vt(t) < vt('khau_hieu.css')));
   const demoCon = (doc('src/giaoDien/demo.css').match(/@import[^;]*;/g) || []).join('');
   k('B1 demo.css không @import khau_hieu (thứ tự nạp do main.jsx giữ)', !/khau_hieu/.test(demoCon));
-  k('B2 chữ lấy từ KHAU_HIEU, không viết cứng ở ManDau', /\{KHAU_HIEU\}/.test(manDau) && !/Đông Y Dưỡng Thể/i.test(manDau));
+  k('B2 chữ lấy từ KHAU_HIEU (qua danh mục nội dung brand.slogan — KH-ND-3a), không viết cứng ở ManDau', /nd\('brand\.slogan'\)/.test(manDau) && /chu\('brand\.slogan', '[^']*', KHAU_HIEU/.test(doc('src/noiDung/nd/khungChung.js')) && !/Đông Y Dưỡng Thể/i.test(manDau));
   k('B2 chú thích đầu thuongHieu.js không còn "giữ nguyên"', !/giữ nguyên/.test(doc('src/noiDung/thuongHieu.js').split('\n')[0]));
 
   console.log('— B3. Chromium: phông EB Garamond vẽ thật, dấu tiếng Việt đủ');
@@ -92,7 +92,9 @@ const CHU = 'ĐÔNG Y DƯỠNG THỂ';
   const conCu = [...quet('src'), ...quet('public'), 'index.html'].filter((f) => CU.some((re) => re.test(doc(f))));
   k('C1/C2 src, public, index.html không còn "Sức khỏe / khoẻ mỗi ngày", "Suc khoe moi ngay"', conCu.length === 0, conCu.join(', '));
   const tc = doc('src/pages/TrangChu.jsx');
-  k('C1 Trang chủ: "Tứ Quý Đường — " + KHAU_HIEU (import từ thuongHieu.js)', /Tứ Quý Đường — \{KHAU_HIEU\}/.test(tc) && /import \{ KHAU_HIEU \} from '..\/noiDung\/thuongHieu\.js'/.test(tc));
+  const kc = doc('src/noiDung/nd/khungChung.js');
+  k('C1 Trang chủ: "Tứ Quý Đường — " + KHAU_HIEU (danh mục home.sub điền brand.slogan = KHAU_HIEU import từ thuongHieu.js — KH-ND-3a)', /'Tứ Quý Đường — \{khauHieu\}'/.test(doc('src/noiDung/nd/trangChu.js'))
+    && /bien=\{\{ khauHieu: nd\('brand\.slogan'\) \}\}/.test(tc) && /import \{ KHAU_HIEU \} from '..\/thuongHieu\.js'/.test(kc));
   k('C4 <title> và manifest không đổi', /<title>Tứ Quý Đường<\/title>/.test(html) && !/Đông Y/.test(doc('public/manifest.webmanifest')));
 
   console.log('— D. K9');
