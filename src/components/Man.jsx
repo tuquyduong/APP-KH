@@ -1,3 +1,5 @@
+import { nd } from '../noiDung/nd.js';
+
 // Một màn như demo: nền "aurora" mờ + nội dung nằm trên. `hien` = màn đang xem (các màn khác ẩn nhưng giữ nguyên trạng thái, như demo).
 export default function Man({ id, hien = true, children }) {
   return (
@@ -12,7 +14,7 @@ export default function Man({ id, hien = true, children }) {
 export function DauManCon({ tieuDe, phu, lui, canTrai = false }) {
   return (
     <div className={`topbar${canTrai ? ' trai' : ''}`}>
-      <button type="button" className="back-btn" aria-label="Quay lại" onClick={lui}><svg className="ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-back" /></svg></button>
+      <button type="button" className="back-btn" aria-label={nd('khung.quayLai')} onClick={lui}><svg className="ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-back" /></svg></button>
       <div><h1>{tieuDe}</h1>{phu && <div className="sub">{phu}</div>}</div>
     </div>
   );
@@ -21,7 +23,7 @@ export function DauManCon({ tieuDe, phu, lui, canTrai = false }) {
 /** Nút QR tròn góc phải như demo (qr-header-btn). */
 export function NutQR({ moQR }) {
   return (
-    <button type="button" className="qr-header-btn" aria-label="Mã QR thành viên" onClick={moQR}>
+    <button type="button" className="qr-header-btn" aria-label={nd('khung.maQR')} onClick={moQR}>
       <svg className="ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-qr" /></svg>
     </button>
   );

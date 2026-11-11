@@ -3,9 +3,8 @@ import { loiChao, dinhDangSo } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
 import { nhuCauCoMon } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
-import { NHU_CAU } from '../noiDung/nhuCau.js';
-import { KHAU_HIEU } from '../noiDung/thuongHieu.js';
-import { BANNER, HOM_NAY, MON_NOI_BAT } from '../noiDung/trangChu.js';
+import { nd, ndNut, ndAnh, ndDs, ndHien, ndDau } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import Man, { NutQR } from '../components/Man.jsx';
 import MonO from '../components/MonO.jsx';
 import BannerHomNay from '../components/BannerHomNay.jsx';
@@ -22,11 +21,12 @@ import { taoDuongDan } from '../duongDan.js';
 import '../giaoDien/ke_hoach.css';
 import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
 import { dungKho } from '../kho.js';
-import { THE_MOI, tenXungHo } from '../noiDung/dangNhap.js';
+import { tenXungHo } from '../noiDung/dangNhap.js';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
 //   thẻ "Xem cách dùng app" (chưa có video) · Mời bạn bè, combo → sau khai trương. Ô "Kế hoạch và nhắc việc" (KH-UI-5b) nằm cạnh thẻ hội viên như demo.
 // Demo không có dòng "quán đang mở / đóng": thêm MỘT dòng nhỏ (kiểu `.sub`) dưới lời chào, chữ lấy từ `/gio-hoat-dong` (xem `## Phát hiện` của KH-UI-3a).
+// Mọi chữ / ảnh / nút đọc qua nd() (danh mục src/noiDung/nd/trangChu.js); phần POS / tự tính gắn ndDau(<mục khoá>). Khối ẩn / hiện theo `hien.<mã SECS demo>`.
 // Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
 function DauChung({ chao, moQR, the, ke }) {
   const quan = trangThaiQuan(dungKho(khoGioHoatDong));
@@ -34,13 +34,13 @@ function DauChung({ chao, moQR, the, ke }) {
     <>
       <div className="topbar">
         <div>
-          <h1>{chao}</h1>
-          <div className="sub">Tứ Quý Đường — {KHAU_HIEU}</div>
-          {quan && <div className="sub">{quan.dangMo ? 'Quán đang mở cửa' : quan.thongBao}</div>}
+          <h1 {...ndDau('chao.dau')}>{chao}</h1>
+          <Chu k="home.sub" as="div" className="sub" bien={{ khauHieu: nd('brand.slogan') }} />
+          {quan && (quan.dangMo ? <Chu k="home.mo" as="div" className="sub" /> : <div className="sub" {...ndDau('home.quan')}>{quan.thongBao}</div>)}
         </div>
         <div className="topbar-right"><NutQR moQR={moQR} /></div>
       </div>
-      <div className="top-row">{the}{ke}</div>
+      <div className="top-row">{ndHien('hien.home.member') && the}{ndHien('hien.home.cal') && ke}</div>
     </>
   );
 }
@@ -72,12 +72,12 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
       the={(
         <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
           <div className="card-top">
-            <div className="hang-logo"><img className="tqd-logo tqd-mini" src="/anh/logo-nho.webp" alt="" /><div className="brand">TỨ QUÝ ĐƯỜNG<small>Thẻ hội viên</small></div></div>
+            <div className="hang-logo"><img className="tqd-logo tqd-mini" src={ndAnh('home.logo')} alt="" {...ndDau('home.logo')} /><div className="brand"><span {...ndDau('home.the.nhan')}>{nd('home.the.nhan')}</span><Chu k="home.the.phu" as="small" /></div></div>
           </div>
           <div className="card-bottom">
             <div>
-              {hang && <div className="tier"><IcoVe ten="crown" s={12} /> Hạng {hang.ten}</div>}
-              <div className="num">{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <span>điểm</span></div>
+              {hang && <div className="tier" {...ndDau('home.hang.ten')}><IcoVe ten="crown" s={12} /> <span {...ndDau('home.hang')}>{nd('home.hang', { hang: hang.ten })}</span></div>}
+              <div className="num" {...ndDau('home.diem.so')}>{diem.dl ? dinhDangSo(diem.dl.points) : '—'} <Chu k="home.diem" /></div>
             </div>
           </div>
         </div>
@@ -90,53 +90,59 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
 export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const ke = <OKeHoachTrangChu dangNhap={dangNhap} daBiet={daBiet} moKeHoach={moKeHoach} moDangNhapTai={moDangNhapTai} />;
-  const nhuCau = nhuCauCoMon(NHU_CAU, ds, MON);
-  const noiBat = MON_NOI_BAT.map((ma) => ds.find((m) => m.ma === ma)).filter(Boolean);
-  const coHomNay = !!HOM_NAY.tieuDe;
+  const nhuCau = nhuCauCoMon(ndDs('home.need'), ds, MON);
+  const noiBat = ndDs('home.feat.mon').map((x) => ds.find((m) => m.ma === x.ma)).filter(Boolean);
+  const homNay = { tieuDe: nd('today.t'), phu: nd('today.s'), nut: ndNut('today.cta') };
+  const bb = ndNut('home.bb'), fmore = ndNut('home.fmore');
+  const DICH = { menu: moMenu, giovang: moGioVang, tracnghiem: moTracNghiem, kehoach: moKeHoach, uudai: moUuDai }; // mọi mã trong DICH (noiDung/nd/index.js)
+  const di = (dich) => () => DICH[dich]();
+  const moi = { tieuDe: nd('home.moi.t'), phu: nd('home.moi.p'), nut: nd('home.moi.nut') };
   const { bang: keHoach } = dungKeHoach(daBiet);
 
   return (
     <Man id="home">
       {dangNhap
         ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} ke={ke} />
-        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={THE_MOI} moDangNhap={moDangNhap} />} ke={ke} />}
+        : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={moi} khoa={{ tieuDe: 'home.moi.t', phu: 'home.moi.p', nut: 'home.moi.nut' }} anh={ndAnh('home.logo')} moDangNhap={moDangNhap} />} ke={ke} />}
 
+      {ndHien('hien.home.hb') && (
       <div className="hb-one">
-        {coHomNay ? (
-          <div id="todayHome"><BannerHomNay anh={BANNER.anh} tieuDe={HOM_NAY.tieuDe} phu={HOM_NAY.phu} nut={HOM_NAY.nut} chon={moMenu} /></div>
+        {homNay.tieuDe ? (
+          <div id="todayHome"><BannerHomNay anh={ndAnh('today.bg')} tieuDe={homNay.tieuDe} phu={homNay.phu} nut={homNay.nut.chu} chon={di(homNay.nut.dich)} /></div>
         ) : (
-          <div className="hero-banner" role="button" tabIndex={0} onClick={moMenu} onKeyDown={(e) => { if (e.key === 'Enter') moMenu(); }}>
-            <img className="slot-img" src={BANNER.anh} alt="" />
+          <div className="hero-banner" role="button" tabIndex={0} onClick={di(bb.dich)} onKeyDown={(e) => { if (e.key === 'Enter') di(bb.dich)(); }} {...ndDau('home.banner')}>
+            <img className="slot-img" src={ndAnh('home.banner')} alt="" />
             <div className="txt">
-              <div className="k">{BANNER.nhan}</div>
-              <div className="h">{BANNER.dong1}<br />{BANNER.dong2}</div>
-              <span className="b">{BANNER.nut}</span>
+              <Chu k="home.bk" as="div" className="k" />
+              <div className="h" {...ndDau('home.bh')}>{nd('home.bh').split('\n').map((d, i) => <span key={i}>{i > 0 && <br />}{d}</span>)}</div>
+              <span className="b" {...ndDau('home.bb')}>{bb.chu}</span>
             </div>
           </div>
         )}
-        <div className="hb-tiles"><OGioVang mo={moGioVang} /><OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} /></div>
+        <div className="hb-tiles">{ndHien('hien.home.gv') && <OGioVang mo={moGioVang} />}{ndHien('hien.home.quiz') && <OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} />}</div>
       </div>
+      )}
 
-      {nhuCau.length > 0 && (
+      {ndHien('hien.home.needs') && nhuCau.length > 0 && (
         <>
-          <div className="sec-head"><h2>Chăm sóc theo nhu cầu</h2></div>
-          <div className="need-grid">
+          <div className="sec-head"><Chu k="home.needs" as="h2" /></div>
+          <div className="need-grid" {...ndDau('home.need')}>
             {nhuCau.map((n) => (
               <div key={n.ten} className="need" role="button" tabIndex={0} onClick={() => locNhuCau(n.ten)} onKeyDown={(e) => { if (e.key === 'Enter') locNhuCau(n.ten); }}>
                 <div className="em ph-need"><img className="need-ph" src={n.anh} alt="" /></div>
-                <div className="t">{n.ten}</div>
+                <div className="t">{n.nhan}</div>
               </div>
             ))}
           </div>
-          <div className="care-disclaimer">Chỉ mang tính gợi ý theo dịp dùng — TQD kinh doanh thực phẩm thông thường, không phải thực phẩm bảo vệ sức khỏe.</div>
+          <Chu k="home.disc" as="div" className="care-disclaimer" />
         </>
       )}
 
-      {noiBat.length > 0 && (
+      {ndHien('hien.home.feat') && noiBat.length > 0 && (
         <>
-          <div className="sec-head"><h2>Món nổi bật</h2></div>
-          <div className="grid2">{noiBat.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
-          <div className="more-l"><span role="button" tabIndex={0} onClick={moMenu} onKeyDown={(e) => { if (e.key === 'Enter') moMenu(); }}>Xem tất cả</span></div>
+          <div className="sec-head"><Chu k="home.feat" as="h2" /></div>
+          <div className="grid2" {...ndDau('home.mon')}>{noiBat.map((m) => <MonO key={m.ma} mon={m} chon={chonMon} />)}</div>
+          <div className="more-l"><span role="button" tabIndex={0} onClick={di(fmore.dich)} onKeyDown={(e) => { if (e.key === 'Enter') di(fmore.dich)(); }} {...ndDau('home.fmore')}>{fmore.chu}</span></div>
         </>
       )}
     </Man>

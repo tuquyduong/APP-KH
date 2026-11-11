@@ -3,8 +3,8 @@
 //   mau = mẫu đường dẫn (":ten" = tham số) · tab = tab sáng trên thanh tab (null = giữ tab trước) · canDN = khách phải đăng nhập
 //   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau · cho = các giá trị hợp lệ của tham số
 import { boDau } from './menuLoc.js';
+import { nd } from './noiDung/nd.js';
 
-const HAU_TO_TIEU_DE = ' · Tứ Quý Đường';
 const TRANG_CHU = '/trangchu';
 import { MA_DIP } from './noiDung/vanKhan.js';
 
@@ -12,28 +12,28 @@ import { MA_DIP } from './noiDung/vanKhan.js';
 const TIEN_ICH =['theomua', 'ngayle', 'saptoi', 'ngaycannho', 'vankhan'];
 
 const BANG = [
-  { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'Trang chủ' },
-  { trang: 'menu', mau: '/menu', tab: 'menu', tieuDe: 'Menu' },
-  { trang: 'menu', mau: '/menu/:nhom', tab: 'menu', tieuDe: 'Menu' },
-  { trang: 'mon', mau: '/mon/:slug', tab: 'menu', tieuDe: 'Món', cha: '/menu' },
-  { trang: 'giohang', mau: '/giohang', tab: 'giohang', tieuDe: 'Giỏ hàng' },
-  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'Thanh toán', cha: '/giohang' },
-  { trang: 'theodoi', mau: '/don/:ma', tab: 'giohang', canDN: true, tieuDe: 'Theo dõi đơn', cha: '/taikhoan/donhang' },
-  { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'Ưu đãi' },
-  { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'Tài khoản' },
-  { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'Thông tin cá nhân', cha: '/taikhoan' },
-  { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'Đơn hàng', cha: '/taikhoan' },
-  { trang: 'don', mau: '/taikhoan/donhang/:ma', tab: 'taikhoan', canDN: true, tieuDe: 'Chi tiết đơn', cha: '/taikhoan/donhang' },
-  { trang: 'hotro', mau: '/taikhoan/hotro', tab: 'taikhoan', tieuDe: 'Hỗ trợ', cha: '/taikhoan' },
-  { trang: 'qr', mau: '/mathanhvien', tab: null, canDN: true, tieuDe: 'Mã thành viên' },
-  { trang: 'dangnhap', mau: '/dangnhap', tab: null, tieuDe: 'Đăng nhập' },
-  { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, canDN: true, tieuDe: 'Trắc nghiệm' },
-  { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'Trắc nghiệm', cha: '/tracnghiem' },
-  { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'Kết quả thể trạng' },
-  { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'Kiểm khớp POS', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
-  { trang: 'kehoach', mau: '/kehoach', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc' },
-  { trang: 'tienich', mau: '/kehoach/:tienich', tab: 'trangchu', canDN: true, tieuDe: 'Kế hoạch và nhắc việc', cha: '/kehoach', cho: TIEN_ICH },
-  { trang: 'tienich', mau: '/kehoach/:tienich/:dip', tab: 'trangchu', canDN: true, tieuDe: 'Văn khấn và lễ cúng', cha: '/kehoach/vankhan', cho: { tienich: ['vankhan'], dip: MA_DIP } },
+  { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'tieuDe.trangchu' },
+  { trang: 'menu', mau: '/menu', tab: 'menu', tieuDe: 'tieuDe.menu' },
+  { trang: 'menu', mau: '/menu/:nhom', tab: 'menu', tieuDe: 'tieuDe.menu' },
+  { trang: 'mon', mau: '/mon/:slug', tab: 'menu', tieuDe: 'tieuDe.mon', cha: '/menu' },
+  { trang: 'giohang', mau: '/giohang', tab: 'giohang', tieuDe: 'tieuDe.giohang' },
+  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/giohang' },
+  { trang: 'theodoi', mau: '/don/:ma', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.theodoi', cha: '/taikhoan/donhang' },
+  { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'tieuDe.uudai' },
+  { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.taikhoan' },
+  { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.thongtin', cha: '/taikhoan' },
+  { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.donhang', cha: '/taikhoan' },
+  { trang: 'don', mau: '/taikhoan/donhang/:ma', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.don', cha: '/taikhoan/donhang' },
+  { trang: 'hotro', mau: '/taikhoan/hotro', tab: 'taikhoan', tieuDe: 'tieuDe.hotro', cha: '/taikhoan' },
+  { trang: 'qr', mau: '/mathanhvien', tab: null, canDN: true, tieuDe: 'tieuDe.qr' },
+  { trang: 'dangnhap', mau: '/dangnhap', tab: null, tieuDe: 'tieuDe.dangnhap' },
+  { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiem' },
+  { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiem', cha: '/tracnghiem' },
+  { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiemketqua' },
+  { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'tieuDe.kiemkhop', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
+  { trang: 'kehoach', mau: '/kehoach', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.kehoach' },
+  { trang: 'tienich', mau: '/kehoach/:tienich', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.kehoach', cha: '/kehoach', cho: TIEN_ICH },
+  { trang: 'tienich', mau: '/kehoach/:tienich/:dip', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.vankhan', cha: '/kehoach/vankhan', cho: { tienich: ['vankhan'], dip: MA_DIP } },
 ];
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);
 const tenThamSo = (e) => [...e.mau.matchAll(/:(\w+)/g)].map((m) => m[1]);
@@ -94,11 +94,11 @@ export function docDuongDan(diaChi) {
 
 export const trangCanDangNhap = (trang) => BANG.some((e) => e.trang === trang && e.canDN);
 
-/** Tiêu đề tab trình duyệt: "Menu · Tứ Quý Đường", "<Tên món> · Tứ Quý Đường". */
+/** Tiêu đề tab trình duyệt: "Menu · Tứ Quý Đường", "<Tên món> · Tứ Quý Đường". `tieuDe` trong BANG là khoá nội dung (src/noiDung/nd/khungChung.js). */
 export function tieuDeTrang(trang, tenMon) {
-  if (trang === 'mon') return (tenMon || 'Món') + HAU_TO_TIEU_DE;
   const e = BANG.find((x) => x.trang === trang);
-  return (e ? e.tieuDe : 'Không tìm thấy trang') + HAU_TO_TIEU_DE;
+  const man = trang === 'mon' ? tenMon || nd('tieuDe.mon') : nd(e ? e.tieuDe : 'tieuDe.khongthay');
+  return nd('tieuDe.mau', { man });
 }
 
 const goc = (m) => slug(m.ten) || slug(m.ma);

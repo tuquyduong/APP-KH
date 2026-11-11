@@ -1,4 +1,5 @@
 // Hàm thuần của App KH (không đụng DOM / mạng) — bài thử cong_cu/thu_KHUNG.js nạp thẳng file này.
+import { nd } from './noiDung/nd.js';
 
 /** 25000 → "25.000đ". Không phải số → "" (không bịa số, CLAUDE.md §5.8). */
 export function dinhDangGia(n) {
@@ -24,24 +25,14 @@ export function dinhDangNgay(chuoi) {
   return m[4] ? `${m[4]}:${m[5]} ${ngay}` : ngay;
 }
 
-// Lời dự phòng khi máy chủ không trả `code` (mất mạng, 5xx chỉ có { error }…).
-const LOI_DU_PHONG = {
-  MANG_LOI: 'Không kết nối được. Kiểm tra mạng rồi thử lại.',
-  KH_CHUA_CAU_HINH: 'App khách chưa sẵn sàng. Vui lòng quay lại sau.',
-  KH_TOKEN_SAI: 'Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.',
-  LOI_MAY_CHU: 'Máy chủ đang bận. Thử lại sau ít phút.',
-  XUNG_HO_SAI: 'Cách xưng hô chưa hợp lệ. Hãy chọn lại.',
-  DIA_CHI_QUA_DAI: 'Địa chỉ quá dài (tối đa 300 ký tự).',
-  TEN_KHONG_HOP_LE: 'Tên chưa hợp lệ. Hãy nhập lại.',
-  YEU_CAU_KHONG_HOP_LE: 'Thông tin gửi đi chưa hợp lệ. Thử lại.',
-};
-const LOI_CHUNG = 'Có lỗi xảy ra. Thử lại sau.';
+// Lời dự phòng khi máy chủ không trả `code` (mất mạng, 5xx chỉ có { error }…): chữ ở danh mục nội dung `loi.<code>` (src/noiDung/nd/khungChung.js).
+const LOI_DU_PHONG = ['MANG_LOI', 'KH_CHUA_CAU_HINH', 'KH_TOKEN_SAI', 'LOI_MAY_CHU', 'XUNG_HO_SAI', 'DIA_CHI_QUA_DAI', 'TEN_KHONG_HOP_LE', 'YEU_CAU_KHONG_HOP_LE'];
 
 /** Chọn lời hiện cho khách: có `code` + `error` của POS → nguyên `error`; KHÔNG có `code` (vd 500 chỉ { error }, lời máy) → lời chung LOI_MAY_CHU. */
 export function loiTheoCode(code, error) {
-  if (!code) return LOI_DU_PHONG.LOI_MAY_CHU;
+  if (!code) return nd('loi.LOI_MAY_CHU');
   if (typeof error === 'string' && error.trim()) return error;
-  return LOI_DU_PHONG[code] || LOI_CHUNG;
+  return nd(LOI_DU_PHONG.includes(code) ? `loi.${code}` : 'loi.chung');
 }
 
 /** Ghép địa chỉ POS: bỏ `/` thừa cuối của gốc; gốc không đặt → '' (cùng gốc, dùng proxy dev). */
@@ -84,13 +75,14 @@ export function hienNgaySinh(chuoi) {
 export function chiaLoiChao(gio, xungHo, ten) {
   const m = /[T ](\d{2}):\d{2}/.exec(String(gio || ''));
   const h = m ? +m[1] : -1;
-  const buoi = h < 0 ? '' : h >= 5 && h < 11 ? ' buổi sáng' : h >= 11 && h < 13 ? ' buổi trưa' : h >= 13 && h < 18 ? ' buổi chiều' : ' buổi tối';
+  const buoi = h < 0 ? '' : h >= 5 && h < 11 ? 'sang' : h >= 11 && h < 13 ? 'trua' : h >= 13 && h < 18 ? 'chieu' : 'toi';
   const xung = String(xungHo || '').trim().toLowerCase();
-  return { dau: `Chào${buoi}`, xung, ten: String(ten || '').trim().replace(/\s+/g, ' ') || (xung ? '' : 'bạn') };
+  const dau = buoi ? `${nd('chao.dau')} ${nd('chao.' + buoi)}` : nd('chao.dau');
+  return { dau, coBuoi: !!buoi, xung, ten: String(ten || '').trim().replace(/\s+/g, ' ') || (xung ? '' : nd('chao.ban')) };
 }
 
 /** "Chào buổi sáng, chị Linh!" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào chị Linh!"; chưa có gì: "Chào bạn!"). */
 export function loiChao(gio, xungHo, ten) {
-  const { dau, xung, ten: t } = chiaLoiChao(gio, xungHo, ten);
-  return `${dau}${dau === 'Chào' ? ' ' : ', '}${[xung, t].filter(Boolean).join(' ')}!`;
+  const { dau, coBuoi, xung, ten: t } = chiaLoiChao(gio, xungHo, ten);
+  return `${dau}${coBuoi ? ', ' : ' '}${[xung, t].filter(Boolean).join(' ')}!`;
 }
