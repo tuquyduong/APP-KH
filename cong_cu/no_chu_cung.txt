@@ -48,7 +48,7 @@ src/gioHoatDong.js 7
 
 src/gioVang.js 9
 
-src/kehoach.js 41
+src/kehoach.js 43
 
 src/kehoachLap.js 32
 
