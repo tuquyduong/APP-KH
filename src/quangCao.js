@@ -1,7 +1,8 @@
 // Dải quảng cáo mảnh ở đầu các trang (KH-UI-5d) — hàm thuần. Chọn MỘT câu để hiện; không có gì → null (ẩn dải, không chữ mẫu).
-// Thứ tự: dòng `quangCao` của POS hợp giờ (KH-QC-1, chưa có cửa — mặc định rỗng) → Giờ vàng ĐANG chạy → chương trình đặc biệt → null.
+// Thứ tự: dòng `quangCao` của POS hợp giờ (KH-QC-1, chưa có cửa — mặc định rỗng) → Giờ vàng ĐANG chạy → chương trình đặc biệt → chữ mặc định (`macDinh: true`; dải ẩn, banner Trang chủ vẫn hiện).
 import { mocTuChuoi } from './bayGio.js';
 import { trangThaiGioVang, gioPhut } from './gioVang.js';
+import { nd, ndNut } from './noiDung/nd.js';
 
 /** Trang có dải: Menu, Ưu đãi, Giỏ hàng, Kế hoạch + tiện ích, Tài khoản (chỉ trang chính). Thanh toán, Theo dõi đơn, Đăng nhập… KHÔNG có. */
 const TRANG_CO_DAI = ['menu', 'uudai', 'giohang', 'kehoach', 'tienich', 'taikhoan'];
@@ -26,15 +27,24 @@ function hopGio(tu, den, bay) {
   return (!a || m >= mocTuChuoi(a)) && (!b || m < mocTuChuoi(b));
 }
 
+/** Biểu tượng (emoji) ở đầu chuỗi tách riêng: "⏰ Giờ vàng" → { bieuTuong: '⏰', chu: 'Giờ vàng' }. Không có emoji → bieuTuong rỗng. */
+export function tachBieuTuong(chu) {
+  const s = String(chu == null ? '' : chu).trim();
+  const m = /^(\p{Extended_Pictographic}(?:\uFE0F|\p{Emoji_Modifier}|\u200D\p{Extended_Pictographic})*)\s*/u.exec(s);
+  return m ? { bieuTuong: m[1], chu: s.slice(m[0].length) } : { bieuTuong: '', chu: s };
+}
+
 const tuDong = (r) => {
   const dich = DICH.includes(r.dich) && (r.dich !== 'mon' || r.ma_mon) ? r.dich : '';
-  return { chu: r.chu_dai.trim(), dich, maMon: dich === 'mon' ? r.ma_mon : '' };
+  const chu = r.chu_dai.trim();
+  return { chu, tieuDe: tachBieuTuong(chu).chu, phu: '', nut: dich ? nd('qc.xem') : '', dich, maMon: dich === 'mon' ? r.ma_mon : '' };
 };
 const dongHopLe = (r) => r && typeof r === 'object' && typeof r.chu_dai === 'string' && r.chu_dai.trim();
 
 /**
  * { gioVang: dữ liệu /gio-vang của POS, chuongTrinh: docChuongTrinh(...), bayGio: 'YYYY-MM-DD HH:mm:ss', quangCao: [dòng POS] }
- * → { chu, dich: 'menu'|'mon'|'uudai'|'tracnghiem'|'', maMon } hoặc null. `dich` rỗng = bấm không làm gì.
+ * → { chu (một dòng cho dải, có biểu tượng), tieuDe, phu, nut (chữ nút), dich: 'menu'|'mon'|'uudai'|'tracnghiem'|'', maMon, macDinh? }. `dich` rỗng = bấm không làm gì.
+ * Luôn trả một kết quả: không có gì thì là chữ mặc định trong danh mục (`macDinh: true`, today.*).
  */
 export function chonQuangCao({ gioVang, chuongTrinh, bayGio, quangCao = [] }) {
   const dong = (Array.isArray(quangCao) ? quangCao : []).filter(dongHopLe);
@@ -43,8 +53,12 @@ export function chonQuangCao({ gioVang, chuongTrinh, bayGio, quangCao = [] }) {
   const tt = trangThaiGioVang(gioVang, bayGio);
   if (tt && tt.pha === 'dang') {
     const rieng = dong.find((r) => r.id === 'gio_vang');
-    return rieng ? { chu: rieng.chu_dai.trim(), dich: 'menu', maMon: '' } : { chu: `⏰ Giờ vàng: giảm ${tt.phanTram}% đến ${tt.ketThuc}`, dich: 'menu', maMon: '' };
+    const bien = { phanTram: tt.phanTram, ketThuc: tt.ketThuc };
+    const kq = { phu: nd('qc.gv.phu', bien), nut: nd('qc.gv.nut'), dich: 'menu', maMon: '' };
+    return rieng ? { ...kq, chu: rieng.chu_dai.trim(), tieuDe: tachBieuTuong(rieng.chu_dai).chu } : { ...kq, chu: nd('qc.dai.gv', bien), tieuDe: nd('qc.gv.tieuDe', bien) };
   }
   const ct = Array.isArray(chuongTrinh) ? chuongTrinh[0] : null;
-  return ct && ct.ten ? { chu: `🎁 ${ct.ten}`, dich: 'uudai', maMon: '' } : null;
+  if (ct && ct.ten) return { chu: nd('qc.dai.ct', { ten: ct.ten }), tieuDe: ct.ten, phu: ct.moTa || '', nut: nd('qc.ct.nut'), dich: 'uudai', maMon: '' };
+  const nut = ndNut('today.cta');
+  return { chu: '', tieuDe: nd('today.t'), phu: nd('today.s'), nut: nut.chu, dich: nut.dich, maMon: '', macDinh: true };
 }
