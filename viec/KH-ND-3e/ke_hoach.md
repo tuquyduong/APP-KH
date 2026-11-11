@@ -23,9 +23,9 @@ Việc THƯỜNG, không chờ duyệt. Màn TIỀN: chuyển chữ, KHÔNG đ�
 | A1 | `kiemDanhMuc` = 0 lỗi; ≥ 100 mục; `man` đúng 5 nhóm; 10 tệp A1 đếm chữ cứng = 0; mọi khoá dùng có trong danh mục, không khoá thừa |
 | A2 | mục khoá `pos` có `chiDuong`, mỗi mục khoá được gắn `ndDau()`; Chromium: `[data-nd-khoa]` ở số đơn, tiền, lời POS (PIN sai) |
 | A3 | `loi.GIA_DA_DOI/…/NGOAI_GIO` là mục chữ; `datThongBao(e.message)` / `datChanPos(e.message)` còn nguyên (lời POS hiện nguyên) |
-| A4 | 28 câu mẫu `macDinh` = chữ gốc; `tenGiam` / `buocTienTrinh` / `chanDat` / `guiDonAnToan` / `tieuDeXong` trả chữ y như cũ; so ảnh (nháp) 25 cặp 0 điểm lệch → `so_anh/` |
+| A4 | 28 câu mẫu `macDinh` = chữ gốc; `tenGiam` / `buocTienTrinh` / `chanDat` / `guiDonAnToan` / `tieuDeXong` trả chữ y như cũ; so ảnh (nháp) 33 cặp 0 điểm lệch → `so_anh/` |
 | B1 | Chromium: bản giả đổi 2–4 khoá (nút đặt, tiêu đề mục, `td.giuApp`, `pin.tra.t`…) → màn đổi theo, bản rỗng → như cũ; đặt đơn QR và đơn ví + PIN qua POS giả của `thu_KHMUA1b` đủ bước; `git diff` gốc → `datDon.js` chỉ đổi dòng có chữ |
-| B2 | 8 bài cũ sửa cho đọc chữ ở danh mục (BAO1, MUA1, MUA1b, MUA1c, NHANH1, SOHD1, TT1) — mỗi bài thêm / sửa ≥ 1 ca ĐỎ trên gốc (`bang_chung_do.txt`) |
+| B2 | 7 bài cũ sửa cho đọc chữ ở danh mục (BAO1, MUA1, MUA1b, MUA1c, NHANH1, SOHD1, TT1) — mỗi bài thêm / sửa ≥ 1 ca ĐỎ trên gốc (`bang_chung_do.txt`) |
 | B3–B5 | `doi_chieu_demo.md`; `ha_no_chu.js`; `trang_thai.md` |
 
 Đường song song canh: `GioHang.jsx` dùng `tenGiam` (cùng chữ); `App.jsx` gọi `tieuDeXong` qua `datTieuDe` (cùng chữ); `Man.jsx` `DauManCon` nhận chuỗi (đã nd() ở màn gọi); mọi màn gọi `KhungLoi` (TrangTai) dùng chung.

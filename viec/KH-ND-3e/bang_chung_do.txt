@@ -23,11 +23,11 @@ thu_KHTT1.js    5 đạt · 4 hỏng    ✗ A1 aria-label qua nd('tt.vi.nhan') �
 (KHÔNG sửa: thu_KHND3a, thu_KHUI*, thu_KHXEM1, thu_KHKHOP1… — vẫn xanh nguyên văn.)
 
 == 3. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
-thu_KHND3e.js 21 đạt · 0 hỏng · thu_KHBAO1.js 34 · 0 · thu_KHMUA1.js 57 · 0 · thu_KHMUA1b.js 51 · 0 · thu_KHMUA1c.js 28 · 0
+thu_KHND3e.js 22 đạt · 0 hỏng (sau soát vòng 1: thêm ca A3 gắn data-nd đúng khoá) · thu_KHBAO1.js 34 · 0 · thu_KHMUA1.js 57 · 0 · thu_KHMUA1b.js 51 · 0 · thu_KHMUA1c.js 28 · 0
 thu_KHNHANH1.js 84 · 0 · thu_KHSOHD1.js 40 · 0 · thu_KHTT1.js 9 · 0
-Có trình duyệt (máy làm việc, Chromium): thu_KHND3e.js 40 · 0 (thêm 19 ca Chromium); thu_KHMUA1b 258 · 0, thu_KHMUA1c 112 · 0, thu_KHBAO1 112 · 0, thu_KHSOHD1 109 · 0.
+Có trình duyệt (máy làm việc, Chromium): thu_KHND3e.js 41 · 0 (thêm 19 ca Chromium); thu_KHMUA1b 258 · 0, thu_KHMUA1c 112 · 0, thu_KHBAO1 112 · 0, thu_KHSOHD1 109 · 0.
 Số ca ghi ở dưới là số GitHub đếm (KHONG_TRINH_DUYET=1) — cổng A16.
-SỐ CA cong_cu/thu_KHND3e.js: 21
+SỐ CA cong_cu/thu_KHND3e.js: 22
 SỐ CA cong_cu/thu_KHBAO1.js: 34
 SỐ CA cong_cu/thu_KHMUA1.js: 57
 SỐ CA cong_cu/thu_KHMUA1b.js: 51
