@@ -23,21 +23,20 @@ Cách làm: `git archive HEAD` cây gốc vào thư mục nháp (node_modules d�
   ✗ B2 đối chứng đỏ được: bản giả có đủ ba dạng B1 → hai cách đếm giống nhau
 (Hai ca bản giả "Công nợ" của vòng 2 KH-ND-3a vẫn xanh: không đổi.)
 
-== 3. Bài CŨ B3 — bỏ \b ở ca "không có chữ nợ" (phiếu B3: mỗi ca kèm bản giả chứng minh ĐỎ được; C2: mỗi bài ≥ 1 ca ĐỎ)
-Bản chứng minh: chép bài mới vào cây gốc nhưng đặt lại `khongNo` kiểu cũ `/\bnợ\b/i` (\b của JS không hiểu chữ có dấu → không bao giờ khớp) — ca bản giả "Công nợ" ĐỎ:
-thu_KHUI5e.js  70 đạt · 1 hỏng   ✗ C3 … K3 không chữ "nợ" (bản giả "Công nợ" bị bắt)
-thu_KHUI5c.js  51 đạt · 1 hỏng   ✗ K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo
-thu_KHUI3a.js  42 đạt · 1 hỏng   ✗ C2 phép kiểm chữ "nợ" bắt được bản giả "Công nợ" (ca này nằm NGOÀI phần trình duyệt nên KHONG_TRINH_DUYET=1 cũng chạy)
-thu_KHUI5b.js  74 đạt · 1 hỏng   ✗ K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo (1.250, 1900, support@)
-thu_KHXEM1.js  — cùng khuôn (`khongNo` + bản giả); không chạy được bản `\b` vì người gác chặn tệp có cụm TOKEN chưa commit. Bản thật (đã commit) xanh: 61 đạt · 0 hỏng.
+== 3. Bài CŨ B3 — bỏ \b ở ca "không có chữ nợ" + bản giả "Công nợ" (phiếu B3) + MỘT ca ĐỎ trên gốc mỗi bài (phiếu C2)
+Ca thêm (cả 5 bài): `K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"` — trên GỐC menu.js còn rỗng nên ĐỎ; sau khi điền danh mục thì XANH.
+(Cổng `chay` lần đầu báo A11 "xanh trên gốc" cho 5 bài khi chưa có ca này — đây là bản sửa.)
+Chứng minh phép kiểm "nợ" đỏ được: chép bài vào cây gốc, đặt lại `khongNo` kiểu cũ `/\bnợ\b/i` → ca bản giả "Công nợ" ĐỎ:
+thu_KHUI5e.js  70 đạt · 1 hỏng   thu_KHUI5c.js  51 đạt · 1 hỏng   thu_KHUI3a.js  42 đạt · 1 hỏng (ca nằm NGOÀI phần trình duyệt)   thu_KHUI5b.js  74 đạt · 1 hỏng
+thu_KHXEM1.js: cùng khuôn; không chạy bản `\b` vì người gác chặn tệp có cụm khoá bí mật chưa commit.
 
 == 4. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
-thu_KHND3b.js 20 đạt · 0 hỏng · thu_KHND3a.js 73 · 0 · thu_KHXEM1.js 61 · 0 · thu_KHUI5e.js 71 · 0 · thu_KHUI5c.js 52 · 0 · thu_KHUI3a.js 43 · 0 · thu_KHUI5b.js 75 · 0
+thu_KHND3b.js 20 đạt · 0 hỏng · thu_KHND3a.js 73 · 0 · thu_KHXEM1.js 62 · 0 · thu_KHUI5e.js 72 · 0 · thu_KHUI5c.js 53 · 0 · thu_KHUI3a.js 44 · 0 · thu_KHUI5b.js 76 · 0
 
 SỐ CA cong_cu/thu_KHND3b.js: 20
 SỐ CA cong_cu/thu_KHND3a.js: 73
-SỐ CA cong_cu/thu_KHXEM1.js: 61
-SỐ CA cong_cu/thu_KHUI5e.js: 71
-SỐ CA cong_cu/thu_KHUI5c.js: 52
-SỐ CA cong_cu/thu_KHUI3a.js: 43
-SỐ CA cong_cu/thu_KHUI5b.js: 75
+SỐ CA cong_cu/thu_KHXEM1.js: 62
+SỐ CA cong_cu/thu_KHUI5e.js: 72
+SỐ CA cong_cu/thu_KHUI5c.js: 53
+SỐ CA cong_cu/thu_KHUI3a.js: 44
+SỐ CA cong_cu/thu_KHUI5b.js: 76
