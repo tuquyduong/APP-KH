@@ -1,0 +1,38 @@
+KH-UI-5g — bằng chứng ĐỎ trên code gốc (commit 306dff3 = "PHIEU: KH-UI-5g"), rồi XANH sau khi sửa.
+Cách làm: `git archive 306dff3` vào thư mục nháp, chép bài thử mới + 7 bài cũ đã sửa (E2) vào đó, chạy ở đó (node_modules dùng chung), luôn với KHONG_TRINH_DUYET=1 (đúng số ca GitHub đếm).
+
+== 1. Bài MỚI cong_cu/thu_KHUI5g.js — trên code GỐC
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5g.js
+5 đạt · 25 hỏng
+(đỏ: chưa có tachBieuTuong; chonQuangCao gốc chỉ trả { chu, dich, maMon } và trả null khi không có gì; loiChao gốc gọi "anh Anh Linh" / "chị Nguyễn Thị Linh";
+ chưa có src/components/anhSangLuot.js; DaiQuangCao chưa có gl-a / gl-t / gl-b; dải còn 38px, 3.5s; Trang chủ còn hero-banner và khoá home.bk/bh/bb/banner;
+ chưa có khoá qc.* trong khungChung.js. 5 ca xanh là ca KHÔNG phụ thuộc thay đổi: "chỉ MỘT chỗ đặt --ox", danh mục hợp lệ, K9, CSS demo còn nguyên, "không xưng hô → tên đủ".)
+
+== 2. Bài CŨ đã sửa theo E2 (hành vi đổi có chủ đích) — mỗi bài ≥ 1 ca ĐỎ trên code gốc
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHSINH1.js   → 20 đạt · 4 hỏng   (lời chào: "anh P", "chị Linh", "chị linh", chiaLoiChao.ten = chữ cuối)
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI3b.js    → 55 đạt · 2 hỏng   (C1/C2 "chị Linh")
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI3d.js    → 33 đạt · 1 hỏng   (A2 "chị linh")
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHNHANH1.js  → 82 đạt · 1 hỏng   (D3 chiaLoiChao.ten = "Linh")
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHND3a.js    → 66 đạt · 2 hỏng   (today.cta thay home.bb; hero-banner/home.b* đã bỏ; today.t mặc định)
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js    → 74 đạt · 1 hỏng   (BannerHomNay nhận qc, không còn tieuDe/phu/nut rời)
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5d.js    → 30 đạt · 1 hỏng   (BannerHomNay qc={quangCao}; today.cta mặc định "Xem Menu ›")
+
+== 3. XANH sau khi sửa (cùng lệnh, KHONG_TRINH_DUYET=1; đếm bằng dòng cuối "n đạt · 0 hỏng")
+cong_cu/thu_KHUI5g.js: 30 đạt · 0 hỏng
+cong_cu/thu_KHSINH1.js: 24 đạt · 0 hỏng
+cong_cu/thu_KHUI3b.js: 57 đạt · 0 hỏng
+cong_cu/thu_KHUI3d.js: 34 đạt · 0 hỏng
+cong_cu/thu_KHNHANH1.js: 83 đạt · 0 hỏng
+cong_cu/thu_KHND3a.js: 68 đạt · 0 hỏng
+cong_cu/thu_KHUI5b.js: 75 đạt · 0 hỏng
+cong_cu/thu_KHUI5d.js: 31 đạt · 0 hỏng
+(Có trình duyệt, ở máy: thu_KHUI5g.js 53 đạt · 0 hỏng.)
+
+SỐ CA cong_cu/thu_KHUI5g.js: 30
+SỐ CA cong_cu/thu_KHSINH1.js: 24
+SỐ CA cong_cu/thu_KHUI3b.js: 57
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+SỐ CA cong_cu/thu_KHNHANH1.js: 83
+SỐ CA cong_cu/thu_KHND3a.js: 68
+SỐ CA cong_cu/thu_KHUI5b.js: 75
+SỐ CA cong_cu/thu_KHUI5d.js: 31
