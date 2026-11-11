@@ -57,3 +57,7 @@
 
 ## Cổng
 - `node tu_chay/cong.js tinh . fe752c3^ HEAD viec/KH-ND-3e` (HEAD 851fd32): chỉ `✗ [A19]` (chưa có dòng HEAD ĐÃ KIỂM — bình thường trước bước này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . fe752c3^ HEAD viec/KH-ND-3e` (HEAD 1d0118a): ✓ CỔNG CHẠY ĐẠT.
+- Sau lần kiểm này không đổi file ngoài `viec/KH-ND-3e/`.
+
+HEAD ĐÃ KIỂM: 1d0118a
