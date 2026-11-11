@@ -227,10 +227,10 @@ async function trinhDuyet(pw) {
     await chup(t, 'trangchu_linh-p_390');
   });
   for (const rong of [360, 390, 430]) {
-    await ca(`chao-dai-${rong}`, { rong, pos: { khach: { ten: TEN_DAI, xung_ho: 'chi' } } }, async (t) => {
+    await ca(`chao-dai-${rong}`, { rong, pos: { khach: { ten: TEN_DAI, xung_ho: null } } }, async (t) => {
       await mo(t, '/trangchu');
       const h = await chu(t, '#home h1');
-      k(`B1 [${rong}] tên dài hiện đủ trong lời chào`, h.replace(/\s+/g, ' ').includes(TEN_DAI), h);
+      k(`B1 [${rong}] tên dài hiện đủ trong lời chào (KH-UI-5g: chỉ khi khách chưa chọn xưng hô; có xưng hô thì gọi chữ cuối)`, h.replace(/\s+/g, ' ').includes(TEN_DAI), h);
       k(`B2 [${rong}] tên dài không làm tràn ngang / vỡ dòng chào`, await khongTran(t) && await t.evaluate(() => { const e = document.querySelector('#home h1'); return e.scrollWidth <= e.clientWidth + 1 || getComputedStyle(e).overflow !== 'visible' || e.getBoundingClientRect().right <= window.innerWidth + 1; }));
       await chup(t, `trangchu_ten-dai_${rong}`);
     });

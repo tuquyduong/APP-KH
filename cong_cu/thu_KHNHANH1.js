@@ -502,7 +502,7 @@ async function trinhDuyet(pw) {
     await t.locator('#profile .pf-chips button', { hasText: 'cô' }).click(); await yen(t, S);
     k('D3 lưu xưng hô → PUT /toi, không GET /toi lại', dem(S, '/toi', 'PUT') === 1 && dem(S, '/toi') === n0, `${n0} → ${dem(S, '/toi')}`);
     await sang(t, '/trangchu'); await yen(t, S);
-    k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Nguyễn Linh!/.test(await chu(t, '#home h1')), await chu(t, '#home h1'));
+    k('D3 Trang chủ chào theo xưng hô vừa lưu', /cô Linh!/.test(await chu(t, '#home h1')), await chu(t, '#home h1'));
   });
   }));
 

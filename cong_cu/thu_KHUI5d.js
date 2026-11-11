@@ -139,7 +139,7 @@ async function trinhDuyet(pw) {
   await ca('dai', {}, async (t, loi) => {
     await mo(t, '/menu'); await dai(t).waitFor();
     const x = await t.evaluate(() => { const e = document.querySelector('.dai-qc'), r = e.getBoundingClientRect(), cs = getComputedStyle(e); return { h: r.height, bk: cs.borderTopLeftRadius, nen: cs.backgroundImage, ct: e.innerText, pos: cs.position, truoc: getComputedStyle(e, '::before').content, mo: e.getAttribute('role') }; });
-    k('A1 dải Menu: cao 38 ± 2, bo góc 12px, nền gradient, nhãn "HÔM NAY", câu một dòng, "Xem ›"', Math.abs(x.h - 38) <= 2 && x.bk === '12px' && /gradient/.test(x.nen) && /HÔM NAY/.test(x.ct) && /Giờ vàng: giảm 30% đến 10:00/.test(x.ct) && /Xem ›/.test(x.ct) && x.ct.trim().split('\n').filter(Boolean).length <= 3, JSON.stringify(x));
+    k('A1 dải Menu: cao 40 ± 1 (KH-UI-5g), bo góc 12px, nền gradient, nhãn "HÔM NAY", biểu tượng riêng, câu một dòng, "Xem ›"', Math.abs(x.h - 40) <= 1 && x.bk === '12px' && /gradient/.test(x.nen) && /HÔM NAY/.test(x.ct) && /Giờ vàng: giảm 30% đến 10:00/.test(x.ct) && /Xem ›/.test(x.ct) && x.ct.trim().split('\n').filter(Boolean).length <= 4, JSON.stringify(x));
     k('A1 vệt sáng lướt chéo (lớp fx-a của banner Trang chủ: ::before có nội dung + animation)', x.truoc !== 'none' && (await dai(t).evaluate((e) => getComputedStyle(e, '::before').animationName)) === 'sweepL');
     for (const p of ['/uudai', '/giohang', '/kehoach', '/kehoach/theomua', '/taikhoan', '/menu']) {
       await di(t, p); await t.waitForTimeout(60);
@@ -168,7 +168,7 @@ async function trinhDuyet(pw) {
   });
   await ca('chuong-trinh', { gv: GV_TAT, ct: [{ ma: 'c1', ten: 'Quà sinh nhật', mo_ta: 'Tặng 1 ly', loai: 'sinh_nhat', dang_bat: true }] }, async (t) => {
     await mo(t, '/giohang'); await dai(t).waitFor();
-    k('A3 chương trình đặc biệt → "🎁 Quà sinh nhật"', /🎁 Quà sinh nhật/.test(await dai(t).innerText()));
+    k('A3 chương trình đặc biệt → "🎁 Quà sinh nhật"', /🎁\s*Quà sinh nhật/.test(await dai(t).innerText()));
     await dai(t).click();
     k('A5 bấm dải chương trình → mở Ưu đãi', new URL(t.url()).pathname === '/uudai', t.url());
   });

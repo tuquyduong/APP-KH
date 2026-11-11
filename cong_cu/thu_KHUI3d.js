@@ -273,7 +273,7 @@ async function trinhDuyet(pw) {
     await ca(`chao-${rong}`, { rong }, async (t) => {
       await mo(t, '/trangchu');
       const h1 = await chu(t, '#home h1');
-      k(`A1 [${rong}] Trang chủ: giờ POS 20:30 → "Chào buổi tối, chị Nguyễn Linh!"`, h1 === 'Chào buổi tối, chị Nguyễn Linh!', h1);
+      k(`A1 [${rong}] Trang chủ: giờ POS 20:30 → "Chào buổi tối, chị Linh!"`, h1 === 'Chào buổi tối, chị Linh!', h1);
       k(`A1 [${rong}] lời chào không tràn ngang`, await khongTran(t));
       if (rong === 360) await chup(t, 'ung-dung_trang-chu-dau_360');
     });
@@ -288,7 +288,7 @@ async function trinhDuyet(pw) {
   });
   await ca('chao-chua-bay-gio', { gio: 'hỏng', pos: { khach: { xung_ho: 'anh' } } }, async (t) => {
     await mo(t, '/trangchu');
-    k('A1 POS không trả bay_gio → "Chào anh Nguyễn Linh!"', (await chu(t, '#home h1')) === 'Chào anh Nguyễn Linh!', await chu(t, '#home h1'));
+    k('A1 POS không trả bay_gio → "Chào anh Linh!"', (await chu(t, '#home h1')) === 'Chào anh Linh!', await chu(t, '#home h1'));
   });
   await ca('chao-chua-ten', { pos: { khach: { ten: '' } } }, async (t) => {
     await mo(t, '/trangchu');
@@ -303,12 +303,12 @@ async function trinhDuyet(pw) {
         const chips = await t.locator('.pf-chips button').allInnerTexts();
         k(`A3 [${nhan}] 7 nút xưng hô viết chữ thường như demo`, chips.join(' · ') === 'anh · chị · cô · chú · bác · em · bạn', chips.join(' · '));
         const pv = await chu(t, '.pf-prev');
-        k(`A4 [${nhan}] xem trước “Chào buổi tối, chị Nguyễn Linh!”, xưng hô in đậm`, /Chào buổi tối,\s*chị\s*Nguyễn Linh!/.test(pv) && (await chu(t, '.pf-prev b')) === 'chị', pv);
+        k(`A4 [${nhan}] xem trước “Chào buổi tối, chị Linh!”, xưng hô in đậm`, /Chào buổi tối,\s*chị\s*Linh!/.test(pv) && (await chu(t, '.pf-prev b')) === 'chị', pv);
         k(`A4 [${nhan}] không tràn ngang`, await khongTran(t));
         if (rong === 360 && cs === '100%') await chup(t, 'ung-dung_thong-tin-ca-nhan_360');
         if (rong === 390 && cs === '100%') {
           await t.locator('.pf-chips button', { hasText: 'anh' }).click(); await t.waitForSelector('.save-ok');
-          k('A4 chọn "anh" → xem trước “… anh Nguyễn Linh!” ngay', /anh\s*Nguyễn Linh!/.test(await chu(t, '.pf-prev')));
+          k('A4 chọn "anh" → xem trước “… anh Linh!” ngay', /anh\s*Linh!/.test(await chu(t, '.pf-prev')));
         }
       });
     }
