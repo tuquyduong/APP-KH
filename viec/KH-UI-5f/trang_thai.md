@@ -82,7 +82,7 @@ Kết quả: **24 / 24 đột biến bị bắt** (22 bắt được cả khi `K
 - E2 dòng gọn "Tín chủ: … · Địa chỉ: …  Sửa ›": Chromium "E2 đầu bài…", "E2 bấm Sửa ›"; thu_KHUI5e "C2 một dịp (E2…)".
 - E3 chỗ trống "(chạm để điền …)", chạm chỗ tô màu → đúng ô, nhắc nhẹ khi thiếu: thuần "E3 dienBai…"; Chromium "E3 chạm chỗ tô màu Địa chỉ → mở đúng ô", "E3 sửa Địa chỉ trong bảng", "E3 tài khoản chưa có địa chỉ…", "E3 điền xong…".
 - E4 dòng gợi ý dưới Lễ vật, không nút đặt hàng: Chromium "E4 dưới Lễ vật…".
-- F1 bài mới `thu_KHUI5f.js`: 85 ca (KHONG_TRINH_DUYET=1) / 177 ca (có Chromium).
+- F1 bài mới `thu_KHUI5f.js`: 86 ca (KHONG_TRINH_DUYET=1) / 182 ca (có Chromium).
 - F2 bài cũ sửa đúng ca, mỗi bài ≥ 1 ca ĐỎ trên gốc, không thêm `## Bài thử cũ sửa`, không bớt ca: thu_KHUI5e (6 ca sửa + 3 ca Chromium, 71 → 71 / 120 → 120), thu_KHUI5b (1 ca sửa, 75 → 75) — xem `bang_chung_do.txt`.
 - F3 ảnh 360 / 390 / 430 + `doi_chieu_demo.md`: `so_anh/` (13 màn × 3 cỡ × demo / app / lệch; màn riêng app: chuky_hoi_ma), `chup_anh.js`.
 - F4 sửa được ở /admin: mục trên; `npm test` / `--day-du` / cổng: xem mục "Cổng" dưới.
@@ -90,8 +90,32 @@ Kết quả: **24 / 24 đột biến bị bắt** (22 bắt được cả khi `K
 - F6 chủ quán thử tay: xem BÁO CÁO · CHƯA KIỂM.
 
 ## Cổng (trước `/ra-soat`)
-- `npm test` (có Chromium): 45 đạt · 0 hỏng. Trong đó thu_KHUI5f 180 ca (Chromium) / 85 ca (`KHONG_TRINH_DUYET=1`), thu_KHUI5e 120 / 71, thu_KHUI5b 75, các bài 5c / 5d / MUA… không đổi và xanh.
+- `npm test` (có Chromium): 45 đạt · 0 hỏng. Trong đó thu_KHUI5f 182 ca (Chromium) / 86 ca (`KHONG_TRINH_DUYET=1`), thu_KHUI5e 120 / 71, thu_KHUI5b 75, các bài 5c / 5d / MUA… không đổi và xanh.
 - `node kiem_tra_truoc_khi_giao.js --day-du`: 47 đạt · 0 hỏng (K9 màu / phông, K10 chữ cứng, vite build) — chạy lại sau commit cuối ở dưới.
 - `node tu_chay/cong.js tinh . 64757e0^ HEAD viec/KH-UI-5f`: ✓ (chỉ còn A19 chờ dòng `HEAD ĐÃ KIỂM`, đã ghi cuối tệp).
-- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 64757e0^ HEAD viec/KH-UI-5f`: ✓ CỔNG CHẠY ĐẠT (một CẢNH BÁO A16 "thu_KHUI5f.js chạy trên gốc in 1 ca ≠ 85" — bình thường: bài mới đổ ngay ở ca đầu trên gốc vì chưa có mục danh mục `xe.macdinh`).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 64757e0^ HEAD viec/KH-UI-5f`: ✓ CỔNG CHẠY ĐẠT (một CẢNH BÁO A16 "thu_KHUI5f.js chạy trên gốc in 1 ca ≠ 86" — bình thường: bài mới đổ ngay ở ca đầu trên gốc vì chưa có mục danh mục `xe.macdinh`).
 HEAD ĐÃ KIỂM: e5526be
+
+## Soát độc lập `/ra-soat` (vòng 1) — KHÔNG ĐẠT, đã sửa
+Báo cáo (tóm, agent độc lập): bài thử có giá trị (đỏ trên gốc; kiểm vắng mặt tên thuốc / chữ kinh / mã gốc); không sửa file ngoài Phạm vi; không chỗ rò dữ liệu sức khoẻ ra mạng / log; nghiệm thu 24/27 (thiếu D2 một phần, F5 chỉ giả lập, F6 chờ chủ quán).
+- LỖI 1 (D2): nút "Xem" của dải nhắc (`DaiNhacViec.jsx`) và thanh nhắc đầu Kế hoạch (`KeHoach.jsx`) mở bảng ngày (trống với việc ảo thuốc / xe / chu kỳ) thay vì đúng tiện ích → ĐÃ SỬA: `tienIchCuaNhac` ở `dungKeHoach.js`, dải + thanh mở `/kehoach/uongthuoc|xeco|chuky`; ca mới thuần "D2 việc ảo… → đúng tiện ích" + Chromium "D2 bấm Xem ở dải nhắc thuốc → mở đúng Uống thuốc"; SỐ CA 85 → 86.
+- LỖI 2: import thừa `thuocConHan` ở `kehoach.js` → đã bỏ.
+- Nghi ngờ ghi nhận (không sửa): `upList` không lọc theo cờ nhắc của thuốc / xe (phiếu không nêu; Sắp tới là danh sách việc, không phải lời nhắc); khoá mã 4 số chỉ là khoá màn hình — dữ liệu chu kỳ nằm chung `kh_kehoach`, ai đọc được bộ nhớ trình duyệt thì thử được 10^4 mã (phiếu C3 yêu cầu đúng như vậy; chữ `chuky.khoaPhu` sửa được ở /admin nếu chủ quán muốn nói nhẹ hơn); `khoa` lưu hỏng → Chu kỳ mở không cần mã; không có ca bắt request mạng trong Chromium (grep: 3 màn mới + `kehoach*.js` không import `api.js`, không `fetch(`).
+
+## BÁO CÁO 7 MỤC
+1. **VIỆC** KH-UI-5f: Xe cộ · Uống thuốc · Chu kỳ (khoá mã riêng) + Văn khấn điền sẵn Tín chủ / Họ / Địa chỉ; gắn vào lưới, Sắp tới, dải / thanh nhắc.
+2. **ĐÃ SỬA** `kehoachLap.js` (hàm thuần xe / thuốc / chu kỳ, khoá mã, chữ trạng thái), `kehoach.js` (kho `xe` / `thuoc` / `thuocXong` / `chuKy`, `upList`, `bangCoNhac`, `chuThich`, `thongTinVk`), `XeCo.jsx` · `UongThuoc.jsx` · `ChuKy.jsx` (mới), `VanKhanMan.jsx`, `vanKhan.js`, `TienIch.jsx`, `KeHoach.jsx`, `DaiNhacViec.jsx`, `dungKeHoach.js`, `duongDan.js`, `giaoDien/tien_ich.css`, `noiDung/nd/tienIch.js` (214 khoá). ≈ 1000 dòng app (phiếu ~900 → 1,1×), bài thử ≈ 520 dòng.
+3. **BÀI THỬ** thu_KHUI5f mới 86 / 182 ca; sửa thu_KHUI5e (71 / 120), thu_KHUI5b (75); 24 / 24 đột biến bị bắt; `npm test` 45 đạt · 0 hỏng (có Chromium), `--day-du` 47 đạt.
+4. **ĐÃ RÀ K4** mọi nơi gọi `upList` / `bangCoNhac` / `chuThich` / `dienBai` / `ghiKeHoach` (grep): đã đồng bộ tham số `xung` / `hoSo`; nơi mở từ dải / thanh nhắc (sửa sau soát); `luuMay.js` không cần sửa.
+5. **CHƯA KIỂM** thử tay trên điện thoại / Zalo thật (F5 chỉ giả lập User-Agent, F6); địa chỉ mặc định Văn khấn khi mới mở app ngoại tuyến (tóm tắt tài khoản không lưu `dia_chi` → để trống, không bịa); ≥ 1024 px (chưa có mẫu màn to); cổng `chay` chạy với `KHONG_TRINH_DUYET=1` (phần Chromium chạy ở máy làm việc, đã xanh).
+6. **GIT** nhánh `viec/KH-UI-5f`, đã push; không merge, không PR.
+7. **BÀI HỌC** xem mục dưới.
+
+## Bài học
+- KHOÁ (đã làm): ca "D2 bấm Xem ở dải nhắc → đúng tiện ích" + hàm `tienIchCuaNhac` có ca thuần. Nghiệm thu dạng "bấm một dòng mở đúng chỗ" phải có ca riêng cho TỪNG cửa vào (Sắp tới, dải nhắc, thanh nhắc) — gặp ở soát vòng 1.
+- NGUYÊN TẮC (đề xuất, ngoài Phạm vi `KHUON_LOI.md`): việc ảo "chỉ để tính nhắc" đi qua nhiều đường (chuông lịch, dải, thanh, bảng ngày) → mỗi lần thêm loại việc ảo phải grep "ai dùng `bangCoNhac`, rồi mở cái gì" và cờ `rieng` cho dữ liệu riêng tư.
+- NGUYÊN TẮC (đề xuất): người gác chặn lệnh ghép "heredoc + chạy script", `sed -i`, `git add <thư mục>`, chữ về biến môi trường trong script / lệnh → tách lệnh, dùng Edit, liệt kê từng file (mất thời gian với ảnh so sánh 117 tệp).
+- BỎ: số ca lệch giữa các dòng trang_thai (177 / 180) — lỗi chép tay một lần.
+- Dọn `KHUON_LOI.md`: không đề xuất xoá mục nào.
+
+HEAD ĐÃ KIỂM: 4d458b9
