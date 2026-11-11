@@ -122,7 +122,7 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   k('B3 thanh nhắc lúc 09:00: "… Đến giờ uống thuốc (09:00)" — không tên thuốc', (() => { const r = LP.nhacDangCo(nhacB, '2026-11-10T09:00:00', HN); return r.some((x) => x.chu.includes('Đến giờ uống thuốc (09:00)')) && !r.some((x) => x.chu.includes('Hoàng Kỳ')); })());
   k('C4 xưng hô "anh" → không nhắc chu kỳ; tắt nhắc → không; đã uống giờ đó → hết nhắc thuốc; tắt nhắc thuốc → hết', !KH.bangCoNhac(bRieng, HN, 'anh').viec.some((v) => v.id === 'ck') && !KH.bangCoNhac(KH.doiNhacChuKy(bRieng), HN, 'chi').viec.some((v) => v.id === 'ck') && !KH.bangCoNhac(KH.doiUong(bRieng, 'ta', '09:00', NAY), HN, 'chi').viec.some((v) => v.id === 'th:09:00') && !KH.bangCoNhac(KH.doiNhacThuoc(bRieng, 'ta'), HN, 'chi').viec.some((v) => v.id === 'th:09:00'));
   const up = (bb, x) => KH.upList(HN, bb, x);
-  k('C4 Sắp tới: KHÔNG khoá → "Kỳ kinh dự kiến" · "Chu kỳ 28 ngày"; khoá → "Lời nhắc riêng tư" (không chữ kinh / chu kỳ)', (() => { const a = up(bRieng, 'chi').find((e) => e.di === 'chuky'), kb = up(KH.datKhoaChuKy(bRieng, kh1), 'chi').find((e) => e.di === 'chuky'); return a.t === 'Kỳ kinh dự kiến' && a.s === 'Chu kỳ 28 ngày' && a.j === hn + 2 && kb.t === 'Lời nhắc riêng tư' && !/kinh|chu kỳ/i.test(kb.t + kb.s); })());
+  k('C4 Sắp tới: KHÔNG khoá → "Kỳ kinh dự kiến" · "Chu kỳ 28 ngày"; khoá → "Lời nhắc riêng tư" (không chữ kinh / chu kỳ)', (() => { const a = up(bRieng, 'chi').find((e) => e.di === 'chuky'), kb = up(KH.datKhoaChuKy(bRieng, kh1), 'chi').find((e) => e.di === 'chuky'); return a.t === 'Kỳ kinh dự kiến' && a.s === 'Chu kỳ 28 ngày' && a.j === hn + 2 && kb.t === 'Lời nhắc riêng tư' && !/kinh|chu kỳ/i.test(kb.t + kb.s + kb.k) && kb.k === 'Riêng tư'; })());
   k('C4 Sắp tới: xưng hô "anh" hoặc kỳ tới ngoài 30 ngày → không có dòng Chu kỳ', !up(bRieng, 'anh').some((e) => e.di === 'chuky') && !up({ ...bRieng, chuKy: ck({ bd: NAY, dai: 40 }) }, 'chi').some((e) => e.di === 'chuky'));
   k('D2 Sắp tới: giờ uống thuốc hôm nay chưa uống (không tên thuốc); đã uống thì hết; nhãn Thuốc', (() => { const t = up(bRieng, 'chi').filter((e) => e.di === 'thuoc'); return t.length === 1 && t[0].t === 'Đến giờ uống thuốc' && t[0].s === '09:00' && t[0].k === 'Thuốc' && !JSON.stringify(t).includes('Hoàng Kỳ') && up(KH.doiUong(bRieng, 'ta', '09:00', NAY), 'chi').filter((e) => e.di === 'thuoc').length === 0; })());
   const bXe = { ...trong(), xe: [xeMay(12200, [lan(-20, 10800)], [{ ten: 'Đăng kiểm', ngay: ngay(20) }, { ten: 'Bảo hiểm', ngay: ngay(45) }, { ten: 'Cà vẹt', ngay: '' }])] };
@@ -179,10 +179,288 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   let pw = null;
   if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } } // CLAUDE.md §9
   if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này (hoặc KHONG_TRINH_DUYET=1) — các ca trình duyệt CHƯA chạy');
-  else await trinhDuyet(pw, { LP, LM });
+  else await trinhDuyet(pw, { LP, LM, KH });
 
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
-async function trinhDuyet() { /* điền ở bước sau */ }
+
+async function trinhDuyet(pw, { LP, LM, KH }) {
+  const esbuild = require('esbuild');
+  const kq = esbuild.buildSync({
+    entryPoints: [path.join(GOC, 'src/main.jsx')], bundle: true, write: false, outdir: path.join(GOC, '.nhap_thu'), format: 'iife', jsx: 'automatic', logLevel: 'silent', external: ['/anh/*', '/fonts/*'],
+    loader: { '.json': 'json', '.svg': 'dataurl', '.webp': 'dataurl', '.png': 'dataurl', '.woff2': 'dataurl' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
+  }).outputFiles;
+  const goi = kq.find((f) => f.path.endsWith('.js')).text, css = (kq.find((f) => f.path.endsWith('.css')) || { text: '' }).text;
+  const html = doc('index.html').replace(/<script type="module" src="\/src\/main.jsx"><\/script>/, '<script src="/bundle.js"></script>').replace(/<link[^>]*(googleapis|gstatic|preload)[^>]*>/g, '').replace('</head>', '<link rel="stylesheet" href="/bundle.css"></head>');
+  const SDT = '0901234567', GOC_URL = 'http://localhost:4599' /* localhost = ngữ cảnh an toàn: crypto.subtle (băm mã khoá) chạy được như ở https thật */, MOC_GIO = '2026-11-10T02:00:00Z'; // = 09:00 ngày 10.11.2026 giờ VN
+  const HN = { d: 10, m: 11, y: 2026 }, hn = LP.jd(HN), ngay = (j) => LP.chuoiJd(hn + j), NAY = ngay(0);
+  const trinh = await pw.chromium.launch();
+
+  async function ca(ten, { rong = 390, luu = {}, xung = 'chi', khach = {}, ua } = {}, chay) {
+    const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, ...(ua ? { userAgent: ua } : {}) });
+    const t = await ctx.newPage(), loi = [];
+    t.on('pageerror', (e) => loi.push(e.message));
+    await t.addInitScript(({ luu }) => { if (!sessionStorage.getItem('da_gieo')) { sessionStorage.setItem('da_gieo', '1'); for (const [x, v] of Object.entries(luu)) localStorage.setItem(x, v); } }, { luu: { kh_token: 'tok-' + SDT, kh_chu: LM.dauVet(SDT), ...luu } });
+    await t.clock.install({ time: new Date(MOC_GIO) });
+    await t.route(`${GOC_URL}/**`, async (r) => {
+      const p = new URL(r.request().url()).pathname, json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) });
+      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goi });
+      if (p === '/bundle.css') return r.fulfill({ contentType: 'text/css', body: css });
+      if (!p.startsWith('/api/kh')) return /\.[a-z0-9]+$/.test(p) ? r.fulfill({ status: 204, body: '' }) : r.fulfill({ contentType: 'text/html', body: html });
+      if (p === '/api/kh/toi') return json(200, { khach: { sdt: SDT, ten: 'Khách thử', xung_ho: xung, ngay_tao: '2026-01-01 00:00:00', qr: 'QR', dia_chi: null, ...khach } });
+      if (p === '/api/kh/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
+      if (p === '/api/kh/chuong-trinh') return json(200, { success: true, data: [] });
+      return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
+    });
+    try { await chay(t, loi); } finally { await ctx.close(); }
+  }
+  const mo = async (t, duong) => { await t.goto(GOC_URL + duong); await t.waitForSelector('.phone'); };
+  const duong = (t) => new URL(t.url()).pathname;
+  const luuTho = async (t) => JSON.parse(await t.evaluate(() => localStorage.getItem('kh_kehoach') || '{}'));
+  const thanTrong = (t) => t.locator('#toolBody');
+  const bang1 = (t) => t.locator('[role=dialog]');
+  const toast = (t) => t.locator('.toast');
+  const tran = (t) => t.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+
+  await ca('luoi', {}, async (t, loi) => {
+    await mo(t, '/kehoach'); await t.locator('#toolGrid').waitFor();
+    k('D1 lưới 6 ô: chữ nhỏ ba ô mới thành thật — "Thêm xe" · "Thêm thuốc" · "Bật" (không còn "Sắp có")', bang(await t.locator('#toolGrid .tl small').allInnerTexts(), ['Mùa Đông', 'Rằm · 13 ng', 'Nhà giáo Việt Nam · 10 ng', 'Thêm xe', 'Thêm thuốc', 'Bật']), JSON.stringify(await t.locator('#toolGrid .tl small').allInnerTexts()));
+    await t.locator('#toolGrid .tl', { hasText: 'Xe cộ' }).click(); await t.waitForURL('**/kehoach/xeco');
+    k('D1 bấm ô Xe cộ → /kehoach/xeco', duong(t) === '/kehoach/xeco' && (await t.locator('h1').first().innerText()) === 'Xe cộ');
+    await t.goBack(); await t.locator('#toolGrid').waitFor();
+    await t.locator('#toolGrid .tl', { hasText: 'Uống thuốc' }).click(); await t.waitForURL('**/kehoach/uongthuoc');
+    await t.goBack(); await t.locator('#toolGrid').waitFor();
+    await t.locator('#toolGrid .tl', { hasText: 'Chu kỳ' }).click(); await t.waitForURL('**/kehoach/chuky');
+    k('D1 Uống thuốc → /kehoach/uongthuoc, Chu kỳ → /kehoach/chuky; Back về /kehoach đúng', (await t.locator('h1').first().innerText()) === 'Chu kỳ');
+    await t.goBack(); await t.locator('#toolGrid').waitFor();
+    k('D1 Back từ Chu kỳ → về Kế hoạch (không thoát app)', duong(t) === '/kehoach');
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  await ca('xe', {}, async (t, loi) => {
+    await mo(t, '/kehoach/xeco'); await thanTrong(t).waitFor();
+    k('A1 chưa có xe: lời mời thêm xe (không xe mẫu), nút "＋ Thêm xe"', (await thanTrong(t).innerText()).includes('Chưa có xe nào') && (await t.locator('.today-btn', { hasText: '＋ Thêm xe' }).count()) === 1);
+    await t.locator('.today-btn', { hasText: '＋ Thêm xe' }).click(); await bang1(t).waitFor();
+    const mauNote = await bang1(t).locator('.tl-note').innerText();
+    k('A2 bảng Thêm xe: 4 loại (Xe máy · Ô tô · Xe đạp điện · Khác), lịch mẫu của Xe máy hiện sẵn', bang(await bang1(t).locator('.pf-chips button').allInnerTexts(), ['Xe máy', 'Ô tô', 'Xe đạp điện', 'Khác']) && mauNote.includes('Thay dầu máy (mỗi 1.500 km hoặc mỗi 2 tháng)') && mauNote.includes('Bảo hiểm bắt buộc'), mauNote);
+    await bang1(t).getByRole('button', { name: 'Thêm xe', exact: true }).click();
+    k('A2 chưa nhập tên → báo "Nhập tên gọi trước nhé", bảng vẫn mở, chưa lưu', (await toast(t).innerText()).includes('Nhập tên gọi trước nhé') && (await bang1(t).count()) === 1 && !(await luuTho(t)).xe);
+    await bang1(t).getByLabel('Tên gọi').fill('Honda Lead'); await bang1(t).getByLabel('Biển số (không bắt buộc)').fill('29X1-123.45'); await bang1(t).getByLabel('Số km hiện tại').fill('12000');
+    await bang1(t).getByRole('button', { name: 'Thêm xe', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    const luu1 = await luuTho(t);
+    k('A2 lưu → kho kh_kehoach có xe (loại xm, 12000 km, 3 hạng mục mặc định, 1 giấy tờ), mở thẳng màn một xe', luu1.xe.length === 1 && luu1.xe[0].loai === 'xm' && luu1.xe[0].km === 12000 && luu1.xe[0].lich.length === 3 && luu1.xe[0].giayTo.length === 1 && (await t.locator('h1').first().innerText()) === 'Honda Lead');
+    const dau = await thanTrong(t).innerText();
+    k('A3 một xe: ô số km 12000, "Lịch bảo dưỡng", 3 hạng mục "Chưa ghi lần nào", "mỗi 1.500 km hoặc mỗi 2 tháng", giấy tờ chưa nhập ngày, "Lịch sử bảo dưỡng" trống', (await t.getByLabel('Số km hiện tại').inputValue()) === '12000' && dau.includes('Lịch bảo dưỡng') && (dau.match(/Chưa ghi lần nào/g) || []).length === 3 && dau.includes('mỗi 1.500 km hoặc mỗi 2 tháng') && dau.includes('Chưa nhập ngày hết hạn') && dau.includes('Chưa có lần sửa nào'));
+    await t.locator('.sch', { hasText: 'Thay dầu máy' }).getByRole('button', { name: '✓ Vừa làm hôm nay' }).click();
+    const sch = await t.locator('.sch', { hasText: 'Thay dầu máy' }).innerText();
+    k('A3 "Vừa làm hôm nay" ở Thay dầu máy → trạng thái đổi "còn 1.500 km hoặc 61 ngày" + thanh tiến độ; lịch sử có 1 dòng 10/11; toast', sch.includes('còn 1.500 km hoặc 61 ngày') && sch.includes('lần cuối 10/11') && (await t.locator('.sch', { hasText: 'Thay dầu máy' }).locator('.car-bar').count()) === 1 && (await thanTrong(t).innerText()).includes('Thay dầu máy') && (await luuTho(t)).xe[0].nhatKy.length === 1 && (await toast(t).innerText()).includes('Đã ghi: Thay dầu máy hôm nay, 12.000 km'), sch);
+    await t.getByLabel('Số km hiện tại').fill('13400'); await t.getByLabel('Số km hiện tại').blur();
+    k('A3 sửa nhanh số km → 13.400 lưu ngay; Thay dầu máy còn 100 km (≤ 150) → sắp tới hạn lên đầu, viền cảnh báo', (await luuTho(t)).xe[0].km === 13400 && (await t.locator('.sch').first().innerText()).includes('Thay dầu máy') && (await t.locator('.sch.soon').count()) === 1 && (await t.locator('.sch').first().innerText()).includes('còn 100 km hoặc'));
+    await t.locator('.today-btn', { hasText: '＋ Ghi lần sửa' }).click(); await bang1(t).waitFor();
+    await bang1(t).getByRole('button', { name: 'Rửa xe', exact: true }).click(); await bang1(t).getByLabel('Chi phí (đ)').fill('50000'); await bang1(t).getByLabel('Nơi làm').fill('Tiệm Ba');
+    await bang1(t).getByLabel('Việc khác, tự điền: VD thay gương, sơn lại yếm').fill('Thay gương'); await bang1(t).getByRole('button', { name: '＋ Thêm', exact: true }).click();
+    await bang1(t).getByRole('button', { name: 'Lưu', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    const nk = (await luuTho(t)).xe[0].nhatKy;
+    k('A3 Ghi lần sửa (ngày hôm nay, km 13.400, chọn "Rửa xe" + tự thêm "Thay gương", chi phí, nơi làm) → lịch sử + tổng chi phí 50.000đ', nk.length === 2 && nk[1].viec.sort().join() === 'Rửa xe,Thay gương' && nk[1].phi === 50000 && nk[1].noi === 'Tiệm Ba' && nk[1].km === 13400 && (await thanTrong(t).innerText()).includes('50.000đ') && (await thanTrong(t).innerText()).includes('Tiệm Ba'));
+    await t.locator('.tl-row', { hasText: 'Bảo hiểm bắt buộc' }).getByRole('button').click(); await bang1(t).waitFor();
+    await bang1(t).getByRole('button', { name: 'Lưu', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    k('A3 giấy tờ: chọn ngày hết hạn (mặc định hôm nay) → "Hết hạn 10/11 · còn 0 ngày", ≤ 30 ngày nên cảnh báo', (await t.locator('.tl-row', { hasText: 'Bảo hiểm bắt buộc' }).innerText()).includes('Hết hạn 10/11 · còn 0 ngày') && (await t.locator('.tl-row small.warn').count()) === 1);
+    await t.locator('.more', { hasText: '＋ Hạng mục' }).click(); await bang1(t).waitFor();
+    await bang1(t).getByRole('button', { name: 'Lưu', exact: true }).click();
+    k('A3 thêm hạng mục: thiếu tên → nhắc; có tên nhưng thiếu km lẫn tháng → nhắc "Điền số km hoặc số tháng"', (await toast(t).innerText()).includes('Nhập tên hạng mục'));
+    await bang1(t).getByLabel('Tên hạng mục').fill('Thay nhông xích'); await bang1(t).getByRole('button', { name: 'Lưu', exact: true }).click();
+    k('A3 thiếu km lẫn tháng → "Điền số km hoặc số tháng", chưa lưu', (await toast(t).innerText()).includes('Điền số km hoặc số tháng') && (await luuTho(t)).xe[0].lich.length === 3);
+    await bang1(t).getByLabel('Số km', { exact: true }).fill('20000'); await bang1(t).getByRole('button', { name: 'Lưu', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    k('A3 lưu hạng mục mới (20.000 km) → 4 hạng mục', (await luuTho(t)).xe[0].lich.length === 4 && (await thanTrong(t).innerText()).includes('Thay nhông xích'));
+    await t.getByText('Xoá xe', { exact: true }).click();
+    k('A2 Xoá xe → hỏi lại một lần ngay tại chỗ, chưa xoá', (await t.locator('.hoi-xoa').innerText()).includes('Xoá xe «Honda Lead»?') && (await luuTho(t)).xe.length === 1);
+    await t.locator('.hoi-xoa').getByRole('button', { name: 'Huỷ', exact: true }).click();
+    await t.locator('.back-btn').click();
+    const ds = await thanTrong(t).innerText();
+    k('A1 quay lại danh sách: xe "Honda Lead", biển số · 13.400 km, trạng thái sắp tới hạn "● Thay dầu máy · còn 100 km…"; ô lưới "1 xe · 1 sắp tới hạn"', ds.includes('Honda Lead') && ds.includes('29X1-123.45 · 13.400 km') && ds.includes('● Thay dầu máy · còn 100 km'), ds);
+    await t.locator('.back-btn').click(); await t.locator('#toolGrid').waitFor();
+    k('D1 ô Xe cộ ở lưới: "1 xe · 1 sắp tới hạn"', (await t.locator('#toolGrid .tl', { hasText: 'Xe cộ' }).locator('small').innerText()) === '1 xe · 1 sắp tới hạn');
+    await t.locator('.up-strip').waitFor();
+    const st = await t.locator('.up-strip').innerText();
+    k('D2 Sắp tới có dòng xe (Thay dầu máy · Honda Lead) và giấy tờ hôm nay; bấm → mở Xe cộ', st.includes('Thay dầu máy · Honda Lead') || (await t.locator('.up-r', { hasText: 'Honda Lead' }).count()) >= 1);
+    await t.locator('.up-r', { hasText: 'Honda Lead' }).first().click(); await t.waitForURL('**/kehoach/xeco');
+    k('D2 bấm dòng xe ở Sắp tới → /kehoach/xeco', duong(t) === '/kehoach/xeco');
+    await t.reload(); await t.waitForSelector('.phone');
+    k('D3 tải lại trang: xe còn nguyên trong danh sách', (await thanTrong(t).innerText()).includes('Honda Lead'));
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  await ca('xeXoa', { luu: { kh_kehoach: JSON.stringify({ v: 1, xe: [{ id: 'a', ten: 'Vios', bien: '', loai: 'oto', km: 100, nhac: true, lich: [], giayTo: [], nhatKy: [] }] }) } }, async (t) => {
+    await mo(t, '/kehoach/xeco'); await t.locator('.veh').first().click();
+    await t.getByText('Xoá xe', { exact: true }).click(); await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();
+    k('A2 xác nhận Xoá → xe biến mất khỏi kho, về danh sách trống', (await luuTho(t)).xe.length === 0 && (await thanTrong(t).innerText()).includes('Chưa có xe nào'));
+  });
+
+  await ca('thuoc', {}, async (t, loi) => {
+    await mo(t, '/kehoach/uongthuoc'); await thanTrong(t).waitFor();
+    k('B1 chưa có thuốc: lời mời, KHÔNG ô tổng "0/0" (không số bịa), ghi chú riêng tư cuối màn', (await thanTrong(t).innerText()).includes('Chưa có thuốc nào') && (await t.locator('.med-sum').count()) === 0 && (await thanTrong(t).innerText()).includes('không ghi tên thuốc'));
+    await t.locator('.today-btn', { hasText: '＋ Thêm' }).click(); await bang1(t).waitFor();
+    await bang1(t).getByRole('button', { name: 'Lưu và nhắc', exact: true }).click();
+    k('B2 thiếu tên → "Nhập tên thuốc trước nhé", bảng vẫn mở', (await toast(t).innerText()).includes('Nhập tên thuốc trước nhé') && (await bang1(t).count()) === 1);
+    await bang1(t).getByLabel('Tên thuốc').fill('Thuốc sắc Hoàng Kỳ'); await bang1(t).getByLabel('Liều mỗi lần').fill('1 chén');
+    await bang1(t).getByText('＋ Thêm giờ').click();
+    await bang1(t).locator('.thuoc-gio').nth(1).getByRole('spinbutton', { name: 'Giờ' }).locator('div', { hasText: /^20$/ }).click();
+    k('B2 bảng thêm thuốc: 2 bánh xe giờ (07:30 và 20:30), "Uống trong" 4 lựa chọn (mặc định 14 ngày)', (await bang1(t).locator('.thuoc-gio').count()) === 2 && bang(await bang1(t).locator('.pf-chips button').allInnerTexts(), ['7 ngày', '14 ngày', '30 ngày', 'Dài ngày']) && (await bang1(t).locator('.pf-chips button.on').innerText()) === '14 ngày');
+    await bang1(t).getByRole('button', { name: 'Lưu và nhắc', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    const l1 = (await luuTho(t)).thuoc;
+    k('B2 lưu → kho có thuốc: giờ 07:30 + 20:30, đến hôm nay + 13 ngày (14 ngày), liều "1 chén"; toast "nhắc lúc 07:30, 20:30"', l1.length === 1 && bang(l1[0].gio, ['07:30', '20:30']) && l1[0].den === ngay(13) && l1[0].lieu === '1 chén' && (await toast(t).innerText()).includes('nhắc lúc 07:30, 20:30'));
+    k('B1 ô tổng "0/2" "lần uống hôm nay", 7 chấm + chấm hôm nay, mỗi giờ là nút "07:30 Chưa uống"', (await t.locator('.med-sum b').innerText()) === '0/2' && (await t.locator('.med-7 i').count()) === 8 && (await t.locator('.med-times button').allInnerTexts()).join('|').replace(/\s+/g, ' ') === '07:30 Chưa uống|20:30 Chưa uống');
+    await t.locator('.med-times button', { hasText: '07:30' }).click();
+    k('B1 bấm giờ 07:30 → "Đã uống", tổng 1/2, kho ghi dấu; bấm lại → bỏ (0/2)', (await t.locator('.med-sum b').innerText()) === '1/2' && (await t.locator('.med-times button.ok').count()) === 1 && (await luuTho(t)).thuocXong[NAY].length === 1);
+    await t.locator('.med-times button', { hasText: '07:30' }).click();
+    k('B1 bấm lại → bỏ đánh dấu (0/2)', (await t.locator('.med-sum b').innerText()) === '0/2');
+    await t.locator('.med-times button', { hasText: '07:30' }).click();
+    await t.reload(); await t.waitForSelector('.phone');
+    k('D3 tải lại: vẫn 1/2 (dấu đã uống lưu trên máy)', (await t.locator('.med-sum b').innerText()) === '1/2');
+    await t.goto(GOC_URL + '/kehoach'); await t.waitForSelector('.phone');
+    k('D1 ô Uống thuốc ở lưới: "1/2 hôm nay"', (await t.locator('#toolGrid .tl', { hasText: 'Uống thuốc' }).locator('small').innerText()) === '1/2 hôm nay');
+    const sap = await t.locator('.up-strip').innerText();
+    k('D2/B3 Sắp tới: giờ 20:30 còn phải uống hiện "Đến giờ uống thuốc" — KHÔNG tên thuốc', sap.includes('Đến giờ uống thuốc') && !sap.includes('Hoàng Kỳ'), sap);
+    await t.clock.fastForward('11:29:00'); await t.waitForTimeout(100); // tới 20:29 (nhảy xa hơn 3 phút thì dải nhắc bỏ qua mốc cũ — đúng thiết kế)
+    await t.clock.fastForward('00:02:00');
+    await t.locator('.dai-nhac').waitFor({ timeout: 8000 });
+    const banner = await t.locator('.dai-nhac').innerText();
+    k('B3 20:30 dải nhắc mở app chỉ nói "Đến giờ uống thuốc (20:30)" — KHÔNG tên thuốc, KHÔNG liều', banner.includes('Đến giờ uống thuốc (20:30)') && !banner.includes('Hoàng Kỳ') && !banner.includes('chén'), banner);
+    await t.goto(GOC_URL + '/kehoach/uongthuoc'); await t.waitForSelector('.phone');
+    await t.locator('.med-card').getByText('Xoá thuốc này').click();
+    k('B1 xoá thuốc → hỏi lại một lần; Xoá → hết thuốc, dấu đã uống cũng xoá', (await t.locator('.hoi-xoa').innerText()).includes('Xoá thuốc «Thuốc sắc Hoàng Kỳ»?') && (await luuTho(t)).thuoc.length === 1);
+    await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();
+    k('B1 xác nhận Xoá → kho hết thuốc', (await luuTho(t)).thuoc.length === 0 && (await thanTrong(t).innerText()).includes('Chưa có thuốc nào'));
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  const kho = (o) => ({ kh_kehoach: JSON.stringify({ v: 1, ...o }) });
+  await ca('thuocHetHan', { luu: kho({ thuoc: [{ id: 'a', ten: 'Cũ', lieu: '1', ghi: '', gio: ['08:00'], den: ngay(-1), bd: ngay(-10), nhac: true }] }) }, async (t) => {
+    await mo(t, '/kehoach/uongthuoc'); await thanTrong(t).waitFor();
+    const noi = await thanTrong(t).innerText();
+    k('B2 hết đợt uống: thuốc vẫn trong danh sách, ghi "đã xong", không còn nút giờ, xoá được', noi.includes('Cũ') && noi.includes('đã xong') && (await t.locator('.med-times').count()) === 0 && (await t.getByText('Xoá thuốc này').count()) === 1);
+  });
+
+  await ca('chuky', {}, async (t, loi) => {
+    await mo(t, '/kehoach/chuky'); await thanTrong(t).waitFor();
+    k('C1 chưa bật: thẻ giới thiệu + nút "Bắt đầu"; chưa có dữ liệu chu kỳ trong kho', (await thanTrong(t).innerText()).includes('Theo dõi chu kỳ') && (await t.getByRole('button', { name: 'Bắt đầu', exact: true }).count()) === 1 && !(await luuTho(t)).chuKy);
+    await t.getByRole('button', { name: 'Bắt đầu', exact: true }).click(); await bang1(t).waitFor();
+    k('C1 bấm Bắt đầu → hỏi ngày bắt đầu kỳ gần nhất (bánh xe ngày)', (await bang1(t).innerText()).includes('Kỳ kinh gần nhất của bạn bắt đầu ngày nào?'));
+    await bang1(t).getByRole('button', { name: 'Lưu và bắt đầu', exact: true }).click(); await bang1(t).waitFor({ state: 'detached' });
+    const tt = await thanTrong(t).innerText();
+    k('C2 đã bật (bắt đầu hôm nay): "Ngày 1", "Hành kinh", "Kỳ kinh tới (dự kiến)" 7/12 "còn 28 ngày", chữ dưỡng sinh cyc.0 ("Giữ ấm bụng…")', tt.includes('Ngày 1') && tt.includes('Hành kinh') && tt.includes('còn 28 ngày') && tt.includes('Dưỡng sinh lúc này') && tt.includes('Giữ ấm bụng, lưng và bàn chân'), tt);
+    k('C2 dải 28 ô, 1 ô "hôm nay", chú giải 4 giai đoạn, ± độ dài (28 ngày) và hành kinh (5 ngày), "Nhắc trước kỳ 2 ngày", ghi chú tham khảo', (await t.locator('.cyc-strip i').count()) === 28 && (await t.locator('.cyc-strip i.now').count()) === 1 && (await t.locator('.cyc-lg span').count()) === 4 && tt.includes('28 ngày') && tt.includes('5 ngày') && tt.includes('Nhắc trước kỳ 2 ngày') && tt.includes('không dùng để tránh thai') && tt.includes('Chưa có chu kỳ nào được ghi'));
+    await t.locator('.cyc-set > div').first().getByRole('button', { name: '+', exact: true }).click(); await t.locator('.cyc-set > div').nth(1).getByRole('button', { name: '−', exact: true }).click();
+    k('C2 chỉnh + độ dài → 29, − hành kinh → 4; lưu trên máy', (await luuTho(t)).chuKy.dai === 29 && (await luuTho(t)).chuKy.hanh === 4);
+    await t.locator('.cyc-set > div').first().getByRole('button', { name: '−', exact: true }).click();
+    await t.getByRole('button', { name: 'Kỳ kinh bắt đầu hôm nay', exact: true }).click();
+    k('C2 "Kỳ kinh bắt đầu hôm nay" (kỳ vừa bắt đầu hôm nay, 0 ngày) → không ghi vào lịch sử, toast "Đã ghi…"', (await luuTho(t)).chuKy.ls.length === 0 && (await toast(t).innerText()).includes('Đã ghi: kỳ kinh bắt đầu hôm nay'));
+    await t.locator('.switch').click(); await bang1(t).waitFor();
+    for (const c of ['1', '2', '3', '4']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
+    await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click();
+    k('C3 bật "Khoá bằng mã khi mở" → bảng đặt mã 4 số (khác PIN ví), bước 1 xong thì yêu cầu nhập lại', (await bang1(t).innerText()).includes('Nhập lại mã để xác nhận'));
+    for (const c of ['1', '2', '3', '5']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
+    await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click();
+    k('C3 nhập lại sai → báo "Hai lần nhập chưa giống nhau", chưa khoá', (await bang1(t).innerText()).includes('Hai lần nhập chưa giống nhau') && !(await luuTho(t)).chuKy.khoa);
+    for (let lan = 0; lan < 2; lan++) { for (const c of ['1', '2', '3', '4']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click(); }
+    await bang1(t).waitFor({ state: 'detached' });
+    const kt = await luuTho(t);
+    k('C3 đặt xong → khoá bật; kho chỉ có muối + băm SHA-256, KHÔNG có mã gốc; vẫn ở trong màn (không bị khoá ngay)', !!kt.chuKy.khoa && /^[0-9a-f]{64}$/.test(kt.chuKy.khoa.bam) && !JSON.stringify(kt).includes('"1234"') && (await t.locator('.switch.on').count()) === 1);
+    k('D1/C4 ô lưới Chu kỳ khi khoá: "Riêng tư" (không hiện số ngày)', await (async () => { await t.goto(GOC_URL + '/kehoach'); await t.waitForSelector('.phone'); return (await t.locator('#toolGrid .tl', { hasText: 'Chu kỳ' }).locator('small').innerText()) === 'Riêng tư'; })());
+    const sapRieng = await t.locator('.up-strip').innerText();
+    await t.goto(GOC_URL + '/kehoach/saptoi'); await thanTrong(t).waitFor();
+    const sapAll = await thanTrong(t).innerText();
+    k('C4 khoá thì Sắp tới hiện "Lời nhắc riêng tư", KHÔNG "Kỳ kinh dự kiến", không chữ kinh / chu kỳ', sapAll.includes('Lời nhắc riêng tư') && !/Kỳ kinh|chu kỳ/i.test(sapAll + sapRieng), sapAll);
+    await mo(t, '/kehoach/chuky'); await t.locator('.pin-pad').waitFor();
+    k('C3 mở lại Chu kỳ → hỏi mã (không hiện dữ liệu chu kỳ phía sau)', (await thanTrong(t).innerText()).includes('Nhập mã để mở Chu kỳ') && (await t.locator('.cyc-card').count()) === 0);
+    for (const c of ['9', '9', '9', '9']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
+    await t.getByRole('button', { name: 'Xác nhận', exact: true }).click();
+    await t.getByText('Mã chưa đúng · còn 4 lần thử').waitFor();
+    k('C3 mã sai → "Mã chưa đúng · còn 4 lần thử", vẫn khoá', (await t.locator('.cyc-card').count()) === 0);
+    for (const c of ['1', '2', '3', '4']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
+    await t.getByRole('button', { name: 'Xác nhận', exact: true }).click(); await t.locator('.cyc-card').waitFor();
+    k('C3 mã đúng → mở Chu kỳ, "Ngày 1"', (await thanTrong(t).innerText()).includes('Ngày 1'));
+    await mo(t, '/kehoach/chuky'); await t.locator('.pin-pad').waitFor();
+    for (let lan = 0; lan < 5; lan++) { for (const c of ['9', '9', '9', '9']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await t.getByRole('button', { name: 'Xác nhận', exact: true }).click(); await t.waitForTimeout(150); }
+    await t.getByText(/Nhập sai nhiều lần, thử lại sau \d+ giây/).waitFor();
+    k('C3 sai 5 lần → "Nhập sai nhiều lần, thử lại sau N giây", bàn phím bị khoá', (await t.locator('.pin-pad button').first().isDisabled()));
+    await t.reload(); await t.waitForSelector('.phone'); await t.locator('.pin-pad').waitFor();
+    k('C3 tải lại trang vẫn đang chờ (đếm sai lưu trên máy, không lách bằng cách tải lại)', (await t.locator('.pin-pad button').first().isDisabled()));
+    await t.getByText('Quên mã? Xoá dữ liệu chu kỳ để đặt lại').click();
+    k('C3 "Quên mã?" → hỏi lại một lần, chưa xoá', (await t.locator('.hoi-xoa').innerText()).includes('Xoá dữ liệu «chu kỳ»?') && !!(await luuTho(t)).chuKy.bat);
+    await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();
+    k('C3 xác nhận Xoá → dữ liệu chu kỳ xoá thật trên máy (về chưa bật), hiện lại thẻ giới thiệu để đặt lại', !(await luuTho(t)).chuKy.bat && !(await luuTho(t)).chuKy.khoa && (await thanTrong(t).innerText()).includes('Theo dõi chu kỳ'));
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  await ca('chukyTat', { luu: kho({ chuKy: { bat: true, bd: ngay(-28), dai: 28, hanh: 5, ls: [27, 29], nhac: true } }) }, async (t) => {
+    await mo(t, '/kehoach/chuky'); await t.locator('.cyc-card').waitFor();
+    const nd = await thanTrong(t).innerText();
+    k('C2 chu kỳ đã đủ 28 ngày: "Ngày 29" "Chậm kinh"; "2 kỳ" trung bình 28 ngày', nd.includes('Ngày 29') && nd.includes('Chậm kinh') && nd.includes('27 · 29 ngày · trung bình 28 ngày') && nd.includes('đã tới'), nd);
+    await t.getByRole('button', { name: 'Kỳ kinh bắt đầu hôm nay', exact: true }).click();
+    const c = (await luuTho(t)).chuKy;
+    k('C2 "Kỳ kinh bắt đầu hôm nay" → ghi độ dài 28 vào lịch sử, kỳ mới hôm nay (Ngày 1)', bang(c.ls, [27, 29, 28]) && c.bd === NAY && (await thanTrong(t).innerText()).includes('Ngày 1'));
+    await t.getByText('Tắt & xoá dữ liệu chu kỳ').click(); await t.locator('.hoi-xoa').getByRole('button', { name: 'Huỷ', exact: true }).click();
+    k('C2 Tắt & xoá → hỏi lại; Huỷ → còn nguyên', !!(await luuTho(t)).chuKy.bat);
+    await t.getByText('Tắt & xoá dữ liệu chu kỳ').click(); await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();
+    k('C2 xác nhận → xoá thật trên máy', !(await luuTho(t)).chuKy.bat && (await thanTrong(t).innerText()).includes('Theo dõi chu kỳ'));
+  });
+
+  await ca('vankhan', { khach: { ten: 'Nguyễn Văn An', dia_chi: '12 Lê Lợi, Hà Nội' } }, async (t, loi) => {
+    await mo(t, '/kehoach/vankhan'); await t.locator('.vk-khung').waitFor();
+    k('E1 khung "Thông tin gia đình khi khấn" ở đầu danh sách, điền sẵn từ tài khoản: Tín chủ "Nguyễn Văn An", Họ gia tiên "Nguyễn", Địa chỉ "12 Lê Lợi, Hà Nội"', (await t.getByLabel('Tín chủ').inputValue()) === 'Nguyễn Văn An' && (await t.getByLabel('Họ gia tiên').inputValue()) === 'Nguyễn' && (await t.getByLabel('Địa chỉ').inputValue()) === '12 Lê Lợi, Hà Nội' && (await t.locator('.vk-khung').innerText()).includes('Thông tin gia đình khi khấn') && !(await luuTho(t)).vk);
+    await t.getByLabel('Họ gia tiên').fill('Trần');
+    k('E1 khách sửa Họ gia tiên → lưu trên máy (chỉ trường đã sửa), Tín chủ / Địa chỉ vẫn theo tài khoản (chưa lưu)', (await luuTho(t)).vk.ho === 'Trần' && (await luuTho(t)).vk.ten === null && (await luuTho(t)).vk.dc === null);
+    await t.locator('.vk-hero').click(); await t.waitForURL('**/kehoach/vankhan/r');
+    const dong = await t.locator('.vk-dong').innerText();
+    k('E2 đầu bài: dòng gọn "Tín chủ: Nguyễn Văn An · Địa chỉ: 12 Lê Lợi, Hà Nội  Sửa ›"; bài khấn tô màu tên + địa chỉ + họ "Trần"', dong.includes('Tín chủ: Nguyễn Văn An · Địa chỉ: 12 Lê Lợi, Hà Nội') && dong.includes('Sửa ›') && (await t.locator('.vk-txt mark', { hasText: 'Nguyễn Văn An' }).count()) >= 1 && (await t.locator('.vk-txt mark', { hasText: '12 Lê Lợi' }).count()) >= 1 && (await t.locator('.vk-txt mark', { hasText: 'Trần' }).count()) >= 1);
+    k('E4 dưới Lễ vật một dòng gợi ý "Có thể dâng thêm hoa quả, trà tươi", KHÔNG nút đặt hàng', (await t.locator('.vk-goiy').innerText()) === 'Có thể dâng thêm hoa quả, trà tươi' && (await t.getByText(/Đặt hoa quả|Đặt hàng|Mua/).count()) === 0);
+    await t.locator('.vk-txt mark[data-cho="dc"]').first().click(); await bang1(t).waitFor();
+    k('E3 chạm chỗ tô màu Địa chỉ → mở đúng ô nhập Địa chỉ (con trỏ ở ô đó)', (await bang1(t).locator('input:focus').getAttribute('aria-label')) === 'Địa chỉ');
+    await bang1(t).getByLabel('Địa chỉ').fill('5 Hàng Bài'); await bang1(t).locator('.bn-x').click();
+    k('E3 sửa Địa chỉ trong bảng → dòng gọn và bài khấn đổi theo', (await t.locator('.vk-dong').innerText()).includes('Địa chỉ: 5 Hàng Bài') && (await t.locator('.vk-txt mark', { hasText: '5 Hàng Bài' }).count()) >= 1);
+    await t.locator('.vk-dong em').click(); await bang1(t).waitFor();
+    k('E2 bấm "Sửa ›" → bảng sửa Tín chủ / Họ / Địa chỉ', (await bang1(t).locator('input').count()) === 3);
+    await bang1(t).locator('.bn-x').click();
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  await ca('vankhanTrong', {}, async (t) => {
+    await mo(t, '/kehoach/vankhan/r'); await t.locator('.vk-txt').waitFor();
+    const txt = await t.locator('.vk-txt').innerText(), dong = await t.locator('.vk-dong').innerText();
+    k('E3 tài khoản chưa có địa chỉ: chỗ trống hiện "(chạm để điền Địa chỉ)" thay vì để trắng; dòng nhắc nhẹ "Bạn chưa điền Địa chỉ"', txt.includes('(chạm để điền Địa chỉ)') && dong.includes('Địa chỉ: …') && (await t.locator('.tl-note', { hasText: 'Bạn chưa điền Địa chỉ' }).count()) === 1);
+    await t.locator('.vk-txt mark.trong').first().click(); await bang1(t).waitFor();
+    await bang1(t).getByLabel('Địa chỉ').fill('9 Nguyễn Du'); await bang1(t).locator('.bn-x').click();
+    k('E3 điền xong → bài khấn có địa chỉ, hết nhắc; lưu trên máy (không gửi đi)', (await t.locator('.vk-txt').innerText()).includes('9 Nguyễn Du') && (await t.locator('.tl-note', { hasText: 'Bạn chưa điền' }).count()) === 0 && (await luuTho(t)).vk.dc === '9 Nguyễn Du');
+  });
+
+  await ca('sapToi', { luu: kho({ xe: [{ id: 'a', ten: 'Wave', bien: '', loai: 'xm', km: 12200, nhac: true, lich: [{ ten: 'Thay dầu máy', km: 1500, thang: 2 }], giayTo: [{ ten: 'Đăng kiểm', ngay: ngay(5) }], nhatKy: [{ ngay: ngay(-20), km: 10800, viec: ['Thay dầu máy'], phi: 0, noi: '' }] }] }) }, async (t) => {
+    await mo(t, '/kehoach/saptoi'); await thanTrong(t).waitFor();
+    const noi = await thanTrong(t).innerText();
+    k('D2 Sắp tới có hạng mục xe sắp tới hạn + giấy tờ ≤ 30 ngày (nhãn Xe), bấm mở Xe cộ', noi.includes('Thay dầu máy · Wave') && noi.includes('Đăng kiểm · Wave') && noi.includes('còn 100 km') && (await t.locator('.up-tag', { hasText: /^Xe$/ }).count()) === 2);
+    await t.locator('.tl-row', { hasText: 'Đăng kiểm · Wave' }).click(); await t.waitForURL('**/kehoach/xeco');
+    k('D2 bấm dòng xe → /kehoach/xeco', duong(t) === '/kehoach/xeco');
+  });
+
+  await ca('zalo', { ua: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 Zalo/22.11.1' }, async (t, loi) => {
+    await mo(t, '/kehoach/vankhan/r'); await t.locator('.vk-txt').waitFor();
+    k('F5 trình duyệt Zalo: mở thẳng /kehoach/vankhan/r → đúng bài Mùng 1 & Rằm, dòng gọn Tín chủ, bài khấn', duong(t) === '/kehoach/vankhan/r' && (await t.locator('h1').first().innerText()).includes('Mùng 1') && (await t.locator('.vk-dong').count()) === 1);
+    await t.locator('.back-btn').click(); await t.waitForURL('**/kehoach/vankhan');
+    k('F5 nút quay lại (mở thẳng, không lịch sử) → về /kehoach/vankhan, không thoát app', duong(t) === '/kehoach/vankhan' && (await t.locator('.vk-khung').count()) === 1);
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  for (const rong of [360, 430]) {
+    await ca('rong' + rong, { rong, luu: kho({ xe: [{ id: 'a', ten: 'Honda Lead rất dài tên để thử tràn', bien: '29X1-123.45', loai: 'xm', km: 123456, nhac: true, lich: [{ ten: 'Thay dầu máy', km: 1500, thang: 2 }], giayTo: [{ ten: 'Bảo hiểm bắt buộc', ngay: ngay(10) }], nhatKy: [] }], thuoc: [{ id: 't', ten: 'Thuốc sắc Hoàng Kỳ Đảng Sâm', lieu: '1 chén lớn', ghi: 'sau ăn 30 phút', gio: ['07:30', '12:00', '20:30'], den: '', bd: ngay(-3), nhac: true }], chuKy: { bat: true, bd: ngay(-5), dai: 28, hanh: 5, ls: [28], nhac: true } }) }, async (t) => {
+      for (const p of ['/kehoach', '/kehoach/xeco', '/kehoach/uongthuoc', '/kehoach/chuky', '/kehoach/vankhan', '/kehoach/vankhan/r']) {
+        await mo(t, p); await t.waitForTimeout(120);
+        k(`F3 ${rong}px ${p}: trang không cuộn ngang`, (await tran(t)) <= 1, String(await tran(t)));
+      }
+      await mo(t, '/kehoach/xeco'); await t.locator('.veh').first().click(); await t.waitForTimeout(120);
+      k(`F3 ${rong}px một xe: không cuộn ngang`, (await tran(t)) <= 1, String(await tran(t)));
+    });
+  }
+  await trinh.close();
+}

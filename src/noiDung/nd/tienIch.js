@@ -7,7 +7,7 @@ const ds = (khoa, ten, macDinh, truong, khoaCauTruc) => ({ khoa, man: M, ten, lo
 
 export const TIEN_ICH = [
   // ----- chung -----
-  c('ti.luu', 'Nút Lưu (bảng thêm / sửa)', 'Lưu'), c('ti.tagXe', 'Nhãn dòng Sắp tới: xe', 'Xe'), c('ti.tagThuoc', 'Nhãn dòng Sắp tới: thuốc', 'Thuốc'), c('ti.tagChuKy', 'Nhãn dòng Sắp tới: chu kỳ', 'Chu kỳ'),
+  c('ti.luu', 'Nút Lưu (bảng thêm / sửa)', 'Lưu'), c('ti.tagXe', 'Nhãn dòng Sắp tới: xe', 'Xe'), c('ti.tagThuoc', 'Nhãn dòng Sắp tới: thuốc', 'Thuốc'), c('ti.tagChuKy', 'Nhãn dòng Sắp tới: chu kỳ', 'Chu kỳ'), c('ti.tagRieng', 'Nhãn dòng Sắp tới: chu kỳ khi đã khoá (không nêu chu kỳ)', 'Riêng tư'),
   c('ti.chuaSan', 'Báo khi chưa biết khách là ai', 'Đang lấy thông tin tài khoản, thử lại sau ít giây'), c('ti.xoaNgay', 'Nút bỏ ngày', 'Bỏ ngày'),
   c('ti.loiKho', 'Báo lỗi khi máy không cho lưu', 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — chưa lưu được'),
   hien('ocXe', 'ô Xe cộ ở lưới tiện ích'), hien('ocThuoc', 'ô Uống thuốc ở lưới tiện ích'), hien('ocChuKy', 'ô Chu kỳ ở lưới tiện ích (xưng hô anh / chú / bác / ông luôn ẩn)'),

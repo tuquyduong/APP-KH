@@ -143,7 +143,7 @@ export function upList(homNay, bang, xung) {
   gioChuaUong.forEach((g) => out.push({ j: tj, t: nd('thuoc.nhacTieu'), s: g, k: nd('ti.tagThuoc'), di: 'thuoc' }));
   if (bang.chuKy.bat && coChuKy(xung)) { // C4: khoá thì KHÔNG nêu nội dung
     const n = chuKyHomNay(bang.chuKy, tj), khoa = !!bang.chuKy.khoa;
-    if (n.nextJ <= cuoi && n.nextJ >= tj) out.push({ j: n.nextJ, t: nd(khoa ? 'chuky.sapToiRieng' : 'chuky.sapToi'), s: khoa ? '' : nd('chuky.sapToiPhu', { so: bang.chuKy.dai }), k: nd('ti.tagChuKy'), di: 'chuky' });
+    if (n.nextJ <= cuoi && n.nextJ >= tj) out.push({ j: n.nextJ, t: nd(khoa ? 'chuky.sapToiRieng' : 'chuky.sapToi'), s: khoa ? '' : nd('chuky.sapToiPhu', { so: bang.chuKy.dai }), k: nd(khoa ? 'ti.tagRieng' : 'ti.tagChuKy'), di: 'chuky' });
   }
   return out.sort((a, b) => a.j - b.j);
 }
