@@ -37,7 +37,7 @@ export function tachBieuTuong(chu) {
 const tuDong = (r) => {
   const dich = DICH.includes(r.dich) && (r.dich !== 'mon' || r.ma_mon) ? r.dich : '';
   const chu = r.chu_dai.trim();
-  return { chu, tieuDe: tachBieuTuong(chu).chu, phu: '', nut: dich ? nd('qc.xem') : '', dich, maMon: dich === 'mon' ? r.ma_mon : '' };
+  return { chu, tieuDe: tachBieuTuong(chu).chu || chu /* dòng chỉ có emoji: không để tiêu đề rỗng */, phu: '', nut: dich ? nd('qc.xem') : '', dich, maMon: dich === 'mon' ? r.ma_mon : '', khoa: { t: 'qc.pos', s: 'qc.pos', nut: 'qc.xem' } };
 };
 const dongHopLe = (r) => r && typeof r === 'object' && typeof r.chu_dai === 'string' && r.chu_dai.trim();
 
@@ -55,10 +55,13 @@ export function chonQuangCao({ gioVang, chuongTrinh, bayGio, quangCao = [] }) {
     const rieng = dong.find((r) => r.id === 'gio_vang');
     const bien = { phanTram: tt.phanTram, ketThuc: tt.ketThuc };
     const kq = { phu: nd('qc.gv.phu', bien), nut: nd('qc.gv.nut'), dich: 'menu', maMon: '' };
-    return rieng ? { ...kq, chu: rieng.chu_dai.trim(), tieuDe: tachBieuTuong(rieng.chu_dai).chu } : { ...kq, chu: nd('qc.dai.gv', bien), tieuDe: nd('qc.gv.tieuDe', bien) };
+    const k = { s: 'qc.gv.phu', nut: 'qc.gv.nut' };
+    return rieng
+      ? { ...kq, chu: rieng.chu_dai.trim(), tieuDe: tachBieuTuong(rieng.chu_dai).chu || rieng.chu_dai.trim(), khoa: { t: 'qc.pos', ...k } }
+      : { ...kq, chu: nd('qc.dai.gv', bien), tieuDe: nd('qc.gv.tieuDe', bien), khoa: { t: 'qc.gv.tieuDe', ...k } };
   }
   const ct = Array.isArray(chuongTrinh) ? chuongTrinh[0] : null;
-  if (ct && ct.ten) return { chu: nd('qc.dai.ct', { ten: ct.ten }), tieuDe: ct.ten, phu: ct.moTa || '', nut: nd('qc.ct.nut'), dich: 'uudai', maMon: '' };
+  if (ct && ct.ten) return { chu: nd('qc.dai.ct', { ten: ct.ten }), tieuDe: ct.ten, phu: ct.moTa || '', nut: nd('qc.ct.nut'), dich: 'uudai', maMon: '', khoa: { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' } };
   const nut = ndNut('today.cta');
-  return { chu: '', tieuDe: nd('today.t'), phu: nd('today.s'), nut: nut.chu, dich: nut.dich, maMon: '', macDinh: true };
+  return { chu: '', tieuDe: nd('today.t'), phu: nd('today.s'), nut: nut.chu, dich: nut.dich, maMon: '', macDinh: true, khoa: { t: 'today.t', s: 'today.s', nut: 'today.cta' } };
 }

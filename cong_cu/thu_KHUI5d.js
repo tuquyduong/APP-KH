@@ -80,7 +80,7 @@ const khoGia = (d = {}) => ({ getItem: (x) => (x in d ? d[x] : null), setItem: (
   console.log('A1/A2 — nguồn dải');
   const ap = doc('src/App.jsx'), dq = doc('src/components/DaiQuangCao.jsx');
   k('A2 dải gắn MỘT chỗ ở vỏ App, trong khung cuộn `.screens` (cuộn theo trang, không dính)', (ap.match(/<DaiQuangCao/g) || []).length === 1 && ap.indexOf('<DaiQuangCao') > ap.indexOf('className="screens"') && ap.indexOf('<DaiQuangCao') < ap.indexOf('daVaoMenu && <Menu'));
-  k('A1 DaiQuangCao import dai_quang_cao.css; CSS không position:sticky/fixed cho dải (KH-UI-5g: z-index chỉ cho nút "Xem ›" nổi trên quầng); có prefers-reduced-motion (qua lớp fx-a của demo); không màu ngoài demo', /dai_quang_cao\.css/.test(dq) && fs.existsSync(path.join(GOC, 'src/giaoDien/dai_quang_cao.css')) && !/sticky|fixed/.test(doc('src/giaoDien/dai_quang_cao.css')) && /fx-a/.test(dq));
+  k('A1 DaiQuangCao import dai_quang_cao.css; CSS không position:sticky/fixed cho dải (KH-UI-5g: z-index chỉ cho nút "Xem ›" nổi trên quầng); có prefers-reduced-motion (qua lớp fx-a của demo); không màu ngoài demo', /dai_quang_cao\.css/.test(dq) && fs.existsSync(path.join(GOC, 'src/giaoDien/dai_quang_cao.css')) && !/sticky|fixed/.test(doc('src/giaoDien/dai_quang_cao.css')) && doc('src/giaoDien/dai_quang_cao.css').split('\n').filter((l) => /z-index/.test(l)).every((l) => /dai-qc-xem|\.gl-a/.test(l)) && /fx-a/.test(dq));
   k('A3 không thêm cửa mới / không sửa api.js: chỉ dùng layChuongTrinh sẵn có; không gọi /quang-cao', /layChuongTrinh/.test(ap) && !/quang-cao/.test(ap + doc('src/api.js') + doc('src/quangCao.js')));
   k('K3 không viết sẵn câu quảng cáo mẫu vào App', !/Mua \d tặng|Khuyến mãi|Giảm \d+%/.test(ap + dq + doc('src/quangCao.js').replace(/Giờ vàng: giảm \$\{/, '')));
 

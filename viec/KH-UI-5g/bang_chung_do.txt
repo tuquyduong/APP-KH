@@ -18,7 +18,7 @@ $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5b.js    → 74 đạt · 1 hỏng   
 $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHUI5d.js    → 30 đạt · 1 hỏng   (BannerHomNay qc={quangCao}; today.cta mặc định "Xem Menu ›")
 
 == 3. XANH sau khi sửa (cùng lệnh, KHONG_TRINH_DUYET=1; đếm bằng dòng cuối "n đạt · 0 hỏng")
-cong_cu/thu_KHUI5g.js: 30 đạt · 0 hỏng
+cong_cu/thu_KHUI5g.js: 32 đạt · 0 hỏng   (vòng sửa 1 thêm 2 ca: khoá /admin từng chữ banner, dòng POS chỉ emoji; cả hai đỏ trên gốc vì gốc chưa có `khoa` / `tachBieuTuong`)
 cong_cu/thu_KHSINH1.js: 24 đạt · 0 hỏng
 cong_cu/thu_KHUI3b.js: 57 đạt · 0 hỏng
 cong_cu/thu_KHUI3d.js: 34 đạt · 0 hỏng
@@ -28,7 +28,7 @@ cong_cu/thu_KHUI5b.js: 75 đạt · 0 hỏng
 cong_cu/thu_KHUI5d.js: 31 đạt · 0 hỏng
 (Có trình duyệt, ở máy: thu_KHUI5g.js 53 đạt · 0 hỏng.)
 
-SỐ CA cong_cu/thu_KHUI5g.js: 30
+SỐ CA cong_cu/thu_KHUI5g.js: 32
 SỐ CA cong_cu/thu_KHSINH1.js: 24
 SỐ CA cong_cu/thu_KHUI3b.js: 57
 SỐ CA cong_cu/thu_KHUI3d.js: 34

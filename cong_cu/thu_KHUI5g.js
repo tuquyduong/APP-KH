@@ -51,6 +51,10 @@ const duyet = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).
   k('C2.4 không có gì: chữ mặc định trong danh mục — "Hôm nay bạn muốn uống gì?", nút "Xem Menu ›", đích menu, macDinh = true, dải rỗng', !!m && m.tieuDe === 'Hôm nay bạn muốn uống gì?' && m.phu === '' && m.nut === 'Xem Menu ›' && m.dich === 'menu' && m.macDinh === true && m.chu === '', JSON.stringify(m));
   k('C2 thứ tự giữ nguyên: Giờ vàng đã hết khung → rơi xuống chương trình; sắp tới → coi như không có', (chon({ gioVang: GV({ ket_thuc: '2026-11-08T08:30:00' }), chuongTrinh: CT }) || {}).dich === 'uudai' && (chon({ gioVang: GV({ dang_chay: false, bat_dau: '2026-11-08T20:00:00', ket_thuc: '2026-11-08T22:00:00' }) }) || {}).macDinh === true);
 
+  k('C2 khoá /admin của từng chữ banner: khung câu có khoá riêng (qc.gv.tieuDe / qc.gv.phu / qc.gv.nut / qc.ct.nut / qc.xem / today.*), chỉ phần chữ POS là "qc.pos"', !!g && !!c && !!m && !!p1 && bang(g.khoa, { t: 'qc.gv.tieuDe', s: 'qc.gv.phu', nut: 'qc.gv.nut' }) && bang(c.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' }) && bang(m.khoa, { t: 'today.t', s: 'today.s', nut: 'today.cta' }) && bang(p1.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.xem' }) && gr.khoa.t === 'qc.pos' && gr.khoa.nut === 'qc.gv.nut');
+  const pe = chon({ quangCao: [R({ chu_dai: '🎁' })] });
+  k('K5 dòng POS chỉ có emoji → tiêu đề banner không rỗng', !!pe && pe.tieuDe === '🎁', JSON.stringify(pe));
+
   console.log('D1 — lời chào gọi theo tên');
   const lc = (gio, xh, ten) => (DD ? DD.loiChao(gio, xh, ten) : undefined);
   const CHIEU = '2026-11-11T15:00:00';

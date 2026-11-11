@@ -194,7 +194,7 @@ async function manHinh(KH) {
   const co = veKH({ ...cb, homNay: HN, banner: BAN });
   k('B7 (KH-UI-5d) dù truyền chữ banner, /kehoach KHÔNG còn banner nhỏ (đã thay bằng dải quảng cáo ở vỏ App)', khongBanner(co) && !co.includes('Giờ vàng hôm nay') && !/photo mini/.test(co));
   k('B7 bản nhỏ và nút ✕ đã bỏ hẳn (KH-UI-5d): không t-x, không BannerNho', !co.includes('t-x') && !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')));
-  const QC = { tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut }; // KH-UI-5g: banner nhận kết quả chonQuangCao
+  const QC = { tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, khoa: { t: 'today.t', s: 'today.s', nut: 'today.cta' } }; // KH-UI-5g: banner nhận kết quả chonQuangCao
   const lon = thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, qc: QC, chon() {} });
   k('B7 banner Trang chủ: không lớp mini, nút giữ chữ của nó, KHÔNG có ✕ (kể cả khi truyền khiAn — KH-UI-5d)', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<')
     && !thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, qc: QC, chon() {}, khiAn() {} }).includes('t-x'));

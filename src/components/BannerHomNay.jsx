@@ -9,9 +9,8 @@ import Chu from './Chu.jsx';
 // Ánh sáng lướt chéo: bộ đo dùng chung với dải (anhSangLuot.js). Không có nút ✕ (chủ quán 09.11, KH-UI-5d).
 export default function BannerHomNay({ anh, qc, chon }) {
   const the = useRef(null);
-  const { tieuDe, phu, nut, macDinh } = qc;
-  const dau = (khoa) => (macDinh ? ndDau(khoa) : ndDau('qc.pos'));
-  dungAnhSangLuot(the, [tieuDe, phu, nut]);
+  const { tieuDe, phu, nut, khoa } = qc; // khoa = khoá danh mục của từng chữ: khung câu sửa được ở /admin, phần chữ POS gắn "qc.pos" (khoá)
+  dungAnhSangLuot(the, [tieuDe, phu, nut, !!chon]);
 
   return (
     <div className="today fx-a photo" ref={the} {...(chon ? bam(chon) : {})}>
@@ -20,10 +19,10 @@ export default function BannerHomNay({ anh, qc, chon }) {
       <i className="gl gl-a" />
       <div className="t-txt">
         <div className="t-k gl gl-t"><span className="dot" /><Chu k="today.k" /></div>
-        <b className="gl gl-t" {...dau('today.t')}>{tieuDe}</b>
-        {phu && <span className="t-s gl gl-t" {...dau('today.s')}>{phu}</span>}
+        <b className="gl gl-t" {...ndDau(khoa.t)}>{tieuDe}</b>
+        {phu && <span className="t-s gl gl-t" {...ndDau(khoa.s)}>{phu}</span>}
       </div>
-      {nut && chon && <span className="t-cta gl gl-b" {...dau('today.cta')}>{nut}</span>}
+      {nut && chon && <span className="t-cta gl gl-b" {...ndDau(khoa.nut)}>{nut}</span>}
     </div>
   );
 }
