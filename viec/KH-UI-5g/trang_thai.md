@@ -68,3 +68,22 @@ Ghi chú: bảng này là mô tả; đột biến chưa chạy từng cái bằn
 
 ✓ CỔNG CHẠY ĐẠT (KHONG_TRINH_DUYET=1, node tu_chay/cong.js chay . 306dff3^ HEAD viec/KH-UI-5g)
 HEAD ĐÃ KIỂM: 2baacba
+
+## Soát độc lập (/ra-soat) — vòng 1
+Báo cáo của agent soát (tóm, nguyên các mục chính):
+- KẾT LUẬN: KHÔNG ĐẠT (lỗi nhỏ, trong Phạm vi; không lỗi tiền / bảo mật). Agent chạy `KHONG_TRINH_DUYET=1 thu_KHUI5g.js` = 30 đạt, KHÔNG chạy phần Chromium.
+- LỖI 1 `BannerHomNay.jsx` (K4): khi không phải chữ mặc định, cả tiêu đề / dòng phụ / nút gắn `data-nd-khoa="pos"` → khung câu (`qc.gv.*`, `qc.ct.nut`, `qc.xem`) không sửa được ở /admin. → ĐÃ SỬA: `chonQuangCao` trả `khoa: { t, s, nut }`, banner gắn `ndDau(khoa.*)`; chỉ chữ POS là `qc.pos`. Ca mới `thu_KHUI5g` "C2 khoá /admin của từng chữ banner".
+- LỖI 2 `thu_KHUI5d.js` (K3): nới bỏ lệnh cấm `z-index`. → ĐÃ SỬA: chỉ cho phép z-index ở `.dai-qc-xem` và `.gl-a`. Ca đếm dòng `<= 3` → `<= 4` GIỮ (dải nay có thêm một dòng biểu tượng đứng riêng — hành vi đổi có chủ đích theo phiếu B1).
+- LỖI 3 `quangCao.js` `tuDong` (K5): dòng POS chỉ có emoji → tiêu đề rỗng. → ĐÃ SỬA (`|| chu`) + ca "K5 dòng POS chỉ có emoji".
+- NGHI NGỜ (không sửa, ghi nhận): banner có thể nháy chữ mặc định rồi đổi khi `/chuong-trinh` + Giờ vàng về (đã có từ trước ở dải; sửa cần trạng thái chờ ở App — ngoài Phạm vi, chủ quán quyết); `chonQuangCao` gọi `bayGio()` không kiểm `coBayGio()` (có từ trước); Trang chủ gọi `/chuong-trinh` cho khách chưa đăng nhập (cùng cửa sẵn có, đã khai ở Phát hiện — chủ quán chốt); "chị P" với tên "Linh P" (đúng D1); Hồ sơ cũng đổi bản xem trước (đã khai); dải 390 px cắt "đến …" (phiếu B1); luật `.hero-banner` thừa ở `giaoDien.css:44` (cấm sửa). Phụ thuộc hook của banner nay có `!!chon` (đã sửa theo gợi ý).
+- NGHIỆM THU: 12/14 có bằng chứng; C2 có điều kiện (lỗi 1 — đã sửa); E4 thiếu `--day-du` có trình duyệt trọn một lần; E5 chủ quán chưa thử tay.
+- CHƯA SOÁT ĐƯỢC: phần Chromium, ảnh, hiệu ứng thật / Zalo / chữ lớn theo cài đặt máy.
+- BÀI HỌC (agent): KHOÁ — mỗi khoá `qc.*` kiểu chữ phải có phần tử vẽ gắn `data-nd` của chính khoá; khi nới bài cũ chỉ nới đúng ca đổi; màn đầu mà chữ phụ thuộc mạng cần trạng thái chờ.
+Sau vòng sửa 1: `thu_KHUI5g.js` 55 đạt (Chromium) / 32 (KHONG_TRINH_DUYET=1); `thu_KHUI5d.js` 31, `thu_KHUI5b.js` 75 (KHONG_TRINH_DUYET=1); `npm test` KHONG_TRINH_DUYET=1: 45 đạt · 0 hỏng. Chưa chạy vòng soát lại (tối đa 3 vòng; còn 2) — các sửa nhỏ, đã có ca đỏ→xanh; chat soát cuối quyết.
+
+## Bài học (bổ sung sau soát)
+- KHOÁ (đề xuất, ngoài Phạm vi): bài thử đọc nguồn — với mỗi khoá `qc.*` loại chữ phải có phần tử gắn `data-nd` đúng khoá (nay chỉ có ca giá trị `khoa` của `chonQuangCao`).
+- NGUYÊN TẮC (đề xuất): màn đầu tiên khách thấy mà chữ phụ thuộc mạng → trạng thái chờ / ẩn đến khi có dữ liệu; hiện chưa làm (ngoài Phạm vi App.jsx).
+
+✓ CỔNG CHẠY ĐẠT (KHONG_TRINH_DUYET=1, node tu_chay/cong.js chay . 306dff3^ HEAD viec/KH-UI-5g) — sau vòng sửa 1
+HEAD ĐÃ KIỂM: 2bafce8
