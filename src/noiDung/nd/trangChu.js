@@ -1,7 +1,7 @@
 // Danh mục nội dung — TRANG CHỦ (demo #home). Khoá theo demo data-cms khi demo có; ẩn / hiện khối theo demo SECS (tiền tố "hien.").
+// Không import tệp nào nhập src/dinhDang.js (dinhDang → nd.js → danh mục): vòng nạp làm sập khi nạp danh mục trước (bài thử thu_KHND3a canh).
 // Khối demo chưa có ở App (Video hướng dẫn home.guide, Mời bạn bè home.ref) KHÔNG khai — xem viec/KH-ND-3a/doi_chieu_demo.md.
 import { NHU_CAU } from '../nhuCau.js';
-import { THE_MOI } from '../dangNhap.js';
 import { O_TRAC_NGHIEM } from '../tracNghiemChu.js';
 
 const M = 'Trang chủ';
@@ -23,9 +23,9 @@ export const TRANG_CHU = [
   khoa('home.hang.ten', 'Tên hạng của khách', 'pos', 'POS › Cài đặt › Hạng thành viên'),
   chu('home.diem', 'Thẻ hội viên: chữ sau số điểm', 'điểm'),
   khoa('home.diem.so', 'Số điểm của khách', 'pos', 'POS › Khách hàng'),
-  chu('home.moi.t', 'Thẻ mời (chưa đăng nhập): tiêu đề', THE_MOI.tieuDe),
-  chu('home.moi.p', 'Thẻ mời (chưa đăng nhập): dòng mời', THE_MOI.phu),
-  chu('home.moi.nut', 'Thẻ mời (chưa đăng nhập): nút', THE_MOI.nut),
+  chu('home.moi.t', 'Thẻ mời (chưa đăng nhập): tiêu đề', 'Thành viên Tứ Quý Đường'),
+  chu('home.moi.p', 'Thẻ mời (chưa đăng nhập): dòng mời', 'Đăng nhập / Đăng ký để tích điểm, nhận ưu đãi'),
+  chu('home.moi.nut', 'Thẻ mời (chưa đăng nhập): nút', 'Đăng nhập'),
   // Ô Kế hoạch và nhắc việc (demo utilCal)
   chu('home.cal.tag', 'Ô Kế hoạch: nhãn', 'KẾ HOẠCH VÀ NHẮC VIỆC'),
   chu('home.cala', 'Ô Kế hoạch: dòng đậm', 'Trợ lý của bạn'),

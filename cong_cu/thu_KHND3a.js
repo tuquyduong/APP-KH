@@ -116,6 +116,9 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     const that = dung(`import { nd, ndHien } from './noiDung/nd.js'; export const a = () => [nd('khong.co'), ndHien('khong.co')];`, { 'import.meta.env': '{"DEV":false}' });
     k('B1 khoá lạ ở bản dựng thật (import.meta.env.DEV=false) → "" không vỡ màn', JSON.stringify(that.a()) === '["",true]', JSON.stringify(that.a()));
   } catch (e) { k('B3 dựng Chu.jsx / nd.js bằng esbuild', false, String(e && e.message).split('\n')[0]); }
+  const VAO = ['src/noiDung/nd/index.js', 'src/noiDung/nd/trangChu.js', 'src/noiDung/nd/khungChung.js', 'src/noiDung/nd.js', 'src/noiDung/dangNhap.js', 'src/dinhDang.js', 'src/duongDan.js'];
+  const sap = VAO.filter((f) => spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(pathToFileURL(tep(f)).href)})`], { encoding: 'utf8' }).status !== 0);
+  k('B1 không vòng nạp: mỗi mô-đun nạp làm đầu vào riêng (danh mục, nd, dangNhap, dinhDang, duongDan) đều không lỗi', sap.length === 0, sap.join(', '));
   const app = doc('src/App.jsx');
   k('B2 vỏ App nghe nguồn nội dung ở MỘT chỗ (useSyncExternalStore(ngheNoiDung, phienNoiDung))', (app.match(/ngheNoiDung/g) || []).length === 2 && /useSyncExternalStore\(ngheNoiDung, phienNoiDung\)/.test(app));
 
