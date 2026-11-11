@@ -4,6 +4,10 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 11.11.2026
+- **Nội dung sửa được — nền xong** (KH-ND-3a gộp 11.11): danh mục `src/noiDung/nd/` (107 khoá), `nd()` / `<Chu>` / `data-nd`, K10 chữ cứng chỉ được giảm (nợ 766 chuỗi / 50 tệp); Trang chủ, thanh tab, màn mở, tên màn, câu báo lỗi chung đọc qua danh mục; khách thấy y hệt.
+- **Ánh sáng lướt như demo** (chủ quán 11.11, KH-UI-5g): dải các trang = kiểu A (dải mảnh 40px, chữ loé sáng + quầng + nút "Xem" vàng); Trang chủ LUÔN có banner "Hôm nay" chạy ánh sáng ("lúc nào cũng có chương trình") — cùng nguồn với dải: Giờ vàng đang chạy → chương trình → (sau) quảng cáo POS → câu mặc định sửa được.
+- **Lời chào gọi xưng hô + chữ cuối của tên** (chủ quán 11.11, ảnh "anh Anh Linh"): "anh Linh"; không có xưng hô thì giữ tên; nơi khác giữ tên đầy đủ.
+- **Google** (11.11): hồ sơ Google của quán CHƯA xác minh → xác minh bằng video trước khai trương (khi biển hiệu thật lắp xong). Google chỉ cho xin Business Profile API khi hồ sơ đã xác minh và hoạt động ≥ 60 ngày, có website → nộp đơn sau; link nhận đánh giá dùng được ngay sau xác minh (QR tại quầy + App).
 - **Kho nội dung App ở nhờ POS nhưng xây như nhà riêng** (chủ quán 11.11): bảng riêng + đường riêng `/api/nd/*`, JSON thuần, mỗi phiên bản là bản đầy đủ, giữ mọi bản, quay lại = tạo bản mới; ảnh tên theo mã băm; đăng nhập bằng vé POS; Xuất / Nhập toàn bộ → sau này tách máy chủ: dựng máy mới, nhập toàn bộ, đổi 1 địa chỉ. "Lưu" = lưu tiến độ (nháp).
 - **Quyền sửa App nằm trong Cài đặt › Phân quyền POS** (chủ quán 11.11): Xem / Sửa (Lưu) / Cập nhật + quay lại / Xuất-Nhập (chủ quán). Có nhật ký.
 - **Đang sửa vẫn bấm chuyển màn được** (chủ quán 11.11): nút bút ✎ riêng ở mỗi chỗ sửa, chạm chỗ khác App chạy như khách; "Đi tới màn" (cả trạng thái hiếm); "Danh sách chữ của màn này"; nút làm thật bị khoá khi sửa.

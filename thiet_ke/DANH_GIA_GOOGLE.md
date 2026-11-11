@@ -10,7 +10,7 @@
 > 6. "Chạm để sao chép tên món": trình duyệt Zalo có thể chặn sao chép → luôn có đường dự phòng (chọn chữ bằng tay).
 > 7. **Chủ quán chốt 28.10:** mời mọi khách như nhau — BỎ điều kiện "đang khiếu nại" (POS không có trạng thái này; Google cấm mời chọn lọc);
 >    đơn huỷ / hoàn tiền không mời.
-> 8. Cần xin quyền Google Business Profile API sớm (duyệt vài ngày – vài tuần); review link dùng in QR tại quán được ngay từ khai trương, không cần code.
+> 8. Xin quyền Google Business Profile API khi hồ sơ đã xác minh và hoạt động ≥ 60 ngày + có website (điều kiện Google, cập nhật 11.11.2026); review link dùng in QR tại quán được ngay từ khai trương, không cần code.
 
 # Bàn giao: Mời khách đánh giá trên Google (28/10/2026)
 
@@ -102,7 +102,7 @@ CREATE INDEX ix_grev_cust ON google_reviews(customer_id);
 
 ## 4. Lấy đánh giá từ Google và ghép khách
 
-- Dùng Google Business Profile API: `accounts.locations.reviews.list` để đọc, `accounts.locations.reviews.updateReply` để trả lời. Cần xin quyền dùng API với Google trước (miễn phí, chờ duyệt từ vài ngày đến vài tuần). Đăng nhập bằng OAuth tài khoản chủ quán, lưu refresh token trong biến môi trường.
+- Dùng Google Business Profile API: `accounts.locations.reviews.list` để đọc, `accounts.locations.reviews.updateReply` để trả lời. Cần xin quyền dùng API với Google trước (miễn phí; Google chỉ nhận đơn khi hồ sơ đã xác minh và hoạt động ≥ 60 ngày, có website — cập nhật 11.11.2026). Đăng nhập bằng OAuth tài khoản chủ quán, lưu refresh token trong biến môi trường.
 - Lấy đánh giá mới 5–10 phút một lần, lưu vào `google_reviews`.
 - Ghép khách: Google không trả số điện thoại hay email, nên chỉ ghép gần đúng:
   - `hi` (khớp cao): tên gần giống tên khách và đánh giá xuất hiện trong 0–24 giờ sau `opened_at` của khách đó.
