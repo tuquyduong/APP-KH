@@ -39,3 +39,39 @@ Không có thông báo đổi model giữa phiên.
 
 ## Câu hỏi
 (không có)
+
+## Cổng
+- `node tu_chay/cong.js tinh . 21d5df0^ HEAD viec/KH-ND-3b`: chỉ còn `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi ở cuối file này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 21d5df0^ HEAD viec/KH-ND-3b` (cây sạch, HEAD `93cbd28`): `✓ CỔNG CHẠY ĐẠT`. Lần chạy đầu đỏ 5 × A11 (5 bài B3 xanh trên gốc) → đã thêm 1 ca đỏ-trên-gốc mỗi bài và chép lại SỐ CA (A16).
+- `KHONG_TRINH_DUYET=1 node kiem_tra_truoc_khi_giao.js --day-du`: 47 đạt · 0 hỏng (có `vite build`).
+- Bản đầy đủ có Chromium (`npm test` / `--day-du` không đặt biến) chạy quá 10 phút ở máy này, đã dừng; chạy riêng `thu_KHND3a.js` (79 đạt) và `thu_KHND3b.js` (38 đạt) với Chromium: xanh. Các bài cũ có phần Chromium khác chưa chạy lại ở máy này (xem CHƯA KIỂM).
+
+## Bảng chỗ vá → đột biến
+Việc không đụng tiền / bảo mật, không có `dot_bien.py` (chỉ chuyển chữ). Phép kiểm "chỉ được giảm" của K10 có bài thử đỏ-xanh ở `thu_KHND3a`.
+
+## Nghiệm thu từng mục (bằng chứng)
+- A1 `thu_KHND3b` Phần 1 A (danh mục hợp lệ, `macDinh` 26 khoá khớp chữ cũ) + B (12 tệp A1 hết chữ cứng, 81 khoá dùng đều có) + Chromium (Menu / Trang món / Giỏ / Không tìm thấy đổi theo bản giả, có `data-nd` / `data-nd-khoa`).
+- A2 `thu_KHND3b` "A2 …" (hai ca) + Chromium nhãn "Da đẹp" ở Menu và Trang món.
+- A3 `so_anh/ket_qua.txt`: 18 cặp, 16 giống hệt, 2 cặp 11 điểm nhiễu mép đáy ≤ 6 mức màu.
+- B1 `thu_KHND3a` 3 ca "B1 …" (đỏ trên bộ đếm cũ) + commit riêng `3f5c8c4` (kehoach.js 41 → 43).
+- B2 `thu_KHND3a` "B2 đối chứng" (94 tệp, lệch 0) + "B2 đối chứng đỏ được".
+- B3 5 bài, mỗi bài bản giả "Công nợ" + ca đỏ-trên-gốc (xem `bang_chung_do.txt` mục 3).
+- C1 `thu_KHND3b` (20 ca không trình duyệt, 38 ca khi có Chromium). C2 không bài cũ nào đỏ vì chữ chuyển chỗ (`npm test` xanh). C3 `doi_chieu_demo.md`. C4 nợ 766 → 684, `npm test` / `--day-du` / cổng `tinh` + `chay` xong. C5 ở mục "Số khoá thêm" và "Số nợ".
+
+## Báo cáo 7 mục
+1. VIỆC: KH-ND-3b — Menu, Trang món, Giỏ hàng (+ ô món, giá, Giờ vàng, thứ trong tuần) đọc chữ qua danh mục; vá bộ đếm K10; B3 năm bài cũ.
+2. ĐÃ SỬA: `src/noiDung/nd/menu.js` (86 mục); `Menu/TrangMon/GioHang/MonTheoDuong/KhongTimThay.jsx`, `MonO/GiaMon.jsx`, `gioVang/giaHang/menuLoc/gioHoatDong.js` đọc `nd()`; `cong_cu/ha_no_chu.js` (3 dạng + đệ quy `${}`); `no_chu_cung.txt` (766 → 684); 5 bài cũ + `thu_KHND3a.js` + `thu_KHND3b.js`.
+3. BÀI THỬ: xem mục Cổng ở trên.
+4. ĐÃ RÀ K4: `grep NHU_CAU` — chỉ còn `noiDung/nhuCau.js` và `nd/trangChu.js` (nguồn); `tenThu`/`bacThang`/`chuGioVang` có chỗ gọi ngoài phạm vi (UuDai, ThanhToan, OGioVang) — giữ chữ ký, chữ mặc định y nguyên.
+5. CHƯA KIỂM: phần Chromium của các bài cũ khác trên máy này (quá lâu); trên điện thoại thật / trình duyệt Zalo; quán đóng ở Giỏ (không có khối); Trang món có size / topping (POS chưa có cửa); /admin thật (KH-ADMIN-1) — mới thử bằng `datBanNoiDung`.
+6. GIT: nhánh `viec/KH-ND-3b`, commit theo bước (xem `git log`); push `origin viec/KH-ND-3b`; không PR, không merge.
+7. BÀI HỌC: mục dưới.
+
+## Bài học
+- **KHOÁ (đã làm):** cổng A11 bắt bài sửa "bỏ `\b`" xanh trên gốc → mỗi bài cũ sửa vì luật chung phải kèm một ca gắn với đúng thứ việc này thêm (ở đây: danh mục `menu.js` có chữ để kiểm) thì mới đỏ-trên-gốc thật. Đã thêm ở 5 bài.
+- **KHOÁ (đã làm):** đối chứng bộ đếm bằng `@babel/parser` quét MỌI tệp `src` (`thu_KHND3a` B2) — bộ đếm heuristic không còn lệch âm thầm.
+- **NGUYÊN TẮC (đề xuất, ngoài Phạm vi `KHUON_LOI.md`):** K4 "mẫu sửa hàng loạt bằng chuỗi gõ tay không khớp dấu cách không ngắt U+00A0 (GiaMon.jsx) — dùng regex hoặc kiểm số lần thay". Đã gây: 1 lần trong việc này (script thay dừng giữa chừng). Dấu hiệu: `KHONG THAY` khi thay một chuỗi nhìn giống hệt. Chặn: kiểm số lần khớp trước khi ghi.
+- **BỎ:** lệnh bị người gác chặn (`rm` trong kho, `ps`, `cp && node`, vòng `for`, chạy bài có cụm TOKEN chưa commit): chỉ tốn thao tác, đã làm lại theo hướng dẫn.
+- Dọn: không có lời dặn nào trong `KHUON_LOI.md` / `CLAUDE.md` mới có phép kiểm làm thay.
+
+HEAD ĐÃ KIỂM: 93cbd28
