@@ -149,6 +149,7 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
 
   console.log('Phần 2 — App thật trong Chromium');
   k('C2 phép kiểm chữ "nợ" bắt được bản giả "Công nợ" (dùng cho màn Tài khoản, phần trình duyệt bên dưới)', !khongNo('Tài khoản · Công nợ') && khongNo('Tài khoản · Ví'));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
   let pw = null;
   if (process.env.KHONG_TRINH_DUYET !== '1') { try { pw = require('playwright'); } catch { /* không có */ } }
   if (!pw) console.log('  BỎ QUA: không có Playwright ở máy này — các ca trong trình duyệt CHƯA chạy');

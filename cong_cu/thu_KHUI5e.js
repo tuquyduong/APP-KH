@@ -187,6 +187,7 @@ const thanhPhan = (tep) => dung(tep, `import React from 'react'; import { render
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moi) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/TienIch.jsx')));
   const khongChuThich = moi.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '').replace(/\s\/\/ .*$/gm, '');
   k('C3 không "Đọc to", "Đặt hoa quả", "Tặng thẻ quà", speechSynthesis trong mã; K3 không chữ "nợ" (bản giả "Công nợ" bị bắt)', !/Đọc to|Đặt hoa quả|Tặng thẻ quà|speechSynthesis/i.test(khongChuThich) && khongNo(khongChuThich) && !khongNo('Công nợ'));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
   k('E1 bài khấn không dùng dangerouslySetInnerHTML với chữ của khách (chỉ biểu tượng tĩnh của demo)', !/dangerouslySetInnerHTML/.test(doc('src/components/VanKhanMan.jsx') + doc('src/components/NguoiThan.jsx') + doc('src/pages/TienIch.jsx')) && /dangerouslySetInnerHTML/.test(doc('src/components/BieuTuongTienIch.jsx')));
   k('E1 ngân sách: mỗi tệp mới < 500 dòng (trừ dữ liệu biểu tượng)', ['src/vanKhan.js', 'src/noiDung/vanKhan.js', 'src/components/NguoiThan.jsx', 'src/components/VanKhanMan.jsx', 'src/pages/TienIch.jsx', 'src/pages/KeHoach.jsx', 'src/kehoach.js'].every((f) => doc(f).split('\n').length < 500));
 

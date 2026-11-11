@@ -89,6 +89,7 @@ const khoGia = (dau = {}, nem = false) => {
   const moi = nds.nd ? { tieuDe: nds.nd('home.moi.t'), phu: nds.nd('home.moi.p'), nut: nds.nd('home.moi.nut') } : {};
   k('thẻ mời có đủ chữ', moi.tieuDe === 'Thành viên Tứ Quý Đường' && /Đăng nhập \/ Đăng ký/.test(moi.phu) && moi.nut === 'Đăng nhập');
   k('không hề có chữ "nợ" trong nội dung đăng nhập; bản giả "Công nợ" bị bắt', khongNo(JSON.stringify(nd)) && !khongNo(JSON.stringify({ x: 'Công nợ' })));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
 
   console.log('— A6 chuyển bước 1→2→3');
   const r1 = l.buocSauXinMa({ lay_ma_tai_quay: false }), r2 = l.buocSauXinMa({ lay_ma_tai_quay: true }), r3 = l.buocSauXinMa({});

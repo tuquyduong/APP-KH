@@ -251,6 +251,7 @@ async function manHinh(KH) {
   k('E1 không gọi mạng: các tệp mới không import api.js, không fetch / XMLHttpRequest / sendBeacon', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon/.test(moiHet));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" lấy từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moiHet) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/KeHoach.jsx')));
   k('K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo (1.250, 1900, support@)', khongNo(moiHet) && !khongNo(moiHet + 'Công nợ') && !/1\.250|1900|support@/.test(moiHet));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
   const kehoachJsx = doc('src/pages/KeHoach.jsx');
