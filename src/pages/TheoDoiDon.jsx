@@ -35,7 +35,7 @@ function TraQR({ qr, soTra, soHd, taoMaMoi, dang }) {
   return (
     <>
       <TheQR chuoi={qr.chuoi} soTien={soTra} soHd={soHd} />
-      <div className="care-disclaimer qr-chu"><Chu k="td.qr.quet" />{soTra !== null && <> <b {...ndDau('td.tien')}>{dinhDangGia(soTra)}</b></>}{con !== null && <> · <Chu k="td.qr.con" /> <b {...ndDau('td.so')}>{dongHo(con)}</b></>}</div>
+      <div className="care-disclaimer qr-chu" {...ndDau('td.qr.quet')}>{nd('td.qr.quet')}{soTra !== null && <> <b {...ndDau('td.tien')}>{dinhDangGia(soTra)}</b></>}{con !== null && <><span {...ndDau('td.qr.con')}>{` · ${nd('td.qr.con')} `}</span><b {...ndDau('td.so')}>{dongHo(con)}</b></>}</div>
     </>
   );
 }
