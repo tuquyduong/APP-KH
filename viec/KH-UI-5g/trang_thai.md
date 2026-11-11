@@ -65,3 +65,6 @@ Ghi chú: bảng này là mô tả; đột biến chưa chạy từng cái bằn
 - NGUYÊN TẮC / KHOÁ (đề xuất, ngoài Phạm vi): khi đổi hành vi dùng chung (vd lời chào), `grep` mọi bài thử có phần Chromium trước khi báo xong — chạy `KHONG_TRINH_DUYET=1` che mất ~40 ca đỏ trong 5 bài cũ (phát hiện nhờ `npm test` đầy đủ). Ghi vào K-mới nếu tái diễn.
 - BỎ: người gác chặn `sed -i`, `npx`, lệnh ghép `python3 <<EOF` + `node` — một lần, làm lại bằng Edit / lệnh đứng một mình.
 - BỎ: `--day-du` có trình duyệt vượt 10 phút của máy — tách từng bài.
+
+✓ CỔNG CHẠY ĐẠT (KHONG_TRINH_DUYET=1, node tu_chay/cong.js chay . 306dff3^ HEAD viec/KH-UI-5g)
+HEAD ĐÃ KIỂM: 2baacba
