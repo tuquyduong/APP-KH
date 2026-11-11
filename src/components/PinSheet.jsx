@@ -64,7 +64,7 @@ export default function PinSheet({ dong, gui }) {
             <Chu k={kTieuDe} as="h3" style={{ textAlign: 'center' }} />
             <Chu k={kPhu} as="div" className="pin-sub" />
             <div className="pin-dots">{Array.from({ length: DO_DAI }, (_, i) => <i key={i} className={i < so.length ? 'on' : ''} />)}</div>
-            <div className="pin-msg" role="alert" {...ndDau('pin.loiPos')}>{thongBao}</div>
+            <div className="pin-msg" role="alert" {...ndDau(thongBao === nd('pin.khongKhop') ? 'pin.khongKhop' : 'pin.loiPos')}>{thongBao}</div>
             <div className="pin-pad">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <button type="button" key={k} onClick={() => nhan(String(k))}>{k}</button>)}
               <Chu k="pin.xoa" as="button" type="button" className="lk" onClick={xoa} />

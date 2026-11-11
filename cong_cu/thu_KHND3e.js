@@ -56,10 +56,13 @@ const GOC_CHU = {
   const thua = DH.map((m) => m.khoa).filter((x) => !khoaDung.has(x));
   k('A1 không khoá thừa: mỗi khoá khai đều có chỗ dùng', DH.length > 0 && thua.length === 0, thua.join(', '));
   const KHOA = DH.filter((m) => m.khoaBoi);
-  const gan = (m) => A1.some((f) => doc(f).split('\n').some((l) => /ndDau\(|canhBao\(/.test(l) && l.includes(`'${m.khoa}'`))); // mục khoá được gắn data-nd-khoa (trực tiếp hoặc qua canhBao)
+  const gan = (m) => A1.some((f) => doc(f).split('\n').some((l) => /ndDau\(|canhBao\(|khoaLoi/.test(l) && l.includes(`'${m.khoa}'`))); // mục khoá được gắn data-nd-khoa (trực tiếp hoặc qua canhBao)
   k('A2 mục khoá pos (số tiền, số đơn, lời POS) có chỉ đường; mỗi mục khoá được gắn ndDau() ở một màn', KHOA.length >= 10 && KHOA.every((m) => m.khoaBoi === 'pos' && m.chiDuong)
     && KHOA.every(gan), KHOA.filter((m) => !gan(m)).map((m) => m.khoa).join(','));
   k('A3 câu báo lỗi App tự viết là mục loi.* (GIA_DA_DOI, GIA_DA_DOI_CU, CHUA_MO, CHUA_RO, NGOAI_GIO)', ['GIA_DA_DOI', 'GIA_DA_DOI_CU', 'CHUA_MO', 'CHUA_RO', 'NGOAI_GIO'].every((c) => theo.get('loi.' + c)?.loai === 'chu'));
+  const ttx = doc('src/pages/ThanhToan.jsx'), pinx = doc('src/components/PinSheet.jsx');
+  k('A3 câu báo App tự viết (loi.*, pin.khongKhop) gắn data-nd của CHÍNH khoá đó, không bị gán 🔒 pos (soát vòng 1)', ['GIA_DA_DOI', 'GIA_DA_DOI_CU', 'CHUA_MO', 'CHUA_RO', 'NGOAI_GIO'].every((c) => ttx.includes(`'loi.${c}'`))
+    && /canhBao\(thongBao, '', khoaLoi\(thongBao\)\)/.test(ttx) && /canhBao\(chan, '', khoaLoi\(chan\)\)/.test(ttx) && /nd\(k\) === s\) \|\| 'tt\.thongBao'/.test(ttx) && /ndDau\(thongBao === nd\('pin\.khongKhop'\) \? 'pin\.khongKhop' : 'pin\.loiPos'\)/.test(pinx));
   k('A3 lời POS kèm code vẫn hiện nguyên: ThanhToan vẫn hiện e.message, không thay bằng chữ App', /datThongBao\(e\.message\)/.test(doc('src/pages/ThanhToan.jsx')) && /datChanPos\(e\.message\)/.test(doc('src/pages/ThanhToan.jsx')));
   k('A1 không chữ "nợ" trong danh mục nhóm này (quán không có công nợ)', DH.length > 0 && !/nợ/i.test(JSON.stringify(DH)));
   const sai = Object.entries(GOC_CHU).filter(([x, v]) => (theo.get(x) || {}).macDinh !== v);

@@ -31,6 +31,8 @@ const MA_PIN = ['PIN_SAI', 'PIN_DANG_KHOA'];      // bảng PIN hiện lời POS
 const MA_NGOAI_GIO = ['NGOAI_GIO', 'QUA_GIO_NHAN_DON'];
 const MA_MON = { HET_HANG: 'tt.monHetHang', MON_KHONG_BAN: 'tt.monKhongBan' }; // mã POS → khoá chữ nhãn món (danh mục nội dung)
 const layDonDau = () => layDon(1);
+const KHOA_LOI_APP = ['loi.GIA_DA_DOI', 'loi.GIA_DA_DOI_CU', 'loi.CHUA_MO', 'loi.CHUA_RO', 'loi.NGOAI_GIO']; // câu App tự viết (sửa được); câu khác là lời POS (🔒 tt.thongBao)
+const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 
 export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon, veGio, danhDauMon, sauHuy }) {
   const toi = dungTai(layToi);
@@ -221,9 +223,9 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
       )}
 
       <BangTien bg={bg} loi={loi} />
-      {chan && canhBao(chan, '', 'tt.thongBao')}
+      {chan && canhBao(chan, '', khoaLoi(chan))}
       {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}
-      {thongBao && canhBao(thongBao, '', 'tt.thongBao')}
+      {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}
       <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
         <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
       </button>
