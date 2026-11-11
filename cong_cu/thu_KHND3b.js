@@ -82,7 +82,8 @@ const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
     && /ndDs\('home\.need'\)/.test(doc('src/pages/Menu.jsx')) && /n\.nhan/.test(doc('src/components/MonO.jsx')) && /n\.nhan/.test(doc('src/pages/TrangMon.jsx')), docSrcNC.join(', '));
   k('A2 không tệp nào ngoài noiDung đọc NHU_CAU để hiện chữ', (() => { const ra = []; const di = (d) => fs.readdirSync(tep(d), { withFileTypes: true }).forEach((e) => { const p = `${d}/${e.name}`; if (e.isDirectory()) { if (p !== 'src/noiDung') di(p); } else if (/\.jsx?$/.test(e.name) && nc(doc(p))) ra.push(p); }); di('src'); return ra.length === 0; })());
   k('A1 Menu / Trang món / Giỏ hàng gắn data-nd (ndDau / Chu) cho chữ và data-nd-khoa cho phần POS', ['src/pages/Menu.jsx', 'src/pages/TrangMon.jsx', 'src/pages/GioHang.jsx'].every((f) => /ndDau\(|<Chu /.test(doc(f)))
-    && /ndDau\('menu\.mon'\)/.test(doc('src/components/MonO.jsx')) && /ndDau\('gio\.tien'\)/.test(doc('src/pages/GioHang.jsx')) && /ndDau\('menu\.gv\.dem'\)/.test(doc('src/pages/Menu.jsx')));
+    && /ndDau\('menu\.mon'\)/.test(doc('src/components/MonO.jsx')) && /ndDau\('gio\.tien'\)/.test(doc('src/pages/GioHang.jsx')) && /ndDau\(khoaDem\(tt, 'tile'\)\)/.test(doc('src/pages/Menu.jsx')) && /'menu\.gv\.dem'/.test(doc('src/pages/Menu.jsx'))
+    && /ndDau\(mon \? 'gio\.hetHang' : 'gio\.khongCon'\)/.test(doc('src/pages/GioHang.jsx')));
 
   console.log('Phần 1 — C. Hàm thuần đọc qua nd()');
   const GV = await nap('src/gioVang.js'), GH = await nap('src/giaHang.js'), ML = await nap('src/menuLoc.js'), HH = await nap('src/gioHoatDong.js');

@@ -17,6 +17,8 @@ import { nd, ndPhan, ndDau, ndDs } from '../noiDung/nd.js';
 // Ô "Giờ vàng" (đường dẫn /menu/gio-vang) chỉ có khi POS báo Giờ vàng bật và có món ghép được với menu.
 const GV_SLUG = 'gio-vang';
 const TAT_CA = { id: '', ic: NHOM_MAC_DINH.ic }; // chữ "Tất cả" đọc từ danh mục (menu.tatCa) khi vẽ
+// Khoá chữ đếm ngược đang hiện (khớp chuGioVang, gioVang.js); ô nhóm chưa tới giờ chỉ hiện giờ mở → số tự tính, khoá 🔒.
+const khoaDem = (tt, kieu) => ({ dang: 'gv.dem.con', cho: 'gv.dem.sap', sau: 'gv.dem.xong' }[tt.pha] || (kieu === 'tile' ? 'menu.gv.dem' : kieu === 'long' ? 'gv.dem.moSau' : 'gv.dem.mo'));
 const LECH_CUON_NHOM = 60; // chừa chỗ cho thanh nhóm thu nhỏ khi nhảy tới lưới (demo catPick)
 
 // `nhomSlug` = nhóm đang chọn lấy từ đường dẫn (/menu/<nhom>); chọn nhóm khác → doiNhom(slug) thay đường dẫn, không thêm lịch sử.
@@ -85,7 +87,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
             <div className="cat-tiles" ref={oNhom}>
               {coGv && (
                 <div className={`ct gv${tt.pha === 'dang' ? ' live' : ''}${chonGv ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => chonNhom(GV_SLUG)} onKeyDown={(e) => { if (e.key === 'Enter') chonNhom(GV_SLUG); }}>
-                  <DenLong s={34} /><b {...ndDau('menu.gv.ten')}>{nd('menu.gv.ten')}</b><small {...ndDau('menu.gv.dem')}><GvDem kieu="tile" /></small>
+                  <DenLong s={34} /><b {...ndDau('menu.gv.ten')}>{nd('menu.gv.ten')}</b><small {...ndDau(khoaDem(tt, 'tile'))}><GvDem kieu="tile" /></small>
                 </div>
               )}
               {oChon.map((o) => (
@@ -119,7 +121,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
                       <div className="gv-ht">
                         <Chu k="menu.gv.dau" as="b" />
                         <small {...ndDau('menu.gv.khung')}>{ndPhan('menu.gv.khung', { batDau: tt.batDau, ketThuc: tt.ketThuc, phanTram: tt.phanTram })}</small>
-                        <span className="gv-st"><i /><span {...ndDau('menu.gv.dem')}><GvDem kieu="long" /></span></span>
+                        <span className="gv-st"><i /><span {...ndDau(khoaDem(tt, 'long'))}><GvDem kieu="long" /></span></span>
                       </div>
                     </div>
                   )}
