@@ -88,3 +88,11 @@ Việc không đụng tiền / bảo mật, không có `dot_bien.py` (chỉ chuy
 Cổng sau soát vòng 1 (`KHONG_TRINH_DUYET=1`, cây sạch): `npm test` 45/45 xanh, `--day-du` 47/47, `thu_KHND3b` 38/38 có Chromium; cổng `chay` ghi ở lượt chạy cuối (xem dưới).
 
 HEAD ĐÃ KIỂM: 5fe2b43
+
+## Chat soát cuối + gộp main (12.11.2026)
+- Chat soát cuối ĐẠT ở đầu nhánh 12f3b12: cổng `tinh` + `chay` kiểu GitHub (`KHONG_TRINH_DUYET=1`) ĐẠT với main 010534d; đọc code; xem ảnh.
+- 22 điểm lệch ở 2 cặp 430 (dải đáy y 840–843, ≤ 6 mức màu) = nhiễu dựng nền thanh tab — CHẤP NHẬN. ~10 khoá đi qua hàm trả chuỗi chưa gắn `data-nd` tại chỗ — để KH-ADMIN-1
+  ("Danh sách chữ của màn này" vẫn sửa được). Hai prop chữ của `KhongTimThay` ở App.jsx — việc sau.
+- Gộp main sau khi KH-UI-5g + KH-ND-3e đã gộp: xung đột DUY NHẤT `cong_cu/no_chu_cung.txt` → số nợ mỗi tệp = số đếm thật (đối chiếu bộ đếm: lệch 0).
+  Cây gộp (commit 951e008) trùng từng byte cây chat đã chạy `node kiem_tra_truoc_khi_giao.js --day-du` CÓ Chromium.
+HEAD ĐÃ KIỂM: 951e008
