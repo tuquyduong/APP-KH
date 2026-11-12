@@ -263,8 +263,9 @@ async function trinhDuyet(pw) {
       await mo(t, '/kehoach'); await t.waitForSelector('#toolGrid .tl');
       const v0 = await t.evaluate(() => ({ h1: document.querySelector('.topbar h1')?.textContent, hom: document.querySelector('.today-btn')?.textContent, ds: document.querySelector('.ds-h')?.textContent, nd: document.querySelectorAll('[data-nd]').length, khoa: document.querySelectorAll('[data-nd-khoa]').length, o: [...document.querySelectorAll('#toolGrid .tl b')].map((b) => b.textContent) }));
       k('E1 Kế hoạch mặc định như cũ: "Kế Hoạch và Nhắc Việc", nút "Hôm nay", "Dưỡng sinh tiết …", 6 ô tiện ích; có data-nd (≥ 15) và data-nd-khoa (≥ 1: lịch App tự tính)', v0.h1 === 'Kế Hoạch và Nhắc Việc' && v0.hom === 'Hôm nay' && /^Dưỡng sinh tiết /.test(v0.ds) && v0.o.length === 6 && v0.nd >= 15 && v0.khoa >= 1, JSON.stringify(v0));
-      // 8/11/2026 giờ POS: thêm một ngày lễ dương 8/11 vào danh mục
-      await datBan(t, { 'kh.tieuDe': 'Kế Hoạch Của Tôi', 'kh.leDuong': [{ ngay: '8/11', ten: 'Ngày thử nghiệm' }] });
+      // ngày đang chọn ở thẻ ngày (hôm nay): thêm đúng ngày đó thành ngày lễ dương trong danh mục
+      const ngayChon = await t.evaluate(() => `${document.querySelector('.cal-hero .big').textContent}/${/Tháng (\d+)/.exec(document.querySelector('.cal-hero .my').textContent)[1]}`);
+      await datBan(t, { 'kh.tieuDe': 'Kế Hoạch Của Tôi', 'kh.leDuong': [{ ngay: ngayChon, ten: 'Ngày thử nghiệm' }] });
       await t.waitForFunction(() => document.querySelector('.topbar h1')?.textContent === 'Kế Hoạch Của Tôi');
       const v1 = await t.evaluate(() => ({ h1: document.querySelector('.topbar h1')?.textContent, hero: document.querySelector('.ch-hol')?.textContent || '', le: document.querySelector('#calHols')?.innerText || '' }));
       k('E1 bản giả đổi 2 khoá Kế hoạch (tiêu đề, ngày lễ): tiêu đề đổi; ngày lễ mới "Ngày thử nghiệm" hiện ở thẻ ngày và danh sách ngày lễ trong tháng', v1.h1 === 'Kế Hoạch Của Tôi' && /Ngày thử nghiệm/.test(v1.hero) && /Ngày thử nghiệm/.test(v1.le), JSON.stringify(v1));
