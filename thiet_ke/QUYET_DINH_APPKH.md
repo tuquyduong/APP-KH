@@ -4,6 +4,9 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 12.11.2026
+- **Đợt 6 đã gộp** (12.11): chữ Ưu đãi / Tài khoản / Hồ sơ / Hỗ trợ / Đăng nhập / Mã thành viên / Trắc nghiệm vào danh mục (KH-ND-3c); Mã thành viên to, nền trắng, giữ màn sáng; vệt sáng luôn chạy; tiện ích Xe cộ, Uống thuốc, Chu kỳ (không khoá mã), Văn khấn điền sẵn Tín chủ / Địa chỉ (KH-UI-5f).
+- **Ô tiện ích bị ẩn thì đường dẫn cũng không mở** (chủ quán 12.11, theo đề nghị): Chu kỳ với khách xưng anh / chú / bác / ông, hoặc ô đã tắt ở /admin → mở thẳng link thì về Kế hoạch (KH-ND-3d).
+- **Mã thành viên** (12.11): chủ quán thử quét thật ở quầy; quét chậm thì phóng to mã thêm (một dòng CSS).
 - **Đợt 5 đã gộp** (12.11): Trang chủ luôn có banner "Hôm nay" chạy ánh sáng + dải các trang chữ loé sáng như demo, chung một nguồn chữ (KH-UI-5g); lời chào "anh Linh"; chữ Menu / Trang món / Giỏ (KH-ND-3b) và Thanh toán / Theo dõi đơn / Đơn hàng / PIN (KH-ND-3e) đã vào danh mục — /admin sửa được, khách thấy y hệt.
 - **Chu kỳ KHÔNG khoá mã** (chủ quán 11.11: "đây là tài khoản riêng của khách") — bỏ dòng "Khoá bằng mã PIN khi mở" của demo (KH-UI-5f).
 - **Mã thành viên dễ quét ở quầy** (POS QUET-1): mã to, nền trắng, giữ màn không tắt, nhắc khách tăng độ sáng (trang web không tự tăng độ sáng được) — KH-ND-3c.

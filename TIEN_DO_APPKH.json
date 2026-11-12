@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 56,
+  "phien_ban_so": 57,
   "cap_nhat": "2026-11-12",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -188,26 +188,29 @@
       "ma": "KH-ND-3c",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-ND-3a"
       ],
       "ten": "Gom noi dung ve danh muc: Uu dai, Tai khoan, Ho so, Ho tro, Dang nhap, Ma thanh vien, Trac nghiem (phan chu man; noi dung chuyen mon khoa)",
-      "ghi_chu": "11.11 tu KH-ND-3a: HoSo.jsx:42 con so dau === \"Chao\" -> dung coBuoi cua chiaLoiChao (mot dong, PHAI xong truoc KH-ADMIN-1); Uu dai truyen anh cho TheMoi (UuDai.jsx:215 — doi home.logo o /admin thi the moi Uu dai van logo cu); tracNghiemChu.js O_TRAC_NGHIEM chuyen han vao danh muc | 11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 11.11 POS QUET-1 (truoc khai truong): quay quet QR tren dien thoai khach bang camera truoc man khach -> man Ma thanh vien (src/pages/ManQR.jsx) ma TO gan het be ngang, nen trang, vien trang >= 4 o (dang 2), giu man sang (Screen Wake Lock khi co), dong nhac \"Tang do sang man hinh de quay quet nhanh\" (web KHONG chinh duoc do sang). Chay SAU KH-UI-5g (cung dung loi chao / Ho so) | 12.11 mo (song song KH-UI-5f): them B ma thanh vien de quet (POS QUET-1: to, nen trang, vien >= 4 o, giu man sang, nhac tang do sang), C1 nho chuong trinh tren may (banner khong nhay chu mac dinh), C2 dai gan data-nd dung khoa, C3 ha_no_chu giu dong so 0 (het xung dot khi gop song song), C4 vet sang LUON chay ke ca may bat giam chuyen dong (chu quan 12.11)",
+      "ghi_chu": "11.11 tu KH-ND-3a: HoSo.jsx:42 con so dau === \"Chao\" -> dung coBuoi cua chiaLoiChao (mot dong, PHAI xong truoc KH-ADMIN-1); Uu dai truyen anh cho TheMoi (UuDai.jsx:215 — doi home.logo o /admin thi the moi Uu dai van logo cu); tracNghiemChu.js O_TRAC_NGHIEM chuyen han vao danh muc | 11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 11.11 POS QUET-1 (truoc khai truong): quay quet QR tren dien thoai khach bang camera truoc man khach -> man Ma thanh vien (src/pages/ManQR.jsx) ma TO gan het be ngang, nen trang, vien trang >= 4 o (dang 2), giu man sang (Screen Wake Lock khi co), dong nhac \"Tang do sang man hinh de quay quet nhanh\" (web KHONG chinh duoc do sang). Chay SAU KH-UI-5g (cung dung loi chao / Ho so) | 12.11 mo (song song KH-UI-5f): them B ma thanh vien de quet (POS QUET-1: to, nen trang, vien >= 4 o, giu man sang, nhac tang do sang), C1 nho chuong trinh tren may (banner khong nhay chu mac dinh), C2 dai gan data-nd dung khoa, C3 ha_no_chu giu dong so 0 (het xung dot khi gop song song), C4 vet sang LUON chay ke ca may bat giam chuyen dong (chu quan 12.11) | 12.11 chat soat cuoi DAT: dau nhanh 3160eee; cong tinh + chay kieu GitHub DAT voi main e107f85; doc diff: chi chuyen chu, khong doi logic tien; 51 cap anh: 48 giong het, 3 cap Ma thanh vien lech co chu dich; the QR 78vw nen trang vien 4 o nhung o ma xap xi cu — chu quan thu quet o quay, cham thi tang .khung-qr (src/giaoDien/giaoDien.css); kh_chuong_trinh (thong tin cong khai, ngoai luuMay.js) khong han dung — lan mo sau thay ngay. Gop PR #34 (64b02d3)",
       "ngay": "2026-11-12",
-      "han": "2026-11-14"
+      "han": "2026-11-14",
+      "commit": "64b02d3"
     },
     {
       "ma": "KH-ND-3d",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
         "KH-ND-3a",
         "KH-UI-5f"
       ],
       "ten": "Gom noi dung ve danh muc: Ke hoach + moi tien ich (loi khuyen tiet khi, theo mua, ngay le, van khan dang danh sach); ten can chi / tiet khi sang noiDung/coDinh",
-      "ghi_chu": "11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 12.11 mo SAU KH-UI-5f gop (cung tep Ke hoach / tien ich); kehoach.js gan 500 dong — xem tach tep"
+      "ghi_chu": "11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 12.11 mo SAU KH-UI-5f gop (cung tep Ke hoach / tien ich); kehoach.js gan 500 dong — xem tach tep | 12.11 mo (sau 3c + 5f gop): ngay le / theo mua / tiet khi / van khan thanh muc sua duoc (bai khan moi dip mot doan, bien dung cho tu dien); lich co dinh (thu, can chi, tiet khi, thang am) sang src/noiDung/coDinh/lich.js — muc khoa tutinh; B1 o tien ich an (Chu ky voi xung ho nam, o tat o /admin) thi duong dan cung khong mo -> thay ve /kehoach; B2 GiaMon bo replace(d) -> dinhDangSoTien; B3 tel: o Theo doi don chi so",
+      "ngay": "2026-11-12",
+      "han": "2026-11-15"
     },
     {
       "ma": "KH-ND-3e",
@@ -238,15 +241,16 @@
       "ma": "KH-UI-5f",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-UI-5e",
         "KH-ND-3a"
       ],
       "ten": "Tien ich theo demo cuoi: Xe co (nhieu xe, lich bao duong, giay to), Uong thuoc (gio uong, danh dau, 7 ngay), Chu ky (rieng tu, khoa PIN, an voi anh/chu/bac/ong)",
-      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to | 10.11 tu soat KH-UI-5e: 3 o Xe co / Uong thuoc / Chu ky dang \"Sap co\" (BieuTuongTienIch.jsx, TienIch.jsx) — 5f thay; thu mo mot dip van khan trong trinh duyet Zalo | 10.11 lam SAU KH-ND-3a: chu / anh moi viet qua danh muc + nd() ngay tu dau (CLAUDE.md muc 11) | 11.11 chu quan (anh chup Van khan Ong Tao): Tin chu / Dia chi phai co o nhap ro + MAC DINH cho moi bai khan — o \"Thong tin gia dinh khi khan\" o dau man Van khan (dien mot lan, moi bai dung chung) + dong gon \"Tin chu: … · Dia chi: … Sua ›\" o dau moi bai; mac dinh Tin chu = ho ten khach (ten POS, KHONG kem xung ho), Dia chi = dia chi da luu (dia_chi POS), Ho gia tien = chu dau cua ho ten — sua duoc, chi luu tren may; trong bai: cho trong hien \"(cham de dien dia chi)\", cham vao cho to mau bat ky → o nhap dung muc do; thieu thi nhac nhe | 11.11 mo song song voi KH-UI-5g, KH-ND-3b, KH-ND-3e, KH-UI-5f (moi viec mot tep nhom danh muc chat tao san, khong sua chung index.js) | 11.11 khoa Chu ky = MA 4 SO RIENG tren may (bam SHA-256 + muoi), KHAC PIN vi (PIN vi do POS kiem, can mang); quen ma -> xoa du lieu chu ky de dat lai | 11.11 chu quan: KHONG khoa ma Chu ky (\"tai khoan rieng cua khach\") — ghi chu \"khoa = ma 4 so rieng\" o tren HET HIEU LUC; may da lam khoa theo phieu cu -> sua_KHUI5f_bokhoa.py (PHIEU 12.11) -> may go phan khoa -> chat soat lai -> gop main (xung dot no_chu_cung.txt chat tinh lai)",
+      "ghi_chu": "10.11 tach tu KH-UI-5e (cung file tien ich — lam SAU 5e). Du lieu suc khoe chi tren may, tin nhac khong ghi ten thuoc / noi dung | 10.11 chu quan: Van khan them MOT dong goi y \"hoa qua, tra dang le\" (chi chu, khong nut dat); khong lam Doc to | 10.11 tu soat KH-UI-5e: 3 o Xe co / Uong thuoc / Chu ky dang \"Sap co\" (BieuTuongTienIch.jsx, TienIch.jsx) — 5f thay; thu mo mot dip van khan trong trinh duyet Zalo | 10.11 lam SAU KH-ND-3a: chu / anh moi viet qua danh muc + nd() ngay tu dau (CLAUDE.md muc 11) | 11.11 chu quan (anh chup Van khan Ong Tao): Tin chu / Dia chi phai co o nhap ro + MAC DINH cho moi bai khan — o \"Thong tin gia dinh khi khan\" o dau man Van khan (dien mot lan, moi bai dung chung) + dong gon \"Tin chu: … · Dia chi: … Sua ›\" o dau moi bai; mac dinh Tin chu = ho ten khach (ten POS, KHONG kem xung ho), Dia chi = dia chi da luu (dia_chi POS), Ho gia tien = chu dau cua ho ten — sua duoc, chi luu tren may; trong bai: cho trong hien \"(cham de dien dia chi)\", cham vao cho to mau bat ky → o nhap dung muc do; thieu thi nhac nhe | 11.11 mo song song voi KH-UI-5g, KH-ND-3b, KH-ND-3e, KH-UI-5f (moi viec mot tep nhom danh muc chat tao san, khong sua chung index.js) | 11.11 khoa Chu ky = MA 4 SO RIENG tren may (bam SHA-256 + muoi), KHAC PIN vi (PIN vi do POS kiem, can mang); quen ma -> xoa du lieu chu ky de dat lai | 11.11 chu quan: KHONG khoa ma Chu ky (\"tai khoan rieng cua khach\") — ghi chu \"khoa = ma 4 so rieng\" o tren HET HIEU LUC; may da lam khoa theo phieu cu -> sua_KHUI5f_bokhoa.py (PHIEU 12.11) -> may go phan khoa -> chat soat lai -> gop main (xung dot no_chu_cung.txt chat tinh lai) | 12.11 chat soat cuoi DAT: dau nhanh a1a2f89 (go HET khoa Chu ky, ban luu cu co khoa mo thang); gop main sau 3c: xung dot no_chu_cung.txt (kehoach.js 42 theo bo dem moi) + SO CA thu_KHUI5e 72 / thu_KHUI5b 76 (ca them tu main) -> gop_KHUI5f.py; cay gop = cay chat da chay --day-du co Chromium; cong tinh + chay tren nhanh sau gop DAT. Gop PR #35 (84b8699)",
       "ngay": "2026-11-11",
-      "han": "2026-11-15"
+      "han": "2026-11-15",
+      "commit": "84b8699"
     },
     {
       "ma": "KH-QC-1",
@@ -698,7 +702,7 @@
         "KH-ND-3a",
         "POS ND-API-1 (gop ~15.11; hop dong RIENG HOP_DONG_API_ND.md v1)"
       ],
-      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai | 10.11 chu quan: lam TRUOC khai truong; bang sua TU SINH tu danh muc; moi bang co nut \"Luu\" (nhap) + nut \"Cap nhat toan bo\" moi doi giao dien khach; giu moi phien ban, so cu-moi, quay lai ban cu; an/hien khoi; mo het chu (ke ca nut, bao loi); phan POS / tu tinh hien khoa co chi duong | 11.11 chu quan: kho noi dung o nho POS (/api/nd, nha rieng — tach sau chi doi 1 dia chi), quyen trong Cai dat › Phan quyen POS; nut but ✎ rieng, cham cho khac van chuyen man; \"Di toi man\" + \"Danh sach chu cua man\"; nut lam that bi khoa khi sua; App noi kho qua MOT tep src/noiDung/khoNoiDung.js | 11.11 bo phu thuoc KH-TACH-1 (noi dung o nho POS /api/nd, khong can may rieng truoc). Truoc khi mo sua chao.dau: HoSo.jsx dung coBuoi (KH-ND-3c); danhsach chua chan muc trung (home.feat.mon nhap trung ma -> trung key React) — chan trung chung cho moi danhsach o bang sua | 11.11 POS tra loi thu (a) (TRA_LOI_POS_11112026_a.md): ND-API-1 NHAN, Opus, bat dau ~13.11, gop ~15.11; nhan NGUYEN ten cua / bang / ma loi / gioi han thu App 11.11 a -> App lam KH-ADMIN-1 NGAY theo ten do. POS chot: anh luu trong bang nd_anh (Xuat / Nhap mang ca anh); ve /api/nd RIENG (~12 gio, gioi han sai nhu dang nhap POS, kiem quyen moi lan ghi) — thay cho \"cua xac nhan tai khoan nhan vien D9\"; CORS chi tuquyduong.com + app-kh.pages.dev; quyen nhom \"App khach hang — noi dung\" (4 quyen, mac dinh chi chu quan) | 12.11 tu soat KH-ND-3b: ~10 khoa qua ham tra chuoi (gv.ghi.*, thu.t2..t8…) chua gan data-nd tai cho — /admin tim qua \"Danh sach chu cua man nay\"; mot so chu co dau cach cuoi (gio.daXoa, gv.ghi.truocA) — bang sua KHONG cat khoang trang dau / cuoi"
+      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai | 10.11 chu quan: lam TRUOC khai truong; bang sua TU SINH tu danh muc; moi bang co nut \"Luu\" (nhap) + nut \"Cap nhat toan bo\" moi doi giao dien khach; giu moi phien ban, so cu-moi, quay lai ban cu; an/hien khoi; mo het chu (ke ca nut, bao loi); phan POS / tu tinh hien khoa co chi duong | 11.11 chu quan: kho noi dung o nho POS (/api/nd, nha rieng — tach sau chi doi 1 dia chi), quyen trong Cai dat › Phan quyen POS; nut but ✎ rieng, cham cho khac van chuyen man; \"Di toi man\" + \"Danh sach chu cua man\"; nut lam that bi khoa khi sua; App noi kho qua MOT tep src/noiDung/khoNoiDung.js | 11.11 bo phu thuoc KH-TACH-1 (noi dung o nho POS /api/nd, khong can may rieng truoc). Truoc khi mo sua chao.dau: HoSo.jsx dung coBuoi (KH-ND-3c); danhsach chua chan muc trung (home.feat.mon nhap trung ma -> trung key React) — chan trung chung cho moi danhsach o bang sua | 11.11 POS tra loi thu (a) (TRA_LOI_POS_11112026_a.md): ND-API-1 NHAN, Opus, bat dau ~13.11, gop ~15.11; nhan NGUYEN ten cua / bang / ma loi / gioi han thu App 11.11 a -> App lam KH-ADMIN-1 NGAY theo ten do. POS chot: anh luu trong bang nd_anh (Xuat / Nhap mang ca anh); ve /api/nd RIENG (~12 gio, gioi han sai nhu dang nhap POS, kiem quyen moi lan ghi) — thay cho \"cua xac nhan tai khoan nhan vien D9\"; CORS chi tuquyduong.com + app-kh.pages.dev; quyen nhom \"App khach hang — noi dung\" (4 quyen, mac dinh chi chu quan) | 12.11 tu soat KH-ND-3b: ~10 khoa qua ham tra chuoi (gv.ghi.*, thu.t2..t8…) chua gan data-nd tai cho — /admin tim qua \"Danh sach chu cua man nay\"; mot so chu co dau cach cuoi (gio.daXoa, gv.ghi.truocA) — bang sua KHONG cat khoang trang dau / cuoi | 12.11 tu soat KH-ND-3c: DauManCon va Thongbao chua gan data-nd — gan khi lam Che do sua (hoac \"Danh sach chu cua man nay\"); loi POS (nm.loi, qc.pos, ud.ct.pos) la muc khoa"
     },
     {
       "ma": "KH-CHU-MA-1",

@@ -1,59 +1,74 @@
-# Bàn giao chat App KH (cập nhật 02.11.2026, tối)
+# Bàn giao chat App KH (cập nhật 12.11.2026 chiều)
 
-<!-- File này nằm trong kho APP-KH (thiet_ke/) và trong Project. Chat App KH mới: ĐỌC FILE NÀY TRƯỚC, rồi làm đúng mục "Bắt đầu chat mới". -->
+<!-- Bản MỚI NHẤT nằm ở Project (claude/BAN_GIAO_CHAT_APPKH.md). Bản trong kho APP-KH (thiet_ke/BAN_GIAO_CHAT_APPKH.md) do script xong_DOT6_mo_KHND3d.py chép (12.11) —
+     script kế tiếp chép bản Project mới hơn (nếu có) vào thiet_ke/ cho khớp. -->
 
-## Prompt chuyển chat (chủ quán dán nguyên văn; chat nào được hỏi "chuyển chat" thì cập nhật file này trước rồi đưa lại câu này)
-> Đây là chat App KH mới, tiếp nối chat cũ. Clone github.com/tuquyduong/APP-KH, đọc thiet_ke/BAN_GIAO_CHAT_APPKH.md rồi làm đúng mục "Bắt đầu chat mới" trong đó. Luôn trả lời tôi dễ hiểu, từng bước cụ thể.
+## Prompt chuyển chat (chủ quán dán nguyên văn vào chat mới, trong Project "APP KH - CLAUDE AUTONOMOUS")
+> Đây là chat App KH mới, tiếp nối chat cũ. Đọc file Project `claude/BAN_GIAO_CHAT_APPKH.md` rồi làm đúng mục "Bắt đầu chat mới" trong đó. Luôn giải thích dễ hiểu câu hỏi của máy, đề xuất câu trả lời của bạn để tôi quyết định; trả lời từng bước cụ thể.
 
 ## Bắt đầu chat mới
-1. Clone `github.com/tuquyduong/APP-KH` → đọc theo thứ tự: file này, `thiet_ke/QUYET_DINH_APPKH.md`, `CLAUDE.md` (§8–§10), `TIEN_DO_APPKH.json`, `thiet_ke/DOI_CHIEU_TINH_NANG.md`, `thiet_ke/trao_doi/` (file mới nhất).
-2. Clone `github.com/pos-tuquyduong/pos-tuquyduong` (chỉ đọc): `HOP_DONG_API_KH.md`, `QUYET_DINH_CHU_QUAN.md`, `TIEN_DO_POS.json`.
-3. Xem POS thật: trình duyệt của Claude (chủ quán bấm Ctrl+Shift+B trong app Claude máy tính), đã đăng nhập tài khoản `claude-xem` (Staff, CHỈ XEM — không bán, không huỷ đơn). App thật: `https://app-kh.pages.dev` (đã cho phép trong trình duyệt Claude). Tài liệu đối chiếu đầy đủ: https://claude.ai/artifact/KV7rGx8sxzJX9GMfhAG6D4
-4. Tóm tắt cho chủ quán vài dòng: hiểu tình trạng thế nào, việc chị cần làm tiếp (mục "Chủ quán làm ngay" bên dưới).
+1. Đọc hết file này. Rồi `git clone https://github.com/tuquyduong/APP-KH` (đọc được, KHÔNG có quyền GitHub API — `gh` báo 403; chỉ dùng `git fetch`). Đọc: `CLAUDE.md` (nhất là §5, §8–§11),
+   `thiet_ke/QUYET_DINH_APPKH.md` (mục 10.11 → 12.11), `TIEN_DO_APPKH.json` (sổ việc), `thiet_ke/trao_doi/` (thư mới nhất).
+2. `git clone --depth 50 https://github.com/pos-tuquyduong/pos-tuquyduong` (công khai, chỉ đọc): `LICH_KHAI_TRUONG.md` (lịch POS theo ngày), `TIEN_DO_POS.json`, `HOP_DONG_API_KH.md`
+   (POS đang **v13**; bản chép trong kho App còn **v11**!). Kho POS có 87 nhánh — đừng fetch từng nhánh (quá 2 phút); đọc `TIEN_DO_POS.json` trên main là đủ.
+3. Xem App thật: sandbox KHÔNG vào được app-kh.pages.dev (proxy 403) → dùng **trình duyệt trong app Claude trên máy chủ quán** (công cụ `Claude_Browser__*`: `preview_start`
+   rồi `javascript_tool` để đo). POS thật: `https://www.pos-tuquyduong.io.vn`.
+4. Fetch nhánh đang chạy (mục Tình trạng) → xem máy làm tới đâu → báo chủ quán vài dòng: đang ở đâu, chị cần làm gì tiếp.
 
-## Vai trò chat App KH
-- Chỉ xây App KH: soạn phiếu `viec/<MÃ>/phieu.md`, soạn script Python (THỬ trên bản sao kho trước khi gửi — bare repo + clone, node_modules là thư mục THẬT, không symlink: bài thử bộ khung dọn node_modules; chủ quán chạy ở Shell Replit POS `~/workspace`; Replit CHỈ có kho POS → script tự dùng / tự tải kho APP-KH về `~/APP-KH` (khuôn: `claude/ghi_QD_31102026.py` ở Project), không ghi gì vào kho POS), soát cuối việc máy Claude Code làm (nhánh `viec/<MÃ>`, `/lam-viec <MÃ>`).
-- Soát cuối = chạy lại `node tu_chay/cong.js tinh` và `chay` với `main` mới nhất, KIỂU GITHUB (ẩn Playwright: `NODE_OPTIONS=-r <tệp chặn require('playwright')>`), thử ghép vào main, đọc code đường tiền / dữ liệu, chụp ảnh khi cần.
-- KHÔNG sửa kho POS. Cần gì ở POS → `YEU_CAU_APPKH_GUI_POS_<ngày>.md` cho chủ quán chuyển; POS trả `TRA_LOI_POS_<ngày>.md`. Chép cả hai vào `thiet_ke/trao_doi/` ở script kế tiếp.
-- Nói với chủ quán: lời thường, ít thuật ngữ, nói rõ việc là gì và chị cần làm gì, từng bước. Cần quyết → giải thích + đề xuất ("theo đề nghị"). Đã quyết → ghi `thiet_ke/QUYET_DINH_APPKH.md` + sổ / CLAUDE.md, không hỏi lại.
-- Bài học: cổng GitHub không có trình duyệt (CLAUDE.md §9, `SỐ CA` theo `KHONG_TRINH_DUYET=1`); script tự xoá sau khi chạy — giữ bản gốc ở chỗ khác khi thử; chủ quán không sửa tay SỐ CA sau khi script đã ghi; 3 bài thử bộ khung (`thu_nguoi_gac`, `thu_cong_cu`, `thu_cong`) có 6 ca đỏ SẴN vì cấu hình riêng của POS — so "không đỏ thêm" chứ không đòi xanh hết.
+## Vai trò chat App KH (giữ nguyên cách làm)
+- Soạn phiếu `viec/<MÃ>/phieu.md` + script Python chủ quán chạy ở **Shell Replit POS** (`~/workspace`). Script tự dùng / tự tải kho về `~/APP-KH`, không ghi gì kho POS, kiểm từng bước,
+  lệch thì DỪNG + trả về như cũ, **chạy lại an toàn**, **tự xoá** sau khi xong. Máy Claude Code làm việc theo phiếu (`/lam-viec <MÃ>` trên đúng nhánh `viec/<MÃ>`), chạy thẳng tới hết.
+- Máy hay DỪNG GIỮA CHỪNG mà không hỏi gì (vd đang chờ bài thử chạy nền) → chủ quán dán log; chat đưa câu nhắn "Làm tiếp … tới hết bước N, không dừng" để chủ quán gõ vào máy.
+- **Thử MỌI script trên GitHub giả trước khi gửi:** `git init --bare <tmp>/gh/tuquyduong/APP-KH.git` (đường dẫn phải chứa `tuquyduong/APP-KH`), `git push` các ref THẬT vào đó,
+  `symbolic-ref HEAD refs/heads/main`, clone vào `<tmp>/home/APP-KH` (đặt `user.email` / `user.name`), chạy `HOME=<tmp>/home python3 <bản chép>.py` (chép script ra file khác — script tự xoá).
+  Giả lập GitHub gộp PR bằng `merge --no-ff -m "Merge pull request #N from tuquyduong/viec/<MÃ>"`. Chạy lại lần 2 phải ra "XONG TỪ TRƯỚC". Sau đó chạy cổng `tinh` + `chay` trên nhánh kết quả.
+- **Khuôn script ở Project** (copy rồi sửa, đừng viết lại): `claude/mo_DOT5.py` (mở nhiều việc), `claude/xong_DOT6_mo_KHND3d.py` (ghi việc xong — tìm commit gộp có `^2` = đầu nhánh
+  đã soát, hoặc nhận đầu nhánh sau script gộp theo CÂY — + mở việc mới + chép bàn giao; sinh bằng `tao_xong.py` nhúng phiếu base64), `claude/gop_KHUI5f.py` (gộp main vào nhánh khi
+  xung đột: ghi bản giải đã tính sẵn, KIỂM CÂY GỘP = cây chat đã chạy đủ bài thử, commit "GOP-<MÃ> gop main …" + commit "HEAD ĐÃ KIỂM: <commit gộp>" — **kèm sửa `SỐ CA` trong
+  `bang_chung_do.txt` khi main thêm ca vào bài cũ mà nhánh có sửa**: cổng A16 đếm số ca ở head SAU gộp), `claude/sua_KHUI5f_bokhoa.py` (chủ quán đổi ý sau khi máy làm).
+- **Soát cuối** (trước khi bảo chủ quán Merge): thư mục có `goc/` (main = base PR, `npm ci` một lần) + `pr/` (nhánh, chép `node_modules`) →
+  `node goc/tu_chay/cong.js tinh pr <BASE> <HEAD> viec/<MÃ>` và `KHONG_TRINH_DUYET=1 node goc/tu_chay/cong.js chay …` (chạy nền bằng `nohup bash -c "…" &`, ~5 phút / nhánh); gộp thử
+  MỌI nhánh đang mở theo thứ tự định gộp; `node kiem_tra_truoc_khi_giao.js --day-du` CÓ Chromium trên cây gộp (~15 phút, chạy nền); **chạy lại cổng `chay` trên nhánh SAU script gộp**
+  (base = main mới) — lần 12.11 nhờ bước này mới thấy A16 đỏ; đọc diff (màn tiền: chỉ đổi chữ, không đổi logic); xem ảnh `viec/<MÃ>/so_anh/`. Máy KHÔNG được `git merge`.
+- Luật cổng hay vấp: A7 (phiếu chỉ đổi ở commit "PHIEU: <MÃ>"), A11 (bài sửa phải đỏ trên gốc), A16 (SỐ CA theo `KHONG_TRINH_DUYET=1`, ở head), **A19** (`HEAD ĐÃ KIỂM: <SHA>` ĐẦU DÒNG,
+  không gạch đầu dòng, là dòng cuối có dạng đó; commit gộp main sau lần kiểm cũng tính là đổi code; commit chỉ đổi `viec/<MÃ>/` sau đó thì được), "Bài thử cũ sửa" chỉ khi bài cũ vẫn xanh.
+- **K10 "chữ cứng chỉ được giảm"** (`cong_cu/no_chu_cung.txt`, `cong_cu/ha_no_chu.js`): từ KH-ND-3c tệp hết chữ GIỮ dòng số 0 (bớt xung đột). Giải xung đột: số nợ mỗi tệp = số đếm thật
+  bằng bộ đếm của main (`demTatCa` vs `docNo` lệch 0, `vietNo(docNo)` = tệp). Bộ đếm main (sau KH-ND-3b) đếm nhiều hơn bộ đếm cũ trên nhánh cũ → đừng lấy số của nhánh.
+- **Luật "Thêm gì cũng phải sửa được ở /admin"** (CLAUDE.md §11): mọi chữ / ảnh / nút / danh sách / khối mới khai mục danh mục `src/noiDung/nd/<nhóm>.js` NGAY; soát cuối thiếu là KHÔNG ĐẠT.
+- KHÔNG sửa kho POS. Cần POS → `YEU_CAU_APPKH_GUI_POS_<ngày>.md` (chủ quán chuyển); POS trả `TRA_LOI_POS_<ngày>.md` → lưu Project + chép vào `thiet_ke/trao_doi/` ở script kế tiếp.
+- Nói với chủ quán: tiếng Việt dễ hiểu, ít thuật ngữ, từng bước đánh số; câu hỏi của máy → kể lại bằng lời thường + đề xuất của chat → chị quyết; đã quyết thì ghi sổ, không hỏi lại.
+  Chị muốn: "hệ thống thông minh, code chuẩn, đơn giản, không lằng nhằng". Project gần đầy (~1,7 / 2 MB) — chỉ lưu script / phiếu cần thiết.
 
-## Tình trạng 02.11
-- Đã gộp: KH-UI-2, KH-XEM-1, KH-LINK-1, KH-UI-5a, KH-SLOGAN-1, KH-LUU-1, KH-UI-3a, KH-UI-3c, KH-MUA-1, KH-KHOP-1, KH-UI-3b, KH-UI-3d, KH-NHANH-1; KH-ND-1 (nhu cầu 10 món tạm trong `src/noiDung/mon.js`, theo `unique_id` POS). Bộ khung tự chạy 1.8.1. Sổ việc v22.
-- **KH-MUA-1b ĐANG LÀM** (máy Claude Code, Opus, nhánh `viec/KH-MUA-1b`, hạn 04.11). Kế hoạch dc07781 chat soát ĐẠT, chủ quán duyệt 02.11 kèm 8 điểm dặn (xem "Việc kế tiếp" 1). Chưa có commit code khi chuyển chat.
-- KH-MUA-1 (App, PR #9 7d11fce): giỏ, Thanh toán, Theo dõi đơn dựng sẵn, cờ `DAT_ONLINE = false`, cổng tiêm `datCongDatDon` — KH-MUA-1b bỏ cổng, nối cửa thật v5, bật cờ.
-- App thật: `https://app-kh.pages.dev`, đăng nhập được (mã lấy ở POS: Khách hàng → bấm khách → "🔑 Mã đăng nhập App"). POS ở `https://www.pos-tuquyduong.io.vn` (`VITE_POS_API` trên Cloudflare). Trình duyệt của Claude đã đăng nhập App KH (chủ quán, 01.11).
-- Lịch: POS báo khai trương **sớm nhất 14–15.11** (chưa chốt) — vì chủ quán chốt 02.11 làm đủ nạp tiền / quà chào mừng / ngày sinh / chương trình / hạng / ghi chú nhanh / hoá đơn TRƯỚC khai trương.
+## Tình trạng 12.11.2026 chiều
+- **Đợt 6:** KH-ND-3c (chữ Ưu đãi / Tài khoản / Hồ sơ / Hỗ trợ / Đăng nhập / Mã thành viên / Trắc nghiệm; QR dễ quét; vệt sáng luôn chạy) + KH-UI-5f (Xe cộ, Uống thuốc, Chu kỳ
+  không khoá, Văn khấn điền sẵn) — chat soát ĐẠT 12.11; thứ tự gộp: PR 3c → `gop_KHUI5f.py` → PR 5f → `xong_DOT6_mo_KHND3d.py` (ghi xong + mở KH-ND-3d, sổ v57).
+- **KH-ND-3d** (Sonnet, hạn 15.11): Kế hoạch + mọi tiện ích vào danh mục (ngày lễ, theo mùa, tiết khí, văn khấn thành mục sửa được; lịch cố định sang `src/noiDung/coDinh/lich.js`),
+  ô ẩn thì link cũng không mở, GiaMon bỏ cắt chữ "đ", `tel:` Theo dõi đơn. Sau 3d chữ cứng chỉ còn `src/tracNghiem.js` (chuyên môn, khoá).
+- **Việc chat làm tiếp:** soạn phiếu **KH-ADMIN-1** (Opus — /admin Chế độ sửa; POS ND-API-1 gộp ~15.11, tên cửa / bảng / mã lỗi theo thư `YEU_CAU_APPKH_GUI_POS_11112026.md`;
+  hợp đồng RIÊNG `HOP_DONG_API_ND.md` v1 khi POS gộp; gắn `data-nd` cho DauManCon / Thongbao; bảng sửa không cắt khoảng trắng) và **KH-THE-1** (Opus — bán thẻ hạng trên App,
+  hợp đồng v13 chép nguyên văn sang `thiet_ke/HOP_DONG_API_KH.md`). Hai việc cùng đụng `App.jsx` / `duongDan.js` → chia rõ dòng / tệp của nhau hoặc chạy nối nhau.
+- **Chờ POS** (lịch POS 09.11 + 11.11; App ~1 ngày sau mỗi hợp đồng): QC-APP-1 v14 → KH-QC-1 · VOUCHER-2 → App nhiều voucher / đơn (**thêm việc**) · COMBO-1a → App combo (**thêm việc**) ·
+  TOPPING-1 → KH-GHICHU-1 + topping · KH-NAP-1 + QUA-1 → KH-NAP-1 + KH-VI-2 · GIOVANG-1 `gia_mon[]` → giá Giờ vàng từng món (**thêm việc**) · KH-MUA-2 · MATKHAU-1 (~20–21.11) → KH-MK-1 ·
+  ND-API-1 (~15.11) → KH-ADMIN-1 + KH-SL-1. Sau khai trương: DOI-DIEM-1 → KH-DOI-1 · QUET-2 → KH-QUET-2 · GIOI-THIEU-1 → KH-GT-1 · QUA-TANG-1 → KH-QUA-1 · CHU-KHACH-1 → KH-CHU-MA-1.
+- **Khai trương:** POS 11.11 — sớm nhất T7 28.11, **thực tế khoảng T5 03.12**. Đánh giá chi tiết: `claude/DANH_GIA_TIEN_DO_11112026.md`.
 
-## POS (đọc thiet_ke/trao_doi/, file mới nhất trước)
-- Hợp đồng đang chạy thật: **v5** (KH-MUA-1 đặt đơn; sửa cuối bbb0892). v6 (SePay) chỉ đổi câu chữ.
-- **v7 ĐÃ HẸN, tên CHỐT** — mục "Đã hẹn" của `HOP_DONG_API_KH.md` trên main POS (2c81b0f, sổ POS v53): HANG-1 (`/hang` `chi_cap` `goi[]` `thu_bac`, `het_han: null`), QUA-1 (`/toi.khach.qua_chao_mung { so_tien, het_han }`), NAP-2 (`GET /goi-nap`, `POST /nap`, `GET /nap/:ma`, `GET /vi`), CT-1a (`/toi.khach.ngay_sinh`, `PUT /toi` 409 `NGAY_SINH_DA_CO` / 400 `NGAY_SINH_SAI`, `GET /chuong-trinh`), TOPPING-1 (`GET /ghi-chu-nhanh`, `ghi_chu` ≤ 120), HD-KH-1 (`/don/:ma.hoa_don[]`). App làm TRƯỚC theo tên này với POS giả; POS xong việc nào thì chuyển lên bảng cửa + tăng PHIEN_BAN.
-- Thứ tự POS (ước tính, ~1 ngày / việc): HANG-1 → NAP-1 → QUA-1 → NAP-2; HD-KH-1 + CORS `maxAge` → CT-1a; … TOPPING-1.
-- Thư App đã gửi 02.11: `YEU_CAU_APPKH_GUI_POS_02112026.md`, `_b`, `_c`, `_d`. Còn chờ POS: thêm `cach_tra`, `giu_vi`, `con_lai` vào `GET /don` + `GET /don/:ma` (thư d). Bỏ đề nghị `so_du_nap` (thư d).
-- POS bản 6 (`YEU_CAU_POS_GUI_APPKH_01112026_ban6.md`): HAI loại tiền — **Quà chào mừng** (mã tạo tài khoản, MỘT lần, CÓ hạn, đếm ngược) và **Thưởng nạp** (mỗi lần nạp, KHÔNG hạn, gộp số dư); `so_du_vi` = tổng dùng được hết cho mọi đơn; POS trừ quà trước. Hoá đơn App = mẫu POS; ghi chú món luôn có; giao hàng: không COD, không hoàn tiền khi giao thất bại do khách.
+## Quyết định 10–12.11 (đủ ở `thiet_ke/QUYET_DINH_APPKH.md`)
+- Nội dung sửa trực tiếp ở App (/admin), KHÔNG đụng phần POS; mở hết chữ; Lưu nháp → "Cập nhật toàn bộ" → giữ mọi phiên bản, quay lại được; quyền sửa trong Phân quyền POS; kho nội dung
+  "ở nhờ POS nhưng xây như nhà riêng"; sao lưu mỗi đêm bằng khoá chỉ đọc (KH-SL-1); /admin TRƯỚC khai trương.
+- Thêm gì cũng phải sửa được ở /admin (CLAUDE.md §11). Banner luôn ánh sáng; dải kiểu A; vệt sáng luôn chạy. Chu kỳ KHÔNG khoá mã; ô tiện ích ẩn thì link cũng không mở.
+  Văn khấn: Tín chủ = họ tên tài khoản (không xưng hô), Địa chỉ = địa chỉ tài khoản, Họ gia tiên = chữ đầu họ tên, sửa được, chỉ trên máy.
+- Mật khẩu đăng nhập + giữ đăng nhập 90 ngày (POS MATKHAU-1); đổi điểm: voucher ở App / quầy, quà hiện vật đổi ở quầy (App hiện nút "Đổi tại quầy"); QUET-2 làm theo lịch POS.
+- Google: hồ sơ CHƯA xác minh → xác minh bằng video trước khai trương (hướng dẫn: `claude/HUONG_DAN_XAC_MINH_GOOGLE.md`); API chỉ xin được khi hồ sơ đã xác minh ≥ 60 ngày.
 
-## Đã chốt 31.10 (chủ quán "theo đề nghị", riêng câu 2 sửa) — chi tiết ở QUYET_DINH_APPKH.md
-- 02.11: làm đủ trước khai trương (lùi nếu cần): nạp ví QR + lịch sử ví, quà chào mừng, ngày sinh (nhập một lần), chương trình đặc biệt, hạng HANG-1, ghi chú nhanh, hoá đơn theo mẫu POS · số dư ví dùng HẾT cho mọi đơn · ô "Số dư ví" hiện TỔNG `so_du_vi`, dưới là dòng nhỏ "Trong đó Quà chào mừng … — còn …" (không tự trừ) · Thanh toán: một công tắc "Trừ từ số dư ví", vẫn hỏi PIN khi trừ ví · giao diện mọi màn mới phải đúng tinh thần thiết kế app (demo).
-- Giữ viên số món ở tab Giỏ hàng · Thêm vào giỏ chỉ ở Trang món, thêm xong QUAY LẠI trang trước (không nhảy vào giỏ) · địa chỉ giao ở KH-MUA-2 · quán đóng thì khoá đặt · giỏ cũ giữ khi hết phiên, đổi khách thì xoá.
-- Văn phong lời chào (31.10 tối): "Chào buổi chiều, anh Linh!" — xưng hô giữa câu chữ thường, luôn có "!", nút xưng hô chữ thường như demo.
+## Chủ quán đang nợ / cần làm
+- Gắn tên miền **tuquyduong.com** vào Cloudflare Pages (KH-CF-1, chờ từ 06.11) — dán địa chỉ vào Cài đặt hoá đơn POS khi xong.
+- Xác minh hồ sơ Google khi biển hiệu lắp xong → gửi link nhận đánh giá.
+- Số điện thoại / Zalo / email hỗ trợ (mục Hỗ trợ đang ẩn vì trống).
+- Thử tay: Mã thành viên quét ở quầy (chậm → phóng to `.khung-qr`), màn không tự tắt; đóng hẳn App mở lại — banner hiện ngay tên chương trình; máy tính tắt hiệu ứng vẫn thấy vệt sáng;
+  Xe cộ / Uống thuốc / Chu kỳ / Văn khấn (5f).
 
-## Việc kế tiếp (theo thứ tự)
-1. **Soát cuối KH-MUA-1b** khi chủ quán gửi nhật ký máy. Đối chiếu đủ phiếu + 8 điểm chủ quán duyệt 02.11 (ghi trong `TIEN_DO_APPKH.json` KH-MUA-1b `ghi_chu`):
-   1) bản ghi `kh_don_gui` có `ma_don, cach_tra, giu_vi, con_lai` (số POS trả) → tải lại CÙNG máy vẫn hiện "Đã giữ … · quét QR …", máy khác thì ẩn số; 2) nút "Gửi lại đúng đơn này" + câu "Nếu quán đã nhận đơn, sẽ không tạo đơn thứ hai" + tóm tắt món / tổng, không nút bỏ qua (trừ > 24 giờ); 3) mở Thanh toán không chờ, nút Đặt khoá "Đang kiểm tra đơn trước…", `GET /don` lỗi thì mở nút; 4) "Mạng chậm, đang gửi lại…"; 5) nút Đặt chỉ bật khi báo giá đang hiện khớp giỏ + mã giảm (`tong_da_xem` đúng); 6) bài cũ `thu_KHMUA1.js` liệt kê ca sửa + lý do, giữ ca G2; 7) **công tắc "Trừ từ số dư ví"** kiểu `.switch` demo (thay 3 nút): tắt → `qr`, bật + đủ → `vi`, bật + thiếu → `vi_qr`, ví 0đ ẩn, bật thì PIN, QR cả đơn không PIN; 8) **giao diện đúng tinh thần thiết kế app** — dùng lại lớp / biến màu của `src/giaoDien/` + demo, `so_anh` 360/390/430 cho mọi khối mới, `doi_chieu_demo.md`. Chat XEM ẢNH trước khi gộp.
-   Kèm: cổng `tinh` + `chay` kiểu GitHub, thử ghép main, đọc kỹ đường tiền (khoá gửi, luật 4xx, PIN không lưu), /security-review nhánh. Chủ quán thử tay trên POS thật 3 bước (đơn QR rẻ, huỷ, ví + PIN). Script soát cuối: lưu `trao_doi/` mới chưa lưu (nếu có), ghi sổ.
-2. Sau KH-MUA-1b gộp: mở lần lượt theo v7 "Đã hẹn" (App làm trước với POS giả, KHÔNG chạy song song hai máy trên cùng màn): KH-HANG-2 → KH-SINH-1 + KH-CT-1 → KH-VI-2 (Quà chào mừng) + KH-NAP-1 (nạp QR + lịch sử ví `GET /vi`) → KH-GHICHU-1 → KH-HD-1. Mỗi phiếu chép mục "Đã hẹn" nguyên văn vào `viec/<MÃ>/` như KH-MUA-1b chép v5.
-3. KH-MUA-2 (Ahamove: phí giao, địa chỉ, tài xế; câu "giao không thành do khách thì không hoàn tiền" + ô "Tôi đã đọc"; không COD) khi POS báo tên cửa.
-4. KH-PWA-1 (service worker), KH-THU-1 (rút `thu_KHMUA1.js` dưới 60 giây), KH-ND-2 (đọc nội dung món từ `/menu`, bỏ `mon.js`).
-5. KH-UI-5b (Kế hoạch), KH-UI-4 (màn rộng), KH-CF-1 (gắn tuquyduong.com trước khai trương).
-6. Sau khai trương: KH-TN-1, KH-ADMIN-1, KH-HOSO-1 (phần còn lại), KH-TB-1, nút mua thẻ hạng (P3b)…
-- Bài học soát: bài cũ chỉ đổi phần Chromium → THÊM ca hàm thuần đỏ trên gốc, KHÔNG dùng `## Bài thử cũ sửa` (luật 6.9 POS); `SỐ CA` theo KHONG_TRINH_DUYET=1; phiếu liệt kê đủ bài cũ (glob `cong_cu/thu_KH*.js`); máy phải mở Claude Code ĐÚNG nhánh `viec/<MÃ>`.
-- Công cụ: /security-review cho POS (toàn bộ, ngay), App, nhánh tiền trước khi gộp, và lượt cuối trước khai trương.
-
-## Chủ quán làm ngay
-- Chờ máy xong KH-MUA-1b → gửi nhật ký cho chat soát cuối.
-- Gửi chat POS thư `YEU_CAU_APPKH_GUI_POS_02112026_d.md` (nếu chưa gửi).
-- Thử đăng ký SĐT MỚI khi POS xong **KH-QUAY-2**.
-- Cổng nhận tiền QR (SePay) + webhook trên POS theo hướng dẫn chat POS; Ahamove: chờ Aha.
-
-## Chủ quán còn nợ
-- Chữ banner "Hôm nay"; hotline / Zalo / email hỗ trợ; chọn nhà cung cấp Zalo ZNS; sửa tên trong POS (đang "Anh Linh"); khi POS có ô: nhu cầu + mô tả ngắn 10 món; danh sách "Bán chạy".
+## Ghi chú kỹ thuật cho việc sau
+- KH-ND-3c: `kh_chuong_trinh` (thông tin công khai) ngoài `luuMay.js`, không hạn dùng — chấp nhận; DauManCon / Thongbao chưa `data-nd` → KH-ADMIN-1.
+- KH-ND-3e: chưa chắc dải "Đơn đã sẵn sàng" có bị thanh tab che trên máy thật → thử tay.
+- Đề xuất bộ kiểm K11 (đường dẫn ảnh `/anh/…` viết thẳng ngoài `src/noiDung` "chỉ được giảm") + cổng so `no_chu_cung.txt` với gốc nhánh (chặn nâng tay) — gom một việc sau.
+- Sandbox của chat: thư mục nháp mất khi phiên kết thúc — mọi script / phiếu đã lưu ở Project `claude/`.
