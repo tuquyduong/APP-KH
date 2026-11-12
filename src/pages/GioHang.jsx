@@ -8,13 +8,14 @@ import { dungBaoGia } from '../dungDatDon.js';
 import { tenGiam } from '../datDon.js';
 import { dungGia } from '../heThong.js';
 import Man from '../components/Man.jsx';
+import Chu from '../components/Chu.jsx';
+import { nd, ndPhan, ndDau } from '../noiDung/nd.js';
 import { AnhMon } from '../components/MonO.jsx';
 import { Ico, En } from '../components/BieuTuong.jsx';
 
 // Giỏ hàng theo demo (cart). Khách chưa đăng nhập vẫn thêm / xem giỏ; "Tiếp tục" → Thanh toán (cần đăng nhập, App tự đưa qua /dangnhap?tiep=).
 // Mã giảm: POS áp (dòng giảm loai "ma_giam") → nút "✓ Đã áp dụng" như demo; không áp → hiện `ma_giam_loi.error` dưới ô mã.
 // App KHÔNG tính tiền: giá trên dòng = giá một ly (như Menu) × số lượng, chỉ để hình dung; tạm tính / giảm / phí / tổng CHỈ từ báo giá POS.
-const CHU_CHUA_TONG = 'Tổng tiền sẽ hiện khi quán xác nhận';
 
 /** Bảng tiền (demo cartSum / bảng ở checkout): mọi số lấy nguyên từ báo giá POS; chưa có báo giá → một dòng chờ, không số. */
 export function BangTien({ bg, loi }) {
@@ -24,12 +25,12 @@ export function BangTien({ bg, loi }) {
       {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>}
       {bg ? (
         <>
-          {bg.tamTinh !== null && <div className="summary-row"><span>Tiền hàng</span><span>{dinhDangGia(bg.tamTinh)}</span></div>}
+          {bg.tamTinh !== null && <div className="summary-row"><Chu k="gio.tienHang" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tamTinh)}</span></div>}
           {bg.giam.map((g, i) => <div className="summary-row discount" key={i}><span>{tenGiam(g.loai, hangToi && hangToi.ten)}</span><span>−{dinhDangGia(g.soTien)}</span></div>)}
-          {bg.phiGiao > 0 && <div className="summary-row"><span>Phí giao</span><span>{dinhDangGia(bg.phiGiao)}</span></div>}
-          <div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(bg.tong)}</span></div>
+          {bg.phiGiao > 0 && <div className="summary-row"><Chu k="gio.phiGiao" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.phiGiao)}</span></div>}
+          <div className="summary-row total"><Chu k="gio.tong" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tong)}</span></div>
         </>
-      ) : <div className="summary-row"><span>{CHU_CHUA_TONG}</span></div>}
+      ) : <div className="summary-row"><Chu k="gio.chuaTong" /></div>}
     </div>
   );
 }
@@ -45,7 +46,7 @@ function ThongBaoXoa({ daXoa, hoanTac, het }) {
   }, [daXoa]);
   if (!daXoa || typeof document === 'undefined') return null;
   return createPortal(
-    <div className="toast show wrap co-nut" role="status">Đã xoá {daXoa.ten} · <button type="button" onClick={hoanTac}>Hoàn tác</button></div>,
+    <div className="toast show wrap co-nut" role="status" {...ndDau('gio.daXoa')}>{ndPhan('gio.daXoa', { ten: daXoa.ten })}<button type="button" onClick={hoanTac} {...ndDau('gio.hoanTac')}>{nd('gio.hoanTac')}</button></div>,
     document.querySelector('.phone') || document.body,
   );
 }
@@ -56,20 +57,20 @@ function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
   const dangGv = !!mon && !!tt && tt.pha === 'dang' && maGv.has(mon.ma); // như Menu: món đang Giờ vàng hiện giá gốc, không giá hạng
   const gia = mon ? giaHinhDung(mon, dangGv ? null : hangToi, dong.so_luong) : null;
   const coMenu = ds.length > 0; // chưa có menu (đang tải / POS đòi đăng nhập) → chưa biết món còn bán không: không cảnh báo, không giá
-  const canhBao = loiPos || (coMenu && !conBan ? (mon ? 'Hết hàng' : 'Không còn trong menu') : ''); // loiPos: POS vừa báo HET_HANG / MON_KHONG_BAN cho mã này
+  const canhBao = loiPos || (coMenu && !conBan ? (mon ? nd('gio.hetHang') : nd('gio.khongCon')) : ''); // loiPos: POS vừa báo HET_HANG / MON_KHONG_BAN cho mã này
   return (
     <div className="cart-item">
-      <button type="button" className="cart-xoa" aria-label="Xoá món" onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
+      <button type="button" className="cart-xoa" aria-label={nd('gio.xoaAria')} onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
       <div className="cart-thumb" style={mon ? { background: bieuTuongNhom(mon.nhom).bg } : undefined}>{mon ? <AnhMon mon={mon} s={40} /> : <Ico ten="package" s={28} />}</div>
       <div className="cart-info">
-        <div className="cart-name">{mon ? mon.ten : coMenu ? 'Món đã ngừng bán' : dong.ma}</div>
-        {(canhBao || dong.ghi_chu) && <div className="cart-opt">{canhBao && <b>{canhBao}</b>}{canhBao && dong.ghi_chu && ' · '}{dong.ghi_chu && `“${dong.ghi_chu}”`}</div>}
-        {gia !== null && <div className="cart-price">{dinhDangGia(gia)}</div>}
+        <div className="cart-name" {...ndDau(mon ? 'gio.mon' : coMenu ? 'gio.ngungBan' : 'gio.mon')}>{mon ? mon.ten : coMenu ? nd('gio.ngungBan') : dong.ma}</div>
+        {(canhBao || dong.ghi_chu) && <div className="cart-opt">{canhBao && <b {...(loiPos ? {} : ndDau(mon ? 'gio.hetHang' : 'gio.khongCon'))}>{canhBao}</b>}{canhBao && dong.ghi_chu && ' · '}{dong.ghi_chu && `“${dong.ghi_chu}”`}</div>}
+        {gia !== null && <div className="cart-price" {...ndDau('gio.mon')}>{dinhDangGia(gia)}</div>}
       </div>
       <div className="qty-ctrl">
-        <button type="button" aria-label="Bớt một" onClick={() => doi(doiSoLuong(gio, i, dong.so_luong - 1))}>−</button>
+        <button type="button" aria-label={nd('khung.bot')} onClick={() => doi(doiSoLuong(gio, i, dong.so_luong - 1))}>−</button>
         <span>{dong.so_luong}</span>
-        <button type="button" aria-label="Thêm một" onClick={() => doi(doiSoLuong(gio, i, dong.so_luong + 1))}>+</button>
+        <button type="button" aria-label={nd('khung.them')} onClick={() => doi(doiSoLuong(gio, i, dong.so_luong + 1))}>+</button>
       </div>
     </div>
   );
@@ -79,32 +80,32 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const [o, datO] = useState(maGiam);
   const [daXoa, datDaXoa] = useState(null); // { dong, vitri, ten } của món vừa xoá — để Hoàn tác
   const coMenu = ds.length > 0;
-  const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: trangThaiDong(d, ds).mon?.ten || 'món' }); doi(xoaDong(gio, i)); };
+  const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: trangThaiDong(d, ds).mon?.ten || nd('gio.monChung') }); doi(xoaDong(gio, i)); };
   const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
   const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
   const { bg, loi } = dungBaoGia(gio, { maGiam }, dangNhap && coMenu && coThe);
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
   return (
     <Man id="cart">
-      <div className="topbar"><div><h1>Giỏ hàng</h1>{gio.length > 0 && <div className="sub">{demMon(gio)} món</div>}</div></div>
+      <div className="topbar"><div><Chu k="gio.tieuDe" as="h1" />{gio.length > 0 && <div className="sub" {...ndDau('gio.soMon')}>{ndPhan('gio.soMon', { so: demMon(gio) })}</div>}</div></div>
       {gio.length === 0 ? (
         <div className="empty-cart">
           <En ten="basket" s={84} />
-          <div className="t">Giỏ hàng đang trống</div>
-          <div className="s">Chọn một món trà hợp tiết trời hôm nay nhé</div>
-          <button type="button" className="ghost-btn" onClick={moMenu}>Xem Menu</button>
+          <Chu k="gio.rong.t" as="div" className="t" />
+          <Chu k="gio.rong.s" as="div" className="s" />
+          <button type="button" className="ghost-btn" onClick={moMenu} {...ndDau('gio.rong.nut')}>{nd('gio.rong.nut')}</button>
         </div>
       ) : (
         <>
           {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
           <div className="promo-box">
-            <input placeholder="Nhập mã giảm giá" aria-label="Mã giảm giá" maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
-            <button type="button" onClick={() => datMaGiam(o.trim())}>{daApMa ? '✓ Đã áp dụng' : 'Áp dụng'}</button>
+            <input placeholder={nd('gio.ma.goiY')} aria-label={nd('gio.ma.aria')} {...ndDau('gio.ma.goiY')} maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
+            <button type="button" onClick={() => datMaGiam(o.trim())} {...ndDau(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}>{nd(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}</button>
           </div>
-          {bg && bg.maGiamLoi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{bg.maGiamLoi.error}</div></div>}
+          {bg && bg.maGiamLoi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('gio.maLoi')}>{bg.maGiamLoi.error}</div></div>}
           <BangTien bg={bg} loi={loi} />
           <button type="button" className={`checkout-btn${coThe ? '' : ' btn-disabled'}`} aria-disabled={!coThe} onClick={coThe ? tiepTuc : undefined}>
-            <span>Tiếp tục · chọn cách nhận hàng</span><span>{bg ? `${dinhDangGia(bg.tong)} →` : '→'}</span>
+            <span {...ndDau('gio.tiepTuc')}>{nd('gio.tiepTuc')}</span><span>{bg ? `${dinhDangGia(bg.tong)} →` : '→'}</span>
           </button>
         </>
       )}

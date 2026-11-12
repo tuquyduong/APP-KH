@@ -10,13 +10,11 @@ src/components/BanhXoay.jsx 11
 
 src/components/DaiNhacViec.jsx 3
 
-src/components/GiaMon.jsx 7
+src/components/GiaMon.jsx 1
 
 src/components/HoiXoa.jsx 6
 
 src/components/KhoaTienIch.jsx 1
-
-src/components/MonO.jsx 2
 
 src/components/NguoiThan.jsx 33
 
@@ -26,23 +24,15 @@ src/components/VanKhanMan.jsx 22
 
 src/dinhDang.js 3
 
-src/giaHang.js 4
+src/giaHang.js 3
 
-src/gioHoatDong.js 7
-
-src/gioVang.js 9
-
-src/kehoach.js 41
+src/kehoach.js 43
 
 src/kehoachLap.js 32
 
 src/lich.js 68
 
-src/menuLoc.js 1
-
 src/pages/DangNhap.jsx 5
-
-src/pages/GioHang.jsx 22
 
 src/pages/HoSo.jsx 31
 
@@ -50,13 +40,7 @@ src/pages/HoTro.jsx 3
 
 src/pages/KeHoach.jsx 44
 
-src/pages/KhongTimThay.jsx 1
-
 src/pages/ManQR.jsx 4
-
-src/pages/Menu.jsx 18
-
-src/pages/MonTheoDuong.jsx 3
 
 src/pages/TaiKhoan.jsx 14
 
@@ -65,8 +49,6 @@ src/pages/TienIch.jsx 27
 src/pages/TracNghiemKetQua.jsx 6
 
 src/pages/TracNghiemLam.jsx 4
-
-src/pages/TrangMon.jsx 14
 
 src/pages/UuDai.jsx 34
 

@@ -11,36 +11,73 @@ const TEP_NO = 'cong_cu/no_chu_cung.txt';
 const BO_QUA = /^src\/(noiDung|kiemKhop)\/|^src\/pages\/KiemKhop\.jsx$/;
 const coDau = (s) => /[̀-ͯ]|[đĐ]/.test(s.normalize('NFD'));
 
-/** Số chữ cứng của một tệp: mỗi chuỗi ('…' "…" `…`) có dấu = 1; mỗi đoạn chữ JSX (code ngoài chuỗi, cắt theo < > { }) có dấu = 1. Bỏ chú thích, regex. */
+/** Vị trí đóng của chuỗi mở ở `i` (' " hoặc `); mẫu chuỗi bỏ qua mọi `${…}` lồng nhau. Chuỗi thường hết ở xuống dòng. */
+function hetChuoi(s, i) {
+  const q = s[i];
+  let j = i + 1;
+  for (; j < s.length; j++) {
+    const d = s[j];
+    if (d === '\\') j++;
+    else if (q === '`' && d === '$' && s[j + 1] === '{') j = hetNgoac(s, j + 2);
+    else if (d === q) return j;
+    else if (d === '\n' && q !== '`') return j;
+  }
+  return j;
+}
+/** Vị trí `}` khớp với `${` đã mở (i = ngay sau `${`): đếm `{ }` lồng, bỏ qua chuỗi. */
+function hetNgoac(s, i) {
+  let sau = 1;
+  for (let j = i; j < s.length; j++) {
+    const d = s[j];
+    if (d === '\'' || d === '"' || d === '`') j = hetChuoi(s, j);
+    else if (d === '{') sau++;
+    else if (d === '}' && --sau === 0) return j;
+  }
+  return s.length;
+}
+/** Regex literal bắt đầu ở `i`: trả vị trí `/` đóng, hoặc -1 nếu không phải regex (chữ JSX như `(/ngày) chữ</p>`: không có `/` đóng, hoặc sau `/` đóng là chữ / `<` / `>`). */
+function hetRegex(s, i) {
+  let j = i + 1, lop = false;
+  for (; j < s.length && s[j] !== '\n'; j++) {
+    const d = s[j];
+    if (d === '\\') j++;
+    else if (d === '[') lop = true;
+    else if (d === ']') lop = false;
+    else if (d === '/' && !lop) break;
+  }
+  if (s[j] !== '/') return -1;
+  let k = j + 1;
+  while (/[dgimsuvy]/.test(s[k] || '')) k++;
+  return k >= s.length || /[\s.,;:)\]}?!&|=+\-*/%^~]/.test(s[k]) ? j : -1;
+}
+
+/**
+ * Số chữ cứng của một tệp: mỗi chuỗi ('…' "…") có dấu = 1; mẫu chuỗi `…`: phần chữ của nó có dấu = 1, cộng chuỗi / mẫu lồng trong `${…}` tính riêng (mỗi chuỗi có dấu = 1);
+ * mỗi đoạn chữ JSX (code ngoài chuỗi, cắt theo < > { }) có dấu = 1. Bỏ chú thích, regex. `://` (địa chỉ web trong chữ JSX) không phải chú thích.
+ */
 function demChuCung(nguon) {
   let n = 0, code = '', i = 0;
   const L = nguon.length;
   const truocLaRegex = () => { const t = code.replace(/\s+$/, ''); return !t || /[(,=:[!&|?{;+\-*%~^]$/.test(t) || /=>$|\breturn$/.test(t); };
   while (i < L) {
     const c = nguon[i], c2 = nguon[i + 1];
-    if (c === '/' && c2 === '/') { while (i < L && nguon[i] !== '\n') i++; continue; }
+    if (c === '/' && c2 === '/' && nguon[i - 1] !== ':') { while (i < L && nguon[i] !== '\n') i++; continue; }
     if (c === '/' && c2 === '*') { const j = nguon.indexOf('*/', i + 2); i = j < 0 ? L : j + 2; code += ' '; continue; }
     if (c === '\'' || c === '"' || c === '`') {
-      let j = i + 1, sau = 0;
-      for (; j < L; j++) {
-        const d = nguon[j];
-        if (d === '\\') { j++; continue; }
-        if (c === '`' && d === '$' && nguon[j + 1] === '{') sau++;
-        else if (c === '`' && sau && d === '}') sau--;
-        else if (d === c && !sau) break;
-        else if (d === '\n' && c !== '`') break;
+      const j = hetChuoi(nguon, i);
+      let chu = nguon.slice(i, j + 1);
+      if (c === '`') { // phần chữ của mẫu = bỏ các ${…}; mỗi ${…} đếm riêng như code
+        chu = '';
+        for (let k = i; k <= j; k++) {
+          if (nguon[k] === '\\') { chu += nguon.slice(k, k + 2); k++; } else if (nguon[k] === '$' && nguon[k + 1] === '{') { const e = hetNgoac(nguon, k + 2); n += demChuCung(nguon.slice(k + 2, e)); k = e; } else chu += nguon[k];
+        }
       }
-      if (coDau(nguon.slice(i, j + 1))) n++;
+      if (coDau(chu)) n++;
       code += '""'; i = j + 1; continue;
     }
     if (c === '/' && truocLaRegex()) {
-      let j = i + 1, lop = false;
-      for (; j < L && nguon[j] !== '\n'; j++) {
-        const d = nguon[j];
-        if (d === '\\') { j++; continue; }
-        if (d === '[') lop = true; else if (d === ']') lop = false; else if (d === '/' && !lop) break;
-      }
-      code += '/r/'; i = j + 1; continue;
+      const j = hetRegex(nguon, i);
+      if (j >= 0) { code += '/r/'; i = j + 1; continue; }
     }
     code += c; i++;
   }
