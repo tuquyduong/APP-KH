@@ -2,7 +2,7 @@ KH-ND-3d — bằng chứng ĐỎ trên code gốc (cây eaa9a34 chép ra nháp,
 
 1. Bài mới
   cong_cu/thu_KHND3d.js trên gốc: văng lỗi ngay ở phần A (src/noiDung/nd/keHoach.js còn rỗng, chưa có coDinh/lich.js) → ĐỎ
-  cong_cu/thu_KHND3d.js sau vá (KHONG_TRINH_DUYET=1): 32 đạt · 0 hỏng ; có Chromium: 45 đạt · 0 hỏng
+  cong_cu/thu_KHND3d.js sau vá (KHONG_TRINH_DUYET=1): 33 đạt · 0 hỏng ; có Chromium: 46 đạt · 0 hỏng
 
 2. Bài cũ sửa (C2) — mỗi bài có ≥ 1 ca đỏ trên gốc
   thu_KHUI5b.js (đọc ngày lễ / theo mùa / tiết khí từ danh mục + coDinh, bỏ KH.CO_NHAC): gốc 0 đạt · 1 hỏng (không nạp được src/noiDung/coDinh/lich.js) → sau vá 78 đạt · 0 hỏng
@@ -10,8 +10,10 @@ KH-ND-3d — bằng chứng ĐỎ trên code gốc (cây eaa9a34 chép ra nháp,
   thu_KHUI5f.js (ca mới F4 vkd.* / mua.nhan.* ở danh mục): gốc 83 đạt · 1 hỏng → sau vá 84 đạt · 0 hỏng
   thu_KHND3b.js (GiaMon hết chữ cứng 'đ': phép 1 → 0): gốc 19 đạt · 1 hỏng → sau vá 20 đạt · 0 hỏng
 
-SỐ CA cong_cu/thu_KHND3d.js: 32
+SỐ CA cong_cu/thu_KHND3d.js: 33
 SỐ CA cong_cu/thu_KHUI5b.js: 78
 SỐ CA cong_cu/thu_KHUI5e.js: 72
 SỐ CA cong_cu/thu_KHUI5f.js: 84
 SỐ CA cong_cu/thu_KHND3b.js: 20
+
+Bổ sung sau soát: ca "TERM_TIPS (Proxy) dùng được như mảng thật" — trước vá (Proxy gọi regex trên khoá Symbol) [...TERM_TIPS] ném TypeError → ĐỎ; sau vá xanh.
