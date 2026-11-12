@@ -35,7 +35,8 @@ function dung(tepNguon, xuat) {
   new vm.Script(`(function (module, exports, require) {${kq.outputFiles[0].text}\n})`, { filename: tepNguon }).runInThisContext()(m, m.exports, require);
   return m.exports;
 }
-const ve = (tepNguon) => dung(tepNguon, `import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import T from './${tepNguon}'; export const ve = (props) => renderToStaticMarkup(React.createElement(T, props));`).ve;
+// Mỗi gói dựng riêng có BẢN nd.js riêng → trả cả `datBan` của đúng gói đó (đổi nội dung ở gói khác không ảnh hưởng).
+const goiVe = (tepNguon, ten = 'default') => dung(tepNguon, `import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import { ${ten === 'default' ? 'default as T' : ten + ' as T'} } from './${tepNguon}'; import { datBanNoiDung } from './noiDung/nd.js'; export const ve = (props) => renderToStaticMarkup(React.createElement(T, props)); export const datBan = datBanNoiDung;`);
 const boDau = (h) => h.replace(/ data-nd(-khoa)?="[^"]*"/g, '');
 
 // Tệp A1 (phiếu): số chữ cứng phải bằng 0.
@@ -55,13 +56,13 @@ const KHONG_GAN = {
     'kh.badgeNay', 'kh.badgeBoTienTo', 'kh.alRam', 'kh.alMung', 'kh.alNgay', 'kh.alThang', 'kh.alNhuan', 'kh.alThieu', 'kh.nhacNguoi0', 'kh.nhacNguoi1', 'kh.nhacNguoi2', 'kh.nhacNguoi3', 'lap.sau', 'lap.moi', 'lap.dvNgay',
     'lap.dvTuan', 'lap.dvThang', 'lap.dvNam', 'lap.hangNgay', 'lap.hangTuan', 'lap.hangThang', 'lap.hangNam', 'lap.tu', 'lap.den', 'lap.chuaHan', 'lap.hanNay', 'lap.quaHan', 'lap.han', 'lap.nhacDung', 'lap.nhacTruoc1', 'lap.nhacGio',
     'lap.nhacPhut', 'lap.nhacCung', 'lap.nhacHomTruoc', 'lap.nhacNgay', 'lap.conNgay', 'lap.hom', 'lap.ngayMai', 'lap.dangToi', 'lap.phutNua', 'lap.conGio', 'lap.nhacDai', 'lap.caNgayThuong', 'bn.tietNhan', 'bn.tieuNgay', 'bn.gioChua',
-    'bn.gioDat', 'bn.nhacChua', 'bn.nhacDat', 'bn.lapChua', 'bn.lapDat', 'bn.toiTruoc', 'bn.sangCung', 'bn.sauNgay', 'qh.tieuDe', 'qh.phu', 'qh.lo', 'qh.qua', 'dnv.nhieu', 'vk.dongDip', 'vk.ldMung', 'vk.cacCu', 'hx.loaiViec', 'mua.nay', 'bx.truocLuc'],
+    'bn.gioDat', 'bn.nhacChua', 'bn.nhacDat', 'bn.lapChua', 'bn.lapDat', 'bn.toiTruoc', 'bn.sangCung', 'bn.sauNgay', 'qh.tieuDe', 'qh.phu', 'qh.lo', 'qh.qua', 'dnv.nhieu', 'vk.dongDip', 'vk.ldMung', 'vk.cacCu', 'hx.loaiViec', 'mua.nay'],
   'gắn qua biến (ndDau(khoa) / khoaTieuDe / khoaPhu / ndDau(`vkd.${…}`)) — kiểm bằng ca "mọi chỗ gắn động"': ['kh.tieuDe', 'kh.phu', 'ngc.tieuDe', 'ngc.phuNguoi', 'ngc.phuLe', 'ngc.tabNguoi', 'ngc.tabLe', 'sap.tieuDe', 'sap.phu', 'mua.tieuDe', 'mua.phu', 'vk.tieuDe',
-    'vk.phu', 'hx.lap', 'hx.thuong', 'ngt.loaiGio', 'ngt.loaiSn', 'ngt.formThem', 'ngt.formSua', 'vk.nguoiGio', 'vk.huongLinh', 'vk.khongGio', 'kh.dangNhac', 'kh.coNhac', 'qh.nhan'],
+    'vk.phu', 'hx.lap', 'hx.thuong', 'bn.them', 'ngt.loaiGio', 'ngt.loaiSn', 'ngt.formThem', 'ngt.formSua', 'vk.nguoiGio', 'vk.huongLinh', 'vk.khongGio', 'kh.dangNhac', 'kh.coNhac', 'qh.nhan'],
   'chữ của chip / nút nội bộ chỉ nhận children (Chip trong NguoiThan.jsx)': ['ngt.chipSn', 'ngt.chipGio', 'ngt.chipDuong', 'ngt.chipAm'],
   'danh sách dùng ở nhiều chỗ (bảng tra ngày lễ, gợi ý quà, lời khuyên tiết khí) — ca "danh sách có chỗ gắn" kiểm bản giả': ['kh.leAmLich', 'kh.leQua', 'kh.tiet'],
 };
-const COTIEP = ['kh.o.', 'vkd.', 'mua.nhan.']; // khoá dựng bằng mẫu `…${id}`: kiểm mẫu có mặt trong mã
+const COTIEP = ['kh.o.', 'vkd.', 'mua.nhan.', 'kh.nhacNguoi']; // khoá dựng bằng mẫu `…${id}`: kiểm mẫu có mặt trong mã
 const khoaMoi = (m) => /^(kh|lap|bn|hx|bx|qh|dnv|ngc|ngt|sap)\./.test(m.khoa) || /^(mua|vkd)\./.test(m.khoa) || /^vk\.(tieuDe|phu|khongGio|dauDip|dongDip|sapToi|xemLe|nguoiGio|huongLinh|nmGoiY|leVat|daSam|cachSap|vanKhan|chuNho|chuTo|ldMung|cacCu|ghiChuDs|ghiChuBai)$/.test(m.khoa);
 
 (async () => {
@@ -166,21 +167,25 @@ const khoaMoi = (m) => /^(kh|lap|bn|hx|bx|qh|dnv|ngc|ngt|sap)\./.test(m.khoa) ||
     && ((ND.datBanNoiDung({ so_ban: 1, gia_tri: { 'hien.ocXe': false, 'hien.ocThuoc': false, 'hien.ocChuKy': false } }), true) && DK.ocHien('xeco', 'chi') === false && DK.ocHien('uongthuoc', 'chi') === false && DK.ocHien('chuky', 'chi') === false && DK.ocHien('vankhan', 'chi') === true) && (ND.datBanNoiDung(null), true));
   const tiJsx = doc('src/pages/TienIch.jsx'), khJsx = doc('src/pages/KeHoach.jsx');
   k('B1 MỘT hàm quyết định: KeHoach.jsx và TienIch.jsx cùng gọi ocHien (không còn coChuKy / HIEN_O chép lại); TienIch thay về /kehoach qua prop thayVeLich; App.jsx chỉ truyền thêm thayVeLich', /ocHien\(/.test(khJsx) && /ocHien\(/.test(tiJsx) && !/coChuKy|HIEN_O/.test(khJsx + tiJsx) && /props\.thayVeLich/.test(tiJsx) && /thayVeLich=\{\(\) => thay\(taoDuongDan\('kehoach'\)\)\}/.test(doc('src/App.jsx')));
-  const manTi = ve('pages/TienIch.jsx'), cb = { veLich() {}, moTienIch() {}, homNay: { d: 10, m: 11, y: 2026 } };
+  const TI_GOI = goiVe('pages/TienIch.jsx'), manTi = TI_GOI.ve, cb = { veLich() {}, moTienIch() {}, homNay: { d: 10, m: 11, y: 2026 } };
   globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
   k('B1 TienIch id=chuky: xưng hô "anh" → không vẽ gì (rồi thay về /kehoach); "chị" → màn Chu kỳ; ô tắt ở /admin (hien.ocXe) → không vẽ Xe cộ', boDau(manTi({ ...cb, id: 'chuky', xungHo: 'anh' })) === '' && boDau(manTi({ ...cb, id: 'chuky', xungHo: 'chi' })).includes('Chu kỳ')
-    && ((ND.datBanNoiDung({ so_ban: 1, gia_tri: { 'hien.ocXe': false } }), boDau(manTi({ ...cb, id: 'xeco', xungHo: 'chi' }))) === '') && (ND.datBanNoiDung(null), boDau(manTi({ ...cb, id: 'xeco', xungHo: 'chi' })).includes('Xe cộ')));
+    && ((TI_GOI.datBan({ so_ban: 1, gia_tri: { 'hien.ocXe': false } }), boDau(manTi({ ...cb, id: 'xeco', xungHo: 'chi' }))) === '') && (TI_GOI.datBan(null), boDau(manTi({ ...cb, id: 'xeco', xungHo: 'chi' })).includes('Xe cộ')));
   const DD = await nap('src/dinhDang.js');
   k('B2 dinhDangSoTien(25000) = "25.000" (số có dấu chấm, không đơn vị), không phải số → ""; dinhDangGia vẫn kèm đơn vị', DD.dinhDangSoTien?.(25000) === '25.000' && DD.dinhDangSoTien?.('x') === '' && DD.dinhDangSoTien?.(NaN) === '' && DD.dinhDangGia(25000) === '25.000đ');
-  const bacGia = ve('components/GiaMon.jsx');
-  void bacGia;
-  const BacGia = dung('components/GiaMon.jsx', "import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import { BacGia } from './components/GiaMon.jsx'; export const ve = (p) => renderToStaticMarkup(React.createElement(BacGia, p));").ve;
+  ND.datBanNoiDung({ so_ban: 1, gia_tri: { 'gia.donVi': 'VNĐ' } });
+  const giaVND = [DD.dinhDangGia(25000), DD.dinhDangSoTien(25000)];
+  ND.datBanNoiDung({ so_ban: 1, gia_tri: { 'gia.donVi': ' VNĐ' } }); // 4 ký tự > toiDa 3 của mục → bị bỏ, về 'đ' (phiếu ghi ví dụ ' VNĐ')
+  const giaQuaDai = DD.dinhDangGia(25000);
+  ND.datBanNoiDung(null);
+  k('B2 đối chứng: bản giả gia.donVi = "VNĐ" làm dinhDangGia thành "25.000VNĐ" nhưng dinhDangSoTien vẫn "25.000" (đổi đơn vị ở /admin không ảnh hưởng cột giá hạng); " VNĐ" (4 ký tự, quá toiDa 3) bị bỏ về "đ"', bang(giaVND, ['25.000VNĐ', '25.000']) && giaQuaDai === '25.000đ', JSON.stringify([giaVND, giaQuaDai]));
+  const GM = goiVe('components/GiaMon.jsx', 'BacGia'), BacGia = GM.ve;
   const bac = [{ ten: 'Thường', gia: 35000, laToi: false }, { ten: 'Vàng', gia: 31500, laToi: true }];
   const hBac0 = boDau(BacGia({ bac }));
-  ND.datBanNoiDung({ so_ban: 1, gia_tri: { 'gia.donVi': ' VNĐ' } });
+  GM.datBan({ so_ban: 1, gia_tri: { 'gia.donVi': 'VNĐ' } });
   const hBac1 = boDau(BacGia({ bac }));
-  ND.datBanNoiDung(null);
-  k('B2 bản nội dung giả gia.donVi = " VNĐ" → cột giá theo hạng vẫn chỉ có số ("35.000", "31.500"), không "VNĐ" / "đ"; bản mặc định cũng chỉ số', /<b>35\.000<\/b>/.test(hBac1) && /<b>31\.500<\/b>/.test(hBac1) && !/VNĐ|đ</.test(hBac1) && /<b>35\.000<\/b>/.test(hBac0) && !/>35\.000đ</.test(hBac0));
+    GM.datBan(null);
+  k('B2 bản nội dung giả gia.donVi = "VNĐ" → cột giá theo hạng vẫn chỉ có số ("35.000", "31.500"), không "VNĐ" / "đ"; bản mặc định cũng chỉ số', /<b>35\.000<\/b>/.test(hBac1) && /<b>31\.500<\/b>/.test(hBac1) && !/VNĐ|đ</.test(hBac1) && /<b>35\.000<\/b>/.test(hBac0) && !/>35\.000đ</.test(hBac0));
   const tdd = doc('src/pages/TheoDoiDon.jsx');
   const dongTel = tdd.split('\n').filter((d) => d.includes('href={`tel:'));
   k('B3 TheoDoiDon: nút gọi quán dùng tel: chỉ số và dấu + (như HoTro.jsx); bản giả "0901 234 567" ra "0901234567"', dongTel.length === 1 && /\.replace\(\/\[\^\\d\+\]\/g, ''\)/.test(dongTel[0]) && '0901 234 567'.replace(/[^\d+]/g, '') === '0901234567' && /replace\(\/\[\^\\d\+\]\/g/.test(doc('src/pages/HoTro.jsx')));
