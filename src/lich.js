@@ -100,8 +100,8 @@ export function tipTiet(idx) {
 }
 /** Giữ dạng mảng cũ `TERM_TIPS[i] = [lời, [mã…]]` cho nơi gọi ngoài Phạm vi (tracNghiem.js): Proxy đọc sống từ `tipTiet`. */
 export const TERM_TIPS = new Proxy([], {
-  get: (t, k) => (k === 'length' ? TERMS.length : /^\d+$/.test(k) ? tipTiet(+k) : Reflect.get(t, k)),
-  has: (t, k) => (/^\d+$/.test(k) ? +k < TERMS.length : Reflect.has(t, k)),
+  get: (t, k) => (k === 'length' ? TERMS.length : typeof k === 'string' && /^\d+$/.test(k) ? tipTiet(+k) : Reflect.get(t, k)),
+  has: (t, k) => (typeof k === 'string' && /^\d+$/.test(k) ? +k < TERMS.length : Reflect.has(t, k)),
 });
 
 /** Tiết khí đang hiệu lực của một ngày VN. `gio` = chuỗi giờ VN "YYYY-MM-DD…" (không dùng đồng hồ múi giờ của máy); không đọc được → null. */

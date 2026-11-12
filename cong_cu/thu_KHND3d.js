@@ -128,6 +128,7 @@ const khoaMoi = (m) => /^(kh|lap|bn|hx|bx|qh|dnv|ngc|ngt|sap)\./.test(m.khoa) ||
   k('A2 ngày lễ dương / âm, ngày lễ gợi ý quà, 4 mùa + nhãn trường, thứ — đọc từ danh mục / coDinh — giống demo từng byte', Object.keys(nguon).every((t) => bang(nguon[t], hangDemo(t))), Object.keys(nguon).filter((t) => !bang(nguon[t], hangDemo(t))).join());
   const tipsDemo = hangDemo('TERM_TIPS');
   k('A2 lời khuyên 24 tiết khí + mã món (tipTiet / TERM_TIPS) giống demo từng byte; TERM_TIPS giữ dạng mảng 24 phần tử cho tracNghiem.js', L.TERM_TIPS && L.TERM_TIPS.length === 24 && tipsDemo.every((t, i) => bang(L.tipTiet(i), t) && bang(L.TERM_TIPS[i], t)) && !/TERM_TIPS = \[/.test(doc('src/lich.js')));
+  k('A2 TERM_TIPS (Proxy) dùng được như mảng thật: [...TERM_TIPS], Array.from, for…of, map đều chạy (khoá Symbol không làm ném lỗi)', (() => { try { return [...L.TERM_TIPS].length === 24 && Array.from(L.TERM_TIPS).length === 24 && L.TERM_TIPS.map((t) => t[0]).length === 24 && (() => { let n = 0; for (const t of L.TERM_TIPS) n += t[1].length ? 1 : 0; return n === 24; })(); } catch { return false; } })());
   const a0 = demoSrc.indexOf('  const VK_OPEN'), a1 = demoSrc.indexOf('  const VKI');
   let vkDemo = null;
   try { const c = vm.createContext({ nextMot15() {}, nextGiaoThua() {}, nextThanhMinh() {} }); vm.runInContext(demoSrc.slice(a0, a1) + '\nthis.VK = VK;', c); vkDemo = c.VK; } catch { /* ca dưới đỏ */ }
