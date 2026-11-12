@@ -1,45 +1,28 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { ndDau } from '../noiDung/nd.js';
+import { dungAnhSangLuot } from './anhSangLuot.js';
+import { bam } from './bam.js';
 import Chu from './Chu.jsx';
 
-// Banner khuyến mãi "Hôm nay" (demo todayCard, bản trên ảnh thật): chữ lấy từ danh mục nội dung today.* (src/noiDung/nd/trangChu.js). Không hiện ngày vì chưa có giờ POS (bay_gio — KH-API-2 v2).
-// Ánh sáng lướt chéo (demo glMeasure): đo toạ độ chữ trong thẻ để CSS tính vệt sáng; đo lại khi đổi cỡ màn.
-// Không còn nút ✕ và bản nhỏ (chủ quán 09.11, KH-UI-5d): các trang khác dùng dải quảng cáo mảnh (DaiQuangCao).
-export default function BannerHomNay({ anh, tieuDe, phu, nut, chon }) {
+// Banner khuyến mãi "Hôm nay" (demo todayCard, bản trên ảnh thật), LUÔN hiện ở Trang chủ. `qc` = kết quả chonQuangCao (tính một lần ở App, dùng chung với dải):
+// chữ từ POS gắn khoá "pos"; chữ mặc định sửa ở danh mục today.*. Không hiện ngày vì chưa có giờ POS (bay_gio — KH-API-2 v2).
+// Ánh sáng lướt chéo: bộ đo dùng chung với dải (anhSangLuot.js). Không có nút ✕ (chủ quán 09.11, KH-UI-5d).
+export default function BannerHomNay({ anh, qc, chon }) {
   const the = useRef(null);
-
-  useEffect(() => {
-    const t = the.current;
-    if (!t) return undefined;
-    const dat = (e, k, v) => e.style.setProperty(k, v);
-    const do_ = () => {
-      const r = t.getBoundingClientRect();
-      if (!r.width) return;
-      dat(t, '--W', r.width); dat(t, '--H', r.height);
-      const sang = t.querySelector('.gl-a');
-      if (sang) Object.assign(sang.style, { left: '0px', top: '0px', width: `${r.width}px`, height: `${r.height}px` });
-      t.querySelectorAll('.gl').forEach((e) => {
-        const q = e.getBoundingClientRect();
-        dat(e, '--ox', q.left - r.left); dat(e, '--oy', q.top - r.top); dat(e, '--w', q.width); dat(e, '--h', q.height);
-      });
-    };
-    do_();
-    const theo = typeof ResizeObserver === 'function' ? new ResizeObserver(do_) : null;
-    if (theo) theo.observe(t); else window.addEventListener('resize', do_);
-    return () => { if (theo) theo.disconnect(); else window.removeEventListener('resize', do_); };
-  }, [tieuDe, phu, nut]);
+  const { tieuDe, phu, nut, khoa } = qc; // khoa = khoá danh mục của từng chữ: khung câu sửa được ở /admin, phần chữ POS gắn "qc.pos" (khoá)
+  dungAnhSangLuot(the, [tieuDe, phu, nut, !!chon]);
 
   return (
-    <div className="today fx-a photo" ref={the} role="button" tabIndex={0} onClick={chon} onKeyDown={(e) => { if (e.key === 'Enter') chon(); }}>
+    <div className="today fx-a photo" ref={the} {...(chon ? bam(chon) : {})}>
       <div className="t-bg" {...ndDau('today.bg')}><img className="t-img" src={anh} alt="" /></div>
       <div className="t-shade" />
       <i className="gl gl-a" />
       <div className="t-txt">
         <div className="t-k gl gl-t"><span className="dot" /><Chu k="today.k" /></div>
-        <b className="gl gl-t" {...ndDau('today.t')}>{tieuDe}</b>
-        {phu && <span className="t-s gl gl-t" {...ndDau('today.s')}>{phu}</span>}
+        <b className="gl gl-t" {...ndDau(khoa.t)}>{tieuDe}</b>
+        {phu && <span className="t-s gl gl-t" {...ndDau(khoa.s)}>{phu}</span>}
       </div>
-      {nut && <span className="t-cta gl gl-b" {...ndDau('today.cta')}>{nut}</span>}
+      {nut && chon && <span className="t-cta gl gl-b" {...ndDau(khoa.nut)}>{nut}</span>}
     </div>
   );
 }

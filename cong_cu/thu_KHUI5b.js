@@ -10,6 +10,9 @@ const vm = require('vm');
 const { pathToFileURL } = require('url');
 
 const GOC = path.join(__dirname, '..');
+// Không dùng \b cho chữ có dấu: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp và ca "không có chữ nợ" luôn xanh (KH-ND-3b B3).
+// Mỗi ca kèm bản giả "Công nợ" chứng minh phép kiểm ĐỎ được.
+const khongNo = (x) => !/nợ/i.test(String(x));
 let dat = 0, hong = 0;
 const k = (ten, dung, them = '') => {
   if (dung) { dat++; console.log(`  ✓ ${ten}`); } else { hong++; console.log(`  ✗ ${ten}${them ? '  — ' + them : ''}`); }
@@ -194,9 +197,10 @@ async function manHinh(KH) {
   const co = veKH({ ...cb, homNay: HN, banner: BAN });
   k('B7 (KH-UI-5d) dù truyền chữ banner, /kehoach KHÔNG còn banner nhỏ (đã thay bằng dải quảng cáo ở vỏ App)', khongBanner(co) && !co.includes('Giờ vàng hôm nay') && !/photo mini/.test(co));
   k('B7 bản nhỏ và nút ✕ đã bỏ hẳn (KH-UI-5d): không t-x, không BannerNho', !co.includes('t-x') && !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')));
-  const lon = thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {} });
+  const QC = { tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, khoa: { t: 'today.t', s: 'today.s', nut: 'today.cta' } }; // KH-UI-5g: banner nhận kết quả chonQuangCao
+  const lon = thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, qc: QC, chon() {} });
   k('B7 banner Trang chủ: không lớp mini, nút giữ chữ của nó, KHÔNG có ✕ (kể cả khi truyền khiAn — KH-UI-5d)', !/mini/.test(lon) && !lon.includes('t-x') && lon.includes('>Xem Menu<')
-    && !thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, tieuDe: BAN.tieuDe, phu: BAN.phu, nut: BAN.nut, chon() {}, khiAn() {} }).includes('t-x'));
+    && !thanhPhan('components/BannerHomNay.jsx')({ anh: BAN.anh, qc: QC, chon() {}, khiAn() {} }).includes('t-x'));
   globalThis.localStorage.setItem('kh_kehoach', JSON.stringify({ v: 1, viec: [], leNhac: {}, anBanner: KH.ngayChuoi(HN) })); // bản cũ có trường ẩn banner: đọc không lỗi
   const an = veKH({ ...cb, homNay: HN, banner: BAN });
   k('B7 bản lưu CŨ có anBanner của hôm nay: /kehoach vẫn dựng được và vẫn không banner nhỏ', khongBanner(an) && khongBanner(veKH({ ...cb, homNay: { d: 8, m: 11, y: 2026 }, banner: BAN })));
@@ -247,7 +251,8 @@ async function manHinh(KH) {
   const moiHet = moi.join('\n');
   k('E1 không gọi mạng: các tệp mới không import api.js, không fetch / XMLHttpRequest / sendBeacon', !/api\.js|fetch\(|XMLHttpRequest|sendBeacon/.test(moiHet));
   k('E1 giờ VN: không new Date(chuỗi giờ POS); "hôm nay" lấy từ bayGio()', !/new Date\(\s*(gio|chuoi|bayGio|String)/.test(moiHet) && /homNayTuGio\(bayGio\(\)\)/.test(doc('src/pages/KeHoach.jsx')));
-  k('K3 không có chữ "nợ", không số mẫu của demo (1.250, 1900, support@)', !/\bnợ\b/i.test(moiHet) && !/1\.250|1900|support@/.test(moiHet));
+  k('K3 không có chữ "nợ" (bản giả "Công nợ" bị bắt), không số mẫu của demo (1.250, 1900, support@)', khongNo(moiHet) && !khongNo(moiHet + 'Công nợ') && !/1\.250|1900|support@/.test(moiHet));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
   const kehoachJsx = doc('src/pages/KeHoach.jsx');

@@ -34,7 +34,8 @@ const GIO = [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít ngọt' }, { ma: 'CFM', so_
 
 if (require.main === module) (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
-  k('KH-TT-1 B1 màn Thanh toán không còn dòng "Chuyển khoản QR" / chữ "Xác nhận trả"; ba chữ nút theo cách trả', !/Chuyển khoản QR|Xác nhận trả/.test(doc('src/pages/ThanhToan.jsx')) && /Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')) && /\+ QR/.test(doc('src/pages/ThanhToan.jsx')));
+  k('KH-TT-1 B1 màn Thanh toán không còn dòng "Chuyển khoản QR" / chữ "Xác nhận trả"; ba chữ nút theo cách trả', !/Chuyển khoản QR|Xác nhận trả/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))) && /Thanh toán qua QR/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))) && /\+ QR/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))));
+  k('ND3e KH-TT-1 B1 ba chữ nút theo cách trả nằm ở danh mục nội dung, màn ThanhToan.jsx không còn viết thẳng', /Thanh toán qua QR \{tong\}/.test(doc('src/noiDung/nd/donHang.js')) && !/Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')));
   k('KH-BAO-1 C2 công tắc ví mở theo máy nhớ (kh_dung_vi): tab sau thấy ví đã bật sẵn, nên ca hai tab không bấm tắt đi', /useState\(docDungVi\)/.test(doc('src/pages/ThanhToan.jsx')) && /ghiDungVi\(bat\)/.test(doc('src/pages/ThanhToan.jsx')));
   let D = null;
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
@@ -162,7 +163,7 @@ if (require.main === module) (async () => {
     k('F6 thẻ đơn cho_tra / da_tra / dang_lam → Theo dõi đơn; xong / da_huy / bill quầy → Chi tiết đơn', ['cho_tra', 'da_tra', 'dang_lam'].every(D.moTheoDoi) && !['xong', 'da_huy', null, undefined, ''].some(D.moTheoDoi));
     const app = doc('src/App.jsx');
     const dong = (/const themVaoGio = [^\n]*/.exec(app) || [''])[0];
-    k('G1 thêm món: thông báo "Đã thêm …" rồi quay lại (luiVe), KHÔNG vào giỏ', /Đã thêm/.test(dong) && /luiVe\(\)/.test(dong) && !/vaoGio|giohang/.test(dong), dong);
+    k('G1 thêm món: thông báo "Đã thêm …" rồi quay lại (luiVe), KHÔNG vào giỏ', /nd\('app\.daThem'/.test(dong) && /'app\.daThem', '[^']*', 'Đã thêm \{ten\} vào giỏ'/.test(fs.readFileSync(path.join(GOC, 'src/noiDung/nd/taiKhoan.js'), 'utf8')) && /luiVe\(\)/.test(dong) && !/vaoGio|giohang/.test(dong), dong);
     k('G2 "Đặt lại" vẫn vào giỏ (vaoGio)', /const datLai = [\s\S]*?vaoGio\(/.test(app));
   });
 

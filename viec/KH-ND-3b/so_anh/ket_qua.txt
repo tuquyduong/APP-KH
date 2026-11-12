@@ -1,0 +1,19 @@
+gio_co_mon_360.png: 0 diem anh khac
+gio_co_mon_390.png: 0 diem anh khac
+gio_co_mon_430.png: 11 diem anh khac (vung (212, 840, 218, 844))
+gio_rong_360.png: 0 diem anh khac
+gio_rong_390.png: 0 diem anh khac
+gio_rong_430.png: 0 diem anh khac
+menu_dau_360.png: 0 diem anh khac
+menu_dau_390.png: 0 diem anh khac
+menu_dau_430.png: 11 diem anh khac (vung (128, 840, 134, 844))
+menu_giovang_360.png: 0 diem anh khac
+menu_giovang_390.png: 0 diem anh khac
+menu_giovang_430.png: 0 diem anh khac
+mon_gv_360.png: 0 diem anh khac
+mon_gv_390.png: 0 diem anh khac
+mon_gv_430.png: 0 diem anh khac
+mon_het_360.png: 0 diem anh khac
+mon_het_390.png: 0 diem anh khac
+mon_het_430.png: 0 diem anh khac
+TONG: 22 diem anh khac tren 18 cap

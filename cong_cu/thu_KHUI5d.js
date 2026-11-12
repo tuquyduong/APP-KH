@@ -22,7 +22,9 @@ const khoGia = (d = {}) => ({ getItem: (x) => (x in d ? d[x] : null), setItem: (
   const QC = await nap('src/quangCao.js'), LP = await nap('src/kehoachLap.js'), KH = await nap('src/kehoach.js');
   const GV = (o = {}) => ({ dang_chay: true, bat_dau: '2026-11-08T08:00:00', ket_thuc: '2026-11-08T10:00:00', phan_tram: 30, mon: ['M1'], ...o });
   const BAY = '2026-11-08 09:00:00';
-  const chon = (o) => (QC ? QC.chonQuangCao({ gioVang: null, chuongTrinh: [], bayGio: BAY, quangCao: [], ...o }) : undefined);
+  // KH-UI-5g: chonQuangCao luôn trả kết quả (không có gì → chữ mặc định `macDinh`, banner Trang chủ dùng); dải các trang ẨN khi macDinh → `chon` ở đây = phần nhìn của dải.
+  const chon = (o) => { const r = QC ? QC.chonQuangCao({ gioVang: null, chuongTrinh: [], bayGio: BAY, quangCao: [], ...o }) : undefined; return r && r.macDinh ? null : r; };
+  const macDinh = (o) => !!o && o.macDinh === true && o.chu === ''; // KH-UI-5g: không có gì → chữ mặc định (dải ẩn, banner vẫn hiện)
   const CT = [{ ma: 'c1', ten: 'Quà sinh nhật', moTa: '', loai: 'sinh_nhat' }, { ma: 'c2', ten: 'Học sinh giỏi', moTa: '', loai: 'hoc_sinh_gioi' }];
 
   console.log('A3/A4 — chọn chữ quảng cáo (hàm thuần)');
@@ -63,7 +65,7 @@ const khoGia = (d = {}) => ({ getItem: (x) => (x in d ? d[x] : null), setItem: (
   k('B1 đọc bản lưu CŨ có trường anBanner không lỗi và không giữ lại; ghi không còn trường đó', Array.isArray(cu.viec) && !('anBanner' in cu) && (KH.ghiKeHoach(cu, khoGia(d)), !/anBanner/.test(d.kh_kehoach)) && !('anBanner' in KH.keHoachTrong()));
   k('B1 kho không còn anBannerHomNay / bannerDangAn', !KH.anBannerHomNay && !KH.bannerDangAn);
   const bn = doc('src/components/BannerHomNay.jsx'), tc = doc('src/pages/TrangChu.jsx');
-  k('B1 BannerHomNay không còn khiAn / nút ✕ (t-x) / bản mini; Trang chủ không còn khiAn / thông báo "Ẩn ở Lịch và tiện ích"', !/khiAn|t-x|mini/.test(bn) && !/khiAn|anBanner|Ẩn ở Lịch/.test(tc) && /<BannerHomNay[^>]*chon=\{di\(homNay\.nut\.dich\)\}/.test(tc) && /\{ khoa: 'today\.cta'[^}]*macDinh: \{ chu: '', dich: 'menu' \}/.test(doc('src/noiDung/nd/trangChu.js')));
+  k('B1 BannerHomNay không còn khiAn / nút ✕ (t-x) / bản mini; Trang chủ không còn khiAn / thông báo "Ẩn ở Lịch và tiện ích"', !/khiAn|t-x|mini/.test(bn) && !/khiAn|anBanner|Ẩn ở Lịch/.test(tc) && /<BannerHomNay[^>]*qc=\{quangCao\}/.test(tc) && /\{ khoa: 'today\.cta'[^}]*macDinh: \{ chu: 'Xem Menu ›', dich: 'menu' \}/.test(doc('src/noiDung/nd/trangChu.js')));
   k('B2 BannerNho.jsx đã xoá và không ai import; Kế hoạch / tiện ích không còn banner nhỏ', !fs.existsSync(path.join(GOC, 'src/components/BannerNho.jsx')) && !/BannerNho|bannerDangAn/.test(doc('src/pages/KeHoach.jsx') + doc('src/pages/TienIch.jsx')));
   k('B1 ke_hoach.css không còn luật .t-x của ✕', !/\.t-x/.test(doc('src/giaoDien/ke_hoach.css')));
 
@@ -78,7 +80,7 @@ const khoGia = (d = {}) => ({ getItem: (x) => (x in d ? d[x] : null), setItem: (
   console.log('A1/A2 — nguồn dải');
   const ap = doc('src/App.jsx'), dq = doc('src/components/DaiQuangCao.jsx');
   k('A2 dải gắn MỘT chỗ ở vỏ App, trong khung cuộn `.screens` (cuộn theo trang, không dính)', (ap.match(/<DaiQuangCao/g) || []).length === 1 && ap.indexOf('<DaiQuangCao') > ap.indexOf('className="screens"') && ap.indexOf('<DaiQuangCao') < ap.indexOf('daVaoMenu && <Menu'));
-  k('A1 DaiQuangCao import dai_quang_cao.css; CSS không position:sticky/fixed/absolute cho dải, không z-index; có prefers-reduced-motion (qua lớp fx-a của demo); không màu ngoài demo', /dai_quang_cao\.css/.test(dq) && fs.existsSync(path.join(GOC, 'src/giaoDien/dai_quang_cao.css')) && !/sticky|fixed|z-index/.test(doc('src/giaoDien/dai_quang_cao.css')) && /fx-a/.test(dq));
+  k('A1 DaiQuangCao import dai_quang_cao.css; CSS không position:sticky/fixed cho dải (KH-UI-5g: z-index chỉ cho nút "Xem ›" nổi trên quầng); có prefers-reduced-motion (qua lớp fx-a của demo); không màu ngoài demo', /dai_quang_cao\.css/.test(dq) && fs.existsSync(path.join(GOC, 'src/giaoDien/dai_quang_cao.css')) && !/sticky|fixed/.test(doc('src/giaoDien/dai_quang_cao.css')) && doc('src/giaoDien/dai_quang_cao.css').split('\n').filter((l) => /z-index/.test(l)).every((l) => /dai-qc-xem|\.gl-a/.test(l)) && /fx-a/.test(dq));
   k('A3 không thêm cửa mới / không sửa api.js: chỉ dùng layChuongTrinh sẵn có; không gọi /quang-cao', /layChuongTrinh/.test(ap) && !/quang-cao/.test(ap + doc('src/api.js') + doc('src/quangCao.js')));
   k('K3 không viết sẵn câu quảng cáo mẫu vào App', !/Mua \d tặng|Khuyến mãi|Giảm \d+%/.test(ap + dq + doc('src/quangCao.js').replace(/Giờ vàng: giảm \$\{/, '')));
 
@@ -137,7 +139,7 @@ async function trinhDuyet(pw) {
   await ca('dai', {}, async (t, loi) => {
     await mo(t, '/menu'); await dai(t).waitFor();
     const x = await t.evaluate(() => { const e = document.querySelector('.dai-qc'), r = e.getBoundingClientRect(), cs = getComputedStyle(e); return { h: r.height, bk: cs.borderTopLeftRadius, nen: cs.backgroundImage, ct: e.innerText, pos: cs.position, truoc: getComputedStyle(e, '::before').content, mo: e.getAttribute('role') }; });
-    k('A1 dải Menu: cao 38 ± 2, bo góc 12px, nền gradient, nhãn "HÔM NAY", câu một dòng, "Xem ›"', Math.abs(x.h - 38) <= 2 && x.bk === '12px' && /gradient/.test(x.nen) && /HÔM NAY/.test(x.ct) && /Giờ vàng: giảm 30% đến 10:00/.test(x.ct) && /Xem ›/.test(x.ct) && x.ct.trim().split('\n').filter(Boolean).length <= 3, JSON.stringify(x));
+    k('A1 dải Menu: cao 40 ± 1 (KH-UI-5g), bo góc 12px, nền gradient, nhãn "HÔM NAY", biểu tượng riêng, câu một dòng, "Xem ›"', Math.abs(x.h - 40) <= 1 && x.bk === '12px' && /gradient/.test(x.nen) && /HÔM NAY/.test(x.ct) && /Giờ vàng: giảm 30% đến 10:00/.test(x.ct) && /Xem ›/.test(x.ct) && x.ct.trim().split('\n').filter(Boolean).length <= 4, JSON.stringify(x));
     k('A1 vệt sáng lướt chéo (lớp fx-a của banner Trang chủ: ::before có nội dung + animation)', x.truoc !== 'none' && (await dai(t).evaluate((e) => getComputedStyle(e, '::before').animationName)) === 'sweepL');
     for (const p of ['/uudai', '/giohang', '/kehoach', '/kehoach/theomua', '/taikhoan', '/menu']) {
       await di(t, p); await t.waitForTimeout(60);
@@ -166,7 +168,7 @@ async function trinhDuyet(pw) {
   });
   await ca('chuong-trinh', { gv: GV_TAT, ct: [{ ma: 'c1', ten: 'Quà sinh nhật', mo_ta: 'Tặng 1 ly', loai: 'sinh_nhat', dang_bat: true }] }, async (t) => {
     await mo(t, '/giohang'); await dai(t).waitFor();
-    k('A3 chương trình đặc biệt → "🎁 Quà sinh nhật"', /🎁 Quà sinh nhật/.test(await dai(t).innerText()));
+    k('A3 chương trình đặc biệt → "🎁 Quà sinh nhật"', /🎁\s*Quà sinh nhật/.test(await dai(t).innerText()));
     await dai(t).click();
     k('A5 bấm dải chương trình → mở Ưu đãi', new URL(t.url()).pathname === '/uudai', t.url());
   });

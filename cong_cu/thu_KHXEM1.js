@@ -7,6 +7,9 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 
 const GOC = path.join(__dirname, '..');
+// Không dùng \b cho chữ có dấu: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp và ca "không có chữ nợ" luôn xanh (KH-ND-3b B3).
+// Mỗi ca kèm bản giả "Công nợ" chứng minh phép kiểm ĐỎ được.
+const khongNo = (x) => !/nợ/i.test(String(x));
 let dat = 0, hong = 0;
 const k = (ten, dung, them = '') => {
   if (dung) { dat++; console.log(`  ✓ ${ten}`); } else { hong++; console.log(`  ✗ ${ten}${them ? '  — ' + them : ''}`); }
@@ -79,13 +82,16 @@ const khoGia = (dau = {}, nem = false) => {
   const q = nd.loiMa(true, '0901234567');
   k('quầy: hỏi nhân viên quầy, không nói đã gửi qua Zalo', /nhân viên quầy/.test(q) && !/Zalo/.test(q));
   k('SĐT ngắn → không bịa số', !/xxx/.test(nd.loiMa(false, '09')) && /Zalo/.test(nd.loiMa(false, '09')));
-  k('chữ bước 1: một dòng nhỏ Zalo, không nhắc quầy', /Zalo/.test(nd.BUOC_SDT.phu) && !/quầy/.test(nd.BUOC_SDT.phu));
+  const nds0 = await nap('src/noiDung/nd.js').catch(() => ({})); // KH-ND-3c: chữ màn Đăng nhập ở danh mục nội dung dn.*
+  const buoc1 = nds0.nd ? nds0.nd('dn.sdt.phu') : '';
+  k('chữ bước 1: một dòng nhỏ Zalo, không nhắc quầy (khoá dn.sdt.phu)', /Zalo/.test(buoc1) && !/quầy/.test(buoc1));
   k('xưng hô đủ 7 lựa chọn, GỬI mã không dấu', JSON.stringify(nd.XUNG_HO.map((x) => x.ten)) === JSON.stringify(['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']) && nd.XUNG_HO.map((x) => x.ma).join() === 'anh,chi,co,chu,bac,em,ban');
   k('địa chỉ tối đa 300 ký tự', nd.DIA_CHI_TOI_DA === 300);
   const nds = await nap('src/noiDung/nd.js').catch(() => ({})); // KH-ND-3a: chữ thẻ mời ở danh mục nội dung home.moi.*
   const moi = nds.nd ? { tieuDe: nds.nd('home.moi.t'), phu: nds.nd('home.moi.p'), nut: nds.nd('home.moi.nut') } : {};
   k('thẻ mời có đủ chữ', moi.tieuDe === 'Thành viên Tứ Quý Đường' && /Đăng nhập \/ Đăng ký/.test(moi.phu) && moi.nut === 'Đăng nhập');
-  k('không hề có chữ "nợ" trong nội dung đăng nhập', !/\bnợ\b/i.test(JSON.stringify(nd)));
+  k('không hề có chữ "nợ" trong nội dung đăng nhập; bản giả "Công nợ" bị bắt', khongNo(JSON.stringify(nd)) && khongNo(doc('src/noiDung/nd/taiKhoan.js')) && !khongNo(JSON.stringify({ x: 'Công nợ' })));
+  k('K3 (KH-ND-3b) danh mục Menu / Trang món / Giỏ hàng có chữ để kiểm (≥ 20 khoá) và không có chữ "nợ"', (doc('src/noiDung/nd/menu.js').match(/'(?:menu|mon|gio)\./g) || []).length >= 20 && khongNo(doc('src/noiDung/nd/menu.js')));
 
   console.log('— A6 chuyển bước 1→2→3');
   const r1 = l.buocSauXinMa({ lay_ma_tai_quay: false }), r2 = l.buocSauXinMa({ lay_ma_tai_quay: true }), r3 = l.buocSauXinMa({});

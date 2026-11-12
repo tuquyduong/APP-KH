@@ -2,7 +2,6 @@
 // Không import tệp nào nhập src/dinhDang.js (dinhDang → nd.js → danh mục): vòng nạp làm sập khi nạp danh mục trước (bài thử thu_KHND3a canh).
 // Khối demo chưa có ở App (Video hướng dẫn home.guide, Mời bạn bè home.ref) KHÔNG khai — xem viec/KH-ND-3a/doi_chieu_demo.md.
 import { NHU_CAU } from '../nhuCau.js';
-import { O_TRAC_NGHIEM } from '../tracNghiemChu.js';
 
 const M = 'Trang chủ';
 const chu = (khoa, ten, macDinh, them = {}) => ({ khoa, man: M, ten, loai: 'chu', macDinh, ...them });
@@ -36,16 +35,12 @@ export const TRANG_CHU = [
   chu('home.cal.viec', 'Ô Kế hoạch: số việc hôm nay', '{so} việc hôm nay ›', { bien: ['so'] }),
   chu('home.cal.quaHan', 'Ô Kế hoạch: số việc quá hạn (máy đọc màn hình)', '{so} việc quá hạn', { bien: ['so'] }),
   khoa('home.lich', 'Ngày dương, thứ, ngày âm, tiết khí, số việc', 'tutinh', 'App tự tính theo giờ POS và việc khách tự ghi'),
-  // Banner (demo hero-banner) + banner khuyến mãi "Hôm nay" (demo today; chữ trống → dùng banner thường)
-  { khoa: 'home.banner', man: M, ten: 'Ảnh banner Trang chủ', loai: 'anh', macDinh: ANH_BANNER, tiLe: '2:1' },
-  chu('home.bk', 'Banner: dòng nhỏ', 'Tứ Quý Đường'),
-  { khoa: 'home.bh', man: M, ten: 'Banner: dòng lớn (xuống dòng = Enter)', loai: 'doan', macDinh: 'Hôm nay bạn muốn\nuống gì?' },
-  { khoa: 'home.bb', man: M, ten: 'Banner: nút', loai: 'nut', macDinh: { chu: 'Xem Menu →', dich: 'menu' } },
+  // Banner khuyến mãi "Hôm nay" (demo today) — LUÔN hiện; today.t / today.s / today.cta là chữ mặc định khi POS không có quảng cáo, Giờ vàng, chương trình
   { khoa: 'today.bg', man: M, ten: 'Banner Hôm nay: ảnh nền', loai: 'anh', macDinh: ANH_BANNER, tiLe: '2:1' },
   chu('today.k', 'Banner Hôm nay: nhãn', 'HÔM NAY'),
-  chu('today.t', 'Banner Hôm nay: tiêu đề (trống = dùng banner thường)', ''),
-  chu('today.s', 'Banner Hôm nay: dòng phụ', ''),
-  { khoa: 'today.cta', man: M, ten: 'Banner Hôm nay: nút', loai: 'nut', macDinh: { chu: '', dich: 'menu' } },
+  chu('today.t', 'Banner Hôm nay: tiêu đề mặc định', 'Hôm nay bạn muốn uống gì?'),
+  chu('today.s', 'Banner Hôm nay: dòng phụ mặc định', ''),
+  { khoa: 'today.cta', man: M, ten: 'Banner Hôm nay: nút mặc định', loai: 'nut', macDinh: { chu: 'Xem Menu ›', dich: 'menu' } },
   // Ô Giờ vàng + ô Trắc nghiệm
   chu('home.gvk', 'Ô Giờ vàng: nhãn', 'Giờ vàng'),
   chu('home.gv.chua', 'Ô Giờ vàng: khi chưa có', 'Hiện chưa có'),
@@ -53,10 +48,10 @@ export const TRANG_CHU = [
   chu('home.gv.cuoi', 'Ô Giờ vàng: sắp chạy', '{so} món cuối ngày', { bien: ['so'] }),
   khoa('home.gv.so', 'Phần trăm giảm, số món, giờ của Giờ vàng', 'pos', 'POS › Giờ vàng'),
   { khoa: 'home.q.anh', man: M, ten: 'Ô Trắc nghiệm: hình', loai: 'anh', macDinh: '/anh/the-chat-scale.svg', tiLe: '1:1' },
-  chu('home.qk', 'Ô Trắc nghiệm: nhãn', O_TRAC_NGHIEM.nhan),
-  chu('home.qh', 'Ô Trắc nghiệm: câu hỏi', O_TRAC_NGHIEM.hoi),
-  chu('home.q.kq', 'Ô Trắc nghiệm: nhãn khi đã có kết quả', O_TRAC_NGHIEM.ketQua),
-  chu('home.q.xem', 'Ô Trắc nghiệm: dòng mở kết quả', O_TRAC_NGHIEM.xemKetQua),
+  chu('home.qk', 'Ô Trắc nghiệm: nhãn', 'Trắc nghiệm'),
+  chu('home.qh', 'Ô Trắc nghiệm: câu hỏi', 'Bạn thuộc thể chất nào?'),
+  chu('home.q.kq', 'Ô Trắc nghiệm: nhãn khi đã có kết quả', 'Thể trạng'),
+  chu('home.q.xem', 'Ô Trắc nghiệm: dòng mở kết quả', 'Xem kết quả ›'),
   // Chăm sóc theo nhu cầu
   chu('home.needs', 'Tiêu đề mục Chăm sóc theo nhu cầu', 'Chăm sóc theo nhu cầu'),
   {

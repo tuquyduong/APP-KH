@@ -3,6 +3,8 @@ import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDon } from '../duLieuKhach.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
+import { nd, ndDau } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
@@ -14,9 +16,9 @@ import { cauTienVe, docHoaDon, soDon } from '../hoaDon.js';
 // ô lọc (Đang giao / Hoàn thành / Đã hủy) ẩn vì POS chưa ghi giá trị `trang_thai`. Chỉ hiện trạng thái POS trả — KHÔNG tính tiền chưa trả.
 // Đơn App chưa có đơn thật: trang_thai / thanh_toan = null (hợp đồng v5) → đọc tien_trinh.
 function NhanDon({ don }) {
-  if (don.trang_thai === 'cancelled' || don.tien_trinh === 'da_huy') return <div className="order-status cancelled">Đã hủy</div>;
-  if (don.tien_trinh === 'cho_tra') return <div className="order-status shipping">Chờ thanh toán</div>;
-  if (don.thanh_toan === 'paid' || ['da_tra', 'dang_lam', 'xong'].includes(don.tien_trinh)) return <div className="order-status done">Đã thanh toán</div>;
+  if (don.trang_thai === 'cancelled' || don.tien_trinh === 'da_huy') return <Chu k="dh.nhan.huy" as="div" className="order-status cancelled" />;
+  if (don.tien_trinh === 'cho_tra') return <Chu k="dh.nhan.cho" as="div" className="order-status shipping" />;
+  if (don.thanh_toan === 'paid' || ['da_tra', 'dang_lam', 'xong'].includes(don.tien_trinh)) return <Chu k="dh.nhan.tra" as="div" className="order-status done" />;
   return null;
 }
 
@@ -24,23 +26,23 @@ export function ChiTietDon({ ma, lui }) {
   const tai = dungTai(useCallback(() => layChiTietDon(ma), [ma]));
   return (
     <Man id="orderdetail">
-      <DauManCon tieuDe={tai.dl && tai.dl.don ? `Đơn ${soDon(tai.dl.don.so_hd, tai.dl.don.ma || ma)}` : 'Đơn hàng'} lui={lui} />
+      <DauManCon tieuDe={tai.dl && tai.dl.don ? nd('dh.ct.tieuDe', { so: soDon(tai.dl.don.so_hd, tai.dl.don.ma || ma) }) : nd('dh.ct.tieuDe.cho')} lui={lui} />
       <TrangTai tai={tai}>
         {({ don }) => (
           <div className="order-card">
             <div className="top">
-              <div><div className="code">{soDon(don.so_hd, don.ma || ma)}</div><div className="date">{dinhDangNgay(don.ngay)}</div></div>
+              <div><div className="code" {...ndDau('dh.so')}>{soDon(don.so_hd, don.ma || ma)}</div><div className="date" {...ndDau('dh.so')}>{dinhDangNgay(don.ngay)}</div></div>
               <NhanDon don={don} />
             </div>
-            {cauTienVe(don) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{cauTienVe(don)}</div></div>}
+            {cauTienVe(don) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('dh.cauTienVe')}>{cauTienVe(don)}</div></div>}
             {docHoaDon(don).length > 0 ? <HoaDonKhach don={don} /> : <>
               {don.mon.map((m, i) => (
-                <div className="summary-row" key={i}>
+                <div className="summary-row" key={i} {...ndDau('dh.tien')}>
                   <span>{m.so_luong} × {m.ten}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
                   <span>{dinhDangGia(m.thanh_tien)}</span>
                 </div>
               ))}
-              <div className="summary-row total"><span>Tổng</span><span>{dinhDangGia(don.tong)}</span></div>
+              <div className="summary-row total"><Chu k="dh.ct.tong" /><span {...ndDau('dh.tien')}>{dinhDangGia(don.tong)}</span></div>
             </>}
           </div>
         )}
@@ -82,20 +84,20 @@ export default function LichSuDon({ chonDon, lui, datLai }) {
 
   return (
     <Man id="orderhistory">
-      <DauManCon tieuDe="Lịch sử đơn hàng" phu={ds.length > 0 && !conNua ? `${ds.length} đơn` : ''} lui={lui} />
-      {ds.length === 0 && !dang && !loi && <div className="empty-note">Bạn chưa có đơn nào.</div>}
+      <DauManCon tieuDe={nd('dh.tieuDe')} phu={ds.length > 0 && !conNua ? nd('dh.soDon', { so: ds.length }) : ''} lui={lui} />
+      {ds.length === 0 && !dang && !loi && <Chu k="dh.rong" as="div" className="empty-note" />}
       {ds.map((d) => (
         <div className="order-card" key={d.ma} role="button" tabIndex={0} onClick={() => chonDon(d)} onKeyDown={(e) => { if (e.key === 'Enter') chonDon(d); }}>
           <div className="top">
-            <div><div className="code">{soDon(d.so_hd, d.ma)}</div><div className="date">{dinhDangNgay(d.ngay)}</div></div>
+            <div><div className="code" {...ndDau('dh.so')}>{soDon(d.so_hd, d.ma)}</div><div className="date" {...ndDau('dh.so')}>{dinhDangNgay(d.ngay)}</div></div>
             <NhanDon don={d} />
           </div>
-          <div className="bottom"><div className="total">{dinhDangGia(d.tong)}</div>{datLai && <button type="button" className="reorder-btn" onClick={(e) => { e.stopPropagation(); datLai(d.ma); }}>Đặt lại</button>}</div>
+          <div className="bottom"><div className="total" {...ndDau('dh.tien')}>{dinhDangGia(d.tong)}</div>{datLai && <Chu k="dh.datLai" as="button" type="button" className="reorder-btn" onClick={(e) => { e.stopPropagation(); datLai(d.ma); }} />}</div>
         </div>
       ))}
       {dang && <div className="khung-tai" aria-busy="true" />}
       {loi && <KhungLoi loi={loi} thuLai={thuLai} />}
-      {conNua && !dang && !loi && <div className="more-l"><span role="button" tabIndex={0} onClick={xemThem} onKeyDown={(e) => { if (e.key === 'Enter') xemThem(); }}>Xem thêm</span></div>}
+      {conNua && !dang && !loi && <div className="more-l"><span role="button" tabIndex={0} onClick={xemThem} onKeyDown={(e) => { if (e.key === 'Enter') xemThem(); }} {...ndDau('dh.xemThem')}>{nd('dh.xemThem')}</span></div>}
     </Man>
   );
 }

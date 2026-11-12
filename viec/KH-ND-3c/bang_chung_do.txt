@@ -1,0 +1,47 @@
+KH-ND-3c — bằng chứng ĐỎ trên code gốc (commit 8c67ae6 = "PHIEU: KH-ND-3c"), rồi XANH sau khi sửa.
+Cách làm: `git archive 8c67ae6` cả cây gốc vào thư mục nháp (node_modules dùng chung), chép ĐÚNG bài thử mới / đã sửa (đã commit) + viec/KH-ND-3c/chu_goc.json vào đó, chạy với KHONG_TRINH_DUYET=1 ở cả hai cây.
+chu_goc.json = mọi chuỗi có dấu của 17 tệp A1 ở bản gốc, trích bằng @babel/parser (bài thử kiểm chúng còn trong danh mục).
+
+== 1. Bài MỚI cong_cu/thu_KHND3c.js — trên GỐC (taiKhoan.js còn rỗng, các màn còn chữ cứng, VeQR chưa có tham số viền, App chưa nhớ chương trình, ha_no_chu.js còn xoá dòng 0)
+7 đạt · 35 hỏng   (dòng ✗, rút gọn):
+  ✗ A1 taiKhoan.js xuất MẢNG ≥ 250 mục, đã gộp vào danh mục chung — 0 mục
+  ✗ A1 man của mục thuộc 8 màn · ✗ A1 phần POS có mục khoá pos + chỉ đường POS › · ✗ A2 nội dung chuyên môn trắc nghiệm là mục KHOÁ tutinh
+  ✗ A1 macDinh = chữ đang chạy (53 khoá kiểm lại với chữ cũ) · ✗ A1 danh sách đáp án khí hậu giữ mã máy lanh / nong / deu
+  ✗ A1 mọi chữ có dấu của 17 tệp A1 ở bản trước việc (243 chuỗi) còn trong danh mục
+  ✗ C1 14 tệp A1: số chữ cứng = 0 — UuDai.jsx (34), TaiKhoan.jsx (14), HoSo.jsx (31), … · ✗ C1 noiDung/dangNhap.js chỉ còn 5 chữ xưng hô; lienHe.js và tracNghiemChu.js hết chữ cứng
+  ✗ C1 mọi khoá các tệp A1 dùng có trong danh mục (gốc: 16 khoá — chỉ tên biểu tượng) · ✗ C1 khoá ghép chuỗi / mảng · ✗ D1 khoá hay quên: ndDau thật ở màn · ✗ D1 mọi khoá KHONG_GAN có thật trong danh mục
+  ✗ A4 HoSo.jsx không còn so `=== 'Chào'` · ✗ A3 TheMoi không còn ảnh mặc định riêng
+  ✗ C1 (phiếu) App.jsx: KhongTimThay không nhận chữ từ ngoài · ✗ C1 (phiếu) thông báo thêm vào giỏ / đặt lại đọc qua nd("app.…")
+  ✗ B1 loiMa mặc định như cũ / bản giả đổi chữ · ✗ B1 dongGoi / dinhDangGia / moTaGiam đi qua nd() · ✗ A1 lienHe.js đọc từ danh mục
+  ✗ B1 VeQR tham số `vien` · ✗ B1 VeQR tên đọc từ danh mục · ✗ B1 ManQR viền 4 ô · ✗ B1 CSS .khung-qr min(78vw, 320px) + nền #fff · ✗ B2 Wake Lock · ✗ B3 dòng nhắc mqr.sang
+  ✗ C1 tìm thấy hai hàm đọc / ghi chương trình trong App.jsx · ✗ C1 đọc hỏng · ✗ C1 ghi · ✗ C1 App.jsx nhớ chương trình, khoá ngoài luuMay.js
+  ✗ C2 chonQuangCao trả khoaDai theo loại dòng · ✗ C2 DaiQuangCao gắn data-nd bằng ndDau(khoa)
+  ✗ C3 haNo giữ dòng 0 · ✗ C3 no_chu_cung.txt giữ dòng "<tệp> 0"
+  ✗ C4 vệt sáng LUÔN chạy (ca tĩnh của thu_KHND3c: demo_2.css còn luật tắt; giaoDien.css chưa có sweepP/sweepL)
+  (7 ca còn XANH trên gốc vì là điều kiện không đổi / rỗng khi danh mục còn trống: kiemDanhMuc, không chữ "nợ", tracNghiem.js còn 62 chữ cứng, D1 hai ca "mỗi khoá có chỗ dùng / gắn" (danh mục rỗng), A4 chiaLoiChao (hàm đã có coBuoi từ KH-ND-3a), C2 khoá khoaDai có trong danh mục. Phần Chromium của thu_KHND3c (37 ca) không chạy với KHONG_TRINH_DUYET=1.)
+
+== 2. Bài CŨ sửa — chữ chuyển chỗ / hành vi đổi có chủ đích (D2: sửa đúng ca, không bớt điều canh). Trên GỐC mỗi bài có ≥ 1 ca ĐỎ (kể cả KHONG_TRINH_DUYET=1):
+thu_KHHANG2.js   14 đạt · 2 hỏng   (A1 chữ cố định "Hạng dành tặng…" / "Không thời hạn" → khoá ud.hang.*; TheHang dùng <Chu k="ud.hang.*">)
+thu_KHMUA1b.js   50 đạt · 1 hỏng   (G1 thông báo "Đã thêm …" → nd('app.daThem'))
+thu_KHSINH1.js   23 đạt · 1 hỏng   (A1 thẻ "Ngày sinh" → <Chu k="hs.ns.t">)
+thu_KHUI3d.js    32 đạt · 2 hỏng   (B2 "Ưu đãi của tôi" → ud.tieuDeToi; B2 KH-HANG-2 → khoá ud.hang.*)
+thu_KHUI5a.js   354 đạt · 3 hỏng   (Tài khoản nhóm "Sức khỏe" → khoá tk.*; "thoát giữa chừng" → tnl.thoatT ở danh mục; "kho bị chặn" → nd('tnk.khongLuuDuoc'); các ca kết quả chỉ đổi regex cho khớp data-nd)
+thu_KHUI5g.js    32 đạt · 2 hỏng   (C4: giaoDien.css ghi đè prefers-reduced-motion + chú thích dai_quang_cao.css; ca Chromium "reduce → vẫn sweepP, --p đổi" thay ca "reduce → none" — chạy ở máy có Chromium)
+thu_KHXEM1.js     0 đạt · 1 hỏng   (bài không chạy được vì nd.BUOC_SDT không còn — chữ bước 1 đọc từ danh mục dn.sdt.phu)
+thu_KHND3a.js    71 đạt · 2 hỏng   (C3: tệp hết chữ GIỮ dòng 0; D1 dinhDang.js hết chữ cứng — gia.donVi, gia.giam)
+thu_KHND3b.js    19 đạt · 1 hỏng   (A1 giaHang.js hết chữ cứng: phép còn 3 → 0)
+
+== 3. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
+thu_KHND3c.js 42 đạt · 0 hỏng · thu_KHHANG2.js 16 · 0 · thu_KHMUA1b.js 51 · 0 · thu_KHSINH1.js 24 · 0 · thu_KHUI3d.js 34 · 0 · thu_KHUI5a.js 357 · 0 · thu_KHUI5g.js 34 · 0 · thu_KHXEM1.js 62 · 0 · thu_KHND3a.js 73 · 0 · thu_KHND3b.js 20 · 0
+Chromium (không đặt biến): thu_KHND3c.js 79 đạt · 0 hỏng.
+
+SỐ CA cong_cu/thu_KHND3c.js: 42
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHMUA1b.js: 51
+SỐ CA cong_cu/thu_KHSINH1.js: 24
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+SỐ CA cong_cu/thu_KHUI5a.js: 357
+SỐ CA cong_cu/thu_KHUI5g.js: 34
+SỐ CA cong_cu/thu_KHXEM1.js: 62
+SỐ CA cong_cu/thu_KHND3a.js: 73
+SỐ CA cong_cu/thu_KHND3b.js: 20

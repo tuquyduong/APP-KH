@@ -3,6 +3,8 @@ import { cuaDon } from '../duLieuKhach.js';
 import { dungKho } from '../kho.js';
 import { MS_HOI, daBao, docNho, ghiNho, tieuDeXong, xemDanhSach, xoaNho } from '../baoDonXong.js';
 import { Ico } from './BieuTuong.jsx';
+import Chu from './Chu.jsx';
+import { nd, ndDau } from '../noiDung/nd.js';
 import '../giaoDien/bao_don.css';
 
 // Dải "Đơn <số đơn> đã sẵn sàng — mời bạn ra quầy" trên cùng MỌI màn (KH-BAO-1). Hỏi qua kho `cuaDon` (GET /don trang 1, dùng chung lệnh đang chờ):
@@ -37,9 +39,9 @@ export default function BaoDonXong({ moDon, datTieuDe }) {
   return (
     <div className="nt-state on bao-don" role="status">
       <Ico ten="check" s={18} />
-      <div>Đơn {kq.nhan[ma]} đã sẵn sàng — mời bạn ra quầy</div>
-      <button type="button" className="bao-don-xem" onClick={() => { tat(); moDon(ma); }}>Xem đơn</button>
-      <button type="button" className="bao-don-tat" aria-label="Tắt thông báo" onClick={tat}><Ico ten="close" s={14} /></button>
+      <Chu k="bao.chu" as="div" bien={{ don: kq.nhan[ma] }} />
+      <Chu k="bao.xem" as="button" type="button" className="bao-don-xem" onClick={() => { tat(); moDon(ma); }} />
+      <button type="button" className="bao-don-tat" aria-label={nd('bao.tat')} {...ndDau('bao.tat')} onClick={tat}><Ico ten="close" s={14} /></button>
     </div>
   );
 }

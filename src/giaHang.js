@@ -1,6 +1,7 @@
 // Giá theo hạng — App KHÔNG tự tính: chỉ TRA bảng `gia_hang[]` POS gửi kèm từng món (máy chủ tính cùng hàm với quầy).
 // Hạng khách (`hangToi`) = { id, ten } lấy từ /toi; `dsHang` = /hang (POS đã xếp theo thu_bac tăng dần — App không sắp lại).
 import { dinhDangGia } from './dinhDang.js';
+import { nd } from './noiDung/nd.js';
 
 /** Giá khách phải trả theo hạng: dòng `hang_id` = hạng khách; không có dòng (không hạng / bảng rỗng) → giá gốc. */
 export function giaChoKhach(mon, hangToi) {
@@ -19,7 +20,7 @@ export function bacThang(dsHang, mon, hangToi) {
   if (hangToi && co(hangToi.id) && !cot.some((c) => c.id === hangToi.id)) cot.push({ id: hangToi.id, ten: hangToi.ten, gia: co(hangToi.id).gia }); // hạng đã tắt mà thẻ còn hạn
   if (cot.length === 0) return null;
   const toi = hangToi ? hangToi.id : null;
-  return [{ ten: 'Thường', gia: mon.gia, laToi: !cot.some((c) => c.id === toi) }, ...cot.map((c) => ({ ten: c.ten, gia: c.gia, laToi: c.id === toi }))];
+  return [{ ten: nd('gia.thuong'), gia: mon.gia, laToi: !cot.some((c) => c.id === toi) }, ...cot.map((c) => ({ ten: c.ten, gia: c.gia, laToi: c.id === toi }))];
 }
 
 /** Menu không còn giá hạng của khách (bản công khai): bỏ `gia_hang` khỏi mọi món, không sửa bản gốc. */
@@ -27,9 +28,6 @@ export const boGiaHang = (dl) => (dl && Array.isArray(dl.data) ? { ...dl, data: 
 
 /** Bảng hạng cho khách xem: chỉ hạng giảm thật (`phan_tram` là số > 0) — chủ quán chốt 01.11 ẩn hạng 0%. Không phải mảng → []. */
 export const hangCoGiam = (ds) => (Array.isArray(ds) ? ds.filter((h) => typeof h.phan_tram === 'number' && h.phan_tram > 0) : []);
-
-export const CHU_HANG_TANG = 'Hạng dành tặng khách thân thiết';
-export const CHU_KHONG_THOI_HAN = 'Không thời hạn';
 
 /** Hạng `id` trong /hang có phải hạng chỉ chủ quán cấp (`chi_cap === true`)? Thiếu / sai kiểu → false. */
 export const laHangChiCap = (ds, id) => Array.isArray(ds) && ds.some((h) => h && h.id === id && h.chi_cap === true);
@@ -39,6 +37,6 @@ export function dongGoi(h) {
   if (!h || h.chi_cap === true || !Array.isArray(h.goi)) return [];
   return h.goi.flatMap((g) => {
     const gia = g && Number.isInteger(g.so_thang) && g.so_thang > 0 && g.gia > 0 ? dinhDangGia(g.gia) : '';
-    return gia ? [`${g.so_thang} tháng — ${gia}`] : [];
+    return gia ? [nd('ud.hang.goi', { soThang: g.so_thang, gia })] : [];
   });
 }

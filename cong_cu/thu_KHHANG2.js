@@ -38,7 +38,7 @@ const TANG = 'Hạng dành tặng khách thân thiết';
   await thu('A1', async () => {
     k('A1 laHangChiCap: đúng id + chi_cap true → true', g.laHangChiCap([H_BAC, H_TANG], 3) === true);
     k('A1 laHangChiCap: hạng thường / id lạ / ds không phải mảng / chi_cap sai kiểu → false', [g.laHangChiCap([H_BAC, H_TANG], 1), g.laHangChiCap([H_BAC], 99), g.laHangChiCap(null, 3), g.laHangChiCap(undefined, 3), g.laHangChiCap([{ id: 3, chi_cap: 'true' }], 3), g.laHangChiCap([null, 7], 3)].every((x) => x === false));
-    k('A1 chữ cố định: "Hạng dành tặng khách thân thiết" / "Không thời hạn"', g.CHU_HANG_TANG === TANG && g.CHU_KHONG_THOI_HAN === 'Không thời hạn');
+    k('A1 chữ cố định: "Hạng dành tặng khách thân thiết" / "Không thời hạn"', !('CHU_HANG_TANG' in g) && !('CHU_KHONG_THOI_HAN' in g) && new RegExp(`'ud\\.hang\\.tang', '[^']*', '${TANG}'`).test(doc('src/noiDung/nd/taiKhoan.js')) && /'ud\.hang\.khongHan', '[^']*', 'Không thời hạn'/.test(doc('src/noiDung/nd/taiKhoan.js'))); // KH-ND-3c: chữ ở danh mục
   });
 
   await thu('A2', async () => {
@@ -63,7 +63,7 @@ const TANG = 'Hạng dành tặng khách thân thiết';
   await thu('A1b', async () => {
     const f = doc('src/pages/UuDai.jsx');
     const jsx = boChuThich(f);
-    k('A1 nguồn: TheHang DÙNG (không chỉ import) {CHU_KHONG_THOI_HAN}, {CHU_HANG_TANG}, laHangChiCap(dsHang…), dongGoi(h)', /\{CHU_KHONG_THOI_HAN\}/.test(jsx) && /\{CHU_HANG_TANG\}/.test(jsx) && /laHangChiCap\(dsHang,/.test(jsx) && /dongGoi\(h\)/.test(jsx));
+    k('A1 nguồn: TheHang DÙNG (không chỉ import) khoá ud.hang.khongHan, ud.hang.tang, laHangChiCap(dsHang…), dongGoi(h)', /<Chu k="ud\.hang\.khongHan"/.test(jsx) && /<Chu k="ud\.hang\.tang"/.test(jsx) && /laHangChiCap\(dsHang,/.test(jsx) && /dongGoi\(h\)/.test(jsx));
   });
 
   await thu('B1n', async () => {

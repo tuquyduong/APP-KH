@@ -37,8 +37,8 @@ function dung(noiDung, define = {}) {
 const D1 = ['src/pages/TrangChu.jsx', 'src/components/OKeHoach.jsx', 'src/components/OGioVang.jsx', 'src/components/BannerHomNay.jsx', 'src/components/TheMoi.jsx',
   'src/components/OTracNghiem.jsx', 'src/components/ThanhTab.jsx', 'src/components/ManDau.jsx', 'src/components/Man.jsx', 'src/duongDan.js', 'src/dinhDang.js'];
 // Khoá demo (data-cms) của Trang chủ / màn mở mà App có khối → phải dùng lại đúng tên (phần sau dấu ":").
-const KHOA_DEMO = ['brand.slogan', 'home.sub', 'home.bk', 'home.bb', 'home.gvk', 'home.qk', 'home.qh', 'home.needs', 'home.disc', 'home.fmore', 'home.cala', 'home.calb',
-  'today.t', 'today.s', 'today.cta', 'today.bg', 'home.banner', 'home.need'];
+const KHOA_DEMO = ['brand.slogan', 'home.sub', 'home.gvk', 'home.qk', 'home.qh', 'home.needs', 'home.disc', 'home.fmore', 'home.cala', 'home.calb',
+  'today.t', 'today.s', 'today.cta', 'today.bg', 'home.need'];
 const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 'home.needs', 'home.feat'];
 
 (async () => {
@@ -55,16 +55,16 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
   k('A1 dùng lại khoá demo data-cms (home.needs, home.bb, brand.slogan…)', thieuDemo.length === 0, thieuDemo.join(', '));
   const loaiCo = new Set(DM.filter((m) => !m.khoaBoi).map((m) => m.loai));
   k('A1 đủ 6 loại: chu doan anh nut danhsach battat', ['chu', 'doan', 'anh', 'nut', 'danhsach', 'battat'].every((l) => loaiCo.has(l)), [...loaiCo].join(','));
-  k('A1 nút có { chu, dich }: home.bb → Xem Menu → / menu', JSON.stringify(theo.get('home.bb')?.macDinh) === JSON.stringify({ chu: 'Xem Menu →', dich: 'menu' }));
+  k('A1 nút có { chu, dich }: today.cta → Xem Menu › / menu; hero-banner (home.banner/bk/bh/bb) đã bỏ (KH-UI-5g)', JSON.stringify(theo.get('today.cta')?.macDinh) === JSON.stringify({ chu: 'Xem Menu ›', dich: 'menu' }) && ['home.banner', 'home.bk', 'home.bh', 'home.bb'].every((x) => !theo.has(x)));
   k('A1 ẩn / hiện: mỗi khối SECS App có một mục battat hien.<mã> (mặc định hiện)', SECS_APP.every((s) => theo.get('hien.' + s)?.loai === 'battat' && theo.get('hien.' + s).macDinh === true),
     SECS_APP.filter((s) => theo.get('hien.' + s)?.loai !== 'battat').join(','));
   const nc = theo.get('home.need');
   const NHU_CAU = (await nap('src/noiDung/nhuCau.js')).NHU_CAU || [];
   k('A1 danhsach nhu cầu: tên lọc món là khoaCauTruc, chữ hiện (nhan) = tên đang chạy', nc?.loai === 'danhsach' && (nc.khoaCauTruc || []).includes('ten')
     && nc.macDinh.length === NHU_CAU.length && nc.macDinh.every((x, i) => x.ten === NHU_CAU[i].ten && x.nhan === NHU_CAU[i].ten && x.anh === NHU_CAU[i].anh));
-  k('A1 macDinh = chữ đang chạy: brand.slogan = KHAU_HIEU, home.sub, home.disc, home.bh', theo.get('brand.slogan')?.macDinh === (await nap('src/noiDung/thuongHieu.js')).KHAU_HIEU
+  k('A1 macDinh = chữ đang chạy: brand.slogan = KHAU_HIEU, home.sub, home.disc, today.t', theo.get('brand.slogan')?.macDinh === (await nap('src/noiDung/thuongHieu.js')).KHAU_HIEU
     && theo.get('home.sub')?.macDinh === 'Tứ Quý Đường — {khauHieu}' && /^Chỉ mang tính gợi ý theo dịp dùng — TQD/.test(theo.get('home.disc')?.macDinh || '')
-    && theo.get('home.bh')?.macDinh === 'Hôm nay bạn muốn\nuống gì?');
+    && theo.get('today.t')?.macDinh === 'Hôm nay bạn muốn uống gì?');
   k('A1 bien khai đúng chỗ điền (tab.soMon: so)', JSON.stringify(theo.get('tab.soMon')?.bien) === '["so"]' && /\{so\}/.test(theo.get('tab.soMon')?.macDinh || ''));
   const khoa = DM.filter((m) => m.khoaBoi);
   // Không dùng \b: \b của JS chỉ hiểu chữ ASCII nên /\bnợ\b/ không bao giờ khớp (soát vòng 2). Ca giả "công nợ" chứng minh phép kiểm đỏ được.
@@ -92,17 +92,17 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     k('B1 nd điền biến: tab.soMon {so: 3} → "3 món trong giỏ"', ND.nd('tab.soMon', { so: 3 }) === '3 món trong giỏ', ND.nd('tab.soMon', { so: 3 }));
     k('B1 nd thiếu biến → giữ nguyên {so} (không bịa số)', ND.nd('tab.soMon') === '{so} món trong giỏ');
     k('B1 khoá lạ khi chạy thử → ném lỗi rõ', /không có trong danh mục/.test(nem(() => ND.nd('khong.co'))));
-    k('B1 ndNut / ndAnh / ndDs / ndHien trả mặc định', ND.ndNut('home.bb').dich === 'menu' && ND.ndAnh('home.banner') === '/anh/banner-trang-chu.webp'
+    k('B1 ndNut / ndAnh / ndDs / ndHien trả mặc định', ND.ndNut('today.cta').dich === 'menu' && ND.ndAnh('today.bg') === '/anh/banner-trang-chu.webp'
       && ND.ndDs('home.need').length === NHU_CAU.length && ND.ndHien('hien.home.needs') === true);
     const nghe = []; const bo = ND.ngheNoiDung(() => nghe.push(ND.phienNoiDung()));
     const p0 = ND.phienNoiDung();
-    ND.datBanNoiDung({ so_ban: 3, gia_tri: { 'home.needs': 'Nhu cầu của bạn', 'home.bb': { chu: 'Đi Menu', dich: 'uudai' }, 'hien.home.feat': false, 'tab.soMon': '{so} món' } });
-    k('B2 bản hợp lệ thay chữ / nút / bật tắt', ND.nd('home.needs') === 'Nhu cầu của bạn' && ND.ndNut('home.bb').dich === 'uudai' && ND.ndHien('hien.home.feat') === false && ND.nd('tab.soMon', { so: 2 }) === '2 món');
+    ND.datBanNoiDung({ so_ban: 3, gia_tri: { 'home.needs': 'Nhu cầu của bạn', 'today.cta': { chu: 'Đi Menu', dich: 'uudai' }, 'hien.home.feat': false, 'tab.soMon': '{so} món' } });
+    k('B2 bản hợp lệ thay chữ / nút / bật tắt', ND.nd('home.needs') === 'Nhu cầu của bạn' && ND.ndNut('today.cta').dich === 'uudai' && ND.ndHien('hien.home.feat') === false && ND.nd('tab.soMon', { so: 2 }) === '2 món');
     k('B2 báo người nghe, phiên tăng', nghe.length === 1 && ND.phienNoiDung() === p0 + 1);
-    ND.datBanNoiDung({ so_ban: 4, gia_tri: { 'home.needs': 5, 'tab.soMon': 'món trong giỏ', 'home.bb': { chu: 'Đi', dich: 'khongco' }, 'hien.home.feat': 'không',
+    ND.datBanNoiDung({ so_ban: 4, gia_tri: { 'home.needs': 5, 'tab.soMon': 'món trong giỏ', 'today.cta': { chu: 'Đi', dich: 'khongco' }, 'hien.home.feat': 'không',
       'home.need': [{ ten: 'Bịa', nhan: 'x', anh: '/a.webp', bieuTuong: 'need-moon' }], 'brand.slogan': 'x'.repeat(500) } });
     k('B2 sai loại / mất chỗ điền / đích lạ / bật tắt sai → macDinh', ND.nd('home.needs') === 'Chăm sóc theo nhu cầu' && ND.nd('tab.soMon', { so: 1 }) === '1 món trong giỏ'
-      && ND.ndNut('home.bb').dich === 'menu' && ND.ndHien('hien.home.feat') === true);
+      && ND.ndNut('today.cta').dich === 'menu' && ND.ndHien('hien.home.feat') === true);
     k('B2 danhsach đổi tên lọc (khoaCauTruc) → macDinh; quá toiDa → macDinh', ND.ndDs('home.need')[0].ten === NHU_CAU[0].ten && ND.nd('brand.slogan') === theo.get('brand.slogan').macDinh);
     ND.datBanNoiDung({ so_ban: 5, gia_tri: { 'home.need': NHU_CAU.map((n) => ({ ten: n.ten, nhan: n.ten + '!', anh: n.anh, bieuTuong: n.bieuTuong })) } });
     k('B2 danhsach đổi chữ hiện (giữ tên lọc) → nhận', ND.ndDs('home.need')[0].nhan === NHU_CAU[0].ten + '!');
@@ -142,6 +142,42 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     k('C1 thẻ tự đóng có {…} rồi chữ JSX: <Ico s={11} /> Chữ → 1', H.demChuCung('<p><Ico s={11} /> Chữ cứng</p>') === 1);
     k('C1 phép chia trong JSX {a}/{b} và {a} / {b} rồi chữ → 1 mỗi ca', H.demChuCung('<p>{a}/{b} Chữ mới</p>') === 1 && H.demChuCung('<p>{a} / {b} Chữ mới</p>') === 1);
     k("C1 chuỗi sau thẻ tự đóng có {…}: <X a={b} />{'Khác'} → 1", H.demChuCung("<p><X a={b} />{x ? 'Khác' : ''}</p>") === 1);
+    // KH-ND-3b B1: ba dạng bộ đếm cũ đếm sót (soát KH-ND-3a vòng 2) — mỗi dạng một ca, ĐỎ trên bộ đếm cũ.
+    k('B1 chữ JSX có địa chỉ web: <p>Xem https://… chữ</p> → 1 (// sau : không phải chú thích); chú thích thật vẫn bỏ', H.demChuCung('<p>Xem https://tuquyduong.com/menu chữ</p>') === 1
+      && H.demChuCung('const a = 1; // Chào bạn\nconst b = 2; /* Đó */') === 0);
+    k('B1 chữ JSX có "/" ngay sau ( = ? - : <p>(/ngày) chữ</p> … → 1 mỗi ca (không phải regex); regex thật vẫn bỏ', ['(/ngày) chữ', '= /ngày chữ', '? /ngày chữ', '- /ngày chữ']
+      .every((t) => H.demChuCung(`<p>${t}</p>`) === 1) && H.demChuCung('const r = /ngày/g.test(x) ? /đêm/i : 0;') === 0 && H.demChuCung('const m = x.replace(/Đ+/g, "d");') === 0);
+    k('B1 chuỗi có dấu lồng trong ${…} của mẫu chuỗi: mỗi chuỗi lồng có dấu = 1 (cộng 1 nếu phần chữ của mẫu có dấu)', H.demChuCung("const s = `${a ? 'Có' : 'Không'}`;") === 2
+      && H.demChuCung("const s = `Chào ${a ? 'Có' : 'x'}`;") === 2 && H.demChuCung("const s = `Chào ${f(`Tên ${y}`)}`;") === 2 && H.demChuCung('const s = `${a} món`;') === 1);
+    // Đối chứng bằng cách đếm thứ hai ĐỘC LẬP: @babel/parser (có sẵn trong node_modules qua vite, KHÔNG nằm trong package.json) đếm trên cây cú pháp của MỌI tệp src.
+    let BP = null;
+    try { BP = require('@babel/parser'); } catch { /* không có */ }
+    if (!BP) console.log('  BỎ QUA: không có @babel/parser trong node_modules — ca đối chứng bộ đếm thứ hai CHƯA chạy (chạy npm ci)');
+    else {
+      const demCay = (nguon) => {
+        let n = 0;
+        const duyet = (x) => {
+          if (!x || typeof x !== 'object') return;
+          if (Array.isArray(x)) { x.forEach(duyet); return; }
+          if (x.type === 'StringLiteral') { if (coDauThu(x.value)) n++; return; }
+          if (x.type === 'JSXText') { if (coDauThu(x.value)) n++; return; }
+          if (x.type === 'TemplateLiteral') { if (coDauThu(x.quasis.map((q) => q.value.raw).join(''))) n++; x.expressions.forEach(duyet); return; }
+          for (const t of Object.keys(x)) if (t !== 'loc' && t !== 'leadingComments' && t !== 'trailingComments' && t !== 'innerComments') duyet(x[t]);
+        };
+        duyet(BP.parse(nguon, { sourceType: 'module', plugins: ['jsx'] }).program);
+        return n;
+      };
+      const coDauThu = (s) => /[̀-ͯ]|[đĐ]/.test(String(s).normalize('NFD'));
+      const lech = [], hong2 = [];
+      const lietKe = (d) => fs.readdirSync(tep(d), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? lietKe(`${d}/${e.name}`) : /\.jsx?$/.test(e.name) ? [`${d}/${e.name}`] : []));
+      let tong = 0;
+      for (const f of lietKe('src').filter((x) => !/^src\/(noiDung|kiemKhop)\/|^src\/pages\/KiemKhop\.jsx$/.test(x))) {
+        try { const a = H.demChuCung(doc(f)), b = demCay(doc(f)); tong++; if (a !== b) lech.push(`${f} (bộ đếm ${a} · cây cú pháp ${b})`); } catch (e) { hong2.push(`${f}: ${String(e.message).split('\n')[0]}`); }
+      }
+      k(`B2 đối chứng: bộ đếm K10 và cây cú pháp @babel/parser cho CÙNG số chữ cứng ở mọi tệp src (${tong} tệp), tổng lệch 0`, lech.length === 0 && hong2.length === 0 && tong > 50, lech.concat(hong2).slice(0, 6).join(' · '));
+      k('B2 đối chứng đỏ được: bản giả có đủ ba dạng B1 → hai cách đếm giống nhau; bản giả chữ lạ đếm khác → bị phát hiện', demCay('const a = <p>Xem https://x.vn chữ <b>{`${y ? \'Có\' : \'Không\'}`}</b></p>;') === H.demChuCung('const a = <p>Xem https://x.vn chữ <b>{`${y ? \'Có\' : \'Không\'}`}</b></p>;')
+        && demCay("const a = 'Chào';") !== H.demChuCung("const a = 'Chao';"));
+    }
     const tam = fs.mkdtempSync(path.join(os.tmpdir(), 'k10-'));
     try {
       for (const f of ['kiem_tra_truoc_khi_giao.js', 'cong_cu/ha_no_chu.js', 'cong_cu/no_chu_cung.txt', 'package.json', 'package-lock.json', 'index.html', 'thiet_ke/app_kh_demo.html',
@@ -176,7 +212,7 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
       k('C2 ha_no_chu.js KHÔNG BAO GIỜ nâng: tệp tăng giữ số cũ, tệp mới không được thêm dòng', no3['src/pages/HoTro.jsx'] === no2['src/pages/HoTro.jsx'] && !('src/components/TepMoi.jsx' in no3) && /✗ K10/.test(K10()));
       fs.writeFileSync(path.join(tam, 'src/pages/HoTro.jsx'), 'export default () => null;\n');
       spawnSync(process.execPath, [path.join(tam, 'cong_cu/ha_no_chu.js')], { cwd: tam, encoding: 'utf8' });
-      k('C2 tệp hết chữ → xoá dòng trong số nợ', !('src/pages/HoTro.jsx' in (H.docNo(tam) || {})));
+      k('C2 (KH-ND-3c C3) tệp hết chữ → GIỮ dòng với số 0 (không xoá — hai việc song song cùng hạ tệp kề nhau không xung đột), K10 vẫn xanh', (H.docNo(tam) || {})['src/pages/HoTro.jsx'] === 0 && !/HoTro/.test(K10()), K10()); // (TepMoi.jsx còn nằm trong bản chép từ ca trên nên K10 chung vẫn đỏ vì nó — chỉ HoTro.jsx phải sạch)
     } catch (e) { k('C2 ca bộ kiểm trên bản chép dừng giữa chừng', false, String(e && e.message).split('\n')[0]); } finally { fs.rmSync(tam, { recursive: true, force: true }); }
     const txt = doc('cong_cu/no_chu_cung.txt');
     const dong = txt.split('\n');
@@ -195,7 +231,8 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     }
     k('C1 đối chứng: không dòng chữ có dấu nào (ngoài chú thích / regex) bị bộ đếm bỏ sót', sot.length === 0, sot.slice(0, 8).join(', '));
     const dem = H.demTatCa(GOC);
-    k('C1 số nợ khớp số đếm hiện tại', JSON.stringify(dem) === JSON.stringify(H.docNo(GOC)));
+    const noHT = H.docNo(GOC) || {}; // dòng số 0 (tệp đã hết chữ) được giữ: so theo từng tệp, thiếu = 0
+    k('C1 số nợ khớp số đếm hiện tại (dòng số 0 được giữ)', [...new Set([...Object.keys(dem), ...Object.keys(noHT)])].every((f) => (dem[f] || 0) === (noHT[f] || 0)));
     const bk = doc('kiem_tra_truoc_khi_giao.js');
     k('C2 K10 nằm trong kiem_tra_truoc_khi_giao.js', /K10/.test(bk) && /ha_no_chu/.test(bk));
     console.log('Phần 1 — D. Chuyển mẫu');
@@ -203,7 +240,7 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     k('D1 các tệp đã chuyển không còn chữ tiếng Việt viết thẳng (trừ dinhDang.js — phiếu chỉ chuyển lời báo lỗi / lời chào)', conChu.filter((x) => !x.startsWith('src/dinhDang.js')).length === 0, conChu.join(', '));
     const dd = doc('src/dinhDang.js').replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '');
     const chuoiDD = [...dd.matchAll(/'[^'\n]*'|`[^`]*`/g)].map((m) => m[0]).filter((x) => H.demChuCung(x) > 0);
-    k('D1 dinhDang.js: lời báo lỗi + lời chào đã ra danh mục; chỉ còn đơn vị "đ" và "giảm …" (định dạng giá)', chuoiDD.length > 0 && chuoiDD.every((x) => x === "'đ'" || /^`giảm /.test(x)), chuoiDD.join(' | '));
+    k('D1 dinhDang.js: lời báo lỗi, lời chào, đơn vị "đ" và "giảm …" đều đã ra danh mục (KH-ND-3c: gia.donVi, gia.giam) — không còn chữ cứng nào', chuoiDD.length === 0 && /nd\('gia\.donVi'\)/.test(dd) && /nd\('gia\.giam'/.test(dd), chuoiDD.join(' | '));
   } else k('C1 cong_cu/ha_no_chu.js xuất demChuCung', false);
   k('D1 noiDung/trangChu.js cũ đã gộp vào danh mục (bỏ tệp)', !co('src/noiDung/trangChu.js'));
   const boChuThich = (t) => t.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '');
@@ -268,21 +305,21 @@ async function trinhDuyet(pw) {
     await t.goto(`${URL0}/trangchu`);
     await t.waitForSelector('.need-grid');
     const truoc = await t.evaluate(() => ({ nd: document.querySelectorAll('[data-nd]').length, khoa: document.querySelectorAll('[data-nd-khoa]').length,
-      h2: document.querySelector('h2[data-nd="home.needs"]')?.textContent, bk: document.querySelector('.hero-banner .k')?.textContent, tab: document.querySelector('.tabbar [data-nd="tab.trangchu"]')?.textContent }));
+      h2: document.querySelector('h2[data-nd="home.needs"]')?.textContent, bk: document.querySelector('.today .t-k')?.textContent, tab: document.querySelector('.tabbar [data-nd="tab.trangchu"]')?.textContent }));
     k('E1 Trang chủ có phần tử data-nd (≥ 15) và data-nd-khoa', truoc.nd >= 15 && truoc.khoa >= 1, JSON.stringify(truoc));
-    k('E1 chữ mặc định như cũ: "Chăm sóc theo nhu cầu", "Tứ Quý Đường", tab "Trang chủ"', truoc.h2 === 'Chăm sóc theo nhu cầu' && truoc.bk === 'Tứ Quý Đường' && truoc.tab === 'Trang chủ', JSON.stringify(truoc));
-    await t.evaluate(() => window.__datBan({ so_ban: 2, gia_tri: { 'home.bk': 'Bản mới', 'home.bb': { chu: 'Đi Ưu đãi', dich: 'uudai' }, 'hien.home.needs': false, 'tieuDe.trangchu': 'Nhà' } }));
-    await t.waitForFunction(() => document.querySelector('.hero-banner .k')?.textContent === 'Bản mới');
-    const sau = await t.evaluate(() => ({ bb: document.querySelector('.hero-banner .b')?.textContent, needs: !!document.querySelector('.need-grid'), tieuDe: document.title }));
+    k('E1 chữ mặc định như cũ: "Chăm sóc theo nhu cầu", nhãn banner "HÔM NAY", tab "Trang chủ"', truoc.h2 === 'Chăm sóc theo nhu cầu' && truoc.bk === 'HÔM NAY' && truoc.tab === 'Trang chủ', JSON.stringify(truoc));
+    await t.evaluate(() => window.__datBan({ so_ban: 2, gia_tri: { 'today.k': 'Bản mới', 'today.cta': { chu: 'Đi Ưu đãi', dich: 'uudai' }, 'hien.home.needs': false, 'tieuDe.trangchu': 'Nhà' } }));
+    await t.waitForFunction(() => document.querySelector('.today .t-k')?.textContent === 'Bản mới');
+    const sau = await t.evaluate(() => ({ bb: document.querySelector('.today .t-cta')?.textContent, needs: !!document.querySelector('.need-grid'), tieuDe: document.title }));
     k('E1 bản giả đổi 3 khoá → chữ, nút đổi, khối Nhu cầu ẩn; tên tab trình duyệt đổi', sau.bb === 'Đi Ưu đãi' && !sau.needs && sau.tieuDe === 'Nhà · Tứ Quý Đường', JSON.stringify(sau));
-    await t.click('.hero-banner .b');
+    await t.click('.today .t-cta');
     await t.waitForFunction(() => location.pathname !== '/trangchu');
     k('E1 nút đi đúng trang đích mới (uudai)', /\/uudai|tiep=%2Fuudai/.test(await t.evaluate(() => location.pathname + location.search)), await t.evaluate(() => location.href));
     await t.goBack();
     await t.evaluate(() => window.__datBan({ so_ban: 0, gia_tri: {} }));
     await t.waitForSelector('.need-grid');
-    const ve = await t.evaluate(() => ({ bk: document.querySelector('.hero-banner .k')?.textContent, bb: document.querySelector('.hero-banner .b')?.textContent, tieuDe: document.title }));
-    k('E1 bản rỗng → về như cũ', ve.bk === 'Tứ Quý Đường' && ve.bb === 'Xem Menu →' && ve.tieuDe === 'Trang chủ · Tứ Quý Đường', JSON.stringify(ve));
+    const ve = await t.evaluate(() => ({ bk: document.querySelector('.today .t-k')?.textContent, bb: document.querySelector('.today .t-cta')?.textContent, tieuDe: document.title }));
+    k('E1 bản rỗng → về như cũ', ve.bk === 'HÔM NAY' && ve.bb === 'Xem Menu ›' && ve.tieuDe === 'Trang chủ · Tứ Quý Đường', JSON.stringify(ve));
     k('E1 không lỗi trang', loi.length === 0, loi.join(' | '));
   } catch (e) { k('E1 ca Chromium dừng giữa chừng', false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); await tr.close(); }
 }

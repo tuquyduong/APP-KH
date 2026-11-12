@@ -1,4 +1,5 @@
 // Lọc / tìm món (hàm thuần, không đụng DOM).
+import { nd } from './noiDung/nd.js';
 
 /** Bỏ dấu, chữ thường: "Trà Đông Y" → "tra dong y". */
 export function boDau(chuoi) {
@@ -46,7 +47,7 @@ export function bieuTuongNhom(nhom) {
 export function nhomTheoTen(ds) {
   const ban = new Map();
   for (const m of ds) {
-    const ten = m.nhom || 'Khác';
+    const ten = m.nhom || nd('menu.nhomKhac');
     if (!ban.has(ten)) ban.set(ten, []);
     ban.get(ten).push(m);
   }

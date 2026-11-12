@@ -27,7 +27,8 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
 
 (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
-  k('KH-TT-1 B3 nút đặt ghi cách trả (không còn "Xác nhận trả", dòng "Chuyển khoản QR")', /Trừ ví/.test(doc('src/pages/ThanhToan.jsx')) && !/Xác nhận trả|Chuyển khoản QR/.test(doc('src/pages/ThanhToan.jsx')));
+  k('KH-TT-1 B3 nút đặt ghi cách trả (không còn "Xác nhận trả", dòng "Chuyển khoản QR")', /Trừ ví/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))) && !/Xác nhận trả|Chuyển khoản QR/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))));
+  k('ND3e KH-TT-1 B3 chữ ba nút cách trả nằm ở danh mục (tt.nut.qr / tt.nut.vi / tt.nut.viQr), màn không viết thẳng', /Trừ ví \{tong\}/.test(doc('src/noiDung/nd/donHang.js')) && !/Trừ ví/.test(doc('src/pages/ThanhToan.jsx')));
   let G = null, D = null, L = null, DD = null, LDN = null, CD = null;
   try { G = await nap('src/gio.js'); } catch (e) { k('nạp src/gio.js', false, String(e.message).split('\n')[0]); }
   try { D = await nap('src/datDon.js'); } catch (e) { k('nạp src/datDon.js', false, String(e.message).split('\n')[0]); }
@@ -111,7 +112,7 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     k('D1 datDon.js không gọi mạng trực tiếp (không fetch / XMLHttpRequest)', nguon.length > 0 && !/\bfetch\s*\(|XMLHttpRequest/.test(nguon));
     k('D1 (v5) api.js có cửa đặt đơn (bao-gia, POST /don, huy) — chỗ DUY NHẤT gọi mạng', /bao-gia/.test(doc('src/api.js')) && /\/huy/.test(doc('src/api.js')) && /'POST', '\/don'/.test(doc('src/api.js')));
     k('D2 (v5) cờ DAT_ONLINE ở src/noiDung/caiDat.js, đã bật', !!CD && CD.DAT_ONLINE === true);
-    k('D2 cờ tắt (công tắc khẩn): cửa ghi trả lỗi "Đặt online sắp mở…", không gọi api', /DAT_ONLINE \? f\(\.\.\.a\) : Promise\.reject\(/.test(nguon) && /export const baoGia = canMo\(/.test(nguon) && /Đặt online sắp mở — mời bạn đặt tại quầy/.test(D.CHU_CHUA_MO));
+    k('D2 cờ tắt (công tắc khẩn): cửa ghi trả lỗi "Đặt online sắp mở…", không gọi api', /DAT_ONLINE \? f\(\.\.\.a\) : Promise\.reject\(/.test(nguon) && /export const baoGia = canMo\(/.test(nguon) && /nd\('loi\.CHUA_MO'\)/.test(nguon) && /Đặt online sắp mở — mời bạn đặt tại quầy/.test(doc('src/noiDung/nd/donHang.js')) && D.CHU_CHUA_MO === undefined);
     // B3 ví
     k('B3 ví đủ → thiếu 0; thiếu → số thiếu theo số POS; thiếu số → null', D.viThieu(87654, 100000) === 0 && D.viThieu(87654, 50000) === 37654 && D.viThieu(null, 5) === null && D.viThieu(5, undefined) === null);
     // B8 lỗi theo danh sách trắng
@@ -143,8 +144,8 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     const dl = D.monDatLai({ mon: [{ ma: 'TLB', so_luong: 2, ghi_chu: 'ít đá' }, { ma: 'CU', so_luong: 1 }, { ten: 'không mã', so_luong: 1 }] }, MENU_DS);
     k('C3 đặt lại theo ma: món còn trong menu vào giỏ, món không còn đếm bỏ qua', dl.them.length === 1 && dl.them[0].ma === 'TLB' && dl.them[0].so_luong === 2 && dl.them[0].ghi_chu === 'ít đá' && dl.boQua === 2, JSON.stringify(dl));
   }
-  const tt2 = doc('src/pages/ThanhToan.jsx');
-  k('B1 chữ "Giao qua Ahamove", "Sắp có", "đọc số đơn"; không "GHN"; không "suất"', /Giao qua Ahamove/.test(tt2) && /Sắp có/.test(tt2) && /đọc <b>số đơn<\/b>|đọc số đơn/.test(tt2) && !/GHN|suất/.test(tt2 + doc('src/pages/GioHang.jsx') + doc('src/pages/TheoDoiDon.jsx') + doc('src/datDon.js')));
+  const tt2 = (doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'));
+  k('B1 chữ "Giao qua Ahamove", "Sắp có", "đọc số đơn"; không "GHN"; không "suất"', /Giao qua Ahamove/.test(tt2) && /Sắp có/.test(tt2) && /đọc <b>số đơn<\/b>|đọc số đơn|đọc \{so\} hiện trong app/.test(tt2) && !/GHN|suất/.test(tt2 + doc('src/pages/GioHang.jsx') + doc('src/pages/TheoDoiDon.jsx') + doc('src/datDon.js')));
   k('B3 PIN không lưu: datDon / ThanhToan / PinSheet không ghi PIN vào kho / log', !/(localStorage|sessionStorage|console\.)[^\n]*pin/i.test(tt2 + doc('src/datDon.js') + doc('src/components/PinSheet.jsx')));
   k('B7 vẽ QR trả tiền bằng thẻ thương hiệu TheQR (KH-SOHD-1); ManQR vẫn giữ VeQR cho mã thành viên', /export function VeQR/.test(doc('src/pages/ManQR.jsx')) && /<TheQR /.test(doc('src/pages/TheoDoiDon.jsx')) && !/VeQR/.test(doc('src/pages/TheoDoiDon.jsx')));
   k('C2 số gọi quán lấy ở noiDung/lienHe.js', /LIEN_HE/.test(doc('src/pages/TheoDoiDon.jsx')));

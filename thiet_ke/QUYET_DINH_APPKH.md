@@ -3,6 +3,13 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 12.11.2026
+- **Đợt 5 đã gộp** (12.11): Trang chủ luôn có banner "Hôm nay" chạy ánh sáng + dải các trang chữ loé sáng như demo, chung một nguồn chữ (KH-UI-5g); lời chào "anh Linh"; chữ Menu / Trang món / Giỏ (KH-ND-3b) và Thanh toán / Theo dõi đơn / Đơn hàng / PIN (KH-ND-3e) đã vào danh mục — /admin sửa được, khách thấy y hệt.
+- **Chu kỳ KHÔNG khoá mã** (chủ quán 11.11: "đây là tài khoản riêng của khách") — bỏ dòng "Khoá bằng mã PIN khi mở" của demo (KH-UI-5f).
+- **Mã thành viên dễ quét ở quầy** (POS QUET-1): mã to, nền trắng, giữ màn không tắt, nhắc khách tăng độ sáng (trang web không tự tăng độ sáng được) — KH-ND-3c.
+- **Vệt sáng LUÔN chạy** (chủ quán 12.11): kể cả máy khách bật "giảm chuyển động" (máy tính chủ quán đang bật nên không thấy vệt sáng) — banner Trang chủ + dải các trang; hiệu ứng khác vẫn theo cài đặt máy — KH-ND-3c.
+- **Khai trương thực tế khoảng T5 03.12** (POS 11.11: "sớm nhất T7 28.11 nếu mọi việc trơn tru"). **/admin**: POS làm kho nội dung ND-API-1 (gộp ~15.11, hợp đồng riêng `HOP_DONG_API_ND.md`), App làm KH-ADMIN-1 ngay theo tên cửa đã thống nhất. Câu POS gửi khách đọc nguyên văn → sau này POS trả MÃ, App lấy chữ từ danh mục (KH-CHU-MA-1).
+
 ## 11.11.2026
 - **Khai trương sớm nhất khoảng thứ Bảy 28.11.2026** (POS 11.11). Trước khai trương phía POS: MATKHAU-1, BO-MAN-CU-1, QUET-1; cuối danh sách: DOI-DIEM-1 → QUET-2 → GIOI-THIEU-1 → QUA-TANG-1.
 - **Đăng nhập bằng mật khẩu — POS chốt** (MATKHAU-1): KHÔNG có cửa hỏi "số này đăng nhập kiểu gì" → màn như nhau cho mọi SĐT (SĐT + mật khẩu + "Đăng nhập bằng mã"); đăng nhập giữ 90 ngày; quên PIN đặt lại bằng mã; màn đăng ký / "Đăng nhập bằng mã" ghi "Nhập số điện thoại có dùng Zalo — mã xác nhận gửi qua Zalo" (chủ quán dặn).

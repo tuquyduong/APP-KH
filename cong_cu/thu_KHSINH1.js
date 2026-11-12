@@ -31,14 +31,14 @@ const TEN_DAI = 'Nguyễn Thị Phương Linh Trần Hoàng Bảo Anh Khôi Nguy
     const d = await nap('src/dinhDang.js');
     const c = (gio, xh, ten) => d.loiChao(gio, xh, ten);
     const T = '2026-11-05T12:00:00';
-    k('B1 "LINH P" + anh → "Chào buổi trưa, anh LINH P!" (giữ hoa như khách gõ)', c(T, 'anh', 'LINH P') === 'Chào buổi trưa, anh LINH P!', c(T, 'anh', 'LINH P'));
-    k('B1 "Phạm Thị Linh" + chị → "…, chị Phạm Thị Linh!"', c(T, 'chị', 'Phạm Thị Linh') === 'Chào buổi trưa, chị Phạm Thị Linh!', c(T, 'chị', 'Phạm Thị Linh'));
+    k('B1 "LINH P" + anh → "Chào buổi trưa, anh P!" (KH-UI-5g: có xưng hô → gọi chữ CUỐI của tên, giữ hoa như khách gõ)', c(T, 'anh', 'LINH P') === 'Chào buổi trưa, anh P!', c(T, 'anh', 'LINH P'));
+    k('B1 "Phạm Thị Linh" + chị → "…, chị Linh!" (KH-UI-5g)', c(T, 'chị', 'Phạm Thị Linh') === 'Chào buổi trưa, chị Linh!', c(T, 'chị', 'Phạm Thị Linh'));
     k('B1 cắt khoảng trắng hai đầu, gộp khoảng trắng thừa', c('', null, '  Trần   Văn  Nam ') === 'Chào Trần Văn Nam!', c('', null, '  Trần   Văn  Nam '));
-    k('B1 không viết hoa thêm chữ đầu ("nguyễn linh" giữ nguyên)', c('', 'chị', 'nguyễn linh') === 'Chào chị nguyễn linh!', c('', 'chị', 'nguyễn linh'));
+    k('B1 không viết hoa thêm chữ đầu ("nguyễn linh" + chị → chữ cuối "linh" giữ nguyên — KH-UI-5g)', c('', 'chị', 'nguyễn linh') === 'Chào chị linh!' && c('', null, 'nguyễn linh') === 'Chào nguyễn linh!', c('', 'chị', 'nguyễn linh'));
     k('B1 một từ vẫn như cũ', c(T, 'cô', 'Hoa') === 'Chào buổi trưa, cô Hoa!');
     k('B1 luật 31.10 giữ: xưng hô chữ thường, chưa có tên → chỉ xưng hô, chưa gì → "Chào bạn!"', c(T, 'Chị', '') === 'Chào buổi trưa, chị!' && c('', '', '') === 'Chào bạn!' && c(null, null, '   ') === 'Chào bạn!');
     const p = d.chiaLoiChao(T, 'anh', ' Lê  Nam ');
-    k('B1 chiaLoiChao trả tên đủ đã gộp khoảng trắng', p.ten === 'Lê Nam' && p.xung === 'anh' && p.dau === 'Chào buổi trưa', JSON.stringify(p));
+    k('B1 chiaLoiChao có xưng hô trả chữ cuối của tên đã gộp khoảng trắng (KH-UI-5g); không xưng hô trả tên đủ', p.ten === 'Nam' && d.chiaLoiChao(T, null, ' Lê  Nam ').ten === 'Lê Nam' && p.xung === 'anh' && p.dau === 'Chào buổi trưa', JSON.stringify(p));
     k('B3 tenNgan không còn (không code chết)', d.tenNgan === undefined && !/tenNgan/.test(doc('src/dinhDang.js')));
   });
 
@@ -56,7 +56,7 @@ const TEN_DAI = 'Nguyễn Thị Phương Linh Trần Hoàng Bảo Anh Khôi Nguy
 
   await thu('A', async () => {
     const hs = doc('src/pages/HoSo.jsx');
-    k('A1 thẻ "Ngày sinh" khuôn `card pf-card` trong HoSo.jsx, đặt sau <SuaTen>', /<div className="tt">Ngày sinh<\/div>/.test(hs) && hs.indexOf('<SuaTen') < hs.indexOf('<NgaySinh') && hs.indexOf('<NgaySinh') > 0);
+    k('A1 thẻ "Ngày sinh" khuôn `card pf-card` trong HoSo.jsx, đặt sau <SuaTen>', /<Chu k="hs\.ns\.t" as="div" className="tt" \/>/.test(hs) && hs.indexOf('<SuaTen') < hs.indexOf('<NgaySinh') && hs.indexOf('<NgaySinh') > 0);
     k('A3 gửi `suaHoSo({ ngay_sinh` riêng (không gộp khoá khác)', /luu\(\{ ngay_sinh: [a-zA-Z.]+ \}\)/.test(hs));
     k('A4 xử lý mã NGAY_SINH_DA_CO (đọc lại /toi)', /NGAY_SINH_DA_CO/.test(hs) && /lamMoi\(\[cuaToi\]\)/.test(hs));
     k('A8 chú thích đầu không còn "ngày sinh" trong danh sách Bỏ', !/Bỏ:[^\n]*ngày sinh/.test(hs));
@@ -223,14 +223,14 @@ async function trinhDuyet(pw) {
   await ca('chao-linh-p', { pos: { khach: { ten: 'LINH P', xung_ho: 'anh' } } }, async (t) => {
     await mo(t, '/trangchu');
     const h = await chu(t, '#home h1');
-    k('B1 Trang chủ: tên "LINH P" + anh, 20:30 → "Chào buổi tối, anh LINH P!"', h === 'Chào buổi tối, anh LINH P!', h);
+    k('B1 Trang chủ: tên "LINH P" + anh, 20:30 → "Chào buổi tối, anh P!" (KH-UI-5g)', h === 'Chào buổi tối, anh P!', h);
     await chup(t, 'trangchu_linh-p_390');
   });
   for (const rong of [360, 390, 430]) {
-    await ca(`chao-dai-${rong}`, { rong, pos: { khach: { ten: TEN_DAI, xung_ho: 'chi' } } }, async (t) => {
+    await ca(`chao-dai-${rong}`, { rong, pos: { khach: { ten: TEN_DAI, xung_ho: null } } }, async (t) => {
       await mo(t, '/trangchu');
       const h = await chu(t, '#home h1');
-      k(`B1 [${rong}] tên dài hiện đủ trong lời chào`, h.replace(/\s+/g, ' ').includes(TEN_DAI), h);
+      k(`B1 [${rong}] tên dài hiện đủ trong lời chào (KH-UI-5g: chỉ khi khách chưa chọn xưng hô; có xưng hô thì gọi chữ cuối)`, h.replace(/\s+/g, ' ').includes(TEN_DAI), h);
       k(`B2 [${rong}] tên dài không làm tràn ngang / vỡ dòng chào`, await khongTran(t) && await t.evaluate(() => { const e = document.querySelector('#home h1'); return e.scrollWidth <= e.clientWidth + 1 || getComputedStyle(e).overflow !== 'visible' || e.getBoundingClientRect().right <= window.innerWidth + 1; }));
       await chup(t, `trangchu_ten-dai_${rong}`);
     });

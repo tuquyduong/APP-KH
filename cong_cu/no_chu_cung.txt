@@ -1,6 +1,4 @@
-src/App.jsx 7
-
-src/baoDonXong.js 1
+src/App.jsx 0
 
 src/components/BangNgay.jsx 54
 
@@ -10,89 +8,49 @@ src/components/BangQuaHan.jsx 23
 
 src/components/BanhXoay.jsx 11
 
-src/components/BaoDonXong.jsx 4
-
 src/components/DaiNhacViec.jsx 3
 
-src/components/DaiQuangCao.jsx 1
-
-src/components/GiaMon.jsx 7
-
-src/components/HoaDonKhach.jsx 1
+src/components/GiaMon.jsx 1
 
 src/components/HoiXoa.jsx 6
 
 src/components/KhoaTienIch.jsx 1
 
-src/components/MonO.jsx 2
-
 src/components/NguoiThan.jsx 33
 
-src/components/NhanMa.jsx 9
-
-src/components/PinSheet.jsx 13
-
-src/components/TheQR.jsx 3
-
-src/components/TrangTai.jsx 1
+src/components/NhanMa.jsx 0
 
 src/components/VanKhanMan.jsx 20
 
-src/datDon.js 16
+src/dinhDang.js 0
 
-src/dinhDang.js 3
+src/giaHang.js 0
 
-src/giaHang.js 4
-
-src/gioHoatDong.js 7
-
-src/gioVang.js 9
-
-src/kehoach.js 40
+src/kehoach.js 42
 
 src/kehoachLap.js 32
 
 src/lich.js 68
 
-src/menuLoc.js 1
+src/pages/DangNhap.jsx 0
 
-src/pages/DangNhap.jsx 5
+src/pages/HoSo.jsx 0
 
-src/pages/Don.jsx 11
-
-src/pages/GioHang.jsx 22
-
-src/pages/HoSo.jsx 31
-
-src/pages/HoTro.jsx 3
+src/pages/HoTro.jsx 0
 
 src/pages/KeHoach.jsx 43
 
-src/pages/KhongTimThay.jsx 1
+src/pages/ManQR.jsx 0
 
-src/pages/ManQR.jsx 4
-
-src/pages/Menu.jsx 18
-
-src/pages/MonTheoDuong.jsx 3
-
-src/pages/TaiKhoan.jsx 14
-
-src/pages/ThanhToan.jsx 54
-
-src/pages/TheoDoiDon.jsx 17
+src/pages/TaiKhoan.jsx 0
 
 src/pages/TienIch.jsx 27
 
-src/pages/TracNghiemKetQua.jsx 6
+src/pages/TracNghiemKetQua.jsx 0
 
-src/pages/TracNghiemLam.jsx 4
+src/pages/TracNghiemLam.jsx 0
 
-src/pages/TrangMon.jsx 14
-
-src/pages/UuDai.jsx 34
-
-src/quangCao.js 1
+src/pages/UuDai.jsx 0
 
 src/tracNghiem.js 62
 

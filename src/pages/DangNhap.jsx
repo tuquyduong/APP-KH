@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { xinMa, xacMinh, luuToken } from '../api.js';
+import { cheSdt } from '../dinhDang.js';
 import { buocSauXinMa, buocSauLoiXacMinh, duDieuKienHoanTat, truongThem } from '../luongDangNhap.js';
-import { XUNG_HO, DIA_CHI_TOI_DA, GIAY_CHO_GUI_LAI, BUOC_SDT, BUOC_MA, BUOC_THONG_TIN, DONG_MA_HOA_DON, loiMa } from '../noiDung/dangNhap.js';
+import { XUNG_HO, DIA_CHI_TOI_DA, GIAY_CHO_GUI_LAI, loiMa } from '../noiDung/dangNhap.js';
+import { nd, ndPhan, ndAnh, ndDau } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import Man from '../components/Man.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
@@ -59,61 +62,61 @@ export default function DangNhap({ khiXong, dong, coMaHoaDon }) {
   return (
     <Man id="login">
       {buoc !== 'thongtin' && (
-        <div className="dn-hd"><button type="button" className="back-btn" aria-label="Đóng" onClick={dong}><Ico ten="close" s={18} /></button></div>
+        <div className="dn-hd"><button type="button" className="back-btn" aria-label={nd('dn.dong')} onClick={dong}><Ico ten="close" s={18} /></button></div>
       )}
       <div className="dn-dau">
-        <img className="dn-logo" src="/anh/logo.webp" alt="Tứ Quý Đường" />
-        <h1>{buoc === 'sdt' ? BUOC_SDT.tieuDe : buoc === 'ma' ? BUOC_MA.tieuDe : BUOC_THONG_TIN.tieuDe}</h1>
+        <img className="dn-logo" src={ndAnh('dn.logo')} alt={nd('brand.ten')} {...ndDau('dn.logo')} />
+        <Chu k={buoc === 'sdt' ? 'dn.sdt.t' : buoc === 'ma' ? 'dn.ma.t' : 'dn.tt.t'} as="h1" />
       </div>
-      {coMaHoaDon && buoc === 'sdt' && <div className="dn-ma-hoadon">{DONG_MA_HOA_DON}</div>}
+      {coMaHoaDon && buoc === 'sdt' && <Chu k="dn.maHoaDon" as="div" className="dn-ma-hoadon" />}
       <div className="card pf-card">
         {buoc === 'sdt' && (
           <>
             <div className="pf-row">
-              <label htmlFor="sdt">Số điện thoại</label>
+              <Chu k="dn.sdt.nhan" as="label" htmlFor="sdt" />
               <input id="sdt" type="tel" inputMode="tel" autoComplete="tel" value={sdt} onChange={(e) => datSdt(e.target.value)} />
             </div>
-            <div className="dn-phu">{BUOC_SDT.phu}</div>
-            <button type="button" className="checkout-btn giua" disabled={dang || !sdt.trim()} onClick={xinMaMoi}>{BUOC_SDT.nut}</button>
+            <Chu k="dn.sdt.phu" as="div" className="dn-phu" />
+            <button type="button" className="checkout-btn giua" disabled={dang || !sdt.trim()} onClick={xinMaMoi} {...ndDau('dn.sdt.nut')}>{nd('dn.sdt.nut')}</button>
           </>
         )}
         {buoc === 'ma' && (
           <>
-            <div className="otp-s">{loiMa(taiQuay, sdt)}</div>
-            <input className="otp-in" id="ma" aria-label="Mã đăng nhập" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="••••••" value={ma} onChange={(e) => datMa(e.target.value.replace(/\D/g, ''))} />
-            {hetHan && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{BUOC_MA.hetHan}</div></div>}
-            <button type="button" className="checkout-btn giua" disabled={dang || ma.trim().length < 6} onClick={xacNhan}>{BUOC_MA.nut}</button>
+            <div className="otp-s" {...ndDau(taiQuay ? 'dn.ma.quay' : cheSdt(sdt) ? 'dn.ma.zalo' : 'dn.ma.zaloChung')}>{loiMa(taiQuay, sdt)}</div>
+            <input className="otp-in" id="ma" aria-label={nd('dn.ma.aria')} inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="••••••" value={ma} onChange={(e) => datMa(e.target.value.replace(/\D/g, ''))} />
+            {hetHan && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><Chu k="dn.ma.hetHan" as="div" /></div>}
+            <button type="button" className="checkout-btn giua" disabled={dang || ma.trim().length < 6} onClick={xacNhan} {...ndDau('dn.ma.nut')}>{nd('dn.ma.nut')}</button>
             <div className="otp-re">
-              {choGuiLai ? <b {...bam(xinMaMoi)}>{BUOC_MA.guiLai}</b> : <span>{BUOC_MA.guiLai} sau {conLai} giây</span>}
-              {' · '}<b {...bam(veBuoc1)}>{BUOC_MA.doiSo}</b>
+              {choGuiLai ? <b {...bam(xinMaMoi)} {...ndDau('dn.ma.guiLai')}>{nd('dn.ma.guiLai')}</b> : <span {...ndDau('dn.ma.guiLaiSau')}>{nd('dn.ma.guiLai')}{ndPhan('dn.ma.guiLaiSau', { giay: conLai })}</span>}
+              {' · '}<b {...bam(veBuoc1)} {...ndDau('dn.ma.doiSo')}>{nd('dn.ma.doiSo')}</b>
             </div>
           </>
         )}
         {buoc === 'thongtin' && (
           <>
             <div className="pf-row">
-              <label htmlFor="ten">{BUOC_THONG_TIN.ten}</label>
+              <Chu k="dn.tt.ten" as="label" htmlFor="ten" />
               <input id="ten" autoComplete="name" value={ten} onChange={(e) => datTen(e.target.value)} />
             </div>
             <div className="pf-row">
-              <label>{BUOC_THONG_TIN.xungHo}</label>
-              <div className="xh-hang">
+              <Chu k="dn.tt.xh" as="label" />
+              <div className="xh-hang" {...ndDau('dn.xh.chu')}>
                 {XUNG_HO.map((x) => <button key={x.ma} type="button" className={`xh${xungHo === x.ma ? ' on' : ''}`} aria-pressed={xungHo === x.ma} onClick={() => datXungHo(x.ma)}>{x.ten}</button>)}
               </div>
             </div>
             <div className="pf-row">
-              <label htmlFor="dia-chi">{BUOC_THONG_TIN.diaChi}</label>
+              <Chu k="dn.tt.dc" as="label" htmlFor="dia-chi" />
               <input id="dia-chi" autoComplete="street-address" maxLength={DIA_CHI_TOI_DA} value={diaChi} onChange={(e) => datDiaChi(e.target.value)} />
-              <small>{BUOC_THONG_TIN.ghiChuDiaChi}</small>
+              <Chu k="dn.tt.dcGhiChu" as="small" />
             </div>
-            {hetHan && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{BUOC_MA.hetHan}</div></div>}
+            {hetHan && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><Chu k="dn.ma.hetHan" as="div" /></div>}
             {hetHan
-              ? <button type="button" className="checkout-btn giua" disabled={dang} onClick={xinMaMoi}>{BUOC_MA.guiLai}</button>
-              : <button type="button" className="checkout-btn giua" disabled={dang || !hoanTatDuoc} onClick={xacNhan}>{BUOC_THONG_TIN.nut}</button>}
-            <div className="otp-re"><b {...bam(veBuoc1)}>{BUOC_THONG_TIN.quayLai}</b></div>
+              ? <button type="button" className="checkout-btn giua" disabled={dang} onClick={xinMaMoi} {...ndDau('dn.ma.guiLai')}>{nd('dn.ma.guiLai')}</button>
+              : <button type="button" className="checkout-btn giua" disabled={dang || !hoanTatDuoc} onClick={xacNhan} {...ndDau('dn.tt.nut')}>{nd('dn.tt.nut')}</button>}
+            <div className="otp-re"><b {...bam(veBuoc1)} {...ndDau('dn.tt.quayLai')}>{nd('dn.tt.quayLai')}</b></div>
           </>
         )}
-        {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>}
+        {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('dn.loi')}>{loi}</div></div>}
       </div>
     </Man>
   );
