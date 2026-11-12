@@ -163,7 +163,7 @@ if (require.main === module) (async () => {
     k('F6 thẻ đơn cho_tra / da_tra / dang_lam → Theo dõi đơn; xong / da_huy / bill quầy → Chi tiết đơn', ['cho_tra', 'da_tra', 'dang_lam'].every(D.moTheoDoi) && !['xong', 'da_huy', null, undefined, ''].some(D.moTheoDoi));
     const app = doc('src/App.jsx');
     const dong = (/const themVaoGio = [^\n]*/.exec(app) || [''])[0];
-    k('G1 thêm món: thông báo "Đã thêm …" rồi quay lại (luiVe), KHÔNG vào giỏ', /Đã thêm/.test(dong) && /luiVe\(\)/.test(dong) && !/vaoGio|giohang/.test(dong), dong);
+    k('G1 thêm món: thông báo "Đã thêm …" rồi quay lại (luiVe), KHÔNG vào giỏ', /nd\('app\.daThem'/.test(dong) && /'app\.daThem', '[^']*', 'Đã thêm \{ten\} vào giỏ'/.test(fs.readFileSync(path.join(GOC, 'src/noiDung/nd/taiKhoan.js'), 'utf8')) && /luiVe\(\)/.test(dong) && !/vaoGio|giohang/.test(dong), dong);
     k('G2 "Đặt lại" vẫn vào giỏ (vaoGio)', /const datLai = [\s\S]*?vaoGio\(/.test(app));
   });
 

@@ -84,7 +84,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     const uu = doc('src/pages/UuDai.jsx');
     const app = doc('src/App.jsx');
     k('B2 App vẽ UuDai cho cả khách vãng lai (không còn `dangNhap && taiTab(\'uudai\')`)', !/dangNhap && taiTab\('uudai'\)/.test(app) && /taiTab\('uudai'\) && <UuDai/.test(app));
-    k('B2 đầu trang: "Ưu đãi của tôi" chỉ khi đã đăng nhập, vãng lai "Ưu đãi"', /dangNhap \? 'Ưu đãi của tôi' : 'Ưu đãi'/.test(uu));
+    k('B2 đầu trang: "Ưu đãi của tôi" chỉ khi đã đăng nhập, vãng lai "Ưu đãi"', /dangNhap \? 'ud\.tieuDeToi' : 'ud\.tieuDe'/.test(uu) && /'ud\.tieuDeToi', '[^']*', 'Ưu đãi của tôi'/.test(fs.readFileSync(path.join(GOC, 'src/noiDung/nd/taiKhoan.js'), 'utf8')));
     k('B2 không chữ / số mẫu của demo ("Ưu đãi tháng này", "đến 50%")', !/tháng này|đến 50%|Quyền lợi/.test(uu));
     // KH-NHANH-1: /toi, /diem, /voucher đọc kho chung (cuaToi / cuaDiem / cuaVoucher); "Xem tất cả" vẫn gọi layVoucher(true).
     k('B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher', !/goi\(/.test(uu) && !/fetch\(/.test(uu) && [...uu.matchAll(/\blay[A-Z][A-Za-z]*/g)].every((m) => ['layVoucher', 'layTatCa', 'layChuongTrinh'].includes(m[0])) && [...uu.matchAll(/\bcua[A-Z][A-Za-z]*/g)].every((m) => ['cuaToi', 'cuaDiem', 'cuaVoucher'].includes(m[0])) && /dungCua\(cuaDiem\)/.test(uu));
@@ -94,7 +94,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     // KH-NHANH-1 B1: có phiên → App tải trước cả bốn cửa khách (có /don) — ca Chromium B4 đổi theo, khoá thêm bằng đọc nguồn (đỏ trên gốc).
     k('B4 có phiên: App tải trước /toi, /diem, /voucher, /don một chỗ (lamMoi(CUA_KHACH))', /lamMoi\(CUA_KHACH\)/.test(app));
     // KH-HANG-2 (HANG-1, v10): thẻ hạng đọc `goi[]` / `chi_cap` / `het_han: null`, không còn `gia_the` — đỏ trên gốc.
-    k('B2 KH-HANG-2: thẻ hạng không còn đọc gia_the; có "Không thời hạn" và dòng hạng tặng', !/gia_the/.test(uu.replace(/\/\/.*$/gm, '')) && /\{CHU_KHONG_THOI_HAN\}/.test(uu) && /\{CHU_HANG_TANG\}/.test(uu));
+    k('B2 KH-HANG-2: thẻ hạng không còn đọc gia_the; có "Không thời hạn" và dòng hạng tặng', !/gia_the/.test(uu.replace(/\/\/.*$/gm, '')) && /<Chu k="ud\.hang\.khongHan"/.test(uu) && /<Chu k="ud\.hang\.tang"/.test(uu));
   });
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');
