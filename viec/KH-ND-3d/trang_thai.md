@@ -57,3 +57,32 @@ Việc không đụng tiền / bảo mật (chuyển chữ, hai sửa nhỏ giao
 ## Thử tay (C5)
 1. Kế hoạch, Ngày cần nhớ, Văn khấn, Xe cộ, Uống thuốc, Chu kỳ trông như cũ.
 2. Tài khoản xưng "anh" gõ `tuquyduong.com/kehoach/chuky` → về Kế hoạch (không kẹt nút Back).
+
+## Cổng (C4)
+- `KHONG_TRINH_DUYET=1 node kiem_tra_truoc_khi_giao.js --day-du` (có `vite build`) tại `197f142`: 52 đạt · 0 hỏng. Lần chạy đủ CÓ Chromium (trước sửa Proxy, `1a83947`): 52 đạt · 0 hỏng (~25 phút).
+- `node tu_chay/cong.js tinh . eaa9a34^ HEAD viec/KH-ND-3d`: chỉ còn `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM) trước khi ghi dòng đó.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . eaa9a34^ HEAD viec/KH-ND-3d` (HEAD `197f142`, cây sạch): `✓ CỔNG CHẠY ĐẠT` (cảnh báo A16 không chặn: `thu_KHUI5b.js` / `thu_KHUI5e.js` dừng sớm trên gốc nên in 1 / 17 ca — đúng, bằng chứng ở `bang_chung_do.txt`).
+
+## Soát độc lập (/ra-soat, vòng 1) — báo cáo của agent soát (tóm, nguyên ý)
+KHÔNG ĐẠT (nhẹ). NGHIỆM THU 26/28 lúc soát; mục thiếu: C4 (dòng HEAD ĐÃ KIỂM + kết quả cổng chưa ghi — nay đã ghi mục "Cổng" trên), A5 (chưa chụp thanh nhắc việc đang chạy và tiết khí khác Lập đông — đã khai ở `ket_qua.txt`, giữ ở CHƯA KIỂM).
+LỖI: (1) `src/lich.js` Proxy `TERM_TIPS` ném lỗi với khoá Symbol (`[...TERM_TIPS]`) — ĐÃ SỬA (`typeof k === 'string'`) + ca thử mới (đỏ trước vá, xanh sau). (4) regex `KHONG_VAO_SAP_TOI` theo tên lễ — đã ở Phát hiện 2. (5) tên xuất `CO_NHAC` / `KHONG_NHAC` / `NHAC_NGUOI` bị bỏ (thành `nd('kh.coNhac')`, `nd('kh.khongNhac')`, `nhacNguoi()`): grep không còn nơi gọi, bài thử cũ đã sửa — chỗ lệch chữ phiếu A4, ghi nhận. (6) `<em>Aa</em>` mẫu chữ chú thích (demo cũng có) và mọi chữ ASCII hiển thị: `demChuCung` chỉ đếm chuỗi có dấu — ghi ở Bài học.
+NGHI NGỜ: xưng hô chưa biết thì Chu kỳ thoáng hiện rồi mới về /kehoach (chấp nhận, không kẹt Back); `leNhac` theo tên lễ (Phát hiện 3); ca "mục thừa" của thu_KHUI5f nới cho `vkd.*` / `mua.nhan.*` (có ca F4 mới bù).
+K3: 4 bài cũ sửa đều ≥ 1 ca đỏ trên gốc; ca đỏ phần lớn kiểm sự có mặt của khoá / hàm, hành vi được giữ bởi ca so demo và so `dienBai` cũ.
+CHƯA SOÁT ĐƯỢC (theo agent): ca Chromium, chạy cổng, so ảnh pixel.
+
+## Báo cáo 7 mục
+1. **VIỆC**: KH-ND-3d — gom chữ Kế hoạch + mọi tiện ích về danh mục; lịch cố định ở `coDinh/lich.js`; B1 ô ẩn thì đường dẫn không mở; B2 `dinhDangSoTien`; B3 `tel:`.
+2. **ĐÃ SỬA**: `src/noiDung/nd/{keHoach,tienIch}.js` (316 khoá mới) · `src/noiDung/{coDinh/lich.js (mới),vanKhan.js}` (xoá `noiDung/keHoach.js`) · `src/{kehoach,kehoachLap,kehoachXe (mới),lich,vanKhan,dinhDang}.js` · `src/pages/{KeHoach,TienIch,TheoDoiDon}.jsx` · `src/components/{BangNgay,BangNoi,BangQuaHan,BanhXoay,DaiNhacViec,GiaMon,HoiXoa,KhoaTienIch,NguoiThan,OKeHoach,VanKhanMan,dungKeHoach}` · `src/App.jsx` (1 dòng) · `cong_cu/{thu_KHND3d (mới),thu_KHUI5b,5e,5f,thu_KHND3b,no_chu_cung.txt}`. Nợ chữ cứng 434 → 62 (chỉ còn `tracNghiem.js`).
+3. **BÀI THỬ**: `thu_KHND3d` 33 ca / 46 ca có Chromium; 4 bài cũ sửa; `--day-du` 52 đạt · 0 hỏng; so ảnh 54 cặp, 53 giống hệt + 1 nhiễu.
+4. **ĐÃ RÀ K4**: grep `SOLAR_HOL|LUNAR_HOL|GIFT_HOL|SS_F|CO_NHAC|NHAC_NGUOI|KHONG_NHAC|VK.n/.le/.vk|noiDung/keHoach|noiDung/vanKhan` trong `src/` và `cong_cu/` — mọi nơi dùng đã chuyển (`duongDan.js` vẫn đọc `MA_DIP`, giữ ở `noiDung/vanKhan.js`; `tracNghiem.js` đọc `TERM_TIPS` qua Proxy).
+5. **CHƯA KIỂM**: trình duyệt Zalo; chữ to theo cài đặt máy; /admin chưa có nên chưa thấy viền vàng / 🔒; ảnh chưa chụp: thanh nhắc việc đang chạy, tiết khí khác Lập đông; ảnh commit chỉ mẫu 390 (bộ đủ 54 cặp chạy lại bằng công cụ ở nháp); thử tay C5 trên điện thoại chưa ai làm.
+6. **GIT**: nhánh `viec/KH-ND-3d` đã push; không PR, không merge.
+7. **BÀI HỌC**: xem mục Bài học.
+
+## Bài học
+- KHOÁ (đề xuất, ngoài Phạm vi — `kiem_tra_truoc_khi_giao.js` / `ha_no_chu.js`): `demChuCung` mù với chữ ASCII hiển thị (`Aa`, `Xong`) và chữ trong regex khớp theo tên nội dung (`KHONG_VAO_SAP_TOI`) — thêm phép kiểm riêng; ca đỏ: bản giả JSX `<b>Xong</b>` / regex chứa tên lễ.
+- KHOÁ (đã làm): `chu_goc.json` + ca "mọi chuỗi gốc còn trong danh mục" cho `thu_KHND3d` (tiếp lời đề xuất của 3c: gom thành bài chung cho các việc ND — chưa làm); ca TERM_TIPS dùng như mảng thật.
+- NGUYÊN TẮC (đề xuất K11): đối tượng giả mảng (Proxy) phải xử lý khoá Symbol; gói bài thử dựng riêng (esbuild) có BẢN `nd.js` riêng — đổi nội dung ở module ESM ngoài không ảnh hưởng gói: phải đổi bằng `datBanNoiDung` XUẤT TỪ CHÍNH gói đó (suýt có bài xanh giả ở B2).
+- NGUYÊN TẮC (đề xuất): `bien` của mục chữ bắt buộc khớp đúng chỗ `{…}`: bản giả thiếu chỗ điền bị bỏ nên bài thử đổi bài khấn phải giữ đủ 6 chỗ; ví dụ phiếu " VNĐ" vượt `toiDa` 3 — kiểm ví dụ của phiếu với `toiDa` trước khi viết ca.
+- BỎ: lệnh bị người gác chặn (`sed -i`, ghép `python3 … && node`, `for`, `git add` thư mục, `$VAR` làm đích ghi) — chỉ làm lại; sai chỗ gắn `data-nd` thành `<span>` lồng làm vỡ bài thử cũ → chuyển `data-nd` lên phần tử cha.
+- Dọn: không đề xuất xoá lời dặn nào.
