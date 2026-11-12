@@ -212,7 +212,7 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
       k('C2 ha_no_chu.js KHÔNG BAO GIỜ nâng: tệp tăng giữ số cũ, tệp mới không được thêm dòng', no3['src/pages/HoTro.jsx'] === no2['src/pages/HoTro.jsx'] && !('src/components/TepMoi.jsx' in no3) && /✗ K10/.test(K10()));
       fs.writeFileSync(path.join(tam, 'src/pages/HoTro.jsx'), 'export default () => null;\n');
       spawnSync(process.execPath, [path.join(tam, 'cong_cu/ha_no_chu.js')], { cwd: tam, encoding: 'utf8' });
-      k('C2 (KH-ND-3c C3) tệp hết chữ → GIỮ dòng với số 0 (không xoá — hai việc song song cùng hạ tệp kề nhau không xung đột), K10 vẫn xanh', (H.docNo(tam) || {})['src/pages/HoTro.jsx'] === 0 && /✓ K10/.test(K10()), K10());
+      k('C2 (KH-ND-3c C3) tệp hết chữ → GIỮ dòng với số 0 (không xoá — hai việc song song cùng hạ tệp kề nhau không xung đột), K10 vẫn xanh', (H.docNo(tam) || {})['src/pages/HoTro.jsx'] === 0 && !/HoTro/.test(K10()), K10()); // (TepMoi.jsx còn nằm trong bản chép từ ca trên nên K10 chung vẫn đỏ vì nó — chỉ HoTro.jsx phải sạch)
     } catch (e) { k('C2 ca bộ kiểm trên bản chép dừng giữa chừng', false, String(e && e.message).split('\n')[0]); } finally { fs.rmSync(tam, { recursive: true, force: true }); }
     const txt = doc('cong_cu/no_chu_cung.txt');
     const dong = txt.split('\n');
