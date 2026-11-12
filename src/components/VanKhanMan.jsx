@@ -17,7 +17,7 @@ export function dauDip(v, homNay, bang) {
 }
 
 export function NutNhac({ bat, doi, lon = false }) {
-  return <button type="button" className={`tl-rm${lon ? ' big' : ''}${bat ? ' on' : ''}`} aria-pressed={bat} onClick={(e) => { e.stopPropagation(); doi(); }}><Ico ten="bell" s={12} /> <span {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')}>{nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}</span></button>;
+  return <button type="button" className={`tl-rm${lon ? ' big' : ''}${bat ? ' on' : ''}`} aria-pressed={bat} {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')} onClick={(e) => { e.stopPropagation(); doi(); }}><Ico ten="bell" s={12} /> {nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}</button>;
 }
 const baoNhac = (bang, id) => nd(bang.vk.nhac[id] ? 'kh.daTatNhac' : 'kh.daBatNhac');
 

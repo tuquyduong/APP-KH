@@ -34,7 +34,7 @@ function TheoMua({ homNay, ds, chonMon, veLich }) {
   z.p.split(',').map((id) => id.trim()).filter(Boolean).forEach((id) => ghepMon(ds, [TU_KHOA_MON[id]], TU_KHOA_MON).forEach((m) => mon.includes(m) || mon.push(m)));
   return (
     <>
-      <div className="ss-tabs" {...ndDau('kh.lich')}>{MUA.map((k) => <button type="button" key={k} className={k === sel ? 'on' : ''} onClick={() => datSel(k)}>{k}{k === hien ? <span {...ndDau('mua.nay')}>{nd('mua.nay')}</span> : ''}</button>)}</div>
+      <div className="ss-tabs" {...ndDau('kh.lich')}>{MUA.map((k) => <button type="button" key={k} className={k === sel ? 'on' : ''} onClick={() => datSel(k)}>{k}{k === hien ? nd('mua.nay') : ''}</button>)}</div>
       <div className="ss-card">
         {['tang', 'an', 'uong', 'sh', 'tt', 'han'].map((f) => <div className="ss-f" key={f}><small {...ndDau(`mua.nhan.${f}`)}>{nd(`mua.nhan.${f}`)}</small><div {...ndDau('mua.noiDung')}>{z[f]}</div></div>)}
         {mon.length > 0 && (
@@ -62,7 +62,7 @@ function NgayLe({ homNay, bang, doiNhac }) {
             <div className="tl-date"><b>{dayThang(h.j)}</b><small>{conLai(h.j, homNay)}</small></div>
             <div className="tl-rt"><b>{h.n}</b><small>{h.cal} · {thuNgayNgan(h.j, homNay)}</small>
               {leCoQua().includes(h.n) && <div className="tl-acts"><span style={{ cursor: 'default' }} {...ndDau('ngc.goiYQua')}>{nd('ngc.goiYQua')}</span></div>}</div>
-            <button type="button" className={`tl-rm${bat ? ' on' : ''}`} aria-pressed={bat} onClick={() => doiNhac(h.n)}><Ico ten="bell" s={12} /> <span {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')}>{nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}</span></button>
+            <button type="button" className={`tl-rm${bat ? ' on' : ''}`} aria-pressed={bat} onClick={() => doiNhac(h.n)} {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')}><Ico ten="bell" s={12} /> {nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}</button>
           </div>
         );
       })}

@@ -34,8 +34,8 @@ export function DanhSachNguoi({ homNay, bang, luu, moSua, moVanKhanGio }) {
               </div>
               {hoi === p.id && <HoiXoa loai={nd(p.loai === 'gio' ? 'ngt.loaiGio' : 'ngt.loaiSn')} tieu={p.ten} huy={() => datHoi('')} xoa={() => { luu(xoaNguoi(bang, p.id), nd('bn.daXoa', { tieu: chuLoai(p) })); datHoi(''); }} />}
             </div>
-            <button type="button" className={`tl-rm${bat ? ' on' : ''}`} aria-pressed={bat} onClick={() => luu({ ...bang, nguoi: bang.nguoi.map((x) => (x.id === p.id ? { ...x, nhac: bat ? null : -240 } : x)) }, nd(bat ? 'kh.daTatNhac' : 'kh.daBatNhac'))}>
-              <Ico ten="bell" s={12} /> <span {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')}>{nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}</span>
+            <button type="button" className={`tl-rm${bat ? ' on' : ''}`} aria-pressed={bat} {...ndDau(bat ? 'kh.dangNhac' : 'kh.coNhac')} onClick={() => luu({ ...bang, nguoi: bang.nguoi.map((x) => (x.id === p.id ? { ...x, nhac: bat ? null : -240 } : x)) }, nd(bat ? 'kh.daTatNhac' : 'kh.daBatNhac'))}>
+              <Ico ten="bell" s={12} /> {nd(bat ? 'kh.dangNhac' : 'kh.coNhac')}
             </button>
           </div>
         );
