@@ -30,7 +30,7 @@
 | A3 TheMoi | `thu_KHND3c` A3 (TheMoi hết `logo-nho`; Ưu đãi truyền `ud.moi.anh`) + Chromium (ảnh thẻ mời đổi theo `ud.moi.anh`) |
 | A4 lời chào Hồ sơ | `thu_KHND3c` A4: HoSo hết `=== 'Chào'`, dùng `coBuoi`; Chromium: có giờ POS → "Xin chào buổi sáng, chị Linh!", KHÔNG có giờ → "Xin chào chị Linh!" (không phẩy thừa) |
 | A5 ảnh y hệt | `so_anh/ket_qua.txt`: 51 cặp (17 ca × 360/390/430), 48 giống hệt, 3 lệch = Mã thành viên (mục B) |
-| B1 mã to, nền trắng, viền 4 ô | `thu_KHND3c` B1 tĩnh (CSS `.khung-qr` min(78vw, 320px), `#fff`; `VeQR` tham số `vien`, `VIEN_QUET = 4`) + Chromium: mã rộng ≥ 70% ở 390 (374/390), nền `rgb(255, 255, 255)` kể cả `prefers-color-scheme: dark`, viewBox −4 |
+| B1 mã to, nền trắng, viền 4 ô | `thu_KHND3c` B1 tĩnh (CSS `.khung-qr` min(78vw, 320px), `#fff`; `VeQR` tham số `vien`, `VIEN_QUET = 4`) + Chromium: mã rộng ≥ 70% ở 390 (số 374/390 ghi lúc đầu là SAI — lần đo đó chưa nạp CSS; với CSS thật: thẻ 304px, svg ≈ 288px ≈ 74%, đã sửa theo báo cáo soát), nền `rgb(255, 255, 255)` kể cả `prefers-color-scheme: dark`, viewBox −4 |
 | B2 giữ màn sáng | `thu_KHND3c` B2 (tĩnh) + Chromium: `navigator.wakeLock` giả — xin 1 lần `'screen'`, rời màn → `release` 1 lần; không có / từ chối → không lỗi trang |
 | B3 dòng nhắc | `thu_KHND3c` B3 + Chromium (đọc "Đưa mã này cho nhân viên quầy" + "Tăng độ sáng màn hình để quầy quét nhanh", SĐT "090 xxx 4567") |
 | B4 ảnh + đối chiếu | `so_anh/{truoc,sau,lech}/qr__man__*`, `doi_chieu_demo.md` §3 |
@@ -93,5 +93,18 @@ Việc không đụng tiền / bảo mật (chuyển chữ, giao diện một m�
 - NGUYÊN TẮC (đề xuất): bài thử không nên đọc nguồn bằng regex CHỮ trong JSX (`<div className="tt">Ngày sinh</div>`, `CHU.daLuuToast`) — vỡ mỗi lần chuyển chữ (9 bài phải sửa lần này); kiểm theo KHOÁ (`<Chu k="hs.ns.t" …>`) và để bài danh mục kiểm chữ.
 - BỎ: lệnh bị người gác chặn (`sed -i`, vòng `for`, ghép `python3 … && node`, `cp -r` / `git add` thư mục, `pgrep`, `Monitor until`) — chỉ làm lại lệnh, không phải lỗi mã; bài thử có cụm TOKEN phải commit trước khi chạy (đã có trong skill). Bài thử Chromium ban đầu đỏ vì không nạp CSS (`loader '.css': 'empty'`) → ca đo kích thước dùng bó CSS như `thu_KHUI5g` (một lần, đã ghi trong bài). `kiemDanhMuc` bắt khoá `qr.aria` trùng với khoá của 3e — phép kiểm có sẵn làm đúng việc.
 - Dọn `KHUON_LOI.md` / `CLAUDE.md`: không đề xuất xoá (chưa có phép kiểm thay).
+
+## Soát độc lập (/ra-soat, vòng 1) — báo cáo của agent soát
+Kết luận: **ĐẠT** (không lỗi chặn). Nghiệm thu 22/22 mục có bằng chứng, không mục thiếu. Chạy lại `thu_KHND3c` KHONG_TRINH_DUYET=1: 42 đạt (khớp). Phạm vi: 35 tệp src/cong_cu đổi đều nằm trong Phạm vi; không đụng tệp cấm.
+LỖI TÌM ĐƯỢC: dòng B1 của bảng nghiệm thu ghi sai "374/390" (K1) — ĐÃ SỬA ở trên.
+NGHI NGỜ (không sửa ở việc này, ghi để chat soát / việc sau quyết):
+1. Bài đo "mã rộng" tính cả viền trắng 4 ô; phần ô đen thật chỉ ~58–60% bề ngang. Nếu quầy vẫn quét chậm thì tăng `78vw` (cần thử tay ở quầy).
+2. `ManQR.jsx` Wake Lock: nếu `visibilitychange` bắn lại khi lời gọi `request` đầu chưa xong thì xin lần hai, lần một mất tham chiếu nên không được thả — hiếm, hậu quả màn sáng lâu hơn một chút sau khi rời màn; có thể chặn bằng cờ "đang xin".
+3. `App.jsx` C1: bản nhớ chương trình không có hạn dùng — offline / `/chuong-trinh` lỗi thì banner vẫn hiện chương trình cũ (đúng phiếu). `LOAI_CT` lặp `LOAI` của `src/chuongTrinh.js` (một quy tắc một chỗ; `chuongTrinh.js` ngoài Phạm vi).
+4. `gia.donVi` sửa được nhưng `GiaMon.jsx` còn `.replace('đ','')` (Phát hiện 4).
+5. `TheoDoiDon.jsx:106` href `tel:${LIEN_HE.dienThoai}` không bỏ dấu cách như `HoTro.jsx` — số điền "0901 234 567" có thể gọi không được ở một số máy; nên làm sạch (Phát hiện 7, ngoài Phạm vi).
+6. Ảnh: ca chưa chụp đã khai ở CHƯA KIỂM; Trang chủ 360 từng nhiễu giữa hai lần chụp (ghi ở `so_anh/ket_qua.txt`).
+CHƯA SOÁT ĐƯỢC: không chạy lại phần Chromium, `--day-du`, cổng `chay`; không xem ảnh so_anh; không đọc từng dòng 252 mục; máy thật (quét QR, Wake Lock, Zalo, /admin).
+BÀI HỌC của soát: số đo giao diện phải lấy từ kết quả chạy in ra, không viết tay; đo độ to mã QR nên tách ô đen khỏi viền trắng; khi mở khoá một chữ máy thành sửa được phải rà mọi `replace` bằng chữ cứng đó (kể cả tệp ngoài Phạm vi) và giao người nhận việc; giữ `chu_goc.json` làm khuôn cho các việc ND sau.
 
 HEAD ĐÃ KIỂM: 9ce1f75
