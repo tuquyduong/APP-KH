@@ -10,8 +10,8 @@ KH-ND-3d — bằng chứng ĐỎ trên code gốc (cây eaa9a34 chép ra nháp,
   thu_KHUI5f.js (ca mới F4 vkd.* / mua.nhan.* ở danh mục): gốc 83 đạt · 1 hỏng → sau vá 84 đạt · 0 hỏng
   thu_KHND3b.js (GiaMon hết chữ cứng 'đ': phép 1 → 0): gốc 19 đạt · 1 hỏng → sau vá 20 đạt · 0 hỏng
 
-SỐ CA thu_KHND3d.js: 32
-SỐ CA thu_KHUI5b.js: 78
-SỐ CA thu_KHUI5e.js: 72
-SỐ CA thu_KHUI5f.js: 84
-SỐ CA thu_KHND3b.js: 20
+SỐ CA cong_cu/thu_KHND3d.js: 32
+SỐ CA cong_cu/thu_KHUI5b.js: 78
+SỐ CA cong_cu/thu_KHUI5e.js: 72
+SỐ CA cong_cu/thu_KHUI5f.js: 84
+SỐ CA cong_cu/thu_KHND3b.js: 20
