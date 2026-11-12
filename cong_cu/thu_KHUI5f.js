@@ -96,22 +96,16 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   k('C1 bật với ngày bắt đầu hợp lệ; ngày tương lai / quá 120 ngày / sai → null', KH.batChuKy(trong(), ngay(-10), NAY).chuKy.bat === true && KH.batChuKy(trong(), ngay(1), NAY) === null && KH.batChuKy(trong(), ngay(-121), NAY) === null && KH.batChuKy(trong(), '2026-02-30', NAY) === null && KH.batChuKy(trong(), '', NAY) === null);
   k('C2 "Kỳ kinh bắt đầu hôm nay": ghi độ dài chu kỳ vừa qua (28), kỳ mới bắt đầu hôm nay; chỉ 4 ngày (bấm nhầm) → không ghi vào lịch sử', (() => { const u = KH.ghiKyMoi(KH.batChuKy(trong(), ngay(-28), NAY), NAY), v = KH.ghiKyMoi(KH.batChuKy(trong(), ngay(-4), NAY), NAY); return bang(u.chuKy.ls, [28]) && u.chuKy.bd === NAY && v.chuKy.ls.length === 0 && v.chuKy.bd === NAY; })());
   k('C2 độ dài 21–40, hành kinh 2–9 (kẹp ở biên); nhắc trước kỳ bật / tắt', (() => { let t = KH.batChuKy(trong(), NAY, NAY); for (let i = 0; i < 30; i++) t = KH.doiDaiChuKy(t, -1); const lo = t.chuKy.dai; for (let i = 0; i < 30; i++) t = KH.doiDaiChuKy(t, 1); const hi = t.chuKy.dai; for (let i = 0; i < 20; i++) t = KH.doiHanhChuKy(t, 1); const hh = t.chuKy.hanh; for (let i = 0; i < 20; i++) t = KH.doiHanhChuKy(t, -1); return lo === 21 && hi === 40 && hh === 9 && t.chuKy.hanh === 2 && KH.doiNhacChuKy(t).chuKy.nhac === false; })());
-  k('C2 tắt & xoá → về mặc định (không còn ngày, lịch sử, khoá)', bang(KH.tatChuKy(KH.datKhoaChuKy(KH.ghiKyMoi(KH.batChuKy(trong(), ngay(-28), NAY), NAY), { muoi: 'a'.repeat(32), bam: 'b'.repeat(64) })).chuKy, KH.chuKyTrong()));
+  k('C2 tắt & xoá → về mặc định (không còn ngày, lịch sử)', bang(KH.tatChuKy(KH.ghiKyMoi(KH.batChuKy(trong(), ngay(-28), NAY), NAY)).chuKy, KH.chuKyTrong()));
   k('C1 ô Chu kỳ vẫn ẩn với anh / chú / bác / ông, hiện với chị / cô / em / bạn / chưa biết', ['anh', 'chu', 'bac', 'ong'].every((x) => !KH.coChuKy(x)) && ['chi', 'co', 'em', 'ban', undefined, ''].every((x) => KH.coChuKy(x)));
 
-  console.log('C3 — khoá bằng mã riêng (băm, không lưu mã gốc, sai 5 lần chờ 1 phút)');
-  const kh1 = await KH.taoKhoa('4827'), kh2 = await KH.taoKhoa('4827');
-  k('C3 taoKhoa → { muoi 32 hex, bam 64 hex SHA-256 }, hai lần cho muối khác nhau; mã sai dạng → null', /^[0-9a-f]{32}$/.test(kh1.muoi) && /^[0-9a-f]{64}$/.test(kh1.bam) && kh1.muoi !== kh2.muoi && kh1.bam !== kh2.bam && (await KH.taoKhoa('12')) === null && (await KH.taoKhoa('12ab')) === null && (await KH.taoKhoa('12345')) === null);
-  k('C3 kiemKhoa: mã đúng → true; mã khác / sai dạng / không khoá → false', (await KH.kiemKhoa('4827', kh1)) === true && (await KH.kiemKhoa('4828', kh1)) === false && (await KH.kiemKhoa('48', kh1)) === false && (await KH.kiemKhoa('4827', null)) === false);
-  const khoLuu = khoGia();
-  KH.ghiKeHoach(KH.datKhoaChuKy(KH.batChuKy(trong(), NAY, NAY), kh1), khoLuu);
-  k('C3 kho trên máy KHÔNG chứa mã gốc (chỉ muối + băm); đọc lại còn khoá', !khoLuu.d.kh_kehoach.includes('"4827"') && !khoLuu.d.kh_kehoach.includes('4827:') && bang(KH.docKeHoach(khoLuu).chuKy.khoa, kh1));
-  let tt = { sai: 0, den: 0 };
-  for (let i = 0; i < 4; i++) tt = KH.thuMa(tt, false, 1000);
-  k('C3 sai 4 lần: chưa khoá', tt.sai === 4 && tt.den === 0 && KH.conChoGiay(tt, 1000) === 0);
-  tt = KH.thuMa(tt, false, 1000);
-  k('C3 sai lần thứ 5 → chờ 60 giây', tt.den === 61000 && KH.conChoGiay(tt, 1000) === 60 && KH.conChoGiay(tt, 31000) === 30);
-  k('C3 đang chờ: nhập (kể cả đúng) không đổi trạng thái; hết 60 giây nhập đúng → đặt lại', bang(KH.thuMa(tt, true, 2000), tt) && bang(KH.thuMa(tt, true, 62000), { sai: 0, den: 0 }) && KH.thuMa({ sai: 3, den: 0 }, true, 5).sai === 0);
+  console.log('C3 — KHÔNG có khoá mã (chủ quán 11.11); bản lưu cũ có khoá vẫn đọc được, bỏ qua khoá');
+  k('C3 chuKyTrong không còn trường khoa / thu; kho không xuất hàm khoá / băm / thử mã', !('khoa' in KH.chuKyTrong()) && !('thu' in KH.chuKyTrong()) && ['datKhoaChuKy', 'datThuChuKy', 'taoKhoa', 'kiemKhoa', 'thuMa', 'conChoGiay', 'SAI_TOI_DA', 'CHO_GIAY'].every((x) => KH[x] === undefined));
+  const khoCu = khoGia({ kh_kehoach: JSON.stringify({ v: 1, chuKy: { bat: true, bd: ngay(-3), dai: 30, hanh: 4, ls: [27, 29], nhac: false, khoa: { muoi: 'a'.repeat(32), bam: 'b'.repeat(64) }, thu: { sai: 3, den: 0 } } }) });
+  const ckCu = KH.docKeHoach(khoCu).chuKy;
+  k('C3 bản lưu cũ có khoa + thu: đọc không lỗi, BỎ QUA hai trường đó, giữ đủ dữ liệu chu kỳ khác', ckCu.bat === true && ckCu.bd === ngay(-3) && ckCu.dai === 30 && ckCu.hanh === 4 && bang(ckCu.ls, [27, 29]) && ckCu.nhac === false && !('khoa' in ckCu) && !('thu' in ckCu));
+  KH.ghiKeHoach(KH.docKeHoach(khoCu), khoCu);
+  k('C3 ghi lại thì kho không còn khoa / thu (và vẫn đủ dữ liệu chu kỳ)', !khoCu.d.kh_kehoach.includes('"khoa"') && !khoCu.d.kh_kehoach.includes('"thu"') && !khoCu.d.kh_kehoach.includes('aaaa') && KH.docKeHoach(khoCu).chuKy.dai === 30);
 
   console.log('B3/C4 — riêng tư: lời nhắc không lộ tên thuốc, không có chữ "kinh" / "chu kỳ"');
   const bRieng = { ...trong(), thuoc: [{ ...thuocA, gio: ['09:00'] }], chuKy: ck({ bd: ngay(-26), nhac: true }) };
@@ -124,7 +118,7 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   const DK = await nap('src/components/dungKeHoach.js');
   k('D2 việc ảo của dải / thanh nhắc → đúng tiện ích (thuốc · xe · chu kỳ); việc thường và sinh nhật / giỗ → null (mở bảng ngày)', DK.tienIchCuaNhac({ ao: true, id: 'th:09:00' }) === 'uongthuoc' && DK.tienIchCuaNhac({ ao: true, id: 'xea1h0:20400' }) === 'xeco' && DK.tienIchCuaNhac({ ao: true, id: 'ck' }) === 'chuky' && DK.tienIchCuaNhac({ ao: true, id: 'ngabc:5' }) === null && DK.tienIchCuaNhac({ id: 'xe123' }) === null);
   const up = (bb, x) => KH.upList(HN, bb, x);
-  k('C4 Sắp tới: KHÔNG khoá → "Kỳ kinh dự kiến" · "Chu kỳ 28 ngày"; khoá → "Lời nhắc riêng tư" (không chữ kinh / chu kỳ)', (() => { const a = up(bRieng, 'chi').find((e) => e.di === 'chuky'), kb = up(KH.datKhoaChuKy(bRieng, kh1), 'chi').find((e) => e.di === 'chuky'); return a.t === 'Kỳ kinh dự kiến' && a.s === 'Chu kỳ 28 ngày' && a.j === hn + 2 && kb.t === 'Lời nhắc riêng tư' && !/kinh|chu kỳ/i.test(kb.t + kb.s + kb.k) && kb.k === 'Riêng tư'; })());
+  k('C4 Sắp tới luôn "Kỳ kinh dự kiến" · "Chu kỳ 28 ngày", nhãn "Kỳ kinh"', (() => { const a = up(bRieng, 'chi').find((e) => e.di === 'chuky'); return a.t === 'Kỳ kinh dự kiến' && a.s === 'Chu kỳ 28 ngày' && a.j === hn + 2; })());
   k('C4 Sắp tới: xưng hô "anh" hoặc kỳ tới ngoài 30 ngày → không có dòng Chu kỳ', !up(bRieng, 'anh').some((e) => e.di === 'chuky') && !up({ ...bRieng, chuKy: ck({ bd: NAY, dai: 40 }) }, 'chi').some((e) => e.di === 'chuky'));
   k('D2 Sắp tới: giờ uống thuốc hôm nay chưa uống (không tên thuốc); đã uống thì hết; nhãn Thuốc', (() => { const t = up(bRieng, 'chi').filter((e) => e.di === 'thuoc'); return t.length === 1 && t[0].t === 'Đến giờ uống thuốc' && t[0].s === '09:00' && t[0].k === 'Thuốc' && !JSON.stringify(t).includes('Hoàng Kỳ') && up(KH.doiUong(bRieng, 'ta', '09:00', NAY), 'chi').filter((e) => e.di === 'thuoc').length === 0; })());
   const bXe = { ...trong(), xe: [xeMay(12200, [lan(-20, 10800)], [{ ten: 'Đăng kiểm', ngay: ngay(20) }, { ten: 'Bảo hiểm', ngay: ngay(45) }, { ten: 'Cà vẹt', ngay: '' }])] };
@@ -134,7 +128,7 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   console.log('D1 — chữ nhỏ dưới ô lưới');
   k('D1 Xe cộ: "N xe · M sắp tới hạn" / "N xe · ổn" / chưa có xe: "Thêm xe" (không số bịa)', KH.chuThich('xe', HN, bXe) === '1 xe · 1 sắp tới hạn' && KH.chuThich('xe', HN, { ...bXe, xe: [xeMay(12000, [lan(-20, 10800)])] }) === '1 xe · ổn' && KH.chuThich('xe', HN, trong()) === 'Thêm xe');
   k('D1 Uống thuốc: "đã / tổng hôm nay"; chưa có thuốc: "Thêm thuốc"', KH.chuThich('thuoc', HN, bT) === '0/2 hôm nay' && KH.chuThich('thuoc', HN, KH.doiUong(bT, 'ta', '07:30', NAY)) === '1/2 hôm nay' && KH.chuThich('thuoc', HN, trong()) === 'Thêm thuốc');
-  k('D1 Chu kỳ: chưa bật "Bật"; đã bật "Ngày N"; KHOÁ → "Riêng tư" (không hiện số)', KH.chuThich('chuky', HN, trong()) === 'Bật' && KH.chuThich('chuky', HN, bRieng) === 'Ngày 27' && KH.chuThich('chuky', HN, KH.datKhoaChuKy(bRieng, kh1)) === 'Riêng tư');
+  k('D1 Chu kỳ: chưa bật "Bật"; đã bật luôn "Ngày N"', KH.chuThich('chuky', HN, trong()) === 'Bật' && KH.chuThich('chuky', HN, bRieng) === 'Ngày 27');
 
   console.log('E1/E3 — Văn khấn: mặc định Tín chủ / Họ gia tiên / Địa chỉ từ tài khoản');
   const hoSo = { ten: 'Nguyễn Văn An', dia_chi: '12 Lê Lợi, Hà Nội' }, vk0 = trong().vk;
@@ -153,8 +147,8 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   k('D3 bản hỏng từng phần: xe sai dạng → rỗng; thuốc hỏng bỏ, thuốc đúng giữ; dấu uống lạ bỏ; chu kỳ ngày sai → chưa bật', rHong.xe.length === 0 && rHong.thuoc.length === 1 && rHong.thuoc[0].id === 't2' && bang(rHong.thuocXong, { [NAY]: ['ta@08:00'] }) && !rHong.chuKy.bat);
   k('D3 chu kỳ bật ngày đúng nhưng độ dài / hành kinh ngoài khoảng, lịch sử lạ → dùng mặc định / lọc', (() => { const r = KH.docKeHoach(khoGia({ kh_kehoach: JSON.stringify({ chuKy: { bat: true, bd: NAY, dai: 99, hanh: 1, ls: [28, 'x', 500, 30] } }) })).chuKy; return r.bat && r.dai === 28 && r.hanh === 5 && bang(r.ls, [28, 30]); })());
   k('D3 xe hỏng: hạng mục thiếu cả km lẫn tháng bỏ; giấy tờ ngày sai → rỗng; lịch sử không việc bỏ; loại lạ bỏ cả xe; id trùng bỏ', (() => { const r = KH.docKeHoach(khoGia({ kh_kehoach: JSON.stringify({ xe: [{ id: 'a', ten: 'X', loai: 'oto', km: 5, lich: [{ ten: 'h', km: 0, thang: 0 }, { ten: 'ok', km: 100, thang: 0 }], giayTo: [{ ten: 'g', ngay: '2026-02-30' }], nhatKy: [{ ngay: NAY, km: 1, viec: [] }, { ngay: NAY, km: 1, viec: ['ok'] }] }, { id: 'a', ten: 'Y', loai: 'xm' }, { id: 'b', ten: 'Z', loai: 'lạ' }] }) })).xe; return r.length === 1 && r[0].lich.length === 1 && r[0].giayTo[0].ngay === '' && r[0].nhatKy.length === 1; })());
-  const dayDu = (() => { let t = KH.themXe(trong(), { ten: 'Lead', bien: '29X', loai: 'oto', km: 100 }, MAU); t = KH.ghiXongHang(t, t.xe[0].id, 'Đảo lốp', NAY); t = KH.themThuoc(t, { ten: 'Canxi', lieu: '1', ghi: 'g', gio: ['08:00', '20:00'], trong: 7 }, NAY); t = KH.doiUong(t, t.thuoc[0].id, '08:00', NAY); return KH.datKhoaChuKy(KH.ghiKyMoi(KH.batChuKy(t, ngay(-28), NAY), NAY), kh1); })();
-  k('D3 ghi → đọc lại đủ: xe (lịch, giấy tờ, lịch sử), thuốc + dấu đã uống, chu kỳ (lịch sử, khoá)', (() => { const kg = khoGia(); KH.ghiKeHoach(dayDu, kg); const r = KH.docKeHoach(kg); return bang(r.xe, dayDu.xe) && bang(r.thuoc, dayDu.thuoc) && bang(r.thuocXong, dayDu.thuocXong) && bang(r.chuKy, dayDu.chuKy); })());
+  const dayDu = (() => { let t = KH.themXe(trong(), { ten: 'Lead', bien: '29X', loai: 'oto', km: 100 }, MAU); t = KH.ghiXongHang(t, t.xe[0].id, 'Đảo lốp', NAY); t = KH.themThuoc(t, { ten: 'Canxi', lieu: '1', ghi: 'g', gio: ['08:00', '20:00'], trong: 7 }, NAY); t = KH.doiUong(t, t.thuoc[0].id, '08:00', NAY); return KH.ghiKyMoi(KH.batChuKy(t, ngay(-28), NAY), NAY); })();
+  k('D3 ghi → đọc lại đủ: xe (lịch, giấy tờ, lịch sử), thuốc + dấu đã uống, chu kỳ (lịch sử)', (() => { const kg = khoGia(); KH.ghiKeHoach(dayDu, kg); const r = KH.docKeHoach(kg); return bang(r.xe, dayDu.xe) && bang(r.thuoc, dayDu.thuoc) && bang(r.thuocXong, dayDu.thuocXong) && bang(r.chuKy, dayDu.chuKy); })());
   k('D3 kho bị chặn → ghi trả false (màn không báo "đã lưu")', KH.ghiKeHoach(dayDu, { getItem: () => null, setItem: () => { throw new Error('chặn'); } }) === false);
   k('D3 không thêm khoá lưu mới: vẫn chỉ kh_kehoach (luật xoá của luuMay.js áp cho cả xe / thuốc / chu kỳ)', (() => { const kg = khoGia(); KH.ghiKeHoach(dayDu, kg); return bang(Object.keys(kg.d), ['kh_kehoach']); })());
   k('D3 đổi khách khác → xoá luôn xe / thuốc / chu kỳ; đăng xuất → xoá; cùng khách → giữ', (() => {
@@ -196,7 +190,7 @@ async function trinhDuyet(pw, { LP, LM, KH, IDX_KHOA }) {
   }).outputFiles;
   const goi = kq.find((f) => f.path.endsWith('.js')).text, css = (kq.find((f) => f.path.endsWith('.css')) || { text: '' }).text;
   const html = doc('index.html').replace(/<script type="module" src="\/src\/main.jsx"><\/script>/, '<script src="/bundle.js"></script>').replace(/<link[^>]*(googleapis|gstatic|preload)[^>]*>/g, '').replace('</head>', '<link rel="stylesheet" href="/bundle.css"></head>');
-  const SDT = '0901234567', GOC_URL = 'http://localhost:4599' /* localhost = ngữ cảnh an toàn: crypto.subtle (băm mã khoá) chạy được như ở https thật */, MOC_GIO = '2026-11-10T02:00:00Z'; // = 09:00 ngày 10.11.2026 giờ VN
+  const SDT = '0901234567', GOC_URL = 'http://localhost:4599', MOC_GIO = '2026-11-10T02:00:00Z'; // = 09:00 ngày 10.11.2026 giờ VN
   const HN = { d: 10, m: 11, y: 2026 }, hn = LP.jd(HN), ngay = (j) => LP.chuoiJd(hn + j), NAY = ngay(0);
   const trinh = await pw.chromium.launch();
 
@@ -361,41 +355,24 @@ async function trinhDuyet(pw, { LP, LM, KH, IDX_KHOA }) {
     await t.locator('.cyc-set > div').first().getByRole('button', { name: '−', exact: true }).click();
     await t.getByRole('button', { name: 'Kỳ kinh bắt đầu hôm nay', exact: true }).click();
     k('C2 "Kỳ kinh bắt đầu hôm nay" (kỳ vừa bắt đầu hôm nay, 0 ngày) → không ghi vào lịch sử, toast "Đã ghi…"', (await luuTho(t)).chuKy.ls.length === 0 && (await toast(t).innerText()).includes('Đã ghi: kỳ kinh bắt đầu hôm nay'));
-    await t.locator('.switch').click(); await bang1(t).waitFor();
-    for (const c of ['1', '2', '3', '4']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
-    await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click();
-    k('C3 bật "Khoá bằng mã khi mở" → bảng đặt mã 4 số (khác PIN ví), bước 1 xong thì yêu cầu nhập lại', (await bang1(t).innerText()).includes('Nhập lại mã để xác nhận'));
-    for (const c of ['1', '2', '3', '5']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
-    await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click();
-    k('C3 nhập lại sai → báo "Hai lần nhập chưa giống nhau", chưa khoá', (await bang1(t).innerText()).includes('Hai lần nhập chưa giống nhau') && !(await luuTho(t)).chuKy.khoa);
-    for (let lan = 0; lan < 2; lan++) { for (const c of ['1', '2', '3', '4']) await bang1(t).locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await bang1(t).getByRole('button', { name: 'Xác nhận', exact: true }).click(); }
-    await bang1(t).waitFor({ state: 'detached' });
-    const kt = await luuTho(t);
-    k('C3 đặt xong → khoá bật; kho chỉ có muối + băm SHA-256, KHÔNG có mã gốc; vẫn ở trong màn (không bị khoá ngay)', !!kt.chuKy.khoa && /^[0-9a-f]{64}$/.test(kt.chuKy.khoa.bam) && !JSON.stringify(kt).includes('"1234"') && (await t.locator('.switch.on').count()) === 1);
-    k('D1/C4 ô lưới Chu kỳ khi khoá: "Riêng tư" (không hiện số ngày)', await (async () => { await t.goto(GOC_URL + '/kehoach'); await t.waitForSelector('.phone'); return (await t.locator('#toolGrid .tl', { hasText: 'Chu kỳ' }).locator('small').innerText()) === 'Riêng tư'; })());
-    const sapRieng = await t.locator('.up-strip').innerText();
+    k('C3 màn Chu kỳ đã bật KHÔNG có công tắc "Khoá bằng mã" và không có bàn phím số / hỏi mã', (await t.locator('.switch').count()) === 0 && (await t.locator('.pin-pad').count()) === 0 && !(await thanTrong(t).innerText()).includes('Khoá bằng mã'));
+    await t.goto(GOC_URL + '/kehoach'); await t.waitForSelector('.phone');
+    k('D1 ô lưới Chu kỳ luôn "Ngày N" (không còn "Riêng tư")', (await t.locator('#toolGrid .tl', { hasText: 'Chu kỳ' }).locator('small').innerText()) === 'Ngày 1');
     await t.goto(GOC_URL + '/kehoach/saptoi'); await thanTrong(t).waitFor();
     const sapAll = await thanTrong(t).innerText();
-    k('C4 khoá thì Sắp tới hiện "Lời nhắc riêng tư", KHÔNG "Kỳ kinh dự kiến", không chữ kinh / chu kỳ', sapAll.includes('Lời nhắc riêng tư') && !/Kỳ kinh|chu kỳ/i.test(sapAll + sapRieng), sapAll);
-    await mo(t, '/kehoach/chuky'); await t.locator('.pin-pad').waitFor();
-    k('C3 mở lại Chu kỳ → hỏi mã (không hiện dữ liệu chu kỳ phía sau)', (await thanTrong(t).innerText()).includes('Nhập mã để mở Chu kỳ') && (await t.locator('.cyc-card').count()) === 0);
-    for (const c of ['9', '9', '9', '9']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
-    await t.getByRole('button', { name: 'Xác nhận', exact: true }).click();
-    await t.getByText('Mã chưa đúng · còn 4 lần thử').waitFor();
-    k('C3 mã sai → "Mã chưa đúng · còn 4 lần thử", vẫn khoá', (await t.locator('.cyc-card').count()) === 0);
-    for (const c of ['1', '2', '3', '4']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
-    await t.getByRole('button', { name: 'Xác nhận', exact: true }).click(); await t.locator('.cyc-card').waitFor();
-    k('C3 mã đúng → mở Chu kỳ, "Ngày 1"', (await thanTrong(t).innerText()).includes('Ngày 1'));
-    await mo(t, '/kehoach/chuky'); await t.locator('.pin-pad').waitFor();
-    for (let lan = 0; lan < 5; lan++) { for (const c of ['9', '9', '9', '9']) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click(); await t.getByRole('button', { name: 'Xác nhận', exact: true }).click(); await t.waitForTimeout(150); }
-    await t.getByText(/Nhập sai nhiều lần, thử lại sau \d+ giây/).waitFor();
-    k('C3 sai 5 lần → "Nhập sai nhiều lần, thử lại sau N giây", bàn phím bị khoá', (await t.locator('.pin-pad button').first().isDisabled()));
-    await t.reload(); await t.waitForSelector('.phone'); await t.locator('.pin-pad').waitFor();
-    k('C3 tải lại trang vẫn đang chờ (đếm sai lưu trên máy, không lách bằng cách tải lại)', (await t.locator('.pin-pad button').first().isDisabled()));
-    await t.getByText('Quên mã? Xoá dữ liệu chu kỳ để đặt lại').click();
-    k('C3 "Quên mã?" → hỏi lại một lần, chưa xoá', (await t.locator('.hoi-xoa').innerText()).includes('Xoá dữ liệu «chu kỳ»?') && !!(await luuTho(t)).chuKy.bat);
-    await t.locator('.hoi-xoa').getByRole('button', { name: 'Xoá', exact: true }).click();
-    k('C3 xác nhận Xoá → dữ liệu chu kỳ xoá thật trên máy (về chưa bật), hiện lại thẻ giới thiệu để đặt lại', !(await luuTho(t)).chuKy.bat && !(await luuTho(t)).chuKy.khoa && (await thanTrong(t).innerText()).includes('Theo dõi chu kỳ'));
+    k('C4 Sắp tới luôn "Kỳ kinh dự kiến" (không còn "Lời nhắc riêng tư")', sapAll.includes('Kỳ kinh dự kiến') && !sapAll.includes('Lời nhắc riêng tư'), sapAll);
+    await mo(t, '/kehoach/chuky'); await t.locator('.cyc-card').waitFor();
+    k('C3 mở lại Chu kỳ → vào thẳng, không hỏi mã; kho không có trường khoa / thu', (await thanTrong(t).innerText()).includes('Ngày 1') && !('khoa' in (await luuTho(t)).chuKy) && !('thu' in (await luuTho(t)).chuKy));
+    k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
+  });
+
+  await ca('chukyKhoaCu', { luu: kho({ chuKy: { bat: true, bd: ngay(-3), dai: 30, hanh: 4, ls: [27, 29], nhac: true, khoa: { muoi: 'a'.repeat(32), bam: 'b'.repeat(64) }, thu: { sai: 3, den: 0 } } }) }, async (t, loi) => {
+    await mo(t, '/kehoach/chuky'); await t.locator('.cyc-card').waitFor();
+    const nd = await thanTrong(t).innerText();
+    k('C3 bản lưu cũ CÓ khoá + thử mã → mở thẳng Chu kỳ (Ngày 4), giữ đủ dữ liệu (30 ngày, lịch sử 27 · 29), không bàn phím', nd.includes('Ngày 4') && nd.includes('30 ngày') && nd.includes('27 · 29 ngày') && (await t.locator('.pin-pad').count()) === 0 && (await t.locator('.switch').count()) === 0, nd);
+    await t.locator('.cyc-set > div').first().getByRole('button', { name: '+', exact: true }).click();
+    const c = (await luuTho(t)).chuKy;
+    k('C3 ghi lại thì kho không còn khoa / thu, dữ liệu chu kỳ khác còn nguyên', c.dai === 31 && bang(c.ls, [27, 29]) && c.hanh === 4 && !('khoa' in c) && !('thu' in c));
     k('F4 không lỗi JS', loi.length === 0, loi.join(' | '));
   });
 
@@ -456,7 +433,7 @@ async function trinhDuyet(pw, { LP, LM, KH, IDX_KHOA }) {
     const kt = await khoa('/kehoach/uongthuoc'), kc = await khoa('/kehoach/chuky'), kv = await khoa('/kehoach/vankhan');
     const co = (ds, ...ks) => ks.every((x) => ds.includes(x));
     k('F4 data-nd gắn ở mọi chữ sửa được: Xe cộ (danh sách + một xe: lịch, vừa làm, nhắc, giấy tờ, lịch sử, sửa / xoá)', co(kx, 'xe.ghiChu') && co(k1, 'xe.lichTieu', 'xe.vuaLam', 'xe.nhacTieu', 'xe.giayTieu', 'xe.lsTieu', 'xe.suaXe', 'xe.xoaXe', 'xe.themHang'), JSON.stringify([kx, k1]));
-    k('F4 data-nd: Uống thuốc (ô tổng, xoá thuốc, ghi chú riêng tư) · Chu kỳ (giai đoạn, dưỡng sinh cyc.N, khoá, ghi chú, tắt) · Văn khấn (khung thông tin gia đình)', co(kt, 'thuoc.tongNhan', 'thuoc.xoa', 'thuoc.ghiChu') && co(kc, 'chuky.kyBatDau', 'chuky.khoaTieu', 'chuky.ghiChu', 'chuky.tat', 'chuky.duongSinh') && kc.some((x) => /^cyc\.\d$/.test(x)) && kc.some((x) => /^chuky\.ph\d$/.test(x)) && co(kv, 'vk.khungTieu', 'vk.khungNote'), JSON.stringify([kt, kc, kv]));
+    k('F4 data-nd: Uống thuốc (ô tổng, xoá thuốc, ghi chú riêng tư) · Chu kỳ (giai đoạn, dưỡng sinh cyc.N, ghi chú, tắt) · Văn khấn (khung thông tin gia đình)', co(kt, 'thuoc.tongNhan', 'thuoc.xoa', 'thuoc.ghiChu') && co(kc, 'chuky.kyBatDau', 'chuky.ghiChu', 'chuky.tat', 'chuky.duongSinh') && kc.some((x) => /^cyc\.\d$/.test(x)) && kc.some((x) => /^chuky\.ph\d$/.test(x)) && co(kv, 'vk.khungTieu', 'vk.khungNote'), JSON.stringify([kt, kc, kv]));
     const khoaDanhMuc = new Set(IDX_KHOA);
     k('F4 mọi data-nd trên các màn này đều có trong danh mục (không khoá mồ côi)', [...kx, ...k1, ...kt, ...kc, ...kv].every((x) => khoaDanhMuc.has(x)));
   });
