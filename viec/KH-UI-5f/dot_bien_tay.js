@@ -33,7 +33,7 @@ const DS = [
   ['VS-DOC-BAN-CU-GIU-KHOA-THU', K, 'const ck = chuKyTrong(); // khoa / thu', 'const ck = { ...chuKyTrong(), khoa: c.khoa, thu: c.thu }; // khoa / thu'],
 ];
 const TRINH_DUYET = [
-  ['BV-HOI-XOA-XE-XOA-LUON', 'src/components/XeCo.jsx', '{...bam(() => datHoiXoa(true))}>{nd(\'xe.xoaXe\')}', '{...bam(xoa)}>{nd(\'xe.xoaXe\')}'],
+  ['BV-HOI-XOA-XE-XOA-LUON', 'src/components/XeCo.jsx', '{...bam(() => datHoiXoa(true))} {...ndDau(\'xe.xoaXe\')}>', '{...bam(xoa)} {...ndDau(\'xe.xoaXe\')}>'],
 ];
 
 function chay(ten, tep, tu, den, trinhDuyet) {
