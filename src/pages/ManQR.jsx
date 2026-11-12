@@ -7,7 +7,6 @@ import Chu from '../components/Chu.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 
-// QR thành viên: vẽ từ `qr` của GET /toi (VeQR dùng lại cho QR trả tiền ở Theo dõi đơn). Không có `qr` → không vẽ (không bịa mã). Demo chỉ có nút QR (chưa vẽ màn này): dựng bằng khối của demo.
 const VIEN_QUET = 4; // viền trắng quanh mã ở màn Mã thành viên (≥ 4 ô — POS QUET-1: quầy quét bằng camera trước của máy tính bảng)
 
 /** Giữ màn không tắt khi đang mở Mã thành viên (Screen Wake Lock): xin lại khi quay lại tab, thả khi rời màn. Trình duyệt không có / từ chối → thôi, không báo lỗi. */
@@ -24,6 +23,8 @@ function dungGiuManSang() {
   }, []);
 }
 
+// QR thành viên: vẽ từ `qr` của GET /toi (VeQR vẽ mã QR từ một chuỗi; chỉ màn này dùng). Không có `qr` → không vẽ (không bịa mã). Demo chỉ có nút QR (chưa vẽ màn này): dựng bằng khối của demo.
+// `vien` = độ rộng viền trắng quanh mã (số ô mã): mặc định 2; màn Mã thành viên truyền VIEN_QUET.
 export function VeQR({ noiDung, nhan = nd('mqr.aria'), vien = 2 }) {
   const o = useMemo(() => {
     const q = qrcode(0, 'M');

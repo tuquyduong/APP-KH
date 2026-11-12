@@ -1,0 +1,10 @@
+KH-ND-3c — so ảnh bản GỐC (8c67ae6) ↔ bản sau việc. Chromium + Playwright có sẵn; POS giả; giờ cố định (08/11/2026 09:00 VN); hoạt ảnh và chuyển động khoá; 360 / 390 / 430.
+Màn Hỗ trợ + mục Hỗ trợ ở Tài khoản chụp với liên hệ GIẢ (gốc: thay tệp lienHe.js; sau: bản nội dung ht.* qua datBanNoiDung).
+Số cặp: 51 · giống hệt 48 (0 điểm lệch) · lệch 3 = màn Mã thành viên ở 360 / 390 / 430 — lệch CÓ CHỦ ĐÍCH (mục B: mã to, nền trắng, viền 4 ô, dòng nhắc thêm).
+
+Giống hệt (3 cỡ mỗi ca): uudai-khach__man · uudai-dn__man · uudai-dn__tatca · nhanma__loi · taikhoan__man · hoso__man · hotro__man · dangnhap__b1 · dangnhap__b2 · dangnhap__b3 ·
+  tracnghiem__gioithieu · tracnghiem__cau1 · tracnghiem__cuoi · tracnghiem__ketqua · khongthay__man · trangchu__khach.
+Lệch có chủ đích: qr__man__360 · qr__man__390 · qr__man__430  → so_anh/lech/*__lech.png (đỏ = điểm khác).
+
+Ghi chú: (1) Trang chủ 360 từng lệch ~300 điểm ở một lần chụp trước — chụp LẠI cả bản gốc cũng lệch cùng chỗ (nhiễu vệt sáng giữa hai lần chụp), lần chụp cuối giống hệt.
+(2) Ca chưa chụp: Ưu đãi có voucher "đã dùng" kèm nhãn (đã chụp "Xem tất cả": có nhãn "Hết hạn"); Hồ sơ đã có ngày sinh; Đăng nhập khi mã hết hạn; Trắc nghiệm kết quả có tình trạng đặc biệt (do bài thử UI5a kiểm bằng HTML, không bằng ảnh).
