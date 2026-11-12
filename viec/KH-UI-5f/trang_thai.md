@@ -118,3 +118,5 @@ Báo cáo (tóm nguyên ý, agent độc lập): code và bài thử đạt; K4 
 - Nghi ngờ ghi nhận (không sửa): `dot_bien_tay.js` ghi cứng đường dẫn; `form` của `ChuKy.jsx` chỉ `null | 'ngay'`; `/kehoach/chuky` mở được với xưng hô anh… (đã ghi vào Phát hiện); khách từng đặt mã ở bản thử nay mở không cần mã; ca `KH[x] === undefined` chỉ chứng minh `kehoach.js` không xuất hàm (phần còn lại dựa vào grep K4).
 - Agent không chạy được Chromium / đột biến / cổng nên tin số ghi ở mục Cổng (các số đó do phiên chính tự chạy lượt này).
 - BÀI HỌC của agent: viết lại cả `trang_thai.md` phải giữ dòng `HEAD ĐÃ KIỂM`; gỡ tính năng phải grep cả `doi_chieu_demo.md` / `ke_hoach.md`; số dòng ghi bằng `wc -l`.
+
+HEAD ĐÃ KIỂM: f50dd5d
