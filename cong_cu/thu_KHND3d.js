@@ -275,10 +275,10 @@ async function trinhDuyet(pw) {
       // Văn khấn: đổi một câu bài khấn
       await mo(t, '/kehoach/vankhan/r'); await t.waitForSelector('#vkTxt');
       const bai0 = await chuTrong(t, '#vkTxt');
-      await datBan(t, { 'vkd.r.khan': 'Câu thử nghiệm của {ten}.\nHết bài {ny}.' });
+      await datBan(t, { 'vkd.r.khan': 'Câu thử nghiệm của {ten} ({dc}) họ {ho}.\nNgày {ld} tháng {lm} năm {ny}.' });
       await t.waitForFunction(() => /Câu thử nghiệm/.test(document.querySelector('#vkTxt')?.textContent || ''));
       const bai1 = await chuTrong(t, '#vkTxt'), marks = await t.evaluate(() => document.querySelectorAll('#vkTxt mark').length);
-      k('E1 bản giả đổi 1 câu bài khấn (vkd.r.khan): bài đổi, chỗ tự điền vẫn tô màu (2 chỗ); bản gốc bắt đầu "Nam mô A Di Đà Phật"', /^Nam mô A Di Đà Phật/.test(bai0) && /^Câu thử nghiệm của/.test(bai1) && marks === 2, `${marks} · ${bai1}`);
+      k('E1 bản giả đổi 1 câu bài khấn (vkd.r.khan): bài đổi, đủ 6 chỗ tự điền vẫn tô màu; bản gốc bắt đầu "Nam mô A Di Đà Phật"', /^Nam mô A Di Đà Phật/.test(bai0) && /^Câu thử nghiệm của/.test(bai1) && marks === 6, `${marks} · ${bai1}`);
       await lamRong(t);
       await t.waitForFunction(() => /^Nam mô/.test(document.querySelector('#vkTxt')?.textContent || ''));
       k('E1 bản rỗng → bài khấn như cũ', (await chuTrong(t, '#vkTxt')) === bai0);
