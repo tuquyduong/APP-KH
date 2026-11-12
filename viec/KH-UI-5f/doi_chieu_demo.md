@@ -44,13 +44,13 @@ Lý do: (a) dữ liệu POS chưa có / việc sau · (b) chữ / số mẫu c�
 | Ghi chú cuối "Tên thuốc chỉ lưu trên máy…" | giống | **không có biểu tượng trái tim** (bộ `<symbol>` của app chưa có `heart`; không vẽ mới) |
 | Màn "Thêm thuốc": 3 ô `type=time` | **1–3 bánh xe giờ 24h** + "＋ Thêm giờ" / "Bỏ" | bánh xe giờ đã có từ KH-UI-5c, tránh ô giờ của trình duyệt · P (B2) |
 
-## Chu kỳ (`chuky_off`, `chuky_on`, `chuky_on_duoi`, `chuky_hoi_ma` — chỉ app)
+## Chu kỳ (`chuky_off`, `chuky_on`, `chuky_on_duoi`)
 | Khối trong demo | Đã làm | Khác gì · lý do |
 |---|---|---|
 | Thẻ giới thiệu + "Bắt đầu" | giống | bấm Bắt đầu hỏi **ngày bắt đầu kỳ gần nhất** (bánh xe ngày) thay vì bật ngay với dữ liệu mẫu · P (C1) |
 | Thẻ hôm nay: "Ngày N", giai đoạn (màu CYC_PH), kỳ tới, dải ngày, chú giải, "Dưỡng sinh lúc này", nút ghi kỳ mới | giống | màu đặt theo lớp `p0…p4` (cùng mã màu CYC_PH) thay cho style tại chỗ |
 | ± độ dài chu kỳ / số ngày hành kinh, "6 chu kỳ gần nhất", nhắc trước kỳ 2 ngày | giống | lịch sử trống → "Chưa có chu kỳ nào được ghi" (K3) |
-| "Khoá bằng mã PIN khi mở" (công tắc, chưa làm gì) | **làm thật: "Khoá bằng mã khi mở"** | mã 4 số RIÊNG cho Chu kỳ, băm trên máy, bàn phím số `.pin-pad`, sai 5 lần chờ 1 phút, "Quên mã?" · P (C3). Màn hỏi mã không có trong demo |
+| "Khoá bằng mã PIN khi mở" (công tắc, chưa làm gì) | **bỏ hàng này** | chủ quán 11.11: "đây là tài khoản riêng của khách" nên không khoá mã · P (C3) |
 | Lời nhắc | "Lời nhắc của bạn" (không chữ kinh / chu kỳ) | P (C4) |
 
 ## Văn khấn (`vankhan_ds`, `vankhan_bai`)

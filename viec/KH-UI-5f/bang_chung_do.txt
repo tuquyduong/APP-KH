@@ -20,10 +20,16 @@ TypeError: Cannot read properties of undefined (reading 'macDinh')
 74 đạt · 1 hỏng
 
 == Trên code ĐÃ VÁ (nhánh việc) ==
-cong_cu/thu_KHUI5f.js  KHONG_TRINH_DUYET=1 → 86 đạt · 0 hỏng ; có Chromium → 182 đạt · 0 hỏng
+cong_cu/thu_KHUI5f.js  KHONG_TRINH_DUYET=1 → 83 đạt · 0 hỏng ; có Chromium → 174 đạt · 0 hỏng   (sau gỡ khoá mã 12.11; trước đó 86 / 182)
 cong_cu/thu_KHUI5e.js  KHONG_TRINH_DUYET=1 → 71 đạt · 0 hỏng (không bớt ca: 71 → 71)
 cong_cu/thu_KHUI5b.js  KHONG_TRINH_DUYET=1 → 75 đạt · 0 hỏng (không bớt ca: 75 → 75)
 
-SỐ CA cong_cu/thu_KHUI5f.js: 86
+SỐ CA cong_cu/thu_KHUI5f.js: 83
 SỐ CA cong_cu/thu_KHUI5e.js: 71
 SỐ CA cong_cu/thu_KHUI5b.js: 75
+
+== 12.11 — GỠ KHOÁ MÃ CHU KỲ (phiếu sửa 11.11): bài thu_KHUI5f.js ĐÃ SỬA chạy trên code CHƯA gỡ (KHONG_TRINH_DUYET=1) ==
+  ✗ C3 chuKyTrong không còn trường khoa / thu; kho không xuất hàm khoá / băm / thử mã
+  ✗ C3 bản lưu cũ có khoa + thu: đọc không lỗi, BỎ QUA hai trường đó, giữ đủ dữ liệu chu kỳ khác
+  ✗ C3 ghi lại thì kho không còn khoa / thu (và vẫn đủ dữ liệu chu kỳ)
+80 đạt · 3 hỏng

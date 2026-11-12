@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const GOC = '/home/user/APP-KH', NHAP = '/tmp/claude-0/-home-user-APP-KH/abd685b0-ca58-5d60-b03a-0a06358bc527/scratchpad/mut';
+const GOC = '/home/user/APP-KH', NHAP = '/tmp/claude-0/-home-user-APP-KH/a1661746-4867-5f2d-a7a0-f04ed1e83fd1/scratchpad/mut';
 fs.rmSync(NHAP, { recursive: true, force: true });
 fs.mkdirSync(NHAP, { recursive: true });
 for (const d of ['src', 'cong_cu', 'thiet_ke', 'package.json', 'index.html']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
@@ -19,11 +19,8 @@ const DS = [
   ['BV-THUOC-HET-DOT-VAN-NHAC', L, 'export const thuocConHan = (t, j) =>', 'export const thuocConHan = (t, j) => true ||'],
   ['VS-THUOC-BAY-NGAY-LECH-MOT', L, 'const j = hn - 7 + i,', 'const j = hn - 6 + i,'],
   ['VS-CHAM-KINH-KHONG-TOI', L, 'day <= ck.dai ? 3 : 4', 'day <= ck.dai + 5 ? 3 : 4'],
-  ['VS-KHOA-LUU-MA-GOC', L, 'bam: await bamMa(ma, muoi)', 'bam: ma'],
-  ['BV-SAI-5-LAN-KHONG-CHO', L, 'sai >= SAI_TOI_DA ?', 'false ?'],
   ['VS-NHAC-THUOC-LO-TEN-THUOC', K, "tieu: nd('thuoc.nhacTieu'), nhac: gioPhut(g)", 'tieu: bang.thuoc[0].ten, nhac: gioPhut(g)'],
   ['BV-NHAC-CHU-KY-LO-CHU-KINH', K, "tieu: nd('chuky.loiNhac')", "tieu: nd('chuky.sapToi')"],
-  ['VS-SAP-TOI-KHOA-VAN-LO-KINH', K, "t: nd(khoa ? 'chuky.sapToiRieng' : 'chuky.sapToi')", "t: nd('chuky.sapToi')"],
   ['BV-CHUONG-LICH-LO-VIEC-RIENG', L, '!v.rieng && cacLan', 'cacLan'],
   ['VS-MAC-DINH-HO-GIA-TIEN-TRONG', K, 'ho: vk.ho ?? chuDauTen(ten)', "ho: vk.ho ?? ''"],
   ['VS-MAC-DINH-DIA-CHI-TRONG', K, "dc: vk.dc ?? (hoSo.dia_chi || '')", "dc: vk.dc ?? ''"],
@@ -33,12 +30,10 @@ const DS = [
   ['VS-DOI-UONG-KHONG-BO-DANH-DAU', K, 'cu.includes(k) ? cu.filter((x) => x !== k) : [...cu, k]', '[...cu, k]'],
   ['BV-SAP-TOI-CHU-KY-CHO-ANH', K, 'if (bang.chuKy.bat && coChuKy(xung))', 'if (bang.chuKy.bat)'],
   ['VS-GHI-KY-MOI-GHI-CA-KY-NHAM', L, 'd >= 10 && d <= 120 ? [...c.ls, d]', 'true ? [...c.ls, d]'],
-  ['VS-NHAN-SAP-TOI-KHOA-LO-CHU-KY', K, "k: nd(khoa ? 'ti.tagRieng' : 'ti.tagChuKy')", "k: nd('ti.tagChuKy')"],
-  ['BV-BADGE-CHU-KY-KHOA-LO-SO', K, "!ck.bat ? nd('chuky.badgeBat') : ck.khoa ? nd('chuky.badgeKhoa') :", "!ck.bat ? nd('chuky.badgeBat') :"],
+  ['VS-DOC-BAN-CU-GIU-KHOA-THU', K, 'const ck = chuKyTrong(); // khoa / thu', 'const ck = { ...chuKyTrong(), khoa: c.khoa, thu: c.thu }; // khoa / thu'],
 ];
 const TRINH_DUYET = [
   ['BV-HOI-XOA-XE-XOA-LUON', 'src/components/XeCo.jsx', '{...bam(() => datHoiXoa(true))}>{nd(\'xe.xoaXe\')}', '{...bam(xoa)}>{nd(\'xe.xoaXe\')}'],
-  ['BV-CHU-KY-KHOA-KHONG-HOI-MA', 'src/components/ChuKy.jsx', 'khoaDong = ck.bat && ck.khoa && !mo', 'khoaDong = false'],
 ];
 
 function chay(ten, tep, tu, den, trinhDuyet) {

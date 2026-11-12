@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Chụp ảnh KH-UI-5f (F3) bằng Chromium + Playwright có sẵn: cặp ảnh DEMO (thiet_ke/app_kh_demo.html, patch39) ↔ APP THẬT, cùng cỡ 360 / 390 / 430 × 844, cùng dữ liệu mẫu
 // (xe Honda Vision + Toyota Vios, thuốc sắc + Vitamin D3, chu kỳ ngày 10, thông tin Tín chủ — chép từ demo TL.car / TL.med / TL.cyc / TL.vkInfo), đồng hồ giả 10.11.2026 09:00 giờ VN cho cả hai.
-// Lưu viec/KH-UI-5f/so_anh/<rộng>_<màn>_{demo,app,lech}.png (lech = ảnh tô chỗ khác nhau, đỏ). 390 chụp ×2 để người xem; 360 / 430 ×1. Màn chỉ có ở app (khoá mã riêng, khung Tín chủ) chỉ có ảnh app.
+// Lưu viec/KH-UI-5f/so_anh/<rộng>_<màn>_{demo,app,lech}.png (lech = ảnh tô chỗ khác nhau, đỏ). 390 chụp ×2 để người xem; 360 / 430 ×1. Màn chỉ có ở app (khung Tín chủ) chỉ có ảnh app.
 // Dữ liệu mẫu là dữ liệu thử, KHÔNG phải của khách thật. Chạy: node viec/KH-UI-5f/chup_anh.js
 'use strict';
 const fs = require('fs');
@@ -30,9 +30,8 @@ const MOC = new Date('2026-11-10T02:00:00Z');
     { id: 't2', ten: 'Vitamin D3', lieu: '1 viên', ghi: 'Sau bữa sáng', gio: ['08:00'], den: '', bd: ngay(-30), nhac: false }];
   const tat = ['t1@07:30', 't1@19:30', 't2@08:00']; // 7 ngày trước: [1, 1, .5, 1, 1, 1, .5] như medHist của demo
   const XONG = {}; [1, 1, 0.5, 1, 1, 1, 0.5].forEach((v, i) => { XONG[ngay(i - 7)] = v === 1 ? tat : tat.slice(0, 1); });
-  const CK = { bat: true, bd: ngay(-9), dai: 28, hanh: 5, ls: [28, 29, 27, 28, 30, 28], nhac: true, khoa: null, thu: { sai: 0, den: 0 } };
+  const CK = { bat: true, bd: ngay(-9), dai: 28, hanh: 5, ls: [28, 29, 27, 28, 30, 28], nhac: true };
   const KE = { v: 1, viec: [], leNhac: {}, nguoi: [], vk: { ten: null, ho: null, dc: null, nm: null, fs: 17, tick: {}, nhac: {} }, xe: XE, thuoc: THUOC, thuocXong: XONG, chuKy: CK };
-  const khoaMau = { muoi: 'a'.repeat(32), bam: 'b'.repeat(64) };
 
   const kq = esbuild.buildSync({
     entryPoints: [path.join(GOC, 'src/main.jsx')], bundle: true, write: false, outdir: path.join(GOC, '.nhap_thu'), format: 'iife', jsx: 'automatic', logLevel: 'silent', external: ['/anh/*', '/fonts/*'],
@@ -96,9 +95,6 @@ const MOC = new Date('2026-11-10T02:00:00Z');
     ({ ctx, t } = await moApp(rong, null));
     await vao(t, '/kehoach/chuky', '.cyc-off'); await chup(t, 'chuky_off', rong, 'app');
     await vao(t, '/kehoach/vankhan/r', '.vk-txt'); await t.evaluate(() => { document.querySelector('.screens').scrollTop = 0; }); await chup(t, 'vankhan_bai', rong, 'app');
-    await ctx.close();
-    ({ ctx, t } = await moApp(rong, { ...KE, chuKy: { ...CK, khoa: khoaMau } }));
-    await vao(t, '/kehoach/chuky', '.pin-pad'); await chup(t, 'chuky_hoi_ma', rong, 'app');
     await ctx.close();
 
     // ----- Demo
