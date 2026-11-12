@@ -36,16 +36,12 @@ export const TRANG_CHU = [
   chu('home.cal.viec', 'Ô Kế hoạch: số việc hôm nay', '{so} việc hôm nay ›', { bien: ['so'] }),
   chu('home.cal.quaHan', 'Ô Kế hoạch: số việc quá hạn (máy đọc màn hình)', '{so} việc quá hạn', { bien: ['so'] }),
   khoa('home.lich', 'Ngày dương, thứ, ngày âm, tiết khí, số việc', 'tutinh', 'App tự tính theo giờ POS và việc khách tự ghi'),
-  // Banner (demo hero-banner) + banner khuyến mãi "Hôm nay" (demo today; chữ trống → dùng banner thường)
-  { khoa: 'home.banner', man: M, ten: 'Ảnh banner Trang chủ', loai: 'anh', macDinh: ANH_BANNER, tiLe: '2:1' },
-  chu('home.bk', 'Banner: dòng nhỏ', 'Tứ Quý Đường'),
-  { khoa: 'home.bh', man: M, ten: 'Banner: dòng lớn (xuống dòng = Enter)', loai: 'doan', macDinh: 'Hôm nay bạn muốn\nuống gì?' },
-  { khoa: 'home.bb', man: M, ten: 'Banner: nút', loai: 'nut', macDinh: { chu: 'Xem Menu →', dich: 'menu' } },
+  // Banner khuyến mãi "Hôm nay" (demo today) — LUÔN hiện; today.t / today.s / today.cta là chữ mặc định khi POS không có quảng cáo, Giờ vàng, chương trình
   { khoa: 'today.bg', man: M, ten: 'Banner Hôm nay: ảnh nền', loai: 'anh', macDinh: ANH_BANNER, tiLe: '2:1' },
   chu('today.k', 'Banner Hôm nay: nhãn', 'HÔM NAY'),
-  chu('today.t', 'Banner Hôm nay: tiêu đề (trống = dùng banner thường)', ''),
-  chu('today.s', 'Banner Hôm nay: dòng phụ', ''),
-  { khoa: 'today.cta', man: M, ten: 'Banner Hôm nay: nút', loai: 'nut', macDinh: { chu: '', dich: 'menu' } },
+  chu('today.t', 'Banner Hôm nay: tiêu đề mặc định', 'Hôm nay bạn muốn uống gì?'),
+  chu('today.s', 'Banner Hôm nay: dòng phụ mặc định', ''),
+  { khoa: 'today.cta', man: M, ten: 'Banner Hôm nay: nút mặc định', loai: 'nut', macDinh: { chu: 'Xem Menu ›', dich: 'menu' } },
   // Ô Giờ vàng + ô Trắc nghiệm
   chu('home.gvk', 'Ô Giờ vàng: nhãn', 'Giờ vàng'),
   chu('home.gv.chua', 'Ô Giờ vàng: khi chưa có', 'Hiện chưa có'),

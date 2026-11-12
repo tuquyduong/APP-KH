@@ -4,6 +4,7 @@ import { KHAU_HIEU } from '../thuongHieu.js';
 
 const M = 'Khung chung';
 const chu = (khoa, ten, macDinh, them = {}) => ({ khoa, man: M, ten, loai: 'chu', macDinh, ...them });
+const khoa = (k, ten, khoaBoi, chiDuong) => ({ khoa: k, man: M, ten, khoaBoi, chiDuong });
 const tieuDe = (trang, ten) => chu(`tieuDe.${trang}`, `Tên màn trên tab trình duyệt: ${ten}`, ten);
 
 export const KHUNG_CHUNG = [
@@ -33,6 +34,15 @@ export const KHUNG_CHUNG = [
   tieuDe('don', 'Chi tiết đơn'), tieuDe('hotro', 'Hỗ trợ'), tieuDe('qr', 'Mã thành viên'), tieuDe('dangnhap', 'Đăng nhập'), tieuDe('tracnghiem', 'Trắc nghiệm'),
   tieuDe('tracnghiemketqua', 'Kết quả thể trạng'), tieuDe('kiemkhop', 'Kiểm khớp POS'), tieuDe('kehoach', 'Kế hoạch và nhắc việc'),
   tieuDe('vankhan', 'Văn khấn và lễ cúng'), tieuDe('khongthay', 'Không tìm thấy trang'),
+  // Quảng cáo: dải mảnh ở đầu các trang + banner "Hôm nay" Trang chủ dùng CHUNG khung câu (chữ POS: tên chương trình, chữ quảng cáo, % và giờ Giờ vàng → khoá)
+  chu('qc.xem', 'Quảng cáo: nút khi bấm được (dải và banner)', 'Xem ›'),
+  chu('qc.dai.gv', 'Dải quảng cáo: câu Giờ vàng đang chạy', '⏰ Giờ vàng: giảm {phanTram}% đến {ketThuc}', { bien: ['phanTram', 'ketThuc'] }),
+  chu('qc.dai.ct', 'Dải quảng cáo: câu chương trình đặc biệt', '🎁 {ten}', { bien: ['ten'] }),
+  chu('qc.gv.tieuDe', 'Banner Hôm nay: tiêu đề khi Giờ vàng đang chạy', 'Giờ vàng: giảm {phanTram}%', { bien: ['phanTram'] }),
+  chu('qc.gv.phu', 'Banner Hôm nay: dòng phụ khi Giờ vàng đang chạy', 'Đến {ketThuc} hôm nay', { bien: ['ketThuc'] }),
+  chu('qc.gv.nut', 'Banner Hôm nay: nút khi Giờ vàng đang chạy', 'Xem Menu ›'),
+  chu('qc.ct.nut', 'Banner Hôm nay: nút khi có chương trình đặc biệt', 'Xem ưu đãi ›'),
+  khoa('qc.pos', 'Tên, mô tả chương trình; chữ quảng cáo; % và giờ Giờ vàng', 'pos', 'POS › Chương trình / Giờ vàng / Quảng cáo'),
   // Câu báo lỗi chung khi POS không trả lời của mình (dinhDang.loiTheoCode)
   chu('loi.MANG_LOI', 'Báo lỗi: mất mạng', 'Không kết nối được. Kiểm tra mạng rồi thử lại.'),
   chu('loi.KH_CHUA_CAU_HINH', 'Báo lỗi: app chưa sẵn sàng', 'App khách chưa sẵn sàng. Vui lòng quay lại sau.'),

@@ -87,13 +87,12 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
 }
 
 // `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn!" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
-export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon }) {
+export default function TrangChu({ quangCao, moQuangCao, menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon }) {
   const ds = menu.dl ? menu.dl.data : [];
   const ke = <OKeHoachTrangChu dangNhap={dangNhap} daBiet={daBiet} moKeHoach={moKeHoach} moDangNhapTai={moDangNhapTai} />;
   const nhuCau = nhuCauCoMon(ndDs('home.need'), ds, MON);
   const noiBat = ndDs('home.feat.mon').map((x) => ds.find((m) => m.ma === x.ma)).filter(Boolean);
-  const homNay = { tieuDe: nd('today.t'), phu: nd('today.s'), nut: ndNut('today.cta') };
-  const bb = ndNut('home.bb'), fmore = ndNut('home.fmore');
+  const fmore = ndNut('home.fmore');
   const DICH = { menu: moMenu, giovang: moGioVang, tracnghiem: moTracNghiem, kehoach: moKeHoach, uudai: moUuDai }; // mọi mã trong DICH (noiDung/nd/index.js)
   const di = (dich) => () => DICH[dich]();
   const moi = { tieuDe: nd('home.moi.t'), phu: nd('home.moi.p'), nut: nd('home.moi.nut') };
@@ -107,18 +106,7 @@ export default function TrangChu({ menu, dangNhap, daBiet = false, klLuu, moQR, 
 
       {ndHien('hien.home.hb') && (
       <div className="hb-one">
-        {homNay.tieuDe ? (
-          <div id="todayHome"><BannerHomNay anh={ndAnh('today.bg')} tieuDe={homNay.tieuDe} phu={homNay.phu} nut={homNay.nut.chu} chon={di(homNay.nut.dich)} /></div>
-        ) : (
-          <div className="hero-banner" role="button" tabIndex={0} onClick={di(bb.dich)} onKeyDown={(e) => { if (e.key === 'Enter') di(bb.dich)(); }} {...ndDau('home.banner')}>
-            <img className="slot-img" src={ndAnh('home.banner')} alt="" />
-            <div className="txt">
-              <Chu k="home.bk" as="div" className="k" />
-              <div className="h" {...ndDau('home.bh')}>{nd('home.bh').split('\n').map((d, i) => <span key={i}>{i > 0 && <br />}{d}</span>)}</div>
-              <span className="b" {...ndDau('home.bb')}>{bb.chu}</span>
-            </div>
-          </div>
-        )}
+        <div id="todayHome"><BannerHomNay anh={ndAnh('today.bg')} qc={quangCao} chon={!quangCao.dich ? null : quangCao.macDinh ? di(quangCao.dich) : moQuangCao} /></div>
         <div className="hb-tiles">{ndHien('hien.home.gv') && <OGioVang mo={moGioVang} />}{ndHien('hien.home.quiz') && <OTracNghiem dangNhap={dangNhap} klLuu={klLuu} mo={moTracNghiem} moDangNhap={moDangNhapTai} />}</div>
       </div>
       )}
