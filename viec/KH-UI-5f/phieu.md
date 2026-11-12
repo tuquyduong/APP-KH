@@ -38,14 +38,11 @@ Mọi dữ liệu chỉ nằm trên máy khách; tin nhắc không lộ nội du
   của chu kỳ tô màu theo giai đoạn (đánh dấu hôm nay), chú giải; "Dưỡng sinh lúc này" = chữ `CYC_PH` của giai đoạn (khoá `cyc.0`…`cyc.4` như demo — mục danh mục, sửa được ở /admin);
   "Kỳ kinh bắt đầu hôm nay" (ghi lịch sử); độ dài chu kỳ (21–40) và số ngày hành kinh (2–9) chỉnh − / +; "6 chu kỳ gần nhất · trung bình N ngày"; nhắc trước kỳ 2 ngày bật / tắt;
   ghi chú cuối như demo (tham khảo, không dùng để tránh thai, khi nào nên đi khám); "Tắt & xoá dữ liệu chu kỳ" (hỏi lại một lần, xoá thật trên máy).
-- C3 **Khoá khi mở:** bật "Khoá bằng mã khi mở" → khách đặt MÃ 4 SỐ RIÊNG cho Chu kỳ (KHÁC mã PIN ví — PIN ví do POS kiểm, cần mạng; dữ liệu chu kỳ chỉ trên máy nên khoá cũng trên máy).
-  Lưu dạng băm (crypto.subtle SHA-256 + muối ngẫu nhiên), không lưu mã gốc. Mở Chu kỳ → hỏi mã (dùng lại giao diện bàn phím số của bảng PIN, không gọi mạng). Quên mã →
-  "Quên mã? Xoá dữ liệu chu kỳ để đặt lại" (hỏi lại một lần). Sai 5 lần → chờ 1 phút.
-- C4 Lời nhắc trước kỳ CHỈ hiện "Lời nhắc của bạn" (KHÔNG chữ "kinh" / "chu kỳ"); mục trong "Sắp tới" là "Kỳ kinh dự kiến" như demo NHƯNG chỉ hiện khi Chu kỳ KHÔNG khoá
-  (khoá thì hiện "Lời nhắc riêng tư").
+- C3 KHÔNG có khoá mã khi mở Chu kỳ (chủ quán 11.11: "đây là tài khoản riêng của khách") — bỏ dòng "Khoá bằng mã PIN khi mở" của demo.
+- C4 Dải nhắc trước kỳ (hiện trên mọi màn khi App mở) CHỈ ghi "Lời nhắc của bạn" (KHÔNG chữ "kinh" / "chu kỳ") như demo; mục trong "Sắp tới" là "Kỳ kinh dự kiến" như demo.
 
 ### D. Gắn vào Kế hoạch chung
-- D1 Lưới 6 ô: 3 ô mới mở đúng màn; toolBadge như demo (Xe cộ "N xe · …"; Uống thuốc "đã / tổng hôm nay"; Chu kỳ "Ngày N" — khoá thì không hiện số).
+- D1 Lưới 6 ô: 3 ô mới mở đúng màn; toolBadge như demo (Xe cộ "N xe · …"; Uống thuốc "đã / tổng hôm nay"; Chu kỳ "Ngày N").
 - D2 "Sắp tới" (`upList`) + dải nhắc khi mở App (`bangCoNhac` / `DaiNhacViec`) + thanh nhắc đầu Kế hoạch: thêm hạn xe (hạng mục / giấy tờ trong 30 ngày), giờ uống thuốc (hôm nay),
   ngày dự kiến kỳ tới (theo C4) — bấm một dòng mở đúng tiện ích. Câu nhắc theo B3 / C4.
 - D3 Dữ liệu trong kho `kh_kehoach` (thêm trường `xe`, `thuoc`, `chuKy` — bản cũ thiếu trường → mặc định, không mất dữ liệu cũ; đọc hỏng → mặc định, như luật `luuMay.js` / `docKeHoach`).
@@ -63,13 +60,12 @@ Mọi dữ liệu chỉ nằm trên máy khách; tin nhắc không lộ nội du
 ### F. Kiểm
 - F1 Bài MỚI `cong_cu/thu_KHUI5f.js` (chạy cả `KHONG_TRINH_DUYET=1`):
   - hàm thuần: itemState / docState / vehState (km trước, tháng trước, chưa ghi, quá hạn, sắp tới hạn ở ngưỡng), lịch mặc định theo loại xe, medToday + 7 ngày, thuốc hết hạn, cycNow mọi
-    giai đoạn (cả chậm kinh), trung bình 6 kỳ, băm / so mã khoá (không lưu mã gốc), chữ nhắc riêng tư (B3, C4), mặc định Tín chủ / Họ gia tiên / Địa chỉ (E1), bản `kh_kehoach` cũ đọc vẫn đủ;
-  - Chromium (390): thêm xe máy → lịch mặc định, "Vừa làm hôm nay" → trạng thái đổi; thêm thuốc 2 giờ → đánh dấu một lần → "1/2"; bật Chu kỳ, đặt khoá, mở lại → hỏi mã, sai / đúng,
-    "Quên mã" → xoá; xưng hô "anh" → không có ô Chu kỳ; Văn khấn: khung E1 có mặc định từ tài khoản giả, chạm chỗ tô màu → đúng ô; Sắp tới có dòng xe / thuốc.
+    giai đoạn (cả chậm kinh), trung bình 6 kỳ, chữ nhắc riêng tư (B3, C4), mặc định Tín chủ / Họ gia tiên / Địa chỉ (E1), bản `kh_kehoach` cũ đọc vẫn đủ;
+  - Chromium (390): thêm xe máy → lịch mặc định, "Vừa làm hôm nay" → trạng thái đổi; thêm thuốc 2 giờ → đánh dấu một lần → "1/2"; bật Chu kỳ → "Kỳ kinh bắt đầu hôm nay" → ngày / giai đoạn đúng, "Tắt & xoá" → hỏi lại → xoá thật; xưng hô "anh" → không có ô Chu kỳ; Văn khấn: khung E1 có mặc định từ tài khoản giả, chạm chỗ tô màu → đúng ô; Sắp tới có dòng xe / thuốc.
 - F2 Bài thử cũ đỏ vì hành vi đổi có chủ đích (3 ô "Sắp có" thành thật, khung thông tin Văn khấn chuyển chỗ) → sửa đúng ca; mỗi bài sửa có ≥ 1 ca ĐỎ trên gốc kể cả `KHONG_TRINH_DUYET=1`;
   KHÔNG dùng `## Bài thử cũ sửa`.
-- F3 Ảnh 360 / 390 / 430 → `viec/KH-UI-5f/so_anh/`: lưới 6 ô, Xe cộ (danh sách, một xe, thêm xe, ghi lần sửa), Uống thuốc (danh sách, thêm), Chu kỳ (chưa bật, đã bật, hỏi mã),
-  Văn khấn (khung E1, một bài có chỗ trống). `doi_chieu_demo.md`: khác demo (khoá mã riêng C3, câu nhắc riêng tư C4, E1–E4 theo chủ quán).
+- F3 Ảnh 360 / 390 / 430 → `viec/KH-UI-5f/so_anh/`: lưới 6 ô, Xe cộ (danh sách, một xe, thêm xe, ghi lần sửa), Uống thuốc (danh sách, thêm), Chu kỳ (chưa bật, đã bật),
+  Văn khấn (khung E1, một bài có chỗ trống). `doi_chieu_demo.md`: khác demo (bỏ khoá khi mở C3, E1–E4 theo chủ quán).
 - F4 **Sửa được ở /admin** (CLAUDE.md §11 "thêm gì cũng phải sửa được"): mọi chữ / ảnh / nút / danh sách mặc định mới có khoá trong `tienIch.js` + `data-nd`; khối mới có `hien.<khối>`;
   `trang_thai.md` liệt kê khoá đã thêm. K10: tệp mới 0 chữ cứng; tệp sửa không tăng (giảm thì `node cong_cu/ha_no_chu.js`). `npm test`, `--day-du`, cổng `tinh` + `chay` (`KHONG_TRINH_DUYET=1`) ĐẠT, ghi `trang_thai.md`
   + dòng `HEAD ĐÃ KIỂM: <SHA>` (đầu dòng, không gạch đầu dòng) TRƯỚC `/ra-soat`.
@@ -93,7 +89,6 @@ Mọi dữ liệu chỉ nằm trên máy khách; tin nhắc không lộ nội du
 - src/components/ChuKy.jsx
 - src/components/dungKeHoach.js
 - src/components/DaiNhacViec.jsx
-- src/components/PinSheet.jsx
 - src/duongDan.js
 - src/luuMay.js
 - src/giaoDien/tien_ich.css
@@ -114,8 +109,6 @@ không (kho trên máy `kh_kehoach` thêm trường, đọc bản cũ được)
 không
 
 ## Cấm
-- `src/components/PinSheet.jsx` CHỈ dùng lại / tách phần bàn phím số cho khoá Chu kỳ — KHÔNG đổi luồng PIN ví (KH-ND-3e đang chuyển chữ tệp này: chỉ thêm, không sửa dòng có chữ;
-  nếu phải sửa thì tách bàn phím ra tệp mới và ghi `## Phát hiện`).
 - `src/duongDan.js` CHỈ thêm `xeco`, `uongthuoc`, `chuky` vào danh sách tiện ích. `src/luuMay.js` CHỈ nếu cần thêm khoá dữ liệu mới vào `KHOA_DU_LIEU`.
 - KHÔNG sửa `src/noiDung/nd/index.js`, `src/noiDung/nd.js`, tệp nhóm của việc khác (`khungChung.js`, `trangChu.js`, `menu.js`, `donHang.js`, `taiKhoan.js`, `keHoach.js`).
 - KHÔNG sửa `src/App.jsx`, `src/pages/TrangChu.jsx`, `src/dinhDang.js`, `src/quangCao.js` (KH-UI-5g), trang Menu / Giỏ / Thanh toán / Theo dõi đơn (KH-ND-3b, 3e), `src/api.js`,
@@ -124,3 +117,16 @@ không
 - Dữ liệu sức khoẻ (thuốc, chu kỳ) KHÔNG rời máy, KHÔNG ghi vào nhật ký / lỗi / bài thử chụp màn hình có dữ liệu thật; KHÔNG gửi lên POS.
 - KHÔNG làm thông báo đẩy, KHÔNG thêm thư viện, KHÔNG đổi màu / phông ngoài lớp CSS demo đã có, KHÔNG "Đọc to", KHÔNG nút đặt hoa quả.
 - Chỉ push `git push -u origin viec/KH-UI-5f`. Không đụng `main`, không merge, không tạo PR.
+
+## Chủ quán đổi sau khi máy làm (11.11) — BỎ khoá mã Chu kỳ
+Chủ quán 11.11 (sau khi đọc phiếu): "không cần phải khoá mã Chu kỳ vì đây là tài khoản riêng của khách". Các mục C3, C4, D1, F1, F3, Phạm vi, Cấm ở trên ĐÃ sửa theo
+(commit PHIEU này). Phần khoá máy đã làm ở các commit trước phải GỠ HẾT, không để code chết:
+1. `src/components/ChuKy.jsx`: bỏ công tắc "Khoá bằng mã khi mở", màn hỏi mã (`HoiMa`), đặt mã, bàn phím số (`BanPhim`), trạng thái `mo` / `khoaDong`; mở Chu kỳ là vào thẳng.
+2. `src/kehoachLap.js` / `src/kehoach.js`: bỏ `taoKhoa`, `kiemKhoa`, `thuMa`, `datKhoaChuKy`, `datThuChuKy`, hàm băm SHA-256, trường `khoa` / `thu` trong `chuKyTrong()`;
+   đọc bản `kh_kehoach` đã lưu có `khoa` / `thu` → BỎ QUA hai trường đó (không lỗi, không mất dữ liệu chu kỳ khác); ghi lại thì không còn hai trường.
+3. "Sắp tới" luôn "Kỳ kinh dự kiến" (C4) — bỏ nhánh `chuky.sapToiRieng`; ô lưới luôn "Ngày N" (D1) — bỏ `chuky.badgeKhoa`. Dải nhắc vẫn CHỈ "Lời nhắc của bạn".
+4. `src/noiDung/nd/tienIch.js`: bỏ mọi mục chỉ phần khoá dùng (`chuky.khoa*`, `chuky.ma*`, `chuky.quen`, `chuky.cho`, `chuky.khongKhop`, `chuky.daKhoa`, `chuky.daTatKhoa`,
+   `chuky.xacNhan`, `chuky.xoaSo`, `chuky.khongHoTro`, `chuky.sapToiRieng`, `chuky.badgeKhoa`… — đối chiếu bằng tìm khoá trong `src/`, không khoá thừa); CSS chỉ khoá dùng (`.cyc-khoa`…).
+5. Bài thử: bỏ ca khoá / băm / hỏi mã; THÊM ca: màn Chu kỳ đã bật không có công tắc / bàn phím khoá; bản `kh_kehoach` cũ CÓ `khoa` + `thu` vẫn mở thẳng Chu kỳ và giữ đủ dữ liệu
+   (ca đỏ trên gốc của nhánh trước khi gỡ — theo luật E2). Đột biến: bỏ các VS- về khoá. Ảnh: bỏ `*_chuky_hoi_ma_*`, chụp lại Chu kỳ đã bật nếu đổi.
+6. Chạy lại `npm test`, `--day-du`, cổng `tinh` + `chay` (`KHONG_TRINH_DUYET=1`), `/ra-soat`; ghi `trang_thai.md` + dòng `HEAD ĐÃ KIỂM: <SHA>` mới (đầu dòng); push nhánh.
