@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Số nợ chữ cứng (K10, CLAUDE.md §11): đếm chữ tiếng Việt có dấu viết thẳng trong src/ (ngoài src/noiDung/**, src/kiemKhop/**, src/pages/KiemKhop.jsx).
 //   node cong_cu/ha_no_chu.js  → HẠ số nợ trong cong_cu/no_chu_cung.txt theo số đếm mới. CHỈ hạ: tệp tăng giữ nguyên số cũ, tệp chưa có dòng không thêm,
-//                                tệp hết chữ (hoặc đã xoá) thì xoá dòng.
+//                                tệp hết chữ (hoặc đã xoá) thì GIỮ dòng với số 0 (KH-ND-3c C3: hai việc song song cùng hạ hai tệp kề nhau không xung đột khi gộp).
 // Bộ kiểm kiem_tra_truoc_khi_giao.js (K10) và bài thử dùng chung các hàm xuất ra ở đây.
 'use strict';
 const fs = require('fs');
@@ -113,10 +113,10 @@ function docNo(goc) {
 /** Ghi số nợ: sắp theo đường dẫn, giữa hai dòng MỘT dòng trống (việc song song sửa tệp khác nhau không đụng dòng kề nhau khi gộp). */
 const vietNo = (no) => Object.keys(no).sort().map((f) => `${f} ${no[f]}`).join('\n\n') + '\n';
 
-/** Hạ: min(nợ cũ, số đếm); 0 → xoá dòng; không bao giờ thêm tệp mới hay nâng số. */
+/** Hạ: min(nợ cũ, số đếm); 0 → GIỮ dòng với số 0 (không xoá); không bao giờ thêm tệp mới hay nâng số. */
 function haNo(no, dem) {
   const ra = {};
-  for (const f of Object.keys(no)) { const m = Math.min(no[f], dem[f] || 0); if (m > 0) ra[f] = m; }
+  for (const f of Object.keys(no)) ra[f] = Math.min(no[f], dem[f] || 0);
   return ra;
 }
 

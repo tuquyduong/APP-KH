@@ -1,8 +1,8 @@
 import { bam } from './bam.js';
 import { ndDau } from '../noiDung/nd.js';
 
-/** Thẻ mời đăng nhập, cùng dáng thẻ vàng hội viên của demo (points-card). `chu` = { tieuDe, phu, nut }; `khoa` = { tieuDe, phu, nut, anh } khoá nội dung (Trang chủ) để đánh dấu chỗ sửa. */
-export default function TheMoi({ chu, khoa = {}, anh = '/anh/logo-nho.webp', moDangNhap }) {
+/** Thẻ mời đăng nhập, cùng dáng thẻ vàng hội viên của demo (points-card). `chu` = { tieuDe, phu, nut }; `anh` = đường dẫn ảnh (người gọi truyền, theo khoá nội dung của mình); `khoa` = { tieuDe, phu, nut, anh } khoá nội dung để đánh dấu chỗ sửa. */
+export default function TheMoi({ chu, khoa = {}, anh, moDangNhap }) {
   const dau = (t) => (khoa[t] ? ndDau(khoa[t]) : {});
   return (
     <div className="points-card pc-mini the-moi">

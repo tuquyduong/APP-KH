@@ -72,7 +72,8 @@ button:disabled{ opacity:.45; cursor:default; }
 .the-moi .nut{ flex-shrink:0; background:var(--pink-dark); color:#fff; border-radius:11px; padding:10px 14px; min-height:44px; display:inline-flex; align-items:center; font-size:12px; font-weight:700; }
 
 /* ===== Mã thành viên (demo chưa có màn này; dùng viền vàng + thẻ ngà của demo) ===== */
-.khung-qr{ width:min(100%, 18rem); margin:8px auto 14px; padding:14px; background:var(--tq-card); border-radius:var(--tq-r); box-shadow:0 0 0 1px var(--tq-line), var(--tq-shadow); }
+/* KH-ND-3c B1 (POS QUET-1): quầy quét mã bằng camera trước của máy tính bảng → mã to gần hết bề ngang, thẻ NỀN TRẮNG kể cả giao diện tối; viền trắng quanh mã do VeQR vẽ (≥ 4 ô mã). */
+.khung-qr{ width:min(78vw, 320px); margin:8px auto 14px; padding:8px; background:#fff; border-radius:var(--tq-r); box-shadow:0 0 0 1px var(--tq-line), var(--tq-shadow); }
 .khung-qr svg{ display:block; width:100%; height:auto; }
 .qr-sdt{ text-align:center; font-size:20px; font-weight:700; color:var(--navy); }
 .qr-chu{ text-align:center; font-size:12.5px; margin-top:4px; }
@@ -122,3 +123,11 @@ button:disabled{ opacity:.45; cursor:default; }
 /* ===== Nhãn nhỏ in hoa ở ô Giờ vàng / Trắc nghiệm (KH-UI-3b F2): lỗi CÓ SẴN trong demo — overflow:hidden + dòng quá thấp ở cỡ ~9px cắt dấu tiếng Việt (Ắ Ệ Ờ…).
    Chỉ nới chiều cao dòng; KHÔNG đổi màu / phông / cỡ chữ. ===== */
 .hb-k{ line-height:1.7; }
+
+/* ===== KH-ND-3c C4 — vệt sáng LUÔN chạy (chủ quán 12.11): kể cả máy khách bật "giảm chuyển động" (máy tính chủ quán đang bật nên không thấy vệt sáng).
+   Ghi đè luật `prefers-reduced-motion` của demo_2.css (`.fx-a, .fx-a::before { animation:none }`) CHỈ cho banner Trang chủ + dải các trang: cùng nhịp var(--dur).
+   Hiệu ứng khác (màn mở, khung tải…) vẫn theo cài đặt máy. KHÔNG sửa demo_*.css. ===== */
+@media (prefers-reduced-motion:reduce){
+  .fx-a{ animation:sweepP var(--dur) linear infinite !important; }
+  .fx-a::before{ animation:sweepL var(--dur) linear infinite !important; }
+}

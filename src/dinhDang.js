@@ -1,10 +1,10 @@
 // Hàm thuần của App KH (không đụng DOM / mạng) — bài thử cong_cu/thu_KHUNG.js nạp thẳng file này.
 import { nd } from './noiDung/nd.js';
 
-/** 25000 → "25.000đ". Không phải số → "" (không bịa số, CLAUDE.md §5.8). */
+/** 25000 → "25.000đ". Không phải số → "" (không bịa số, CLAUDE.md §5.8). Đơn vị tiền: danh mục `gia.donVi`. */
 export function dinhDangGia(n) {
   if (typeof n !== 'number' || !Number.isFinite(n)) return '';
-  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + nd('gia.donVi');
 }
 
 /** 1250 → "1.250" (điểm). Không phải số → "" (không bịa số). */
@@ -14,7 +14,7 @@ export function dinhDangSo(n) {
 
 /** Mô tả mức giảm của mã: percent → "giảm 10%", loại khác → "giảm 20.000đ". */
 export function moTaGiam(loai, giaTri) {
-  return loai === 'percent' ? `giảm ${giaTri}%` : `giảm ${dinhDangGia(Number(giaTri))}`;
+  return nd('gia.giam', { giaTri: loai === 'percent' ? `${giaTri}%` : dinhDangGia(Number(giaTri)) });
 }
 
 /** "2026-10-22T14:05:00" (giờ VN từ máy chủ) → "14:05 22/10/2026". Không đọc được → "". */

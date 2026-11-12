@@ -4,6 +4,8 @@ import { dungCua, cuaToi, gopToi, lamMoi } from '../duLieuKhach.js';
 import { cheSdt, chiaLoiChao, hienNgaySinh, tachNgaySinh } from '../dinhDang.js';
 import { bayGio, coBayGio } from '../bayGio.js';
 import { XUNG_HO, DIA_CHI_TOI_DA, tenXungHo } from '../noiDung/dangNhap.js';
+import { nd, ndDau } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import PinSheet from '../components/PinSheet.jsx';
@@ -23,24 +25,25 @@ function dungLuu(khiXong, khiLoi) {
   }
   return { ...tt, luu, boXong: () => datTt((t) => ({ ...t, xong: false })) };
 }
+// `chu` = KHOÁ nội dung của câu báo đã lưu; lỗi là lời POS (hoặc câu lỗi chung của khung).
 const Bao = ({ s, chu }) => (
   <>
-    {s.loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{s.loi}</div></div>}
-    {s.xong && <div className="save-ok" role="status"><Ico ten="check" s={14} /> {chu}</div>}
+    {s.loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('hs.loi')}>{s.loi}</div></div>}
+    {s.xong && <div className="save-ok" role="status"><Ico ten="check" s={14} /> <span {...ndDau(chu)}>{nd(chu)}</span></div>}
   </>
 );
 
 function XungHo({ ho, doi }) {
   const s = dungLuu(doi);
-  const { dau, xung, ten } = chiaLoiChao(coBayGio() ? bayGio() : '', tenXungHo(ho.xung_ho), ho.ten);
+  const { dau, coBuoi, xung, ten } = chiaLoiChao(coBayGio() ? bayGio() : '', tenXungHo(ho.xung_ho), ho.ten);
   return (
     <div className="card pf-card">
-      <div className="tt">Quán gọi bạn là</div>
-      <div className="pf-chips">
+      <Chu k="hs.xh.t" as="div" className="tt" />
+      <div className="pf-chips" {...ndDau('hs.xh.chu')}>
         {XUNG_HO.map((x) => <button key={x.ma} type="button" className={ho.xung_ho === x.ma ? 'on' : ''} disabled={s.dang} onClick={() => ho.xung_ho !== x.ma && s.luu({ xung_ho: x.ma })}>{x.ten}</button>)}
       </div>
-      <div className="pf-prev"><Ico ten="chat" s={14} /> <span>“{dau}{dau === 'Chào' ? '' : ','} {xung && <b>{xung}</b>}{xung && ten ? ' ' : ''}{ten}!”</span></div>
-      <Bao s={s} chu="Đã lưu cách xưng hô" />
+      <div className="pf-prev"><Ico ten="chat" s={14} /> <span {...ndDau('chao.dau')}>“{dau}{coBuoi ? ',' : ''} {xung && <b>{xung}</b>}{xung && ten ? ' ' : ''}{ten}!”</span></div>
+      <Bao s={s} chu="hs.xh.daLuu" />
     </div>
   );
 }
@@ -50,17 +53,17 @@ function SuaTen({ ho, doi }) {
   const s = dungLuu((khach) => { datTen(khach.ten ?? ten.trim()); doi(khach); });
   return (
     <div className="card pf-card">
-      <div className="tt">Thông tin</div>
+      <Chu k="hs.ten.t" as="div" className="tt" />
       <div className="pf-row">
-        <label htmlFor="ten-toi">Họ và tên</label>
-        <input id="ten-toi" value={ten} onChange={(e) => { datTen(e.target.value); s.boXong(); }} />
+        <Chu k="hs.ten.nhan" as="label" htmlFor="ten-toi" />
+        <input id="ten-toi" {...ndDau('hs.khach')} value={ten} onChange={(e) => { datTen(e.target.value); s.boXong(); }} />
       </div>
-      <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang || !ten.trim()} onClick={() => s.luu({ ten: ten.trim() })}>Lưu tên</button></div>
-      <Bao s={s} chu="Đã lưu tên" />
+      <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang || !ten.trim()} onClick={() => s.luu({ ten: ten.trim() })} {...ndDau('hs.ten.nut')}>{nd('hs.ten.nut')}</button></div>
+      <Bao s={s} chu="hs.ten.daLuu" />
       <div className="pf-row">
-        <label>Số điện thoại</label>
-        <div className="pf-lock">{cheSdt(ho.sdt)}</div>
-        <small>Dùng để đăng nhập</small>
+        <Chu k="hs.sdt.nhan" as="label" />
+        <div className="pf-lock" {...ndDau('hs.khach')}>{cheSdt(ho.sdt)}</div>
+        <Chu k="hs.sdt.phu" as="small" />
       </div>
     </div>
   );
@@ -78,28 +81,28 @@ function NgaySinh({ ho, doi }) {
   const daCo = hienNgaySinh(ho.ngay_sinh);
   return (
     <div className="card pf-card">
-      <div className="tt">Ngày sinh</div>
+      <Chu k="hs.ns.t" as="div" className="tt" />
       {daCo ? (
         <>
-          <div className="pf-lock pf-ns-xem">{daCo}</div>
-          <div className="pf-note">Cần sửa? Mang căn cước đến quầy để nhân viên sửa.</div>
+          <div className="pf-lock pf-ns-xem" {...ndDau('hs.khach')}>{daCo}</div>
+          <Chu k="hs.ns.suaQuay" as="div" className="pf-note" />
         </>
       ) : hoi ? (
         <div className="pf-xn">
-          <div className="pf-note">Ngày sinh {hienNgaySinh(v)} — sau khi lưu bạn không tự sửa được. Lưu?</div>
-          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang} onClick={gui}>Lưu</button><button type="button" className="hq-b ghost" onClick={() => datHoi(false)}>Sửa lại</button></div>
+          <div className="pf-note" {...ndDau('hs.ns.hoi')}>{nd('hs.ns.hoi', { ngay: hienNgaySinh(v) })}</div>
+          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang} onClick={gui} {...ndDau('hs.ns.luu')}>{nd('hs.ns.luu')}</button><button type="button" className="hq-b ghost" onClick={() => datHoi(false)} {...ndDau('hs.ns.suaLai')}>{nd('hs.ns.suaLai')}</button></div>
         </div>
       ) : (
         <>
           <div className="pf-row">
-            <label htmlFor="ngay-sinh">Ngày sinh</label>
+            <Chu k="hs.ns.nhan" as="label" htmlFor="ngay-sinh" />
             <input id="ngay-sinh" type="date" max={homNay} value={v} onChange={(e) => { datV(e.target.value); s.boXong(); }} />
-            <small>Nhập đúng như căn cước — quán đối chiếu khi áp ưu đãi sinh nhật. Chỉ nhập được một lần.</small>
+            <Chu k="hs.ns.goiY" as="small" />
           </div>
-          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang || !hopLe} onClick={() => datHoi(true)}>Lưu</button></div>
+          <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang || !hopLe} onClick={() => datHoi(true)} {...ndDau('hs.ns.luu')}>{nd('hs.ns.luu')}</button></div>
         </>
       )}
-      <Bao s={s} chu="Đã lưu ngày sinh" />
+      <Bao s={s} chu="hs.ns.daLuu" />
     </div>
   );
 }
@@ -109,14 +112,14 @@ function DiaChi({ ho, doi }) {
   const s = dungLuu((khach) => { datDc(khach.dia_chi || ''); doi(khach); });
   return (
     <div className="card pf-card">
-      <div className="tt">Giao hàng</div>
+      <Chu k="hs.dc.t" as="div" className="tt" />
       <div className="pf-row">
-        <label htmlFor="dia-chi-toi">Địa chỉ nhận hàng</label>
-        <input id="dia-chi-toi" autoComplete="street-address" maxLength={DIA_CHI_TOI_DA} value={dc} onChange={(e) => { datDc(e.target.value); s.boXong(); }} />
-        <small>Địa chỉ này dùng chung với quầy và được in trên hoá đơn. Để trống rồi lưu là xoá địa chỉ.</small>
+        <Chu k="hs.dc.nhan" as="label" htmlFor="dia-chi-toi" />
+        <input id="dia-chi-toi" autoComplete="street-address" maxLength={DIA_CHI_TOI_DA} {...ndDau('hs.khach')} value={dc} onChange={(e) => { datDc(e.target.value); s.boXong(); }} />
+        <Chu k="hs.dc.goiY" as="small" />
       </div>
-      <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang} onClick={() => s.luu({ dia_chi: dc.trim() })}>Lưu địa chỉ</button></div>
-      <Bao s={s} chu="Đã lưu địa chỉ" />
+      <div className="hq-btns"><button type="button" className="hq-b" disabled={s.dang} onClick={() => s.luu({ dia_chi: dc.trim() })} {...ndDau('hs.dc.nut')}>{nd('hs.dc.nut')}</button></div>
+      <Bao s={s} chu="hs.dc.daLuu" />
     </div>
   );
 }
@@ -127,7 +130,7 @@ export default function HoSo({ lui }) {
   const doi = (k) => gopToi(cuaToi, k); // hồ sơ POS vừa trả → gộp vào kho chung: thẻ xem trước, Trang chủ, Tài khoản đổi theo, không gọi lại
   return (
     <Man id="profile">
-      <DauManCon canTrai tieuDe="Thông tin cá nhân" phu="Xưng hô, tên, địa chỉ và mã PIN" lui={lui} />
+      <DauManCon canTrai tieuDe={nd('hs.tieuDe')} phu={nd('hs.phu')} lui={lui} />
       <TrangTai tai={tai}>
         {({ khach: ho }) => (
           <>
@@ -136,11 +139,11 @@ export default function HoSo({ lui }) {
             <NgaySinh ho={ho} doi={doi} />
             <DiaChi ho={ho} doi={doi} />
             <div className="card pf-card">
-              <div className="tt">Bảo mật</div>
+              <Chu k="hs.bm.t" as="div" className="tt" />
               <div className="pf-link" role="button" tabIndex={0} onClick={() => datMoPin(true)} onKeyDown={(e) => { if (e.key === 'Enter') datMoPin(true); }}>
-                <Ico ten="card" s={16} /> <span>Mã PIN<small>4 số · đặt hoặc đổi mã PIN của bạn</small></span><b>Đặt / đổi ›</b>
+                <Ico ten="card" s={16} /> <span><Chu k="hs.pin.t" /><Chu k="hs.pin.phu" as="small" /></span><Chu k="hs.pin.nut" as="b" />
               </div>
-              <div className="pf-note">Nhân viên quán không xem được mã PIN của bạn.</div>
+              <Chu k="hs.pin.ghiChu" as="div" className="pf-note" />
             </div>
           </>
         )}
