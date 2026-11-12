@@ -93,3 +93,5 @@ Việc không đụng tiền / bảo mật (chuyển chữ, giao diện một m�
 - NGUYÊN TẮC (đề xuất): bài thử không nên đọc nguồn bằng regex CHỮ trong JSX (`<div className="tt">Ngày sinh</div>`, `CHU.daLuuToast`) — vỡ mỗi lần chuyển chữ (9 bài phải sửa lần này); kiểm theo KHOÁ (`<Chu k="hs.ns.t" …>`) và để bài danh mục kiểm chữ.
 - BỎ: lệnh bị người gác chặn (`sed -i`, vòng `for`, ghép `python3 … && node`, `cp -r` / `git add` thư mục, `pgrep`, `Monitor until`) — chỉ làm lại lệnh, không phải lỗi mã; bài thử có cụm TOKEN phải commit trước khi chạy (đã có trong skill). Bài thử Chromium ban đầu đỏ vì không nạp CSS (`loader '.css': 'empty'`) → ca đo kích thước dùng bó CSS như `thu_KHUI5g` (một lần, đã ghi trong bài). `kiemDanhMuc` bắt khoá `qr.aria` trùng với khoá của 3e — phép kiểm có sẵn làm đúng việc.
 - Dọn `KHUON_LOI.md` / `CLAUDE.md`: không đề xuất xoá (chưa có phép kiểm thay).
+
+HEAD ĐÃ KIỂM: 9ce1f75
