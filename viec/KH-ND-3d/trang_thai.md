@@ -86,3 +86,5 @@ CHƯA SOÁT ĐƯỢC (theo agent): ca Chromium, chạy cổng, so ảnh pixel.
 - NGUYÊN TẮC (đề xuất): `bien` của mục chữ bắt buộc khớp đúng chỗ `{…}`: bản giả thiếu chỗ điền bị bỏ nên bài thử đổi bài khấn phải giữ đủ 6 chỗ; ví dụ phiếu " VNĐ" vượt `toiDa` 3 — kiểm ví dụ của phiếu với `toiDa` trước khi viết ca.
 - BỎ: lệnh bị người gác chặn (`sed -i`, ghép `python3 … && node`, `for`, `git add` thư mục, `$VAR` làm đích ghi) — chỉ làm lại; sai chỗ gắn `data-nd` thành `<span>` lồng làm vỡ bài thử cũ → chuyển `data-nd` lên phần tử cha.
 - Dọn: không đề xuất xoá lời dặn nào.
+
+HEAD ĐÃ KIỂM: 197f142
