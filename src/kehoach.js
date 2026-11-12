@@ -6,7 +6,7 @@ import { LUNAR, TERM_TIPS } from './lich.js';
 import { nd } from './noiDung/nd.js';
 import { SOLAR_HOL, LUNAR_HOL, SEASON, WD } from './noiDung/keHoach.js';
 import { docNgay, ngayChuoi, viecNgay, cacLan, daXongLan as daXong, jd as jdNgay, chuoiJd, GIO_RE, HAN_NHAC, LAN_XONG_TOI_DA, chuNhac, nhacTuPhut, gioPhut, amSangDuong, ngayKeTiep, soNgayThang, lichAm, jdChuoi, LOAI_XE, CHU_KY, lichTheoLoai, sapHang, trangThaiHang, trangThaiGiay, homNayThuoc, bayNgayThuoc, chuKyHomNay, trangThaiXe, chuHang, chuGiay, gioThuocChuaUong, chuKyTrong } from './kehoachLap.js';
-export { chuHang, chuGiay, chuLich, chuXe, gioThuocChuaUong, chuKyTrong, batChuKy, tatChuKy, ghiKyMoi, doiDaiChuKy, doiHanhChuKy, doiNhacChuKy, datKhoaChuKy, datThuChuKy, taoKhoa, kiemKhoa, thuMa, conChoGiay, SAI_TOI_DA, CHO_GIAY } from './kehoachLap.js';
+export { chuHang, chuGiay, chuLich, chuXe, gioThuocChuaUong, chuKyTrong, batChuKy, tatChuKy, ghiKyMoi, doiDaiChuKy, doiHanhChuKy, doiNhacChuKy } from './kehoachLap.js';
 import { VK, MA_DIP } from './noiDung/vanKhan.js';
 import { vkNext, dipSapXep, tenNganDip } from './vanKhan.js';
 
@@ -141,9 +141,9 @@ export function upList(homNay, bang, xung) {
   });
   const gioChuaUong = gioThuocChuaUong(bang, tj);
   gioChuaUong.forEach((g) => out.push({ j: tj, t: nd('thuoc.nhacTieu'), s: g, k: nd('ti.tagThuoc'), di: 'thuoc' }));
-  if (bang.chuKy.bat && coChuKy(xung)) { // C4: khoá thì KHÔNG nêu nội dung
-    const n = chuKyHomNay(bang.chuKy, tj), khoa = !!bang.chuKy.khoa;
-    if (n.nextJ <= cuoi && n.nextJ >= tj) out.push({ j: n.nextJ, t: nd(khoa ? 'chuky.sapToiRieng' : 'chuky.sapToi'), s: khoa ? '' : nd('chuky.sapToiPhu', { so: bang.chuKy.dai }), k: nd(khoa ? 'ti.tagRieng' : 'ti.tagChuKy'), di: 'chuky' });
+  if (bang.chuKy.bat && coChuKy(xung)) {
+    const n = chuKyHomNay(bang.chuKy, tj);
+    if (n.nextJ <= cuoi && n.nextJ >= tj) out.push({ j: n.nextJ, t: nd('chuky.sapToi'), s: nd('chuky.sapToiPhu', { so: bang.chuKy.dai }), k: nd('ti.tagChuKy'), di: 'chuky' });
   }
   return out.sort((a, b) => a.j - b.j);
 }
@@ -164,8 +164,8 @@ export function chuThich(id, homNay, bang) {
     return bang.xe.length ? nd('xe.badgeCo', { xe: bang.xe.length, them: n ? nd('xe.badgeSap', { so: n }) : nd('xe.badgeOn') }) : nd('xe.badgeTrong');
   }
   if (id === 'thuoc') { const t = homNayThuoc(bang, jd(homNay)); return t.all ? nd('thuoc.badge', { xong: t.done, tong: t.all }) : nd('thuoc.badgeTrong'); }
-  const ck = bang.chuKy; // 'chuky': khoá thì KHÔNG hiện số ngày
-  return !ck.bat ? nd('chuky.badgeBat') : ck.khoa ? nd('chuky.badgeKhoa') : nd('chuky.badgeNgay', { so: chuKyHomNay(ck, jd(homNay)).day });
+  const ck = bang.chuKy; // 'chuky'
+  return !ck.bat ? nd('chuky.badgeBat') : nd('chuky.badgeNgay', { so: chuKyHomNay(ck, jd(homNay)).day });
 }
 
 // ----- LƯU TRÊN MÁY (D1) -----
@@ -269,13 +269,11 @@ function thuocXongDoc(o) {
 }
 function chuKyDoc(c) {
   if (!c || typeof c !== 'object' || c.bat !== true || !docNgay(c.bd)) return chuKyTrong();
-  const ck = chuKyTrong(), k = c.khoa;
+  const ck = chuKyTrong(); // khoa / thu của bản lưu cũ (khoá mã đã bỏ 11.11) → bỏ qua
   ck.bat = true; ck.bd = c.bd; ck.nhac = c.nhac !== false;
   if (so(c.dai, ...CHU_KY.dai)) ck.dai = c.dai;
   if (so(c.hanh, ...CHU_KY.hanh)) ck.hanh = c.hanh;
   ck.ls = (Array.isArray(c.ls) ? c.ls : []).filter((n) => so(n, 10, 120)).slice(-CHU_KY.toiDaLs);
-  if (k && typeof k === 'object' && /^[0-9a-f]{32}$/.test(k.muoi) && /^[0-9a-f]{64}$/.test(k.bam)) ck.khoa = { muoi: k.muoi, bam: k.bam };
-  if (c.thu && so(c.thu.sai, 0, 99) && so(c.thu.den, 0, 9e15)) ck.thu = { sai: c.thu.sai, den: c.thu.den };
   return ck;
 }
 
