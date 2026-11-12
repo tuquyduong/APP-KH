@@ -2,7 +2,6 @@
 // Không import tệp nào nhập src/dinhDang.js (dinhDang → nd.js → danh mục): vòng nạp làm sập khi nạp danh mục trước (bài thử thu_KHND3a canh).
 // Khối demo chưa có ở App (Video hướng dẫn home.guide, Mời bạn bè home.ref) KHÔNG khai — xem viec/KH-ND-3a/doi_chieu_demo.md.
 import { NHU_CAU } from '../nhuCau.js';
-import { O_TRAC_NGHIEM } from '../tracNghiemChu.js';
 
 const M = 'Trang chủ';
 const chu = (khoa, ten, macDinh, them = {}) => ({ khoa, man: M, ten, loai: 'chu', macDinh, ...them });
@@ -49,10 +48,10 @@ export const TRANG_CHU = [
   chu('home.gv.cuoi', 'Ô Giờ vàng: sắp chạy', '{so} món cuối ngày', { bien: ['so'] }),
   khoa('home.gv.so', 'Phần trăm giảm, số món, giờ của Giờ vàng', 'pos', 'POS › Giờ vàng'),
   { khoa: 'home.q.anh', man: M, ten: 'Ô Trắc nghiệm: hình', loai: 'anh', macDinh: '/anh/the-chat-scale.svg', tiLe: '1:1' },
-  chu('home.qk', 'Ô Trắc nghiệm: nhãn', O_TRAC_NGHIEM.nhan),
-  chu('home.qh', 'Ô Trắc nghiệm: câu hỏi', O_TRAC_NGHIEM.hoi),
-  chu('home.q.kq', 'Ô Trắc nghiệm: nhãn khi đã có kết quả', O_TRAC_NGHIEM.ketQua),
-  chu('home.q.xem', 'Ô Trắc nghiệm: dòng mở kết quả', O_TRAC_NGHIEM.xemKetQua),
+  chu('home.qk', 'Ô Trắc nghiệm: nhãn', 'Trắc nghiệm'),
+  chu('home.qh', 'Ô Trắc nghiệm: câu hỏi', 'Bạn thuộc thể chất nào?'),
+  chu('home.q.kq', 'Ô Trắc nghiệm: nhãn khi đã có kết quả', 'Thể trạng'),
+  chu('home.q.xem', 'Ô Trắc nghiệm: dòng mở kết quả', 'Xem kết quả ›'),
   // Chăm sóc theo nhu cầu
   chu('home.needs', 'Tiêu đề mục Chăm sóc theo nhu cầu', 'Chăm sóc theo nhu cầu'),
   {

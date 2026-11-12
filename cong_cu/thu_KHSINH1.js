@@ -56,7 +56,7 @@ const TEN_DAI = 'Nguyễn Thị Phương Linh Trần Hoàng Bảo Anh Khôi Nguy
 
   await thu('A', async () => {
     const hs = doc('src/pages/HoSo.jsx');
-    k('A1 thẻ "Ngày sinh" khuôn `card pf-card` trong HoSo.jsx, đặt sau <SuaTen>', /<div className="tt">Ngày sinh<\/div>/.test(hs) && hs.indexOf('<SuaTen') < hs.indexOf('<NgaySinh') && hs.indexOf('<NgaySinh') > 0);
+    k('A1 thẻ "Ngày sinh" khuôn `card pf-card` trong HoSo.jsx, đặt sau <SuaTen>', /<Chu k="hs\.ns\.t" as="div" className="tt" \/>/.test(hs) && hs.indexOf('<SuaTen') < hs.indexOf('<NgaySinh') && hs.indexOf('<NgaySinh') > 0);
     k('A3 gửi `suaHoSo({ ngay_sinh` riêng (không gộp khoá khác)', /luu\(\{ ngay_sinh: [a-zA-Z.]+ \}\)/.test(hs));
     k('A4 xử lý mã NGAY_SINH_DA_CO (đọc lại /toi)', /NGAY_SINH_DA_CO/.test(hs) && /lamMoi\(\[cuaToi\]\)/.test(hs));
     k('A8 chú thích đầu không còn "ngày sinh" trong danh sách Bỏ', !/Bỏ:[^\n]*ngày sinh/.test(hs));

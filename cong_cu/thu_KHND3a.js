@@ -212,7 +212,7 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
       k('C2 ha_no_chu.js KHÔNG BAO GIỜ nâng: tệp tăng giữ số cũ, tệp mới không được thêm dòng', no3['src/pages/HoTro.jsx'] === no2['src/pages/HoTro.jsx'] && !('src/components/TepMoi.jsx' in no3) && /✗ K10/.test(K10()));
       fs.writeFileSync(path.join(tam, 'src/pages/HoTro.jsx'), 'export default () => null;\n');
       spawnSync(process.execPath, [path.join(tam, 'cong_cu/ha_no_chu.js')], { cwd: tam, encoding: 'utf8' });
-      k('C2 tệp hết chữ → xoá dòng trong số nợ', !('src/pages/HoTro.jsx' in (H.docNo(tam) || {})));
+      k('C2 (KH-ND-3c C3) tệp hết chữ → GIỮ dòng với số 0 (không xoá — hai việc song song cùng hạ tệp kề nhau không xung đột), K10 vẫn xanh', (H.docNo(tam) || {})['src/pages/HoTro.jsx'] === 0 && !/HoTro/.test(K10()), K10()); // (TepMoi.jsx còn nằm trong bản chép từ ca trên nên K10 chung vẫn đỏ vì nó — chỉ HoTro.jsx phải sạch)
     } catch (e) { k('C2 ca bộ kiểm trên bản chép dừng giữa chừng', false, String(e && e.message).split('\n')[0]); } finally { fs.rmSync(tam, { recursive: true, force: true }); }
     const txt = doc('cong_cu/no_chu_cung.txt');
     const dong = txt.split('\n');
@@ -231,7 +231,8 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     }
     k('C1 đối chứng: không dòng chữ có dấu nào (ngoài chú thích / regex) bị bộ đếm bỏ sót', sot.length === 0, sot.slice(0, 8).join(', '));
     const dem = H.demTatCa(GOC);
-    k('C1 số nợ khớp số đếm hiện tại', JSON.stringify(dem) === JSON.stringify(H.docNo(GOC)));
+    const noHT = H.docNo(GOC) || {}; // dòng số 0 (tệp đã hết chữ) được giữ: so theo từng tệp, thiếu = 0
+    k('C1 số nợ khớp số đếm hiện tại (dòng số 0 được giữ)', [...new Set([...Object.keys(dem), ...Object.keys(noHT)])].every((f) => (dem[f] || 0) === (noHT[f] || 0)));
     const bk = doc('kiem_tra_truoc_khi_giao.js');
     k('C2 K10 nằm trong kiem_tra_truoc_khi_giao.js', /K10/.test(bk) && /ha_no_chu/.test(bk));
     console.log('Phần 1 — D. Chuyển mẫu');
@@ -239,7 +240,7 @@ const SECS_APP = ['home.member', 'home.cal', 'home.hb', 'home.gv', 'home.quiz', 
     k('D1 các tệp đã chuyển không còn chữ tiếng Việt viết thẳng (trừ dinhDang.js — phiếu chỉ chuyển lời báo lỗi / lời chào)', conChu.filter((x) => !x.startsWith('src/dinhDang.js')).length === 0, conChu.join(', '));
     const dd = doc('src/dinhDang.js').replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '');
     const chuoiDD = [...dd.matchAll(/'[^'\n]*'|`[^`]*`/g)].map((m) => m[0]).filter((x) => H.demChuCung(x) > 0);
-    k('D1 dinhDang.js: lời báo lỗi + lời chào đã ra danh mục; chỉ còn đơn vị "đ" và "giảm …" (định dạng giá)', chuoiDD.length > 0 && chuoiDD.every((x) => x === "'đ'" || /^`giảm /.test(x)), chuoiDD.join(' | '));
+    k('D1 dinhDang.js: lời báo lỗi, lời chào, đơn vị "đ" và "giảm …" đều đã ra danh mục (KH-ND-3c: gia.donVi, gia.giam) — không còn chữ cứng nào', chuoiDD.length === 0 && /nd\('gia\.donVi'\)/.test(dd) && /nd\('gia\.giam'/.test(dd), chuoiDD.join(' | '));
   } else k('C1 cong_cu/ha_no_chu.js xuất demChuCung', false);
   k('D1 noiDung/trangChu.js cũ đã gộp vào danh mục (bỏ tệp)', !co('src/noiDung/trangChu.js'));
   const boChuThich = (t) => t.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '');

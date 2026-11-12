@@ -1,5 +1,5 @@
 /* KH-UI-5d / KH-UI-5g — dải quảng cáo mảnh (chủ quán chọn kiểu A, 11.11.2026; KHÔNG có trong demo). Mọi giá trị chép từ demo `.today` / `.today.photo .gl-a` / `.t-k` / `.t-cta`.
-   Vệt sáng + chữ loé dùng lớp .fx-a / .gl* của demo (demo_1.css, demo_2.css; prefers-reduced-motion tắt luôn) và bộ đo components/anhSangLuot.js. Dải nằm trong luồng trang, không dính. */
+   Vệt sáng + chữ loé dùng lớp .fx-a / .gl* của demo (demo_1.css, demo_2.css; demo_2.css tắt khi `prefers-reduced-motion`, nhưng giaoDien.css ghi đè: vệt sáng LUÔN chạy — KH-ND-3c C4, chủ quán 12.11) và bộ đo components/anhSangLuot.js. Dải nằm trong luồng trang, không dính. */
 .dai-qc{ position:relative; overflow:hidden; isolation:isolate; display:flex; align-items:center; gap:8px; height:40px; margin:12px 18px 0; padding:0 10px; border-radius:12px;
   background:linear-gradient(125deg,#8E1B4C 0%,#B2365F 55%,#C8784A 100%); box-shadow:0 4px 12px rgba(142,27,76,.22); color:#fff; }
 .dai-qc[role="button"]{ cursor:pointer; }

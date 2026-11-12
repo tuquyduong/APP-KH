@@ -1,5 +1,6 @@
-// Chữ của màn Đăng nhập / Đăng ký (3 bước) và thẻ mời cho khách chưa đăng nhập. Chữ ở đây, không rải trong trang.
+// Màn Đăng nhập / Đăng ký (3 bước): mã máy (cách xưng hô, độ dài địa chỉ, giây chờ). Mọi chữ khách thấy ở danh mục nội dung (src/noiDung/nd/taiKhoan.js, khoá dn.*).
 import { cheSdt } from '../dinhDang.js';
+import { nd } from './nd.js';
 
 // Cách xưng hô: hiện chữ có dấu, GỬI mã không dấu (hợp đồng v3). Địa chỉ nhận hàng tối đa DIA_CHI_TOI_DA ký tự.
 export const XUNG_HO = [
@@ -11,23 +12,9 @@ export const tenXungHo = (ma) => (XUNG_HO.find((x) => x.ma === ma) || { ten: '' 
 export const DIA_CHI_TOI_DA = 300;
 export const GIAY_CHO_GUI_LAI = 60; // "Gửi lại mã" mở sau ngần này giây
 
-export const BUOC_SDT = { tieuDe: 'Đăng nhập / Đăng ký', phu: 'Nhận mã đăng nhập qua Zalo', nut: 'Tiếp tục' };
-export const BUOC_MA = { tieuDe: 'Nhập mã', nut: 'Xác nhận', guiLai: 'Gửi lại mã', doiSo: 'Đổi số điện thoại', hetHan: 'Mã đã hết hạn' };
-export const BUOC_THONG_TIN = {
-  tieuDe: 'Thông tin của bạn',
-  ten: 'Tên', xungHo: 'Cách xưng hô', diaChi: 'Địa chỉ nhận hàng (không bắt buộc)',
-  ghiChuDiaChi: 'Dùng làm địa chỉ giao hàng mặc định khi bạn đặt online; sửa được trong Tài khoản.',
-  nut: 'Hoàn tất', quayLai: 'Quay lại',
-};
-export const DONG_MA_HOA_DON = 'Đăng nhập để nhận điểm cho hoá đơn này';
-
-// Thẻ mời ở Trang chủ: danh mục nội dung home.moi.* (src/noiDung/nd/trangChu.js — KH-ND-3a).
-// Khối khoá ở Ưu đãi cho khách vãng lai (điểm, ví, voucher là của riêng khách).
-export const THE_MOI_UU_DAI = { tieuDe: 'Điểm, ví và voucher', phu: 'Đăng nhập để xem điểm, ví và voucher', nut: 'Đăng nhập' };
-
 /** Dòng trên ô nhập mã: POS bật Zalo → "đã gửi qua Zalo tới số …"; POS báo lấy mã ở quầy → hỏi nhân viên. SĐT quá ngắn thì không hiện số (không bịa). */
 export function loiMa(taiQuay, sdt) {
-  if (taiQuay) return 'Hỏi nhân viên quầy để lấy mã đăng nhập';
+  if (taiQuay) return nd('dn.ma.quay');
   const che = cheSdt(sdt);
-  return che ? `Mã đã gửi qua Zalo tới số ${che}` : 'Mã đã gửi qua Zalo tới số điện thoại của bạn';
+  return che ? nd('dn.ma.zalo', { sdt: che }) : nd('dn.ma.zaloChung');
 }

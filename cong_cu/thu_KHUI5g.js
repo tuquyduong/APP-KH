@@ -84,6 +84,9 @@ const duyet = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).
   const loi = ND && DM ? ND.kiemDanhMuc(DM.DANH_MUC || []) : ['không nạp được danh mục'];
   k('E4 danh mục hợp lệ (kiemDanhMuc) sau khi thêm khoá qc.* và bỏ home.b*', loi.length === 0, loi.slice(0, 3).join(' | '));
   k('K9 CSS dải: mọi màu #hex có trong demo', (css.match(/#[0-9A-Fa-f]{6}\b/g) || []).every((h) => doc('src/giaoDien/demo_1.css').toLowerCase().includes(h.toLowerCase()) || doc('src/giaoDien/demo_2.css').toLowerCase().includes(h.toLowerCase())));
+  const gd = doc('src/giaoDien/giaoDien.css'), mm = gd.lastIndexOf('@media (prefers-reduced-motion:reduce)') >= 0 ? /\{([\s\S]*)\}\s*$/.exec(gd.slice(gd.lastIndexOf('@media (prefers-reduced-motion:reduce)'))) : null;
+  k('A2 (C4) giaoDien.css ghi đè prefers-reduced-motion: .fx-a chạy sweepP, .fx-a::before chạy sweepL, cùng var(--dur), !important — và CHỈ hai lớp đó', !!mm && /\.fx-a\{ animation:sweepP var\(--dur\) linear infinite !important; \}/.test(mm[1]) && /\.fx-a::before\{ animation:sweepL var\(--dur\) linear infinite !important; \}/.test(mm[1]) && (mm[1].match(/\{/g) || []).length === 2, mm ? mm[1] : 'không thấy khối @media ở cuối giaoDien.css');
+  k('A2 (C4) chú thích đầu dai_quang_cao.css không còn nói "tắt luôn" khi reduce', !/prefers-reduced-motion tắt luôn/.test(doc('src/giaoDien/dai_quang_cao.css')) && /LUÔN chạy/.test(doc('src/giaoDien/dai_quang_cao.css')));
   k('A2 không sửa CSS chép từ demo: demo_1.css / demo_2.css còn luật .fx-a .gl-t, .gl-a, prefers-reduced-motion', /\.fx-a \.gl-t\{/.test(doc('src/giaoDien/demo_1.css')) && /\.fx-a \.gl-a\{/.test(doc('src/giaoDien/demo_2.css')) && /prefers-reduced-motion/.test(doc('src/giaoDien/demo_2.css')));
 
   console.log('Phần 2 — App thật trong Chromium');
@@ -196,11 +199,19 @@ async function trinhDuyet(pw) {
     k('E1 Trang chủ: vệt sáng chạy (--p đổi sau 500 ms); mọi .gl có --ox; có nút gl-b', p1 !== '' && p1 !== p2 && o.ox && o.nut, `${p1} → ${p2} ${JSON.stringify(o)}`);
   });
   await ca('giảm chuyển động', { giam: true }, async (t) => {
+    // KH-ND-3c C4 (chủ quán 12.11): vệt sáng LUÔN chạy, kể cả máy bật "giảm chuyển động"
     await mo(t, '/menu'); await t.locator('.dai-qc').waitFor();
     const a = await t.evaluate(() => getComputedStyle(document.querySelector('.dai-qc')).animationName);
+    const a1 = await t.evaluate(() => getComputedStyle(document.querySelector('.dai-qc')).getPropertyValue('--p'));
+    await t.waitForTimeout(500);
+    const a2 = await t.evaluate(() => getComputedStyle(document.querySelector('.dai-qc')).getPropertyValue('--p'));
     await t.goto(GOC_URL + '/trangchu'); await t.locator('.today.fx-a').waitFor();
     const b = await t.evaluate(() => getComputedStyle(document.querySelector('.today.fx-a')).animationName);
-    k('A2 prefers-reduced-motion: reduce → animation-name none ở dải và banner', a === 'none' && b === 'none', `${a} / ${b}`);
+    const b1 = await t.evaluate(() => getComputedStyle(document.querySelector('.today.fx-a')).getPropertyValue('--p'));
+    await t.waitForTimeout(500);
+    const b2 = await t.evaluate(() => getComputedStyle(document.querySelector('.today.fx-a')).getPropertyValue('--p'));
+    const c = await t.evaluate(() => getComputedStyle(document.querySelector('.today.fx-a'), '::before').animationName);
+    k('A2 (C4) prefers-reduced-motion: reduce → vệt sáng VẪN chạy ở dải và banner (sweepP, --p đổi giữa hai lần đọc; ::before sweepL)', a === 'sweepP' && b === 'sweepP' && c === 'sweepL' && a1 !== a2 && b1 !== b2, `${a} ${a1}→${a2} / ${b} ${b1}→${b2} / ${c}`);
   });
   await trinh.close();
 }

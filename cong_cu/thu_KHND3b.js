@@ -24,7 +24,7 @@ const A1 = {
   'src/pages/Menu.jsx': 0, 'src/pages/TrangMon.jsx': 0, 'src/pages/GioHang.jsx': 0, 'src/pages/MonTheoDuong.jsx': 0, 'src/pages/KhongTimThay.jsx': 0,
   'src/components/MonO.jsx': 0, 'src/components/GvDem.jsx': 0, 'src/gioVang.js': 0, 'src/menuLoc.js': 0, 'src/gioHoatDong.js': 0,
   'src/components/GiaMon.jsx': 1, // `.replace('đ', '')`: ký hiệu tiền tệ của dinhDangGia để bỏ đuôi ở cột bậc giá — chữ máy, không hiện ra
-  'src/giaHang.js': 3, // CHU_HANG_TANG, CHU_KHONG_THOI_HAN, dongGoi ("N tháng — giá"): chỉ màn Ưu đãi (src/pages/UuDai.jsx, ngoài Phạm vi KH-ND-3b) đọc → để việc Ưu đãi chuyển
+  'src/giaHang.js': 0, // KH-ND-3c: CHU_HANG_TANG, CHU_KHONG_THOI_HAN, dongGoi chuyển hết sang danh mục (ud.hang.*)
 };
 const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
 
@@ -62,7 +62,7 @@ const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
   let H = {};
   try { H = require(tep('cong_cu/ha_no_chu.js')); } catch { /* thiếu */ }
   const conChu = Object.keys(A1).filter((f) => H.demChuCung(doc(f)) !== A1[f]).map((f) => `${f} (${H.demChuCung(doc(f))}, phép ${A1[f]})`);
-  k(`C1 ${Object.keys(A1).length} tệp A1: số chữ cứng = 0 (trừ chữ máy: GiaMon 'đ' = 1, giaHang của màn Ưu đãi = 3)`, typeof H.demChuCung === 'function' && conChu.length === 0, conChu.join(', '));
+  k(`C1 ${Object.keys(A1).length} tệp A1: số chữ cứng = 0 (trừ chữ máy: GiaMon 'đ' = 1)`, typeof H.demChuCung === 'function' && conChu.length === 0, conChu.join(', '));
   const dung = new Set(), thieu = [];
   for (const f of [...Object.keys(A1), 'src/noiDung/nd/menu.js']) {
     const nguon = boChuThich(doc(f));

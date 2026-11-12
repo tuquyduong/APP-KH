@@ -5,9 +5,10 @@ import { dungCua, cuaDiem, cuaToi, cuaVoucher, lamMoi } from '../duLieuKhach.js'
 import { dungGia } from '../heThong.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
-import { hangCoGiam, laHangChiCap, dongGoi, CHU_HANG_TANG, CHU_KHONG_THOI_HAN } from '../giaHang.js';
+import { hangCoGiam, laHangChiCap, dongGoi } from '../giaHang.js';
 import { dinhDangGia, dinhDangNgay, dinhDangSo, moTaGiam } from '../dinhDang.js';
-import { THE_MOI_UU_DAI } from '../noiDung/dangNhap.js';
+import { nd, ndPhan, ndAnh, ndDau } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import NhanMa from '../components/NhanMa.jsx';
@@ -23,18 +24,18 @@ import '../giaoDien/hang.css';
 // Ưu đãi theo demo (rewards): banner Giờ vàng, thẻ hạng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
 // Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
 //   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
-const LOAI_DIEM = { earn: 'Tích điểm', redeem: 'Đổi điểm' };
-const TRANG_THAI_VOUCHER = { used: 'Đã dùng', expired: 'Hết hạn' };
+const LOAI_DIEM = { earn: 'ud.loai.earn', redeem: 'ud.loai.redeem' }; // loại → khoá nội dung
+const TRANG_THAI_VOUCHER = { used: 'ud.voucher.daDung', expired: 'ud.voucher.hetHan' };
 const dau = (n) => (n > 0 ? `+${n}` : String(n));
 
-function TheVoucher({ ten, ma, loai, giaTri, toiThieu, han, nhan }) {
-  const phu = [ma, moTaGiam(loai, giaTri), toiThieu > 0 && `đơn từ ${dinhDangGia(toiThieu)}`, han && `hạn dùng đến ${dinhDangNgay(han)}`].filter(Boolean).join(' · ');
+function TheVoucher({ ten, khoaTen, ma, loai, giaTri, toiThieu, han, nhan, khoaNhan }) {
+  const phu = [ma, moTaGiam(loai, giaTri), toiThieu > 0 && nd('ud.voucher.donTu', { gia: dinhDangGia(toiThieu) }), han && nd('ud.voucher.han', { ngay: dinhDangNgay(han) })].filter(Boolean).join(' · ');
   return (
     <div className="voucher">
       <div className="strip" />
       <div className="body">
-        <div><div className="t">{ten || 'Mã giảm giá'}</div><div className="s">{phu}</div></div>
-        {nhan && <div className="use">{nhan}</div>}
+        <div><div className="t" {...ndDau(khoaTen || (ten ? 'ud.khach' : 'ud.voucher.tenChung'))}>{ten || nd('ud.voucher.tenChung')}</div><div className="s" {...ndDau('ud.khach')}>{phu}</div></div>
+        {nhan && <div className="use" {...ndDau(khoaNhan)}>{nhan}</div>}
       </div>
     </div>
   );
@@ -52,12 +53,12 @@ function DanhSachVoucher({ tai }) {
         const dung = dl.data; // không `?all`: POS chỉ trả mã còn dùng; `?all`: thêm mã đã dùng / hết hạn (nhãn)
         return (
           <>
-            {dl.ma_khach_moi.length === 0 && dung.length === 0 && <div className="empty-note">Bạn chưa có voucher nào.</div>}
+            {dl.ma_khach_moi.length === 0 && dung.length === 0 && <Chu k="ud.voucher.chua" as="div" className="empty-note" />}
             {dl.ma_khach_moi.map((v) => (
-              <TheVoucher key={v.code} ten="Ưu đãi khách mới" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} />
+              <TheVoucher key={v.code} ten={nd('ud.voucher.khachMoi')} khoaTen="ud.voucher.khachMoi" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} />
             ))}
             {dung.map((v) => (
-              <TheVoucher key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status]} />
+              <TheVoucher key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status] ? nd(TRANG_THAI_VOUCHER[v.status]) : undefined} khoaNhan={TRANG_THAI_VOUCHER[v.status]} />
             ))}
           </>
         );
@@ -73,17 +74,15 @@ function BannerGioVang({ mo }) {
   return (
     <div className="rw-ban" {...bam(mo)}>
       <div className="rw-in">
-        <div className="rw-k">Giờ vàng · <GvDem kieu="short" /></div>
-        <div className="rw-h">{tt.batDau} – {tt.ketThuc}<br />giảm {tt.phanTram}%</div>
-        <button className="rw-b" type="button">Xem món Giờ vàng →</button>
+        <div className="rw-k"><span {...ndDau('ud.gv.k')}>{nd('ud.gv.k')}</span> <span {...ndDau('ud.gv.so')}><GvDem kieu="short" /></span></div>
+        <div className="rw-h" {...ndDau('ud.gv.so')}>{ndPhan('ud.gv.khung', { batDau: tt.batDau, ketThuc: tt.ketThuc })}<br />{ndPhan('ud.gv.giam', { phanTram: tt.phanTram })}</div>
+        <button className="rw-b" type="button" {...ndDau('ud.gv.nut')}>{nd('ud.gv.nut')}</button>
       </div>
     </div>
   );
 }
 
 const BIEU_TUONG_CT = { sinh_nhat: 'ticket', hoc_sinh_gioi: 'card', khac: 'package' };
-const CHUC_SINH_NHAT = 'Chúc mừng sinh nhật! Mời bạn đến quán, đưa căn cước để nhận ưu đãi hôm nay.';
-const MOI_NHAP_NGAY_SINH = 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đãi sinh nhật';
 
 // Thẻ chương trình (khuôn .voucher của demo). `ghiChu` = dòng chúc mừng / mời nhập ngày sinh (chỉ thẻ sinh nhật của khách đã đăng nhập).
 function TheChuongTrinh({ ct, noiBat, ghiChu }) {
@@ -93,11 +92,11 @@ function TheChuongTrinh({ ct, noiBat, ghiChu }) {
       <div className="body">
         <span className="ct-ic"><Med ten={BIEU_TUONG_CT[ct.loai]} s={36} /></span>
         <div>
-          <div className="t">{ct.ten}</div>
-          {ct.moTa && <div className="s">{ct.moTa}</div>}
+          <div className="t" {...ndDau('ud.ct.pos')}>{ct.ten}</div>
+          {ct.moTa && <div className="s" {...ndDau('ud.ct.pos')}>{ct.moTa}</div>}
           {ghiChu}
         </div>
-        <div className="use">Áp dụng tại quán</div>
+        <Chu k="ud.ct.apDung" as="div" className="use" />
       </div>
     </div>
   );
@@ -114,8 +113,8 @@ function ChuongTrinhToi({ ds, moHoSo }) {
   return xep.map((c, i) => {
     const sn = c.loai === 'sinh_nhat';
     let ghiChu = null;
-    if (sn && i === dauTien && homNay) ghiChu = <div className="ct-chuc">{CHUC_SINH_NHAT}</div>;
-    else if (sn && i === dauTien && ngaySinh === null) ghiChu = <span className="ct-moi" {...bam(moHoSo)}>{MOI_NHAP_NGAY_SINH}</span>;
+    if (sn && i === dauTien && homNay) ghiChu = <Chu k="ud.ct.chuc" as="div" className="ct-chuc" />;
+    else if (sn && i === dauTien && ngaySinh === null) ghiChu = <Chu k="ud.ct.moiNhap" className="ct-moi" {...bam(moHoSo)} />;
     return <TheChuongTrinh key={c.ma || c.ten} ct={c} noiBat={sn && homNay} ghiChu={ghiChu} />;
   });
 }
@@ -127,7 +126,7 @@ function KhoiChuongTrinh({ dangNhap, moHoSo }) {
   if (ds.length === 0) return null;
   return (
     <div className="ct-khoi">
-      <div className="sec-head"><h2>Chương trình đặc biệt</h2></div>
+      <div className="sec-head"><Chu k="ud.ct.tieuDe" as="h2" /></div>
       {dangNhap
         ? <ChuongTrinhToi ds={ds} moHoSo={moHoSo} />
         : ds.map((c) => <TheChuongTrinh key={c.ma || c.ten} ct={c} />)}
@@ -140,12 +139,12 @@ function TheHang({ hang }) {
   const { dsHang } = dungGia();
   if (hang) {
     const tang = laHangChiCap(dsHang, hang.id);
-    const db = hang.phan_tram_nhom_dac_biet > 0 ? ` · nhóm đặc biệt ${hang.phan_tram_nhom_dac_biet}%` : '';
+    const db = hang.phan_tram_nhom_dac_biet > 0 ? nd('ud.hang.db', { phanTram: hang.phan_tram_nhom_dac_biet }) : '';
     return (
       <div className="tier-card">
-        <div className="top"><div><div className="name">Hạng {hang.ten}</div><div className="pct">Giảm {hang.phan_tram}% món thường{db}</div></div></div>
-        {hang.het_han ? <div className="prog-lbl">Thẻ hết hạn: {dinhDangNgay(hang.het_han)}</div> : hang.het_han === null && <div className="prog-lbl">{CHU_KHONG_THOI_HAN}</div>}
-        {tang && <div className="hang-tang">{CHU_HANG_TANG}</div>}
+        <div className="top"><div><div className="name" {...ndDau('ud.hang.pos')}>{ndPhan('ud.hang.ten', { ten: hang.ten })}</div><div className="pct" {...ndDau('ud.hang.pct')}>{ndPhan('ud.hang.pct', { phanTram: hang.phan_tram })}{db}</div></div></div>
+        {hang.het_han ? <div className="prog-lbl" {...ndDau('ud.hang.hetHan')}>{ndPhan('ud.hang.hetHan', { ngay: dinhDangNgay(hang.het_han) })}</div> : hang.het_han === null && <Chu k="ud.hang.khongHan" as="div" className="prog-lbl" />}
+        {tang && <Chu k="ud.hang.tang" as="div" className="hang-tang" />}
       </div>
     );
   }
@@ -153,10 +152,10 @@ function TheHang({ hang }) {
   if (ds.length === 0) return null;
   return (
     <div className="tier-card">
-      <div className="top"><div><div className="name">Hạng thành viên</div>{ds.map((h) => (
+      <div className="top"><div><Chu k="ud.hang.bang" as="div" className="name" />{ds.map((h) => (
         <div key={h.id}>
-          <div className="pct">{h.ten} — giảm {h.phan_tram}%</div>
-          {h.chi_cap === true ? <div className="hang-tang">{CHU_HANG_TANG}</div> : dongGoi(h).map((g, i) => <div className="hang-goi" key={i}>{g}</div>)}
+          <div className="pct" {...ndDau('ud.hang.pos')}>{ndPhan('ud.hang.dong', { ten: h.ten, phanTram: h.phan_tram })}</div>
+          {h.chi_cap === true ? <Chu k="ud.hang.tang" as="div" className="hang-tang" /> : dongGoi(h).map((g, i) => <div className="hang-goi" key={i} {...ndDau('ud.hang.goi')}>{g}</div>)}
         </div>
       ))}</div></div>
     </div>
@@ -176,27 +175,27 @@ function UuDaiToi({ maSan, khiNhanXong }) {
       <TrangTai tai={tai}>
         {(dl) => (
           <div className="wallet-row">
-            <div className="wallet-box"><div className="n">{dinhDangSo(dl.points)}</div><div className="l">Điểm tích lũy</div></div>
-            {khach && dinhDangGia(khach.so_du_vi) && <div className="wallet-box"><div className="n">{dinhDangGia(khach.so_du_vi)}</div><div className="l">Số dư ví</div></div>}
+            <div className="wallet-box"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>
+            {khach && dinhDangGia(khach.so_du_vi) && <div className="wallet-box"><div className="n" {...ndDau('ud.khach')}>{dinhDangGia(khach.so_du_vi)}</div><Chu k="ud.vi" as="div" className="l" /></div>}
           </div>
         )}
       </TrangTai>
 
-      <div className="sec-head"><h2>Nhập mã trên hoá đơn</h2></div>
+      <div className="sec-head"><Chu k="ud.nhapMa" as="h2" /></div>
       <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={() => lamMoi([cuaDiem, cuaVoucher, cuaToi])} />
 
-      <div className="sec-head"><h2>Ví voucher</h2></div>
+      <div className="sec-head"><Chu k="ud.viVoucher" as="h2" /></div>
       {tatCa ? <VoucherTatCa /> : <VoucherConDung />}
-      <div className="more-l"><span role="button" tabIndex={0} onClick={() => datTatCa(!tatCa)} onKeyDown={(e) => { if (e.key === 'Enter') datTatCa(!tatCa); }}>{tatCa ? 'Chỉ xem mã còn dùng' : 'Xem tất cả'}</span></div>
+      <div className="more-l"><span role="button" tabIndex={0} onClick={() => datTatCa(!tatCa)} onKeyDown={(e) => { if (e.key === 'Enter') datTatCa(!tatCa); }} {...ndDau(tatCa ? 'ud.chiConDung' : 'ud.xemTatCa')}>{nd(tatCa ? 'ud.chiConDung' : 'ud.xemTatCa')}</span></div>
 
-      <div className="sec-head"><h2>Lịch sử điểm</h2></div>
+      <div className="sec-head"><Chu k="ud.lichSu" as="h2" /></div>
       {tai.dl && !tai.dl.tuMay && (tai.dl.history.length === 0
-        ? <div className="empty-note">Chưa có điểm nào.</div>
+        ? <Chu k="ud.lichSu.chua" as="div" className="empty-note" />
         : tai.dl.history.map((h) => (
           <div className="tx-item" key={h.id}>
             <div className="ic"><Med ten="ticket" s={44} /></div>
-            <div className="info"><div className="t">{h.reason || LOAI_DIEM[h.type] || 'Giao dịch điểm'}</div><div className="d">{dinhDangNgay(h.created_at)}</div></div>
-            {typeof h.points === 'number' && <div className={`amt ${h.points > 0 ? 'plus' : 'minus'}`}>{dau(h.points)}</div>}
+            <div className="info"><div className="t" {...ndDau(h.reason ? 'ud.khach' : LOAI_DIEM[h.type] || 'ud.loai.khac')}>{h.reason || nd(LOAI_DIEM[h.type] || 'ud.loai.khac')}</div><div className="d" {...ndDau('ud.khach')}>{dinhDangNgay(h.created_at)}</div></div>
+            {typeof h.points === 'number' && <div className={`amt ${h.points > 0 ? 'plus' : 'minus'}`} {...ndDau('ud.khach')}>{dau(h.points)}</div>}
           </div>
         )))}
     </>
@@ -207,12 +206,12 @@ function UuDaiToi({ maSan, khiNhanXong }) {
 export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo }) {
   return (
     <Man id="rewards">
-      <div className="topbar"><div><h1>{dangNhap ? 'Ưu đãi của tôi' : 'Ưu đãi'}</h1></div><NutQR moQR={moQR} /></div>
+      <div className="topbar"><div><Chu k={dangNhap ? 'ud.tieuDeToi' : 'ud.tieuDe'} as="h1" /></div><NutQR moQR={moQR} /></div>
       <BannerGioVang mo={moGioVang} />
       <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
         ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} />
-        : <><TheHang hang={null} /><div className="top-row mot"><TheMoi chu={THE_MOI_UU_DAI} moDangNhap={moDangNhap} /></div></>}
+        : <><TheHang hang={null} /><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );
 }
