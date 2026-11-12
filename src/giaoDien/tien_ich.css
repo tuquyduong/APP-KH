@@ -71,8 +71,6 @@
 .p0{ --ph:#C0546B; } .p1{ --ph:#D88A5A; } .p2{ --ph:#5E9A6B; } .p3{ --ph:#8E6BB8; } .p4{ --ph:#9A6A2E; }
 .cyc-strip i[class^="p"]{ background:var(--ph); opacity:.333; } .cyc-strip i.now{ opacity:1; }
 .cyc-lg i[class^="p"]{ background:var(--ph); } .cyc-tip[class*=" p"]{ border-color:var(--ph); } .cyc-top span[class^="p"]{ color:var(--ph); }
-/* Khoá mã riêng của Chu kỳ (KH-UI-5f C3): dùng lại bàn phím số .pin-pad / .pin-dots của bảng PIN. */
-.cyc-khoa{ text-align:center; } .cyc-khoa .pin-dots{ justify-content:center; } .cyc-khoa .pin-pad{ max-width:300px; margin:0 auto; }
 .vk-dong{ display:flex; align-items:center; gap:8px; font-size:12.5px; background:#FFFDFB; border-radius:12px; padding:9px 12px; margin-bottom:10px; box-shadow:0 0 0 1px rgba(215,185,129,.35); }
 .vk-dong span{ flex:1; min-width:0; overflow-wrap:anywhere; } .vk-dong em{ font-style:normal; font-weight:800; color:var(--pink-dark); cursor:pointer; flex:none; }
 .vk-txt mark.trong{ color:var(--muted); cursor:pointer; } .vk-txt mark.cham{ cursor:pointer; }
