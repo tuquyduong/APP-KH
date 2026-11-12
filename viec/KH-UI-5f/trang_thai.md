@@ -19,6 +19,8 @@
 - Nhắc xe chỉ có cho hạng mục có hạn THEO THÁNG và giấy tờ có ngày (đặt mốc 8:00, trước 7 ngày); hạng mục chỉ theo km thì chỉ hiện "sắp tới hạn" khi khách mở app (không có ngày để hẹn). Chữ giải thích nhắc của demo ("… khi còn dưới 10% quãng đường (theo km)") giữ nguyên.
 - Bản `kh_kehoach` đã lưu từ lượt 1 có `chuKy.khoa` / `chuKy.thu`: đọc thì BỎ QUA hai trường đó, ghi lại thì không còn (ca "C3 bản lưu cũ…"). Khách đã đặt mã ở bản thử thì từ nay mở Chu kỳ không hỏi mã.
 - Ảnh `so_anh/`: `chup_anh.js` chụp lại cả 110 ảnh mỗi lần chạy, nhiều ảnh lệch byte chỉ vì ngày hôm nay đổi → chỉ commit ảnh Chu kỳ đã bật (`chuky_on`, `chuky_on_duoi`), các ảnh khác giữ bản cũ (nội dung không đổi).
+- Đi thẳng `/kehoach/chuky` thì `ChuKy` mở cho cả xưng hô anh / chú / bác / ông (`TienIch.jsx`); chỉ ô lưới (`KeHoach.jsx`), `upList`, `bangCoNhac` kiểm `coChuKy`. Phiếu C1 chỉ đòi ẩn ô nên không vi phạm; có từ lượt 1.
+- `viec/KH-UI-5f/dot_bien_tay.js` ghi cứng đường dẫn kho và thư mục nháp của phiên (dòng 8) — chạy ở máy khác phải sửa dòng đó.
 - `dist/`, `.nhap_thu/` do bài thử dựng — không commit.
 - Chưa có mẫu màn to (`thiet_ke/mau_man_to/`) → chưa đối chiếu ≥ 1024 px; ba màn mới dùng khung giữa như các màn con khác.
 
@@ -87,11 +89,13 @@ Kết quả: **19 / 19 đột biến bị bắt** (18 bắt được cả khi `K
 ## Cổng (lượt 12.11, sau gỡ khoá mã)
 - `npm test` (có Chromium): 45 đạt · 0 hỏng (thu_KHUI5f 174, thu_KHUI5e 120).
 - Đột biến `dot_bien_tay.js --trinh-duyet`: TẤT CẢ 19 BỊ BẮT.
-- `--day-du`, cổng `tinh` + `chay`, `/ra-soat`: ghi ở các mục dưới.
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 47 đạt · 0 hỏng (K9, K10, vite build, dist/index.html). `ha_no_chu.js`: nợ chữ 762 → 762 (không đổi, không có gì để hạ).
+- `node tu_chay/cong.js tinh . 64757e0^ HEAD viec/KH-UI-5f`: chỉ còn `✗ [A19]` chờ dòng `HEAD ĐÃ KIỂM` (ghi ở cuối tệp sau commit này).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 64757e0^ HEAD viec/KH-UI-5f`: ✓ CỔNG CHẠY ĐẠT (một CẢNH BÁO A16 "thu_KHUI5f.js chạy trên gốc in 1 ca ≠ 83" — bình thường: bài mới đổ ngay ở ca đầu trên gốc vì chưa có mục danh mục `xe.macdinh`).
 
 ## BÁO CÁO 7 MỤC (sau gỡ khoá mã Chu kỳ — 12.11)
 1. **VIỆC** KH-UI-5f: Xe cộ · Uống thuốc · Chu kỳ (KHÔNG khoá mã — chủ quán 11.11) + Văn khấn điền sẵn Tín chủ / Họ / Địa chỉ; gắn vào lưới, Sắp tới, dải / thanh nhắc.
-2. **ĐÃ SỬA** `kehoachLap.js` (hàm thuần xe / thuốc / chu kỳ, chữ trạng thái; bỏ `taoKhoa` / `kiemKhoa` / `thuMa` / `datKhoaChuKy` / `datThuChuKy` / băm SHA-256), `kehoach.js` (kho `xe` / `thuoc` / `thuocXong` / `chuKy`, `upList`, `bangCoNhac`, `chuThich`, `thongTinVk`; `chuKyDoc` bỏ qua `khoa` / `thu`), `XeCo.jsx` · `UongThuoc.jsx` · `ChuKy.jsx` (bỏ `BanPhim` / `DatMa` / `HoiMa` / công tắc khoá), `VanKhanMan.jsx`, `vanKhan.js`, `TienIch.jsx`, `KeHoach.jsx`, `DaiNhacViec.jsx`, `dungKeHoach.js`, `duongDan.js`, `giaoDien/tien_ich.css` (bỏ `.cyc-khoa`), `noiDung/nd/tienIch.js` (195 khoá). Lượt 12.11 chủ yếu XOÁ code (ChuKy.jsx −61 dòng…).
+2. **ĐÃ SỬA** `kehoachLap.js` (hàm thuần xe / thuốc / chu kỳ, chữ trạng thái; bỏ `taoKhoa` / `kiemKhoa` / `thuMa` / `datKhoaChuKy` / `datThuChuKy` / băm SHA-256), `kehoach.js` (kho `xe` / `thuoc` / `thuocXong` / `chuKy`, `upList`, `bangCoNhac`, `chuThich`, `thongTinVk`; `chuKyDoc` bỏ qua `khoa` / `thu`), `XeCo.jsx` · `UongThuoc.jsx` · `ChuKy.jsx` (bỏ `BanPhim` / `DatMa` / `HoiMa` / công tắc khoá), `VanKhanMan.jsx`, `vanKhan.js`, `TienIch.jsx`, `KeHoach.jsx`, `DaiNhacViec.jsx`, `dungKeHoach.js`, `duongDan.js`, `giaoDien/tien_ich.css` (bỏ `.cyc-khoa`), `noiDung/nd/tienIch.js` (195 khoá). Lượt 12.11 chủ yếu XOÁ code (`ChuKy.jsx` 152 → 83 dòng, −69).
 3. **BÀI THỬ** thu_KHUI5f 83 / 174 ca (+3 ca đỏ trên gốc, −ca khoá); 19 / 19 đột biến bị bắt; `npm test` 45 đạt · 0 hỏng (có Chromium).
 4. **ĐÃ RÀ K4** grep `taoKhoa|kiemKhoa|thuMa|datKhoaChuKy|datThuChuKy|conChoGiay|SAI_TOI_DA|cyc-khoa|chuky.(khoa…)|tagRieng` trong `src/`: không còn; mọi nơi gọi `upList` / `bangCoNhac` / `chuThich` đã đồng bộ (không còn nhánh khoá).
 5. **CHƯA KIỂM** thử tay trên điện thoại / Zalo thật (F5 chỉ giả lập User-Agent, F6); địa chỉ mặc định Văn khấn khi mở app ngoại tuyến (tóm tắt tài khoản không lưu `dia_chi` → để trống, không bịa); ≥ 1024 px (chưa có mẫu màn to); cổng `chay` chạy với `KHONG_TRINH_DUYET=1` (phần Chromium chạy ở máy làm việc, đã xanh).
@@ -105,3 +109,12 @@ Kết quả: **19 / 19 đột biến bị bắt** (18 bắt được cả khi `K
 - NGUYÊN TẮC (đề xuất): người gác chặn lệnh ghép "script + đường ống / &&", `git rm`/`git restore` có glob hoặc thư mục → tách lệnh, liệt kê từng file.
 - BỎ: `chup_anh.js` đổi byte ảnh không đổi nội dung vì ngày hôm nay — chỉ cần commit ảnh thật sự đổi.
 - Dọn `KHUON_LOI.md`: không đề xuất xoá mục nào.
+
+## Soát độc lập `/ra-soat` (lượt 12.11, sau gỡ khoá mã) — KHÔNG ĐẠT vòng 1, đã sửa
+Báo cáo (tóm nguyên ý, agent độc lập): code và bài thử đạt; K4 — 0 dấu vết khoá mã trong `src/` (taoKhoa, kiemKhoa, thuMa, datKhoaChuKy, datThuChuKy, conChoGiay, SAI_TOI_DA, bamMa, crypto.subtle, cyc-khoa, tagRieng, 18 khoá `chuky.*` về khoá, HoiMa / BanPhim / DatMa); 195 khoá không mồ côi; K5 không luồng nào bị chặn oan (`kehoach.js` `chuKyDoc`, `ChuKy.jsx`); thuốc / chu kỳ không rời máy (0 `fetch` / `api.`); phạm vi đủ; nghiệm thu 25/25 có bằng chứng (F5 / F6 một phần, đã tự khai ở CHƯA KIỂM).
+- LỖI 1: thiếu dòng `HEAD ĐÃ KIỂM` (bị xoá khi viết lại cả tệp) → đã ghi lại ở cuối tệp.
+- LỖI 2: `doi_chieu_demo.md` dòng 13–14 còn nói khoá "Riêng tư" / "Lời nhắc riêng tư" → đã sửa theo code.
+- LỖI 3: số dòng `ChuKy.jsx` ghi −61, thực −69 (152 → 83) → đã sửa.
+- Nghi ngờ ghi nhận (không sửa): `dot_bien_tay.js` ghi cứng đường dẫn; `form` của `ChuKy.jsx` chỉ `null | 'ngay'`; `/kehoach/chuky` mở được với xưng hô anh… (đã ghi vào Phát hiện); khách từng đặt mã ở bản thử nay mở không cần mã; ca `KH[x] === undefined` chỉ chứng minh `kehoach.js` không xuất hàm (phần còn lại dựa vào grep K4).
+- Agent không chạy được Chromium / đột biến / cổng nên tin số ghi ở mục Cổng (các số đó do phiên chính tự chạy lượt này).
+- BÀI HỌC của agent: viết lại cả `trang_thai.md` phải giữ dòng `HEAD ĐÃ KIỂM`; gỡ tính năng phải grep cả `doi_chieu_demo.md` / `ke_hoach.md`; số dòng ghi bằng `wc -l`.

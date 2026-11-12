@@ -10,8 +10,8 @@ Lý do: (a) dữ liệu POS chưa có / việc sau · (b) chữ / số mẫu c�
 |---|---|---|
 | Ô Xe cộ (huy hiệu scooter), "N xe · M sắp tới hạn" / "N xe · ổn" | giống | — |
 | Ô Uống thuốc (cối giã), "đã/tổng hôm nay" | giống | chưa có thuốc: "Thêm thuốc" thay vì "0/0" (K3, không số bịa) · P |
-| Ô Chu kỳ (trăng), "Ngày N" / "Bật" | giống | khoá bằng mã → "Riêng tư", không hiện số ngày (C4) · P |
-| Dải Sắp tới | thêm dòng xe / thuốc / chu kỳ | nội dung dòng thuốc "Đến giờ uống thuốc" (không tên thuốc), chu kỳ khoá "Lời nhắc riêng tư" · P |
+| Ô Chu kỳ (trăng), "Ngày N" / "Bật" | giống | luôn "Ngày N" khi đã bật (D1; khoá mã đã bỏ 11.11) |
+| Dải Sắp tới | thêm dòng xe / thuốc / chu kỳ | nội dung dòng thuốc "Đến giờ uống thuốc" (không tên thuốc); dòng chu kỳ "Kỳ kinh dự kiến" như demo (C4) · P |
 
 ## Xe cộ — danh sách (`xe_ds`)
 | Khối trong demo | Đã làm | Khác gì · lý do |
