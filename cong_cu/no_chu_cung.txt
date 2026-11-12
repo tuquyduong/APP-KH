@@ -20,13 +20,13 @@ src/components/NguoiThan.jsx 33
 
 src/components/NhanMa.jsx 0
 
-src/components/VanKhanMan.jsx 22
+src/components/VanKhanMan.jsx 20
 
 src/dinhDang.js 0
 
 src/giaHang.js 0
 
-src/kehoach.js 43
+src/kehoach.js 42
 
 src/kehoachLap.js 32
 
@@ -38,7 +38,7 @@ src/pages/HoSo.jsx 0
 
 src/pages/HoTro.jsx 0
 
-src/pages/KeHoach.jsx 44
+src/pages/KeHoach.jsx 43
 
 src/pages/ManQR.jsx 0
 

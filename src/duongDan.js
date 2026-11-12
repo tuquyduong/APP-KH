@@ -8,8 +8,8 @@ import { nd } from './noiDung/nd.js';
 const TRANG_CHU = '/trangchu';
 import { MA_DIP } from './noiDung/vanKhan.js';
 
-/** Tiện ích của Kế hoạch (KH-UI-5b, 5e): Xe cộ · Uống thuốc · Chu kỳ là KH-UI-5f — đường dẫn lạ dưới /kehoach về /kehoach. */
-const TIEN_ICH =['theomua', 'ngayle', 'saptoi', 'ngaycannho', 'vankhan'];
+/** Tiện ích của Kế hoạch (KH-UI-5b, 5e, 5f) — đường dẫn lạ dưới /kehoach về /kehoach. */
+const TIEN_ICH = ['theomua', 'ngayle', 'saptoi', 'ngaycannho', 'vankhan', 'xeco', 'uongthuoc', 'chuky'];
 
 const BANG = [
   { trang: 'trangchu', mau: '/trangchu', tab: 'trangchu', tieuDe: 'tieuDe.trangchu' },

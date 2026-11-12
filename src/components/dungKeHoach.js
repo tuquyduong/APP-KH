@@ -3,6 +3,7 @@ import { bayGio } from '../bayGio.js';
 import { docKeHoach, ghiKeHoach, xoaKeHoach, keHoachTrong } from '../kehoach.js';
 import { cuaToi } from '../duLieuKhach.js';
 import { taoDuongDan } from '../duongDan.js';
+import { nd } from '../noiDung/nd.js';
 
 // Bản Kế hoạch (kh_kehoach) giữ ở MỘT chỗ trong bộ nhớ trang để ô Trang chủ, màn Kế hoạch, màn tiện ích cùng thấy một bản.
 // `san` = đã biết khách là ai (luuMay.doiKhach xong, như trắc nghiệm): chưa biết thì CHƯA hiện / CHƯA ghi bản của người trước.
@@ -24,6 +25,19 @@ export function dungKeHoach(san = true) {
     luu: (moi) => { if (!san) return false; bang = moi; const ok = ghiKeHoach(moi); phat(); return ok; },
     xoaHet: () => { const ok = xoaKeHoach(); bang = null; phat(); return ok; },
   };
+}
+
+/** Cho các màn tiện ích: { bang, luuBao(moi, chu) → true nếu đã ghi được (chu rỗng = lưu lặng lẽ), xoaHet, tb, datTb }. Chưa biết khách / kho chặn → báo lỗi, KHÔNG báo "đã lưu". */
+export function dungLuuBao(san) {
+  const { bang: b, luu, xoaHet } = dungKeHoach(san);
+  const [tb, datTb] = useState('');
+  const luuBao = (moi, chu) => {
+    if (!san) { datTb(nd('ti.chuaSan')); return false; }
+    const ok = luu(moi);
+    if (!ok) datTb(nd('ti.loiKho')); else if (chu) datTb(chu);
+    return ok;
+  };
+  return { bang: b, luuBao, xoaHet, tb, datTb };
 }
 
 // Bấm một việc ở "Sắp tới" → mở lịch đúng ngày đó (demo calPick + go('lich')). Đọc MỘT lần.
@@ -58,10 +72,16 @@ export function luiDen(veNeuHet) {
 /** Hồ sơ khách đang đăng nhập đã có sẵn trong kho chung của App (không gọi mạng): { ten, xung_ho }; chưa biết → {}. */
 export const hoSoKhach = () => { const s = cuaToi.kho.lay(); return (s.dl && s.dl.khach) || {}; };
 
+/** Việc ảo của dải / thanh nhắc → tiện ích cần mở (thuốc · xe · chu kỳ); việc khác → null (mở bảng ngày). */
+export const tienIchCuaNhac = (v) => (!v.ao ? null : /^th:/.test(v.id) ? 'uongthuoc' : /^xe/.test(v.id) ? 'xeco' : v.id === 'ck' ? 'chuky' : null);
+
 /** Bấm một dòng của "Sắp tới" (`upList`) → mở đúng chỗ. `moViec(ngay)` mở việc trên lịch; `moTienIch(id)` mở một tiện ích. */
 export function moMucSapToi(e, { moViec, moTienIch }) {
   if (e.di === 'viec') moViec(e.ngay);
   else if (e.di === 'nguoi') moTienIch('ngaycannho');
+  else if (e.di === 'xe') moTienIch('xeco');
+  else if (e.di === 'thuoc') moTienIch('uongthuoc');
+  else if (e.di === 'chuky') moTienIch('chuky');
   else if (e.di === 'cung') diDen(taoDuongDan('tienich', { tienich: 'vankhan', dip: e.dip }));
   else moTienIch('ngayle');
 }

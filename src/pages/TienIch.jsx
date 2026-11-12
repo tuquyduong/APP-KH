@@ -20,6 +20,9 @@ import MotDip, { DanhSachDip, dauDip } from '../components/VanKhanMan.jsx';
 import { timDip } from '../vanKhan.js';
 import { docDuongDan, taoDuongDan } from '../duongDan.js';
 import { DauMan } from './KeHoach.jsx';
+import XeCo from '../components/XeCo.jsx';
+import UongThuoc from '../components/UongThuoc.jsx';
+import ChuKy from '../components/ChuKy.jsx';
 
 const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — chưa lưu được';
 
@@ -70,7 +73,7 @@ function NgayLe({ homNay, bang, doiNhac }) {
 
 // "Sắp tới" (nhánh 'up'): việc của tôi, sinh nhật, giỗ, ngày cúng, ngày lễ trong 30 ngày. Bấm một dòng → mở đúng chỗ (moMucSapToi).
 function SapToi({ homNay, bang, mo }) {
-  const ds = upList(homNay, bang);
+  const ds = upList(homNay, bang, hoSoKhach().xung_ho);
   if (!ds.length) return <div className="empty-note">30 ngày tới chưa có việc gì.</div>;
   return ds.map((e, i) => (
     <div className="tl-row" key={`${e.j}-${i}`} {...bam(() => mo(e))}>
@@ -91,9 +94,10 @@ const DUONG_VAN_KHAN = taoDuongDan('tienich', { tienich: 'vankhan' });
 
 /** Màn tiện ích của Kế hoạch (demo màn `tool`): `id` = theomua | ngayle | ngaycannho | vankhan | saptoi. Nút quay lại về /kehoach (`veLich`).
  *  `dip` = dịp cúng đang mở (/kehoach/vankhan/<dịp>): không truyền thì đọc từ địa chỉ trình duyệt (App chỉ truyền `id`). */
-export default function TienIch({ id, san = true, veLich, moTienIch, ds = [], chonMon, homNay: homNayCho, dip: dipCho, tenKhach: tenCho }) {
+function TienIchChung({ id, san = true, veLich, moTienIch, ds = [], chonMon, homNay: homNayCho, dip: dipCho, tenKhach: tenCho }) {
   const homNay = homNayCho || homNayTuGio(bayGio());
   const { bang, luu } = dungKeHoach(san);
+  const hoSo = tenCho !== undefined ? { ten: tenCho } : hoSoKhach(); // Tín chủ / Họ / Địa chỉ điền sẵn lấy từ tài khoản (E1)
   const [tb, datTb] = useState('');
   const [tab, datTab] = useState(id === 'ngayle' ? 'hol' : 'ppl'); // Ngày cần nhớ: 'ppl' Người thân · 'hol' Ngày lễ
   const [form, datForm] = useState(null); // null | { nguoi? } — bảng thêm / sửa người thân
@@ -122,12 +126,20 @@ export default function TienIch({ id, san = true, veLich, moTienIch, ds = [], ch
             {tab === 'hol' && <NgayLe homNay={homNay} bang={bang} doiNhac={(ten) => luuVaBao(doiNhacLe(bang, ten), bang.leNhac[ten] ? 'Đã tắt nhắc' : 'Đã bật nhắc · hiện khi bạn mở app')} />}
           </>
         )}
-        {id === 'vankhan' && !dipMo && <DanhSachDip homNay={homNay} bang={bang} luu={luuVaBao} moDip={moDip} />}
-        {dipMo && <MotDip dip={dipMo.id} homNay={homNay} bang={bang} tenKhach={tenCho !== undefined ? tenCho : hoSoKhach().ten} luu={luuVaBao} />}
+        {id === 'vankhan' && !dipMo && <DanhSachDip homNay={homNay} bang={bang} luu={luuVaBao} moDip={moDip} hoSo={hoSo} />}
+        {dipMo && <MotDip dip={dipMo.id} homNay={homNay} bang={bang} hoSo={hoSo} luu={luuVaBao} />}
         {id === 'saptoi' && <SapToi homNay={homNay} bang={bang} mo={(e) => moMucSapToi(e, { moViec: (ngay) => { if (docNgay(ngay)) datNgayMo(ngay); veLich(); }, moTienIch })} />}
       </div>
       {form && <FormNguoi homNay={homNay} bang={bang} nguoi={form.nguoi} luu={luuVaBao} dong={() => datForm(null)} />}
       <Thongbao chu={tb} het={() => datTb('')} />
     </Man>
   );
+}
+
+const MAN_RIENG = { xeco: XeCo, uongthuoc: UongThuoc, chuky: ChuKy }; // ba tiện ích có màn riêng (KH-UI-5f), mỗi màn tự giữ trạng thái
+
+/** Màn tiện ích: Xe cộ · Uống thuốc · Chu kỳ là màn riêng; còn lại dùng màn chung ở trên. */
+export default function TienIch(props) {
+  const Rieng = MAN_RIENG[props.id];
+  return Rieng ? <Rieng homNay={props.homNay || homNayTuGio(bayGio())} san={props.san !== false} veLich={props.veLich} /> : <TienIchChung {...props} />;
 }
