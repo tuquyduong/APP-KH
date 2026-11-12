@@ -1,10 +1,13 @@
-/* KH-UI-5d — dải quảng cáo mảnh (chủ quán chọn kiểu A, 09.11.2026; KHÔNG có trong demo). Màu = màu đã có trong demo; vệt sáng lướt dùng lớp .fx-a của banner
-   Trang chủ (demo_1.css) nên prefers-reduced-motion tắt luôn (demo_2.css). Dải nằm trong luồng trang, không dính, không đè nút nào. */
-.dai-qc{ position:relative; overflow:hidden; isolation:isolate; display:flex; align-items:center; gap:8px; height:38px; margin:12px 18px 0; padding:0 10px; border-radius:12px;
-  background:linear-gradient(125deg,#8E1B4C 0%,#B2365F 100%); color:#fff; }
-.dai-qc.fx-a{ --dur:3.5s; }
+/* KH-UI-5d / KH-UI-5g — dải quảng cáo mảnh (chủ quán chọn kiểu A, 11.11.2026; KHÔNG có trong demo). Mọi giá trị chép từ demo `.today` / `.today.photo .gl-a` / `.t-k` / `.t-cta`.
+   Vệt sáng + chữ loé dùng lớp .fx-a / .gl* của demo (demo_1.css, demo_2.css; prefers-reduced-motion tắt luôn) và bộ đo components/anhSangLuot.js. Dải nằm trong luồng trang, không dính. */
+.dai-qc{ position:relative; overflow:hidden; isolation:isolate; display:flex; align-items:center; gap:8px; height:40px; margin:12px 18px 0; padding:0 10px; border-radius:12px;
+  background:linear-gradient(125deg,#8E1B4C 0%,#B2365F 55%,#C8784A 100%); box-shadow:0 4px 12px rgba(142,27,76,.22); color:#fff; }
 .dai-qc[role="button"]{ cursor:pointer; }
-.dai-qc-nhan{ flex:none; font-size:10px; font-weight:800; letter-spacing:.1em; color:#FDE69B; }
-.dai-qc-chu{ flex:1; min-width:0; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.dai-qc-xem{ flex:none; font-size:12px; font-weight:800; color:#FDE69B; }
+.dai-qc > :not(.gl-a){ position:relative; }
+.dai-qc .dot{ width:7px; height:7px; border-radius:50%; background:#FDE69B; flex:none; }
+.dai-qc-nhan{ flex:none; display:flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.1em; --c:#F6D57E; --hi:#FFFFFF; }
+.dai-qc-bt{ flex:none; font-size:14px; line-height:1; }
+.dai-qc-chu{ flex:1; min-width:0; font-size:12.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; --c:#F8EAF0; --hi:#FFE7A6; }
+.dai-qc-xem{ flex:none; z-index:2; background:#FDE69B; color:#7A2647; font-size:11.5px; font-weight:800; padding:5px 9px; border-radius:9px; }
+.dai-qc .gl-a{ border-radius:0; z-index:0; mix-blend-mode:color-dodge; background-image:linear-gradient(45deg, transparent calc(var(--b) * 1px - 34px), rgba(255,238,200,.55) calc(var(--b) * 1px - 6px), rgba(255,246,222,.7) calc(var(--b) * 1px), rgba(255,238,200,.55) calc(var(--b) * 1px + 6px), transparent calc(var(--b) * 1px + 34px)); }
 .dai-qc ~ .screen{ padding-top:14px; }

@@ -69,7 +69,7 @@ export function hienNgaySinh(chuoi) {
 
 /**
  * Lời chào chia phần: { dau: "Chào buổi sáng" | "Chào", xung: "chị" | "" (chữ thường, đứng giữa câu), ten: "Linh P" | "bạn" | "" }.
- * Tên = ĐỦ như khách nhập (cắt hai đầu, gộp khoảng trắng thừa, giữ hoa / thường — chủ quán chốt 03.11).
+ * Có xưng hô → gọi xưng hô + CHỮ CUỐI của tên ("anh" + "Anh Linh" → "anh Linh"; chủ quán 11.11); không xưng hô → tên ĐỦ (cắt hai đầu, gộp khoảng trắng thừa, giữ hoa / thường — chốt 03.11).
  * `gio` = giờ VN của POS ("YYYY-MM-DD HH:mm:ss" hoặc "…THH:mm:ss"); không đọc được → không có buổi. Mốc: 5–11 sáng · 11–13 trưa · 13–18 chiều · còn lại tối.
  */
 export function chiaLoiChao(gio, xungHo, ten) {
@@ -78,7 +78,8 @@ export function chiaLoiChao(gio, xungHo, ten) {
   const buoi = h < 0 ? '' : h >= 5 && h < 11 ? 'sang' : h >= 11 && h < 13 ? 'trua' : h >= 13 && h < 18 ? 'chieu' : 'toi';
   const xung = String(xungHo || '').trim().toLowerCase();
   const dau = buoi ? `${nd('chao.dau')} ${nd('chao.' + buoi)}` : nd('chao.dau');
-  return { dau, coBuoi: !!buoi, xung, ten: String(ten || '').trim().replace(/\s+/g, ' ') || (xung ? '' : nd('chao.ban')) };
+  const day = String(ten || '').trim().replace(/\s+/g, ' ');
+  return { dau, coBuoi: !!buoi, xung, ten: xung ? day.split(' ').pop() : day || nd('chao.ban') };
 }
 
 /** "Chào buổi sáng, chị Linh!" — thiếu phần nào bỏ phần đó (chưa có giờ: "Chào chị Linh!"; chưa có gì: "Chào bạn!"). */

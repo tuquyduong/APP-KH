@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
+import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
+import Chu from '../components/Chu.jsx';
 import { bayGio } from '../bayGio.js';
 import { banGhiCuaDon, buocTienTrinh, conLaiQR, huyDon, xongChua } from '../datDon.js';
 import { dungTheoDoi } from '../dungDatDon.js';
@@ -25,15 +27,15 @@ function TraQR({ qr, soTra, soHd, taoMaMoi, dang }) {
   if (con === 0) {
     return (
       <>
-        <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>Mã QR đã hết hạn, đơn chưa được trả.</div></div>
-        <button type="button" className={`checkout-btn${dang ? ' btn-disabled' : ''}`} onClick={dang ? undefined : taoMaMoi}><span>Tạo mã mới</span><span>→</span></button>
+        <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><Chu k="td.qr.hetHan" as="div" /></div>
+        <button type="button" className={`checkout-btn${dang ? ' btn-disabled' : ''}`} onClick={dang ? undefined : taoMaMoi}><Chu k="td.qr.taoMoi" /><span>→</span></button>
       </>
     );
   }
   return (
     <>
       <TheQR chuoi={qr.chuoi} soTien={soTra} soHd={soHd} />
-      <div className="care-disclaimer qr-chu">Quét mã bằng app ngân hàng để trả{soTra !== null && <> <b>{dinhDangGia(soTra)}</b></>}{con !== null && <> · còn <b>{dongHo(con)}</b></>}</div>
+      <div className="care-disclaimer qr-chu" {...ndDau('td.qr.quet')}>{nd('td.qr.quet')}{soTra !== null && <> <b {...ndDau('td.tien')}>{dinhDangGia(soTra)}</b></>}{con !== null && <><span {...ndDau('td.qr.con')}>{` · ${nd('td.qr.con')} `}</span><b {...ndDau('td.so')}>{dongHo(con)}</b></>}</div>
     </>
   );
 }
@@ -46,7 +48,7 @@ function CacBuoc({ tt }) {
     return (
       <div className={`tl-step ${lop}`} key={b.ma}>
         <div className="tl-cot"><div className="tl-dot"><Ico ten={xongBuoc ? 'check' : b.ic} s={12} /></div>{i < ds.length - 1 && <div className="tl-line" />}</div>
-        <div className={`tl-chu${i < ds.length - 1 ? ' giua' : ''}`}><div className="t">{b.t}</div>{b.s && <div className="s">{b.s}</div>}</div>
+        <div className={`tl-chu${i < ds.length - 1 ? ' giua' : ''}`}><div className="t" {...ndDau(b.kt)}>{b.t}</div>{b.s && <div className="s" {...ndDau(b.ks)}>{b.s}</div>}</div>
       </div>
     );
   });
@@ -78,30 +80,30 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
   };
   return (
     <Man id="tracking">
-      <DauManCon tieuDe={don ? `Đơn ${soDon(don.soHd, don.ma)}` : 'Đơn hàng'} phu={don && dinhDangNgay(don.ngay) ? `Đặt lúc ${dinhDangNgay(don.ngay)}` : ''} lui={lui} canTrai />
+      <DauManCon tieuDe={don ? nd('td.tieuDe', { so: soDon(don.soHd, don.ma) }) : nd('td.tieuDe.cho')} phu={don && dinhDangNgay(don.ngay) ? nd('td.phu', { ngay: dinhDangNgay(don.ngay) }) : ''} lui={lui} canTrai />
       {!don && (loi ? <KhungLoi loi={loi} thuLai={taiLai} /> : <div className="khung-tai" aria-busy="true" />)}
       {don && (
         <>
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
-          {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi">Đã giữ <b>{dinhDangGia(tra.giu_vi)}</b> trong ví · quét QR <b>{dinhDangGia(tra.con_lai)}</b></div>}
-          {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{don.cauTienVe || 'Quán đã nhận tiền, nhân viên sẽ liên hệ với bạn.'}</div></div>}
-          {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><div className="pick-chu">Số đơn của bạn — đọc cho nhân viên</div><div className="n">{soDon(don.soHd, don.ma)}</div></div>}
-          {tt === 'xong' && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div>Đơn đã xong — mời bạn ra quầy</div></div>}
-          {(tt === 'da_tra' || tt === 'dang_lam') && <div className="care-disclaimer qr-chu">Giữ App mở để được báo khi đồ uống xong</div>}
+          {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi" {...ndDau('td.vi.giu')}>{ndPhan('td.vi.giu', { giu: <b key="giu" {...ndDau('td.tien')}>{dinhDangGia(tra.giu_vi)}</b>, qr: <b key="qr" {...ndDau('td.tien')}>{dinhDangGia(tra.con_lai)}</b> })}</div>}
+          {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau(don.cauTienVe ? 'td.cauTienVe' : 'td.tienVe')}>{don.cauTienVe || nd('td.tienVe')}</div></div>}
+          {tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><Chu k="td.soDon" as="div" className="pick-chu" /><div className="n" {...ndDau('td.so')}>{soDon(don.soHd, don.ma)}</div></div>}
+          {tt === 'xong' && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><Chu k="td.xong" as="div" /></div>}
+          {(tt === 'da_tra' || tt === 'dang_lam') && <Chu k="td.giuApp" as="div" className="care-disclaimer qr-chu" />}
           <div className="card the-buoc"><CacBuoc tt={tt} /></div>
           {docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
-            {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><h2>Chi tiết đơn</h2></div>}
+            {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><Chu k="td.chiTiet" as="h2" /></div>}
             {don.mon.map((m, i) => (
               <div className="cart-item" key={i}>
                 <div className="cart-thumb"><Ico ten="package" s={28} /></div>
-                <div className="cart-info"><div className="cart-name">{m.ten} ×{m.so_luong}</div>{m.ghi_chu && <div className="cart-opt">“{m.ghi_chu}”</div>}<div className="cart-price">{dinhDangGia(m.thanh_tien)}</div></div>
+                <div className="cart-info" {...ndDau('td.tien')}><div className="cart-name">{m.ten} ×{m.so_luong}</div>{m.ghi_chu && <div className="cart-opt">“{m.ghi_chu}”</div>}<div className="cart-price">{dinhDangGia(m.thanh_tien)}</div></div>
               </div>
             ))}
-            {don.tong !== null && <div className="card the-tong"><div className="summary-row total"><span>Tổng cộng</span><span>{dinhDangGia(don.tong)}</span></div></div>}
+            {don.tong !== null && <div className="card the-tong"><div className="summary-row total"><Chu k="td.tong" /><span {...ndDau('td.tien')}>{dinhDangGia(don.tong)}</span></div></div>}
           </>}
-          {loiHuy && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loiHuy}</div></div>}
-          {choTra && <button type="button" className={`ghost-btn nut-huy${dangHuy ? ' btn-disabled' : ''}`} onClick={dangHuy ? undefined : huy}>Huỷ đơn</button>}
-          {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai}`}>Gọi quán để huỷ</a>}
+          {loiHuy && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('td.loiPos')}>{loiHuy}</div></div>}
+          {choTra && <button type="button" className={`ghost-btn nut-huy${dangHuy ? ' btn-disabled' : ''}`} onClick={dangHuy ? undefined : huy} {...ndDau('td.huy')}>{nd('td.huy')}</button>}
+          {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai}`} {...ndDau('td.goi')}>{nd('td.goi')}</a>}
         </>
       )}
     </Man>
