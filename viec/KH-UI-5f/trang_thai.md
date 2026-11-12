@@ -120,3 +120,12 @@ Báo cáo (tóm nguyên ý, agent độc lập): code và bài thử đạt; K4 
 - BÀI HỌC của agent: viết lại cả `trang_thai.md` phải giữ dòng `HEAD ĐÃ KIỂM`; gỡ tính năng phải grep cả `doi_chieu_demo.md` / `ke_hoach.md`; số dòng ghi bằng `wc -l`.
 
 HEAD ĐÃ KIỂM: f50dd5d
+
+## Chat soát cuối + gộp main (12.11.2026)
+- Chat soát cuối ĐẠT ở đầu nhánh a1a2f89: cổng `tinh` + `chay` kiểu GitHub (`KHONG_TRINH_DUYET=1`) ĐẠT với main e107f85; đọc code: đã gỡ HẾT khoá mã Chu kỳ
+  (không còn hàm / khoá chữ / CSS khoá trong `src/`; bản lưu cũ có `khoa` / `thu` mở thẳng — ca thu_KHUI5f); xem ảnh Chu kỳ 3 cỡ.
+- Ghi nhận (không chặn): đi thẳng `/kehoach/chuky` với xưng hô anh / chú / bác / ông vẫn mở được (ô chỉ ẩn ở lưới) — chuyển KH-ND-3d.
+- Gộp main sau khi KH-ND-3c đã gộp: xung đột DUY NHẤT `cong_cu/no_chu_cung.txt` → số nợ mỗi tệp = số đếm thật bằng bộ đếm của main
+  (`src/kehoach.js` 42; đối chiếu `demTatCa` ↔ `docNo`: lệch 0). Cây gộp (commit 378ca4c) trùng từng byte cây chat đã chạy
+  `node kiem_tra_truoc_khi_giao.js --day-du` CÓ Chromium.
+HEAD ĐÃ KIỂM: 378ca4c

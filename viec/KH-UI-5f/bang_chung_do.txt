@@ -25,11 +25,13 @@ cong_cu/thu_KHUI5e.js  KHONG_TRINH_DUYET=1 → 71 đạt · 0 hỏng (không b�
 cong_cu/thu_KHUI5b.js  KHONG_TRINH_DUYET=1 → 75 đạt · 0 hỏng (không bớt ca: 75 → 75)
 
 SỐ CA cong_cu/thu_KHUI5f.js: 83
-SỐ CA cong_cu/thu_KHUI5e.js: 71
-SỐ CA cong_cu/thu_KHUI5b.js: 75
+SỐ CA cong_cu/thu_KHUI5e.js: 72
+SỐ CA cong_cu/thu_KHUI5b.js: 76
 
 == 12.11 — GỠ KHOÁ MÃ CHU KỲ (phiếu sửa 11.11): bài thu_KHUI5f.js ĐÃ SỬA chạy trên code CHƯA gỡ (KHONG_TRINH_DUYET=1) ==
   ✗ C3 chuKyTrong không còn trường khoa / thu; kho không xuất hàm khoá / băm / thử mã
   ✗ C3 bản lưu cũ có khoa + thu: đọc không lỗi, BỎ QUA hai trường đó, giữ đủ dữ liệu chu kỳ khác
   ✗ C3 ghi lại thì kho không còn khoa / thu (và vẫn đủ dữ liệu chu kỳ)
 80 đạt · 3 hỏng
+(12.11 chat gộp main có KH-UI-5g / KH-ND-3b / KH-ND-3c: hai bài cũ thêm ca từ main — thu_KHUI5e 71 → 72, thu_KHUI5b 75 → 76; chạy lại trên cây gộp với
+ KHONG_TRINH_DUYET=1: thu_KHUI5f 83 · thu_KHUI5e 72 · thu_KHUI5b 76, 0 hỏng.)
