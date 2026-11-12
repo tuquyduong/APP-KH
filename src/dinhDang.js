@@ -7,6 +7,9 @@ export function dinhDangGia(n) {
   return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + nd('gia.donVi');
 }
 
+/** 25000 → "25.000" — số tiền KHÔNG kèm đơn vị (cột giá theo hạng); đổi đơn vị `gia.donVi` ở /admin không ảnh hưởng. Không phải số → "". */
+export const dinhDangSoTien = (n) => dinhDangSo(n);
+
 /** 1250 → "1.250" (điểm). Không phải số → "" (không bịa số). */
 export function dinhDangSo(n) {
   return typeof n === 'number' && Number.isFinite(n) ? String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';

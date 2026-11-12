@@ -1,20 +1,35 @@
 // Kế hoạch và nhắc việc (KH-UI-5b): hàm tính CHÉP NGUYÊN logic demo (dayInfo, renderCal, holList, upList, SEASON…) thành hàm thuần,
 // và phần LƯU TRÊN MÁY (khoá kh_kehoach). Bài thử cong_cu/thu_KHUI5b.js so từng ô với bảng lấy từ chính hàm của demo (thu_KHUI5b_mau.json).
 // "Hôm nay" luôn là tham số { d, m, y } lấy từ giờ POS (bayGio()) — KHÔNG đọc đồng hồ máy, KHÔNG new Date(chuỗi giờ POS) (CLAUDE.md §6).
-// Dữ liệu tĩnh ở noiDung/keHoach.js; LUNAR + TERM_TIPS ở lich.js.
-import { LUNAR, TERM_TIPS } from './lich.js';
-import { nd } from './noiDung/nd.js';
-import { SOLAR_HOL, LUNAR_HOL, SEASON, WD } from './noiDung/keHoach.js';
+// Chữ ở danh mục noiDung/nd/keHoach.js (đọc qua nd()); thứ / Can / Chi / tiết khí cố định ở noiDung/coDinh/lich.js; LUNAR + tipTiet ở lich.js.
+import { LUNAR, TERM_TIPS, tipTiet } from './lich.js';
+import { nd, ndDs } from './noiDung/nd.js';
+import { SEASON, WD, THU_NGAN } from './noiDung/coDinh/lich.js';
 import { docNgay, ngayChuoi, viecNgay, cacLan, daXongLan as daXong, jd as jdNgay, chuoiJd, GIO_RE, HAN_NHAC, LAN_XONG_TOI_DA, chuNhac, nhacTuPhut, gioPhut, amSangDuong, ngayKeTiep, soNgayThang, lichAm, jdChuoi, LOAI_XE, CHU_KY, lichTheoLoai, sapHang, trangThaiHang, trangThaiGiay, homNayThuoc, bayNgayThuoc, chuKyHomNay, trangThaiXe, chuHang, chuGiay, gioThuocChuaUong, chuKyTrong } from './kehoachLap.js';
 export { chuHang, chuGiay, chuLich, chuXe, gioThuocChuaUong, chuKyTrong, batChuKy, tatChuKy, ghiKyMoi, doiDaiChuKy, doiHanhChuKy, doiNhacChuKy } from './kehoachLap.js';
 import { VK, MA_DIP } from './noiDung/vanKhan.js';
-import { vkNext, dipSapXep, tenNganDip } from './vanKhan.js';
+import { vkNext, dipSapXep, tenNganDip, tenDip } from './vanKhan.js';
 
 export { TERM_TIPS };
 export const KHOA_KE_HOACH = 'kh_kehoach';
 export const SO_NGAY_SAP_TOI = 30;
-export const KHONG_NHAC = 'Không nhắc';
-export const CO_NHAC = 'Nhắc khi mở app'; // chữ cạnh công tắc: nhắc chỉ hiện khi khách MỞ app, chưa tự báo khi đóng app (chủ quán duyệt 06.11)
+// Ngày lễ (danh mục kh.leDuong / kh.leAmLich — sửa được ở /admin): bảng tra { 'd/m': tên }. Dòng sai dạng (không phải d/m trong lịch) bị BỎ QUA; trùng ngày thì dòng đầu thắng.
+const DANG_NGAY = /^(\d{1,2})\/(\d{1,2})$/;
+const nhoLe = new WeakMap();
+function bangLe(khoa, toiDaNgay) {
+  const ds = ndDs(khoa);
+  let b = nhoLe.get(ds);
+  if (!b) {
+    b = {};
+    ds.forEach(({ ngay, ten }) => { const t = DANG_NGAY.exec(String(ngay).trim()); if (t && +t[1] >= 1 && +t[1] <= toiDaNgay && +t[2] >= 1 && +t[2] <= 12 && String(ten).trim()) { const k = +t[1] + '/' + +t[2]; if (!(k in b)) b[k] = ten; } });
+    nhoLe.set(ds, b);
+  }
+  return b;
+}
+export const leDuong = () => bangLe('kh.leDuong', 31);
+export const leAmLich = () => bangLe('kh.leAmLich', 30);
+/** Tên các ngày lễ có gợi ý quà tặng. */
+export const leCoQua = () => ndDs('kh.leQua').map((x) => x.ten);
 const DAI_TIEU_DE = 120;
 const TOI_DA_VIEC = 500;
 const KHONG_VAO_SAP_TOI = /Tết Nguyên đán|Trung thu|Đoan ngọ|Vu Lan/; // demo upList: các lễ này đã có ở tiện ích Cúng (việc sau)
@@ -30,7 +45,7 @@ const thuCua = (d, m, y) => new Date(y, m - 1, d).getDay(); // dựng từ thàn
 /** Demo dayInfo: ngày âm, tiết khí, ngày lễ (dương + âm, không tính tháng nhuận), thứ. */
 export function thongTinNgay(d, m, y) {
   const l = LUNAR.solar2lunar(d, m, y), tm = LUNAR.term(l.jd);
-  const le = [SOLAR_HOL[d + '/' + m], !l.leap && LUNAR_HOL[l.d + '/' + l.m]].filter(Boolean);
+  const le = [leDuong()[d + '/' + m], !l.leap && leAmLich()[l.d + '/' + l.m]].filter(Boolean);
   return { l, tm, le, wd: thuCua(d, m, y) };
 }
 
@@ -42,12 +57,12 @@ export function theNgay(chon, homNay) {
   const x = thongTinNgay(chon.d, chon.m, chon.y), se = SEASON(x.tm.idx), la = chon.d === homNay.d && chon.m === homNay.m && chon.y === homNay.y;
   const con = x.tm.endJd - x.l.jd;
   return {
-    thu: WD[x.wd] + (la ? ' · Hôm nay' : ''), lon: String(chon.d), thang: `Tháng ${chon.m}/${chon.y}`,
-    am: `${x.l.d}/${x.l.m}${x.l.leap ? ' nhuận' : ''}`, ngayAm: x.l.d, thangAm: `/${x.l.m}${x.l.leap ? ' nhuận' : ''}`,
-    namCanChi: `Năm ${LUNAR.yearName(x.l.y)}`, thangNgayCanChi: `Tháng ${LUNAR.monthName(x.l.m, x.l.y)} · Ngày ${LUNAR.dayName(x.l.jd)}`,
-    mua: se, tiet: x.tm.name, chip: `Mùa ${se.n} · Tiết ${x.tm.name}`,
-    conLai: x.tm.startsToday ? 'Bắt đầu hôm nay' : con <= 0 ? 'Mai sang tiết ' + x.tm.nextName : 'Còn ' + (con + 1) + ' ngày tới ' + x.tm.nextName,
-    le: x.le.join(' · '), tip: TERM_TIPS[x.tm.idx], tietIdx: x.tm.idx,
+    thu: la ? nd('kh.thuHomNay', { thu: WD[x.wd] }) : WD[x.wd], lon: String(chon.d), thang: nd('kh.thangNam', { m: chon.m, y: chon.y }),
+    am: `${x.l.d}/${x.l.m}${x.l.leap ? nd('kh.nhuan') : ''}`, ngayAm: x.l.d, thangAm: `/${x.l.m}${x.l.leap ? nd('kh.nhuan') : ''}`,
+    namCanChi: nd('kh.namCC', { cc: LUNAR.yearName(x.l.y) }), thangNgayCanChi: nd('kh.thangNgayCC', { t: LUNAR.monthName(x.l.m, x.l.y), n: LUNAR.dayName(x.l.jd) }),
+    mua: se, tiet: x.tm.name, chip: nd('kh.chipTiet', { mua: se.n, tiet: x.tm.name }),
+    conLai: x.tm.startsToday ? nd('kh.tietBatDau') : con <= 0 ? nd('kh.tietMai', { tiet: x.tm.nextName }) : nd('kh.tietCon', { so: con + 1, tiet: x.tm.nextName }),
+    le: x.le.join(' · '), tip: tipTiet(x.tm.idx), tietIdx: x.tm.idx,
   };
 }
 
@@ -63,7 +78,7 @@ export function luoiThang(y, m, homNay, chon, coViec = () => false) {
     const dt = tuJd(j0 + i), trong = dt.m === m;
     if (i === 35 && !trong) break;
     const l = LUNAR.solar2lunar(dt.d, dt.m, dt.y), tk = LUNAR.term(l.jd);
-    const le = !!(SOLAR_HOL[dt.d + '/' + dt.m] || (!l.leap && LUNAR_HOL[l.d + '/' + l.m]));
+    const le = !!(leDuong()[dt.d + '/' + dt.m] || (!l.leap && leAmLich()[l.d + '/' + l.m]));
     o.push({
       d: dt.d, m: dt.m, y: dt.y, ngoai: !trong, homNay: dt.d === homNay.d && dt.m === homNay.m && dt.y === homNay.y,
       chon: dt.d === chon.d && dt.m === chon.m && dt.y === chon.y, cn: i % 7 === 6, le,
@@ -78,8 +93,8 @@ export function leTrongThang(y, m) {
   const le = [], soNgay = new Date(y, m, 0).getDate();
   for (let d = 1; d <= soNgay; d++) {
     const l = LUNAR.solar2lunar(d, m, y);
-    [SOLAR_HOL[d + '/' + m], !l.leap && LUNAR_HOL[l.d + '/' + l.m]].filter(Boolean).forEach((n) => {
-      if (!le.find((z) => z.n === n)) le.push({ d, n, al: SOLAR_HOL[d + '/' + m] === n ? '' : ' (' + l.d + '/' + l.m + ' âm)' });
+    [leDuong()[d + '/' + m], !l.leap && leAmLich()[l.d + '/' + l.m]].filter(Boolean).forEach((n) => {
+      if (!le.find((z) => z.n === n)) le.push({ d, n, al: leDuong()[d + '/' + m] === n ? '' : nd('kh.leAm', { d: l.d, m: l.m }) });
     });
   }
   return le;
@@ -99,19 +114,19 @@ function tiepDuong(d, m, homNay) {
 
 /** Demo holList: ngày lễ gần nhất trước — [{ n, j, cal }]. */
 export function holList(homNay) {
-  const a = Object.entries(SOLAR_HOL).map(([k, n]) => { const [d, m] = k.split('/').map(Number); return { n, j: tiepDuong(d, m, homNay), cal: 'Dương lịch ' + d + '/' + m }; });
+  const a = Object.entries(leDuong()).map(([k, n]) => { const [d, m] = k.split('/').map(Number); return { n, j: tiepDuong(d, m, homNay), cal: nd('kh.calDuong', { d, m }) }; });
   const thay = {};
-  Object.entries(LUNAR_HOL).forEach(([k, n]) => {
+  Object.entries(leAmLich()).forEach(([k, n]) => {
     if (thay[n]) return;
     thay[n] = 1;
     const [d, m] = k.split('/').map(Number), j = tiepAm(d, m, homNay);
-    if (j) a.push({ n, j, cal: 'Âm lịch ' + d + '/' + m });
+    if (j) a.push({ n, j, cal: nd('kh.calAm', { d, m }) });
   });
   return a.sort((x, y) => x.j - y.j);
 }
 
 /** Số ngày từ hôm nay tới `j` → "Hôm nay" / "N ngày" (demo tl-date). */
-export const conLai = (j, homNay) => (j - jd(homNay) === 0 ? 'Hôm nay' : (j - jd(homNay)) + ' ngày');
+export const conLai = (j, homNay) => (j - jd(homNay) === 0 ? nd('kh.conHom') : nd('kh.conNgay', { so: j - jd(homNay) }));
 /** "d/m" (kèm /năm nếu khác năm nay) của một ngày Julius — demo fJ(j).split(', ')[1]. */
 export function ngayNgan(j, homNay) { const x = tuJd(j); return x.d + '/' + x.m + (x.y !== homNay.y ? '/' + x.y : ''); }
 export const dayThang = (j) => { const x = tuJd(j); return x.d + '/' + x.m; };
@@ -124,17 +139,17 @@ export function upList(homNay, bang, xung) {
   const out = [], tj = jd(homNay), cuoi = tj + SO_NGAY_SAP_TOI;
   bang.viec.forEach((v) => cacLan(v, tj, cuoi).forEach((j) => {
     if (daXong(v, j)) return;
-    out.push({ j, t: v.tieu, s: (v.gio || 'Cả ngày') + ' · ' + (typeof v.nhac === 'number' ? chuNhac(nhacTuPhut(v.nhac, v.gio)) : KHONG_NHAC), k: 'Việc', di: 'viec', ngay: chuoiJd(j) });
+    out.push({ j, t: v.tieu, s: (v.gio || nd('kh.caNgay')) + ' · ' + (typeof v.nhac === 'number' ? chuNhac(nhacTuPhut(v.nhac, v.gio)) : nd('kh.khongNhac')), k: nd('kh.tagViec'), di: 'viec', ngay: chuoiJd(j) });
   }));
   bang.nguoi.forEach((p) => {
     const j = ngayKeTiep(p.cal, p.d, p.m, homNay);
-    if (j !== null && j <= cuoi) out.push({ j, t: (p.loai === 'gio' ? 'Giỗ ' : 'Sinh nhật ') + p.ten, s: thuNgayNgan(j, homNay), k: p.loai === 'gio' ? 'Giỗ' : 'Sinh nhật', di: 'nguoi' });
+    if (j !== null && j <= cuoi) out.push({ j, t: nd(p.loai === 'gio' ? 'kh.gioTen' : 'kh.snTen', { ten: p.ten }), s: thuNgayNgan(j, homNay), k: nd(p.loai === 'gio' ? 'kh.tagGio' : 'kh.tagSn'), di: 'nguoi' });
   });
   VK.filter((v) => !v.gio).forEach((v) => {
     const j = vkNext(v, homNay, bang.nguoi);
-    if (j && j <= cuoi) { const l = lichAm(j); out.push({ j, t: v.n, s: 'Âm lịch ' + l.d + '/' + l.m, k: 'Cúng', di: 'cung', dip: v.id }); }
+    if (j && j <= cuoi) { const l = lichAm(j); out.push({ j, t: nd(`vkd.${v.id}.ten`), s: nd('kh.calAm', { d: l.d, m: l.m }), k: nd('kh.tagCung'), di: 'cung', dip: v.id }); }
   });
-  holList(homNay).filter((h) => h.j <= cuoi && !KHONG_VAO_SAP_TOI.test(h.n)).forEach((h) => out.push({ j: h.j, t: h.n, s: h.cal, k: 'Lễ', di: 'le' }));
+  holList(homNay).filter((h) => h.j <= cuoi && !KHONG_VAO_SAP_TOI.test(h.n)).forEach((h) => out.push({ j: h.j, t: h.n, s: h.cal, k: nd('kh.tagLe'), di: 'le' }));
   bang.xe.forEach((x) => {
     sapHang(x, tj).forEach(({ hang, st }) => { if (st.soon || (st.denJ !== null && st.denJ <= cuoi)) out.push({ j: Math.max(tj, st.denJ ?? tj), t: `${hang.ten} · ${x.ten}`, s: chuHang(st), k: nd('ti.tagXe'), di: 'xe' }); });
     x.giayTo.forEach((g) => { const st = trangThaiGiay(g, tj); if (st.j !== null && st.j <= cuoi) out.push({ j: Math.max(tj, st.j), t: `${g.ten} · ${x.ten}`, s: chuGiay(st, homNay), k: nd('ti.tagXe'), di: 'xe' }); });
@@ -152,12 +167,12 @@ export function upList(homNay, bang, xung) {
 export const coChuKy = (xungHo) => !['anh', 'chu', 'bac', 'ong'].includes(xungHo);
 /** Dòng nhỏ dưới mỗi ô tiện ích (demo toolBadge): 'mua' · 'vk' · 'ngay' · 'xe' · 'thuoc' · 'chuky'. */
 export function chuThich(id, homNay, bang) {
-  const nay = (j) => (j - jd(homNay) ? (j - jd(homNay)) + ' ng' : 'nay');
-  if (id === 'mua') return 'Mùa ' + muaNgay(homNay).n;
+  const nay = (j) => (j - jd(homNay) ? nd('kh.badgeNg', { so: j - jd(homNay) }) : nd('kh.badgeNay'));
+  if (id === 'mua') return nd('kh.badgeMua', { mua: muaNgay(homNay).n });
   if (id === 'vk') { const a = dipSapXep(homNay, bang.nguoi).find((x) => x.j); return a ? tenNganDip(a.v, a.j) + ' · ' + nay(a.j) : ''; }
   if (id === 'ngay') {
     const a = [...bang.nguoi.map((p) => ({ n: p.ten, j: ngayKeTiep(p.cal, p.d, p.m, homNay) })).filter((x) => x.j !== null), ...holList(homNay)].sort((x, y) => x.j - y.j)[0];
-    return a ? a.n.replace('Tết ', '') + ' · ' + nay(a.j) : '';
+    return a ? a.n.replace(nd('kh.badgeBoTienTo'), '') + ' · ' + nay(a.j) : '';
   }
   if (id === 'xe') {
     const n = bang.xe.filter((x) => trangThaiXe(x, jd(homNay)).soon).length;
@@ -177,14 +192,16 @@ export function chuThich(id, homNay, bang) {
 // Quy tắc xoá (đăng xuất / đổi khách) ở luuMay.js. Kho tiêm vào để thử.
 const kho = () => localStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
-const TEN_LE = new Set([...Object.values(SOLAR_HOL), ...Object.values(LUNAR_HOL)]);
+const tenLe = () => new Set([...Object.values(leDuong()), ...Object.values(leAmLich())]);
 export const TOI_DA_NGUOI = 100;
 export const TEN_NGUOI_TOI_DA = 40;
 export const CO_CHU = { nho: 14, lon: 26, mac: 17, buoc: 2 };
 const TOI_DA_TICK = 60; // số cặp dịp:năm giữ lại
 const vkTrong = () => ({ ten: null, ho: null, dc: null, nm: null, fs: CO_CHU.mac, tick: {}, nhac: {} });
 export const keHoachTrong = () => ({ viec: [], leNhac: {}, nguoi: [], vk: vkTrong(), xe: [], thuoc: [], thuocXong: {}, chuKy: chuKyTrong() });
-export const NHAC_NGUOI = [['Không nhắc', null], ['Đúng ngày', 480], ['1 ngày trước', -240], ['3 ngày trước', -3840]];
+const MOC_NHAC_NGUOI = [null, 480, -240, -3840]; // giá trị lưu (phút): không · 8h cùng ngày · 20h hôm trước · 8h trước 3 ngày
+/** [[chữ, giá trị]…] của chọn "Nhắc trước" ở bảng người thân — chữ ở danh mục (kh.nhacNguoi0–3). */
+export const nhacNguoi = () => MOC_NHAC_NGUOI.map((ph, i) => [nd(`kh.nhacNguoi${i}`), ph]);
 const LOAI_LAP = ['ngay', 'tuan', 'thang', 'nam', 'amlich', 'sau'];
 
 const nhacHopLe = (n) => n === null || typeof n === 'boolean' || (Number.isInteger(n) && n >= HAN_NHAC[0] && n <= HAN_NHAC[1]);
@@ -215,7 +232,7 @@ function nguoiDoc(p) {
   if (!p || typeof p !== 'object' || typeof p.id !== 'string' || !p.id || (p.loai !== 'sn' && p.loai !== 'gio') || (p.cal !== 'duong' && p.cal !== 'am')) return null;
   const ten = typeof p.ten === 'string' ? p.ten.trim().slice(0, TEN_NGUOI_TOI_DA) : '';
   if (!ten || !so(p.m, 1, 12) || !so(p.d, 1, p.cal === 'am' ? 30 : soNgayThang(p.m, 2000))) return null;
-  return { id: p.id, loai: p.loai, ten, cal: p.cal, d: p.d, m: p.m, nam: p.loai === 'sn' && so(p.nam, 1800, 2200) ? p.nam : null, nhac: NHAC_NGUOI.some((n) => n[1] === p.nhac) ? p.nhac : null };
+  return { id: p.id, loai: p.loai, ten, cal: p.cal, d: p.d, m: p.m, nam: p.loai === 'sn' && so(p.nam, 1800, 2200) ? p.nam : null, nhac: MOC_NHAC_NGUOI.includes(p.nhac) ? p.nhac : null };
 }
 /** Thông tin văn khấn đọc từ bản lưu: thiếu / hỏng → mặc định từng phần. */
 function vkDoc(o) {
@@ -287,7 +304,7 @@ export function docKeHoach(k = kho) {
     const ids = new Set();
     tho.viec.filter(viecHopLe).forEach((v) => { if (!ids.has(v.id) && bang.viec.length < TOI_DA_VIEC) { ids.add(v.id); bang.viec.push(viecDoc(v)); } });
   }
-  if (tho.leNhac && typeof tho.leNhac === 'object' && !Array.isArray(tho.leNhac)) Object.keys(tho.leNhac).forEach((n) => { if (tho.leNhac[n] === true && TEN_LE.has(n)) bang.leNhac[n] = true; });
+  if (tho.leNhac && typeof tho.leNhac === 'object' && !Array.isArray(tho.leNhac)) Object.keys(tho.leNhac).forEach((n) => { if (tho.leNhac[n] === true && tenLe().has(n)) bang.leNhac[n] = true; });
   if (Array.isArray(tho.nguoi)) {
     const ids = new Set();
     tho.nguoi.forEach((p) => { const x = nguoiDoc(p); if (x && !ids.has(x.id) && bang.nguoi.length < TOI_DA_NGUOI) { ids.add(x.id); bang.nguoi.push(x); } });
@@ -335,7 +352,7 @@ export function suaViec(bang, id, nhap) {
 export const xoaViec = (bang, id) => ({ ...bang, viec: bang.viec.filter((v) => v.id !== id) });
 export const doiNhacLe = (bang, ten) => {
   const le = { ...bang.leNhac };
-  if (le[ten]) delete le[ten]; else if (TEN_LE.has(ten)) le[ten] = true;
+  if (le[ten]) delete le[ten]; else if (tenLe().has(ten)) le[ten] = true;
   return { ...bang, leNhac: le };
 };
 
@@ -358,7 +375,7 @@ export const xoaNguoi = (bang, id) => ({ ...bang, nguoi: bang.nguoi.filter((p) =
 /** Danh sách người thân, lần tới gần nhất trước: [{ p, j }] (j = số ngày Julius dương). */
 export const nguoiSapXep = (bang, homNay) => bang.nguoi.map((p) => ({ p, j: ngayKeTiep(p.cal, p.d, p.m, homNay) })).filter((x) => x.j !== null).sort((a, b) => a.j - b.j);
 /** "Tròn N tuổi" của lần sinh nhật ở ngày `j`: cần năm sinh; chưa tới tuổi 1 → ''. */
-export const tronTuoi = (p, j) => (p.loai === 'sn' && p.nam && tuJd(j).y - p.nam >= 1 ? ` · tròn ${tuJd(j).y - p.nam} tuổi` : '');
+export const tronTuoi = (p, j) => (p.loai === 'sn' && p.nam && tuJd(j).y - p.nam >= 1 ? nd('kh.tronTuoi', { so: tuJd(j).y - p.nam }) : '');
 
 // ----- VĂN KHẤN: thông tin, lễ vật đã sắm, nhắc dịp cúng, cỡ chữ -----
 /** Đổi một hay nhiều trường ten · ho · dc · nm của Tín chủ. */
@@ -392,10 +409,10 @@ function lanTrongKhung(tinh, tu, den) {
 export function bangCoNhac(bang, homNay, xung) {
   const h = jd(homNay), den = h + KHUNG_NHAC, ao = [];
   const them = (id, j, tieu, nhac, them2 = {}) => ao.push({ id: `${id}:${j}`, ngay: chuoiJd(j), gio: '', tieu, nhac, xong: false, ao: true, ...them2 });
-  bang.nguoi.forEach((p) => lanTrongKhung((n) => ngayKeTiep(p.cal, p.d, p.m, n), h, den).forEach((j) => them('ng' + p.id, j, (p.loai === 'gio' ? 'Giỗ ' : 'Sinh nhật ') + p.ten, p.nhac)));
+  bang.nguoi.forEach((p) => lanTrongKhung((n) => ngayKeTiep(p.cal, p.d, p.m, n), h, den).forEach((j) => them('ng' + p.id, j, nd(p.loai === 'gio' ? 'kh.gioTen' : 'kh.snTen', { ten: p.ten }), p.nhac)));
   VK.filter((v) => !v.gio && bang.vk.nhac[v.id]).forEach((v) => {
-    if (v.kieu === 'mot15') ao.push({ id: 'vk' + v.id, ngay: chuoiJd(h), gio: '', tieu: v.n, nhac: NHAC_DIP, xong: false, ao: true, lap: { k: 'amlich', n: 1, den: '' } });
-    else lanTrongKhung((n) => vkNext(v, n, bang.nguoi), h, den).forEach((j) => them('vk' + v.id, j, v.n, NHAC_DIP));
+    if (v.kieu === 'mot15') ao.push({ id: 'vk' + v.id, ngay: chuoiJd(h), gio: '', tieu: tenDip(v), nhac: NHAC_DIP, xong: false, ao: true, lap: { k: 'amlich', n: 1, den: '' } });
+    else lanTrongKhung((n) => vkNext(v, n, bang.nguoi), h, den).forEach((j) => them('vk' + v.id, j, tenDip(v), NHAC_DIP));
   });
   bang.xe.filter((x) => x.nhac).forEach((x) => { // nhắc trước 7 ngày, 08:00: hạng mục có hạn theo tháng, giấy tờ có ngày
     x.lich.forEach((hang, k) => { const st = trangThaiHang(x, hang, h); if (st.denJ !== null) them(`xe${x.id}h${k}`, Math.max(h, st.denJ), `${hang.ten} · ${x.ten}`, NHAC_XE); });
@@ -473,7 +490,6 @@ export function doiUong(bang, id, gio, nay) {
 }
 export { bayNgayThuoc };
 
-const THU_NGAN = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 /** Demo fJ: "T7, 20/11" (kèm /năm nếu khác năm nay). */
 export function thuNgayNgan(j, homNay) { const x = tuJd(j); return THU_NGAN[thuCua(x.d, x.m, x.y)] + ', ' + ngayNgan(j, homNay); }
 /** Tên tiết khí của một ngày (dòng "Dưỡng sinh theo tiết …" ở Theo mùa). */
@@ -485,6 +501,6 @@ export const thuTrongTuan = (n) => thuCua(n.d, n.m, n.y);
 export function amLichChu(n) {
   const l = LUNAR.solar2lunar(n.d, n.m, n.y), dau = l.jd - l.d + 1;
   const x = tuJd(dau + 29), thieu = LUNAR.solar2lunar(x.d, x.m, x.y).d === 1; // ngày thứ 30 đã sang tháng sau = tháng thiếu (29 ngày)
-  const ngay = l.d === 15 ? 'Rằm' : l.d <= 10 ? 'Mùng ' + l.d : 'Ngày ' + l.d;
-  return `${ngay} tháng ${l.m} âm${l.leap ? ' · nhuận' : ''}${thieu ? ' · tháng thiếu' : ''}`;
+  const ngay = l.d === 15 ? nd('kh.alRam') : l.d <= 10 ? nd('kh.alMung', { d: l.d }) : nd('kh.alNgay', { d: l.d });
+  return nd('kh.alThang', { ngay, m: l.m, nhuan: l.leap ? nd('kh.alNhuan') : '', thieu: thieu ? nd('kh.alThieu') : '' });
 }

@@ -1,6 +1,6 @@
 import { LUNAR } from '../lich.js';
 import { thuTrongTuan } from '../kehoach.js';
-import { WD } from '../noiDung/keHoach.js';
+import { WD } from '../noiDung/coDinh/lich.js';
 import { IcoVe } from './BieuTuong.jsx';
 import { bam } from './bam.js';
 import { nd, ndPhan, ndDau } from '../noiDung/nd.js';

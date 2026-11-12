@@ -1,6 +1,10 @@
 // Lịch âm / tiết khí — CHÉP NGUYÊN từ thiet_ke/app_kh_demo.html (patch39: `LUNAR`, `TERM_TIPS`), hàm thuần, không đụng DOM.
 // Bài thử cong_cu/thu_KHUI5a.js so từng ngày với bảng lấy từ chính hàm của demo (cong_cu/thu_KHUI5a_mau.json). KH-UI-5b dùng lại.
-// TERM_TIPS: [lời dưỡng sinh, [mã món demo…]] theo thứ tự LUNAR.TERMS (bắt đầu từ Xuân phân); mã món demo → từ khoá tên món POS ở tracNghiem.js.
+// Tên thứ / Can / Chi / 24 tiết khí ở noiDung/coDinh/lich.js (App tự tính). TERM_TIPS (KH-ND-3d): lời dưỡng sinh + mã món nay ở danh mục `kh.tiet`, đọc qua tipTiet();
+// mã món demo → từ khoá tên món POS ở tracNghiem.js.
+
+import { CAN, CHI, TERMS } from './noiDung/coDinh/lich.js';
+import { ndDs } from './noiDung/nd.js';
 
 export const LUNAR = (() => {
   const TZ = 7, PI = Math.PI, INT = Math.floor;
@@ -71,10 +75,6 @@ export const LUNAR = (() => {
     if (lunarMonth >= 11 && diff < 4) lunarYear -= 1;
     return { d: lunarDay, m: lunarMonth, y: lunarYear, leap, jd: dayNumber };
   }
-  const CAN = ['Giáp','Ất','Bính','Đinh','Mậu','Kỷ','Canh','Tân','Nhâm','Quý'];
-  const CHI = ['Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi','Thân','Dậu','Tuất','Hợi'];
-  const TERMS = ['Xuân phân','Thanh minh','Cốc vũ','Lập hạ','Tiểu mãn','Mang chủng','Hạ chí','Tiểu thử','Đại thử','Lập thu','Xử thử','Bạch lộ',
-                 'Thu phân','Hàn lộ','Sương giáng','Lập đông','Tiểu tuyết','Đại tuyết','Đông chí','Tiểu hàn','Đại hàn','Lập xuân','Vũ thủy','Kinh trập'];
   const yearName = y => CAN[(y + 6) % 10] + ' ' + CHI[(y + 8) % 12];
   const dayName = jd => CAN[(jd + 9) % 10] + ' ' + CHI[(jd + 1) % 12];
   const monthName = (m, y) => CAN[(y * 12 + m + 3) % 10] + ' ' + CHI[(m + 1) % 12];
@@ -93,32 +93,16 @@ export const LUNAR = (() => {
   return { jdFromDate, jdToDate, solar2lunar, yearName, dayName, monthName, term, TERMS };
 })();
 
-export const TERM_TIPS = [
-  ['Ngày đêm dài bằng nhau, giữ nếp ngủ dậy đều giờ; ăn uống cân bằng, không quá nóng hay quá lạnh.', ['tra-luc-bao','tra-ngoc-thanh']],
-  ['Trời ấm, ẩm dần; đi bộ ngoài trời, ăn rau xanh, giữ nhà cửa khô thoáng.', ['tra-luc-bao','ep-thanh-tan-duong']],
-  ['Mưa xuân nhiều, độ ẩm cao; ăn thanh đạm, hạn chế đồ ngọt béo.', ['tra-pho-nhi','tra-luc-bao']],
-  ['Bắt đầu mùa hạ, ngày dài; ngủ trưa ngắn, uống nước đều trong ngày.', ['tra-ngoc-thanh','ep-thanh-tan-duong']],
-  ['Nóng ẩm tăng; chọn món thanh mát, ăn nhiều rau quả.', ['ep-thanh-tan-duong','ds-tau-hu']],
-  ['Nắng gắt, mưa rào; tránh ra nắng giữa trưa, uống đủ nước.', ['tra-luc-bao','ds-tau-hu']],
-  ['Ngày dài nhất năm; nghỉ ngơi đủ, không uống quá nhiều đá một lúc.', ['ep-thanh-tan-duong','tra-ngoc-thanh']],
-  ['Oi bức; ăn nhẹ, chia nhỏ bữa, giữ tâm trạng thư thái.', ['ds-tau-hu','tra-luc-bao']],
-  ['Nóng nhất năm; uống nước từng ngụm, ưu tiên món thanh, hạn chế đồ chiên.', ['ep-thanh-tan-duong','ds-sup-le']],
-  ['Đầu thu, trời bắt đầu hanh; ngủ sớm dậy sớm, thêm món nhuận.', ['ds-sup-le','tra-duong-nhan']],
-  ['Hết nóng, sáng tối mát dần; giữ ấm bụng khi đêm xuống.', ['tra-duong-nhan','ds-tau-hu']],
-  ['Sương trắng xuất hiện, trời khô; uống đủ nước ấm, dưỡng ẩm cho da.', ['ds-sup-le','tra-duong-nhan']],
-  ['Ngày đêm cân bằng; ăn uống điều hoà, thêm món nhuận như lê, nấm tuyết.', ['ds-sup-le','ds-tau-hu']],
-  ['Sương lạnh, sáng sớm se lạnh; giữ ấm cổ và bàn chân, ưu tiên đồ uống ấm.', ['ds-sup-le','tra-pho-nhi']],
-  ['Sương giáng, cuối thu; ngủ đủ giấc, ăn món ấm mềm, hạn chế đồ sống lạnh.', ['tra-pho-nhi','ds-canh-dai-bo']],
-  ['Bắt đầu mùa đông; ngủ sớm dậy muộn hơn chút, giữ ấm cơ thể, món hầm nóng.', ['ds-canh-dai-bo','tra-pho-nhi']],
-  ['Trời lạnh dần, khô; thêm món ấm, uống nước ấm thay nước đá.', ['tra-pho-nhi','ds-linh-chi']],
-  ['Lạnh rõ; giữ ấm đầu, cổ, bàn chân; vận động nhẹ buổi sáng có nắng.', ['ds-canh-dai-bo','ds-nep-cam']],
-  ['Đêm dài nhất năm; nghỉ ngơi nhiều hơn, món hầm ấm, giữ tinh thần an nhiên.', ['ds-canh-dai-bo','ds-linh-chi']],
-  ['Lạnh sâu; ăn đủ bữa, ưu tiên món nóng, tránh ra gió lạnh khi vừa ra mồ hôi.', ['tra-pho-nhi','ds-canh-dai-bo']],
-  ['Lạnh nhất năm; giữ ấm toàn thân, uống trà nóng sau bữa ăn.', ['tra-pho-nhi','ds-nep-cam']],
-  ['Bắt đầu mùa xuân; vận động nhẹ ngoài trời, ăn rau mầm, giữ tinh thần vui vẻ.', ['tra-ngoc-thanh','ep-hong-tan-sinh']],
-  ['Mưa phùn, ẩm; giữ ấm khi giao mùa, ăn thanh nhẹ.', ['tra-luc-bao','ep-hong-tan-sinh']],
-  ['Vạn vật thức giấc; ra ngoài trời nhiều hơn, ăn rau xanh, ngủ đủ giấc.', ['tra-ngoc-thanh','tra-luc-bao']]
-];
+/** Lời dưỡng sinh + mã món gợi ý của tiết khí thứ `idx` (0–23, thứ tự TERMS): [lời, [mã món…]]. Đọc SỐNG từ danh mục `kh.tiet` (sửa được ở /admin); thiếu → ['', []]. */
+export function tipTiet(idx) {
+  const x = ndDs('kh.tiet').find((t) => t.tiet === TERMS[idx]);
+  return x ? [x.loi, String(x.mon || '').split(',').map((m) => m.trim()).filter(Boolean)] : ['', []];
+}
+/** Giữ dạng mảng cũ `TERM_TIPS[i] = [lời, [mã…]]` cho nơi gọi ngoài Phạm vi (tracNghiem.js): Proxy đọc sống từ `tipTiet`. */
+export const TERM_TIPS = new Proxy([], {
+  get: (t, k) => (k === 'length' ? TERMS.length : /^\d+$/.test(k) ? tipTiet(+k) : Reflect.get(t, k)),
+  has: (t, k) => (/^\d+$/.test(k) ? +k < TERMS.length : Reflect.has(t, k)),
+});
 
 /** Tiết khí đang hiệu lực của một ngày VN. `gio` = chuỗi giờ VN "YYYY-MM-DD…" (không dùng đồng hồ múi giờ của máy); không đọc được → null. */
 export function tietKhiNgay(gio) {

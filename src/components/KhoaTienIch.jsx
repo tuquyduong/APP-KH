@@ -1,8 +1,9 @@
 import { bam } from './bam.js';
+import { nd, ndDau } from '../noiDung/nd.js';
 
 /** Dòng khoá (chủ quán chốt 29.10, KH-UI-3c): 🔒 + chữ. Ô tiện ích tự nhận làm dòng phụ thay chỗ chữ của nó — không phủ lên chữ nào. */
 export function DongKhoa() {
-  return <><span aria-hidden="true">🔒</span> Đăng nhập để mở khoá chức năng</>;
+  return <><span aria-hidden="true">🔒</span> <span {...ndDau('kh.khoa')}>{nd('kh.khoa')}</span></>;
 }
 
 // Khoá tiện ích (chủ quán chốt 29.10): bọc MỘT ô tiện ích cần tài khoản (Kế hoạch và nhắc việc…) bằng viên nhãn giữa ô.
