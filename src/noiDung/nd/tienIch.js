@@ -7,7 +7,7 @@ const ds = (khoa, ten, macDinh, truong, khoaCauTruc) => ({ khoa, man: M, ten, lo
 
 export const TIEN_ICH = [
   // ----- chung -----
-  c('ti.luu', 'Nút Lưu (bảng thêm / sửa)', 'Lưu'), c('ti.tagXe', 'Nhãn dòng Sắp tới: xe', 'Xe'), c('ti.tagThuoc', 'Nhãn dòng Sắp tới: thuốc', 'Thuốc'), c('ti.tagChuKy', 'Nhãn dòng Sắp tới: chu kỳ', 'Chu kỳ'), c('ti.tagRieng', 'Nhãn dòng Sắp tới: chu kỳ khi đã khoá (không nêu chu kỳ)', 'Riêng tư'),
+  c('ti.luu', 'Nút Lưu (bảng thêm / sửa)', 'Lưu'), c('ti.tagXe', 'Nhãn dòng Sắp tới: xe', 'Xe'), c('ti.tagThuoc', 'Nhãn dòng Sắp tới: thuốc', 'Thuốc'), c('ti.tagChuKy', 'Nhãn dòng Sắp tới: chu kỳ', 'Chu kỳ'),
   c('ti.chuaSan', 'Báo khi chưa biết khách là ai', 'Đang lấy thông tin tài khoản, thử lại sau ít giây'), c('ti.xoaNgay', 'Nút bỏ ngày', 'Bỏ ngày'),
   c('ti.loiKho', 'Báo lỗi khi máy không cho lưu', 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — chưa lưu được'),
   hien('ocXe', 'ô Xe cộ ở lưới tiện ích'), hien('ocThuoc', 'ô Uống thuốc ở lưới tiện ích'), hien('ocChuKy', 'ô Chu kỳ ở lưới tiện ích (xưng hô anh / chú / bác / ông luôn ẩn)'),
@@ -82,16 +82,11 @@ export const TIEN_ICH = [
   c('chuky.soNgay', 'Chu kỳ · N ngày', '{so} ngày', ['so']), c('chuky.lsTieu', 'Chu kỳ · tiêu đề các chu kỳ gần nhất', '6 chu kỳ gần nhất'), c('chuky.lsDong', 'Chu kỳ · dòng các chu kỳ', '{ds} ngày · trung bình {tb} ngày', ['ds', 'tb']),
   c('chuky.lsTrong', 'Chu kỳ · chưa có chu kỳ nào', 'Chưa có chu kỳ nào được ghi. Bấm "Kỳ kinh bắt đầu hôm nay" khi kỳ mới tới.'),
   c('chuky.nhacTieu', 'Chu kỳ · tiêu đề nhắc trước kỳ', 'Nhắc trước kỳ 2 ngày'), c('chuky.nhacPhu', 'Chu kỳ · giải thích nhắc', 'Tin nhắc chỉ hiện "Lời nhắc của bạn", không ghi nội dung'), c('chuky.loiNhac', 'Chu kỳ · lời nhắc (KHÔNG có chữ kinh / chu kỳ)', 'Lời nhắc của bạn'),
-  c('chuky.khoaTieu', 'Chu kỳ · tiêu đề khoá bằng mã', 'Khoá bằng mã khi mở'), c('chuky.khoaPhu', 'Chu kỳ · giải thích khoá', 'Người khác cầm máy cũng không xem được'),
   c('chuky.ghiChu', 'Chu kỳ · ghi chú cuối màn', 'Ngày dự đoán chỉ để tham khảo, không dùng để tránh thai. Chậm kinh trên 7 ngày, đau nhiều hoặc ra máu bất thường nên đi khám.', null, 'doan'),
   c('chuky.tat', 'Chu kỳ · tắt và xoá dữ liệu', 'Tắt & xoá dữ liệu chu kỳ'), c('chuky.loaiXoa', 'Chu kỳ · loại trong câu hỏi xoá', 'dữ liệu'), c('chuky.tenXoa', 'Chu kỳ · tên trong câu hỏi xoá', 'chu kỳ'), c('chuky.daTat', 'Chu kỳ · báo đã xoá', 'Đã tắt và xoá dữ liệu chu kỳ trên máy'),
-  c('chuky.datMa', 'Chu kỳ · đặt mã 4 số', 'Đặt mã 4 số cho Chu kỳ'), c('chuky.datMaPhu', 'Chu kỳ · giải thích mã riêng', 'Mã này chỉ để mở Chu kỳ trên máy này, khác mã PIN ví'), c('chuky.nhapLai', 'Chu kỳ · nhập lại mã', 'Nhập lại mã để xác nhận'),
-  c('chuky.khongKhop', 'Chu kỳ · hai lần mã khác nhau', 'Hai lần nhập chưa giống nhau, thử lại nhé'), c('chuky.daKhoa', 'Chu kỳ · báo đã bật khoá', 'Đã bật khoá bằng mã'), c('chuky.daTatKhoa', 'Chu kỳ · báo đã tắt khoá', 'Đã tắt khoá bằng mã'),
-  c('chuky.moMa', 'Chu kỳ · nhập mã để mở', 'Nhập mã để mở Chu kỳ'), c('chuky.maSai', 'Chu kỳ · mã sai', 'Mã chưa đúng · còn {con} lần thử', ['con']), c('chuky.cho', 'Chu kỳ · chờ sau khi sai nhiều lần', 'Nhập sai nhiều lần, thử lại sau {giay} giây', ['giay']),
-  c('chuky.quen', 'Chu kỳ · quên mã', 'Quên mã? Xoá dữ liệu chu kỳ để đặt lại'), c('chuky.xoaSo', 'Chu kỳ · nút xoá số', 'Xoá'), c('chuky.xacNhan', 'Chu kỳ · nút xác nhận', 'Xác nhận'), c('chuky.khongKhoa', 'Chu kỳ · mã nhập', 'Mã 4 số'),
-  c('chuky.sapToi', 'Chu kỳ · dòng Sắp tới (khi KHÔNG khoá)', 'Kỳ kinh dự kiến'), c('chuky.sapToiPhu', 'Chu kỳ · phụ dòng Sắp tới', 'Chu kỳ {so} ngày', ['so']), c('chuky.sapToiRieng', 'Chu kỳ · dòng Sắp tới khi khoá', 'Lời nhắc riêng tư'),
-  c('chuky.badgeNgay', 'Chu kỳ · chữ nhỏ dưới ô lưới', 'Ngày {so}', ['so']), c('chuky.badgeBat', 'Chu kỳ · chữ nhỏ khi chưa bật', 'Bật'), c('chuky.badgeKhoa', 'Chu kỳ · chữ nhỏ khi đã khoá (không hiện số)', 'Riêng tư'),
-  c('chuky.khongHoTro', 'Chu kỳ · máy không hỗ trợ khoá', 'Máy này chưa hỗ trợ khoá bằng mã, nên chưa bật được'),  // ----- Văn khấn: thông tin gia đình khi khấn -----
+  c('chuky.sapToi', 'Chu kỳ · dòng Sắp tới', 'Kỳ kinh dự kiến'), c('chuky.sapToiPhu', 'Chu kỳ · phụ dòng Sắp tới', 'Chu kỳ {so} ngày', ['so']),
+  c('chuky.badgeNgay', 'Chu kỳ · chữ nhỏ dưới ô lưới', 'Ngày {so}', ['so']), c('chuky.badgeBat', 'Chu kỳ · chữ nhỏ khi chưa bật', 'Bật'),
+  // ----- Văn khấn: thông tin gia đình khi khấn -----
   hien('vkKhung', 'khung "Thông tin gia đình khi khấn" đầu danh sách Văn khấn'), hien('vkGoiYLe', 'dòng gợi ý dâng thêm dưới Lễ vật'),
   c('vk.khungTieu', 'Văn khấn · tiêu đề khung thông tin gia đình', 'Thông tin gia đình khi khấn'), c('vk.khungNote', 'Văn khấn · ghi chú khung', 'Điền một lần, mọi bài khấn tự dùng. Mặc định lấy từ tài khoản của bạn; bạn sửa ở đây thì chỉ lưu trên máy.', null, 'doan'),
   c('vk.tinChu', 'Văn khấn · nhãn Tín chủ', 'Tín chủ'), c('vk.hoGia', 'Văn khấn · nhãn Họ gia tiên', 'Họ gia tiên'), c('vk.diaChi', 'Văn khấn · nhãn Địa chỉ', 'Địa chỉ'),
