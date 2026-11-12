@@ -1,7 +1,5 @@
 src/App.jsx 7
 
-src/baoDonXong.js 1
-
 src/components/BangNgay.jsx 54
 
 src/components/BangNoi.jsx 1
@@ -10,13 +8,9 @@ src/components/BangQuaHan.jsx 23
 
 src/components/BanhXoay.jsx 11
 
-src/components/BaoDonXong.jsx 4
-
 src/components/DaiNhacViec.jsx 3
 
 src/components/GiaMon.jsx 7
-
-src/components/HoaDonKhach.jsx 1
 
 src/components/HoiXoa.jsx 6
 
@@ -28,15 +22,7 @@ src/components/NguoiThan.jsx 33
 
 src/components/NhanMa.jsx 9
 
-src/components/PinSheet.jsx 13
-
-src/components/TheQR.jsx 3
-
-src/components/TrangTai.jsx 1
-
 src/components/VanKhanMan.jsx 22
-
-src/datDon.js 16
 
 src/dinhDang.js 3
 
@@ -56,8 +42,6 @@ src/menuLoc.js 1
 
 src/pages/DangNhap.jsx 5
 
-src/pages/Don.jsx 11
-
 src/pages/GioHang.jsx 22
 
 src/pages/HoSo.jsx 31
@@ -75,10 +59,6 @@ src/pages/Menu.jsx 18
 src/pages/MonTheoDuong.jsx 3
 
 src/pages/TaiKhoan.jsx 14
-
-src/pages/ThanhToan.jsx 54
-
-src/pages/TheoDoiDon.jsx 17
 
 src/pages/TienIch.jsx 27
 

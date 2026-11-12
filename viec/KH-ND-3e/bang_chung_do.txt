@@ -1,0 +1,37 @@
+KH-ND-3e — bằng chứng ĐỎ trên code gốc (commit fe752c3 = "PHIEU: KH-ND-3e"), rồi XANH sau khi sửa.
+Cách làm: `git archive fe752c3 src cong_cu package.json index.html thiet_ke viec/KH-SOHD-1 public` vào thư mục nháp (node_modules dùng chung), chép ĐÚNG bài thử mới / đã sửa vào đó,
+chạy với KHONG_TRINH_DUYET=1 ở cả hai cây.
+
+== 1. Bài MỚI cong_cu/thu_KHND3e.js — trên GỐC (donHang.js mảng rỗng, mười tệp A1 còn 121 chữ cứng)
+5 đạt · 16 hỏng
+  ✗ A1 donHang.js khai ≥ 100 mục — 0 mục · kiemDanhMuc = 0 lỗi nhưng danh mục rỗng · `man` chỉ gồm 5 nhóm · khoá đúng dạng tiền tố
+  ✗ A1 tệp A1 hết chữ cứng — ThanhToan.jsx=54, TheoDoiDon.jsx=17, Don.jsx=11, PinSheet.jsx=13, TheQR.jsx=3, BaoDonXong.jsx=4, HoaDonKhach.jsx=1, TrangTai.jsx=1, baoDonXong.js=1, datDon.js=16
+  ✗ A1 mọi khoá dùng có trong danh mục (0 khoá) · không khoá thừa
+  ✗ A2 mục khoá pos có chỉ đường + gắn ndDau() · A3 loi.* là mục chữ · A1 không "nợ" (danh mục rỗng)
+  ✗ A4 chữ mặc định = chữ gốc (28 câu mẫu: tt.tieuDe, tt.phu, …) · {bien}
+  ✗ B1 buocTienTrinh kèm khoá kt / ks · CHU_CHUA_MO / CHU_CHUA_RO không còn xuất · datDon.js so với gốc (cây giải nén không có git → ca đọc `git diff` đỏ; ca này xanh ở kho thật)
+(Lần chạy trên cây làm việc, khi donHang.js đã điền nhưng màn CHƯA sửa: ca "tệp A1 hết chữ cứng", "mọi khoá dùng có trong danh mục", "không khoá thừa", "A2 gắn ndDau" đỏ.)
+
+== 2. Bài CŨ sửa vì chữ đã chuyển chỗ (phiếu B2: sửa cho tìm đúng chỗ mới; không đổi điều canh, không bớt ca) — trên GỐC, mỗi bài ≥ 1 ca ĐỎ (KHONG_TRINH_DUYET=1)
+thu_KHBAO1.js   30 đạt · 4 hỏng   ✗ A3 TheoDoiDon: dòng "Giữ App mở…" / "Đơn đã xong…" (ở danh mục td.giuApp / td.xong) · ✗ ND3e A3 bỏ chữ cứng · ✗ B1 "Tổng cộng" (td.tong) · ✗ C3 nút gửi lại khoá + loi.CHUA_MO
+thu_KHMUA1.js   55 đạt · 2 hỏng   ✗ ND3e KH-TT-1 B3 chữ ba nút cách trả ở danh mục · ✗ D2 cờ tắt: câu loi.CHUA_MO ở danh mục (datDon không còn CHU_CHUA_MO)
+thu_KHMUA1b.js  50 đạt · 1 hỏng   ✗ ND3e KH-TT-1 B1 ba chữ nút theo cách trả ở danh mục (màn không còn viết thẳng)
+thu_KHMUA1c.js  27 đạt · 1 hỏng   ✗ ND3e KH-TT-1 B3 nút "Xác nhận" ở danh mục (tt.nut.xacNhan)
+thu_KHNHANH1.js 81 đạt · 3 hỏng   ✗ A4 "Xem thêm" ở danh mục · ✗ ND3e A4 · ✗ F1 "Đang cập nhật số dư…" (tt.vi.dangTai)
+thu_KHSOHD1.js  39 đạt · 1 hỏng   ✗ ND3e D3 TheQR: chữ + logo ở danh mục (qr.ten, qr.phu, qr.logo)
+thu_KHTT1.js    5 đạt · 4 hỏng    ✗ A1 aria-label qua nd('tt.vi.nhan') · ✗ A3 "Bấm để thử lại" (tt.vi.loi) · ✗ B3 chữ ba nút · ✗ B3 chữ trạng thái cũ giữ nguyên (ở danh mục)
+(KHÔNG sửa: thu_KHND3a, thu_KHUI*, thu_KHXEM1, thu_KHKHOP1… — vẫn xanh nguyên văn.)
+
+== 3. Sau khi sửa (HEAD) — XANH (KHONG_TRINH_DUYET=1)
+thu_KHND3e.js 22 đạt · 0 hỏng (sau soát vòng 1: thêm ca A3 gắn data-nd đúng khoá) · thu_KHBAO1.js 34 · 0 · thu_KHMUA1.js 57 · 0 · thu_KHMUA1b.js 51 · 0 · thu_KHMUA1c.js 28 · 0
+thu_KHNHANH1.js 84 · 0 · thu_KHSOHD1.js 40 · 0 · thu_KHTT1.js 9 · 0
+Có trình duyệt (máy làm việc, Chromium): thu_KHND3e.js 41 · 0 (thêm 19 ca Chromium); thu_KHMUA1b 258 · 0, thu_KHMUA1c 112 · 0, thu_KHBAO1 112 · 0, thu_KHSOHD1 109 · 0.
+Số ca ghi ở dưới là số GitHub đếm (KHONG_TRINH_DUYET=1) — cổng A16.
+SỐ CA cong_cu/thu_KHND3e.js: 22
+SỐ CA cong_cu/thu_KHBAO1.js: 34
+SỐ CA cong_cu/thu_KHMUA1.js: 57
+SỐ CA cong_cu/thu_KHMUA1b.js: 51
+SỐ CA cong_cu/thu_KHMUA1c.js: 28
+SỐ CA cong_cu/thu_KHNHANH1.js: 84
+SỐ CA cong_cu/thu_KHSOHD1.js: 40
+SỐ CA cong_cu/thu_KHTT1.js: 9

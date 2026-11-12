@@ -16,16 +16,17 @@ const boChuThich = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`\
 
 const TT = boChuThich(docTho('src/pages/ThanhToan.jsx'));
 const CSS = docTho('src/giaoDien/thanh_toan.css');
-const dongVi = (/<div className=\{`notif-row the-vi[\s\S]*?>\s*<div><div className="t">/.exec(TT) || [''])[0];
+const DM3e = docTho('src/noiDung/nd/donHang.js'); // KH-ND-3e: chữ của màn Thanh toán nằm ở danh mục nội dung
+const dongVi = (/<div className=\{`notif-row the-vi[\s\S]*?>\s*<div><Chu k="tt\.vi\.nhan" as="div" className="t" \/>/.exec(TT) || [''])[0];
 const dongSwitch = (/<div className=\{`switch[^\n]*/.exec(TT) || [''])[0];
 
 console.log('Phần 1 — đọc nguồn');
-k('A1 cả dòng .the-vi là role="switch" có aria-checked + aria-label, gắn bam', /'switch'/.test(dongVi) && /aria-checked/.test(dongVi) && /aria-label=\{[^}]*'Trừ từ số dư ví'/.test(dongVi) && /bam\(/.test(dongVi), dongVi);
+k('A1 cả dòng .the-vi là role="switch" có aria-checked + aria-label, gắn bam', /'switch'/.test(dongVi) && /aria-checked/.test(dongVi) && /aria-label=\{[^}]*nd\('tt\.vi\.nhan'\)/.test(dongVi) && /Trừ từ số dư ví/.test(DM3e) && /bam\(/.test(dongVi), dongVi);
 k('A1 ô .switch chỉ là hình: không gắn bam / role riêng', dongSwitch !== '' && !/bam\(/.test(dongSwitch) && !/role=/.test(dongSwitch), dongSwitch);
-k('A3 có chữ "Bấm để thử lại" và gọi toi.taiLai()', /Bấm để thử lại/.test(TT) && /bam\(toi\.taiLai\)/.test(TT));
+k('A3 có chữ "Bấm để thử lại" và gọi toi.taiLai()', /Bấm để thử lại/.test(DM3e) && /'tt\.vi\.loi'/.test(TT) && /bam\(toi\.taiLai\)/.test(TT));
 k('B1 không còn khối "Chuyển khoản QR" / "Quét mã bằng app ngân hàng"', !/Chuyển khoản QR|Quét mã bằng app ngân hàng/.test(TT));
-k('B3 chữ nút: "Thanh toán qua QR", "Trừ ví", "+ QR"; hết "Xác nhận trả"', /Thanh toán qua QR/.test(TT) && /Trừ ví/.test(TT) && /\+ QR/.test(TT) && !/Xác nhận trả/.test(TT));
-k('B3 chữ trạng thái cũ giữ nguyên', ['Đang gửi…', 'Mạng chậm, đang gửi lại…', 'Xử lý đơn trước rồi đặt tiếp', 'Đang kiểm tra đơn trước…', 'Thử lại sau '].every((c) => TT.includes(c)) && /CHU_CHUA_MO/.test(TT));
+k('B3 chữ nút: "Thanh toán qua QR", "Trừ ví", "+ QR"; hết "Xác nhận trả"', /Thanh toán qua QR/.test(DM3e) && /Trừ ví/.test(DM3e) && /\+ QR/.test(DM3e) && !/Xác nhận trả/.test(TT + DM3e));
+k('B3 chữ trạng thái cũ giữ nguyên', ['Đang gửi…', 'Mạng chậm, đang gửi lại…', 'Xử lý đơn trước rồi đặt tiếp', 'Đang kiểm tra đơn trước…', 'Thử lại sau '].every((c) => DM3e.includes(c)) && /loi\.CHUA_MO/.test(TT) && /Đặt online sắp mở/.test(DM3e));
 k('C1 thanh_toan.css có file, ThanhToan.jsx import nó, main.jsx / giaoDien.css không nhắc tới', CSS.length > 0 && /import '\.\.\/giaoDien\/thanh_toan\.css'/.test(docTho('src/pages/ThanhToan.jsx')) && !/thanh_toan/.test(docTho('src/main.jsx') + docTho('src/giaoDien/giaoDien.css')));
 k('C1 CSS có vùng bấm ≥ 44px cho .the-vi', /\.the-vi[^{]*\{[^}]*min-height:\s*44px/.test(CSS));
 k('không đổi luật cách trả: cachTra vẫn tắt→qr, vi, vi_qr', /const cachTra = !dungVi \? 'qr' : duoc\.vi \? 'vi' : duoc\.viQr \? 'vi_qr' : 'qr'/.test(TT));

@@ -3,6 +3,7 @@
 // Nhớ { thay[], bao[] } ở sessionStorage (mất khi đóng tab; tải lại thì còn). Kho tiêm vào để thử.
 
 import { soDon } from './hoaDon.js';
+import { nd } from './noiDung/nd.js';
 
 export const MS_HOI = 15000;            // có đơn đang chạy + tab hiện: hỏi GET /don mỗi ngần này ms
 export const KHOA_BAO_DON = 'kh_bao_don';
@@ -12,7 +13,7 @@ const kho = () => sessionStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 const gom = (a) => [...new Set(a)].slice(-TOI_DA);
 
-export const tieuDeXong = (nhan) => `(Xong) Đơn ${nhan} — Tứ Quý Đường`;
+export const tieuDeXong = (nhan) => nd('bao.tieuDe', { don: nhan });
 
 /** { nho, choBao[], nhan{ma→số đơn}, dangChay } — `choBao` theo thứ tự POS trả (mã App); `nhan` là số đơn HIỆN cho khách (`soDon`). */
 export function xemDanhSach(ds, nho) {

@@ -70,14 +70,16 @@ const d = (ma, tt) => ({ ma, tien_trinh: tt });
   // ---- đọc nguồn ----
   const APP = doc('src/App.jsx'), BDX = doc('src/components/BaoDonXong.jsx'), TD = doc('src/pages/TheoDoiDon.jsx'), TT = doc('src/pages/ThanhToan.jsx');
   const HDK = doc('src/components/HoaDonKhach.jsx'), DDD = doc('src/dungDatDon.js');
+  const DM = doc('src/noiDung/nd/donHang.js'); // KH-ND-3e: chữ khách đọc ở Thanh toán / Theo dõi đơn nằm ở danh mục, không còn trong màn
   k('A2 App gắn <BaoDonXong MỘT lần, chỉ khi đã đăng nhập, cạnh <Thongbao', (APP.match(/<BaoDonXong\b/g) || []).length === 1 && /dangNhap && <BaoDonXong/.test(APP) && APP.indexOf('<BaoDonXong') < APP.indexOf('<Thongbao') + 200);
   k('A2 BaoDonXong chỉ hỏi qua cuaDon.lay (không layChiTietDon / fetch), có setInterval(MS_HOI), visibilitychange, vibrate', /cuaDon\.lay\(\)/.test(BDX) && !/layChiTietDon|fetch\(|xemDon/.test(BDX) && /MS_HOI/.test(BDX) && /visibilitychange/.test(BDX) && /navigator\.vibrate/.test(BDX) && /document\.hidden/.test(BDX));
   k('A2 không thư viện / âm thanh mới (không Audio, không file .mp3 / .wav mới)', !/new Audio|<audio|\.mp3|\.wav/.test(BDX) && !fs.existsSync(path.join(GOC, 'public/am_thanh/bao_don.mp3')));
   k('A2 xoá nhớ khi tháo (đăng xuất / 401) và App đưa tiêu đề "(Xong)" qua state, effect tiêu đề dùng nó', /xoaNho/.test(BDX) && /tieuXong/.test(APP) && /document\.title = tieuDeTrang\([^\n]*if \(tieuXong\) document\.title = tieuXong/.test(APP));
   k('A3 daTra làm mới cuaDon (đơn QR vừa trả sang da_tra thì dải bắt đầu hỏi)', /const daTra = \(ma\) => \{[^\n]*lamMoi\(\[cuaDon\]\)/.test(APP));
-  k('A3 TheoDoiDon: dòng "Giữ App mở để được báo khi đồ uống xong" và "Đơn đã xong — mời bạn ra quầy"', /Giữ App mở để được báo khi đồ uống xong/.test(TD) && /Đơn đã xong — mời bạn ra quầy/.test(TD) && !/cuaDon|dungCua/.test(TD));
+  k('A3 TheoDoiDon: dòng "Giữ App mở để được báo khi đồ uống xong" và "Đơn đã xong — mời bạn ra quầy"', /Giữ App mở để được báo khi đồ uống xong/.test(DM) && /Đơn đã xong — mời bạn ra quầy/.test(DM) && /["']td\.giuApp["']/.test(TD) && /["']td\.xong["']/.test(TD) && !/cuaDon|dungCua/.test(TD));
+  k('ND3e A3 bỏ chữ cứng: TheoDoiDon không còn viết thẳng hai dòng báo; danh mục có câu loi.CHUA_MO', !/Giữ App mở để được báo|Đơn đã xong — mời/.test(TD) && /Đặt online sắp mở — mời bạn đặt tại quầy/.test(DM));
   k('A3 dungTheoDoi vẫn hỏi 3 s / 10 s, dừng khi document.hidden; BaoDonXong không gọi /don/:ma', /GIAY_HOI_QR = 3/.test(docTho('src/dungDatDon.js')) && /GIAY_HOI_DON = 10/.test(docTho('src/dungDatDon.js')) && /document\.hidden/.test(DDD));
-  k('B1 dungDatDon đưa hoa_don vào don; TheoDoiDon vẽ HoaDonKhach khi docHoaDon có dòng, còn lại mon[] + Tổng', /hoa_don/.test(DDD) && /HoaDonKhach/.test(TD) && /docHoaDon\(don\)\.length > 0/.test(TD) && /Tổng cộng/.test(TD));
+  k('B1 dungDatDon đưa hoa_don vào don; TheoDoiDon vẽ HoaDonKhach khi docHoaDon có dòng, còn lại mon[] + Tổng', /hoa_don/.test(DDD) && /HoaDonKhach/.test(TD) && /docHoaDon\(don\)\.length > 0/.test(TD) && /Tổng cộng/.test(DM) && /["']td\.tong["']/.test(TD));
   const HDN = doc('src/hoaDon.js'); // KH-SOHD-1: bộ lọc ghi_no chuyển vào docHoaDon (hết dòng = coi như không có tờ)
   k('B2 docHoaDon lọc ghi_no (không bao giờ vẽ dòng nợ); HoaDonKhach vẽ từ docHoaDon', /ghi_no/.test(HDN) && /filter\(/.test(HDN) && /docHoaDon\(don\)\.map/.test(HDK));
   // Ca ôm CẢ câu lệnh (soát vòng 1): tên hàm còn ở dòng import / chỗ khác thì regex trần vẫn khớp oan, đột biến sống ở cổng không có Chromium.
@@ -87,7 +89,7 @@ const d = (ma, tt) => ({ ma, tien_trinh: tt });
   k('A2 (câu lệnh) nhớ đã tắt ghi qua tải lại: tat() gọi ghiNho', /const tat = \(\) => \{ const n = daBao\(kq\.nho, ma\); datNho\(n\); ghiNho\(n\); \};/.test(BDX));
   k('C2 ThanhToan khởi tạo công tắc từ docDungVi() và ghi bằng ghiDungVi; cachTra giữ luật cũ', /useState\(docDungVi\)|useState\(docDungVi\(\)\)|useState\(\(\) => docDungVi\(\)\)/.test(TT) && /ghiDungVi\(/.test(TT) && /const cachTra = !dungVi \? 'qr' : duoc\.vi \? 'vi' : duoc\.viQr \? 'vi_qr' : 'qr'/.test(TT));
   k('C1 luuMay.js: KHOA_DUNG_VI nằm trong KHOA_DU_LIEU, KHÔNG nằm trong KHOA_VANG_LAI', /KHOA_DU_LIEU = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')) && !/KHOA_VANG_LAI = \[[^\]]*KHOA_DUNG_VI/.test(doc('src/luuMay.js')));
-  k('C3 gửi lại gặp CHUA_MO → GIỮ bản ghi (nhánh riêng trước ghiGuiDo(null)); nút gửi lại khoá + CHU_CHUA_MO khi !DAT_ONLINE', /cu && e\.code === 'CHUA_MO'/.test(TT) && TT.indexOf("e.code === 'CHUA_MO'") < TT.indexOf('ghiGuiDo(null);\n      datMoPin(null);') && /!DAT_ONLINE \? CHU_CHUA_MO : conGiay \? `Gửi lại sau/.test(TT.replace(/\s+/g, ' ')));
+  k('C3 gửi lại gặp CHUA_MO → GIỮ bản ghi (nhánh riêng trước ghiGuiDo(null)); nút gửi lại khoá + loi.CHUA_MO khi !DAT_ONLINE', /cu && e\.code === 'CHUA_MO'/.test(TT) && TT.indexOf("e.code === 'CHUA_MO'") < TT.indexOf('ghiGuiDo(null);\n      datMoPin(null);') && /!DAT_ONLINE \? \['loi\.CHUA_MO'\] : conGiay \? \['tt\.guiLai\.cho'/.test(TT.replace(/\s+/g, ' ')));
   k('D1 bao_don.css do BaoDonXong import; main.jsx / giaoDien.css / demo*.css không nhắc', docTho('src/giaoDien/bao_don.css').length > 0 && /import '\.\.\/giaoDien\/bao_don\.css'/.test(BDX) && !/bao_don/.test(docTho('src/main.jsx') + docTho('src/giaoDien/giaoDien.css') + fs.readdirSync(path.join(GOC, 'src/giaoDien')).filter((f) => /^demo.*\.css$/.test(f)).map((f) => docTho('src/giaoDien/' + f)).join('')));
 
   console.log('Phần 2 — App thật trong Chromium');

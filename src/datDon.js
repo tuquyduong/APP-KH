@@ -1,13 +1,13 @@
 // Đặt đơn (KH-MUA-1b, hợp đồng v5; KH-MUA-1c theo v9): dựng thân yêu cầu, đọc trả lời, luật lỗi, vòng gửi lại, ghi nhớ lần gửi chưa rõ — MỌI tên trường đặt đơn ở MỘT chỗ này.
 // Gọi mạng qua api.js. App KHÔNG tính tiền: tạm tính / giảm / tổng / ví giữ / QR còn lại lấy NGUYÊN từ POS.
-// Cờ DAT_ONLINE (noiDung/caiDat.js) là công tắc tắt khẩn: tắt → không gọi cửa ghi nào, nút đặt hiện CHU_CHUA_MO.
+// Cờ DAT_ONLINE (noiDung/caiDat.js) là công tắc tắt khẩn: tắt → không gọi cửa ghi nào, nút đặt hiện câu `loi.CHUA_MO` (danh mục nội dung).
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
 import { cauTienVe } from './hoaDon.js';
+import { nd } from './noiDung/nd.js';
 
-export const CHU_CHUA_MO = 'Đặt online sắp mở — mời bạn đặt tại quầy';
-const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(CHU_CHUA_MO), { code: 'CHUA_MO' })));
+const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(nd('loi.CHUA_MO')), { code: 'CHUA_MO' })));
 
 const so = (n) => typeof n === 'number' && Number.isFinite(n);
 const chu = (s) => String(s || '').trim();
@@ -49,10 +49,10 @@ export function docBaoGia(r) {
 
 /** Tên dòng giảm theo demo (checkout "Giảm giá (voucher)", giỏ "Ưu đãi hạng …", nhãn "Giờ vàng"); loại lạ → "Giảm giá". */
 export function tenGiam(loai, tenHang) {
-  if (loai === 'ma_giam') return 'Giảm giá (voucher)';
-  if (loai === 'hang') return chu(tenHang) ? `Ưu đãi hạng ${chu(tenHang)}` : 'Ưu đãi hạng';
-  if (loai === 'gio_vang') return 'Giờ vàng';
-  return 'Giảm giá';
+  if (loai === 'ma_giam') return nd('giam.voucher');
+  if (loai === 'hang') return chu(tenHang) ? nd('giam.hang', { hang: chu(tenHang) }) : nd('giam.hangTron');
+  if (loai === 'gio_vang') return nd('giam.gioVang');
+  return nd('giam.chung');
 }
 
 const docQR = (q) => (q && chu(q.chuoi) ? { chuoi: String(q.chuoi), hetHan: chu(q.het_han) } : null);
@@ -105,7 +105,6 @@ export function loaiLoi(e) {
   return e && e.status >= 400 && e.status < 500 && e.code && !LUOT_GUI_LAI[e.code] ? 'chua_tao' : 'khong_biet';
 }
 const choThat = (ms) => new Promise((x) => setTimeout(x, ms));
-export const CHU_CHUA_RO = 'Chưa rõ quán đã nhận đơn chưa.';
 
 /**
  * Gửi `POST /don` an toàn: MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
@@ -126,7 +125,7 @@ export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat
     if (loai === 'chua_tao' && lan === 0) throw loi;
     const nhom = LUOT_GUI_LAI[loi.code] ? loi.code : '';
     dem[nhom] = (dem[nhom] || 0) + 1;
-    if (loai !== 'khong_biet' || dem[nhom] > (LUOT_GUI_LAI[nhom] || LAN_GUI_LAI)) throw Object.assign(new Error(CHU_CHUA_RO), { code: 'KHONG_BIET', goc: loi.code });
+    if (loai !== 'khong_biet' || dem[nhom] > (LUOT_GUI_LAI[nhom] || LAN_GUI_LAI)) throw Object.assign(new Error(nd('loi.CHUA_RO')), { code: 'KHONG_BIET', goc: loi.code });
     khiGuiLai();
     await cho(MS_GUI_LAI);
   }
@@ -204,7 +203,7 @@ export const moTheoDoi = (tt) => ['cho_tra', 'da_tra', 'dang_lam'].includes(tt);
 /** Chặn đặt biết trước theo /gio-hoat-dong: ngừng nhận đơn / quán đóng → câu hiện cho khách; được đặt / chưa biết → ''. POS vẫn là bên chặn. */
 export function chanDat(gh) {
   if (!gh || (gh.nhan_don !== false && gh.dang_mo !== false)) return '';
-  return chu(gh.thong_bao) || 'Quán đang ngoài giờ nhận đơn online.';
+  return chu(gh.thong_bao) || nd('loi.NGOAI_GIO');
 }
 
 /** Giây còn lại của mã QR: het_han và "bây giờ" đều là giờ VN của POS. Không đọc được → null. */
@@ -214,24 +213,25 @@ export function conLaiQR(hetHan, bayGioChuoi) {
 }
 
 // Các bước theo dõi đơn (`tien_trinh` của GET /don/:ma). Giao tận nơi (KH-MUA-2) có bước giao.
+// t / s = KHOÁ trong danh mục nội dung (td.buoc.<mã>), chữ đọc qua nd() lúc dựng bước.
 const BUOC = {
-  cho_tra: { t: 'Chờ thanh toán', ic: 'qr' },
-  da_tra: { t: 'Đã thanh toán', ic: 'check' },
-  dang_lam: { t: 'Quán đang pha chế', ic: 'cat-coffee' },
-  xong: { t: 'Sẵn sàng — mời bạn ra quầy nhận', s: 'Đọc số đơn cho nhân viên', ic: 'bell' },
-  dang_giao: { t: 'Đang giao đến bạn', ic: 'package' },
-  da_giao: { t: 'Đã giao thành công', ic: 'flag' },
-  da_huy: { t: 'Đã huỷ', ic: 'close' },
+  cho_tra: { t: 'td.buoc.cho_tra', ic: 'qr' },
+  da_tra: { t: 'td.buoc.da_tra', ic: 'check' },
+  dang_lam: { t: 'td.buoc.dang_lam', ic: 'cat-coffee' },
+  xong: { t: 'td.buoc.xong', s: 'td.buoc.xong.s', ic: 'bell' },
+  dang_giao: { t: 'td.buoc.dang_giao', ic: 'package' },
+  da_giao: { t: 'td.buoc.da_giao', ic: 'flag' },
+  da_huy: { t: 'td.buoc.da_huy', ic: 'close' },
 };
 const TAI_QUAN = ['cho_tra', 'da_tra', 'dang_lam', 'xong'];
 const GIAO = ['cho_tra', 'da_tra', 'dang_lam', 'dang_giao', 'da_giao'];
 const KET_THUC = ['xong', 'da_giao', 'da_huy'];
 const DA_XONG = ['da_tra', 'xong', 'da_giao']; // trạng thái là "đã làm xong bước đó" (khác "đang làm": cho_tra, dang_lam, dang_giao)
 
-/** { ds[] { ma, t, s, ic }, hien, xongBuocHien } — `hien` = chỉ số bước đang ở; `xongBuocHien` = bước đó đã xong. */
+/** { ds[] { ma, t, s, ic, kt, ks }, hien, xongBuocHien } — t / s = chữ hiện, kt / ks = khoá nội dung của chúng; `hien` = chỉ số bước đang ở; `xongBuocHien` = bước đó đã xong. */
 export function buocTienTrinh(tt) {
   const ma = tt === 'da_huy' ? ['da_huy'] : GIAO.slice(3).includes(tt) ? GIAO : TAI_QUAN;
-  return { ds: ma.map((m) => ({ ma: m, ...BUOC[m] })), hien: Math.max(0, ma.indexOf(tt)), xongBuocHien: DA_XONG.includes(tt) };
+  return { ds: ma.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(BUOC[m].s ? { s: nd(BUOC[m].s), ks: BUOC[m].s } : {}) })), hien: Math.max(0, ma.indexOf(tt)), xongBuocHien: DA_XONG.includes(tt) };
 }
 export const xongChua = (tt) => KET_THUC.includes(tt);
 

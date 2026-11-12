@@ -25,7 +25,8 @@ const OK = { success: true, ma_don: 'TQD42', tong: 1, giu_vi: 0, con_lai: 1, tie
 
 (async () => {
   console.log('Phần 1 — hàm thuần, đọc nguồn');
-  k('KH-TT-1 B3 nút đặt "Xác nhận" chỉ còn khi báo giá chưa về (hết "Xác nhận trả <tổng>")', /Thanh toán qua QR/.test(doc('src/pages/ThanhToan.jsx')) && !/Xác nhận trả/.test(doc('src/pages/ThanhToan.jsx')));
+  k('KH-TT-1 B3 nút đặt "Xác nhận" chỉ còn khi báo giá chưa về (hết "Xác nhận trả <tổng>")', /Thanh toán qua QR/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))) && !/Xác nhận trả/.test((doc('src/pages/ThanhToan.jsx') + doc('src/noiDung/nd/donHang.js'))));
+  k('ND3e KH-TT-1 B3 nút "Xác nhận" (báo giá chưa về) nằm ở danh mục: tt.nut.xacNhan; màn không viết thẳng', /'tt\.nut\.xacNhan', 'Nút đặt đơn: chưa có báo giá', 'Xác nhận'/.test(doc('src/noiDung/nd/donHang.js')) && !/'Xác nhận'/.test(doc('src/pages/ThanhToan.jsx')));
   const D = await nap('src/datDon.js');
   const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
 
