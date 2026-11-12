@@ -334,7 +334,7 @@ export const dayChuKy = (ck) => Array.from({ length: ck.dai }, (_, i) => { const
 /** Trung bình các chu kỳ gần nhất (tối đa 6), làm tròn; chưa có → null. */
 export const trungBinhKy = (ls) => { const g = ls.slice(-CHU_KY.soKy); return g.length ? Math.round(g.reduce((a, b) => a + b, 0) / g.length) : null; };
 
-// ----- Chữ trạng thái (xe, thuốc) và Chu kỳ: đổi trạng thái + khoá mã (KH-UI-5f) -----
+// ----- Chữ trạng thái (xe, thuốc) và Chu kỳ: đổi trạng thái (KH-UI-5f) -----
 /** Chữ trạng thái một hạng mục xe (demo itemState.txt): "còn 300 km hoặc 12 ngày" · "Đã tới hạn" · chưa ghi lần nào. */
 export function chuHang(st) {
   if (st.none) return nd('xe.chuaGhi');
@@ -366,8 +366,8 @@ export function gioThuocChuaUong(bang, hn) {
 }
 
 
-export const chuKyTrong = () => ({ bat: false, bd: '', dai: CHU_KY.macDai, hanh: CHU_KY.macHanh, ls: [], nhac: true, khoa: null, thu: { sai: 0, den: 0 } });
-// ----- CHU KỲ (C1–C3): chỉ lưu trên máy, có thể khoá bằng mã riêng -----
+export const chuKyTrong = () => ({ bat: false, bd: '', dai: CHU_KY.macDai, hanh: CHU_KY.macHanh, ls: [], nhac: true });
+// ----- CHU KỲ (C1–C2): chỉ lưu trên máy -----
 const capChuKy = (bang, f) => ({ ...bang, chuKy: f(bang.chuKy) });
 /** Bật Chu kỳ với ngày bắt đầu kỳ gần nhất `bd` ('YYYY-MM-DD', không ở tương lai, không quá 120 ngày trước). */
 export function batChuKy(bang, bd, nay) {
@@ -384,30 +384,3 @@ const kep = (x, [tu, den]) => Math.min(den, Math.max(tu, x));
 export const doiDaiChuKy = (bang, buoc) => capChuKy(bang, (c) => ({ ...c, dai: kep(c.dai + buoc, CHU_KY.dai) }));
 export const doiHanhChuKy = (bang, buoc) => capChuKy(bang, (c) => ({ ...c, hanh: kep(c.hanh + buoc, CHU_KY.hanh) }));
 export const doiNhacChuKy = (bang) => capChuKy(bang, (c) => ({ ...c, nhac: !c.nhac }));
-export const datKhoaChuKy = (bang, khoa) => capChuKy(bang, (c) => ({ ...c, khoa: khoa || null, thu: { sai: 0, den: 0 } }));
-export const datThuChuKy = (bang, thu) => capChuKy(bang, (c) => ({ ...c, thu }));
-
-// Khoá mã 4 số của Chu kỳ: lưu SHA-256(muối ':' mã) + muối, KHÔNG lưu mã gốc. Khác mã PIN ví (PIN ví do POS kiểm, cần mạng).
-export const SAI_TOI_DA = 5, CHO_GIAY = 60;
-const hex = (u8) => [...u8].map((b) => b.toString(16).padStart(2, '0')).join('');
-const bamMa = async (ma, muoi) => hex(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${muoi}:${ma}`))));
-/** Mã 4 chữ số → { muoi, bam }; mã sai dạng / máy không có crypto.subtle → null. */
-export async function taoKhoa(ma) {
-  try {
-    if (!/^\d{4}$/.test(ma)) return null;
-    const muoi = hex(globalThis.crypto.getRandomValues(new Uint8Array(16)));
-    return { muoi, bam: await bamMa(ma, muoi) };
-  } catch { return null; }
-}
-export async function kiemKhoa(ma, khoa) {
-  try { return !!khoa && /^\d{4}$/.test(ma) && (await bamMa(ma, khoa.muoi)) === khoa.bam; } catch { return false; }
-}
-/** Trạng thái thử mã sau một lần nhập (`dung` đúng / sai) lúc `ms`: sai đủ 5 lần → chờ 60 giây; đang chờ thì không tính lần nào. */
-export function thuMa(tt, dung, ms) {
-  if (ms < tt.den) return tt;
-  if (dung) return { sai: 0, den: 0 };
-  const sai = tt.sai + 1;
-  return sai >= SAI_TOI_DA ? { sai: 0, den: ms + CHO_GIAY * 1000 } : { sai, den: 0 };
-}
-export const conChoGiay = (tt, ms) => Math.max(0, Math.ceil((tt.den - ms) / 1000));
-
