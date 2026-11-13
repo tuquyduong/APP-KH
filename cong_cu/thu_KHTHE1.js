@@ -145,7 +145,7 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     const gThe = { khoa_gui: 'K'.repeat(20), ma_don: 'TQD43', than: { mon: [THE(2, 3)] } }, gTron = { ...gThe, than: { mon: [{ ma: 'TLB', so_luong: 1 }, THE(2, 3)] } };
     k('D2 tên hạng "Đã lên hạng …" lấy từ dòng thẻ đã gửi + /hang (không chờ /toi — soát v1 lỗi 3)', D.hangCuaDon(gThe, HANG) === 'Vàng' && D.hangCuaDon(gTron, HANG) === 'Vàng' && D.hangCuaDon(null, HANG) === '' && D.hangCuaDon(gThe, null) === '');
     k('D2 App không còn truyền tên hạng từ kho /toi cho Theo dõi đơn', !/hangMoi=\{hk/.test(doc('src/App.jsx')) && /hangCuaDon\(/.test(doc('src/pages/TheoDoiDon.jsx')));
-    k('C3 "Tạo mã mới" đơn trả thẻ trước giữ ?chi=the (soát v1 lỗi 2): thamThanhToanLai', bang(D.thamThanhToanLai(gThe), { chi: 'the' }) && bang(D.thamThanhToanLai(gTron), {}) && bang(D.thamThanhToanLai(null), {}) && /veThanhToan=\{\(\) => di\(taoDuongDan\('thanhtoan', D?\.?thamThanhToanLai\(|thamThanhToanLai\(banGhiCuaDon\(/.test(doc('src/App.jsx')));
+    k('C3 "Tạo mã mới" đơn trả thẻ trước giữ ?chi=the (soát v1 lỗi 2): thamThanhToanLai', bang(D.thamThanhToanLai(gThe), { chi: 'the' }) && bang(D.thamThanhToanLai(gTron), {}) && bang(D.thamThanhToanLai(null), {}) && bang(D.thamThanhToanLai({ ...gThe, than: { ...gThe.than, ma_giam: 'GIAM10' } }), {}) && /veThanhToan=\{\(\) => di\(taoDuongDan\('thanhtoan', D?\.?thamThanhToanLai\(|thamThanhToanLai\(banGhiCuaDon\(/.test(doc('src/App.jsx')));
   });
 
   console.log('B / D4 / E1 — hạng, gói, nhắc gia hạn');
@@ -184,7 +184,7 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
   await thu('R', async () => {
     const hv = doc('src/pages/HangThanhVien.jsx');
     const than = (/export default function HangThanhVien[\s\S]*$/.exec(hv) || [''])[0];
-    k('B1 màn Hạng thành viên: phần chung KHÔNG gọi /toi (dungCua) — chỉ phần vẽ khi đã đăng nhập (soát v1 lỗi 4)', !!than && !/dungCua\(/.test(than) && /\{dangNhap && <TheToi/.test(than));
+    k('B1 màn Hạng thành viên: phần chung KHÔNG gọi /toi (dungCua) — chỉ phần vẽ khi đã đăng nhập (soát v1 lỗi 4)', !!than && !/dungCua\(/.test(than) && /\{daBiet && <TheToi/.test(than) && /<HangThanhVien [^\n]*daBiet=\{daBiet\}/.test(doc('src/App.jsx')));
     k('C2 tên dòng thẻ MỘT hàm (tenDongThe) cho Giỏ và Thanh toán', H.tenDongThe(THE(2, 3), HANG) === 'Thẻ hội viên Vàng · 3 tháng' && H.tenDongThe(THE(9, 3), HANG) === 'Thẻ hội viên' && ['src/pages/GioHang.jsx', 'src/pages/ThanhToan.jsx'].every((f) => /tenDongThe\(/.test(doc(f)) && !/'gio\.the\.ten'/.test(doc(f))));
   });
 
@@ -276,8 +276,10 @@ async function trinhDuyet(pw) {
         return { ma: m.ma, so_luong: m.so_luong, don_gia: x.gia, thanh_tien: (gh ? gh.gia : x.gia) * m.so_luong, goc: x.gia * m.so_luong };
       });
       if (dong.some((d) => d.loai && d.don_gia === null)) return { loi: 'GOI_HANG_KHONG_BAN' };
-      const tam = dong.reduce((s, d) => s + (d.goc || d.thanh_tien), 0), tong = dong.reduce((s, d) => s + d.thanh_tien, 0);
-      return { dong: dong.map(({ goc, ...d }) => d), tam_tinh: tam, giam: tam > tong ? [{ loai: 'hang', so_tien: tam - tong }] : [], phi_giao: 0, tong, ma_giam_loi: null, chiThe: !coLy };
+      const tam = dong.reduce((s, d) => s + (d.goc || d.thanh_tien), 0), sau = dong.reduce((s, d) => s + d.thanh_tien, 0);
+      const ma = t.ma_giam === 'GIAM10' ? Math.round(sau / 10) : 0; // mã 10 % theo v13 (POS tính trên tạm tính gồm thẻ) — số do POS giả quyết, App chỉ hiện
+      const giam = [...(tam > sau ? [{ loai: 'hang', so_tien: tam - sau }] : []), ...(ma ? [{ loai: 'ma_giam', so_tien: ma }] : [])];
+      return { dong: dong.map(({ goc, ...d }) => d), tam_tinh: tam, giam, phi_giao: 0, tong: sau - ma, ma_giam_loi: null, chiThe: !coLy };
     };
     const lenHang = (d) => { const m = d.mon.find((x) => x.loai === 'the'); if (m) S.hang = { id: m.hang_id, ten: HANG.find((h) => h.id === m.hang_id).ten, phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: BAY('23:59:59', '2027-02-13') }; };
     const traDon = (d) => { d.tt = d.chiThe ? 'xong' : 'da_tra'; lenHang(d); };
@@ -423,10 +425,10 @@ async function trinhDuyet(pw) {
     await doiChu(t, '#cart', /Trả thẻ trước để đơn này được giảm ›/);
     k('C3 CR giỏ thẻ + ly: dòng "Đồ uống trong đơn này tính theo hạng hiện tại…" + nút "Trả thẻ trước…"', /Đồ uống trong đơn này tính theo hạng hiện tại; hạng mới áp từ đơn sau\./.test(await chu(t, '#cart')));
     k('C2 CR giá ly hình dung theo hạng Thường: 30.000đ', /30\.000đ/.test(await chu(t, '#cart .cart-item')));
-    k('C6 CR bảng tiền giỏ có thẻ = đúng số báo giá POS (tạm tính / tổng 229.000đ = ly 30.000 + gói 199.000 do POS tính), App không tự trừ', await doiChu(t, '#cart .bang-tien', /Tổng cộng\s*229\.000đ/) && S.baoGia.some((b) => bang(b.mon, [{ ma: 'TLB', so_luong: 1 }, THE(2, 3)])));
     await chup(t, 'gio_the_ly');
     // ô mã giảm: mã nhập trước khi trả thẻ phải còn cho đơn đồ uống
     await t.locator('#cart .promo-box input').fill('GIAM10'); await t.locator('#cart .promo-box button').click();
+    k('C6 CR bảng tiền giỏ thẻ + ly = ĐÚNG báo giá POS: dòng "Giảm giá (voucher)" −22.900đ, tổng 206.100đ (POS tính, khác tổng các dòng — App không tự cộng / trừ)', await doiChu(t, '#cart .bang-tien', /Giảm giá \(voucher\)\s*−22\.900đ[\s\S]*Tổng cộng\s*206\.100đ/) && S.baoGia.some((b) => b.ma_giam === 'GIAM10' && bang(b.mon, [{ ma: 'TLB', so_luong: 1 }, THE(2, 3)])), await chu(t, '#cart .bang-tien'));
     await t.locator('#cart .ghost-btn', { hasText: 'Trả thẻ trước' }).click();
     await doi(t, async () => /\/thanhtoan\?chi=the$/.test(t.url()));
     await traVi(t);
