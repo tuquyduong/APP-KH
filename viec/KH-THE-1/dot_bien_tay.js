@@ -28,12 +28,18 @@ const DS = [
   ['VS-NHAC-GIA-HAN-8-NGAY', H, 'n <= NGAY_NHAC_GIA_HAN ?', 'n <= NGAY_NHAC_GIA_HAN + 1 ?'],
   ['VS-NUT-MUA-BO-THU-BAC', H, 'toi > h.thu_bac', 'toi < h.thu_bac'],
   ['VS-THE-HONG-VAN-DOC', G, "&& !('ma' in d) ?", '?'],
+  ['VS-DAT-LAI-DEM-THE-LA-KHONG-BAN', D, "else if (m.loai !== 'the') boQua++;", 'else boQua++;'],
+  ['BV-TAO-MA-MOI-MAT-CHI-THE', D, "g.than.mon.every(laThe) ? { chi: 'the' } : {});", 'false ? { chi: \'the\' } : {});'],
+  ['VS-TEN-HANG-LEN-HANG-RONG', D, "return h ? chu(h.ten) : '';", "return '';"],
+  ['BV-THANH-TOAN-KHONG-DON-GIO-C7', 'src/pages/ThanhToan.jsx', 'const maXong = dsDon.dl ? maDonDaTra(guiDo, dsDon.dl.data)', 'const maXong = false ? maDonDaTra(guiDo, dsDon.dl.data)'],
+  ['BV-MAN-HANG-GOI-TOI-KHI-VANG-LAI', 'src/pages/HangThanhVien.jsx', '  const { dsHang, hangToi } = dungGia();', '  const { dsHang, hangToi } = dungGia(); dungCua(cuaToi);'],
   ['VS-DON-GIO-XOA-DONG-THEM-SAU', G, 'if (i >= 0) con = doiSoLuong(con, i, con[i].so_luong - m.so_luong);', 'if (i >= 0) con = xoaDong(con, i);'],
 ];
 const TRINH_DUYET = [
   ['BV-C7-APP-KHONG-NGHE-KHO-DON', A, 'const maDaTra = dangNhap ? maDonDaTra(', 'const maDaTra = false ? maDonDaTra('],
   ['BV-THEO-DOI-CHI-THE-VAN-MOI-RA-QUAY', 'src/pages/TheoDoiDon.jsx', "{tt === 'xong' && !theXong &&", "{tt === 'xong' &&"],
   ['BV-GIO-KHONG-GOI-Y-TRA-THE-TRUOC', 'src/pages/GioHang.jsx', "coDoUong(gio) && ndHien('hien.gio.truocThe')", "false && ndHien('hien.gio.truocThe')"],
+  ['BV-THANH-TOAN-KHONG-KHOA-KHI-THAY-DA-TRA', 'src/pages/ThanhToan.jsx', "useEffect(() => { if (maXong) daTra(maXong); }, [maXong]);", 'useEffect(() => {}, [maXong]);'],
   ['BV-THANH-TOAN-KHONG-DANH-DAU-THE', 'src/pages/ThanhToan.jsx', "danhDauMon({ the: true, chu: e.message }); return; }", 'return; }'],
 ];
 
