@@ -2,6 +2,7 @@
 // Đường dẫn theo TRANG, không theo thiết bị. Màn mới phải thêm một dòng vào BANG.
 //   mau = mẫu đường dẫn (":ten" = tham số) · tab = tab sáng trên thanh tab (null = giữ tab trước) · canDN = khách phải đăng nhập
 //   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau · cho = các giá trị hợp lệ của tham số
+//   tv = tham số TRUY VẤN của trang { tên: [giá trị hợp lệ] | null (mã ngắn bất kỳ) } — giữ trong `chuan` (đăng nhập xong quay về đúng); tham số lạ bỏ
 import { boDau } from './menuLoc.js';
 import { nd } from './noiDung/nd.js';
 
@@ -17,9 +18,10 @@ const BANG = [
   { trang: 'menu', mau: '/menu/:nhom', tab: 'menu', tieuDe: 'tieuDe.menu' },
   { trang: 'mon', mau: '/mon/:slug', tab: 'menu', tieuDe: 'tieuDe.mon', cha: '/menu' },
   { trang: 'giohang', mau: '/giohang', tab: 'giohang', tieuDe: 'tieuDe.giohang' },
-  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/giohang' },
+  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/giohang', tv: { chi: ['the'] } },
   { trang: 'theodoi', mau: '/don/:ma', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.theodoi', cha: '/taikhoan/donhang' },
   { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'tieuDe.uudai' },
+  { trang: 'hang', mau: '/uudai/hang', tab: 'uudai', tieuDe: 'tieuDe.hang', cha: '/uudai', tv: { h: null } },
   { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.taikhoan' },
   { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.thongtin', cha: '/taikhoan' },
   { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.donhang', cha: '/taikhoan' },
@@ -42,6 +44,9 @@ const tenThamSo = (e) => [...e.mau.matchAll(/:(\w+)/g)].map((m) => m[1]);
 export const slug = (chuoi) => boDau(chuoi).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 const giaiMa = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
+const MA_TV = /^[\w-]{1,40}$/;
+/** Tham số truy vấn hợp lệ của dòng `e` lấy từ `lay(tên)` → { tên: giá trị }. */
+const docTv = (e, lay) => Object.fromEntries(Object.entries(e.tv || {}).map(([t]) => [t, String(lay(t) ?? '')]).filter(([t, v]) => MA_TV.test(v) && (!e.tv[t] || e.tv[t].includes(v))));
 
 /** `tiep` (trang quay về sau đăng nhập) chỉ nhận đường dẫn nội bộ của app → trả đường dẫn chuẩn; lạ / ra ngoài / chính trang đăng nhập → ''. */
 export function tiepHopLe(tiep) {
@@ -56,7 +61,9 @@ export function taoDuongDan(trang, tham = {}) {
   if (!e) return TRANG_CHU;
   const p = e.mau.replace(/:(\w+)/g, (_, t) => encodeURIComponent(tham[t]));
   const tiep = trang === 'dangnhap' ? tiepHopLe(tham.tiep) : '';
-  return tiep ? `${p}?tiep=${encodeURIComponent(tiep)}` : p;
+  if (tiep) return `${p}?tiep=${encodeURIComponent(tiep)}`;
+  const tv = new URLSearchParams(docTv(e, (t) => tham[t])).toString();
+  return tv ? `${p}?${tv}` : p;
 }
 
 function ra(e, tham) {
@@ -85,6 +92,7 @@ export function docDuongDan(diaChi) {
     });
     if (!khop) continue;
     if (e.trang === 'dangnhap') { const t = tiepHopLe(truyVan.get('tiep')); if (t) tham.tiep = t; }
+    Object.assign(tham, docTv(e, (t) => truyVan.get(t)));
     return ra(e, tham);
   }
   if (dau === 'kehoach') return ra(BANG.find((e) => e.trang === 'kehoach'), {}); // /kehoach/<tiện ích lạ> → màn Kế hoạch

@@ -4,10 +4,12 @@ import { dungTai } from '../dungTai.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
-import { duocThanhToan } from '../gio.js';
+import { duocThanhToan, laThe } from '../gio.js';
+import { dungGia } from '../heThong.js';
+import { tenDongThe } from '../giaHang.js';
 import { soDon } from '../hoaDon.js';
 import {
-  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDat, docBaoGia, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDatGio, docBaoGia, laLoiThe, maDonDaTra, phanGui, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
@@ -34,7 +36,10 @@ const layDonDau = () => layDon(1);
 const KHOA_LOI_APP = ['loi.GIA_DA_DOI', 'loi.GIA_DA_DOI_CU', 'loi.CHUA_MO', 'loi.CHUA_RO', 'loi.NGOAI_GIO']; // câu App tự viết (sửa được); câu khác là lời POS (🔒 tt.thongBao)
 const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 
-export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon, veGio, danhDauMon, sauHuy }) {
+// `chiThe` (/thanhtoan?chi=the, KH-THE-1 C3): "Trả thẻ trước" — gửi CHỈ dòng thẻ, không mã giảm (phanGui); mọi luật khác của đơn giữ nguyên.
+export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu, moDon, veGio, danhDauMon, sauHuy, chiThe = false, daTra }) {
+  const { dsHang } = dungGia();
+  const { gio, tuy } = phanGui(gioCa, { maGiam }, chiThe);
   const toi = dungTai(layToi);
   const dsDon = dungTai(layDonDau); // gọi MỚI mỗi lần mở (không kho chung): đơn chờ trả của tab / lần mở trước
   const gh = dungKho(khoGioHoatDong);
@@ -72,8 +77,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
     return () => clearInterval(id);
   }, [conGiay > 0]);
 
-  const tuy = { maGiam };
-  const coThe = duocThanhToan(gio, ds);
+  const coThe = duocThanhToan(gio, ds, dsHang);
   const { bg, loi, datBg } = dungBaoGia(gio, tuy, coThe);
   const soDu = toi.dl && toi.dl.khach ? toi.dl.khach.so_du_vi : null;
   const duoc = cachTraDuoc(bg && bg.tong, soDu);
@@ -84,14 +88,18 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   const donKhac = chanGhi && !chuaRo ? guiDo.ma_don : '';
   const nhanDon = (ma) => soDon(((dsDon.dl && dsDon.dl.data) || []).find((d) => d.ma === ma)?.so_hd, ma); // số đơn hiện cho khách; ma chỉ để gọi API
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
-  const chan = chanDat(gh) || chanPos;
-  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
+  // C7: GET /don của màn này thấy đơn vừa gửi ĐÃ trả (tiền QR về khi khách đã rời Theo dõi đơn) → dọn giỏ bằng CÙNG hàm daTra; nút khoá NGAY lần vẽ này (`khoa`) tới khi dọn xong — không mua thẻ hai lần.
+  const maXong = dsDon.dl ? maDonDaTra(guiDo, dsDon.dl.data) : '';
+  useEffect(() => { if (maXong) daTra(maXong); }, [maXong]);
+  const chan = chanDatGio(gh, gio) || chanPos; // giỏ chỉ thẻ đặt mọi giờ (v13)
+  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi || !!maXong;
 
   function xuLyLoi(e) {
     const dl = e.duLieu || {};
     if (e.code === 'GIA_DA_DOI') { const b = docBaoGia(dl.bao_gia); if (b) datBg(b); datThongBao(nd('loi.GIA_DA_DOI')); return; }
     if (e.code === 'QUA_NHIEU_LAN') { datHetLuc(Date.now() + (Number(dl.thu_lai_sau_giay) || 60) * 1000); datThongBao(e.message); return; }
     if (MA_NGOAI_GIO.includes(e.code)) { datChanPos(e.message); return; }
+    if (laLoiThe(e)) { datMonLoi(true); datThongBao(e.message); danhDauMon({ the: true, chu: e.message }); return; } // lời POS nguyên văn, đánh dấu dòng thẻ
     if (MA_MON[e.code]) {
       const m = ds.find((x) => x.ma === dl.ma);
       datMonLoi(true); datThongBao(m ? `${e.message} — ${m.ten}` : e.message);
@@ -151,6 +159,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
   };
   const khongGuiLai = guiDo && (guiDo.quaHan || guiDo.da_dung); // POS không nhận lại khoá này → chỉ xem Lịch sử / bỏ qua
   const tenMon = (ma) => (ds.find((m) => m.ma === ma) || {}).ten || ma;
+  const tenGui = (m) => (laThe(m) ? tenDongThe(m, dsHang) : `${tenMon(m.ma)} ×${m.so_luong}`);
 
   // Số dư quyết định cách trả CHỈ lấy từ /toi gọi SAU khi mở màn (KH-NHANH-1 F1); chờ thì công tắc khoá.
   const viBat = cachTra !== 'qr';
@@ -176,7 +185,7 @@ export default function ThanhToan({ gio, ds, maGiam, lui, xong, moLichSu, moDon,
             : guiDo.quaHan ? canhBao(nd('tt.quaHan.t'), nd('tt.quaHan.p'), 'tt.quaHan.t', 'tt.quaHan.p')
               : canhBao(nd('tt.chuaRo.t'), nd('tt.chuaRo.p'), 'tt.chuaRo.t', 'tt.chuaRo.p')}
           <div className="card bang-tien">
-            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau('tt.so')}>{tenMon(m.ma)} ×{m.so_luong}</span></div>)}
+            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau(laThe(m) ? 'tt.the' : 'tt.so')}>{tenGui(m)}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><Chu k="tt.tong" /><span {...ndDau('tt.so')}>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}

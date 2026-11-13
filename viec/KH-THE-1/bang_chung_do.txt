@@ -1,0 +1,79 @@
+BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = cha của commit `PHIEU: KH-THE-1` đầu tiên, `git archive` ra nháp, node_modules nối vào), KHONG_TRINH_DUYET=1
+(cây gốc để ở nháp, không trong kho; bài thử chép từ nhánh việc — đúng như cổng A11 dựng)
+
+== cong_cu/thu_KHTHE1.js (bài MỚI) trên gốc ==
+  ✗ A1 viec/KH-THE-1/hop_dong_v13.md sha256 bắt đầu 490976b0c438b8b4 (bản gốc POS 162a908)
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = bản gốc từng byte, PHIEN_BAN 13
+  ✗ A1 4 mã lỗi thẻ đọc thẳng từ hợp đồng
+  ✗ A2 canTuPos: GET /hang data[].quyen_loi (co:true, viec_pos KH-THE-1)
+  ✗ A2 canTuPos: dòng thẻ của POST /gio/bao-gia và POST /don (co:true, viec_pos KH-THE-1)
+  ✗ C1 dừng giữa chừng  — G.themThe is not a function
+  ✗ C2 trangThaiDong dòng thẻ còn bán → { hang, goi, conBan: true }  — {"mon":null,"conBan":false}
+  ✗ C2 thẻ còn bán + món còn bán → được Thanh toán; giỏ chỉ thẻ khi chưa có menu vẫn được
+  ✗ C4 thân: dòng thẻ ĐÚNG { loai, hang_id, so_thang }; dòng món không có loai; giữ thứ tự giỏ  — [...,{},...]
+  ✗ C4 dừng giữa chừng  — G.boDongDaGui is not a function
+  ✗ C3 dừng giữa chừng  — D.phanGui is not a function
+  ✗ C5 dừng giữa chừng  — D.chanDatGio is not a function
+  ✗ C7 dừng giữa chừng  — undefined is not a function
+  ✗ D2 docDon giữ loai của mon[]
+  ✗ D dừng giữa chừng  — D.laDonChiThe is not a function
+  ✗ B2 dừng giữa chừng  — H.goiBan is not a function
+  ✗ D4 hằng NGAY_NHAC_GIA_HAN = 7 (một chỗ)
+  ✗ D4 dừng giữa chừng  — H.soNgayCon is not a function
+  ✗ E1 dừng giữa chừng  — H.hangBanDuoc is not a function
+  ✗ B1 /uudai/hang?h=2 → trang hang, … (gốc: trang khongthay)
+  ✗ B1 /uudai/hang (không h) → chuan /uudai/hang; tham số lạ bỏ
+  ✗ B1 taoDuongDan(hang, { h }) và (thanhtoan, { chi: the })
+  ✗ B1 /thanhtoan?chi=the → tham.chi = the; giá trị lạ bỏ
+  ✗ B1 đăng nhập xong quay về đúng ?h= / ?chi=the (tiepHopLe giữ truy vấn)
+  ✗ B1 tiêu đề tab trình duyệt có tên màn Hạng thành viên
+  ✗ F1 có nhóm theHang.js (một dòng thêm vào index.js) + đích hang
+  ✗ F1 các khoá mới của việc có trong danh mục  — tieuDe.hang, tier.tieuDe, … (21 khoá)
+  ✗ F1 phần POS → khoá pos; tiết kiệm / số ngày còn → khoá tutinh
+  ✗ F1 Trang chủ mở được đích hang (bảng DICH của màn)
+7 đạt · 29 hỏng      (gốc dừng sớm từng nhóm → 36 ca; code đã vá 77 ca — cảnh báo A16 "số ca gốc ≠ head" là do dừng sớm)
+
+== cong_cu/thu_KHTHE1.js sau vòng sửa soát 1 (thêm ca C7 Thanh toán, Tạo mã mới ?chi=the, tên hạng từ dòng thẻ, màn Hạng không gọi /toi khi vãng lai, Đặt lại không đếm thẻ, tenDongThe) — CHẠY LẠI trên gốc ==
+  (thêm hai dòng ✗ nhóm R / D3 so với trên; cùng nguyên nhân: hàm / khoá chưa có trên gốc)
+7 đạt · 31 hỏng   (chạy lại bản cuối 434f672 trên gốc 13.11: vẫn 7 đạt · 31 hỏng — nhóm dừng sớm)
+  Các ca mới cũng ĐỎ trên code của vòng trước (b6f06a9^ = 2418e38 — commit ca thử, trước commit vá b6f06a9): 124 đạt · 7 hỏng có Chromium — tái hiện đúng 5 lỗi soát v1.
+  Vòng sửa 2 (soát v2): ca mới / sửa ĐỎ trên d05a767 (ca thử, trước vá a2a1baa): 132 đạt · 2 hỏng có Chromium (Tạo mã mới khi có mã giảm; TheToi gác daBiet).
+
+== cong_cu/thu_KHMUA1c.js (SỬA ca A1 — hợp đồng v13 thay v11, F3) trên gốc ==
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-THE-1/hop_dong_v13.md từng byte (v13 chứa v9)
+27 đạt · 1 hỏng
+
+== cong_cu/thu_KHSOHD1.js (SỬA ca A1 — hợp đồng v13 thay v11, F3) trên gốc ==
+  ✗ A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-THE-1/hop_dong_v13.md từng byte (v13 chứa v11)
+39 đạt · 1 hỏng
+
+== cong_cu/thu_KHND3b.js (SỬA ca A1 — DICH thêm đích hang có chủ đích, F1 / F3) trên gốc ==
+  ✗ A1 nhóm khác còn nguyên (Trang chủ: khoá hien.* và home.need); DICH chỉ thêm đích hang của KH-THE-1  — menu,giovang,tracnghiem,kehoach,uudai
+19 đạt · 1 hỏng
+
+== cong_cu/thu_KHND3e.js (SỬA ca B1 — so datDon.js tới commit CUỐI của KH-ND-3e thay vì cây hiện tại: KH-THE-1 được thêm hàm thẻ, F3) trên gốc ==
+  LƯU Ý (soát v1 lỗi 6): đỏ ở đây do cây git archive KHÔNG có lịch sử git (như cổng dựng), không do hành vi; trên cây gốc CÓ lịch sử thì ca này xanh.
+  Không có cách làm đỏ thật — xem trang_thai.md ## Câu hỏi 4 (đề xuất mục ## Bài thử cũ sửa). Vòng sửa 2: ca thứ hai đổi thành phép ⊆ trên CÂY HIỆN TẠI
+  (tên hàm xuất + lời gọi api.js của bản gốc còn đủ) — lớp gác còn sống, nhưng trên cây gốc có lịch sử vẫn xanh (đúng: gốc chưa bỏ gì).
+  ✗ B1 datDon.js so với bản gốc: … (cây git archive không có lịch sử git — như cổng)
+  ✗ B1 datDon.js HIỆN TẠI ⊇ bản gốc: còn đủ tên hàm xuất (trừ hai hằng chữ) và lời gọi api.js; KH-ND-3e không đổi hai thứ đó tới commit cuối   (tên ca sau vòng sửa 2; chạy lại trên gốc 13.11)
+20 đạt · 2 hỏng
+
+== cong_cu/thu_KHHANG2.js (SỬA ca A2 trình duyệt "không có nút mua" → "một nút Mua thẻ ›" (E2) + ca tĩnh mới, F3) trên gốc ==
+  ✗ A2 (KH-THE-1 E2) thẻ hạng Ưu đãi có nút ud.hang.nutCo (có hạng) / ud.hang.nutMua (chưa) → màn Hạng thành viên (moHang)
+16 đạt · 1 hỏng
+
+== Trên code ĐÃ VÁ (nhánh việc), KHONG_TRINH_DUYET=1 ==
+cong_cu/thu_KHTHE1.js   → 85 đạt · 0 hỏng ; có Chromium → 136 đạt · 0 hỏng   (sau soát v3: +2 ca tĩnh — khoá !!maXong, onClick Ưu đãi; hai ca ĐỎ trên 73a1935: 83 · 2)
+cong_cu/thu_KHMUA1c.js  → 28 đạt · 0 hỏng (không bớt ca)
+cong_cu/thu_KHSOHD1.js  → 40 đạt · 0 hỏng (không bớt ca)
+cong_cu/thu_KHND3b.js   → 20 đạt · 0 hỏng (không bớt ca)
+cong_cu/thu_KHND3e.js   → 22 đạt · 0 hỏng (không bớt ca)
+cong_cu/thu_KHHANG2.js  → 17 đạt · 0 hỏng (+1 ca tĩnh) ; có Chromium → 74 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHTHE1.js: 85
+SỐ CA cong_cu/thu_KHMUA1c.js: 28
+SỐ CA cong_cu/thu_KHSOHD1.js: 40
+SỐ CA cong_cu/thu_KHND3b.js: 20
+SỐ CA cong_cu/thu_KHND3e.js: 22
+SỐ CA cong_cu/thu_KHHANG2.js: 17

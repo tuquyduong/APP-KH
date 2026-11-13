@@ -3,15 +3,16 @@ import { createPortal } from 'react-dom';
 import '../giaoDien/gio_xoa.css';
 import { dinhDangGia } from '../dinhDang.js';
 import { bieuTuongNhom } from '../menuLoc.js';
-import { chenDong, demMon, doiSoLuong, duocThanhToan, giaHinhDung, trangThaiDong, xoaDong } from '../gio.js';
+import { chenDong, coDoUong, demMon, doiSoLuong, duocThanhToan, giaHinhDung, laThe, trangThaiDong, xoaDong } from '../gio.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import { tenGiam } from '../datDon.js';
+import { tenDongThe } from '../giaHang.js';
 import { dungGia } from '../heThong.js';
 import Man from '../components/Man.jsx';
 import Chu from '../components/Chu.jsx';
-import { nd, ndPhan, ndDau } from '../noiDung/nd.js';
+import { nd, ndPhan, ndDau, ndHien } from '../noiDung/nd.js';
 import { AnhMon } from '../components/MonO.jsx';
-import { Ico, En } from '../components/BieuTuong.jsx';
+import { Ico, En, Med } from '../components/BieuTuong.jsx';
 
 // Giỏ hàng theo demo (cart). Khách chưa đăng nhập vẫn thêm / xem giỏ; "Tiếp tục" → Thanh toán (cần đăng nhập, App tự đưa qua /dangnhap?tiep=).
 // Mã giảm: POS áp (dòng giảm loai "ma_giam") → nút "✓ Đã áp dụng" như demo; không áp → hiện `ma_giam_loi.error` dưới ô mã.
@@ -51,6 +52,23 @@ function ThongBaoXoa({ daXoa, hoanTac, het }) {
   );
 }
 
+/** Dòng thẻ hạng (KH-THE-1 C2): biểu tượng thẻ, giá gói của /hang để hình dung, xoá + Hoàn tác; KHÔNG ô số lượng / ghi chú. */
+function DongThe({ dong, i, dsHang, loiPos, xoa }) {
+  const { hang, goi, conBan } = trangThaiDong(dong, null, dsHang);
+  const canhBao = loiPos || (Array.isArray(dsHang) && !conBan ? nd('gio.the.khongBan') : '');
+  return (
+    <div className="cart-item">
+      <button type="button" className="cart-xoa" aria-label={nd('gio.the.xoaAria')} onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
+      <div className="cart-thumb"><Med ten="card" s={40} /></div>
+      <div className="cart-info">
+        <div className="cart-name" {...ndDau(hang ? 'gio.the' : 'gio.the.chung')}>{tenDongThe(dong, dsHang)}</div>
+        {canhBao && <div className="cart-opt"><b {...(loiPos ? {} : ndDau('gio.the.khongBan'))}>{canhBao}</b></div>}
+        {goi && <div className="cart-price" {...ndDau('gio.the')}>{dinhDangGia(goi.gia)}</div>}
+      </div>
+    </div>
+  );
+}
+
 function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
   const { tt, maGv, hangToi } = dungGia();
   const { mon, conBan } = trangThaiDong(dong, ds);
@@ -76,14 +94,19 @@ function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
   );
 }
 
-export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tiepTuc, moMenu, monLoi }) {
+export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tiepTuc, moMenu, monLoi, traTheTruoc }) {
   const [o, datO] = useState(maGiam);
   const [daXoa, datDaXoa] = useState(null); // { dong, vitri, ten } của món vừa xoá — để Hoàn tác
-  const coMenu = ds.length > 0;
-  const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: trangThaiDong(d, ds).mon?.ten || nd('gio.monChung') }); doi(xoaDong(gio, i)); };
+  const { dsHang } = dungGia();
+  const coMenu = ds.length > 0 || !coDoUong(gio); // giỏ chỉ thẻ không cần menu
+  const tenDong = (d) => (laThe(d) ? tenDongThe(d, dsHang) : trangThaiDong(d, ds).mon?.ten || nd('gio.monChung'));
+  const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: tenDong(d) }); doi(xoaDong(gio, i)); };
   const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
-  const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
+  const coThe = coMenu ? duocThanhToan(gio, ds, dsHang) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
   const { bg, loi } = dungBaoGia(gio, { maGiam }, dangNhap && coMenu && coThe);
+  const dongThe = gio.find(laThe);
+  const goiTruoc = !!dongThe && coDoUong(gio) && ndHien('hien.gio.truocThe'); // C3: thẻ + đồ uống → gợi ý trả thẻ trước (đơn riêng)
+  const theBan = !!dongThe && trangThaiDong(dongThe, null, dsHang).conBan;
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
   return (
     <Man id="cart">
@@ -97,7 +120,15 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
         </div>
       ) : (
         <>
-          {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
+          {gio.map((d, i) => (laThe(d)
+            ? <DongThe key="the" dong={d} i={i} dsHang={dsHang} loiPos={monLoi && monLoi.the ? monLoi.chu : ''} xoa={xoaMon} />
+            : <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && !monLoi.the && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />))}
+          {goiTruoc && (
+            <>
+              <Chu k="gio.truocThe.chu" as="div" className="care-disclaimer" />
+              <button type="button" className={`ghost-btn${theBan ? '' : ' btn-disabled'}`} aria-disabled={!theBan} onClick={theBan ? traTheTruoc : undefined} {...ndDau('gio.truocThe.nut')}>{nd('gio.truocThe.nut')}</button>
+            </>
+          )}
           <div className="promo-box">
             <input placeholder={nd('gio.ma.goiY')} aria-label={nd('gio.ma.aria')} {...ndDau('gio.ma.goiY')} maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
             <button type="button" onClick={() => datMaGiam(o.trim())} {...ndDau(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}>{nd(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}</button>

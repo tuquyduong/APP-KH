@@ -34,6 +34,8 @@ const TANG = 'Hạng dành tặng khách thân thiết';
 (async () => {
   console.log('Phần 1 — hàm thuần + đọc nguồn');
   const g = await nap('src/giaHang.js');
+  const uuDai = boChuThich(doc('src/pages/UuDai.jsx'));
+  k('A2 (KH-THE-1 E2) thẻ hạng Ưu đãi có nút ud.hang.nutCo (có hạng) / ud.hang.nutMua (chưa) → màn Hạng thành viên (moHang)', /['"]ud\.hang\.nutCo['"]/.test(uuDai) && /['"]ud\.hang\.nutMua['"]/.test(uuDai) && /moHang/.test(uuDai));
 
   await thu('A1', async () => {
     k('A1 laHangChiCap: đúng id + chi_cap true → true', g.laHangChiCap([H_BAC, H_TANG], 3) === true);
@@ -185,7 +187,8 @@ async function trinhDuyet(pw) {
       k(`A2 [${n}] bảng hạng: Bạc có hai gói, Vàng không dòng giá, Kim Cương = dòng tặng, không hạng 0%`, /Bạc — giảm 5%/.test(v) && /3 tháng — 300\.000đ/.test(v) && /12 tháng — 1\.000\.000đ/.test(v) && /Vàng — giảm 10%/.test(v) && /Kim Cương — giảm 15%/.test(v) && v.includes(TANG) && !/Thường/.test(v), v);
       k(`A2 [${n}] đúng hai dòng giá (chỉ hạng Bạc); hạng tặng một dòng, không giá`, dem(v, 'đ') === 2 && dem(v, TANG) === 1, v);
       k(`A2 [${n}] thứ tự hạng như POS gửi (Bạc, Vàng, Kim Cương)`, v.indexOf('Bạc') < v.indexOf('Vàng') && v.indexOf('Vàng') < v.indexOf('Kim Cương'));
-      k(`A2 [${n}] không có nút mua`, (await t.locator('#rewards .tier-card button').count()) === 0 && !/Mua thẻ|Gia hạn/.test(v));
+      // KH-THE-1 E2: thẻ hạng có MỘT nút demo "Mua thẻ ›" mở màn Hạng thành viên — vẫn không mua / gia hạn ngay trên Ưu đãi.
+      k(`A2 [${n}] chỉ một nút "Mua thẻ ›" (mở màn Hạng thành viên), không nút Gia hạn`, (await t.locator('#rewards .tier-card button').count()) === 1 && (await t.locator('#rewards .tier-card button').innerText()).trim() === 'Mua thẻ ›' && !/Gia hạn/.test(v));
       k(`A2 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `bang-hang-vang-lai_${rong}`);
     });

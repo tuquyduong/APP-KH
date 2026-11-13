@@ -33,8 +33,8 @@ const MAU_CHUOI = [vietqr('TQDNOV06 APP0016'), vietqr('TQDNOV06 APP0016', 'x'.re
   const qrcode = await import('qrcode-generator').then((m) => m.default || m);
 
   // A. hợp đồng v11
-  const v11 = path.join(GOC, 'viec/KH-SOHD-1/hop_dong_v11.md');
-  k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-SOHD-1/hop_dong_v11.md từng byte', fs.existsSync(v11) && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(v11)));
+  const v13 = path.join(GOC, 'viec/KH-THE-1/hop_dong_v13.md');
+  k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-THE-1/hop_dong_v13.md từng byte (v13 chứa v11)', fs.existsSync(v13) && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(v13)));
   const mc = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || { truong: [] };
   k('A1 canTuPos khai trường v11 của /don/:ma và /don', ['don.so_hd', 'don.tien_ve_da_cong_vi', 'don.thong_bao_tien_ve'].every((x) => mc('don_v11').truong.includes(x)) && ['data[].so_hd', 'data[].tien_ve_da_cong_vi', 'data[].thong_bao_tien_ve'].every((x) => mc('don_ds_v11').truong.includes(x)));
   k('A1 canTuPos khai trường v10 của /hang (chi_cap, goi[], thu_bac)', ['data[].chi_cap', 'data[].goi[].so_thang', 'data[].goi[].gia', 'data[].thu_bac'].every((x) => mc('hang_v10').truong.includes(x)));

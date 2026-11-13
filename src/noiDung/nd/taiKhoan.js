@@ -76,6 +76,8 @@ export const TAI_KHOAN = [
   cU('ud.hang.tang', 'Ưu đãi: hạng chỉ chủ quán cấp', 'Hạng dành tặng khách thân thiết'),
   cU('ud.hang.dong', 'Ưu đãi: bảng các hạng, mỗi hạng một dòng', '{ten} — giảm {phanTram}%', { bien: ['ten', 'phanTram'] }),
   cU('ud.hang.goi', 'Ưu đãi: bảng các hạng, gói tháng đang bán', '{soThang} tháng — {gia}', { bien: ['soThang', 'gia'] }),
+  cU('ud.hang.nutCo', 'Ưu đãi: thẻ hạng, nút mở màn Hạng thành viên (khách có hạng)', 'Quyền lợi & nâng hạng ›'),
+  cU('ud.hang.nutMua', 'Ưu đãi: thẻ hạng, nút mở màn Hạng thành viên (chưa có hạng)', 'Mua thẻ ›'),
   kU('ud.hang.pos', 'Tên hạng, % giảm, hạn thẻ, giá các gói tháng', 'pos', 'POS › Cài đặt › Hạng thành viên'),
   { khoa: 'ud.moi.anh', man: 'Ưu đãi', ten: 'Ưu đãi: thẻ mời đăng nhập, logo nhỏ', loai: 'anh', macDinh: '/anh/logo-nho.webp', tiLe: '1:1' },
   cU('ud.moi.t', 'Ưu đãi: thẻ mời đăng nhập, tiêu đề', 'Điểm, ví và voucher'),

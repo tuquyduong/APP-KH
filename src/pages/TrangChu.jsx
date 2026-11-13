@@ -22,13 +22,25 @@ import '../giaoDien/ke_hoach.css';
 import { khoGioHoatDong, trangThaiQuan } from '../gioHoatDong.js';
 import { dungKho } from '../kho.js';
 import { tenXungHo } from '../noiDung/dangNhap.js';
+import { dungGia } from '../heThong.js';
+import { nhacGiaHan } from '../giaHang.js';
+import { Ico } from '../components/BieuTuong.jsx';
 
 // Trang chủ theo demo, đúng thứ tự khối. Khối thuộc VIỆC SAU để TRỐNG (không thay bằng gì):
 //   thẻ "Xem cách dùng app" (chưa có video) · Mời bạn bè, combo → sau khai trương. Ô "Kế hoạch và nhắc việc" (KH-UI-5b) nằm cạnh thẻ hội viên như demo.
 // Demo không có dòng "quán đang mở / đóng": thêm MỘT dòng nhỏ (kiểu `.sub`) dưới lời chào, chữ lấy từ `/gio-hoat-dong` (xem `## Phát hiện` của KH-UI-3a).
 // Mọi chữ / ảnh / nút đọc qua nd() (danh mục src/noiDung/nd/trangChu.js); phần POS / tự tính gắn ndDau(<mục khoá>). Khối ẩn / hiện theo `hien.<mã SECS demo>`.
 // Đầu Trang chủ (lời chào + QR + thẻ). Tách hai bản để chỉ khách ĐÃ đăng nhập mới gọi /toi và /diem.
-function DauChung({ chao, moQR, the, ke }) {
+// Nhắc gia hạn thẻ (KH-THE-1 D4) ngay dưới thẻ hội viên: hạng bán được còn ≤ NGAY_NHAC_GIA_HAN ngày (đếm theo giờ POS) → mở màn Hạng thành viên của hạng đó.
+function NhacGiaHan({ hang, moHang }) {
+  const { dsHang } = dungGia();
+  const nh = ndHien('hien.nhacGiaHan') && coBayGio() ? nhacGiaHan(dsHang, hang, bayGio()) : null;
+  if (!nh) return null;
+  const k = nh.soNgay > 0 ? 'home.nhac.giaHan' : 'home.nhac.homNay';
+  return <div className="nt-state" role="button" tabIndex={0} onClick={() => moHang(nh.id)} onKeyDown={(e) => { if (e.key === 'Enter') moHang(nh.id); }}><Ico ten="warning" s={16} /><div {...ndDau(k)}>{nd(k, { hang: nh.ten, so: nh.soNgay })}</div></div>;
+}
+
+function DauChung({ chao, moQR, the, ke, nhac }) {
   const quan = trangThaiQuan(dungKho(khoGioHoatDong));
   return (
     <>
@@ -41,6 +53,7 @@ function DauChung({ chao, moQR, the, ke }) {
         <div className="topbar-right"><NutQR moQR={moQR} /></div>
       </div>
       <div className="top-row">{ndHien('hien.home.member') && the}{ndHien('hien.home.cal') && ke}</div>
+      {nhac}
     </>
   );
 }
@@ -58,7 +71,7 @@ function OKeHoachTrangChu({ dangNhap, daBiet, moKeHoach, moDangNhapTai }) {
   );
 }
 
-function DauHoiVien({ moQR, moUuDai, ke }) {
+function DauHoiVien({ moQR, moUuDai, ke, moHang }) {
   const toi = dungCua(cuaToi);
   const diem = dungCua(cuaDiem);
   const hang = toi.dl && toi.dl.khach.hang; // null = chưa có hạng → không hiện nhãn hạng
@@ -69,6 +82,7 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
       chao={loiChao(coBayGio() ? bayGio() : '', tenXungHo(k && k.xung_ho), k && k.ten)}
       moQR={moQR}
       ke={ke}
+      nhac={<NhacGiaHan hang={hang} moHang={moHang} />}
       the={(
         <div className="points-card pc-mini" role="button" tabIndex={0} onClick={moUuDai} onKeyDown={(e) => { if (e.key === 'Enter') moUuDai(); }}>
           <div className="card-top">
@@ -87,13 +101,13 @@ function DauHoiVien({ moQR, moUuDai, ke }) {
 }
 
 // `menu` = menu của App (tải một chỗ, kể cả khi chưa đăng nhập). Chưa đăng nhập: "Chào bạn!" + thẻ mời thay thẻ hội viên; khối cần dữ liệu riêng của khách bị ẩn.
-export default function TrangChu({ quangCao, moQuangCao, menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon }) {
+export default function TrangChu({ quangCao, moQuangCao, menu, dangNhap, daBiet = false, klLuu, moQR, moMenu, moGioVang, moUuDai, moDangNhap, moDangNhapTai, moTracNghiem, moKeHoach, locNhuCau, chonMon, moHang }) {
   const ds = menu.dl ? menu.dl.data : [];
   const ke = <OKeHoachTrangChu dangNhap={dangNhap} daBiet={daBiet} moKeHoach={moKeHoach} moDangNhapTai={moDangNhapTai} />;
   const nhuCau = nhuCauCoMon(ndDs('home.need'), ds, MON);
   const noiBat = ndDs('home.feat.mon').map((x) => ds.find((m) => m.ma === x.ma)).filter(Boolean);
   const fmore = ndNut('home.fmore');
-  const DICH = { menu: moMenu, giovang: moGioVang, tracnghiem: moTracNghiem, kehoach: moKeHoach, uudai: moUuDai }; // mọi mã trong DICH (noiDung/nd/index.js)
+  const DICH = { menu: moMenu, giovang: moGioVang, tracnghiem: moTracNghiem, kehoach: moKeHoach, uudai: moUuDai, hang: moHang }; // mọi mã trong DICH (noiDung/nd/index.js)
   const di = (dich) => () => DICH[dich]();
   const moi = { tieuDe: nd('home.moi.t'), phu: nd('home.moi.p'), nut: nd('home.moi.nut') };
   const { bang: keHoach } = dungKeHoach(daBiet);
@@ -101,7 +115,7 @@ export default function TrangChu({ quangCao, moQuangCao, menu, dangNhap, daBiet 
   return (
     <Man id="home">
       {dangNhap
-        ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} ke={ke} />
+        ? <DauHoiVien moQR={moQR} moUuDai={moUuDai} ke={ke} moHang={moHang} />
         : <DauChung chao={loiChao('', '', '')} moQR={moQR} the={<TheMoi chu={moi} khoa={{ tieuDe: 'home.moi.t', phu: 'home.moi.p', nut: 'home.moi.nut', anh: 'home.logo' }} anh={ndAnh('home.logo')} moDangNhap={moDangNhap} />} ke={ke} />}
 
       {ndHien('hien.home.hb') && (

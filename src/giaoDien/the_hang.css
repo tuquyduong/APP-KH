@@ -1,0 +1,22 @@
+/* KH-THE-1 — màn Hạng thành viên (/uudai/hang). CHÉP NGUYÊN demo app_kh_demo.html "===== hạng thành viên =====" (.ti-*), bỏ .ti-crit / .ti-demo (khối không làm — lý do (a)). */
+.ti-card{ border-radius:20px; padding:16px; color:#fff; } .ti-card.l0{ background:linear-gradient(135deg,#8B6877,#B48C9B); } .ti-card.l1{ background:linear-gradient(135deg,#B57A2A,#E2B865); } .ti-card.l2{ background:linear-gradient(135deg,#2C3E5E,#5B7FB8); }
+.ti-card small{ opacity:.85; font-size:11.5px; } .ti-card b{ display:block; font-size:22px; margin:2px 0; } .ti-card span{ font-size:12.5px; }
+.ti-tabs{ display:flex; gap:6px; margin:14px 0 6px; } .ti-tabs button{ flex:1; border:none; font:inherit; padding:9px 4px; border-radius:12px; background:#F3EBEE; font-weight:700; font-size:12.5px; cursor:pointer; color:var(--muted); }
+.ti-tabs button.on.l0{ background:var(--pink-deep); color:#fff; } .ti-tabs button.on.l1{ background:#C38C40; color:#fff; } .ti-tabs button.on.l2{ background:#3D5A8C; color:#fff; }
+.ti-how{ font-size:12px; color:var(--muted); text-align:center; margin-bottom:8px; }
+.ti-ben{ background:#FFFDFB; border-radius:16px; padding:4px 14px; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+.ti-ben > div{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #F4E6EA; font-size:13px; color:var(--ink); } .ti-ben > div:last-child{ border:none; }
+.ti-ben > div > span{ flex:1; } .ti-ben em{ font-style:normal; color:var(--muted); font-size:12.5px; } .ti-ben svg{ color:#C38C40; flex:none; }
+.ti-buy{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.ti-buy button{ border:1.5px solid #E7CFA5; background:#fff; border-radius:16px; padding:12px 8px; cursor:pointer; text-align:center; font:inherit; }
+.ti-buy button.on{ border-color:#C38C40; background:#FFF1DC; } .ti-buy small{ display:block; color:var(--muted); font-size:11.5px; } .ti-buy b{ display:block; font-size:18px; color:#9E5A12; } .ti-buy em{ font-style:normal; font-size:10.5px; font-weight:800; color:#2F6B3A; }
+.ti-cmp{ width:100%; border-collapse:collapse; font-size:12px; background:#FFFDFB; border-radius:14px; overflow:hidden; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+.ti-cmp th, .ti-cmp td{ padding:8px 6px; text-align:center; border-bottom:1px solid #F4E6EA; } .ti-cmp td:first-child{ text-align:left; padding-left:10px; color:var(--muted); }
+.ti-cmp th.l1{ color:#9E5A12; } .ti-cmp th.l2{ color:#3D5A8C; } .ti-cmp .me{ background:#FFF8EE; font-weight:700; }
+/* App đặt lại :where(button){ text-align:inherit } (giaoDien.css); demo để nút theo mặc định trình duyệt = chữ giữa. */
+.ti-tabs button{ text-align:center; }
+/* Nút chính dưới gói: demo đặt kiểu ngay trên thẻ (style="justify-content:center;margin-top:12px"). */
+#buycard .checkout-btn{ justify-content:center; margin-top:12px; }
+/* Nút "Quyền lợi & nâng hạng ›" trên thẻ hạng Ưu đãi: demo đặt kiểu ngay trên nút (#rewards .tier-card button). */
+/* Màu theo bản vá thẻ vàng dập của demo (".tier-card button" — chữ nâu trên nền trắng mờ, đè màu trắng của kiểu ngay trên nút). */
+.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.55); color:#4A2410; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; text-align:center; position:relative; }
