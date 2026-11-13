@@ -125,6 +125,8 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     k('C7 đơn còn chờ trả / huỷ / không có trong ds → ""', D.maDonDaTra(g, ds('cho_tra')) === '' && D.maDonDaTra(g, ds('da_huy')) === '' && D.maDonDaTra(g, [{ ma: 'TQD9', tien_trinh: 'xong' }]) === '');
     k('C7 đúng MỘT lần: bản ghi đã xong / chưa có mã đơn / không bản ghi / ds lỗi → ""', D.maDonDaTra({ ...g, xong: true }, ds('xong')) === '' && D.maDonDaTra({ ...g, ma_don: undefined }, ds('xong')) === '' && D.maDonDaTra(null, ds('xong')) === '' && D.maDonDaTra(g, null) === '');
     const app = doc('src/App.jsx'), td = doc('src/pages/TheoDoiDon.jsx'), tt = doc('src/pages/ThanhToan.jsx');
+    k('C7 Thanh toán: nút đặt KHOÁ ngay trong lần vẽ thấy đơn đã trả (khoa có !!maXong — không chờ effect dọn giỏ; soát v3)', /const khoa = [^\n]*\|\| !!maXong;/.test(tt));
+    k('E2 nút Ưu đãi không truyền sự kiện bấm làm tham số hạng (onClick bọc hàm; soát v3)', /onClick=\{\(\) => mo\(\)\}/.test(doc('src/pages/UuDai.jsx')) && !/onClick=\{mo\}/.test(doc('src/pages/UuDai.jsx')));
     k('C7 Thanh toán (GET /don riêng) cũng dọn giỏ qua maDonDaTra + daTra và khoá nút khi thấy đơn đã trả (soát v1 lỗi 1)', /maDonDaTra\((docGuiDo\(\)|guiDo), [^)]*dsDon/.test(tt) && /daTra\(/.test(tt) && /daTra=\{daTra\}/.test(app));
     k('C7 Theo dõi đơn dùng daThanhToan (không viết lại điều kiện)', /daThanhToan\(tt\)/.test(td) && !/tt !== 'cho_tra' && tt !== 'da_huy'/.test(td));
     k('C7 App đọc kho cuaDon và gọi daTra theo maDonDaTra; daTra dọn bằng boDongDaGui', /maDonDaTra\(/.test(app) && /cuaDon\.kho/.test(app) && /const daTra = [^\n]*boDongDaGui\(/.test(app) && !/const daTra = [^\n]*doiGio\(\[\]\)/.test(app));
