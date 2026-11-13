@@ -87,7 +87,8 @@ const GOC_CHU = {
   } else k('B1 nạp được src/datDon.js', false, D.loiNap || '');
   k('B1 tieuDeXong như cũ', typeof B.tieuDeXong === 'function' && B.tieuDeXong('A7') === '(Xong) Đơn A7 — Tứ Quý Đường', B.loiNap || '');
   // datDon.js: việc này chỉ đổi dòng có chữ (commit PHIEU → commit KH-ND-3e CUỐI đụng datDon.js) — đọc nguồn, không đổi tên hàm / phép tính / lời gọi api.js.
-  // So tới commit cuối của việc (không tới cây hiện tại): việc sau (KH-THE-1 thêm hàm thẻ) được đổi datDon.js mà không làm đỏ bài này.
+  // Ca 1 so tới commit cuối của việc (việc sau — KH-THE-1 thêm hàm thẻ — được đổi datDon.js). Ca 2 gác CÂY HIỆN TẠI bằng phép ⊆ (soát KH-THE-1 v2):
+  // tên hàm xuất và lời gọi api.js của bản gốc vẫn còn đủ — việc sau được THÊM, không được bỏ / đổi tên hàm hay cửa mạng KH-ND-3e đã giữ.
   const goc = spawnSync('git', ['log', '--format=%H', '--grep=^PHIEU: KH-ND-3e$', '-1'], { cwd: GOC, encoding: 'utf8' }).stdout.trim();
   const cuoi = spawnSync('git', ['log', '--format=%H', '--grep=^KH-ND-3e:', '-1', '--', 'src/datDon.js'], { cwd: GOC, encoding: 'utf8' }).stdout.trim();
   const diff = goc && cuoi ? spawnSync('git', ['diff', '-U0', goc, cuoi, '--', 'src/datDon.js'], { cwd: GOC, encoding: 'utf8' }).stdout.split('\n') : [];
@@ -99,8 +100,10 @@ const GOC_CHU = {
   const apiGoc = (s) => (s.match(/\b(baoGiaGio|datDonApp|huyDonApp|layChiTietDon)\(/g) || []).sort().join();
   const nguonGoc = goc ? spawnSync('git', ['show', `${goc}:src/datDon.js`], { cwd: GOC, encoding: 'utf8' }).stdout : '';
   const nguonCuoi = cuoi ? spawnSync('git', ['show', `${cuoi}:src/datDon.js`], { cwd: GOC, encoding: 'utf8' }).stdout : '';
-  const tenHam = (s) => [...s.matchAll(/^export (?:async )?(?:function|const) (\w+)/gm)].map((m) => m[1]).filter((x) => !/^CHU_CHUA_/.test(x)).sort().join();
-  k('B1 datDon.js: tên hàm xuất và lời gọi api.js y như bản gốc (trừ hai hằng chữ)', !!nguonGoc && !!nguonCuoi && tenHam(nguonGoc) === tenHam(nguonCuoi) && apiGoc(nguonGoc) === apiGoc(nguonCuoi));
+  const tenHam = (s) => [...s.matchAll(/^export (?:async )?(?:function|const) (\w+)/gm)].map((m) => m[1]).filter((x) => !/^CHU_CHUA_/.test(x));
+  const hienTai = docTho('src/datDon.js'), thieuHam = tenHam(nguonGoc).filter((x) => !tenHam(hienTai).includes(x));
+  const cua = (s) => [...new Set(s.match(/\b(baoGiaGio|datDonApp|huyDonApp|layChiTietDon)\(/g) || [])];
+  k('B1 datDon.js HIỆN TẠI ⊇ bản gốc: còn đủ tên hàm xuất (trừ hai hằng chữ) và lời gọi api.js; KH-ND-3e không đổi hai thứ đó tới commit cuối', !!nguonGoc && !!nguonCuoi && tenHam(nguonGoc).sort().join() === tenHam(nguonCuoi).sort().join() && apiGoc(nguonGoc) === apiGoc(nguonCuoi) && thieuHam.length === 0 && cua(nguonGoc).every((x) => cua(hienTai).includes(x)), thieuHam.join(', '));
 
   console.log('Phần 2 — App thật trong Chromium');
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');

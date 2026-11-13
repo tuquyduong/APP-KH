@@ -15,7 +15,7 @@ import '../giaoDien/the_hang.css';
 const POS = ndDau('tier.pos');
 const goiChu = (h) => goiBan(h).map((g) => nd('tier.thang', { so: g.so_thang })).join(nd('tier.hoac'));
 
-/** Thẻ "Hạng hiện tại" — CHỈ vẽ khi đã đăng nhập (chỉ khi đó mới đọc /toi, như TrangChu / UuDaiToi). `hang` = /toi.khach.hang (null = Thường). */
+/** Thẻ "Hạng hiện tại" — CHỈ vẽ khi App đã biết khách (`daBiet`: cùng cổng gác với hangToi của nút / bảng; chỉ khi đó mới đọc /toi). `hang` = /toi.khach.hang (null = Thường). */
 function TheToi({ dsHang, banDau }) {
   const toi = dungCua(cuaToi);
   if (!toi.dl || !toi.dl.khach) return null;
@@ -32,7 +32,7 @@ function TheToi({ dsHang, banDau }) {
   );
 }
 
-export default function HangThanhVien({ dangNhap, hId, doiHang, lui, mua }) {
+export default function HangThanhVien({ daBiet, hId, doiHang, lui, mua }) {
   const { dsHang, hangToi } = dungGia(); // hangToi { id, ten } do App đọc /toi (đã đăng nhập, đã biết khách)
   const ds = hangCoGiam(dsHang);
   const h = ds.find((x) => String(x.id) === String(hId)) || (hangToi && ds.find((x) => x.id === hangToi.id)) || ds.find((x) => goiBan(x).length) || ds[0] || null;
@@ -48,7 +48,7 @@ export default function HangThanhVien({ dangNhap, hId, doiHang, lui, mua }) {
   return (
     <Man id="buycard">
       <DauManCon tieuDe={nd('tier.tieuDe')} phu={nd('tier.sub')} lui={lui} />
-      {dangNhap && <TheToi dsHang={dsHang} banDau={banDau} />}
+      {daBiet && <TheToi dsHang={dsHang} banDau={banDau} />}
       {h && (
         <>
           <div className="ti-tabs">{ds.map((x) => <button type="button" key={x.id} className={x.id === h.id ? `on ${lop(x)}` : ''} onClick={() => doiHang(x.id)} {...POS}>{x.ten}</button>)}</div>

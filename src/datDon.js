@@ -221,8 +221,8 @@ export function hangCuaDon(g, dsHang) {
   const h = the && Array.isArray(dsHang) ? dsHang.find((x) => x && x.id === the.hang_id) : null;
   return h ? chu(h.ten) : '';
 }
-/** Về Thanh toán lại (Tạo mã mới) của đơn CHỈ thẻ ("trả thẻ trước") → giữ { chi: 'the' }; đơn khác → {}. */
-export const thamThanhToanLai = (g) => (g && g.than && Array.isArray(g.than.mon) && g.than.mon.length > 0 && g.than.mon.every(laThe) ? { chi: 'the' } : {});
+/** Về Thanh toán lại (Tạo mã mới) của đơn "trả thẻ trước" (chỉ thẻ, không mã giảm) → giữ { chi: 'the' }; đơn khác (kể cả chỉ thẻ CÓ mã — đặt từ "Thanh toán") → {}. */
+export const thamThanhToanLai = (g) => (g && g.than && !g.than.ma_giam && laDonChiThe(g.than) ? { chi: 'the' } : {});
 /** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
 export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */

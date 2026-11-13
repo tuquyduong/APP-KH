@@ -88,11 +88,11 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
   const donKhac = chanGhi && !chuaRo ? guiDo.ma_don : '';
   const nhanDon = (ma) => soDon(((dsDon.dl && dsDon.dl.data) || []).find((d) => d.ma === ma)?.so_hd, ma); // số đơn hiện cho khách; ma chỉ để gọi API
   const donCho = dsDon.dl && Array.isArray(dsDon.dl.data) ? dsDon.dl.data.find((d) => d.tien_trinh === 'cho_tra') : null;
-  // C7: GET /don của màn này thấy đơn vừa gửi ĐÃ trả (tiền QR về khi khách đã rời Theo dõi đơn) → dọn giỏ bằng CÙNG hàm daTra; chờ dọn thì khoá nút (không mua thẻ hai lần).
+  // C7: GET /don của màn này thấy đơn vừa gửi ĐÃ trả (tiền QR về khi khách đã rời Theo dõi đơn) → dọn giỏ bằng CÙNG hàm daTra (effect chạy trước cú bấm kế) — không mua thẻ hai lần.
   const maXong = dsDon.dl ? maDonDaTra(guiDo, dsDon.dl.data) : '';
   useEffect(() => { if (maXong) daTra(maXong); }, [maXong]);
   const chan = chanDatGio(gh, gio) || chanPos; // giỏ chỉ thẻ đặt mọi giờ (v13)
-  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi || !!maXong;
+  const khoa = !DAT_ONLINE || !!chan || !coThe || !bg || dang || dsDon.dangTai || chuaRo || !!donKhac || !!donCho || conGiay > 0 || monLoi;
 
   function xuLyLoi(e) {
     const dl = e.duLieu || {};

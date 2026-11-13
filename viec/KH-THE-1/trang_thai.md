@@ -55,3 +55,24 @@ CHƯA SOÁT ĐƯỢC: --day-du, cổng chay; so ảnh bằng mắt; VOUCHER-2 ph
 BÀI HỌC: KHOÁ ca CR "trả QR → rời Theo dõi → tiền về → mở Thanh toán"; KHOÁ ca "Tạo mã mới đơn chỉ thẻ giữ ?chi=the"; KHOÁ ca tĩnh "màn vãng lai không gọi cuaToi khi chưa đăng nhập";
 NGUYÊN TẮC: gom "nguồn dữ liệu X" về một hàm thì grep mọi lời gọi cửa API đó; "đỏ trên gốc" do môi trường không tính.
 Đơn giản: the_hang.css khai .ud-hang-nut hai lần; tenThe (GioHang) / tenGui (ThanhToan) trùng → một hàm; HangThanhVien phu/kPhu chuỗi điều kiện hai lần; dot_bien_tay.js đường nháp ghi cứng.
+
+## Vòng sửa 1 (sau soát v1)
+Ca thử trước (`2418e38`, đỏ 7 ca trên code cũ: 124 · 7 có Chromium) → vá `b6f06a9`: ThanhToan dọn giỏ qua `maDonDaTra(guiDo, dsDon)` + `daTra`; "Tạo mã mới" `thamThanhToanLai`;
+"Đã lên hạng" `hangCuaDon` (dòng thẻ đã gửi + /hang, không thì `td.the.xongChung`); `TheToi` đọc /toi chỉ khi đăng nhập; `monDatLai` không đếm thẻ; `tenDongThe` một hàm; gộp CSS;
+`dot_bien_tay.js` thư mục tạm. +6 đột biến (`b52c0d9`, `eaae8e9`). Lỗi 6 (KHND3e) → Câu hỏi 4.
+
+## Soát độc lập vòng 2 (/ra-soat, HEAD 3ccfe1a) — chép nguyên ý
+KHÔNG ĐẠT — 5 lỗi code vòng 1 đã sửa đúng (đối chiếu từng chỗ; gỡ phần dọn giỏ ở Thanh toán thì ca CR đỏ).
+LỖI TÌM ĐƯỢC:
+1. src/pages/ThanhToan.jsx:95 khoá `|| !!maXong` không có bài thử giữ; đột biến BV-THANH-TOAN-KHONG-KHOA-KHI-THAY-DA-TRA thật ra gỡ useEffect, tên sai việc — K3.
+2. cong_cu/thu_KHTHE1.js:426 ca C6 — POS giả trả tong = tổng dòng (trùng số App tự cộng), bỏ qua ma_giam → bản App tự cộng vẫn xanh — K3 (marker suông).
+3. src/pages/HangThanhVien.jsx:20-22 vs :36 — LỖI MỚI: TheToi đọc kho cuaToi không gác daBiet, nút / bảng đọc hangToi có gác → một màn hai nguồn — K4 / đồng bộ.
+4. cong_cu/thu_KHND3e.js:91-103 — ca B1 thành hằng số (gỡ lớp gác); Câu hỏi 4 đúng thủ tục nhưng "cổng vẫn ĐẠT" là chấp nhận đỏ giả; đề xuất giữ phép so với cây HIỆN TẠI bằng ⊆ — K3 / F3.
+5. viec/KH-THE-1/bang_chung_do.txt — "b52c0d9^ = 2418e38" sai (cha b52c0d9 là b6f06a9; đúng là b6f06a9^ = 2418e38); "có Chromium → 133" đã cũ (134) — K1.
+NGHI NGỜ: thamThanhToanLai trả chi=the cả cho đơn chỉ thẻ đặt bằng "Thanh toán" cả giỏ có ma_giam → Tạo mã mới bỏ mã; ảnh so_anh chụp trước vòng sửa; !!maXong gần như thừa.
+NGHIỆM THU: 21/25 · thiếu F1 (trang_thai chưa liệt kê khoá), F3 (KHND3e chờ chủ quán), F6, F7 (chưa ghi thao tác thử tay).
+CHƯA SOÁT ĐƯỢC: --day-du, cổng chay, K10, nhóm đột biến --trinh-duyet (chỉ thử 2), so ảnh bằng mắt, VOUCHER-2.
+BÀI HỌC: KHOÁ — mỗi điều kiện khoá nút mới có đột biến gỡ đúng điều kiện đó, tên khớp chỗ vá; KHOÁ — ca "App không tự tính tiền" cần POS giả trả tong khác tổng dòng;
+NGUYÊN TẮC — sửa bài cũ thành phép so hai commit cố định là gỡ lớp gác, phải so với cây hiện tại bằng ⊆; NGUYÊN TẮC — một khối trên màn dùng cùng cổng gác (daBiet) với phần còn lại.
+Đơn giản: thamThanhToanLai dùng lại laDonChiThe; bỏ `!!maXong` hoặc thêm ca.
+K4: 6 chỗ gọi GET /don — ChiTietDon và Lịch sử trang 2+ không gọi maDonDaTra nhưng tới được chỉ sau khi kho /don đã nạp → không phải lỗi. K5: không luồng nào bị chặn oan lâu.
