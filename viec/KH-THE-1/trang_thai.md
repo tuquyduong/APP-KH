@@ -20,7 +20,8 @@ b7df000 TIEN-DO: KH-ND-3c, KH-UI-5f xong (chat soat cuoi DAT, gop PR); mo KH-ND-
    (`git log --grep=^KH-ND-3e: -- src/datDon.js`) — đúng ý bài (KH-ND-3e chỉ đổi dòng chữ) nhưng nay là phép so lịch sử cố định. Trên cây gốc của cổng (git archive, không `.git`)
    ca ĐỎ, nhưng là do môi trường, không do hành vi — không có cách làm đỏ thật. Đề xuất chủ quán thêm vào phiếu:
    `## Bài thử cũ sửa` · `- cong_cu/thu_KHND3e.js — B1 so datDon.js tới commit cuối của KH-ND-3e (việc sau được thêm hàm vào datDon.js); không có hành vi nào trên gốc để đỏ`.
-   Không thêm thì cổng vẫn ĐẠT (đỏ vì thiếu `.git`), chỉ là bằng chứng không thật — máy ghi rõ ở `bang_chung_do.txt`.
+   Vòng sửa 2 (soát v2 lỗi 4): ca thứ hai đổi thành phép ⊆ trên CÂY HIỆN TẠI (tên hàm xuất + lời gọi api.js của bản gốc còn đủ) — giữ lớp gác sống; ca thứ nhất vẫn là phép so
+   lịch sử của KH-ND-3e. Đỏ trên cây gốc của cổng chỉ do thiếu `.git` (ghi rõ ở `bang_chung_do.txt`) — KHÔNG phải bằng chứng đỏ thật; F3 với bài này CHỜ chủ quán trả lời câu này.
 1. **A1 không tải được đúng từng byte.** Người gác chặn cả ba đường: `curl` tới raw.githubusercontent.com (`[CURL-HOST]`), `git init` + `git fetch` kho POS ở nháp
    (`[GIT-LENH]`), công cụ thêm kho `add_repo` (`[CC-LA]`). Một agent phụ đọc được trang (PHIEN_BAN 13, NGAY 2026-11-09) nhưng chỉ trả lời tóm ý — không dùng để chép.
    Xin chủ quán làm như KH-MUA-1c (v9): đặt bản gốc vào `viec/KH-THE-1/hop_dong_v13.md` (tải `HOP_DONG_API_KH.md` của kho POS ở commit
