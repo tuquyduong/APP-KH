@@ -31,7 +31,8 @@ const OK = { success: true, ma_don: 'TQD42', tong: 1, giu_vi: 0, con_lai: 1, tie
   const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
 
   await thu('A', async () => {
-    k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-SOHD-1/hop_dong_v11.md từng byte (v11 chứa v9)', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-SOHD-1/hop_dong_v11.md'))));
+    const v13 = path.join(GOC, 'viec/KH-THE-1/hop_dong_v13.md');
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-THE-1/hop_dong_v13.md từng byte (v13 chứa v9)', fs.existsSync(v13) && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(v13)));
     const hd = JSON.parse(/<!-- HOP_DONG_MAY_DOC -->\s*```json\n([\s\S]*?)\n```/.exec(docTho('thiet_ke/HOP_DONG_API_KH.md'))[1]);
     const tra = (cua) => { const [pt, duong] = cua.split(' '); const c = hd.cua.find((x) => x.pt === pt && x.duong === duong); return c ? c.tra : null; };
     const khai = (cua) => CAN_TU_POS.filter((x) => x.cua === cua && x.co).flatMap((x) => x.truong);
