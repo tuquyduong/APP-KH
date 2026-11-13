@@ -142,3 +142,15 @@ chặn như cũ (`chanBoiBanGhi`, ca có sẵn của MUA-1c giữ xanh + một c
 ## 5. Ngoài phạm vi / không làm
 - Không sửa `api.js`, `luuMay.js`, `dungDatDon.js`, `hoaDon.js`, `dinhDang.js`, `thiet_ke/**` (trừ hợp đồng), `no_chu_cung.txt`. Cần thì ghi `## Câu hỏi`.
 - Báo giá lỗi mã thẻ (trước khi đặt): `dungBaoGia` chỉ trả câu lỗi (không `code`) → Giỏ hiện câu POS như hiện nay; đánh dấu dòng thẻ chỉ từ lỗi `POST /don` (như món lỗi).
+
+## 6. Soát kế hoạch (agent phụ chỉ đọc, 13.11) — đã sửa kế hoạch theo
+1. **Phạm vi:** không ra ngoài. Sửa: dòng vẽ `HangThanhVien` đặt SAU dòng `UuDai` (App.jsx ~225), không trong khối 219–223 cạnh dòng `<TienIch …>`. Lấy lại `/hang` sau khi trả
+   (D1 "nếu cần"): hàm nạp `/hang` riêng trong `src/heThong.js` (ngoài Phạm vi) → KHÔNG cần: mua thẻ không đổi `/hang`, hạng mới đến từ `/toi` (`lamMoi([cuaToi])`).
+   Biểu tượng thẻ: `i-card` / `i-ticket` đã có sẵn — không thêm.
+2. **Ngắn hơn:** GIỮ cách `daTra` xoá mã giảm như cũ (bỏ ý "chỉ xoá khi có gửi `ma_giam`" — phiếu không đòi, đổi hành vi đơn đồ uống).
+3. **Ca thử:** C6 sửa thành ĐỎ trên gốc (gốc không dựng được dòng thẻ). Để đột biến F4 ĐỎ cả khi `KHONG_TRINH_DUYET=1`, phần quyết định đưa vào hàm thuần thử tĩnh được, JSX chỉ gọi:
+   `thanChiThe(gio)` (datDon.js — giỏ con chỉ thẻ, KHÔNG `ma_giam`), `boDongDaGui` (gio.js — `daTra` gọi), `laLoiThe(e)` (datDon.js — `MA_THE`, ThanhToan đánh dấu dòng thẻ);
+   kèm ca tĩnh đọc mã nguồn `ThanhToan.jsx` / `App.jsx` có gọi đúng các hàm đó (như bài KHBAO1 A3). C3 / D1 / E2 phần dây nối vẫn có ca Chromium (chạy thật ở máy, ghi `trang_thai.md`).
+4. **Đường song song bổ sung:** `ThanhToan.jsx` dòng `coThe = duocThanhToan(gio, ds)` + `dungBaoGia(gio, …)` → truyền `dsHang`, giỏ chỉ thẻ không chờ menu; nhánh `MA_MON` (`dl.ma`) giữ
+   nguyên, lỗi thẻ đi nhánh `laLoiThe` riêng; khoá React dòng thẻ; `ra()` của `duongDan.js` phải giữ truy vấn `tv` trong `chuan` (đăng nhập quay về đúng). `BaoDonXong.jsx` không
+   đổi (`DANG_CHAY` không gồm `cho_tra`). Có sẵn từ trước: `daTra` chỉ chạy khi màn Theo dõi đơn đang mở — ghi `## Phát hiện`, không sửa trong việc này.

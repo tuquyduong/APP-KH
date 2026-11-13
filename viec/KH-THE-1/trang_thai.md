@@ -28,3 +28,4 @@ b7df000 TIEN-DO: KH-ND-3c, KH-UI-5f xong (chat soat cuoi DAT, gop PR); mo KH-ND-
 
 ## Phát hiện
 - Hợp đồng v12 (KH-TOMTAT-1) thêm `kenh`, `cach_nhan`, `tra[]`, `so_mon`, `mon_dau`, `giam` vào `GET /don` và `GET /don/:ma`. Việc này không dùng (ngoài phạm vi), chỉ chép hợp đồng.
+- `daTra` (App.jsx ~210) chỉ chạy khi màn Theo dõi đơn đang mở: đơn trả xong lúc khách ở màn khác thì giỏ không tự dọn (có từ trước KH-THE-1; agent soát kế hoạch chỉ ra). Không sửa ở việc này.
