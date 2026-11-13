@@ -136,3 +136,74 @@ Kiểm: `kiemDanhMuc(DANH_MUC)` rỗng lỗi + ca F1 của thu_KHTHE1 (mọi kho
 2. Giỏ chỉ có thẻ → Tiếp tục → bật "Trừ từ số dư ví" → nhập PIN → Theo dõi đơn hiện "Đã lên hạng …" + "Hạn mới: …"; về Trang chủ thấy hạng mới (có thể mua gói rẻ rồi huỷ / hoàn ở quầy).
 3. Giỏ có thẻ + 1 ly → bấm "Trả thẻ trước để đơn này được giảm ›" → trả → bấm "Về giỏ đặt đồ uống ›": ly còn trong giỏ, giá theo hạng mới.
 4. Menu → ô "Thẻ thành viên" → thẻ "Thẻ … — từ …" → mở màn Hạng thành viên.
+
+## Kiểm (bước 6 / 11.4) ở HEAD 7a8512d
+- `KHONG_TRINH_DUYET=1 npm test` → 50 đạt · 0 hỏng. `node kiem_tra_truoc_khi_giao.js --day-du` (có dựng app + Chromium) → **52 đạt · 0 hỏng** (K9 màu / phông, K10 chữ cứng ĐẠT). `git ls-files dist` rỗng.
+- Phần trình duyệt chạy thật ở máy: thu_KHTHE1 136 · 0; thu_KHHANG2 74 · 0; các bài cũ luồng đơn (MUA1 130, MUA1b 258, MUA1c 112, BAO1 106, TT1 89, SOHD1 103, HD1 87, NHANH1 228) xanh trong `--day-du`.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 3cb9386^ HEAD viec/KH-THE-1` → **✓ CỔNG CHẠY ĐẠT** (cảnh báo A16: thu_KHTHE1 trên gốc in 38 ca ≠ 85 — bài dừng sớm từng nhóm trên gốc).
+- Cổng `tinh` trước đó: chỉ `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi ở cuối tệp này).
+- Ngân sách: app +~520 dòng (phiếu ~700), thử +~560 dòng (phiếu ~550) — trong 1,5 lần.
+
+## Nghiệm thu — đếm từng mục
+| Mục | Bằng chứng |
+|---|---|
+| A1 | thu_KHTHE1 khối A (sha256 490976b0c438b8b4 + so từng byte + PHIEN_BAN 13 + 4 mã đọc từ hợp đồng); thu_KHMUA1c / KHSOHD1 A1 trỏ v13 |
+| A2 | canTuPos.js 3 dòng `viec_pos: 'KH-THE-1'` (hang_v13 quyen_loi, the_bao_gia, the_dat_don); ca A2 ×2; thu_KHKHOP1 xanh |
+| B1 | ca B1 ×6 tĩnh (đường dẫn, ?h=, ?chi=the, tiepHopLe, tiêu đề tab) + CR: mở thẳng, đổi tab = thay (history không tăng), tải lại, Back về Ưu đãi, đăng nhập quay về `?h=` |
+| B2 | ca B2 ×8 (goiBan, tiết kiệm, gói mặc định, Mua / Gia hạn / mờ chiCap / caoHon / chuaBan, lớp l0/l1/l2) + CR vãng lai / chưa hạng / Vàng / Kim cương, So sánh nhanh |
+| B3 | CR Mua → ở lại màn, "Đã thêm Thẻ Vàng 3 tháng vào giỏ", viên số tab Giỏ = 1; đổi gói → "Đã đổi sang …" |
+| C1 | khối C1 ×11 (thêm / thay / bản cũ / dòng hỏng / hai dòng thẻ / ghi / đếm / Hoàn tác) |
+| C2 | khối C2 ×5 + CR (dòng thẻ không ô số lượng, xoá + Hoàn tác); ca R tenDongThe |
+| C3 | khối C3 ×3 + CR (thân chỉ thẻ không ma_giam, ly còn, giá ly theo hạng mới 27.000đ, mã giảm giữ); Tạo mã mới giữ ?chi=the (tĩnh + CR) |
+| C4 | khối C4 ×6 (thân 3 khoá, món không loai, thứ tự, khoá gửi / tong_da_xem / pin, dọn đúng dòng đã gửi) + CR |
+| C5 | khối C5 ×5 (chanDatGio, chanDat cũ không đổi, MA_THE = hợp đồng, 4 mã → chua_tao) + CR (giỏ chỉ thẻ đặt khi quán đóng; DA_CO_HANG_CAO_HON hiện lời POS, đánh dấu dòng thẻ, không "chưa rõ") |
+| C6 | CR bảng tiền giỏ thẻ + ly = báo giá POS (dòng "Giảm giá (voucher)" −22.900đ, tổng 206.100đ ≠ tổng dòng) |
+| C7 | khối C7 ×7 (daThanhToan, maDonDaTra, một lần, Theo dõi / App / Thanh toán dùng cùng hàm, khoá !!maXong) + CR (mở lại App thấy đơn đã trả; Thanh toán thấy đơn đã trả → không đơn thứ hai) + 6 đột biến |
+| D1 | CR Trang chủ / Ưu đãi / màn Hạng hiện hạng mới không tải lại tay (daTra → lamMoi /toi + menu) |
+| D2 | khối D ×4 (docDon loai, laDonChiThe, hanMoiThe, xemDanhSach không báo) + tên hạng hangCuaDon + CR ("Đã lên hạng Vàng", "Hạn mới", không "ra quầy", nút "Về giỏ đặt đồ uống ›") |
+| D3 | ca D3 (Đặt lại bỏ thẻ, không đếm là "không còn bán") |
+| D4 | khối D4 ×6 (hằng 7 một chỗ, soNgayCon, 7 / 8 / 0 ngày, null / chỉ cấp / không giờ) + CR Trang chủ → /uudai/hang?h=2 |
+| E1 | khối E1 ×4 + CR (ô "Thẻ thành viên", phần cuối "Tất cả", tìm không ra thẻ, /menu/the-thanh-vien, bấm → màn Hạng) |
+| E2 | CR (nút "Mua thẻ ›" / "Quyền lợi & nâng hạng ›" → /uudai/hang) + ca tĩnh thu_KHHANG2 + ca onClick |
+| F1 | ca F1 ×6 (kiemDanhMuc, nhóm theHang + đích hang, mọi khoá các màn có trong danh mục, khoá pos / tutinh, Trang chủ mở đích hang); danh sách khoá ở mục "Khoá nội dung đã thêm" |
+| F2 | thu_KHTHE1.js: 85 ca không trình duyệt, 136 có Chromium |
+| F3 | Bài cũ sửa đúng ca, đỏ trên gốc: KHMUA1c, KHSOHD1, KHND3b, KHHANG2 (bang_chung_do.txt); **KHND3e: đỏ trên gốc chỉ do thiếu .git — chờ chủ quán (Câu hỏi 4)**; các bài luồng đơn khác xanh không sửa |
+| F4 | 28 đột biến (bảng trên), tất cả bị bắt |
+| F5 | so_anh/ 108 ảnh 360 / 390 / 430 + doi_chieu_demo.md; Giỏ / Thanh toán đơn đồ uống trước ↔ sau 0 % điểm khác; Ưu đãi chỉ lệch do nút E2 |
+| F6 | npm test, --day-du, cổng tinh + chay ĐẠT (mục Kiểm); dòng HEAD ĐÃ KIỂM ở cuối |
+| F7 | 4 thao tác ở mục "Thử tay của chủ quán" |
+25/25 mục có bằng chứng; F3 riêng thu_KHND3e.js chờ chủ quán trả lời Câu hỏi 4.
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-THE-1 — bán thẻ hạng trên App: màn Hạng thành viên `/uudai/hang` (demo buycard), thẻ chung giỏ + "Trả thẻ trước", Menu nhóm "Thẻ thành viên", nút Ưu đãi,
+  nhắc gia hạn Trang chủ, đơn chỉ thẻ ở Theo dõi đơn, dọn giỏ ở mọi nơi khi đơn đã trả (C7). Hợp đồng v13.
+- **ĐÃ SỬA:** `thiet_ke/HOP_DONG_API_KH.md` (= v13); `src/gio.js`, `src/datDon.js`, `src/giaHang.js`, `src/duongDan.js`, `src/kiemKhop/canTuPos.js`; màn mới `src/pages/HangThanhVien.jsx`,
+  `src/components/TheHoiVien.jsx`, `src/giaoDien/the_hang.css`; `src/App.jsx`, `GioHang`, `ThanhToan`, `TheoDoiDon`, `UuDai`, `TrangChu`, `Menu`; danh mục `nd/theHang.js` (mới), `index.js`,
+  `menu.js`, `donHang.js`, `trangChu.js`, `taiKhoan.js`. Không đụng tệp Cấm (api.js, luuMay.js, dungDatDon.js, dinhDang.js, dòng `<TienIch>`, dòng `tel:`, no_chu_cung.txt…).
+- **BÀI THỬ:** mới `cong_cu/thu_KHTHE1.js` (85 / 136 ca, đỏ trên gốc 7 · 31); sửa đúng ca `thu_KHMUA1c`, `thu_KHSOHD1` (A1 → v13), `thu_KHND3b` (DICH thêm hang), `thu_KHHANG2` (nút E2),
+  `thu_KHND3e` (B1 — Câu hỏi 4). 28 đột biến tay đều bị bắt. Ba vòng soát độc lập: v1, v2 KHÔNG ĐẠT → sửa; v3 ĐẠT.
+- **ĐÃ RÀ K4:** mọi chỗ đọc dòng giỏ theo `ma` (GioHang khoá React / monLoi, ThanhToan "chưa rõ" / MA_MON, datLai, chenDong, themMon); mọi chỗ dọn giỏ (daTra, dangXuat, docLaiGio);
+  mọi chỗ gọi GET /don (kho cuaDon: App / dải báo đơn / Lịch sử; dsDon Thanh toán; Theo dõi đơn; Chi tiết đơn — tới sau khi kho đã nạp); mọi chỗ đọc hangToi (ngữ cảnh giá, Giỏ, BangTien,
+  bacThang, màn Hạng — cùng cổng daBiet); tiepHopLe / canDangNhap với truy vấn.
+- **CHƯA KIỂM:** POS thật (máy không gọi POS): hạng lên khi tiền về, VOUCHER-2 chặn mã trên thẻ, `thong_bao_tien_ve` khi thẻ không còn mua được — chỉ thử với POS giả dựng từ hợp đồng v13;
+  điện thoại thật / trình duyệt Zalo; ảnh chỉ so tự động + máy xem (chủ quán / chat soát cuối so lại); nhiều tab cùng trả thẻ chỉ dựa vào luật bản ghi `kh_don_gui` có sẵn
+  (không có ca CR hai tab riêng cho thẻ); ca B1 KHND3e chỉ "đỏ" do môi trường (Câu hỏi 4).
+- **GIT:** nhánh `viec/KH-THE-1`, đã push; mốc `3cb9386^`; HEAD đã kiểm `7a8512d`. Không merge, không PR.
+- **BÀI HỌC:** mục dưới.
+
+## Bài học (bước 11)
+1. **NGUYÊN TẮC (đề xuất KHUON_LOI.md — ngoài Phạm vi, chat soát duyệt):** "Gom nguồn dữ liệu X về MỘT hàm thì grep MỌI lời gọi cửa API đó (`layDon`, `cuaDon`), không chỉ các nguồn phiếu kể tên."
+   Đã gây: KH-THE-1 C7 sót `dsDon` của Thanh toán (soát v1 lỗi 1 — đường trả thẻ hai lần). Dấu hiệu: điều kiện "đã trả" chỉ gắn ở nơi phiếu liệt kê. Chặn: grep tên hàm API trước khi báo xong.
+2. **NGUYÊN TẮC (đề xuất KHUON_LOI.md):** "Sửa bài thử cũ không được biến ca thành phép so hai commit cố định (gỡ lớp gác); giữ phép so với cây hiện tại, nới bằng ⊆. Đỏ trên gốc do môi trường
+   (thiếu .git, thiếu tệp) không tính." Đã gây: thu_KHND3e B1 (soát v1 lỗi 6, v2 lỗi 4).
+3. **KHOÁ (đề xuất — `tu_chay/cong.js` / người gác, ngoài Phạm vi):** so tên mỗi dòng ✗ trong `bang_chung_do.txt` với tên ca có thật trong bài thử ở head (soát v3: dòng KHND3e ghi tên ca cũ);
+   và đột biến trong `dot_bien_tay.js` phải đổi đúng chuỗi ở chỗ vá cùng tên (soát v2: đột biến tên "không khoá" lại gỡ useEffect). Ca đỏ: bang_chung_do có ✗ với tên không có trong bài.
+4. **KHOÁ (đã làm trong Phạm vi):** ca tĩnh "khoá nút vì dữ liệu đã trả nằm trong biểu thức `khoa` của lần vẽ đó" (thu_KHTHE1, đỏ trên 73a1935); ca "POS giả trả `tong` khác tổng dòng" cho C6;
+   ca "màn vãng lai không đọc /toi" (HangThanhVien `TheToi` gác daBiet).
+5. **NGUYÊN TẮC (đề xuất):** hàm điều hướng có tham số không truyền thẳng vào `onClick` (nhận sự kiện làm tham số) — bọc `() => f()`. Đã gây: UuDai NutHang (soát v3).
+6. **NGUYÊN TẮC (đề xuất):** xin ngoại lệ trái một lệnh "KHÔNG" của phiếu → trích đúng dòng cấm trong câu hỏi.
+7. **BỎ:** người gác chặn tải hợp đồng (curl / git init / add_repo) — chủ quán đã có cách (đặt `hop_dong_vN.md` vào thư mục việc, như KH-MUA-1c); lệnh ghép `python … && node …` bị
+   `[B-PHANTICH]` chặn mấy lần (tách lệnh là đủ); tệp có cụm bí mật của bài thử phải commit trước khi chạy (`[B-BIMAT-CHU]`, đã có lời dặn trong skill).
+- Dọn: không lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm mới làm thay ở việc này.
+
+HEAD ĐÃ KIỂM: 7a8512d
