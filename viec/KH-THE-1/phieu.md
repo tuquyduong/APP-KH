@@ -7,7 +7,7 @@
      mục 1, hợp đồng POS **v13** "Ghi chú v13 — mua thẻ hạng trên App". Demo: màn `buycard` (`renderTier` bản cuối — phần "5. Hạng thành viên: sửa được"), thẻ hội viên thu nhỏ
      `.pc-mini`, lớp `.ti-*`. Đọc CLAUDE.md §4, §5, §8, §11; `LUAT_XAY_APP.md` §5. -->
 
-**Chờ duyệt kế hoạch:** viết `viec/KH-THE-1/ke_hoach.md`, commit, push, rồi DỪNG ở bước 3 của `/lam-viec`.
+**Kế hoạch ĐÃ DUYỆT** (chủ quán 13.11, chat soát `ke_hoach.md` cfaacbf) kèm mục C7 + "Trả lời câu hỏi kế hoạch" ở cuối phiếu — làm thẳng tới hết, không dừng chờ duyệt nữa.
 
 ## Mục tiêu
 Khách mua thẻ hạng NGAY trên App như một sản phẩm: xem các hạng + quyền lợi + gói, bấm Mua → thẻ vào giỏ (chung với đồ uống), trả một lần bằng ví / QR như đơn thường;
@@ -16,8 +16,8 @@ trả xong POS tự lên hạng, App hiện hạng mới ngay. Muốn đơn đ�
 ## Nghiệm thu
 
 ### A. Hợp đồng v13 (POS đã gộp KH-THE-1)
-- A1 `thiet_ke/HOP_DONG_API_KH.md` = NGUYÊN VĂN `HOP_DONG_API_KH.md` của kho POS (công khai: `https://github.com/pos-tuquyduong/pos-tuquyduong`) ở commit
-  `162a9080b0a754f4433e544009ec0893dc358f5f` (PHIEN_BAN 13; sha256 bắt đầu `490976b0c438b8b4`) — tải về nháp, `cmp` từng byte. Không tải được → `## Câu hỏi`, dừng.
+- A1 `thiet_ke/HOP_DONG_API_KH.md` = NGUYÊN VĂN `HOP_DONG_API_KH.md` của kho POS ở commit `162a9080b0a754f4433e544009ec0893dc358f5f` (PHIEN_BAN 13; sha256 bắt đầu
+  `490976b0c438b8b4`). Chủ quán đã đặt bản gốc vào `viec/KH-THE-1/hop_dong_v13.md` (commit PHIEU 13.11, người gác chặn máy tải) → kiểm sha256, chép sang, `cmp` từng byte.
 - A2 `src/kiemKhop/canTuPos.js`: thêm dòng `quyen_loi` của `GET /hang` + dòng thẻ của `POST /gio/bao-gia` / `POST /don` (`co: true`, `viec_pos: 'KH-THE-1'`) — `thu_KHKHOP1.js` xanh.
 
 ### B. Màn "Hạng thành viên" — `/uudai/hang` (theo demo `buycard`)
@@ -53,6 +53,11 @@ trả xong POS tự lên hạng, App hiện hạng mới ngay. Muốn đơn đ�
 - C5 Giờ: giỏ CHỈ có thẻ (không đồ uống) đặt được MỌI giờ — `chanDat` / khoá "quán đóng" của App không chặn giỏ chỉ thẻ (POS cũng không chặn — v13 "Giờ"). Giỏ có đồ uống: như cũ.
   Lỗi POS mới (`NHIEU_THE`, `HANG_CHI_CAP`, `GOI_HANG_KHONG_BAN`, `DA_CO_HANG_CAO_HON`): hiện nguyên `error`, đánh dấu dòng thẻ trong giỏ (như món lỗi), không coi là "chưa rõ".
 - C6 Hiện số: dòng thẻ / `giam[]` / `tong` lấy ĐÚNG báo giá của POS (mã giảm có áp lên thẻ hay không là việc POS — App không tự trừ).
+- C7 **Dọn giỏ khi đơn đã trả — ở MỌI nơi, không chỉ khi màn Theo dõi đơn đang mở** (chat soát kế hoạch 13.11, từ Phát hiện của máy: có thẻ thì khách lỡ trả lại cả giỏ là mua thẻ
+  HAI lần): đơn trong bản ghi `kh_don_gui` mà App biết đã trả qua BẤT KỲ nguồn dữ liệu đơn đã có (kho đơn `/don` lúc mở App / làm mới ngầm, dải báo đơn, Lịch sử đơn, Theo dõi đơn)
+  → gọi CÙNG một hàm dọn (`daTra` → `boDongDaGui`) đúng MỘT lần (cờ `xong` của bản ghi như nay). Điều kiện "đã trả" là MỘT hàm thuần dùng chung với Theo dõi đơn (không viết lại
+  điều kiện ở chỗ thứ hai). KHÔNG gọi mạng mới. Ca thử: đặt đơn → rời Theo dõi đơn → kho `/don` thấy đơn đã trả → giỏ bỏ đúng dòng đã gửi, chỉ một lần; đơn chưa trả / huỷ / hết hạn
+  → giỏ giữ nguyên. Đột biến: "không dọn khi đã trả mà Theo dõi đơn không mở", "dọn khi đơn còn chờ trả".
 
 ### D. Sau khi trả, đơn, Lịch sử
 - D1 Trả xong (ví ngay, QR khi tiền về) → `lamMoi` `/toi` (và `/hang` nếu cần) → thẻ Hạng ở Ưu đãi / Trang chủ / màn Hạng thành viên hiện hạng mới + hạn mới không cần tải lại.
@@ -76,7 +81,7 @@ trả xong POS tự lên hạng, App hiện hạng mới ngay. Muốn đơn đ�
 - F2 Bài MỚI `cong_cu/thu_KHTHE1.js` (chạy cả `KHONG_TRINH_DUYET=1`; POS giả dựng TỪ hợp đồng v13, mã lỗi đọc thẳng từ `thiet_ke/HOP_DONG_API_KH.md`): giỏ C1 (thêm / thay /
   bản cũ / dòng hỏng), C2 (không còn bán chặn), C3 (thân chỉ thẻ, không `ma_giam`; trả xong chỉ bỏ dòng thẻ), C4 (thân dòng thẻ đúng 3 khoá, dòng món không `loai`, thứ tự; dọn
   giỏ bỏ đúng dòng đã gửi), C5 (giỏ chỉ thẻ không bị chặn ngoài giờ; giỏ có đồ uống vẫn chặn; 4 mã lỗi mới đánh dấu dòng thẻ, không "chưa rõ"), D2 (đơn chỉ thẻ không báo "ra
-  quầy"), D3 (đặt lại bỏ thẻ), D4 (7 / 8 ngày, 0 ngày, `het_han` null, `chi_cap`), B2 (nút mờ theo `thu_bac`, gia hạn cùng hạng, tiết kiệm), E1. Chromium (390): màn Hạng thành viên
+  quầy"), C7 (dọn giỏ từ kho `/don`), D3 (đặt lại bỏ thẻ), D4 (7 / 8 ngày, 0 ngày, `het_han` null, `chi_cap`), B2 (nút mờ theo `thu_bac`, gia hạn cùng hạng, tiết kiệm), E1. Chromium (390): màn Hạng thành viên
   chưa / đã đăng nhập, Mua → giỏ có dòng thẻ, Thanh toán ví giả → Theo dõi đơn "Đã lên hạng", Trang chủ nhắc gia hạn, Menu nhóm thẻ.
 - F3 Bài thử CŨ của luồng đơn (MUA-1 / 1b / 1c, BAO-1, TT-1, SOHD-1, HD-1, NHANH-1…) GIỮ XANH không sửa ca — đơn đồ uống không đổi hành vi. Bài cũ phải sửa vì hành vi đổi có chủ
   đích (dọn giỏ C4, chanDat C5) → sửa đúng ca, ≥ 1 ca ĐỎ trên gốc kể cả `KHONG_TRINH_DUYET=1`; KHÔNG dùng `## Bài thử cũ sửa`.
@@ -144,3 +149,11 @@ không
   ghi `## Phát hiện`), `thiet_ke/**` ngoài `HOP_DONG_API_KH.md`, `tu_chay/`, `.claude/`, `.github/`, `kiem_tra_truoc_khi_giao.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - Màu / phông / bóng chỉ lấy từ demo (K9); không vẽ biểu tượng mới.
 - Chỉ push `git push -u origin viec/KH-THE-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời câu hỏi kế hoạch (chủ quán duyệt 13.11 theo đề nghị của chat)
+1. **A1 hợp đồng v13:** đã có `viec/KH-THE-1/hop_dong_v13.md` (chép nguyên văn POS 162a9080; sha256 `490976b0c438b8b4…`) — làm A1 theo đó.
+2. **Mã giảm trên thẻ (v13 ↔ QĐ 10.11):** POS đã có việc VOUCHER-2 (trước khai trương) — máy chủ CHẶN mã / voucher trên thẻ hạng (cả quầy lẫn App). App KHÔNG đổi gì: nút
+   "Thanh toán" cả giỏ vẫn gửi `ma_giam` như cũ, hiện đúng `giam[]` / `tong` POS trả; "Trả thẻ trước" không gửi `ma_giam`. Không cần thư cho POS.
+3. **`DON_KHONG_HOP_LE`:** đồng ý mặc định — chỉ hiện nguyên lời POS, KHÔNG đánh dấu dòng thẻ (mã này dùng chung cho nhiều lỗi đơn); dòng thẻ tự "không còn bán" khi `/hang` mất hạng (C2).
+4. **Phát hiện "giỏ chỉ dọn khi màn Theo dõi đơn đang mở":** LÀM trong việc này — mục C7 (thêm vào kế hoạch P6 + bảng ca thử + F4 hai đột biến). Ngân sách cộng ~20 dòng app + ~40 dòng thử.
+5. Các điểm khác của kế hoạch (`ke_hoach.md` cfaacbf, kể cả mục 6 sửa theo soát): DUYỆT nguyên.
