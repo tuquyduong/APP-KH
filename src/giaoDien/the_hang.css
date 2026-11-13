@@ -13,7 +13,11 @@
 .ti-cmp{ width:100%; border-collapse:collapse; font-size:12px; background:#FFFDFB; border-radius:14px; overflow:hidden; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
 .ti-cmp th, .ti-cmp td{ padding:8px 6px; text-align:center; border-bottom:1px solid #F4E6EA; } .ti-cmp td:first-child{ text-align:left; padding-left:10px; color:var(--muted); }
 .ti-cmp th.l1{ color:#9E5A12; } .ti-cmp th.l2{ color:#3D5A8C; } .ti-cmp .me{ background:#FFF8EE; font-weight:700; }
+/* App đặt lại :where(button){ text-align:inherit } (giaoDien.css); demo để nút theo mặc định trình duyệt = chữ giữa. */
+.ti-tabs button{ text-align:center; }
 /* Nút chính dưới gói: demo đặt kiểu ngay trên thẻ (style="justify-content:center;margin-top:12px"). */
 #buycard .checkout-btn{ justify-content:center; margin-top:12px; }
 /* Nút "Quyền lợi & nâng hạng ›" trên thẻ hạng Ưu đãi: demo đặt kiểu ngay trên nút (#rewards .tier-card button). */
-.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.22); color:#fff; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; }
+.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.22); color:#fff; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; text-align:center; position:relative; }
+/* Bản vá thẻ vàng dập của demo (dòng "tier-card button" — chữ nâu trên nền trắng mờ). */
+.tier-card .ud-hang-nut{ background:rgba(255,255,255,.55); color:#4A2410; }
