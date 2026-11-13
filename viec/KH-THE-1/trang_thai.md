@@ -207,3 +207,14 @@ Kiểm: `kiemDanhMuc(DANH_MUC)` rỗng lỗi + ca F1 của thu_KHTHE1 (mọi kho
 - Dọn: không lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm mới làm thay ở việc này.
 
 HEAD ĐÃ KIỂM: 7a8512d
+
+## Chat soát cuối + gộp main (13.11.2026)
+- Chat soát cuối ĐẠT ở đầu nhánh 47187ff: đọc diff đường tiền (gio.js dòng thẻ / boDongDaGui, datDon.js dongGui / phanGui / daThanhToan / maDonDaTra, ThanhToan khoá `!!maXong`,
+  App daTra + C7 từ kho /don) — đơn đồ uống giữ nguyên luật; `daThanhToan` = điều kiện cũ của Theo dõi đơn (QR hết hạn = da_huy → không dọn); bài cũ sửa có lý do; xem ảnh.
+- Câu hỏi 4 (thu_KHND3e.js): KHÔNG thêm "Bài thử cũ sửa" — chat thử cổng: mục đó bắt BẢN GỐC của bài cũ phải xanh trên code PR (ở đây đỏ → cổng ĐỎ A11).
+  Giữ bản sửa của máy (đúng ý bài cũ: KH-ND-3e chỉ đổi dòng chữ; cây hiện tại ⊇ hàm + cửa mạng cũ). Đỏ trên gốc của cổng chỉ do cây gốc không có .git — chat chấp nhận,
+  ghi việc sau: bài thử không phụ thuộc lịch sử git.
+- Gộp main sau khi KH-ND-3d đã gộp: xung đột DUY NHẤT `src/App.jsx` (dòng `<TienIch … thayVeLich>` của 3d kề dòng TrangChu / UuDai / HangThanhVien của việc này)
+  → giữ dòng TienIch của main + ba dòng của việc này. SỐ CA các bài không đổi; K10 không tệp nào vượt. Cây gộp (commit d6d3faa) trùng từng byte cây chat đã chạy
+  `node kiem_tra_truoc_khi_giao.js --day-du` CÓ Chromium + cổng `tinh` / `chay` kiểu GitHub.
+HEAD ĐÃ KIỂM: d6d3faa
