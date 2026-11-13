@@ -33,6 +33,11 @@ BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = 
   ✗ F1 Trang chủ mở được đích hang (bảng DICH của màn)
 7 đạt · 29 hỏng      (gốc dừng sớm từng nhóm → 36 ca; code đã vá 77 ca — cảnh báo A16 "số ca gốc ≠ head" là do dừng sớm)
 
+== cong_cu/thu_KHTHE1.js sau vòng sửa soát 1 (thêm ca C7 Thanh toán, Tạo mã mới ?chi=the, tên hạng từ dòng thẻ, màn Hạng không gọi /toi khi vãng lai, Đặt lại không đếm thẻ, tenDongThe) — CHẠY LẠI trên gốc ==
+  (thêm hai dòng ✗ nhóm R / D3 so với trên; cùng nguyên nhân: hàm / khoá chưa có trên gốc)
+7 đạt · 31 hỏng
+  Các ca mới cũng ĐỎ trên code của vòng trước (b52c0d9^ = 2418e38): 124 đạt · 7 hỏng có Chromium — tái hiện đúng 5 lỗi soát v1.
+
 == cong_cu/thu_KHMUA1c.js (SỬA ca A1 — hợp đồng v13 thay v11, F3) trên gốc ==
   ✗ A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-THE-1/hop_dong_v13.md từng byte (v13 chứa v9)
 27 đạt · 1 hỏng
@@ -46,6 +51,8 @@ BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = 
 19 đạt · 1 hỏng
 
 == cong_cu/thu_KHND3e.js (SỬA ca B1 — so datDon.js tới commit CUỐI của KH-ND-3e thay vì cây hiện tại: KH-THE-1 được thêm hàm thẻ, F3) trên gốc ==
+  LƯU Ý (soát v1 lỗi 6): đỏ ở đây do cây git archive KHÔNG có lịch sử git (như cổng dựng), không do hành vi; trên cây gốc CÓ lịch sử thì ca này xanh.
+  Không có cách làm đỏ thật — xem trang_thai.md ## Câu hỏi 4 (đề xuất mục ## Bài thử cũ sửa).
   ✗ B1 datDon.js so với bản gốc: … (cây git archive không có lịch sử git — như cổng)
   ✗ B1 datDon.js: tên hàm xuất và lời gọi api.js y như bản gốc (trừ hai hằng chữ)
 20 đạt · 2 hỏng
@@ -55,14 +62,14 @@ BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = 
 16 đạt · 1 hỏng
 
 == Trên code ĐÃ VÁ (nhánh việc), KHONG_TRINH_DUYET=1 ==
-cong_cu/thu_KHTHE1.js   → 77 đạt · 0 hỏng ; có Chromium → 123 đạt · 0 hỏng
+cong_cu/thu_KHTHE1.js   → 83 đạt · 0 hỏng ; có Chromium → 133 đạt · 0 hỏng
 cong_cu/thu_KHMUA1c.js  → 28 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHSOHD1.js  → 40 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHND3b.js   → 20 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHND3e.js   → 22 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHHANG2.js  → 17 đạt · 0 hỏng (+1 ca tĩnh) ; có Chromium → 74 đạt · 0 hỏng
 
-SỐ CA cong_cu/thu_KHTHE1.js: 77
+SỐ CA cong_cu/thu_KHTHE1.js: 83
 SỐ CA cong_cu/thu_KHMUA1c.js: 28
 SỐ CA cong_cu/thu_KHSOHD1.js: 40
 SỐ CA cong_cu/thu_KHND3b.js: 20
