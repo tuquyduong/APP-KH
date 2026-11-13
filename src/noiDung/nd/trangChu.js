@@ -69,6 +69,10 @@ export const TRANG_CHU = [
   { khoa: 'home.fmore', man: M, ten: 'Món nổi bật: nút xem tất cả', loai: 'nut', macDinh: { chu: 'Xem tất cả', dich: 'menu' } },
   khoa('home.mon', 'Tên, giá, ảnh món', 'pos', 'POS › Sản phẩm'),
   // Ẩn / hiện khối (demo SECS)
+  chu('home.nhac.giaHan', 'Nhắc gia hạn thẻ (còn vài ngày)', 'Thẻ {hang} còn {so} ngày — Gia hạn ›', { bien: ['hang', 'so'] }),
+  chu('home.nhac.homNay', 'Nhắc gia hạn thẻ (hết hạn hôm nay)', 'Thẻ {hang} hết hạn hôm nay — Gia hạn ›', { bien: ['hang'] }),
+  khoa('home.nhac.so', 'Số ngày còn của thẻ (đếm theo giờ quán)', 'tutinh', 'App tự tính từ hạn thẻ của POS'),
+  { khoa: 'hien.nhacGiaHan', man: M, ten: 'Hiện khối: nhắc gia hạn thẻ hạng', loai: 'battat', macDinh: true },
   hien('home.member', 'Thẻ hội viên'), hien('home.cal', 'Thẻ Kế hoạch và nhắc việc'), hien('home.hb', 'Banner + Giờ vàng + Trắc nghiệm'),
   hien('home.gv', 'Ô Giờ vàng'), hien('home.quiz', 'Ô Trắc nghiệm'), hien('home.needs', 'Chăm sóc theo nhu cầu'), hien('home.feat', 'Món nổi bật'),
 ];

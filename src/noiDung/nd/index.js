@@ -7,11 +7,12 @@ import { DON_HANG } from './donHang.js';
 import { TAI_KHOAN } from './taiKhoan.js';
 import { KE_HOACH } from './keHoach.js';
 import { TIEN_ICH } from './tienIch.js';
+import { THE_HANG } from './theHang.js';
 
 // Mỗi nhóm một tệp, mỗi việc chỉ điền tệp của mình (chat tạo sẵn 11.11.2026 — các việc chạy song song không sửa chung tệp này).
-export const DANH_MUC = [...KHUNG_CHUNG, ...TRANG_CHU, ...MENU, ...DON_HANG, ...TAI_KHOAN, ...KE_HOACH, ...TIEN_ICH];
+export const DANH_MUC = [...KHUNG_CHUNG, ...TRANG_CHU, ...MENU, ...DON_HANG, ...TAI_KHOAN, ...KE_HOACH, ...TIEN_ICH, ...THE_HANG];
 
 /** Trang đích chung của nút (`loai: 'nut'`, như DESTS demo): [mã, tên cho chủ quán]. Màn có nút phải mở được mọi đích trong bảng này. */
 export const DICH = [
-  ['menu', 'Menu'], ['giovang', 'Menu · Giờ vàng'], ['tracnghiem', 'Trắc nghiệm thể trạng'], ['kehoach', 'Kế hoạch và nhắc việc'], ['uudai', 'Ưu đãi'],
+  ['menu', 'Menu'], ['giovang', 'Menu · Giờ vàng'], ['tracnghiem', 'Trắc nghiệm thể trạng'], ['kehoach', 'Kế hoạch và nhắc việc'], ['uudai', 'Ưu đãi'], ['hang', 'Ưu đãi · Hạng thành viên'],
 ];
