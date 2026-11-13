@@ -40,3 +40,54 @@ export function dongGoi(h) {
     return gia ? [nd('ud.hang.goi', { soThang: g.so_thang, gia })] : [];
   });
 }
+
+// ---- Thẻ hạng bán trên App (KH-THE-1, hợp đồng v13). Chỉ HIỂN THỊ / quyết định nút — giá thật, hạng thật do POS (không gửi số nào đi).
+export const NGAY_NHAC_GIA_HAN = 7; // Trang chủ nhắc gia hạn khi thẻ còn ≤ ngần này ngày
+
+/** Gói đang bán hợp lệ của một hạng (`so_thang` nguyên > 0, `gia` > 0), giữ thứ tự POS; chỉ cấp / thiếu → []. */
+export const goiBan = (h) => (h && h.chi_cap !== true && Array.isArray(h.goi) ? h.goi.filter((g) => g && Number.isInteger(g.so_thang) && g.so_thang > 0 && Number.isFinite(g.gia) && g.gia > 0) : []);
+/** Gói chọn sẵn = gói dài nhất; không gói → null. */
+export const goiMacDinh = (h) => goiBan(h).reduce((a, g) => (!a || g.so_thang > a.so_thang ? g : a), null);
+/** Hạng bán được trên App: có giảm, không chỉ cấp, có gói. */
+export const hangBanDuoc = (ds) => hangCoGiam(ds).filter((h) => goiBan(h).length > 0);
+/** Giá gói rẻ nhất; không gói → null. */
+export const giaRe = (h) => (goiBan(h).length ? Math.min(...goiBan(h).map((g) => g.gia)) : null);
+/** "Tiết kiệm" của gói `g` so với mua lẻ gói ĐẦU (ngắn nhất) cho đủ số tháng; ≤ 0 hoặc chính gói đầu → null. */
+export function tietKiem(goi, g) {
+  const dau = goiBan({ goi })[0];
+  if (!dau || !g || g.so_thang === dau.so_thang) return null;
+  const x = Math.floor((dau.gia * g.so_thang) / dau.so_thang) - g.gia; // như demo: giá gói đầu / số tháng × N − giá gói (đồng nguyên)
+  return x > 0 ? x : null;
+}
+
+const thuBac = (ds, id) => { const h = (Array.isArray(ds) ? ds : []).find((x) => x && x.id === id); return h && Number.isFinite(h.thu_bac) ? h.thu_bac : null; };
+
+/** Lớp màu thẻ "Hạng hiện tại" của demo: l0 chưa hạng · l1 hạng bán · l2 hạng chỉ cấp. */
+export const lopHang = (hangToi, ds) => (!hangToi ? 'l0' : laHangChiCap(ds, hangToi.id) ? 'l2' : 'l1');
+
+/**
+ * Nút chính của màn Hạng thành viên cho hạng `h`: { kieu: 'mua' | 'giaHan' | 'mo', lyDo, hang }. POS vẫn là người quyết (mã lỗi v13).
+ * mo: chiCap (hạng chỉ cấp) · chuaBan (không gói) · caoHon (khách đang ở hạng `thu_bac` cao hơn — /toi.hang luôn còn hạn; `hang` = tên hạng khách).
+ */
+export function nutMua(ds, hangToi, h) {
+  if (!h || h.chi_cap === true) return { kieu: 'mo', lyDo: 'chiCap' };
+  if (!goiBan(h).length) return { kieu: 'mo', lyDo: 'chuaBan' };
+  if (hangToi && hangToi.id === h.id) return { kieu: 'giaHan', lyDo: '' };
+  const toi = hangToi ? thuBac(ds, hangToi.id) : null;
+  if (toi !== null && Number.isFinite(h.thu_bac) && toi > h.thu_bac) return { kieu: 'mo', lyDo: 'caoHon', hang: hangToi.ten };
+  return { kieu: 'mua', lyDo: '' };
+}
+
+const ngayJd = (chuoi) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(chuoi || '')); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000 : null; };
+/** Số ngày lịch (giờ VN — chỉ đọc phần ngày của chuỗi POS, không đổi múi giờ) từ `bayGio` tới `hetHan`; thiếu → null. */
+export function soNgayCon(hetHan, bayGio) {
+  const a = ngayJd(hetHan), b = ngayJd(bayGio);
+  return a === null || b === null ? null : a - b;
+}
+
+/** Nhắc gia hạn ở Trang chủ: hạng của khách bán được (có trong /hang, không chỉ cấp), còn 0…NGAY_NHAC_GIA_HAN ngày → { id, ten, soNgay }; còn lại null. */
+export function nhacGiaHan(ds, hangToi, bayGio) {
+  if (!hangToi || !hangToi.het_han || !(Array.isArray(ds) && ds.some((h) => h && h.id === hangToi.id)) || laHangChiCap(ds, hangToi.id)) return null;
+  const n = soNgayCon(hangToi.het_han, bayGio);
+  return n !== null && n >= 0 && n <= NGAY_NHAC_GIA_HAN ? { id: hangToi.id, ten: hangToi.ten, soNgay: n } : null;
+}

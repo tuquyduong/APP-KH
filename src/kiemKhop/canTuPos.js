@@ -23,6 +23,9 @@ export const CAN_TU_POS = [
   { ma: 'don_v11', ten: 'Số hoá đơn, tiền về muộn của đơn', cua: 'GET /don/:ma', token: true, truong: ['don.so_hd', 'don.tien_ve_da_cong_vi', 'don.thong_bao_tien_ve'], khi: T, co: true, moi: true, viec_pos: 'SOHD-1' },
   { ma: 'don_ds_v11', ten: 'Số hoá đơn, tiền về muộn trong Lịch sử đơn', cua: 'GET /don', token: true, truong: ['data[].so_hd', 'data[].tien_ve_da_cong_vi', 'data[].thong_bao_tien_ve'], khi: T, co: true, moi: true, viec_pos: 'SOHD-1' },
   { ma: 'hang_v10', ten: 'Hạng: chỉ cấp, gói thời hạn, thứ bậc', cua: 'GET /hang', token: false, truong: ['data[].chi_cap', 'data[].goi[].so_thang', 'data[].goi[].gia', 'data[].thu_bac'], khi: T, co: true, moi: true, viec_pos: 'HANG-1' },
+  { ma: 'hang_v13', ten: 'Quyền lợi từng hạng', cua: 'GET /hang', token: false, truong: ['data[].quyen_loi'], khi: T, co: true, moi: true, viec_pos: 'KH-THE-1' },
+  { ma: 'the_bao_gia', ten: 'Báo giá giỏ có thẻ hạng', cua: 'POST /gio/bao-gia', token: true, truong: [], khi: T, co: true, viec_pos: 'KH-THE-1' },
+  { ma: 'the_dat_don', ten: 'Mua thẻ hạng trong đơn (chung giỏ đồ uống)', cua: 'POST /don', token: true, truong: [], khi: T, co: true, viec_pos: 'KH-THE-1' },
   { ma: 'chuong_trinh', ten: 'Chương trình đặc biệt đang bật', cua: 'GET /chuong-trinh', token: false, truong: ['data[].ma', 'data[].ten', 'data[].mo_ta', 'data[].loai', 'data[].dang_bat'], khi: T, co: true, viec_pos: 'CT-1a' },
   { ma: 'xin_ma', ten: 'Xin mã đăng nhập', cua: 'POST /dang-nhap/xin-ma', token: false, truong: [], khi: T, co: true },
   { ma: 'xac_minh', ten: 'Xác minh mã, đăng ký', cua: 'POST /dang-nhap/xac-minh', token: false, truong: [], khi: T, co: true },
@@ -38,7 +41,7 @@ export const CAN_TU_POS = [
   { ma: 'topping', ten: 'Topping theo món', cua: 'chưa chốt — thêm vào GET /menu', token: 'tuy_chon', truong: [], khi: T, co: false, viec_pos: 'TOPPING-1' },
   { ma: 'combo', ten: 'Combo', cua: 'chưa chốt tên cửa', token: 'tuy_chon', truong: [], khi: T, co: false, viec_pos: 'COMBO-1a' },
   { ma: 'doi_diem', ten: 'Đổi điểm, voucher khi trả', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: T, co: false, viec_pos: 'P3b' },
-  { ma: 'vi_lich_su', ten: 'Sổ ví, nạp ví, mua thẻ hạng, đổi quà', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'P3b' },
+  { ma: 'vi_lich_su', ten: 'Sổ ví, nạp ví, đổi quà', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'P3b' },
   { ma: 'ho_so_them', ten: 'Nhiều địa chỉ, email', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'KH-HOSO-1' },
   { ma: 'danh_gia_google', ten: 'Lời mời đánh giá Google', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'DG-GOOGLE-1' },
 ];

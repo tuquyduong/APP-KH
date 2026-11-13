@@ -6,15 +6,19 @@ import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
 import { cauTienVe } from './hoaDon.js';
 import { nd } from './noiDung/nd.js';
+import { laThe, coDoUong } from './gio.js';
 
 const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(nd('loi.CHUA_MO')), { code: 'CHUA_MO' })));
 
 const so = (n) => typeof n === 'number' && Number.isFinite(n);
 const chu = (s) => String(s || '').trim();
 
-/** Thân `POST /gio/bao-gia`: mon[] { ma, so_luong, ghi_chu? }, ma_giam (khi có), cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá. */
+/** Một dòng giỏ → dòng thân: thẻ ĐÚNG { loai, hang_id, so_thang } (v13 — không ma / ghi chú / giá / số lượng); món { ma, so_luong, ghi_chu? } KHÔNG có `loai`. */
+const dongGui = (d) => (laThe(d) ? { loai: 'the', hang_id: d.hang_id, so_thang: d.so_thang } : chu(d.ghi_chu) ? { ma: d.ma, so_luong: d.so_luong, ghi_chu: d.ghi_chu } : { ma: d.ma, so_luong: d.so_luong });
+
+/** Thân `POST /gio/bao-gia`: mon[] (dongGui, giữ thứ tự giỏ), ma_giam (khi có), cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá. */
 export function thanBaoGia(gio, { maGiam } = {}) {
-  const t = { mon: gio.map(({ ma, so_luong, ghi_chu }) => (chu(ghi_chu) ? { ma, so_luong, ghi_chu } : { ma, so_luong })) };
+  const t = { mon: gio.map(dongGui) };
   if (chu(maGiam)) t.ma_giam = chu(maGiam);
   t.cach_nhan = 'tai_quan';
   return t;
@@ -27,6 +31,9 @@ export function thanDatDon(gio, tuy, { cachTra, pin, khoaGui, tongDaXem } = {}) 
   if (t.cach_tra !== 'qr') t.pin = pin;
   return t;
 }
+
+/** Phần giỏ gửi đi: "Trả thẻ trước" (`chiThe`) = CHỈ dòng thẻ, KHÔNG mã giảm (giữ mã cho đơn đồ uống); thường = cả giỏ + mã như cũ. */
+export const phanGui = (gio, tuy, chiThe) => (chiThe ? { gio: gio.filter(laThe), tuy: { maGiam: '' } } : { gio, tuy });
 
 /** Khoá gửi mới (16–64 ký tự A-Z a-z 0-9 -): randomUUID, máy cũ thì 32 số hex từ getRandomValues. Mỗi lần khách BẤM đặt một khoá. */
 export function taoKhoaGui(cr = globalThis.crypto) {
@@ -73,7 +80,7 @@ export function docDatDon(r) {
 export function docDon(r) {
   const d = r && r.don;
   if (!d || !chu(d.ma)) return null;
-  const mon = (Array.isArray(d.mon) ? d.mon : []).map((m) => ({ ma: chu(m.ma), ten: chu(m.ten), so_luong: m.so_luong, thanh_tien: m.thanh_tien, ghi_chu: chu(m.ghi_chu) }));
+  const mon = (Array.isArray(d.mon) ? d.mon : []).map((m) => ({ ma: chu(m.ma), ten: chu(m.ten), so_luong: m.so_luong, thanh_tien: m.thanh_tien, ghi_chu: chu(m.ghi_chu), loai: chu(m.loai) }));
   return {
     ma: String(d.ma), soHd: chu(d.so_hd) || null, cauTienVe: cauTienVe(d), ngay: chu(d.ngay), tong: so(d.tong) ? d.tong : null, tienTrinh: chu(d.tien_trinh), qr: docQR(d.qr),
     thanhToan: d.thanh_toan == null ? null : d.thanh_toan, tienVeChoDoiSoat: d.tien_ve_cho_doi_soat === true, mon,
@@ -98,6 +105,9 @@ const LAN_GUI_LAI = 3;    // "chưa rõ" thường: tự gửi lại tối đa n
 // 1 + 8 = 9 lần dưới trần 10 lần / 10 phút của POS).
 const LUOT_GUI_LAI = { DANG_XU_LY: 30, KHO_BAN: 8 };
 const MA_DUNG = ['KHOA_GUI_DA_DUNG'];
+// Mã chặn mua thẻ (v13, 400 — trả TRƯỚC khi tạo đơn → loaiLoi 'chua_tao'): màn hiện nguyên lời POS và đánh dấu dòng thẻ trong giỏ.
+export const MA_THE = ['NHIEU_THE', 'HANG_CHI_CAP', 'GOI_HANG_KHONG_BAN', 'DA_CO_HANG_CAO_HON'];
+export const laLoiThe = (e) => !!e && MA_THE.includes(e.code);
 
 export function loaiLoi(e) {
   if (e && e.code === 'CHUA_MO') return 'chua_tao';
@@ -197,8 +207,24 @@ export const conChuaRo = (g, khoa) => !!g && g.khoa_gui === khoa && !g.ma_don;
 /** Bản ghi lần gửi của đúng đơn `ma` (đặt từ máy này), không có → null. */
 export const banGhiCuaDon = (ma) => { const g = docGuiDo(); return g && g.ma_don === ma ? g : null; };
 
+/** Đơn đã trả (tiền đã thu): có tiến trình, không còn chờ trả, không huỷ. MỘT điều kiện cho Theo dõi đơn và kho /don (C7). */
+export const daThanhToan = (tt) => !!tt && tt !== 'cho_tra' && tt !== 'da_huy';
+/** Bản ghi lần gửi (`kh_don_gui`) có đơn CHƯA dọn giỏ mà danh sách đơn (GET /don) thấy đơn đó đã trả → mã đơn; còn lại ''. */
+export function maDonDaTra(g, ds) {
+  if (!g || !g.ma_don || g.xong || !Array.isArray(ds)) return '';
+  const d = ds.find((x) => x && String(x.ma) === String(g.ma_don));
+  return d && daThanhToan(d.tien_trinh) ? String(g.ma_don) : '';
+}
+/** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
+export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
+/** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
+export const hanMoiThe = (don) => chu(((don && Array.isArray(don.hoa_don) ? don.hoa_don : []).find((d) => d && d.loai === 'the') || {}).ghi_chu);
+
 /** Thẻ đơn ở Lịch sử mở Theo dõi đơn khi đơn App còn đang chạy; xong / huỷ / bill quầy → Chi tiết đơn. */
 export const moTheoDoi = (tt) => ['cho_tra', 'da_tra', 'dang_lam'].includes(tt);
+
+/** Chặn theo giờ cho ĐÚNG giỏ sắp gửi: giỏ không có đồ uống (chỉ thẻ) đặt mọi giờ (v13); có đồ uống → như chanDat. */
+export const chanDatGio = (gh, gio) => (coDoUong(gio) ? chanDat(gh) : '');
 
 /** Chặn đặt biết trước theo /gio-hoat-dong: ngừng nhận đơn / quán đóng → câu hiện cho khách; được đặt / chưa biết → ''. POS vẫn là bên chặn. */
 export function chanDat(gh) {
