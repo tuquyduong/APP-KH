@@ -238,6 +238,7 @@ async function trinhDuyet(pw) {
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     await ctx.clock.install({ time: new Date('2026-11-13T20:30:00+07:00') }); await ctx.clock.resume();
     await ctx.addInitScript(({ dn, gio }) => {
+      if (location.protocol !== 'http:') return; // about:blank (Back quá trang đầu)
       if (sessionStorage.getItem('da_gieo')) return;
       sessionStorage.setItem('da_gieo', '1');
       localStorage.setItem('kh_ngay_man_dau', '2026-11-13');
@@ -268,6 +269,7 @@ async function trinhDuyet(pw) {
     };
     const lenHang = (d) => { const m = d.mon.find((x) => x.loai === 'the'); if (m) S.hang = { id: m.hang_id, ten: HANG.find((h) => h.id === m.hang_id).ten, phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: BAY('23:59:59', '2027-02-13') }; };
     const traDon = (d) => { d.tt = d.chiThe ? 'xong' : 'da_tra'; lenHang(d); };
+    S.traQR = (ma) => traDon(S.don.get(ma)); // tiền QR về đủ
     const monDon = (d) => d.mon.map((m) => ('loai' in m ? { ma: null, ten: `🎟️ Thẻ hội viên ${HANG.find((h) => h.id === m.hang_id).ten} · ${m.so_thang} tháng`, so_luong: 1, don_gia: giaGoi(m.hang_id, m.so_thang), thanh_tien: giaGoi(m.hang_id, m.so_thang), ghi_chu: null, loai: 'the' }
       : { ma: m.ma, ten: MENU_DS.find((x) => x.ma === m.ma).ten, so_luong: m.so_luong, don_gia: 30000, thanh_tien: 30000 * m.so_luong, ghi_chu: m.ghi_chu || null }));
     const dongDon = (d) => ({ ma: d.ma, so_hd: 'APP00' + d.ma.slice(3), ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' ? 0 : d.tong, trang_thai: null, thanh_toan: null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: false, cach_tra: d.cach, giu_vi: d.cach === 'vi' ? d.tong : 0, con_lai: d.cach === 'vi' ? 0 : d.tong });
@@ -331,7 +333,12 @@ async function trinhDuyet(pw) {
   };
 
   await may('B1 khách vãng lai', { dn: false }, async ({ t }) => {
-    await mo(t, '/uudai/hang?h=3');
+    await mo(t, '/uudai');
+    await doiChu(t, '#rewards .tier-card', /Mua thẻ ›/);
+    await t.locator('#rewards .ud-hang-nut').click();
+    await doi(t, async () => /\/uudai\/hang$/.test(t.url()));
+    await t.locator('#buycard .ti-tabs button', { hasText: 'Kim cương' }).click();
+    await doi(t, async () => /h=3$/.test(t.url()));
     const ok = await doiChu(t, '#buycard .ti-tabs', /Vàng[\s\S]*Kim cương/);
     k('B1/B2 CR khách vãng lai mở thẳng /uudai/hang: tab Vàng + Kim cương (không tab Thường, không hạng 0 %), không thẻ "Hạng hiện tại"', ok && !/Bạc|Thường/.test(await chu(t, '#buycard .ti-tabs')) && (await t.locator('#buycard .ti-card').count()) === 0);
     k('B2 CR đang xem Kim cương (chỉ cấp): "Hạng dành tặng…", nút mờ, không gói', /Hạng dành tặng khách thân thiết/.test(await chu(t, '#buycard .ti-how')) && (await t.locator('#buycard .checkout-btn').getAttribute('aria-disabled')) === 'true' && (await t.locator('#buycard .ti-buy').count()) === 0);
@@ -350,7 +357,9 @@ async function trinhDuyet(pw) {
     k('B3 CR chưa đăng nhập bấm Mua → /dangnhap?tiep=/uudai/hang?h=2 (về đúng màn sau khi đăng nhập)', decodeURIComponent(t.url()).endsWith('/dangnhap?tiep=/uudai/hang?h=2'), t.url());
     await t.goBack(); await t.waitForSelector('#buycard');
     await t.goBack();
-    k('B1 CR Back từ màn Hạng thành viên về Ưu đãi / trang trước', await doi(t, async () => !/\/uudai\/hang/.test(t.url())));
+    k('B1 CR Back từ màn Hạng thành viên về Ưu đãi', await doi(t, async () => /\/uudai$/.test(t.url())) && (await t.locator('#rewards').count()) === 1, t.url());
+    await mo(t, '/uudai/hang?h=3');
+    k('B1 CR mở thẳng /uudai/hang?h=3 → đúng tab Kim cương', await doiChu(t, '#buycard .ti-tabs button.on', /Kim cương/));
   });
 
   await may('B3 C2 D1 D2 mua ví', {}, async ({ t, S }) => {
@@ -435,14 +444,13 @@ async function trinhDuyet(pw) {
     await t.reload(); await t.waitForSelector('#home');
     await t.waitForTimeout(400);
     k('C7 CR đơn còn chờ trả → giỏ giữ nguyên', bang(await gioMay(t), [LY('TLB', 2), THE(2, 3), LY('EPC', 1)]));
-    traDonQR(S, 'TQD42');
+    S.traQR('TQD42');
     await t.reload(); await t.waitForSelector('#home'); // mở App lại: kho /don thấy đơn đã trả
     k('C7 CR kho /don thấy đơn đã trả (không mở Theo dõi đơn) → giỏ bỏ ĐÚNG dòng đã gửi, giữ dòng thêm sau', await doi(t, async () => bang(await gioMay(t), [LY('EPC', 1)])), JSON.stringify(await gioMay(t)));
     await t.evaluate(() => { localStorage.setItem('kh_gio', JSON.stringify([{ ma: 'TLB', so_luong: 2, ghi_chu: '' }])); });
     await t.reload(); await t.waitForSelector('#home'); await t.waitForTimeout(400);
     k('C7 CR chỉ MỘT lần: mở lại App không dọn nữa (bản ghi đã xong)', bang(await gioMay(t), [LY('TLB', 2)]));
   });
-  function traDonQR(S, ma) { const d = S.don.get(ma); traDon(d); }
 
   await may('D4 nhắc gia hạn + E1 Menu', { S0: { hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-18T23:59:59' } } }, async ({ t }) => {
     await mo(t, '/trangchu');

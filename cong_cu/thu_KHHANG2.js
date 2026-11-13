@@ -35,7 +35,7 @@ const TANG = 'Hạng dành tặng khách thân thiết';
   console.log('Phần 1 — hàm thuần + đọc nguồn');
   const g = await nap('src/giaHang.js');
   const uuDai = boChuThich(doc('src/pages/UuDai.jsx'));
-  k('A2 (KH-THE-1 E2) thẻ hạng Ưu đãi có nút ud.hang.nutCo (có hạng) / ud.hang.nutMua (chưa) → màn Hạng thành viên (moHang)', /'ud\.hang\.nutCo'/.test(uuDai) && /'ud\.hang\.nutMua'/.test(uuDai) && /moHang/.test(uuDai));
+  k('A2 (KH-THE-1 E2) thẻ hạng Ưu đãi có nút ud.hang.nutCo (có hạng) / ud.hang.nutMua (chưa) → màn Hạng thành viên (moHang)', /['"]ud\.hang\.nutCo['"]/.test(uuDai) && /['"]ud\.hang\.nutMua['"]/.test(uuDai) && /moHang/.test(uuDai));
 
   await thu('A1', async () => {
     k('A1 laHangChiCap: đúng id + chi_cap true → true', g.laHangChiCap([H_BAC, H_TANG], 3) === true);

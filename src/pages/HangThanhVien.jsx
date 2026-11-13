@@ -18,7 +18,7 @@ const goiChu = (h) => goiBan(h).map((g) => nd('tier.thang', { so: g.so_thang }))
 /** Thẻ "Hạng hiện tại" (đã đăng nhập). `hang` = /toi.khach.hang (null = Thường). */
 function TheHienTai({ hang, dsHang, banDau }) {
   const phu = !hang ? (banDau ? nd('tier.moiMua', { hang: banDau.ten }) : '')
-    : laHangChiCap(dsHang, hang.id) ? nd('ud.hang.tang') : hang.het_han ? nd('tier.conHan', { ngay: dinhDangNgay(hang.het_han) }) : hang.het_han === null ? nd('ud.hang.khongHan') : '';
+    : laHangChiCap(dsHang, hang.id) ? nd('ud.hang.tang') : hang.het_han ? nd('tier.conHan', { ngay: dinhDangNgay(String(hang.het_han).slice(0, 10)) }) : hang.het_han === null ? nd('ud.hang.khongHan') : '';
   const kPhu = !hang ? 'tier.moiMua' : laHangChiCap(dsHang, hang.id) ? 'ud.hang.tang' : hang.het_han ? 'tier.conHan' : 'ud.hang.khongHan';
   return (
     <div className={`ti-card ${lopHang(hang, dsHang)}`}>
