@@ -35,7 +35,7 @@ BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = 
 
 == cong_cu/thu_KHTHE1.js sau vòng sửa soát 1 (thêm ca C7 Thanh toán, Tạo mã mới ?chi=the, tên hạng từ dòng thẻ, màn Hạng không gọi /toi khi vãng lai, Đặt lại không đếm thẻ, tenDongThe) — CHẠY LẠI trên gốc ==
   (thêm hai dòng ✗ nhóm R / D3 so với trên; cùng nguyên nhân: hàm / khoá chưa có trên gốc)
-7 đạt · 31 hỏng
+7 đạt · 31 hỏng   (chạy lại bản cuối 434f672 trên gốc 13.11: vẫn 7 đạt · 31 hỏng — nhóm dừng sớm)
   Các ca mới cũng ĐỎ trên code của vòng trước (b6f06a9^ = 2418e38 — commit ca thử, trước commit vá b6f06a9): 124 đạt · 7 hỏng có Chromium — tái hiện đúng 5 lỗi soát v1.
   Vòng sửa 2 (soát v2): ca mới / sửa ĐỎ trên d05a767 (ca thử, trước vá a2a1baa): 132 đạt · 2 hỏng có Chromium (Tạo mã mới khi có mã giảm; TheToi gác daBiet).
 
@@ -64,14 +64,14 @@ BẰNG CHỨNG ĐỎ KH-THE-1 — bài thử chạy trên code GỐC (c770240 = 
 16 đạt · 1 hỏng
 
 == Trên code ĐÃ VÁ (nhánh việc), KHONG_TRINH_DUYET=1 ==
-cong_cu/thu_KHTHE1.js   → 83 đạt · 0 hỏng ; có Chromium → 134 đạt · 0 hỏng
+cong_cu/thu_KHTHE1.js   → 85 đạt · 0 hỏng ; có Chromium → 136 đạt · 0 hỏng   (sau soát v3: +2 ca tĩnh — khoá !!maXong, onClick Ưu đãi; hai ca ĐỎ trên 73a1935: 83 · 2)
 cong_cu/thu_KHMUA1c.js  → 28 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHSOHD1.js  → 40 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHND3b.js   → 20 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHND3e.js   → 22 đạt · 0 hỏng (không bớt ca)
 cong_cu/thu_KHHANG2.js  → 17 đạt · 0 hỏng (+1 ca tĩnh) ; có Chromium → 74 đạt · 0 hỏng
 
-SỐ CA cong_cu/thu_KHTHE1.js: 83
+SỐ CA cong_cu/thu_KHTHE1.js: 85
 SỐ CA cong_cu/thu_KHMUA1c.js: 28
 SỐ CA cong_cu/thu_KHSOHD1.js: 40
 SỐ CA cong_cu/thu_KHND3b.js: 20
