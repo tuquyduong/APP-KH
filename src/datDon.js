@@ -215,6 +215,14 @@ export function maDonDaTra(g, ds) {
   const d = ds.find((x) => x && String(x.ma) === String(g.ma_don));
   return d && daThanhToan(d.tien_trinh) ? String(g.ma_don) : '';
 }
+/** Tên hạng của dòng thẻ trong bản ghi lần gửi (`than.mon`) tra /hang; không có → ''. ("Đã lên hạng …" không chờ /toi.) */
+export function hangCuaDon(g, dsHang) {
+  const the = g && g.than && Array.isArray(g.than.mon) ? g.than.mon.find(laThe) : null;
+  const h = the && Array.isArray(dsHang) ? dsHang.find((x) => x && x.id === the.hang_id) : null;
+  return h ? chu(h.ten) : '';
+}
+/** Về Thanh toán lại (Tạo mã mới) của đơn CHỈ thẻ ("trả thẻ trước") → giữ { chi: 'the' }; đơn khác → {}. */
+export const thamThanhToanLai = (g) => (g && g.than && Array.isArray(g.than.mon) && g.than.mon.length > 0 && g.than.mon.every(laThe) ? { chi: 'the' } : {});
 /** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
 export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
@@ -261,13 +269,13 @@ export function buocTienTrinh(tt) {
 }
 export const xongChua = (tt) => KET_THUC.includes(tt);
 
-/** "Đặt lại" một đơn cũ: món có `ma` còn trong menu → dòng giỏ; còn lại đếm `boQua`. */
+/** "Đặt lại" một đơn cũ: món có `ma` còn trong menu → dòng giỏ; món còn lại đếm `boQua`. Dòng thẻ hạng (v13) không đặt lại, không đếm là "không còn bán". */
 export function monDatLai(don, ds) {
   const them = [];
   let boQua = 0;
   ((don && don.mon) || []).forEach((m) => {
     if (m.ma && (ds || []).some((x) => x.ma === m.ma) && Number.isInteger(m.so_luong) && m.so_luong > 0) them.push({ ma: m.ma, so_luong: m.so_luong, ghi_chu: chu(m.ghi_chu) });
-    else boQua++;
+    else if (m.loai !== 'the') boQua++;
   });
   return { them, boQua };
 }

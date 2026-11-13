@@ -3,7 +3,8 @@ import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
 import { bayGio } from '../bayGio.js';
-import { banGhiCuaDon, buocTienTrinh, conLaiQR, daThanhToan, hanMoiThe, huyDon, laDonChiThe, xongChua } from '../datDon.js';
+import { banGhiCuaDon, buocTienTrinh, conLaiQR, daThanhToan, hangCuaDon, hanMoiThe, huyDon, laDonChiThe, xongChua } from '../datDon.js';
+import { dungGia } from '../heThong.js';
 import { dungTheoDoi } from '../dungDatDon.js';
 import { docHoaDon, soDon } from '../hoaDon.js';
 import { LIEN_HE } from '../noiDung/lienHe.js';
@@ -55,9 +56,10 @@ function CacBuoc({ tt }) {
 }
 
 // Đơn CHỈ thẻ hạng (KH-THE-1 D2): POS đi thẳng cho_tra → xong, quầy không pha → thay số đơn / các bước / "mời ra quầy" bằng "Đã lên hạng …" + hạn mới (chữ POS);
-// còn đồ uống trong giỏ (vừa "Trả thẻ trước") → nút về giỏ. `hangMoi` = tên hạng của khách theo /toi (App đọc kho, màn này không đọc kho).
-export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUong = false, veGio, hangMoi = '' }) {
+// còn đồ uống trong giỏ (vừa "Trả thẻ trước") → nút về giỏ. Tên hạng: dòng thẻ của bản ghi lần gửi tra /hang (không chờ /toi); không biết → câu chung.
+export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUong = false, veGio }) {
   const { don, loi, taiLai } = dungTheoDoi(ma);
+  const { dsHang } = dungGia();
   const [loiHuy, datLoiHuy] = useState('');
   const [dangHuy, datDangHuy] = useState(false);
   const tt = don ? don.tienTrinh : '';
@@ -81,6 +83,8 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUo
     huyDon(ma).then(() => { datDangHuy(false); taiLai(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
   };
   const theXong = !!don && tt === 'xong' && laDonChiThe(don);
+  const hangMoi = theXong ? hangCuaDon(banGhiCuaDon(ma), dsHang) : '';
+  const kThe = hangMoi ? 'td.the.xong' : 'td.the.xongChung';
   const han = theXong ? hanMoiThe(don) : '';
   return (
     <Man id="tracking">
@@ -91,7 +95,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUo
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi" {...ndDau('td.vi.giu')}>{ndPhan('td.vi.giu', { giu: <b key="giu" {...ndDau('td.tien')}>{dinhDangGia(tra.giu_vi)}</b>, qr: <b key="qr" {...ndDau('td.tien')}>{dinhDangGia(tra.con_lai)}</b> })}</div>}
           {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau(don.cauTienVe ? 'td.cauTienVe' : 'td.tienVe')}>{don.cauTienVe || nd('td.tienVe')}</div></div>}
-          {theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div {...ndDau('td.the.xong')}>{nd('td.the.xong', { hang: hangMoi })}{han && <small {...ndDau('td.the.han')}>{han}</small>}</div></div>}
+          {theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div {...ndDau(kThe)}>{nd(kThe, { hang: hangMoi })}{han && <small {...ndDau('td.the.han')}>{han}</small>}</div></div>}
           {theXong && conDoUong && <button type="button" className="checkout-btn" onClick={veGio} {...ndDau('td.the.veGio')}>{nd('td.the.veGio')}</button>}
           {!theXong && tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><Chu k="td.soDon" as="div" className="pick-chu" /><div className="n" {...ndDau('td.so')}>{soDon(don.soHd, don.ma)}</div></div>}
           {tt === 'xong' && !theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><Chu k="td.xong" as="div" /></div>}

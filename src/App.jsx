@@ -18,7 +18,7 @@ import { khoGioHoatDong } from './gioHoatDong.js';
 import { dungKho } from './kho.js';
 import { canDangNhap, dichSauDangNhap } from './luongDangNhap.js';
 import { docGio, ghiGio, themMon, demMon, themThe, boDongDaGui, coDoUong } from './gio.js';
-import { banGhiCuaDon, docGuiDo, ghiGuiDo, maDonDaTra, moTheoDoi, monDatLai } from './datDon.js';
+import { banGhiCuaDon, docGuiDo, ghiGuiDo, maDonDaTra, moTheoDoi, monDatLai, thamThanhToanLai } from './datDon.js';
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import { nd, ngheNoiDung, phienNoiDung } from './noiDung/nd.js';
@@ -233,8 +233,8 @@ export default function App() {
         {quangCao && <DaiQuangCao chu={quangCao.chu} khoa={quangCao.khoaDai} chon={quangCao.dich ? () => moDichQuangCao(quangCao) : null} />}
         {daVaoMenu && <Menu hien={taiTab('menu')} tai={menu} lanVao={lanVaoMenu} nhuCau={nhuCau} boNhuCau={() => datNhuCau('')} chonMon={chonMon} moQR={moQR} nhomSlug={nhomCuoi.current} doiNhom={(nhom) => thay(taoDuongDan('menu', { nhom }))} moHang={moHang} />}
         {taiTab('giohang') && <GioHang gio={gio} ds={ds} doi={doiGio} dangNhap={dangNhap} maGiam={maGiam} datMaGiam={datMaGiam} tiepTuc={() => di(taoDuongDan('thanhtoan'))} moMenu={moMenu} monLoi={monLoi} traTheTruoc={() => di(taoDuongDan('thanhtoan', { chi: 'the' }))} />}
-        {dangNhap && trang === 'thanhtoan' && <ThanhToan key={r.tham.chi || 'ca'} chiThe={r.tham.chi === 'the'} gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} veGio={() => di(taoDuongDan('giohang'))} danhDauMon={datMonLoi} sauHuy={daHuy} />}
-        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} lui={luiVe} daTra={daTra} daHuy={daHuy} veThanhToan={() => di(taoDuongDan('thanhtoan'))} conDoUong={coDoUong(gio)} hangMoi={hk ? hk.ten : ''} veGio={() => di(taoDuongDan('giohang'))} />}
+        {dangNhap && trang === 'thanhtoan' && <ThanhToan key={r.tham.chi || 'ca'} chiThe={r.tham.chi === 'the'} daTra={daTra} gio={gio} ds={ds} maGiam={maGiam} lui={luiVe} xong={xongDatDon} moLichSu={() => di(taoDuongDan('donhang'))} moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} veGio={() => di(taoDuongDan('giohang'))} danhDauMon={datMonLoi} sauHuy={daHuy} />}
+        {dangNhap && trang === 'theodoi' && <TheoDoiDon key={r.tham.ma} ma={r.tham.ma} lui={luiVe} daTra={daTra} daHuy={daHuy} veThanhToan={() => di(taoDuongDan('thanhtoan', thamThanhToanLai(banGhiCuaDon(r.tham.ma))))} conDoUong={coDoUong(gio)} veGio={() => di(taoDuongDan('giohang'))} />}
         {dangNhap && trang === 'kehoach' && <KeHoach san={daBiet} lui={luiVe} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} moTracNghiem={moTracNghiem} coKetQuaTn={!!klLuu} ds={ds} chonMon={chonMon} />}
         {dangNhap && trang === 'tienich' && <TienIch key={r.tham.tienich} id={r.tham.tienich} san={daBiet} veLich={() => di(taoDuongDan('kehoach'))} moTienIch={(id) => di(taoDuongDan('tienich', { tienich: id }))} ds={ds} chonMon={chonMon} />}
         {taiTab('trangchu') && <TrangChu quangCao={quangCaoTho} moQuangCao={() => moDichQuangCao(quangCaoTho)} menu={menu} dangNhap={dangNhap} daBiet={daBiet} moKeHoach={() => di(taoDuongDan('kehoach'))} klLuu={klLuu} moTracNghiem={moTracNghiem} moDangNhapTai={moDangNhap} moQR={moQR} moMenu={moMenu} moGioVang={moGioVang} moUuDai={moUuDai} moDangNhap={() => moDangNhap('/uudai')} chonMon={chonMon} locNhuCau={(ten) => { vaoTab('menu'); datNhuCau(ten); }} moHang={moHang} />}

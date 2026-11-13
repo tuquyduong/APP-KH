@@ -8,9 +8,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const GOC = path.join(__dirname, '..', '..');
-const NHAP = process.env.NHAP_DOT_BIEN || '/tmp/claude-0/-home-user-APP-KH/2e239bb3-0d06-54ae-9130-2e94f30acec1/scratchpad/mut';
-fs.rmSync(NHAP, { recursive: true, force: true });
-fs.mkdirSync(NHAP, { recursive: true });
+const NHAP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'dot-bien-kh-the-1-')); // thư mục nháp mới mỗi lần chạy
 for (const d of ['src', 'cong_cu', 'thiet_ke', 'viec/KH-THE-1/hop_dong_v13.md', 'package.json', 'index.html']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
 fs.symlinkSync(path.join(GOC, 'node_modules'), path.join(NHAP, 'node_modules'));
 

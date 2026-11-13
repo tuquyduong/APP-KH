@@ -15,24 +15,25 @@ import '../giaoDien/the_hang.css';
 const POS = ndDau('tier.pos');
 const goiChu = (h) => goiBan(h).map((g) => nd('tier.thang', { so: g.so_thang })).join(nd('tier.hoac'));
 
-/** Thẻ "Hạng hiện tại" (đã đăng nhập). `hang` = /toi.khach.hang (null = Thường). */
-function TheHienTai({ hang, dsHang, banDau }) {
-  const phu = !hang ? (banDau ? nd('tier.moiMua', { hang: banDau.ten }) : '')
-    : laHangChiCap(dsHang, hang.id) ? nd('ud.hang.tang') : hang.het_han ? nd('tier.conHan', { ngay: dinhDangNgay(String(hang.het_han).slice(0, 10)) }) : hang.het_han === null ? nd('ud.hang.khongHan') : '';
-  const kPhu = !hang ? 'tier.moiMua' : laHangChiCap(dsHang, hang.id) ? 'ud.hang.tang' : hang.het_han ? 'tier.conHan' : 'ud.hang.khongHan';
+/** Thẻ "Hạng hiện tại" — CHỈ vẽ khi đã đăng nhập (chỉ khi đó mới đọc /toi, như TrangChu / UuDaiToi). `hang` = /toi.khach.hang (null = Thường). */
+function TheToi({ dsHang, banDau }) {
+  const toi = dungCua(cuaToi);
+  if (!toi.dl || !toi.dl.khach) return null;
+  const hang = toi.dl.khach.hang || null;
+  const [kPhu, bien] = !hang ? (banDau ? ['tier.moiMua', { hang: banDau.ten }] : [''])
+    : laHangChiCap(dsHang, hang.id) ? ['ud.hang.tang'] : hang.het_han ? ['tier.conHan', { ngay: dinhDangNgay(String(hang.het_han).slice(0, 10)) }] : hang.het_han === null ? ['ud.hang.khongHan'] : [''];
+  if (!ndHien('hien.tier.card')) return null;
   return (
     <div className={`ti-card ${lopHang(hang, dsHang)}`}>
       <Chu k="tier.hienTai" as="small" />
       <b {...(hang ? POS : ndDau('tier.thuong'))}>{hang ? hang.ten : nd('tier.thuong')}</b>
-      {phu && <span {...ndDau(kPhu)}>{phu}</span>}
+      {kPhu && <span {...ndDau(kPhu)}>{nd(kPhu, bien)}</span>}
     </div>
   );
 }
 
 export default function HangThanhVien({ dangNhap, hId, doiHang, lui, mua }) {
-  const { dsHang } = dungGia();
-  const toi = dungCua(cuaToi);
-  const hangToi = dangNhap && toi.dl && toi.dl.khach ? toi.dl.khach.hang || null : null;
+  const { dsHang, hangToi } = dungGia(); // hangToi { id, ten } do App đọc /toi (đã đăng nhập, đã biết khách)
   const ds = hangCoGiam(dsHang);
   const h = ds.find((x) => String(x.id) === String(hId)) || (hangToi && ds.find((x) => x.id === hangToi.id)) || ds.find((x) => goiBan(x).length) || ds[0] || null;
   const [chon, datChon] = useState(null); // { id hạng, so_thang } gói khách vừa bấm
@@ -47,7 +48,7 @@ export default function HangThanhVien({ dangNhap, hId, doiHang, lui, mua }) {
   return (
     <Man id="buycard">
       <DauManCon tieuDe={nd('tier.tieuDe')} phu={nd('tier.sub')} lui={lui} />
-      {dangNhap && toi.dl && ndHien('hien.tier.card') && <TheHienTai hang={hangToi} dsHang={dsHang} banDau={banDau} />}
+      {dangNhap && <TheToi dsHang={dsHang} banDau={banDau} />}
       {h && (
         <>
           <div className="ti-tabs">{ds.map((x) => <button type="button" key={x.id} className={x.id === h.id ? `on ${lop(x)}` : ''} onClick={() => doiHang(x.id)} {...POS}>{x.ten}</button>)}</div>

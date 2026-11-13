@@ -6,6 +6,7 @@ import { bieuTuongNhom } from '../menuLoc.js';
 import { chenDong, coDoUong, demMon, doiSoLuong, duocThanhToan, giaHinhDung, laThe, trangThaiDong, xoaDong } from '../gio.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import { tenGiam } from '../datDon.js';
+import { tenDongThe } from '../giaHang.js';
 import { dungGia } from '../heThong.js';
 import Man from '../components/Man.jsx';
 import Chu from '../components/Chu.jsx';
@@ -51,9 +52,6 @@ function ThongBaoXoa({ daXoa, hoanTac, het }) {
   );
 }
 
-/** Tên dòng thẻ: "Thẻ hội viên <hạng> · N tháng"; hạng không còn trong /hang → "Thẻ hội viên". */
-const tenThe = (dong, hang) => (hang ? nd('gio.the.ten', { hang: hang.ten, so: dong.so_thang }) : nd('gio.the.chung'));
-
 /** Dòng thẻ hạng (KH-THE-1 C2): biểu tượng thẻ, giá gói của /hang để hình dung, xoá + Hoàn tác; KHÔNG ô số lượng / ghi chú. */
 function DongThe({ dong, i, dsHang, loiPos, xoa }) {
   const { hang, goi, conBan } = trangThaiDong(dong, null, dsHang);
@@ -63,7 +61,7 @@ function DongThe({ dong, i, dsHang, loiPos, xoa }) {
       <button type="button" className="cart-xoa" aria-label={nd('gio.the.xoaAria')} onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
       <div className="cart-thumb"><Med ten="card" s={40} /></div>
       <div className="cart-info">
-        <div className="cart-name" {...ndDau(hang ? 'gio.the' : 'gio.the.chung')}>{tenThe(dong, hang)}</div>
+        <div className="cart-name" {...ndDau(hang ? 'gio.the' : 'gio.the.chung')}>{tenDongThe(dong, dsHang)}</div>
         {canhBao && <div className="cart-opt"><b {...(loiPos ? {} : ndDau('gio.the.khongBan'))}>{canhBao}</b></div>}
         {goi && <div className="cart-price" {...ndDau('gio.the')}>{dinhDangGia(goi.gia)}</div>}
       </div>
@@ -101,7 +99,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const [daXoa, datDaXoa] = useState(null); // { dong, vitri, ten } của món vừa xoá — để Hoàn tác
   const { dsHang } = dungGia();
   const coMenu = ds.length > 0 || !coDoUong(gio); // giỏ chỉ thẻ không cần menu
-  const tenDong = (d) => (laThe(d) ? tenThe(d, trangThaiDong(d, null, dsHang).hang) : trangThaiDong(d, ds).mon?.ten || nd('gio.monChung'));
+  const tenDong = (d) => (laThe(d) ? tenDongThe(d, dsHang) : trangThaiDong(d, ds).mon?.ten || nd('gio.monChung'));
   const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: tenDong(d) }); doi(xoaDong(gio, i)); };
   const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
   const coThe = coMenu ? duocThanhToan(gio, ds, dsHang) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu

@@ -18,6 +18,5 @@
 /* Nút chính dưới gói: demo đặt kiểu ngay trên thẻ (style="justify-content:center;margin-top:12px"). */
 #buycard .checkout-btn{ justify-content:center; margin-top:12px; }
 /* Nút "Quyền lợi & nâng hạng ›" trên thẻ hạng Ưu đãi: demo đặt kiểu ngay trên nút (#rewards .tier-card button). */
-.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.22); color:#fff; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; text-align:center; position:relative; }
-/* Bản vá thẻ vàng dập của demo (dòng "tier-card button" — chữ nâu trên nền trắng mờ). */
-.tier-card .ud-hang-nut{ background:rgba(255,255,255,.55); color:#4A2410; }
+/* Màu theo bản vá thẻ vàng dập của demo (".tier-card button" — chữ nâu trên nền trắng mờ, đè màu trắng của kiểu ngay trên nút). */
+.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.55); color:#4A2410; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; text-align:center; position:relative; }
