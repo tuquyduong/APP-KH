@@ -15,7 +15,8 @@ b7df000 TIEN-DO: KH-ND-3c, KH-UI-5f xong (chat soat cuoi DAT, gop PR); mo KH-ND-
 
 ## Câu hỏi
 (Câu 1–3: chủ quán đã trả lời ở cuối phiếu, commit `53408ed` 13.11 — giữ để tra. Câu 4 MỚI, không chặn việc.)
-4. **`cong_cu/thu_KHND3e.js` ca B1 — xin mục `## Bài thử cũ sửa` trong phiếu** (soát v1 lỗi 6). Bài cũ so `src/datDon.js` với commit `PHIEU: KH-ND-3e` và đòi MỌI dòng thêm từ đó là
+4. **`cong_cu/thu_KHND3e.js` ca B1 — xin mục `## Bài thử cũ sửa` trong phiếu** (soát v1 lỗi 6). LƯU Ý: đây là xin GỠ một lệnh cấm của phiếu — F3 ghi nguyên văn
+   "Bài cũ phải sửa vì hành vi đổi có chủ đích … → sửa đúng ca, ≥ 1 ca ĐỎ trên gốc kể cả `KHONG_TRINH_DUYET=1`; KHÔNG dùng `## Bài thử cũ sửa`." — chỉ xin ngoại lệ cho riêng tệp này. Bài cũ so `src/datDon.js` với commit `PHIEU: KH-ND-3e` và đòi MỌI dòng thêm từ đó là
    `nd()` / chú thích — việc nào sau KH-ND-3e thêm hàm vào `datDon.js` cũng làm nó đỏ (KH-THE-1 thêm hàm thẻ). Máy đã sửa ca thành "so tới commit CUỐI của KH-ND-3e"
    (`git log --grep=^KH-ND-3e: -- src/datDon.js`) — đúng ý bài (KH-ND-3e chỉ đổi dòng chữ) nhưng nay là phép so lịch sử cố định. Trên cây gốc của cổng (git archive, không `.git`)
    ca ĐỎ, nhưng là do môi trường, không do hành vi — không có cách làm đỏ thật. Đề xuất chủ quán thêm vào phiếu:

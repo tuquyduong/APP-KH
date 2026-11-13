@@ -34,6 +34,8 @@ const DS = [
   ['VS-THE-TOI-KHONG-GAC-DA-BIET', 'src/pages/HangThanhVien.jsx', '{daBiet && <TheToi', '{true && <TheToi'],
   ['VS-TEN-HANG-LEN-HANG-RONG', D, "return h ? chu(h.ten) : '';", "return '';"],
   ['BV-MAN-HANG-GOI-TOI-KHI-VANG-LAI', 'src/pages/HangThanhVien.jsx', '  const { dsHang, hangToi } = dungGia();', '  const { dsHang, hangToi } = dungGia(); dungCua(cuaToi);'],
+  ['BV-THANH-TOAN-BO-KHOA-MAXONG', 'src/pages/ThanhToan.jsx', ' || monLoi || !!maXong;', ' || monLoi;'],
+  ['VS-UU-DAI-ONCLICK-TRUYEN-SU-KIEN', 'src/pages/UuDai.jsx', 'onClick={() => mo()}', 'onClick={mo}'],
   ['VS-DON-GIO-XOA-DONG-THEM-SAU', G, 'if (i >= 0) con = doiSoLuong(con, i, con[i].so_luong - m.so_luong);', 'if (i >= 0) con = xoaDong(con, i);'],
 ];
 const TRINH_DUYET = [

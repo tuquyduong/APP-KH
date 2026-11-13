@@ -137,7 +137,7 @@ function KhoiChuongTrinh({ dangNhap, moHoSo }) {
 
 // Thẻ hạng (demo tier-card). `hang` = hạng của khách (/toi); không có → bảng các hạng giảm thật của POS (/hang, bỏ hạng 0%); không còn hạng nào → ẩn, không bịa.
 // Nút demo trên thẻ hạng (ud.hang.nutCo khi có hạng / ud.hang.nutMua khi chưa) → màn Hạng thành viên (KH-THE-1 E2).
-const NutHang = ({ k, mo }) => <button type="button" className="ud-hang-nut" onClick={mo} {...ndDau(k)}>{nd(k)}</button>;
+const NutHang = ({ k, mo }) => <button type="button" className="ud-hang-nut" onClick={() => mo()} {...ndDau(k)}>{nd(k)}</button>;
 
 function TheHang({ hang, moHang }) {
   const { dsHang } = dungGia();
