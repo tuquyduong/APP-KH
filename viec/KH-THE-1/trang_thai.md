@@ -78,3 +78,61 @@ BÀI HỌC: KHOÁ — mỗi điều kiện khoá nút mới có đột biến g�
 NGUYÊN TẮC — sửa bài cũ thành phép so hai commit cố định là gỡ lớp gác, phải so với cây hiện tại bằng ⊆; NGUYÊN TẮC — một khối trên màn dùng cùng cổng gác (daBiet) với phần còn lại.
 Đơn giản: thamThanhToanLai dùng lại laDonChiThe; bỏ `!!maXong` hoặc thêm ca.
 K4: 6 chỗ gọi GET /don — ChiTietDon và Lịch sử trang 2+ không gọi maDonDaTra nhưng tới được chỉ sau khi kho /don đã nạp → không phải lỗi. K5: không luồng nào bị chặn oan lâu.
+
+## Vòng sửa 2 (sau soát v2)
+Ca thử trước `d05a767` (ĐỎ 132 · 2 có Chromium) → vá `a2a1baa`: `TheToi` gác `daBiet` (cùng cổng gác với hangToi); `thamThanhToanLai` chỉ giữ `?chi=the` khi đơn chỉ thẻ KHÔNG mã giảm
+(dùng lại `laDonChiThe`); ca C6 — POS giả trả `tong` khác tổng dòng (mã 10 %); `thu_KHND3e.js` B1 ca 2 thành phép ⊆ trên cây hiện tại; đột biến đúng tên. Chụp lại ảnh `544c910`.
+
+## Soát độc lập vòng 3 (/ra-soat, HEAD sau 544c910) — chép nguyên ý
+ĐẠT (về code). Lỗi K1 nhỏ: bang_chung_do.txt:59 ghi tên ca KHND3e cũ. F1, F6, F7 chờ phiên chính; F3 với thu_KHND3e.js chờ chủ quán (Câu hỏi 4).
+Kiểm 5 chỗ sửa v2 đúng (HangThanhVien.jsx:51 + App.jsx:241 daBiet; datDon.js:225; ThanhToan.jsx:95; C6 có giá trị; KHND3e ca 2 sống). 21 + 5 đột biến bị bắt (chạy lại).
+NGHI NGỜ: (1) bỏ `!!maXong` mở cửa sổ đua một khung hình (bấm trước khi effect dọn giỏ → đơn thẻ thứ hai) — gợi ý giữ khoá + ca tĩnh; (2) UuDai.jsx:140 `onClick={mo}` truyền sự kiện vào
+moHang(h) — chỉ chạy nhờ docTv lọc; (3) KHND3e phép ⊆ dùng Set, không đếm số lần gọi.
+Câu hỏi 4: xử lý chấp nhận được; lưu ý phiếu F3 cấm `## Bài thử cũ sửa` — chủ quán phải chủ động gỡ cấm cho riêng tệp; không nên gộp trước khi có trả lời.
+NGHIỆM THU: 21/25 · thiếu F1, F6, F7 (chờ phiên chính), F3 (KHND3e chờ chủ quán).
+BÀI HỌC: KHOÁ — bang_chung_do chạy lại sau MỖI vòng sửa (cổng so tên ca ✗ với ca có thật); KHOÁ — khoá nút vì dữ liệu "đã trả" nằm trong biểu thức khoá của lần vẽ đó, có ca tĩnh;
+NGUYÊN TẮC — hàm điều hướng có tham số không truyền thẳng vào onClick; NGUYÊN TẮC — xin ngoại lệ trái lệnh "KHÔNG" của phiếu phải trích đúng dòng cấm.
+
+## Sau soát v3 (không mở vòng sửa mới — chỉ làm theo góp ý ĐẠT)
+Ca thử trước `73a1935` (ĐỎ 83 · 2) → `434f672`: đặt lại `|| !!maXong` trong `khoa` của Thanh toán (đóng cửa sổ đua, ca tĩnh + đột biến BV-THANH-TOAN-BO-KHOA-MAXONG);
+`onClick={() => mo()}` ở Ưu đãi (ca tĩnh + đột biến VS-UU-DAI-ONCLICK-TRUYEN-SU-KIEN); sửa dòng bằng chứng KHND3e; Câu hỏi 4 trích nguyên dòng cấm F3. 28/28 đột biến bị bắt.
+
+## Đột biến (F4) — `viec/KH-THE-1/dot_bien_tay.js` (việc chỉ đổi src/, không có dot_bien.py; như KH-UI-5f)
+Chạy `node viec/KH-THE-1/dot_bien_tay.js --trinh-duyet` (HEAD 434f672) → TẤT CẢ ĐỘT BIẾN BỊ BẮT (28). Bảng chỗ vá → đột biến:
+| Chỗ vá | Đột biến |
+|---|---|
+| datDon.js `dongGui` (dòng thẻ đúng 3 khoá) | VS-THE-GUI-KEM-MA |
+| datDon.js `phanGui` (trả thẻ trước không mã) | BV-TRA-THE-TRUOC-GUI-MA-GIAM |
+| App.jsx `daTra` → `boDongDaGui` | BV-TRA-THE-TRUOC-DON-CA-GIO |
+| gio.js `themThe` (một dòng thẻ) | BV-CHO-HAI-DONG-THE |
+| datDon.js `chanDatGio` | BV-GIO-CHI-THE-BI-CHAN-NGOAI-GIO |
+| datDon.js `loaiLoi` + `MA_THE` | VS-MA-THE-THANH-CHUA-RO |
+| baoDonXong.js `DANG_CHAY` | BV-BAO-RA-QUAY-DON-CHI-THE |
+| datDon.js `monDatLai` | BV-DAT-LAI-THEM-THE, VS-DAT-LAI-DEM-THE-LA-KHONG-BAN |
+| datDon.js `maDonDaTra` / `daThanhToan` (C7) | BV-C7-KHONG-DON-KHI-THEO-DOI-KHONG-MO, VS-C7-DON-KHI-CON-CHO-TRA, VS-C7-DON-HAI-LAN |
+| App.jsx nghe kho /don (C7) | BV-C7-APP-KHONG-NGHE-KHO-DON |
+| ThanhToan.jsx C7 + khoá | BV-THANH-TOAN-KHONG-DON-GIO-C7, BV-THANH-TOAN-BO-KHOA-MAXONG |
+| giaHang.js `nhacGiaHan` / `nutMua` | VS-NHAC-GIA-HAN-8-NGAY, VS-NUT-MUA-BO-THU-BAC |
+| gio.js `sach` / `boDongDaGui` | VS-THE-HONG-VAN-DOC, VS-DON-GIO-XOA-DONG-THEM-SAU |
+| datDon.js `thamThanhToanLai` | BV-TAO-MA-MOI-MAT-CHI-THE, VS-TAO-MA-MOI-BO-MA-GIAM |
+| datDon.js `hangCuaDon` | VS-TEN-HANG-LEN-HANG-RONG |
+| HangThanhVien.jsx `TheToi` (daBiet, không /toi khi vãng lai) | VS-THE-TOI-KHONG-GAC-DA-BIET, BV-MAN-HANG-GOI-TOI-KHI-VANG-LAI |
+| UuDai.jsx nút | VS-UU-DAI-ONCLICK-TRUYEN-SU-KIEN |
+| TheoDoiDon.jsx đơn chỉ thẻ | BV-THEO-DOI-CHI-THE-VAN-MOI-RA-QUAY |
+| GioHang.jsx gợi ý trả thẻ trước | BV-GIO-KHONG-GOI-Y-TRA-THE-TRUOC |
+| ThanhToan.jsx đánh dấu dòng thẻ | BV-THANH-TOAN-KHONG-DANH-DAU-THE |
+
+## Khoá nội dung đã thêm (F1 — sửa được ở /admin)
+`src/noiDung/nd/theHang.js` (nhóm MỚI): tieuDe.hang, tier.tieuDe, tier.sub, tier.hienTai, tier.thuong, tier.moiMua, tier.conHan, tier.how, tier.thang, tier.hoac, tier.ben.giam, tier.ben.db,
+tier.tietKiem, tier.nut.mua, tier.nut.giaHan, tier.nut.mo, tier.mo.caoHon, tier.mo.chuaBan, tier.buynote, tier.daThem, tier.daDoi, tier.cmp, tier.cmp.gia, tier.cmp.giaThuong, tier.cmp.giam,
+tier.cmp.cach, tier.cmp.macDinh, tier.cmp.muaThe, tier.cmp.quanTang, hien.tier.card, hien.tier.ben, hien.tier.note, hien.tier.cmp, 🔒 tier.pos (pos), 🔒 tier.tutinh (tutinh) ·
+`menu.js`: gio.the.ten, gio.the.chung, gio.the.khongBan, gio.the.xoaAria, gio.truocThe.chu, gio.truocThe.nut, hien.gio.truocThe, 🔒 gio.the, menu.the.ten, menu.the.tu, hien.menu.the, 🔒 menu.the.pos ·
+`donHang.js`: td.the.xong, td.the.xongChung, td.the.veGio, 🔒 td.the.han, 🔒 tt.the · `trangChu.js`: home.nhac.giaHan, home.nhac.homNay, 🔒 home.nhac.so (tutinh), hien.nhacGiaHan ·
+`taiKhoan.js`: ud.hang.nutCo, ud.hang.nutMua · `index.js`: nhóm THE_HANG + đích nút `['hang', 'Ưu đãi · Hạng thành viên']` (Trang chủ mở được đích này).
+Kiểm: `kiemDanhMuc(DANH_MUC)` rỗng lỗi + ca F1 của thu_KHTHE1 (mọi khoá các màn đụng tới có trong danh mục); mọi chữ mới qua nd() + data-nd; K10 không tệp nào tăng (npm test).
+
+## Thử tay của chủ quán (F7 — trên điện thoại)
+1. Ưu đãi → bấm "Quyền lợi & nâng hạng ›" (hoặc "Mua thẻ ›") → chọn gói → "Mua thẻ …" → thông báo "Đã thêm Thẻ … vào giỏ"; tab Giỏ có dòng "Thẻ hội viên … · N tháng".
+2. Giỏ chỉ có thẻ → Tiếp tục → bật "Trừ từ số dư ví" → nhập PIN → Theo dõi đơn hiện "Đã lên hạng …" + "Hạn mới: …"; về Trang chủ thấy hạng mới (có thể mua gói rẻ rồi huỷ / hoàn ở quầy).
+3. Giỏ có thẻ + 1 ly → bấm "Trả thẻ trước để đơn này được giảm ›" → trả → bấm "Về giỏ đặt đồ uống ›": ly còn trong giỏ, giá theo hạng mới.
+4. Menu → ô "Thẻ thành viên" → thẻ "Thẻ … — từ …" → mở màn Hạng thành viên.
