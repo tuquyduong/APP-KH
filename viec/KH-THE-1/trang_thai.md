@@ -14,6 +14,13 @@ b7df000 TIEN-DO: KH-ND-3c, KH-UI-5f xong (chat soat cuoi DAT, gop PR); mo KH-ND-
 - `ke_hoach.md` đã viết; phiếu dặn "Chờ duyệt kế hoạch" → commit, push, DỪNG chờ chủ quán gõ "duyệt".
 
 ## Câu hỏi
+(Câu 1–3: chủ quán đã trả lời ở cuối phiếu, commit `53408ed` 13.11 — giữ để tra. Câu 4 MỚI, không chặn việc.)
+4. **`cong_cu/thu_KHND3e.js` ca B1 — xin mục `## Bài thử cũ sửa` trong phiếu** (soát v1 lỗi 6). Bài cũ so `src/datDon.js` với commit `PHIEU: KH-ND-3e` và đòi MỌI dòng thêm từ đó là
+   `nd()` / chú thích — việc nào sau KH-ND-3e thêm hàm vào `datDon.js` cũng làm nó đỏ (KH-THE-1 thêm hàm thẻ). Máy đã sửa ca thành "so tới commit CUỐI của KH-ND-3e"
+   (`git log --grep=^KH-ND-3e: -- src/datDon.js`) — đúng ý bài (KH-ND-3e chỉ đổi dòng chữ) nhưng nay là phép so lịch sử cố định. Trên cây gốc của cổng (git archive, không `.git`)
+   ca ĐỎ, nhưng là do môi trường, không do hành vi — không có cách làm đỏ thật. Đề xuất chủ quán thêm vào phiếu:
+   `## Bài thử cũ sửa` · `- cong_cu/thu_KHND3e.js — B1 so datDon.js tới commit cuối của KH-ND-3e (việc sau được thêm hàm vào datDon.js); không có hành vi nào trên gốc để đỏ`.
+   Không thêm thì cổng vẫn ĐẠT (đỏ vì thiếu `.git`), chỉ là bằng chứng không thật — máy ghi rõ ở `bang_chung_do.txt`.
 1. **A1 không tải được đúng từng byte.** Người gác chặn cả ba đường: `curl` tới raw.githubusercontent.com (`[CURL-HOST]`), `git init` + `git fetch` kho POS ở nháp
    (`[GIT-LENH]`), công cụ thêm kho `add_repo` (`[CC-LA]`). Một agent phụ đọc được trang (PHIEN_BAN 13, NGAY 2026-11-09) nhưng chỉ trả lời tóm ý — không dùng để chép.
    Xin chủ quán làm như KH-MUA-1c (v9): đặt bản gốc vào `viec/KH-THE-1/hop_dong_v13.md` (tải `HOP_DONG_API_KH.md` của kho POS ở commit
@@ -28,4 +35,23 @@ b7df000 TIEN-DO: KH-ND-3c, KH-UI-5f xong (chat soat cuoi DAT, gop PR); mo KH-ND-
 
 ## Phát hiện
 - Hợp đồng v12 (KH-TOMTAT-1) thêm `kenh`, `cach_nhan`, `tra[]`, `so_mon`, `mon_dau`, `giam` vào `GET /don` và `GET /don/:ma`. Việc này không dùng (ngoài phạm vi), chỉ chép hợp đồng.
-- `daTra` (App.jsx ~210) chỉ chạy khi màn Theo dõi đơn đang mở: đơn trả xong lúc khách ở màn khác thì giỏ không tự dọn (có từ trước KH-THE-1; agent soát kế hoạch chỉ ra). Không sửa ở việc này.
+- `daTra` (App.jsx ~210) chỉ chạy khi màn Theo dõi đơn đang mở: đơn trả xong lúc khách ở màn khác thì giỏ không tự dọn (có từ trước KH-THE-1; agent soát kế hoạch chỉ ra).
+  → Chủ quán cho LÀM trong việc này (mục C7 của phiếu, 13.11): đã làm — App nghe kho `/don`, Thanh toán nghe GET /don riêng của nó, cùng hàm `maDonDaTra` → `daTra`.
+- POS v13 cho mã giảm áp lên cả giá thẻ; QĐ 10.11 không — chủ quán trả lời: POS VOUCHER-2 chặn ở máy chủ, App không đổi (phiếu, câu 2).
+- Bản đồng bộ giỏ: `boDongDaGui` khớp `ghi_chu` đúng như `themMon` lưu (đã trim); bản `kh_gio` bị sửa tay với ghi chú toàn khoảng trắng thì dòng đó không tự dọn (soát v1 nghi ngờ) — không sửa (chỉ khi kho bị sửa tay).
+
+## Soát độc lập vòng 1 (/ra-soat, 13.11) — báo cáo chép nguyên ý
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:
+1. src/pages/ThanhToan.jsx:43,89 + src/App.jsx:217-219 — C7 sót nguồn `dsDon` (GET /don riêng của Thanh toán): QR đơn có thẻ trả xong khi khách đã rời Theo dõi đơn, kho cuaDon chưa làm mới → mở Thanh toán, giỏ còn thẻ, không chặn → trả thẻ lần hai — K4.
+2. src/App.jsx:237 + TheoDoiDon.jsx:75-78 — "Tạo mã mới" của đơn trả thẻ trước về /thanhtoan mất ?chi=the → trả cả giỏ — K4.
+3. App.jsx:237 hangMoi lấy /toi (làm mới song song) → "Đã lên hạng " trống / tên hạng cũ — K3.
+4. src/pages/HangThanhVien.jsx:34 dungCua(cuaToi) không điều kiện → khách vãng lai bắn GET /toi không token — K4 (lệch khuôn TrangChu / UuDaiToi).
+5. src/datDon.js:265-272 monDatLai đếm dòng thẻ vào boQua → "Đặt lại" báo "1 món không còn bán" sai — K4.
+6. cong_cu/thu_KHND3e.js:92,101-103 ca B1 thành hằng số (so hai commit cố định); "đỏ trên gốc" chỉ vì cây archive không có .git — K3 / F3.
+NGHI NGỜ: hangToi suy từ kho /toi (làm mới lỗi có làm rỗng dl?); boDongDaGui khớp ghi_chu không trim; C6 không ca riêng.
+NGHIỆM THU: 23/25 · thiếu F3 (KHND3e), F6 (chưa ghi).
+CHƯA SOÁT ĐƯỢC: --day-du, cổng chay; so ảnh bằng mắt; VOUCHER-2 phía POS.
+BÀI HỌC: KHOÁ ca CR "trả QR → rời Theo dõi → tiền về → mở Thanh toán"; KHOÁ ca "Tạo mã mới đơn chỉ thẻ giữ ?chi=the"; KHOÁ ca tĩnh "màn vãng lai không gọi cuaToi khi chưa đăng nhập";
+NGUYÊN TẮC: gom "nguồn dữ liệu X" về một hàm thì grep mọi lời gọi cửa API đó; "đỏ trên gốc" do môi trường không tính.
+Đơn giản: the_hang.css khai .ud-hang-nut hai lần; tenThe (GioHang) / tenGui (ThanhToan) trùng → một hàm; HangThanhVien phu/kPhu chuỗi điều kiện hai lần; dot_bien_tay.js đường nháp ghi cứng.

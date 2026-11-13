@@ -423,6 +423,7 @@ async function trinhDuyet(pw) {
     await doiChu(t, '#cart', /Trả thẻ trước để đơn này được giảm ›/);
     k('C3 CR giỏ thẻ + ly: dòng "Đồ uống trong đơn này tính theo hạng hiện tại…" + nút "Trả thẻ trước…"', /Đồ uống trong đơn này tính theo hạng hiện tại; hạng mới áp từ đơn sau\./.test(await chu(t, '#cart')));
     k('C2 CR giá ly hình dung theo hạng Thường: 30.000đ', /30\.000đ/.test(await chu(t, '#cart .cart-item')));
+    k('C6 CR bảng tiền giỏ có thẻ = đúng số báo giá POS (tạm tính / tổng 229.000đ = ly 30.000 + gói 199.000 do POS tính), App không tự trừ', await doiChu(t, '#cart .bang-tien', /Tổng cộng\s*229\.000đ/) && S.baoGia.some((b) => bang(b.mon, [{ ma: 'TLB', so_luong: 1 }, THE(2, 3)])));
     await chup(t, 'gio_the_ly');
     // ô mã giảm: mã nhập trước khi trả thẻ phải còn cho đơn đồ uống
     await t.locator('#cart .promo-box input').fill('GIAM10'); await t.locator('#cart .promo-box button').click();
