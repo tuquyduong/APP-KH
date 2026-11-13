@@ -20,6 +20,7 @@ import { docChuongTrinh, sinhNhatHomNay } from '../chuongTrinh.js';
 import { bayGio } from '../bayGio.js';
 import '../giaoDien/chuong_trinh.css';
 import '../giaoDien/hang.css';
+import '../giaoDien/the_hang.css';
 
 // Ưu đãi theo demo (rewards): banner Giờ vàng, thẻ hạng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
 // Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
@@ -135,7 +136,10 @@ function KhoiChuongTrinh({ dangNhap, moHoSo }) {
 }
 
 // Thẻ hạng (demo tier-card). `hang` = hạng của khách (/toi); không có → bảng các hạng giảm thật của POS (/hang, bỏ hạng 0%); không còn hạng nào → ẩn, không bịa.
-function TheHang({ hang }) {
+// Nút demo trên thẻ hạng (ud.hang.nutCo khi có hạng / ud.hang.nutMua khi chưa) → màn Hạng thành viên (KH-THE-1 E2).
+const NutHang = ({ k, mo }) => <button type="button" className="ud-hang-nut" onClick={mo} {...ndDau(k)}>{nd(k)}</button>;
+
+function TheHang({ hang, moHang }) {
   const { dsHang } = dungGia();
   if (hang) {
     const tang = laHangChiCap(dsHang, hang.id);
@@ -145,6 +149,7 @@ function TheHang({ hang }) {
         <div className="top"><div><div className="name" {...ndDau('ud.hang.pos')}>{ndPhan('ud.hang.ten', { ten: hang.ten })}</div><div className="pct" {...ndDau('ud.hang.pct')}>{ndPhan('ud.hang.pct', { phanTram: hang.phan_tram })}{db}</div></div></div>
         {hang.het_han ? <div className="prog-lbl" {...ndDau('ud.hang.hetHan')}>{ndPhan('ud.hang.hetHan', { ngay: dinhDangNgay(hang.het_han) })}</div> : hang.het_han === null && <Chu k="ud.hang.khongHan" as="div" className="prog-lbl" />}
         {tang && <Chu k="ud.hang.tang" as="div" className="hang-tang" />}
+        <NutHang k="ud.hang.nutCo" mo={moHang} />
       </div>
     );
   }
@@ -158,19 +163,20 @@ function TheHang({ hang }) {
           {h.chi_cap === true ? <Chu k="ud.hang.tang" as="div" className="hang-tang" /> : dongGoi(h).map((g, i) => <div className="hang-goi" key={i} {...ndDau('ud.hang.goi')}>{g}</div>)}
         </div>
       ))}</div></div>
+      <NutHang k="ud.hang.nutMua" mo={moHang} />
     </div>
   );
 }
 
 // Phần riêng của khách đã đăng nhập: thẻ hạng + điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
-function UuDaiToi({ maSan, khiNhanXong }) {
+function UuDaiToi({ maSan, khiNhanXong, moHang }) {
   const tai = dungCua(cuaDiem);
   const toi = dungCua(cuaToi);
   const [tatCa, datTatCa] = useState(false);
   const khach = toi.dl && toi.dl.khach;
   return (
     <>
-      {khach && <TheHang hang={khach.hang} />}
+      {khach && <TheHang hang={khach.hang} moHang={moHang} />}
 
       <TrangTai tai={tai}>
         {(dl) => (
@@ -203,15 +209,15 @@ function UuDaiToi({ maSan, khiNhanXong }) {
 }
 
 // Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
-export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo }) {
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang }) {
   return (
     <Man id="rewards">
       <div className="topbar"><div><Chu k={dangNhap ? 'ud.tieuDeToi' : 'ud.tieuDe'} as="h1" /></div><NutQR moQR={moQR} /></div>
       <BannerGioVang mo={moGioVang} />
       <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
-        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} />
-        : <><TheHang hang={null} /><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
+        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} moHang={moHang} />
+        : <><TheHang hang={null} moHang={moHang} /><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );
 }
