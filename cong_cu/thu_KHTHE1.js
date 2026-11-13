@@ -218,6 +218,249 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
-async function trinhDuyet() {
-  k('Chromium: chưa viết', false);
+// ---- Phần 2: App thật (esbuild) + POS giả theo hợp đồng v13 (dòng thẻ, 4 mã lỗi, giỏ chỉ thẻ mọi giờ và `xong` khi đã thu, hạng lên khi đã thu).
+async function trinhDuyet(pw) {
+  const esbuild = require('esbuild');
+  const goi = (await esbuild.build({
+    stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
+    bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
+    loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
+  })).outputFiles[0].text;
+  const cssTron = (f) => docTho(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
+  const css = [...docTho('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n') + fs.readdirSync(path.join(GOC, 'src/giaoDien')).filter((f) => /\.css$/.test(f) && !/^demo|giaoDien|khau_hieu/.test(f)).map((f) => docTho('src/giaoDien/' + f)).join('\n');
+  const HTML = docTho('index.html').replace(/<script type="module"[^>]*><\/script>/, '<script src="/bundle.js"></script>').replace('</head>', `<style>${css}</style></head>`);
+  const URL0 = 'http://kh.test', PIN = '1357', BAY = (g, d = '2026-11-13') => `${d}T${g}`;
+  const anhDir = process.env.LUU_ANH_DIR || '';
+  const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
+  const giaGoi = (id, n) => { const h = HANG.find((x) => x.id === id); const g = h && h.goi.find((x) => x.so_thang === n); return g ? g.gia : null; };
+
+  async function may(ten, { dn = true, gio = null, S0 = {}, rong = 390 } = {}, chay) {
+    const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
+    await ctx.clock.install({ time: new Date('2026-11-13T20:30:00+07:00') }); await ctx.clock.resume();
+    await ctx.addInitScript(({ dn, gio }) => {
+      if (sessionStorage.getItem('da_gieo')) return;
+      sessionStorage.setItem('da_gieo', '1');
+      localStorage.setItem('kh_ngay_man_dau', '2026-11-13');
+      if (dn) localStorage.setItem('kh_token', 'tok-A');
+      if (gio) localStorage.setItem('kh_gio', JSON.stringify(gio));
+    }, { dn, gio });
+    const S = { vi: 500000, hang: null, mo: true, don: new Map(), soDon: 41, guiDon: [], baoGia: [], loiThe: '', ...S0 };
+    const loiTrang = [];
+    const json = (r, st, o) => r.fulfill({ status: st, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
+    const loi400 = (r, code, st = 400) => json(r, st, { error: `Lời POS giả: ${code}`, code });
+    // Báo giá theo v13: dòng thẻ đúng 3 khoá (so_luong 1 được), món không loai; giá thẻ = giá gói; đồ uống theo hạng ĐANG CÓ.
+    const baoGia = (t) => {
+      const mon = Array.isArray(t && t.mon) ? t.mon : [];
+      const the = mon.filter((m) => m && 'loai' in m);
+      if (the.some((m) => m.loai !== 'the' || Object.keys(m).some((x) => !['loai', 'hang_id', 'so_thang', 'so_luong'].includes(x)))) return { loi: 'YEU_CAU_KHONG_HOP_LE' };
+      if (the.length > 1) return { loi: 'NHIEU_THE' };
+      const coLy = mon.some((m) => !('loai' in m));
+      if (coLy && !S.mo) return { loi: 'NGOAI_GIO' };
+      if (S.loiThe && the.length) return { loi: S.loiThe };
+      const dong = mon.map((m) => {
+        if ('loai' in m) { const gia = giaGoi(m.hang_id, m.so_thang); return { loai: 'the', hang_id: m.hang_id, so_thang: m.so_thang, ma: null, so_luong: 1, don_gia: gia, thanh_tien: gia }; }
+        const x = MENU_DS.find((y) => y.ma === m.ma); const gh = S.hang && x.gia_hang.find((y) => y.hang_id === S.hang.id);
+        return { ma: m.ma, so_luong: m.so_luong, don_gia: x.gia, thanh_tien: (gh ? gh.gia : x.gia) * m.so_luong, goc: x.gia * m.so_luong };
+      });
+      if (dong.some((d) => d.loai && d.don_gia === null)) return { loi: 'GOI_HANG_KHONG_BAN' };
+      const tam = dong.reduce((s, d) => s + (d.goc || d.thanh_tien), 0), tong = dong.reduce((s, d) => s + d.thanh_tien, 0);
+      return { dong: dong.map(({ goc, ...d }) => d), tam_tinh: tam, giam: tam > tong ? [{ loai: 'hang', so_tien: tam - tong }] : [], phi_giao: 0, tong, ma_giam_loi: null, chiThe: !coLy };
+    };
+    const lenHang = (d) => { const m = d.mon.find((x) => x.loai === 'the'); if (m) S.hang = { id: m.hang_id, ten: HANG.find((h) => h.id === m.hang_id).ten, phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: BAY('23:59:59', '2027-02-13') }; };
+    const traDon = (d) => { d.tt = d.chiThe ? 'xong' : 'da_tra'; lenHang(d); };
+    const monDon = (d) => d.mon.map((m) => ('loai' in m ? { ma: null, ten: `🎟️ Thẻ hội viên ${HANG.find((h) => h.id === m.hang_id).ten} · ${m.so_thang} tháng`, so_luong: 1, don_gia: giaGoi(m.hang_id, m.so_thang), thanh_tien: giaGoi(m.hang_id, m.so_thang), ghi_chu: null, loai: 'the' }
+      : { ma: m.ma, ten: MENU_DS.find((x) => x.ma === m.ma).ten, so_luong: m.so_luong, don_gia: 30000, thanh_tien: 30000 * m.so_luong, ghi_chu: m.ghi_chu || null }));
+    const dongDon = (d) => ({ ma: d.ma, so_hd: 'APP00' + d.ma.slice(3), ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' ? 0 : d.tong, trang_thai: null, thanh_toan: null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: false, cach_tra: d.cach, giu_vi: d.cach === 'vi' ? d.tong : 0, con_lai: d.cach === 'vi' ? 0 : d.tong });
+    await ctx.route(`${URL0}/**`, async (r) => {
+      const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
+      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goi });
+      if (!p.startsWith('/api/kh')) return /\.[a-z0-9]+$/.test(p) ? r.fulfill({ status: 204, body: '' }) : r.fulfill({ contentType: 'text/html', body: HTML });
+      const duong = p.slice('/api/kh'.length);
+      let than = null; try { than = JSON.parse(req.postData()); } catch { /* không thân */ }
+      if (duong === '/gio-vang') return json(r, 200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
+      if (duong === '/hang') return json(r, 200, { success: true, data: HANG });
+      if (duong === '/gio-hoat-dong') return json(r, 200, { success: true, bay_gio: BAY('20:30:00'), dang_mo: S.mo, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: S.mo ? '' : 'Quán đã đóng cửa', lich_tuan: [], ngay_nghi: [] });
+      if (duong === '/menu') return json(r, 200, { success: true, data: MENU_DS });
+      if (duong === '/chuong-trinh') return json(r, 200, { success: true, data: [] });
+      if (!/tok-A/.test(req.headers().authorization || '')) return json(r, 401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
+      if (duong === '/toi') return json(r, 200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, ngay_sinh: null, qr: 'QR', hang: S.hang, so_du_vi: S.vi } });
+      if (duong === '/diem') return json(r, 200, { success: true, points: 0, history: [] });
+      if (duong === '/voucher') return json(r, 200, { success: true, data: [], ma_khach_moi: [] });
+      if (duong === '/gia-han') return json(r, 200, { success: true, token: 'tok-A', het_han: BAY('08:00:00', '2026-12-13') });
+      if (duong === '/gio/bao-gia') { S.baoGia.push(than); const b = baoGia(than); return b.loi ? loi400(r, b.loi) : json(r, 200, { success: true, ...b }); }
+      if (duong === '/don' && pt === 'POST') {
+        S.guiDon.push(than);
+        const b = baoGia(than);
+        if (b.loi) return loi400(r, b.loi);
+        if (than.tong_da_xem !== b.tong) return json(r, 409, { error: 'Giá đã đổi', code: 'GIA_DA_DOI', bao_gia: b });
+        if (than.cach_tra !== 'qr' && than.pin !== PIN) return loi400(r, 'PIN_SAI');
+        const ma = 'TQD' + ++S.soDon;
+        const d = { ma, tong: b.tong, mon: than.mon, chiThe: b.chiThe, cach: than.cach_tra, tt: 'cho_tra', qr: { chuoi: '0002010102123857' + ma, het_han: BAY('20:40:00') } };
+        if (than.cach_tra === 'vi') { S.vi -= b.tong; traDon(d); }
+        S.don.set(ma, d);
+        return json(r, 200, { success: true, ma_don: ma, so_hd: 'APP00' + ma.slice(3), tong: b.tong, giu_vi: d.cach === 'vi' ? b.tong : 0, con_lai: d.cach === 'vi' ? 0 : b.tong, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, trung: false });
+      }
+      if (duong.startsWith('/don/') && pt === 'GET') {
+        const d = S.don.get(decodeURIComponent(duong.slice(5)));
+        if (!d) return json(r, 404, { error: 'Không thấy đơn', code: 'KHONG_THAY_DON' });
+        const the = d.mon.find((m) => 'loai' in m);
+        return json(r, 200, { success: true, don: { ...dongDon(d), mon: monDon(d), hoa_don: the && d.tt !== 'cho_tra' ? [{ loai: 'the', trai: '1 x Thẻ hội viên', phai: '199.000', ghi_chu: 'Hạn mới: 13/02/2027' }] : [] } });
+      }
+      if (duong === '/don' && pt === 'GET') return json(r, 200, { success: true, trang: 1, con_nua: false, data: [...S.don.values()].reverse().map(dongDon) });
+      return json(r, 500, { error: 'chưa giả', code: 'LOI_MAY_CHU' });
+    });
+    const t = await ctx.newPage(); t.on('pageerror', (e) => loiTrang.push(e.message)); t.setDefaultTimeout(6000);
+    try { await chay({ t, S, ctx }); } catch (e) { k(`[${ten}] dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); }
+    k(`[${ten}] trang không báo lỗi JS`, loiTrang.length === 0, loiTrang[0]);
+    await ctx.close();
+  }
+  const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); };
+  const chu = (t, sel) => t.locator(sel).first().innerText().catch(() => '');
+  const doi = async (t, fn, ms = 6000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await fn()) return true; await t.waitForTimeout(40); } return false; };
+  const doiChu = (t, sel, mau, ms) => doi(t, async () => mau.test(await chu(t, sel)), ms);
+  const gioMay = (t) => t.evaluate(() => JSON.parse(localStorage.getItem('kh_gio') || '[]'));
+  const chup = async (t, ten) => { if (anhDir) await t.screenshot({ path: path.join(anhDir, ten + '.png') }); };
+  const nutDat = (t) => t.locator('#checkout .nut-dat').first();
+  const traVi = async (t) => {
+    await doi(t, async () => (await nutDat(t).getAttribute('aria-disabled')) !== 'true' && /Thanh toán qua QR|Trừ ví/.test(await nutDat(t).innerText()));
+    if (!/Trừ ví/.test(await nutDat(t).innerText())) await t.locator('#checkout .the-vi').first().click();
+    await doiChu(t, '#checkout .nut-dat', /Trừ ví/);
+    await nutDat(t).click();
+    for (const c of PIN) await t.locator('.pin-pad button', { hasText: new RegExp(`^${c}$`) }).click();
+    await t.locator('.pin-pad button', { hasText: 'Xác nhận' }).click();
+  };
+
+  await may('B1 khách vãng lai', { dn: false }, async ({ t }) => {
+    await mo(t, '/uudai/hang?h=3');
+    const ok = await doiChu(t, '#buycard .ti-tabs', /Vàng[\s\S]*Kim cương/);
+    k('B1/B2 CR khách vãng lai mở thẳng /uudai/hang: tab Vàng + Kim cương (không tab Thường, không hạng 0 %), không thẻ "Hạng hiện tại"', ok && !/Bạc|Thường/.test(await chu(t, '#buycard .ti-tabs')) && (await t.locator('#buycard .ti-card').count()) === 0);
+    k('B2 CR đang xem Kim cương (chỉ cấp): "Hạng dành tặng…", nút mờ, không gói', /Hạng dành tặng khách thân thiết/.test(await chu(t, '#buycard .ti-how')) && (await t.locator('#buycard .checkout-btn').getAttribute('aria-disabled')) === 'true' && (await t.locator('#buycard .ti-buy').count()) === 0);
+    await chup(t, 'hang_vanglai_kimcuong');
+    const dai = await t.evaluate(() => history.length);
+    await t.locator('#buycard .ti-tabs button', { hasText: 'Vàng' }).click();
+    await doi(t, async () => /h=2$/.test(t.url()));
+    k('B1 CR đổi tab = thay địa chỉ ?h=2, không thêm lịch sử', /\/uudai\/hang\?h=2$/.test(t.url()) && (await t.evaluate(() => history.length)) === dai, t.url());
+    k('B2 CR Vàng: quyền lợi POS, gói 1/3 tháng, mặc định 3 tháng, Tiết kiệm 38.000đ, nút "Mua thẻ Vàng 3 tháng"', /Giảm 10% mọi món[\s\S]*Tích điểm ×1,2/.test(await chu(t, '#buycard .ti-ben')) && /3 tháng/.test(await chu(t, '#buycard .ti-buy button.on')) && /Tiết kiệm 38\.000đ/.test(await chu(t, '#buycard .ti-buy')) && /Mua thẻ Vàng 3 tháng/.test(await chu(t, '#buycard .checkout-btn')));
+    k('B2 CR So sánh nhanh: cột Thường + Vàng + Kim cương; Giá thường / −10% / −15%; Mặc định / Mua thẻ / Quán tặng', /Giá thường[\s\S]*−10%[\s\S]*−15%/.test(await chu(t, '#buycard .ti-cmp')) && /Mặc định[\s\S]*Mua thẻ[\s\S]*Quán tặng/.test(await chu(t, '#buycard .ti-cmp')));
+    await chup(t, 'hang_vanglai_vang');
+    await t.reload(); await t.waitForSelector('#buycard .ti-tabs');
+    k('B1 CR tải lại: vẫn màn Hạng thành viên, đúng tab Vàng', /\?h=2$/.test(t.url()) && /Vàng/.test(await chu(t, '#buycard .ti-tabs button.on')));
+    await t.locator('#buycard .checkout-btn').click();
+    await doi(t, async () => /\/dangnhap/.test(t.url()));
+    k('B3 CR chưa đăng nhập bấm Mua → /dangnhap?tiep=/uudai/hang?h=2 (về đúng màn sau khi đăng nhập)', decodeURIComponent(t.url()).endsWith('/dangnhap?tiep=/uudai/hang?h=2'), t.url());
+    await t.goBack(); await t.waitForSelector('#buycard');
+    await t.goBack();
+    k('B1 CR Back từ màn Hạng thành viên về Ưu đãi / trang trước', await doi(t, async () => !/\/uudai\/hang/.test(t.url())));
+  });
+
+  await may('B3 C2 D1 D2 mua ví', {}, async ({ t, S }) => {
+    await mo(t, '/uudai');
+    await doiChu(t, '#rewards .tier-card', /Mua thẻ ›/);
+    k('E2 CR Ưu đãi (chưa có hạng): nút "Mua thẻ ›" trên thẻ hạng', /Mua thẻ ›/.test(await chu(t, '#rewards .tier-card .ud-hang-nut')));
+    await t.locator('#rewards .ud-hang-nut').click();
+    await doi(t, async () => /\/uudai\/hang$/.test(t.url()));
+    await doiChu(t, '#buycard .ti-card', /Thường/);
+    k('B2 CR đã đăng nhập chưa hạng: thẻ "Hạng hiện tại · Thường · Mua thẻ Vàng để nhận giá tốt…"', /Hạng hiện tại[\s\S]*Thường[\s\S]*Mua thẻ Vàng để nhận giá tốt/.test(await chu(t, '#buycard .ti-card')));
+    await chup(t, 'hang_chuahang');
+    await t.locator('#buycard .checkout-btn').click();
+    const tb = await doiChu(t, '.toast', /Đã thêm Thẻ Vàng 3 tháng vào giỏ/);
+    k('B3 CR Mua → ở lại màn, báo "Đã thêm Thẻ Vàng 3 tháng vào giỏ", giỏ có dòng thẻ, viên số tab Giỏ = 1', tb && /\/uudai\/hang/.test(t.url()) && bang(await gioMay(t), [THE(2, 3)]) && (await chu(t, '.tabbar .tab-so')) === '1');
+    await t.locator('#buycard .ti-buy button', { hasText: '1 tháng' }).click();
+    await t.locator('#buycard .checkout-btn').click();
+    k('C1 CR mua gói khác → "Đã đổi sang Thẻ Vàng 1 tháng", vẫn MỘT dòng thẻ', await doiChu(t, '.toast', /Đã đổi sang Thẻ Vàng 1 tháng/) && bang(await gioMay(t), [THE(2, 1)]));
+    await mo(t, '/giohang');
+    await doiChu(t, '#cart .cart-item', /Thẻ hội viên Vàng · 1 tháng/);
+    k('C2 CR giỏ: dòng thẻ "Thẻ hội viên Vàng · 1 tháng", giá 79.000đ, KHÔNG ô số lượng', /79\.000đ/.test(await chu(t, '#cart .cart-item')) && (await t.locator('#cart .cart-item .qty-ctrl').count()) === 0);
+    await t.locator('#cart .cart-xoa').first().click();
+    await t.locator('.toast button', { hasText: 'Hoàn tác' }).click();
+    k('C2 CR xoá thẻ rồi Hoàn tác → dòng thẻ trở lại', await doi(t, async () => bang(await gioMay(t), [THE(2, 1)])));
+    await chup(t, 'gio_the');
+    S.mo = false;
+    await mo(t, '/thanhtoan');
+    await traVi(t);
+    await doi(t, async () => /\/don\/TQD42/.test(t.url()));
+    const xong = await doiChu(t, '#tracking', /Đã lên hạng Vàng/);
+    const td = await chu(t, '#tracking');
+    k('C5 CR giỏ CHỈ thẻ đặt được khi quán đóng; thân POST /don dòng thẻ đúng 3 khoá', S.guiDon.length === 1 && bang(S.guiDon[0].mon, [THE(2, 1)]));
+    k('D2 CR Theo dõi đơn chỉ thẻ: "Đã lên hạng Vàng" + "Hạn mới: 13/02/2027", KHÔNG "mời bạn ra quầy", không các bước pha chế', xong && /Hạn mới: 13\/02\/2027/.test(td) && !/mời bạn ra quầy|Đang pha chế/.test(td), td.slice(0, 200));
+    k('D2 CR không có dải "Đơn … đã sẵn sàng" cho đơn chỉ thẻ', (await t.locator('.bao-don').count()) === 0);
+    k('C4 CR trả xong → giỏ bỏ dòng thẻ đã gửi (giỏ rỗng)', await doi(t, async () => bang(await gioMay(t), [])));
+    await chup(t, 'theodoi_chithe');
+    await mo(t, '/trangchu');
+    k('D1 CR Trang chủ hiện hạng mới Vàng (không tải lại tay — /toi làm mới)', await doiChu(t, '#home .points-card .tier', /Hạng Vàng|Vàng/));
+    await mo(t, '/uudai');
+    k('E2 CR Ưu đãi (có hạng): thẻ "Hạng Vàng" + nút "Quyền lợi & nâng hạng ›"', await doiChu(t, '#rewards .tier-card', /Hạng Vàng[\s\S]*Quyền lợi & nâng hạng ›/));
+    await mo(t, '/uudai/hang?h=2');
+    k('B2 CR đang có Vàng: nút "Gia hạn Vàng 3 tháng", thẻ "Thẻ còn hạn tới 13/02/2027"', await doiChu(t, '#buycard .checkout-btn', /Gia hạn Vàng 3 tháng/) && /Thẻ còn hạn tới 13\/02\/2027/.test(await chu(t, '#buycard .ti-card')));
+    await chup(t, 'hang_vang');
+  });
+
+  await may('C3 trả thẻ trước', { gio: [LY('TLB', 1), THE(2, 3)], S0: { mo: true } }, async ({ t, S }) => {
+    await mo(t, '/giohang');
+    await doiChu(t, '#cart', /Trả thẻ trước để đơn này được giảm ›/);
+    k('C3 CR giỏ thẻ + ly: dòng "Đồ uống trong đơn này tính theo hạng hiện tại…" + nút "Trả thẻ trước…"', /Đồ uống trong đơn này tính theo hạng hiện tại; hạng mới áp từ đơn sau\./.test(await chu(t, '#cart')));
+    k('C2 CR giá ly hình dung theo hạng Thường: 30.000đ', /30\.000đ/.test(await chu(t, '#cart .cart-item')));
+    await chup(t, 'gio_the_ly');
+    // ô mã giảm: mã nhập trước khi trả thẻ phải còn cho đơn đồ uống
+    await t.locator('#cart .promo-box input').fill('GIAM10'); await t.locator('#cart .promo-box button').click();
+    await t.locator('#cart .ghost-btn', { hasText: 'Trả thẻ trước' }).click();
+    await doi(t, async () => /\/thanhtoan\?chi=the$/.test(t.url()));
+    await traVi(t);
+    await doi(t, async () => /\/don\/TQD42/.test(t.url()));
+    k('C3 CR thân "trả thẻ trước" CHỈ dòng thẻ, KHÔNG ma_giam', S.guiDon.length === 1 && bang(S.guiDon[0].mon, [THE(2, 3)]) && !('ma_giam' in S.guiDon[0]), JSON.stringify(S.guiDon[0]));
+    k('C3 CR trả xong: ly còn trong giỏ, thẻ bỏ', await doi(t, async () => bang(await gioMay(t), [LY('TLB', 1)])));
+    k('D2 CR đơn "trả thẻ trước" xong → nút "Về giỏ đặt đồ uống ›"', await doiChu(t, '#tracking', /Về giỏ đặt đồ uống ›/));
+    await t.locator('#tracking .checkout-btn', { hasText: 'Về giỏ' }).click();
+    k('C3 CR quay lại giỏ: giá ly theo hạng mới (27.000đ), không còn gợi ý trả thẻ trước', await doiChu(t, '#cart .cart-item', /27\.000đ/) && !/Trả thẻ trước/.test(await chu(t, '#cart')));
+    k('C3 CR mã giảm vẫn giữ cho đơn đồ uống', (await t.locator('#cart .promo-box input').inputValue()) === 'GIAM10');
+  });
+
+  await may('C5 lỗi mã thẻ', { gio: [THE(2, 3)], S0: { loiThe: '' } }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => (await nutDat(t).getAttribute('aria-disabled')) !== 'true');
+    S.loiThe = 'DA_CO_HANG_CAO_HON';
+    await traVi(t).catch(() => {});
+    k('C5 CR POS báo DA_CO_HANG_CAO_HON → hiện nguyên lời POS, KHÔNG "chưa rõ" (không giữ bản ghi gửi)', await doiChu(t, '#checkout', /Lời POS giả: DA_CO_HANG_CAO_HON/) && (await t.evaluate(() => localStorage.getItem('kh_don_gui'))) === null && !/Chưa rõ/.test(await chu(t, '#checkout')));
+    await t.locator('#checkout .ghost-btn', { hasText: 'giỏ' }).first().click();
+    k('C5 CR về giỏ: dòng thẻ đánh dấu bằng lời POS', await doiChu(t, '#cart .cart-item', /Lời POS giả: DA_CO_HANG_CAO_HON/));
+  });
+
+  await may('C7 dọn giỏ khi Theo dõi đơn không mở', { gio: [LY('TLB', 2), THE(2, 3)] }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => (await nutDat(t).getAttribute('aria-disabled')) !== 'true' && /Thanh toán qua QR/.test(await nutDat(t).innerText()));
+    await nutDat(t).click();
+    await doi(t, async () => /\/don\/TQD42/.test(t.url()));
+    await mo(t, '/trangchu'); // rời Theo dõi đơn
+    await t.evaluate(() => { const g = JSON.parse(localStorage.getItem('kh_gio')); g.push({ ma: 'EPC', so_luong: 1, ghi_chu: '' }); localStorage.setItem('kh_gio', JSON.stringify(g)); });
+    await t.reload(); await t.waitForSelector('#home');
+    await t.waitForTimeout(400);
+    k('C7 CR đơn còn chờ trả → giỏ giữ nguyên', bang(await gioMay(t), [LY('TLB', 2), THE(2, 3), LY('EPC', 1)]));
+    traDonQR(S, 'TQD42');
+    await t.reload(); await t.waitForSelector('#home'); // mở App lại: kho /don thấy đơn đã trả
+    k('C7 CR kho /don thấy đơn đã trả (không mở Theo dõi đơn) → giỏ bỏ ĐÚNG dòng đã gửi, giữ dòng thêm sau', await doi(t, async () => bang(await gioMay(t), [LY('EPC', 1)])), JSON.stringify(await gioMay(t)));
+    await t.evaluate(() => { localStorage.setItem('kh_gio', JSON.stringify([{ ma: 'TLB', so_luong: 2, ghi_chu: '' }])); });
+    await t.reload(); await t.waitForSelector('#home'); await t.waitForTimeout(400);
+    k('C7 CR chỉ MỘT lần: mở lại App không dọn nữa (bản ghi đã xong)', bang(await gioMay(t), [LY('TLB', 2)]));
+  });
+  function traDonQR(S, ma) { const d = S.don.get(ma); traDon(d); }
+
+  await may('D4 nhắc gia hạn + E1 Menu', { S0: { hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-18T23:59:59' } } }, async ({ t }) => {
+    await mo(t, '/trangchu');
+    k('D4 CR Trang chủ: "Thẻ Vàng còn 5 ngày — Gia hạn ›" dưới thẻ hội viên', await doiChu(t, '#home', /Thẻ Vàng còn 5 ngày — Gia hạn ›/));
+    await chup(t, 'trangchu_nhac');
+    await t.locator('#home .nt-state', { hasText: 'Gia hạn' }).click();
+    k('D4 CR bấm nhắc → /uudai/hang?h=2', await doi(t, async () => /\/uudai\/hang\?h=2$/.test(t.url())));
+    await mo(t, '/menu');
+    await doiChu(t, '#catalog .cat-tiles', /Thẻ thành viên/);
+    k('E1 CR Menu có ô "Thẻ thành viên"; "Tất cả" có phần thẻ ở cuối "Thẻ Vàng — từ 79.000đ"', /Thẻ Vàng — từ 79\.000đ/.test(await chu(t, '#catGrid')));
+    await t.locator('#catalog .search-box input').fill('the');
+    k('E1 CR tìm kiếm không ra thẻ', await doi(t, async () => !/Thẻ Vàng — từ/.test(await chu(t, '#catGrid'))));
+    await t.locator('#catalog .search-box input').fill('');
+    await t.locator('#catalog .cat-tiles .ct', { hasText: 'Thẻ thành viên' }).click();
+    k('E1 CR chọn ô → /menu/the-thanh-vien, chỉ thẻ (không món)', await doi(t, async () => /\/menu\/the-thanh-vien$/.test(t.url())) && (await t.locator('#catGrid .pc-mini').count()) === 1 && !/Trà Lục Bảo/.test(await chu(t, '#catGrid')));
+    await chup(t, 'menu_the');
+    await t.locator('#catGrid .pc-mini').click();
+    k('E1 CR bấm thẻ → /uudai/hang?h=2', await doi(t, async () => /\/uudai\/hang\?h=2$/.test(t.url())));
+  });
+  await trinh.close();
 }
