@@ -5,6 +5,7 @@ import { taoDuongDan } from '../duongDan.js';
 import { mocNhacTrong, phutTuGio, chuoiJd, dmNgan } from '../kehoachLap.js';
 import { bangCoNhac, homNayTuGio } from '../kehoach.js';
 import { Ico } from './BieuTuong.jsx';
+import { nd, ndPhan, ndDau } from '../noiDung/nd.js';
 import '../giaoDien/bao_don.css';
 
 const GIAY_HOI = 15; // so mốc nhắc với giờ POS mỗi ngần này giây
@@ -24,7 +25,7 @@ export default function DaiNhacViec({ san, moNgay }) {
       truoc.current = nay;
       if (moi.length) {
         const x = moi[moi.length - 1];
-        datDai({ di: moi.length > 1 ? null : tienIchCuaNhac(x.v), ngay: chuoiJd(x.j), chu: moi.length > 1 ? `${moi.length} việc cần nhớ — ${x.v.tieu}` : `${x.v.tieu} (${x.v.gio || dmNgan(x.j)})` });
+        datDai({ di: moi.length > 1 ? null : tienIchCuaNhac(x.v), ngay: chuoiJd(x.j), chu: moi.length > 1 ? nd('dnv.nhieu', { so: moi.length, tieu: x.v.tieu }) : `${x.v.tieu} (${x.v.gio || dmNgan(x.j)})` });
         if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch { /* máy không cho rung */ } }
       }
     };
@@ -36,9 +37,9 @@ export default function DaiNhacViec({ san, moNgay }) {
   return (
     <div className="nt-state on bao-don dai-nhac" role="status">
       <Ico ten="bell" s={18} />
-      <div>Nhắc việc: {dai.chu}</div>
-      <button type="button" className="bao-don-xem" onClick={() => { if (dai.di) diDen(taoDuongDan('tienich', { tienich: dai.di })); else { datNgayMo(dai.ngay, true); moNgay(); } datDai(null); }}>Xem</button>
-      <button type="button" className="bao-don-tat" aria-label="Tắt thông báo" onClick={() => datDai(null)}><Ico ten="close" s={14} /></button>
+      <div {...ndDau('dnv.nhac')}>{ndPhan('dnv.nhac', { chu: dai.chu })}</div>
+      <button type="button" className="bao-don-xem" onClick={() => { if (dai.di) diDen(taoDuongDan('tienich', { tienich: dai.di })); else { datNgayMo(dai.ngay, true); moNgay(); } datDai(null); }} {...ndDau('dnv.xem')}>{nd('dnv.xem')}</button>
+      <button type="button" className="bao-don-tat" aria-label={nd('dnv.tat')} {...ndDau('dnv.tat')} onClick={() => datDai(null)}><Ico ten="close" s={14} /></button>
     </div>
   );
 }

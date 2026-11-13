@@ -68,20 +68,23 @@ export function ngayKeTiep(cal, d, m, homNay) {
 }
 
 // ----- LẶP LẠI -----
-const DON_VI = { ngay: 'ngày', tuan: 'tuần', thang: 'tháng', nam: 'năm' };
-const HANG = { ngay: 'Hằng ngày', tuan: 'Hằng tuần', thang: 'Hằng tháng', nam: 'Hằng năm' };
+const KHOA_DON_VI = { ngay: 'lap.dvNgay', tuan: 'lap.dvTuan', thang: 'lap.dvThang', nam: 'lap.dvNam' };
+const KHOA_HANG = { ngay: 'lap.hangNgay', tuan: 'lap.hangTuan', thang: 'lap.hangThang', nam: 'lap.hangNam' };
+/** Tên đơn vị lặp (ngày · tuần · tháng · năm) và kiểu "Hằng …" — chữ ở danh mục (lap.dv*, lap.hang*). */
+export const donViLap = (k) => nd(KHOA_DON_VI[k]);
+export const hangLap = (k) => nd(KHOA_HANG[k]);
 /** Chữ ngắn của kiểu lặp: "Hằng tháng" · "Mỗi 2 tuần" · "Mùng 1 & Rằm" · "Sau khi xong 30 ngày". */
 export function chuLap(l) {
-  if (!l) return 'Không lặp';
-  if (l.k === 'amlich') return 'Mùng 1 & Rằm';
-  if (l.k === 'sau') return `Sau khi xong ${l.n} ngày`;
-  return l.n === 1 ? HANG[l.k] : `Mỗi ${l.n} ${DON_VI[l.k]}`;
+  if (!l) return nd('lap.khong');
+  if (l.k === 'amlich') return nd('lap.amlich');
+  if (l.k === 'sau') return nd('lap.sau', { n: l.n });
+  return l.n === 1 ? hangLap(l.k) : nd('lap.moi', { n: l.n, dv: donViLap(l.k) });
 }
 /** Mô tả cạnh việc: "Hằng tháng · từ 31/1/2026 · đến 31/12/2026". */
 export function moTaLap(v, homNay) {
   if (!v.lap) return '';
   const s = jdChuoi(v.ngay), e = v.lap.den && jdChuoi(v.lap.den);
-  return [chuLap(v.lap), s && 'từ ' + dm(s, homNay), e && 'đến ' + dm(e, homNay)].filter(Boolean).join(' · ');
+  return [chuLap(v.lap), s && nd('lap.tu', { ngay: dm(s, homNay) }), e && nd('lap.den', { ngay: dm(e, homNay) })].filter(Boolean).join(' · ');
 }
 
 /** Các lần (số ngày Julius, tăng dần) của việc `v` trong [tuJ, denJ]. Không lặp / "sau khi xong" = đúng một lần ở v.ngay. */
@@ -146,10 +149,10 @@ export function quaHan(bang, homNay) {
 /** Hạn bằng chữ (D3) và có phải quá hạn không. `ngay` = ngày của lần ('YYYY-MM-DD') hoặc rỗng. */
 export function chuHan(ngay, xong, homNay) {
   const j = jdChuoi(ngay);
-  if (j === null) return { chu: 'chưa có hạn', qua: false };
+  if (j === null) return { chu: nd('lap.chuaHan'), qua: false };
   const h = jd(homNay);
-  if (j === h) return { chu: 'hạn hôm nay', qua: false };
-  return j < h && !xong ? { chu: 'quá hạn ' + dmNgan(j), qua: true } : { chu: 'hạn ' + dmNgan(j), qua: false };
+  if (j === h) return { chu: nd('lap.hanNay'), qua: false };
+  return j < h && !xong ? { chu: nd('lap.quaHan', { ngay: dmNgan(j) }), qua: true } : { chu: nd('lap.han', { ngay: dmNgan(j) }), qua: false };
 }
 
 // ----- ĐỔI TRẠNG THÁI (trả bản mới, không sửa bản cũ) -----
@@ -201,9 +204,9 @@ export function nhacTuPhut(nhac, gio) {
 }
 /** Chữ của dạng nhắc: "Đúng giờ" · "Trước 15 phút" · "Hôm trước lúc 20:00" · "Trước 3 ngày lúc 08:00". */
 export function chuNhac(k) {
-  if (!k) return 'Không nhắc';
-  if (k.k === 'truoc') return k.p === 0 ? 'Đúng giờ' : k.p === 1440 ? 'Trước 1 ngày' : k.p % 60 === 0 && k.p < 1440 ? `Trước ${k.p / 60} giờ` : `Trước ${k.p} phút`;
-  return k.ngay === 0 ? `Cùng ngày lúc ${k.g}` : k.ngay === 1 ? `Hôm trước lúc ${k.g}` : `Trước ${k.ngay} ngày lúc ${k.g}`;
+  if (!k) return nd('kh.khongNhac');
+  if (k.k === 'truoc') return k.p === 0 ? nd('lap.nhacDung') : k.p === 1440 ? nd('lap.nhacTruoc1') : k.p % 60 === 0 && k.p < 1440 ? nd('lap.nhacGio', { so: k.p / 60 }) : nd('lap.nhacPhut', { so: k.p });
+  return k.ngay === 0 ? nd('lap.nhacCung', { g: k.g }) : k.ngay === 1 ? nd('lap.nhacHomTruoc', { g: k.g }) : nd('lap.nhacNgay', { n: k.ngay, g: k.g });
 }
 const ketThuc = (j, gio) => (gio ? j * 1440 + gioPhut(gio) + 60 : (j + 1) * 1440); // sau giờ sự kiện 60 phút (hoặc hết ngày) thì thôi nhắc
 
@@ -218,10 +221,10 @@ export function mocNhacTrong(bang, tu, den) {
 }
 function khoangCon(bayGioPhut, j, gio) {
   const ngayNay = Math.floor(bayGioPhut / 1440);
-  if (j > ngayNay) return `Còn ${j - ngayNay} ngày`;
-  if (!gio) return 'Hôm nay';
+  if (j > ngayNay) return nd('lap.conNgay', { so: j - ngayNay });
+  if (!gio) return nd('lap.hom');
   const con = j * 1440 + gioPhut(gio) - bayGioPhut;
-  return con <= 0 ? 'Đang tới giờ' : con < 60 ? `${con} phút nữa` : `Còn ${Math.round(con / 60)} giờ`;
+  return con <= 0 ? nd('lap.dangToi') : con < 60 ? nd('lap.phutNua', { so: con }) : nd('lap.conGio', { so: Math.round(con / 60) });
 }
 /** Việc ĐANG trong thời gian nhắc (đã tới mốc, chưa quá giờ), chưa xong: [{ v, j, ngay, chu }], gần nhất trước. Thanh nhắc đầu màn Kế hoạch và "Sắp tới". */
 export function nhacDangCo(bang, gioPos, homNay) {
@@ -230,7 +233,7 @@ export function nhacDangCo(bang, gioPos, homNay) {
   const h = jd(homNay);
   return mocNhacTrong(bang, bay - (NHAC_TRUOC_TOI_DA + 2) * 1440, bay)
     .filter((x) => bay < ketThuc(x.j, x.v.gio))
-    .map((x) => ({ v: x.v, j: x.j, ngay: chuoiJd(x.j), chu: `${khoangCon(bay, x.j, x.v.gio)}: ${x.v.tieu} (${x.j === h ? x.v.gio || 'cả ngày' : dmNgan(x.j)})` }))
+    .map((x) => ({ v: x.v, j: x.j, ngay: chuoiJd(x.j), chu: nd('lap.nhacDai', { khoang: khoangCon(bay, x.j, x.v.gio), tieu: x.v.tieu, khi: x.j === h ? x.v.gio || nd('lap.caNgayThuong') : dmNgan(x.j) }) }))
     .sort((p, q) => p.j - q.j);
 }
 

@@ -1,89 +1,17 @@
-// Văn khấn & lễ cúng (KH-UI-5e C1): 11 dịp CHÉP NGUYÊN từ thiet_ke/app_kh_demo.html (patch39, VK_OPEN … VK): lễ vật, cách sắp lễ, bài khấn.
-// Chỉ đổi cách tính ngày: demo gắn hàm `next:` vào từng dịp, ở đây ghi `kieu` ('mot15' · 'giaothua' · 'thanhminh') hoặc `lunar:[ngày, tháng]` / `gio:true`; hàm tính ở src/vanKhan.js.
-// Chỗ tự điền trong bài khấn: {ten} {dc} {ho} {ld} {lm} {ny} {nyc} {nm}.
-const VK_OPEN = 'Nam mô A Di Đà Phật! (3 lần)\nCon lạy chín phương Trời, mười phương Chư Phật, Chư Phật mười phương.';
-const VK_THAN = 'Con kính lạy Hoàng thiên Hậu thổ chư vị Tôn thần.\nCon kính lạy ngài Bản cảnh Thành hoàng, ngài Bản xứ Thổ địa, ngài Bản gia Táo quân cùng chư vị Tôn thần cai quản trong xứ này.';
-const VK_GT = 'Con kính lạy các cụ Tổ khảo, Tổ tỷ, Bá thúc, Cô di cùng chư vị Hương linh nội ngoại họ {ho}.';
-const VK_TC = 'Tín chủ con là {ten}, ngụ tại {dc}.';
-const VK_END = 'Chúng con lễ bạc tâm thành, trước án kính lễ, cúi xin chứng giám.\nNam mô A Di Đà Phật! (3 lần)';
-const L_BASE = 'Hương (nhang), nến hoặc đèn\nHoa tươi\nĐĩa hoa quả (ngũ quả)\nTrà, rượu, nước sạch\nTrầu cau (tuỳ nhà)';
+// Văn khấn & lễ cúng — PHẦN MÁY CẦN của 11 dịp (KH-ND-3d): mã dịp, biểu tượng, cách tính ngày (kieu / lunar / gio), dịp đổi năm (newYear), dịp cần tên người mất (needNm).
+// MỌI CHỮ (tên dịp, lễ vật, cách sắp lễ, bài khấn, ghi chú) ở danh mục src/noiDung/nd/tienIch.js, khoá vkd.<mã dịp>.ten · .le · .cach · .khan (sửa được ở /admin). Tên mùa / tên tháng âm: noiDung/coDinh/lich.js.
+// Cách tính ngày: src/vanKhan.js. Chỗ tự điền trong bài khấn: {ten} {dc} {ho} {ld} {lm} {ny} {nyc} {nm}.
 export const VK = [
-  { id:'r', n:'Mùng 1 & Rằm hằng tháng', ic:'lantern', kieu:'mot15',
-    le:L_BASE + '\nXôi, chè hoặc mâm cơm chay/mặn tuỳ nhà',
-    cach:'Thắp hương bàn thờ Thần linh trước, rồi bàn thờ Gia tiên. Nên cúng buổi sáng hoặc trước buổi trưa; thắp số lẻ nén hương (1, 3, 5).',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC, 'Hôm nay là ngày {ld} tháng {lm} năm {ny}, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, trà quả, thắp nén tâm hương dâng lên trước án.',
-        'Kính mời chư vị Tôn thần, các cụ Tổ tiên nội ngoại về chứng giám lòng thành, thụ hưởng lễ vật.',
-        'Cúi xin phù hộ độ trì cho toàn gia chúng con mạnh khoẻ, bình an, công việc hanh thông, gia đạo hưng long, mọi sự tốt lành.', VK_END] },
-  { id:'tao', n:'Ông Công Ông Táo', ic:'flame', lunar:[23, 12],
-    le:'Bộ mũ áo Táo quân (2 mũ ông, 1 mũ bà), hia\nCá chép sống (thả sau lễ)\nHương, hoa, nến\nTrầu cau, rượu, trà\nMâm cỗ hoặc xôi, gà luộc\nVàng mã',
-    cach:'Cúng trước 12 giờ trưa ngày 23 tháng Chạp. Xong lễ, hoá vàng mã, mũ áo; thả cá chép ở ao hồ sạch (bỏ túi ni lông ra).',
-    vk:[VK_OPEN, 'Con kính lạy ngài Đông trù Tư mệnh Táo phủ Thần quân.', VK_TC,
-        'Hôm nay là ngày 23 tháng Chạp năm {ny}, nhân dịp Táo quân về chầu Thiên đình, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, xiêm hài áo mũ và cá chép, kính dâng lên trước án.',
-        'Trong năm qua, gia đình chúng con có điều gì lầm lỗi, cúi xin Tôn thần gia ân xá lỗi, tâu lên Thiên đình những điều tốt lành.',
-        'Cúi xin phù hộ cho toàn gia chúng con năm mới bình an, mạnh khoẻ, làm ăn thuận lợi, vạn sự tốt lành.', VK_END] },
-  { id:'gt', n:'Giao thừa', ic:'moon', kieu:'giaothua', newYear:true,
-    le:'Mâm ngoài trời: gà luộc hoặc chân giò, xôi hoặc bánh chưng\nHoa quả, hoa tươi\nHương, nến, rượu, trà\nMuối, gạo, nước\nVàng mã, mũ áo quan Hành khiển\nMâm trong nhà: lễ Gia tiên',
-    cach:'Cúng ngoài trời (sân, hiên) trước, đúng thời khắc giao thừa; sau đó cúng Gia tiên trong nhà. Đứng quay mặt ra ngoài khi khấn lễ ngoài trời.',
-    vk:[VK_OPEN, 'Con kính lạy Đức Đương lai Hạ sinh Di Lặc Tôn Phật.\nCon kính lạy Hoàng thiên Hậu thổ chư vị Tôn thần.',
-        'Con kính lạy ngài Cựu niên Đương cai Hành khiển, Hành binh chi thần, Phán quan.\nCon kính lạy ngài Tân niên Đương cai Hành khiển, Hành binh chi thần, Phán quan.',
-        'Con kính lạy các ngài Thành hoàng Bản cảnh, Thổ địa, Táo quân, Long mạch cùng chư vị Tôn thần.',
-        'Nay phút giao thừa, năm cũ {nyc} đã qua, năm mới {ny} đã tới.', VK_TC,
-        'Tín chủ con thành tâm sắm sửa hương hoa, lễ vật, kim ngân, trà quả, đốt nén tâm hương, kính cẩn dâng lên trước án, tiễn đưa ngài Cựu niên, nghênh đón ngài Tân niên.',
-        'Cúi xin các ngài gia ân phù hộ cho toàn gia chúng con năm mới an khang thịnh vượng, sức khoẻ dồi dào, vạn sự như ý.', VK_END] },
-  { id:'tet', n:'Mùng 1 Tết · Gia tiên', ic:'blossom', lunar:[1, 1],
-    le:'Mâm ngũ quả\nBánh chưng hoặc bánh tét\nMâm cỗ ngày Tết\nHương, hoa, nến, trà, rượu\nMứt, kẹo',
-    cach:'Cúng sáng mùng Một sau khi đã cúng Giao thừa. Con cháu đông đủ, mặc chỉnh tề; trưởng nam hoặc chủ nhà khấn.',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Nay nhân tiết Nguyên đán năm {ny}, ngày mùng Một tháng Giêng, con cháu chúng con thành tâm sắm sửa hương hoa, mâm ngũ quả, bánh chưng và lễ vật, kính dâng lên trước án.',
-        'Kính mời các cụ Tổ tiên nội ngoại về đón Tết cùng con cháu, chứng giám lòng thành.',
-        'Cúi xin phù hộ độ trì cho toàn gia năm mới mạnh khoẻ, bình an, con cháu hiếu thảo, gia đạo hưng long.', VK_END] },
-  { id:'tt', n:'Vía Thần Tài', ic:'token', lunar:[10, 1],
-    le:'Hoa tươi, hoa quả\nHương, nến, trà, rượu\nHeo quay hoặc thịt luộc, xôi\nTôm, cua (tuỳ nơi)\nVàng thỏi tượng trưng (tuỳ ý)',
-    cach:'Cúng tại bàn thờ Thần Tài – Thổ Địa, nên cúng buổi sáng trước khi mở cửa hàng. Lau dọn bàn thờ, thay nước, thay hoa trước khi cúng.',
-    vk:[VK_OPEN, 'Con kính lạy ngài Thần Tài vị tiền, ngài Thổ địa Long mạch Tôn thần.\nCon kính lạy chư vị Tôn thần cai quản trong khu vực này.', VK_TC,
-        'Hôm nay là ngày mùng Mười tháng Giêng năm {ny}, ngày vía Thần Tài, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, kính dâng lên trước án.',
-        'Cúi xin các ngài phù hộ cho cửa hàng, gia đình chúng con buôn bán hanh thông, khách hàng đông vui, tài lộc dồi dào, mọi việc bình an.', VK_END] },
-  { id:'rg', n:'Rằm tháng Giêng', ic:'lantern', lunar:[15, 1],
-    le:L_BASE + '\nChè trôi nước hoặc xôi\nMâm cỗ chay hoặc mặn tuỳ nhà',
-    cach:'Rằm tháng Giêng (Tết Thượng nguyên) là lễ Rằm lớn đầu năm. Có thể cúng từ ngày 14 hoặc sáng ngày 15.',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Hôm nay là ngày Rằm tháng Giêng năm {ny}, nhân tiết Thượng nguyên, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, trà quả, kính dâng lên trước án.',
-        'Kính mời chư vị Tôn thần, các cụ Tổ tiên về chứng giám lòng thành, thụ hưởng lễ vật.',
-        'Cúi xin phù hộ cho toàn gia chúng con cả năm mạnh khoẻ, bình an, vạn sự hanh thông.', VK_END] },
-  { id:'tm', n:'Thanh minh · Tảo mộ', ic:'sprig', kieu:'thanhminh', needNm:true,
-    le:'Hương, hoa, nến\nTrầu cau, rượu, trà\nHoa quả, bánh\nVàng mã\nDụng cụ dọn mộ: chổi, khăn, cuốc nhỏ',
-    cach:'Trong tiết Thanh minh (khoảng 15 ngày từ 4–5/4 dương lịch). Khấn Thổ thần nơi nghĩa trang trước, rồi mới sửa sang, quét dọn và khấn tại mộ.',
-    vk:[VK_OPEN, 'Con kính lạy quan Thần linh Thổ địa cai quản khu mộ này.', 'Con kính lạy hương linh {nm}.', VK_TC,
-        'Hôm nay là ngày {ld} tháng {lm} năm {ny}, nhân tiết Thanh minh, chúng con cùng con cháu ra thăm phần mộ, sửa sang, quét dọn, thắp nén tâm hương, dâng lễ vật.',
-        'Cúi xin Thần linh Thổ địa cho phần mộ được yên ổn, hương linh được an nghỉ; cúi xin phù hộ cho con cháu mạnh khoẻ, bình an.', VK_END] },
-  { id:'dn', n:'Tết Đoan ngọ', ic:'gourd', lunar:[5, 5],
-    le:'Rượu nếp\nBánh tro (bánh gio)\nHoa quả: mận, vải, dưa hấu\nChè\nHương, hoa, nến',
-    cach:'Cúng sáng sớm mùng 5 tháng 5 (giờ Ngọ trở về trước). Theo lệ, ăn rượu nếp, hoa quả buổi sáng để "giết sâu bọ".',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Hôm nay là ngày mùng Năm tháng Năm năm {ny}, nhân tiết Đoan ngọ, tín chủ con thành tâm sắm sửa hương hoa, rượu nếp, hoa quả, kính dâng lên trước án.',
-        'Cúi xin chư vị Tôn thần, các cụ Tổ tiên phù hộ cho toàn gia chúng con trừ được bệnh tật, mạnh khoẻ, bình an.', VK_END] },
-  { id:'vl', n:'Rằm tháng Bảy · Vu Lan', ic:'lotus', lunar:[15, 7],
-    le:'Lễ Gia tiên: hương, hoa, mâm cỗ, hoa quả, trà, rượu\nLễ chúng sinh (ngoài trời, buổi chiều): cháo trắng loãng\nGạo, muối, bỏng ngô, bánh kẹo\nNước, hương, nến\nQuần áo giấy (tuỳ nhà)',
-    cach:'Cúng Gia tiên trong nhà trước (sáng hoặc trưa). Cúng chúng sinh ngoài trời vào buổi chiều, xong rải gạo muối, không mang đồ cúng chúng sinh vào nhà.',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Hôm nay là ngày Rằm tháng Bảy năm {ny}, nhân tiết Trung nguyên, mùa Vu Lan báo hiếu, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, kính dâng lên trước án.',
-        'Con cháu chúng con nhớ ơn sinh thành dưỡng dục, kính mời các cụ Tổ tiên về chứng giám lòng thành, thụ hưởng lễ vật.',
-        'Cúi xin phù hộ cho toàn gia chúng con mạnh khoẻ, bình an, con cháu hiếu thuận.', VK_END] },
-  { id:'ttu', n:'Tết Trung thu', ic:'moon', lunar:[15, 8],
-    le:'Bánh trung thu (bánh nướng, bánh dẻo)\nHoa quả: bưởi, hồng, na\nTrà\nHương, hoa, nến',
-    cach:'Cúng Gia tiên buổi tối Rằm tháng Tám, sau đó phá cỗ trông trăng cùng gia đình.',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Hôm nay là ngày Rằm tháng Tám năm {ny}, nhân tiết Trung thu, tín chủ con thành tâm sắm sửa hương hoa, bánh trái, trà quả, kính dâng lên trước án.',
-        'Cúi xin phù hộ cho toàn gia đoàn viên, con cháu chăm ngoan, mạnh khoẻ, mọi việc tốt lành.', VK_END] },
-  { id:'gio', n:'Cúng giỗ', ic:'house', gio:true, needNm:true,
-    le:'Mâm cỗ mặn (món người mất thích)\nHương, hoa, nến\nTrà, rượu\nHoa quả, bánh\nVàng mã (tuỳ nhà)',
-    cach:'Ngày giỗ tính theo âm lịch. Có thể cúng tiên thường (chiều hôm trước) và chính giỗ (ngày giỗ). Thêm ngày giỗ ở ô "Sinh nhật & giỗ" để được nhắc.',
-    vk:[VK_OPEN, VK_THAN, VK_GT, VK_TC,
-        'Hôm nay là ngày {ld} tháng {lm} năm {ny}, chính ngày giỗ của {nm}.',
-        'Con cháu chúng con nhớ ơn sinh thành, thành tâm sắm sửa hương hoa, mâm cỗ, trà quả, kính dâng lên trước linh vị.',
-        'Kính mời hương linh về chứng giám lòng thành, thụ hưởng lễ vật; cúi xin phù hộ cho con cháu mạnh khoẻ, bình an, gia đạo hưng long.', VK_END] } ];
+  {id: 'r', ic: 'lantern', kieu: 'mot15'},
+  {id: 'tao', ic: 'flame', lunar: [23, 12]},
+  {id: 'gt', ic: 'moon', kieu: 'giaothua', newYear: true},
+  {id: 'tet', ic: 'blossom', lunar: [1, 1]},
+  {id: 'tt', ic: 'token', lunar: [10, 1]},
+  {id: 'rg', ic: 'lantern', lunar: [15, 1]},
+  {id: 'tm', ic: 'sprig', kieu: 'thanhminh', needNm: true},
+  {id: 'dn', ic: 'gourd', lunar: [5, 5]},
+  {id: 'vl', ic: 'lotus', lunar: [15, 7]},
+  {id: 'ttu', ic: 'moon', lunar: [15, 8]},
+  {id: 'gio', ic: 'house', gio: true, needNm: true} ];
 
 export const MA_DIP = VK.map((v) => v.id);
-export const LNUM = ['', 'Giêng', 'Hai', 'Ba', 'Tư', 'Năm', 'Sáu', 'Bảy', 'Tám', 'Chín', 'Mười', 'Một', 'Chạp'];
-export const GHI_CHU_DANH_SACH = 'Bài khấn theo nếp cổ truyền phổ biến, mỗi vùng miền có thể khác. Nhắc trước 1 ngày để kịp sắm lễ.';
-export const GHI_CHU_BAI = 'Phần tô màu là chỗ tự điền. Bài khấn theo nếp cổ truyền phổ biến, gia đình có thể đọc theo nếp riêng của mình.';

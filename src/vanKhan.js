@@ -1,12 +1,19 @@
 // Văn khấn & lễ cúng (KH-UI-5e): hàm thuần — ngày của từng dịp (demo vkNext) và điền bài khấn (demo renderVkOne.fill).
-// "Hôm nay" luôn là tham số { d, m, y } lấy từ giờ POS (CLAUDE.md §6). Nội dung bài khấn ở noiDung/vanKhan.js.
+// "Hôm nay" luôn là tham số { d, m, y } lấy từ giờ POS (CLAUDE.md §6). Phần máy của từng dịp ở noiDung/vanKhan.js; mọi chữ (tên dịp, lễ vật, bài khấn) ở danh mục (khoá vkd.<mã dịp>.*).
 import { LUNAR } from './lich.js';
-import { VK, LNUM } from './noiDung/vanKhan.js';
+import { VK } from './noiDung/vanKhan.js';
+import { LNUM } from './noiDung/coDinh/lich.js';
+import { nd } from './noiDung/nd.js';
 import { jd, tuJd, lichAm, amSangDuong, ngayKeTiep } from './kehoachLap.js';
 
 const TOI_DA_TIM_MOT_15 = 32; // ngày: Mùng 1 / Rằm luôn có trong ngần này ngày
 
 export const timDip = (id) => VK.find((v) => v.id === id) || null;
+/** Chữ của một dịp (danh mục vkd.<mã>.*): tên · lễ vật (mỗi dòng một thứ) · cách sắp lễ · bài khấn (còn nguyên chỗ {tự điền}). */
+export const tenDip = (v) => nd(`vkd.${v.id}.ten`);
+export const leVatDip = (v) => nd(`vkd.${v.id}.le`);
+export const cachSapDip = (v) => nd(`vkd.${v.id}.cach`);
+export const baiKhanDip = (v) => nd(`vkd.${v.id}.khan`);
 const gioGanNhat = (nguoi, homNay) => nguoi.filter((p) => p.loai === 'gio').map((p) => ({ p, j: ngayKeTiep(p.cal, p.d, p.m, homNay) })).filter((x) => x.j !== null).sort((a, b) => a.j - b.j)[0] || null;
 /** Người có giỗ gần nhất (gợi ý "Người được giỗ"); không có → null. */
 export const gioSapToi = (nguoi, homNay) => (gioGanNhat(nguoi, homNay) || {}).p || null;
@@ -40,15 +47,15 @@ export const dipSapXep = (homNay, nguoi = []) => VK.map((v) => ({ v, j: vkNext(v
 export function dienBai(v, tt, j) {
   const l = lichAm(j);
   const gia = {
-    ten: tt.ten || '', dc: tt.dc || '', ho: tt.ho || '', ld: l.d <= 10 ? 'mùng ' + l.d : String(l.d), lm: LNUM[l.m] || String(l.m),
-    ny: LUNAR.yearName(v.newYear ? l.y + 1 : l.y), nyc: LUNAR.yearName(l.y), nm: tt.nm || 'các cụ Tổ tiên',
+    ten: tt.ten || '', dc: tt.dc || '', ho: tt.ho || '', ld: l.d <= 10 ? nd('vk.ldMung', { d: l.d }) : String(l.d), lm: LNUM[l.m] || String(l.m),
+    ny: LUNAR.yearName(v.newYear ? l.y + 1 : l.y), nyc: LUNAR.yearName(l.y), nm: tt.nm || nd('vk.cacCu'),
   };
-  return v.vk.join('\n').split('\n').map((dong) => dong.split(/\{(\w+)\}/g).map((p, i) => (i % 2 ? { t: gia[p] ?? `{${p}}`, mark: true, p } : { t: p, mark: false })).filter((d) => d.mark || d.t));
+  return baiKhanDip(v).split('\n').map((dong) => dong.split(/\{(\w+)\}/g).map((p, i) => (i % 2 ? { t: gia[p] ?? `{${p}}`, mark: true, p } : { t: p, mark: false })).filter((d) => d.mark || d.t));
 }
 
 /** Ngày cúng bằng chữ cho tiêu đề / thẻ: "Rằm" · "Mùng 1" · tên dịp (phần trước dấu ·). */
-export const tenNganDip = (v, j) => (v.id === 'r' ? (lichAm(j).d === 1 ? 'Mùng 1' : 'Rằm') : v.n.split(' ·')[0]);
+export const tenNganDip = (v, j) => (v.id === 'r' ? (lichAm(j).d === 1 ? nd('kh.alMung', { d: 1 }) : nd('kh.alRam')) : tenDip(v).split(' ·')[0]);
 export { tuJd };
 
 /** Chữ "còn bao lâu" của dịp (demo leftTx): "Hôm nay" · "Ngày mai" · "Còn N ngày". */
-export const chuConLai = (j, homNay) => { const n = j - jd(homNay); return n === 0 ? 'Hôm nay' : n === 1 ? 'Ngày mai' : `Còn ${n} ngày`; };
+export const chuConLai = (j, homNay) => { const n = j - jd(homNay); return n === 0 ? nd('lap.hom') : n === 1 ? nd('lap.ngayMai') : nd('lap.conNgay', { so: n }); };

@@ -1,4 +1,4 @@
-import { dinhDangGia } from '../dinhDang.js';
+import { dinhDangGia, dinhDangSoTien } from '../dinhDang.js';
 import { chuNhanMon } from '../gioVang.js';
 import { nd, ndPhan, ndDau } from '../noiDung/nd.js';
 import { IcoVe } from './BieuTuong.jsx';
@@ -7,12 +7,11 @@ import GvDem from './GvDem.jsx';
 // Phần giá của demo: bậc thang giá các hạng (ladder / ladderD), nhãn Giờ vàng (gvTag), ghi chú ở Trang món (gvDetail).
 // `bac` từ giaHang.bacThang: [{ ten, gia, laToi }] — số cột theo số hạng POS trả (demo cố định 3). Mọi con số là giá POS gửi, App không tính.
 const lopMau = (i) => `l${Math.min(i, 2)}`;
-const boDong = (gia) => dinhDangGia(gia).replace('đ', '');
 
 export function BacGia({ bac }) {
   return (
     <div className="lad" style={{ gridTemplateColumns: `repeat(${bac.length},1fr)` }}>
-      {bac.map((c, i) => <div key={i} className={c.laToi ? `me ${lopMau(i)}` : ''}><small>{c.ten}</small><b>{boDong(c.gia)}</b></div>)}
+      {bac.map((c, i) => <div key={i} className={c.laToi ? `me ${lopMau(i)}` : ''}><small>{c.ten}</small><b>{dinhDangSoTien(c.gia)}</b></div>)}
     </div>
   );
 }

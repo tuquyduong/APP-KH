@@ -167,8 +167,9 @@ const TEP_MAN = ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src
   const khoaDung = [...dung.matchAll(/\b(?:nd|ndPhan|ndNut|ndDs|ndHien|ndDau)\('([\w.]+)'/g), ...dung.matchAll(/<Chu k="([\w.]+)"/g), ...dung.matchAll(/\bk="([\w.]+)"/g)].map((m) => m[1]);
   const coKhoa = new Set(IDX.DANH_MUC.map((m) => m.khoa));
   k('F4 mọi khoá nd()/<Chu> dùng trong 3 màn mới + Văn khấn + lưới đều có trong danh mục (không khoá mồ côi)', khoaDung.length >= 40 && khoaDung.every((x) => coKhoa.has(x)), khoaDung.filter((x) => !coKhoa.has(x)).join());
-  const mocoi = TI.TIEN_ICH.filter((m) => !/^(cyc\.\d|xe\.hangGoiY|xe\.viecKhac)$/.test(m.khoa) && !TEP_MAN.some((f) => doc(f).includes(m.khoa))).map((m) => m.khoa);
+  const mocoi = TI.TIEN_ICH.filter((m) => !/^(cyc\.\d|xe\.hangGoiY|xe\.viecKhac|vkd\.\w+\.(ten|le|cach|khan)|mua\.nhan\.\w+)$/.test(m.khoa) && ![...TEP_MAN, 'src/vanKhan.js'].some((f) => doc(f).includes(m.khoa))).map((m) => m.khoa);
   k('F4 mọi khoá của việc này được dùng trong màn (không mục thừa)', mocoi.length === 0, mocoi.join());
+  k('F4 (KH-ND-3d) chữ 11 dịp văn khấn (vkd.<dịp>.ten/le/cach/khan) và nhãn Theo mùa (mua.nhan.*) nằm ở danh mục tienIch.js, màn đọc bằng mẫu khoá', ['r', 'tao', 'gt', 'tet', 'tt', 'rg', 'tm', 'dn', 'vl', 'ttu', 'gio'].every((d) => ['ten', 'le', 'cach', 'khan'].every((p) => TI.TIEN_ICH.some((m) => m.khoa === `vkd.${d}.${p}`))) && TI.TIEN_ICH.filter((m) => /^mua\.nhan\./.test(m.khoa)).length === 6 && /vkd\.\$\{/.test(doc('src/vanKhan.js')));
   k('F4 ngân sách: mỗi tệp mới < 500 dòng', ['src/components/XeCo.jsx', 'src/components/UongThuoc.jsx', 'src/components/ChuKy.jsx'].every((f) => doc(f).split('\n').length < 500));
 
   console.log('Phần 2 — App thật trong Chromium');
