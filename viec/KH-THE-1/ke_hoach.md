@@ -154,3 +154,17 @@ chặn như cũ (`chanBoiBanGhi`, ca có sẵn của MUA-1c giữ xanh + một c
 4. **Đường song song bổ sung:** `ThanhToan.jsx` dòng `coThe = duocThanhToan(gio, ds)` + `dungBaoGia(gio, …)` → truyền `dsHang`, giỏ chỉ thẻ không chờ menu; nhánh `MA_MON` (`dl.ma`) giữ
    nguyên, lỗi thẻ đi nhánh `laLoiThe` riêng; khoá React dòng thẻ; `ra()` của `duongDan.js` phải giữ truy vấn `tv` trong `chuan` (đăng nhập quay về đúng). `BaoDonXong.jsx` không
    đổi (`DANG_CHAY` không gồm `cho_tra`). Có sẵn từ trước: `daTra` chỉ chạy khi màn Theo dõi đơn đang mở — ghi `## Phát hiện`, không sửa trong việc này.
+
+## 7. Bổ sung sau duyệt (chủ quán 13.11) — C7 dọn giỏ ở mọi nơi + trả lời câu hỏi
+- **Trả lời:** (1) A1 dùng `viec/KH-THE-1/hop_dong_v13.md` (sha256 `490976b0c438b8b4…` — khớp); (2) App không đổi gì vì mã giảm trên thẻ (POS VOUCHER-2 chặn); (3) `DON_KHONG_HOP_LE`
+  chỉ hiện lời POS, không đánh dấu dòng thẻ.
+- **C7 — P6 thêm:** `datDon.js` hàm thuần `daThanhToan(tt)` (= có `tt`, không `cho_tra`, không `da_huy`) — Theo dõi đơn dùng hàm này thay điều kiện viết thẳng ở `useEffect`;
+  `maDonDaTra(g, ds)` = mã đơn của bản ghi `kh_don_gui` khi bản ghi có `ma_don`, CHƯA `xong`, và danh sách đơn (trang 1 `/don`) có đơn đó với `daThanhToan(tien_trinh)`; còn lại ''.
+  `App.jsx`: đọc kho `cuaDon` (đã có — lúc mở App `lamMoi(CUA_KHACH)`, làm mới ngầm 5 phút / quay lại app, dải báo đơn 15 giây, Lịch sử đơn trang 1) → `useEffect` gọi `daTra(ma)`
+  khi `maDonDaTra` ra mã. `daTra` giữ cờ `xong` của bản ghi → đúng MỘT lần dù nhiều nguồn cùng báo. KHÔNG gọi mạng mới. ~12 dòng.
+- **Ca thử C7:** `maDonDaTra` (đã trả → mã; `cho_tra` / `da_huy` / không có trong ds / bản ghi `xong` / chưa `ma_don` → ''); `daThanhToan` dùng ở `TheoDoiDon.jsx` và `App.jsx` (đọc nguồn,
+  không còn điều kiện `!== 'cho_tra' && !== 'da_huy'` viết thẳng); CR: đặt đơn QR → về Trang chủ (rời Theo dõi đơn) → POS giả cho đơn `xong` → kho `/don` làm mới → giỏ bỏ đúng
+  dòng đã gửi, giữ dòng thêm sau, chỉ một lần; đơn còn `cho_tra` → giỏ nguyên.
+- **F4 thêm 2 đột biến:** "không dọn khi đã trả mà Theo dõi đơn không mở" (bỏ `useEffect` C7 / `maDonDaTra` luôn ''), "dọn khi đơn còn chờ trả" (`daThanhToan('cho_tra')` true).
+- **Bài cũ phải sửa vì A1:** `thu_KHMUA1c.js` A1 và `thu_KHSOHD1.js` A1 ghim `viec/KH-SOHD-1/hop_dong_v11.md` → đổi sang `viec/KH-THE-1/hop_dong_v13.md` ("v13 chứa v11"), như
+  KH-SOHD-1 đã đổi bản ghim v9 → v11. Đỏ trên gốc (gốc chưa có tệp v13).
