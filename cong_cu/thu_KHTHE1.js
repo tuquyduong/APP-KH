@@ -124,7 +124,8 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     k('C7 maDonDaTra: bản ghi có đơn, kho /don thấy đã trả → mã đơn', D.maDonDaTra(g, ds('xong')) === 'TQD42' && D.maDonDaTra(g, ds('da_tra')) === 'TQD42');
     k('C7 đơn còn chờ trả / huỷ / không có trong ds → ""', D.maDonDaTra(g, ds('cho_tra')) === '' && D.maDonDaTra(g, ds('da_huy')) === '' && D.maDonDaTra(g, [{ ma: 'TQD9', tien_trinh: 'xong' }]) === '');
     k('C7 đúng MỘT lần: bản ghi đã xong / chưa có mã đơn / không bản ghi / ds lỗi → ""', D.maDonDaTra({ ...g, xong: true }, ds('xong')) === '' && D.maDonDaTra({ ...g, ma_don: undefined }, ds('xong')) === '' && D.maDonDaTra(null, ds('xong')) === '' && D.maDonDaTra(g, null) === '');
-    const app = doc('src/App.jsx'), td = doc('src/pages/TheoDoiDon.jsx');
+    const app = doc('src/App.jsx'), td = doc('src/pages/TheoDoiDon.jsx'), tt = doc('src/pages/ThanhToan.jsx');
+    k('C7 Thanh toán (GET /don riêng) cũng dọn giỏ qua maDonDaTra + daTra và khoá nút khi thấy đơn đã trả (soát v1 lỗi 1)', /maDonDaTra\(docGuiDo\(\), [^)]*dsDon/.test(tt) && /daTra\(/.test(tt) && /daTra=\{daTra\}/.test(app));
     k('C7 Theo dõi đơn dùng daThanhToan (không viết lại điều kiện)', /daThanhToan\(tt\)/.test(td) && !/tt !== 'cho_tra' && tt !== 'da_huy'/.test(td));
     k('C7 App đọc kho cuaDon và gọi daTra theo maDonDaTra; daTra dọn bằng boDongDaGui', /maDonDaTra\(/.test(app) && /cuaDon\.kho/.test(app) && /const daTra = [^\n]*boDongDaGui\(/.test(app) && !/const daTra = [^\n]*doiGio\(\[\]\)/.test(app));
   });
@@ -140,7 +141,11 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     const a = B.xemDanhSach([{ ma: 'TQD43', tien_trinh: 'cho_tra' }], nho);
     const b = B.xemDanhSach([{ ma: 'TQD43', tien_trinh: 'xong' }], a.nho);
     k('D2 đơn chỉ thẻ đi cho_tra → xong: KHÔNG báo "mời ra quầy"', b.choBao.length === 0 && !a.dangChay);
-    k('D3 Đặt lại bỏ dòng thẻ (ma null) — không thêm thẻ vào giỏ', bang(D.monDatLai({ mon: [...don.mon, { ma: 'TLB', so_luong: 1, ghi_chu: '' }] }, MENU_DS), { them: [LY()], boQua: 1 }));
+    k('D3 Đặt lại bỏ dòng thẻ (ma null) — không thêm thẻ vào giỏ, KHÔNG đếm thẻ là "món không còn bán" (soát v1 lỗi 5)', bang(D.monDatLai({ mon: [...don.mon, { ma: 'TLB', so_luong: 1, ghi_chu: '' }] }, MENU_DS), { them: [LY()], boQua: 0 }) && bang(D.monDatLai({ mon: [{ ma: 'XX', so_luong: 1 }, ...don.mon] }, MENU_DS), { them: [], boQua: 1 }));
+    const gThe = { khoa_gui: 'K'.repeat(20), ma_don: 'TQD43', than: { mon: [THE(2, 3)] } }, gTron = { ...gThe, than: { mon: [{ ma: 'TLB', so_luong: 1 }, THE(2, 3)] } };
+    k('D2 tên hạng "Đã lên hạng …" lấy từ dòng thẻ đã gửi + /hang (không chờ /toi — soát v1 lỗi 3)', D.hangCuaDon(gThe, HANG) === 'Vàng' && D.hangCuaDon(gTron, HANG) === 'Vàng' && D.hangCuaDon(null, HANG) === '' && D.hangCuaDon(gThe, null) === '');
+    k('D2 App không còn truyền tên hạng từ kho /toi cho Theo dõi đơn', !/hangMoi=\{hk/.test(doc('src/App.jsx')) && /hangCuaDon\(/.test(doc('src/pages/TheoDoiDon.jsx')));
+    k('C3 "Tạo mã mới" đơn trả thẻ trước giữ ?chi=the (soát v1 lỗi 2): thamThanhToanLai', bang(D.thamThanhToanLai(gThe), { chi: 'the' }) && bang(D.thamThanhToanLai(gTron), {}) && bang(D.thamThanhToanLai(null), {}) && /veThanhToan=\{\(\) => di\(taoDuongDan\('thanhtoan', D?\.?thamThanhToanLai\(|thamThanhToanLai\(banGhiCuaDon\(/.test(doc('src/App.jsx')));
   });
 
   console.log('B / D4 / E1 — hạng, gói, nhắc gia hạn');
@@ -174,6 +179,13 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     const M = await nap('src/menuLoc.js');
     k('E1 tìm kiếm món không ra thẻ (thẻ không nằm trong danh sách món)', M.timMon(MENU_DS, 'thẻ').length === 0);
     k('E1 Menu có ô nhóm "Thẻ thành viên" (slug the-thanh-vien) vẽ từ hangBanDuoc', /the-thanh-vien/.test(doc('src/pages/Menu.jsx')) && /hangBanDuoc\(/.test(doc('src/pages/Menu.jsx')));
+  });
+
+  await thu('R', async () => {
+    const hv = doc('src/pages/HangThanhVien.jsx');
+    const than = (/export default function HangThanhVien[\s\S]*$/.exec(hv) || [''])[0];
+    k('B1 màn Hạng thành viên: phần chung KHÔNG gọi /toi (dungCua) — chỉ phần vẽ khi đã đăng nhập (soát v1 lỗi 4)', !!than && !/dungCua\(/.test(than) && /\{dangNhap && <TheToi/.test(than));
+    k('C2 tên dòng thẻ MỘT hàm (tenDongThe) cho Giỏ và Thanh toán', H.tenDongThe(THE(2, 3), HANG) === 'Thẻ hội viên Vàng · 3 tháng' && H.tenDongThe(THE(9, 3), HANG) === 'Thẻ hội viên' && ['src/pages/GioHang.jsx', 'src/pages/ThanhToan.jsx'].every((f) => /tenDongThe\(/.test(doc(f)) && !/'gio\.the\.ten'/.test(doc(f))));
   });
 
   console.log('B1 — đường dẫn');
@@ -272,7 +284,7 @@ async function trinhDuyet(pw) {
     S.traQR = (ma) => traDon(S.don.get(ma)); // tiền QR về đủ
     const monDon = (d) => d.mon.map((m) => ('loai' in m ? { ma: null, ten: `🎟️ Thẻ hội viên ${HANG.find((h) => h.id === m.hang_id).ten} · ${m.so_thang} tháng`, so_luong: 1, don_gia: giaGoi(m.hang_id, m.so_thang), thanh_tien: giaGoi(m.hang_id, m.so_thang), ghi_chu: null, loai: 'the' }
       : { ma: m.ma, ten: MENU_DS.find((x) => x.ma === m.ma).ten, so_luong: m.so_luong, don_gia: 30000, thanh_tien: 30000 * m.so_luong, ghi_chu: m.ghi_chu || null }));
-    const dongDon = (d) => ({ ma: d.ma, so_hd: 'APP00' + d.ma.slice(3), ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' ? 0 : d.tong, trang_thai: null, thanh_toan: null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: false, cach_tra: d.cach, giu_vi: d.cach === 'vi' ? d.tong : 0, con_lai: d.cach === 'vi' ? 0 : d.tong });
+    const dongDon = (d) => ({ ma: d.ma, so_hd: 'APP00' + d.ma.slice(3), ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' ? 0 : d.tong, trang_thai: null, thanh_toan: null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? (S.qrHet ? { ...d.qr, het_han: BAY('20:20:00') } : d.qr) : null, tien_ve_cho_doi_soat: false, cach_tra: d.cach, giu_vi: d.cach === 'vi' ? d.tong : 0, con_lai: d.cach === 'vi' ? 0 : d.tong });
     await ctx.route(`${URL0}/**`, async (r) => {
       const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
       if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goi });
@@ -302,6 +314,8 @@ async function trinhDuyet(pw) {
         S.don.set(ma, d);
         return json(r, 200, { success: true, ma_don: ma, so_hd: 'APP00' + ma.slice(3), tong: b.tong, giu_vi: d.cach === 'vi' ? b.tong : 0, con_lai: d.cach === 'vi' ? 0 : b.tong, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, trung: false });
       }
+      const huy = /^\/don\/([^/]+)\/huy$/.exec(duong);
+      if (huy && pt === 'POST') { const d = S.don.get(decodeURIComponent(huy[1])); if (!d || d.tt !== 'cho_tra') return loi400(r, 'DA_TRA_GOI_QUAN'); d.tt = 'da_huy'; return json(r, 200, { success: true, ma_don: d.ma, tien_trinh: 'da_huy' }); }
       if (duong.startsWith('/don/') && pt === 'GET') {
         const d = S.don.get(decodeURIComponent(duong.slice(5)));
         if (!d) return json(r, 404, { error: 'Không thấy đơn', code: 'KHONG_THAY_DON' });
@@ -450,6 +464,28 @@ async function trinhDuyet(pw) {
     await t.evaluate(() => { localStorage.setItem('kh_gio', JSON.stringify([{ ma: 'TLB', so_luong: 2, ghi_chu: '' }])); });
     await t.reload(); await t.waitForSelector('#home'); await t.waitForTimeout(400);
     k('C7 CR chỉ MỘT lần: mở lại App không dọn nữa (bản ghi đã xong)', bang(await gioMay(t), [LY('TLB', 2)]));
+  });
+
+  const diApp = async (t, d) => { await t.evaluate((x) => { window.history.pushState({ kh: 1 }, '', x); window.dispatchEvent(new PopStateEvent('popstate')); }, d); await t.waitForTimeout(300); };
+  await may('C7 tiền QR về khi đã rời Theo dõi đơn — mở Thanh toán', { gio: [LY('TLB', 2), THE(2, 3)] }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => (await nutDat(t).getAttribute('aria-disabled')) !== 'true' && /Thanh toán qua QR/.test(await nutDat(t).innerText()));
+    await nutDat(t).click();
+    await doi(t, async () => /\/don\/TQD42/.test(t.url()));
+    await diApp(t, '/trangchu'); await t.waitForSelector('#home');
+    S.traQR('TQD42'); // tiền về khi App vẫn mở, kho /don chưa làm mới
+    await diApp(t, '/thanhtoan');
+    k('C7 CR mở Thanh toán: GET /don riêng thấy đơn đã trả → giỏ bỏ dòng đã gửi, KHÔNG gửi đơn thứ hai (không mua thẻ hai lần)', await doi(t, async () => bang(await gioMay(t), [])) && S.guiDon.length === 1, JSON.stringify(await gioMay(t)));
+  });
+  await may('C3 Tạo mã mới đơn trả thẻ trước', { gio: [LY('TLB', 1), THE(2, 3)] }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan?chi=the');
+    await doi(t, async () => (await nutDat(t).getAttribute('aria-disabled')) !== 'true' && /Thanh toán qua QR/.test(await nutDat(t).innerText()));
+    await nutDat(t).click();
+    await doi(t, async () => /\/don\/TQD42/.test(t.url()));
+    S.qrHet = true; // QR hết hạn (het_han trước bay_gio của POS giả)
+    await t.reload(); await t.waitForSelector('#tracking');
+    await t.locator('#tracking .checkout-btn', { hasText: 'Tạo mã mới' }).click();
+    k('C3 CR "Tạo mã mới" ở đơn chỉ thẻ → /thanhtoan?chi=the (không về Thanh toán cả giỏ)', await doi(t, async () => /\/thanhtoan\?chi=the$/.test(t.url())), t.url());
   });
 
   await may('D4 nhắc gia hạn + E1 Menu', { S0: { hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-18T23:59:59' } } }, async ({ t }) => {
