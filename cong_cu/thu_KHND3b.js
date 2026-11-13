@@ -75,7 +75,8 @@ const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
   const dong = ['gv.nhan.dang', 'gv.nhan.sau', 'gv.nhan.cho', 'gv.nhan.truoc', 'thu.t2', 'thu.t3', 'thu.t4', 'thu.t5', 'thu.t6', 'thu.t7', 'thu.t8'];
   k('C1 các khoá ghép chuỗi (gv.nhan.<pha>, thu.t<N>) có đủ trong danh mục', dong.every((x) => theo.has(x)) && /gv\.nhan\.\$\{/.test(doc('src/components/GiaMon.jsx')) && /thu\.t\$\{/.test(doc('src/gioHoatDong.js')));
   const trongKhoa = [...theo.keys()].filter((x) => x.startsWith('hien.')).length;
-  k('A1 nhóm khác còn nguyên (Trang chủ: khoá hien.* và home.need), không mã mới trong DICH', trongKhoa >= 7 && !!theo.get('home.need') && (await nap('src/noiDung/nd/index.js')).DICH.length === 5);
+  const dich = (await nap('src/noiDung/nd/index.js')).DICH.map((d) => d[0]).join(',');
+  k('A1 nhóm khác còn nguyên (Trang chủ: khoá hien.* và home.need); DICH chỉ thêm đích hang của KH-THE-1', trongKhoa >= 7 && !!theo.get('home.need') && dich === 'menu,giovang,tracnghiem,kehoach,uudai,hang', dich);
   const nc = (s) => /NHU_CAU/.test(boChuThich(s));
   const docSrcNC = ['src/components/MonO.jsx', 'src/pages/TrangMon.jsx', 'src/pages/Menu.jsx'].filter((f) => nc(doc(f)));
   k("A2 MonO / TrangMon / Menu không còn đọc NHU_CAU; đọc ndDs('home.need') (nhan để hiện, ten để lọc)", docSrcNC.length === 0 && /ndDs\('home\.need'\)/.test(doc('src/components/MonO.jsx')) && /ndDs\('home\.need'\)/.test(doc('src/pages/TrangMon.jsx'))
