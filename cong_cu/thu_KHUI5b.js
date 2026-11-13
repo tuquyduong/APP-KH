@@ -34,7 +34,7 @@ function dung(tep, xuat) {
   new vm.Script(`(function (module, exports, require) {${kq.outputFiles[0].text}\n})`, { filename: tep }).runInThisContext()(m, m.exports, require);
   return m.exports;
 }
-const thanhPhan = (tep) => dung(tep, `import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import T from './${tep}'; export const ve = (props, con) => renderToStaticMarkup(React.createElement(T, props, con));`).ve;
+const thanhPhan = (tep) => dung(tep, `import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import T from './${tep}'; export const ve = (props, con) => renderToStaticMarkup(React.createElement(T, props, con)).replace(/ data-nd(-khoa)?="[^"]*"/g, '');`).ve;
 
 // Lấy một hằng của demo bằng tên (chuỗi `const TEN = …;`), đọc bằng vm — không chạy phần còn lại của demo.
 const demoHtml = doc('thiet_ke/app_kh_demo.html');
@@ -55,15 +55,22 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
 
 (async () => {
   const KH = await nap('src/kehoach.js'), LP = await nap('src/kehoachLap.js');
-  const ND = await nap('src/noiDung/keHoach.js');
+  const CD = await nap('src/noiDung/coDinh/lich.js'), NDJ = await nap('src/noiDung/nd.js');
   const mau = json('cong_cu/thu_KHUI5b_mau.json');
 
   console.log('A1 — dữ liệu chép nguyên từ demo');
-  k('A1 SOLAR_HOL, LUNAR_HOL, SS, SS_F, GIFT_HOL, WD giống demo từng chữ', ['SOLAR_HOL', 'LUNAR_HOL', 'SS', 'SS_F', 'GIFT_HOL', 'WD'].every((t) => bang(ND[t], hangDemo(t))));
+  // KH-ND-3d: chữ nay ở danh mục (nd/keHoach.js, nd/tienIch.js) và coDinh/lich.js — dựng lại đúng dạng của demo từ NƠI MỚI rồi so từng chữ.
+  const SS_DEMO = Object.fromEntries(NDJ.ndDs('mua.noiDung').map((z) => [z.mua, { tang: z.tang, an: z.an, uong: z.uong, sh: z.sh, tt: z.tt, han: z.han, p: z.p.split(',') }]));
+  const SS_F_DEMO = ['tang', 'an', 'uong', 'sh', 'tt', 'han'].map((f) => [f, NDJ.nd('mua.nhan.' + f)]);
+  const nguon = { SOLAR_HOL: KH.leDuong(), LUNAR_HOL: KH.leAmLich(), SS: SS_DEMO, SS_F: SS_F_DEMO, GIFT_HOL: KH.leCoQua(), WD: CD.WD };
+  k('A1 SOLAR_HOL, LUNAR_HOL, SS, SS_F, GIFT_HOL, WD (đọc từ danh mục / coDinh) giống demo từng chữ', Object.keys(nguon).every((t) => bang(nguon[t], hangDemo(t))));
+  k('A1 danh mục ngày lễ: dòng sai dạng bị bỏ qua, ngày trùng lấy dòng đầu (không vỡ màn)', (() => { NDJ.datBanNoiDung({ so_ban: 1, gia_tri: { 'kh.leDuong': [{ ngay: '1/1', ten: 'A' }, { ngay: 'x/y', ten: 'B' }, { ngay: '32/1', ten: 'C' }, { ngay: '1/1', ten: 'D' }, { ngay: '5/13', ten: 'E' }] } }); const b = KH.leDuong(); NDJ.datBanNoiDung(null); return bang(b, { '1/1': 'A' }); })());
   const seasonDemo = vm.runInNewContext('(' + /const SEASON = (idx => [^\n]*);/.exec(demoHtml)[1] + ')');
-  k('A1 SEASON: cùng kết quả với demo ở cả 24 tiết', Array.from({ length: 24 }, (_, i) => i).every((i) => bang(ND.SEASON(i), seasonDemo(i))));
+  k('A1 SEASON: cùng kết quả với demo ở cả 24 tiết', Array.from({ length: 24 }, (_, i) => i).every((i) => bang(CD.SEASON(i), seasonDemo(i))));
   const L = await nap('src/lich.js');
-  k('A1 TERM_TIPS dùng lại từ lich.js (không chép lại)', KH.TERM_TIPS === L.TERM_TIPS && !/const TERM_TIPS/.test(doc('src/kehoach.js')) && !/TERM_TIPS = \[/.test(doc('src/noiDung/keHoach.js')));
+  k('A1 TERM_TIPS dùng lại từ lich.js (không chép lại)', KH.TERM_TIPS === L.TERM_TIPS && !/const TERM_TIPS/.test(doc('src/kehoach.js')) && !/TERM_TIPS = \[/.test(doc('src/lich.js')));
+  const tipsDemo = hangDemo('TERM_TIPS');
+  k('A1 lời dưỡng sinh 24 tiết khí (danh mục kh.tiet qua tipTiet / TERM_TIPS) giống demo từng chữ và mã món', Array.from({ length: 24 }, (_, i) => i).every((i) => bang(L.tipTiet(i), tipsDemo[i]) && bang(L.TERM_TIPS[i], tipsDemo[i])) && L.TERM_TIPS.length === 24);
 
   console.log('A2/A3 — hàm tính so với bảng của demo');
   const thang = Object.entries(mau.thang);
@@ -99,8 +106,8 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const homNayUp = Object.entries(mau.up);
   for (const [t, u] of homNayUp) {
     const [y, m, d] = t.split('-').map(Number), hn = { d, m, y }, j0 = L2.LUNAR.jdFromDate(d, m, y);
-    const viec = u.seed.map((s, i) => { const x = L2.LUNAR.jdToDate(j0 + s.off); return { id: 'v' + i, ngay: `${x.y}-${String(x.m).padStart(2, '0')}-${String(x.d).padStart(2, '0')}`, gio: s.t, tieu: s.title, nhac: s.rm === KH.CO_NHAC ? +s.t.slice(0, 2) * 60 + +s.t.slice(3) : null, xong: s.done }; });
-    const ra = KH.upList(hn, { ...KH.keHoachTrong(), viec }).filter((e) => e.k === 'Việc' || e.k === 'Lễ').map((e) => ({ j: e.j, t: e.t, s: e.s.replace(' · Đúng giờ', ' · ' + KH.CO_NHAC), k: e.k })); // KH-UI-5c: việc nhắc đúng giờ ghi "Đúng giờ" (không còn "Nhắc khi mở app")
+    const viec = u.seed.map((s, i) => { const x = L2.LUNAR.jdToDate(j0 + s.off); return { id: 'v' + i, ngay: `${x.y}-${String(x.m).padStart(2, '0')}-${String(x.d).padStart(2, '0')}`, gio: s.t, tieu: s.title, nhac: s.rm === NDJ.nd('kh.coNhac') ? +s.t.slice(0, 2) * 60 + +s.t.slice(3) : null, xong: s.done }; });
+    const ra = KH.upList(hn, { ...KH.keHoachTrong(), viec }).filter((e) => e.k === 'Việc' || e.k === 'Lễ').map((e) => ({ j: e.j, t: e.t, s: e.s.replace(' · Đúng giờ', ' · ' + NDJ.nd('kh.coNhac')), k: e.k })); // KH-UI-5c: việc nhắc đúng giờ ghi "Đúng giờ" (không còn "Nhắc khi mở app")
     if (!bang(ra, u.ra)) upLech.push(t);
     const ngayDau = KH.holList(hn)[0], chuNgay = KH.chuThich('ngay', hn, { ...KH.keHoachTrong(), viec }); // KH-UI-5e: ô Ngày cần nhớ thay ô Ngày lễ; ô Sắp tới thành dải
     if (!chuNgay.startsWith(ngayDau.n.replace('Tết ', '') + ' · ') || KH.chuThich('mua', hn, { ...KH.keHoachTrong(), viec }) !== u.badgeMua) bLech.push(t);
@@ -142,7 +149,7 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   const nh = KH.themViec(KH.themViec(KH.themViec(KH.keHoachTrong(), { ngay: '2026-11-07', gio: '17:30', tieu: 'B', nhac: 1050 }), { ngay: '2026-11-07', gio: '07:00', tieu: 'A', nhac: 420 }), { ngay: '2026-11-07', gio: '09:00', tieu: 'C', nhac: null });
   const ngayBay = { d: 7, m: 11, y: 2026 }, dangCo = (bg, bang2 = nh) => LP.nhacDangCo(bang2, bg, ngayBay).map((x) => x.v.tieu);
   k('C1 nhắc: đã tới mốc, chưa quá giờ, đã bật nhắc, chưa xong; không nhắc thì không hiện', bang(dangCo('2026-11-07 07:10:00'), ['A']) && bang(dangCo('2026-11-07 17:40:00'), ['B']) && bang(dangCo('2026-11-07 06:00:00'), []) && !dangCo('2026-11-07 09:00:00').includes('C') && dangCo('2026-11-07 07:10:00', LP.tickLan(nh, nh.viec[1].id, '2026-11-07', ngayBay)).length === 0);
-  k('C2 chữ công tắc đúng sự thật: "Nhắc khi mở app", không hứa báo về điện thoại', KH.CO_NHAC === 'Nhắc khi mở app' && !/sẽ báo|thông báo đẩy|về điện thoại/i.test(doc('src/kehoach.js').replace(/\/\/.*$/gm, '')));
+  k('C2 chữ công tắc đúng sự thật: "Nhắc khi mở app", không hứa báo về điện thoại', NDJ.nd('kh.coNhac') === 'Nhắc khi mở app' && !/sẽ báo|thông báo đẩy|về điện thoại/i.test(doc('src/kehoach.js').replace(/\/\/.*$/gm, '')));
 
   console.log('D2 — luuMay.js');
   const LM = await nap('src/luuMay.js');
@@ -168,13 +175,14 @@ const khong = process.env.KHONG_TRINH_DUYET === '1'; // phần so ảnh bằng C
   k('B5 /kehoach/<lạ> (kể cả tiện ích của 5f chưa làm) → về /kehoach, không rơi vào "không tìm thấy"', ['/kehoach/la', '/kehoach/xe', '/kehoach/thuoc'].every((p) => ra(p).trang === 'kehoach' && ra(p).chuan === '/kehoach'));
   k('B5 đăng nhập xong quay lại đúng /kehoach/<tiện ích> (tiepHopLe)', DD.tiepHopLe('/kehoach/ngayle') === '/kehoach/ngayle' && DD.tiepHopLe('/kehoach') === '/kehoach' && DD.trangCanDangNhap('kehoach') && DD.trangCanDangNhap('tienich'));
 
-  await manHinh(KH, ND);
+  await manHinh(KH);
   console.log(`\n${dat} đạt · ${hong} hỏng`);
   process.exit(hong ? 1 : 0);
 })().catch((e) => { console.log('  ✗ bài thử lỗi: ' + (e && e.stack || e)); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
 // ---- Màn hình dựng thật (react-dom/server) ----
 async function manHinh(KH) {
+  const NDJ = await nap('src/noiDung/nd.js');
   console.log('B — màn hình dựng thật');
   const khoGia = () => { const o = {}; return { getItem: (x) => (x in o ? o[x] : null), setItem: (x, v) => { o[x] = String(v); }, removeItem: (x) => { delete o[x]; }, o }; };
   const HN = { d: 7, m: 11, y: 2026 };
@@ -256,8 +264,8 @@ async function manHinh(KH) {
   k('B6 biểu tượng không base64 trong src/ của tệp mới', !/data:image|base64/.test(moiHet));
   k('D1 chỉ MỘT nơi chạm localStorage cho Kế hoạch (kehoach.js)', moi.slice(1).every((t) => !/localStorage/.test(t)));
   const kehoachJsx = doc('src/pages/KeHoach.jsx');
-  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu" (KH-UI-5c: mọi thay đổi qua lam())', /const lam = [^\n]*\n\s*if \(!san\) \{ datTb\(LOI_CHUA_BIET\); return false; \}/.test(kehoachJsx) && /LOI_KHO/.test(kehoachJsx) && /if \(!san\) \{ datTb\('Đang lấy thông tin tài khoản/.test(doc('src/pages/TienIch.jsx')));
-  k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(doc('src/components/BangNgay.jsx')));
+  k('D2 chưa biết khách (san=false): thêm / sửa việc báo "Đang lấy thông tin tài khoản…", KHÔNG báo nhầm "trình duyệt không cho lưu" (KH-UI-5c: mọi thay đổi qua lam())', /const lam = [^\n]*\n\s*if \(!san\) \{ datTb\(nd\('ti\.chuaSan'\)\); return false; \}/.test(kehoachJsx) && /nd\('kh\.loiKho'\)/.test(kehoachJsx) && /if \(!san\) \{ datTb\(nd\('ti\.chuaSan'\)\)/.test(doc('src/pages/TienIch.jsx')) && /^Đang lấy thông tin tài khoản/.test(NDJ.nd('ti.chuaSan')));
+  k('D1 đủ 500 việc: báo đúng lý do "Đã đủ số việc lưu trên máy này", không báo "Ngày chưa đúng"; việc thứ 501 không thêm được', KH.themViec({ ...KH.keHoachTrong(), viec: Array.from({ length: 500 }, (_, i) => ({ id: 'v' + i, ngay: '2026-11-07', gio: '08:00', tieu: 'x', nhac: false, xong: false })) }, { ngay: '2026-11-07', gio: '08:00', tieu: 'y' }) === null && /Đã đủ số việc lưu trên máy này/.test(NDJ.nd('bn.daDay')) && /nd\('bn\.daDay'\)/.test(doc('src/components/BangNgay.jsx')));
   k('E1 không còn ngày dự phòng bịa cho "hôm nay" (K3)', !/y: 2026 \}/.test(kehoachJsx + doc('src/pages/TienIch.jsx')) && !/if \(!homNay\) return null/.test(tc));
   void khong;
 }

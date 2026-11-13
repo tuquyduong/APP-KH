@@ -1,36 +1,36 @@
 src/App.jsx 0
 
-src/components/BangNgay.jsx 54
+src/components/BangNgay.jsx 0
 
-src/components/BangNoi.jsx 1
+src/components/BangNoi.jsx 0
 
-src/components/BangQuaHan.jsx 23
+src/components/BangQuaHan.jsx 0
 
-src/components/BanhXoay.jsx 11
+src/components/BanhXoay.jsx 0
 
-src/components/DaiNhacViec.jsx 3
+src/components/DaiNhacViec.jsx 0
 
-src/components/GiaMon.jsx 1
+src/components/GiaMon.jsx 0
 
-src/components/HoiXoa.jsx 6
+src/components/HoiXoa.jsx 0
 
-src/components/KhoaTienIch.jsx 1
+src/components/KhoaTienIch.jsx 0
 
-src/components/NguoiThan.jsx 33
+src/components/NguoiThan.jsx 0
 
 src/components/NhanMa.jsx 0
 
-src/components/VanKhanMan.jsx 20
+src/components/VanKhanMan.jsx 0
 
 src/dinhDang.js 0
 
 src/giaHang.js 0
 
-src/kehoach.js 42
+src/kehoach.js 0
 
-src/kehoachLap.js 32
+src/kehoachLap.js 0
 
-src/lich.js 68
+src/lich.js 0
 
 src/pages/DangNhap.jsx 0
 
@@ -38,13 +38,13 @@ src/pages/HoSo.jsx 0
 
 src/pages/HoTro.jsx 0
 
-src/pages/KeHoach.jsx 43
+src/pages/KeHoach.jsx 0
 
 src/pages/ManQR.jsx 0
 
 src/pages/TaiKhoan.jsx 0
 
-src/pages/TienIch.jsx 27
+src/pages/TienIch.jsx 0
 
 src/pages/TracNghiemKetQua.jsx 0
 
@@ -54,4 +54,4 @@ src/pages/UuDai.jsx 0
 
 src/tracNghiem.js 62
 
-src/vanKhan.js 7
+src/vanKhan.js 0

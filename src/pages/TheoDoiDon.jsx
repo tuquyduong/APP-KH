@@ -103,7 +103,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan }) {
           </>}
           {loiHuy && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('td.loiPos')}>{loiHuy}</div></div>}
           {choTra && <button type="button" className={`ghost-btn nut-huy${dangHuy ? ' btn-disabled' : ''}`} onClick={dangHuy ? undefined : huy} {...ndDau('td.huy')}>{nd('td.huy')}</button>}
-          {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai}`} {...ndDau('td.goi')}>{nd('td.goi')}</a>}
+          {!choTra && !xongChua(tt) && LIEN_HE.dienThoai && <a className="ghost-btn nut-huy" href={`tel:${LIEN_HE.dienThoai.replace(/[^\d+]/g, '')}`} {...ndDau('td.goi')}>{nd('td.goi')}</a>}
         </>
       )}
     </Man>

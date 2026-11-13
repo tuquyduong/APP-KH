@@ -4,25 +4,22 @@ import '../giaoDien/tien_ich.css';
 import { bayGio } from '../bayGio.js';
 import { ghepMon } from '../tracNghiem.js';
 import { TU_KHOA_MON } from '../noiDung/theChat.js';
-import { homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich, upList, bangCoNhac, coChuKy, conLai, dayThang } from '../kehoach.js';
+import { homNayTuGio, ngayChuoi, docNgay, theNgay, luoiThang, leTrongThang, chuThich, upList, bangCoNhac, conLai, dayThang } from '../kehoach.js';
 import { viecNgay, nhacDangCo, quaHan, danhDauNgay, timViec, tickLan, jd, dm } from '../kehoachLap.js';
 import Man from '../components/Man.jsx';
 import { Ico, DenLong } from '../components/BieuTuong.jsx';
 import { AnhMon } from '../components/MonO.jsx';
 import BangNgay, { HangViec } from '../components/BangNgay.jsx';
 import BangQuaHan from '../components/BangQuaHan.jsx';
-import { ndHien } from '../noiDung/nd.js';
+import { nd, ndPhan, ndDau } from '../noiDung/nd.js';
+import { THU_NGAN } from '../noiDung/coDinh/lich.js';
 import Thongbao from '../components/Thongbao.jsx';
 import { bam } from '../components/bam.js';
 import { TranhTienIch } from '../components/BieuTuongTienIch.jsx';
-import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapToi, tienIchCuaNhac } from '../components/dungKeHoach.js';
+import { dungKeHoach, dungPhut, layNgayMo, SU_KIEN_MO_NGAY, hoSoKhach, moMucSapToi, tienIchCuaNhac, ocHien } from '../components/dungKeHoach.js';
 
-const LOI_KHO = 'Trình duyệt không cho lưu trên máy này (cửa sổ riêng tư?) — việc chưa được lưu';
-const LOI_CHUA_BIET = 'Đang lấy thông tin tài khoản, thử lại sau ít giây';
 // Lưới 6 ô của demo (patch35 TOOLS): [mã tiện ích, tên, biểu tượng, mã nhãn chuThich].
-const TIEN_ICH = [['theomua', 'Theo mùa', 'fan', 'mua'], ['vankhan', 'Văn khấn', 'book', 'vk'], ['ngaycannho', 'Ngày cần nhớ', 'gift', 'ngay'],
-  ['xeco', 'Xe cộ', 'scooter', 'xe'], ['uongthuoc', 'Uống thuốc', 'mortar', 'thuoc'], ['chuky', 'Chu kỳ', 'moon', 'chuky']];
-const HIEN_O = { xeco: () => ndHien('hien.ocXe'), uongthuoc: () => ndHien('hien.ocThuoc'), chuky: () => ndHien('hien.ocChuKy') }; // công tắc ẩn / hiện ô ở /admin (CLAUDE.md §11)
+const TIEN_ICH = [['theomua', 'fan', 'mua'], ['vankhan', 'book', 'vk'], ['ngaycannho', 'gift', 'ngay'], ['xeco', 'scooter', 'xe'], ['uongthuoc', 'mortar', 'thuoc'], ['chuky', 'moon', 'chuky']]; // tên ô: khoá kh.o.<mã>
 
 /** Biểu tượng tranh tròn (demo EN): file the-chat-<tên>.svg tách từ demo; đèn lồng vẽ thẳng. */
 export function TranhTron({ ten, s }) {
@@ -30,11 +27,11 @@ export function TranhTron({ ten, s }) {
 }
 
 /** Đầu màn con kiểu demo (nút quay lại + tiêu đề + nút phải). */
-export function DauMan({ tieuDe, phu, lui, phai }) {
+export function DauMan({ tieuDe, phu, lui, phai, khoaTieuDe, khoaPhu }) {
   return (
     <div className="topbar" style={{ justifyContent: 'flex-start', gap: 12 }}>
-      <div className="back-btn" aria-label="Quay lại" {...bam(lui)}><Ico ten="back" s={18} /></div>
-      <div style={{ flex: 1, minWidth: 0 }}><h1>{tieuDe}</h1><div className="sub">{phu}</div></div>
+      <div className="back-btn" aria-label={nd('khung.quayLai')} {...bam(lui)}><Ico ten="back" s={18} /></div>
+      <div style={{ flex: 1, minWidth: 0 }}><h1 {...(khoaTieuDe ? ndDau(khoaTieuDe) : {})}>{tieuDe}</h1><div className="sub" {...(khoaPhu ? ndDau(khoaPhu) : {})}>{phu}</div></div>
       {phai}
     </div>
   );
@@ -56,8 +53,8 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
 
   // Lưu + báo (chủ quán 09.11: xoá rồi thì xoá luôn; tick nhầm thì bấm lại ô tròn).
   const lam = (moi, chu) => {
-    if (!san) { datTb(LOI_CHUA_BIET); return false; }
-    if (!luu(moi)) { datTb(LOI_KHO); return false; }
+    if (!san) { datTb(nd('ti.chuaSan')); return false; }
+    if (!luu(moi)) { datTb(nd('kh.loiKho')); return false; }
     datTb(chu);
     return true;
   };
@@ -86,53 +83,53 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
 
   return (
     <Man id="lich">
-      <DauMan tieuDe="Kế Hoạch và Nhắc Việc" phu="Việc của tôi · âm dương lịch · dưỡng sinh theo tiết khí" lui={lui}
-        phai={<div className="today-btn" {...bam(veHomNay)}>Hôm nay</div>} />
+      <DauMan tieuDe={nd('kh.tieuDe')} phu={nd('kh.phu')} khoaTieuDe="kh.tieuDe" khoaPhu="kh.phu" lui={lui}
+        phai={<div className="today-btn" {...bam(veHomNay)} {...ndDau('kh.homNay')}>{nd('kh.homNay')}</div>} />
       <div id="calNoti">
         {nhac.map((x) => <div key={x.v.id + x.ngay} className="nt-bar on" {...bam(() => { const di = tienIchCuaNhac(x.v); if (di) { moTienIch(di); return; } const n = docNgay(x.ngay); moNgay(n.d, n.m, n.y); })}><span>🔔 {x.chu}</span></div>)}
       </div>
-      {nQua > 0 && <div className="nt-state qua-han" id="calQuaHan" role="button" tabIndex={0} {...bam(() => datBangQua(true))}><span>⚠️ {nQua} việc quá hạn</span><span>›</span></div>}
-      <div className="tim-viec"><input type="search" id="timViec" placeholder="Tìm việc theo tên…" aria-label="Tìm việc" value={tim} onChange={(e) => datTim(e.target.value)} /></div>
+      {nQua > 0 && <div className="nt-state qua-han" id="calQuaHan" role="button" tabIndex={0} {...bam(() => datBangQua(true))}><span {...ndDau('kh.quaHan')}>{ndPhan('kh.quaHan', { so: nQua })}</span><span>›</span></div>}
+      <div className="tim-viec"><input type="search" id="timViec" placeholder={nd('kh.timGoiY')} aria-label={nd('kh.timAria')} value={tim} onChange={(e) => datTim(e.target.value)} /></div>
       {tim.trim() && (
         <div id="timKetQua">
           {ketQuaTim.length
             ? ketQuaTim.map((v) => <div key={v.id} className="tl-row" {...bam(() => { const n = docNgay(v.ngay); chonNgay(n.d, n.m, n.y); datBangNgay(true); })}><div className="tl-rt"><b>{v.tieu}</b><small>{dm(jd(docNgay(v.ngay)), null)}{v.gio ? ' · ' + v.gio : ''}{v.lap ? ' · ↻' : ''}</small></div></div>)
-            : <div className="empty-note">Không thấy việc nào tên như vậy.</div>}
+            : <div className="empty-note" {...ndDau('kh.timKhong')}>{nd('kh.timKhong')}</div>}
         </div>
       )}
 
-      <div className="cal-hero" id="calHero">
+      <div className="cal-hero" id="calHero" {...ndDau('kh.lich')}>
         <div className="ch-ring"><TranhTron ten={the.mua.ic} s={40} /></div>
         <div className="ch-l"><div className="wd">{the.thu}</div><div className="big">{the.lon}</div><div className="my">{the.thang}</div></div>
-        <div className="ch-r"><div className="k">Âm lịch</div><div className="ld">{the.ngayAm}<small>{the.thangAm}</small></div>
+        <div className="ch-r"><div className="k" {...ndDau('kh.am')}>{nd('kh.am')}</div><div className="ld">{the.ngayAm}<small>{the.thangAm}</small></div>
           <div className="cc">{the.namCanChi}<br />{the.thangNgayCanChi}</div></div>
         <div className="ch-term"><span className="tchip"><TranhTron ten="sprig" s={16} /> {the.chip}</span><span className="tleft">{the.conLai}</span></div>
         {the.le && <div className="ch-hol"><Ico ten="flag" s={13} /> {the.le}</div>}
       </div>
 
       <div className="tl-grid" id="toolGrid">
-        <div className="tl-h">Tiện ích</div>
+        <div className="tl-h" {...ndDau('kh.tienIch')}>{nd('kh.tienIch')}</div>
         <div className="tl-g six">
-          {TIEN_ICH.filter(([id]) => (id !== 'chuky' || coChuKy(xung)) && (!HIEN_O[id] || HIEN_O[id]())).map(([id, ten, ic, nhan]) => (
+          {TIEN_ICH.filter(([id]) => ocHien(id, xung)).map(([id, ic, nhan]) => (
             <div key={id} className="tl" {...bam(() => moTienIch(id))}>
-              <div className="tl-ic"><TranhTienIch ten={ic} s={38} /></div><b>{ten}</b><small>{chuThich(nhan, homNay, bang)}</small>
+              <div className="tl-ic"><TranhTienIch ten={ic} s={38} /></div><b {...ndDau(`kh.o.${id}`)}>{nd(`kh.o.${id}`)}</b><small>{chuThich(nhan, homNay, bang)}</small>
             </div>
           ))}
         </div>
         <div className="up-strip">
-          <div className="up-h"><b>Sắp tới</b>{sapToi.length ? <span {...bam(() => moTienIch('saptoi'))}>Xem tất cả {sapToi.length} ›</span> : <span />}</div>
+          <div className="up-h"><b {...ndDau('kh.sapToi')}>{nd('kh.sapToi')}</b>{sapToi.length ? <span {...bam(() => moTienIch('saptoi'))} {...ndDau('kh.xemTatCa')}>{ndPhan('kh.xemTatCa', { so: sapToi.length })}</span> : <span />}</div>
           {sapToi.slice(0, 3).map((e, i) => (
             <div className="up-r" key={`${e.j}-${i}`} {...bam(() => moMucSapToi(e, { moViec: (ngay) => { const n = docNgay(ngay); chonNgay(n.d, n.m, n.y); }, moTienIch }))}>
               <i>{dayThang(e.j)}</i><span>{e.t}</span><small>{conLai(e.j, homNay)}</small>
             </div>
           ))}
-          {!sapToi.length && <div className="up-r"><span className="muted">30 ngày tới chưa có việc gì</span></div>}
+          {!sapToi.length && <div className="up-r"><span className="muted" {...ndDau('kh.sapToiTrong')}>{nd('kh.sapToiTrong')}</span></div>}
         </div>
       </div>
 
       <div className="cal-card">
-        <div className="cal-nav"><span aria-label="Tháng trước" {...bam(() => doiThang(-1))}>‹</span><b>Tháng {thang.m} · {thang.y}</b><span aria-label="Tháng sau" {...bam(() => doiThang(1))}>›</span></div>
-        <div className="cal-wd"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span className="sun">CN</span></div>
+        <div className="cal-nav"><span aria-label={nd('kh.thangTruoc')} {...bam(() => doiThang(-1))}>‹</span><b {...ndDau('kh.thang')}>{ndPhan('kh.thang', { m: thang.m, y: thang.y })}</b><span aria-label={nd('kh.thangSau')} {...bam(() => doiThang(1))}>›</span></div>
+        <div className="cal-wd" {...ndDau('kh.lich')}>{[...THU_NGAN.slice(1), THU_NGAN[0]].map((t, i) => <span key={t} className={i === 6 ? 'sun' : undefined}>{t}</span>)}</div>
         <div className="cal-grid">
           {o.map((c) => (
             <div key={`${c.y}-${c.m}-${c.d}`} className={`cd ${[c.ngoai ? 'out' : '', c.homNay ? 'today' : '', c.chon ? 'sel' : '', c.cn ? 'sun' : '', c.le ? 'hol' : ''].join(' ')}`} {...bam(() => moNgay(c.d, c.m, c.y))}>
@@ -141,42 +138,42 @@ export default function KeHoach({ san = true, lui, moTienIch, moTracNghiem, coKe
             </div>
           ))}
         </div>
-        <div className="cal-legend"><span><Ico ten="bell" s={10} lop="cd-chuong viec" />Việc của tôi</span><span><i className="dh" />Ngày lễ</span><span><em>Aa</em>Tiết khí</span></div>
+        <div className="cal-legend"><span><Ico ten="bell" s={10} lop="cd-chuong viec" /><span {...ndDau('kh.chuViec')}>{nd('kh.chuViec')}</span></span><span><i className="dh" /><span {...ndDau('kh.chuLe')}>{nd('kh.chuLe')}</span></span><span><em>Aa</em><span {...ndDau('kh.chuTiet')}>{nd('kh.chuTiet')}</span></span></div>
       </div>
 
       <div className="ds-card" id="calTip">
-        <div className="ds-h">Dưỡng sinh tiết {the.tiet}</div>
+        <div className="ds-h" {...ndDau('kh.duongSinh')}>{ndPhan('kh.duongSinh', { tiet: the.tiet })}</div>
         <div className="ds-t">{the.tip[0]}</div>
         {monTiet.length > 0 && (
           <>
-            <div className="ds-k">Món hợp tiết này</div>
+            <div className="ds-k" {...ndDau('kh.monHop')}>{nd('kh.monHop')}</div>
             <div className="ds-prods">{monTiet.map((m) => <div key={m.ma} className="ds-p" style={{ background: 'var(--cream)' }} {...bam(() => chonMon(m))}><AnhMon mon={m} s={30} /><span>{m.ten}</span></div>)}</div>
           </>
         )}
-        {!coKetQuaTn && moTracNghiem && <div className="ds-tc cta" {...bam(moTracNghiem)}><TranhTron ten="fan" s={22} /> <span>Làm khảo sát thể chất để nhận gợi ý riêng cho bạn ›</span></div>}
+        {!coKetQuaTn && moTracNghiem && <div className="ds-tc cta" {...bam(moTracNghiem)}><TranhTron ten="fan" s={22} /> <span {...ndDau('kh.khaoSat')}>{nd('kh.khaoSat')}</span></div>}
       </div>
 
-      <div className="sec-head" id="calAgendaHead"><h2>Việc của tôi · {chon.d}/{chon.m}</h2><span className="more" {...bam(() => datBangNgay(true))}><Ico ten="plus" s={13} /> Thêm việc</span></div>
+      <div className="sec-head" id="calAgendaHead"><h2 {...ndDau('kh.viecCua')}>{ndPhan('kh.viecCua', { d: chon.d, m: chon.m })}</h2><span className="more" {...bam(() => datBangNgay(true))}><Ico ten="plus" s={13} /> <span {...ndDau('kh.themViec')}>{nd('kh.themViec')}</span></span></div>
       <div id="calAgenda">
         {viec.length ? viec.map((v) => (
           <HangViec key={v.id} v={v} homNay={homNay} mo={() => datBangNgay(true)}
-            tick={() => lam(tickLan(bang, v.id, v.ngay, homNay), v.xong ? 'Đã bỏ đánh dấu xong' : `Đã xong ${v.tieu}`)} />
-        )) : <div className="empty-note">Chưa có việc nào. Bấm “Thêm việc” để ghi lại và nhận nhắc nhở.</div>}
+            tick={() => lam(tickLan(bang, v.id, v.ngay, homNay), v.xong ? nd('kh.boDau') : nd('kh.daXong', { tieu: v.tieu }))} />
+        )) : <div className="empty-note" {...ndDau('kh.viecTrong')}>{nd('kh.viecTrong')}</div>}
       </div>
 
-      <div className="sec-head"><h2>Ngày lễ trong tháng</h2></div>
-      <div className="hol-list" id="calHols">
+      <div className="sec-head"><h2 {...ndDau('kh.leThang')}>{nd('kh.leThang')}</h2></div>
+      <div className="hol-list" id="calHols" {...ndDau('kh.leDuong')}>
         {(() => {
           const le = leTrongThang(thang.y, thang.m);
-          return le.length ? le.map((h) => <div key={h.n} className="hl" {...bam(() => chonNgay(h.d, thang.m, thang.y))}><b>{h.d}/{thang.m}</b><span>{h.n}{h.al}</span></div>) : <div className="empty-note">Tháng này không có ngày lễ lớn.</div>;
+          return le.length ? le.map((h) => <div key={h.n} className="hl" {...bam(() => chonNgay(h.d, thang.m, thang.y))}><b>{h.d}/{thang.m}</b><span>{h.n}{h.al}</span></div>) : <div className="empty-note" {...ndDau('kh.leTrong')}>{nd('kh.leTrong')}</div>;
         })()}
       </div>
-      <div className="care-disclaimer" style={{ marginTop: 14 }}>Lịch hiển thị âm dương lịch, tiết khí và ngày lễ. Gợi ý dưỡng sinh mang tính tham khảo theo thói quen ăn uống truyền thống.</div>
-      <div className="care-disclaimer" style={{ marginTop: 8 }}>Việc và nhắc của bạn chỉ lưu trên máy này, không gửi đi đâu. Nhắc hiện khi bạn mở app.</div>
+      <div className="care-disclaimer" style={{ marginTop: 14 }} {...ndDau('kh.ghiChuLich')}>{nd('kh.ghiChuLich')}</div>
+      <div className="care-disclaimer" style={{ marginTop: 8 }} {...ndDau('kh.ghiChuLuu')}>{nd('kh.ghiChuLuu')}</div>
       <div className="tl-acts" style={{ justifyContent: 'center', marginTop: 10 }}>
         {hoiXoa
-          ? <span {...bam(() => { datTb(xoaHet() ? 'Đã xoá dữ liệu Kế hoạch trên máy này' : 'Trình duyệt không cho xoá dữ liệu trên máy này'); datHoiXoa(false); })}>Bấm lần nữa để xoá hết việc và nhắc lễ trên máy này</span>
-          : <span {...bam(() => datHoiXoa(true))}>Xoá toàn bộ dữ liệu Kế hoạch trên máy này</span>}
+          ? <span {...bam(() => { datTb(xoaHet() ? nd('kh.daXoaHet') : nd('kh.khongXoaDuoc')); datHoiXoa(false); })} {...ndDau('kh.xoaHoiLai')}>{nd('kh.xoaHoiLai')}</span>
+          : <span {...bam(() => datHoiXoa(true))} {...ndDau('kh.xoaHet')}>{nd('kh.xoaHet')}</span>}
       </div>
 
       {bangNgay && <BangNgay ngay={ngayChuoi(chon)} homNay={homNay} bang={bang} lam={lam} dong={() => datBangNgay(false)} />}

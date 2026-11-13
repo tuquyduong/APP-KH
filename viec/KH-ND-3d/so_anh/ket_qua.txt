@@ -1,0 +1,6 @@
+So ảnh KH-ND-3d (A5): 18 ca × 3 cỡ (360 / 390 / 430) = 54 cặp, trước (cây eaa9a34) so sau (cây việc này), cùng POS giả, giờ cố định 10.11.2026 09:00, khoá hoạt ảnh.
+Lần chạy đủ: 53 cặp GIỐNG HỆT (0 điểm ảnh khác), 1 cặp lệch 46 điểm: kehoach_trong__430.png.
+Chạy lại riêng ca kehoach_trong: lệch chuyển sang cỡ 360 (40 điểm), cỡ 430 giống hệt → NHIỄU khử răng cưa ở góc bo thẻ (đốm đỏ nhỏ ở bốn góc, ảnh lech/), không phải đổi giao diện (cùng loại nhiễu đã ghi ở KH-ND-3c với Trang chủ 360).
+Ca: kehoach_lich · kehoach_trong · kehoach_bangngay · kehoach_themviec · kehoach_giosukien (bánh xoay giờ) · kehoach_quahan · ngaycannho_nguoi · ngaycannho_them · ngaycannho_le · saptoi · theomua · vankhan_ds · vankhan_baidien · vankhan_baithieu · xeco · uongthuoc · chuky_bat · chuky_tat.
+Chưa chụp: thanh nhắc việc đang chạy ở mọi màn (DaiNhacViec) khi vừa tới mốc; một tiết khí khác Lập đông (dưỡng sinh tiết hiện ở kehoach_lich).
+Công cụ so ảnh ở nháp (không commit), ảnh ở so_anh/{truoc,sau,lech}/.

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { soNgayThang } from '../kehoachLap.js';
+import { nd } from '../noiDung/nd.js';
 
 // Bánh xoay (KH-UI-5c): cột số vuốt được, dừng ở dòng giữa; phím ↑ ↓ cũng đổi. Không dùng ô giờ AM/PM của trình duyệt.
 const CAO = 36; // px mỗi dòng (khớp .bx-cot trong bang_ngay.css)
@@ -34,7 +35,7 @@ function Cot({ ds, gtri, doi, nhan }) {
 /** Giờ sự kiện: giờ 00–23 : phút 00–55 (bước 5). `gio` = 'HH:mm'; `doi('HH:mm')`. */
 export function BanhGio({ gio, doi }) {
   const g = gio.slice(0, 2), p = pad((Math.round(+gio.slice(3) / 5) * 5) % 60);
-  return <div className="bx"><Cot ds={DS_GIO} gtri={g} doi={(x) => doi(`${x}:${p}`)} nhan="Giờ" /><b>:</b><Cot ds={DS_PHUT} gtri={p} doi={(x) => doi(`${g}:${x}`)} nhan="Phút" /></div>;
+  return <div className="bx"><Cot ds={DS_GIO} gtri={g} doi={(x) => doi(`${x}:${p}`)} nhan={nd('bx.gio')} /><b>:</b><Cot ds={DS_PHUT} gtri={p} doi={(x) => doi(`${g}:${x}`)} nhan={nd('bx.phut')} /></div>;
 }
 
 /** Hẹn giờ nhắc khác: [0–30] ngày trước · lúc giờ : phút. `k` = { ngay, g }; `doi({ ngay, g })`. */
@@ -42,9 +43,9 @@ export function BanhNhac({ k, doi }) {
   const g = k.g.slice(0, 2), p = pad((Math.round(+k.g.slice(3) / 5) * 5) % 60), n = String(k.ngay);
   return (
     <div className="bx">
-      <Cot ds={DS_NGAY} gtri={n} doi={(x) => doi({ ngay: +x, g: k.g })} nhan="Số ngày trước" /><span>ngày trước · lúc</span>
-      <Cot ds={DS_GIO} gtri={g} doi={(x) => doi({ ngay: k.ngay, g: `${x}:${p}` })} nhan="Giờ nhắc" /><b>:</b>
-      <Cot ds={DS_PHUT} gtri={p} doi={(x) => doi({ ngay: k.ngay, g: `${g}:${x}` })} nhan="Phút nhắc" />
+      <Cot ds={DS_NGAY} gtri={n} doi={(x) => doi({ ngay: +x, g: k.g })} nhan={nd('bx.soNgay')} /><span data-nd="bx.truocLuc">{nd('bx.truocLuc')}</span>
+      <Cot ds={DS_GIO} gtri={g} doi={(x) => doi({ ngay: k.ngay, g: `${x}:${p}` })} nhan={nd('bx.gioNhac')} /><b>:</b>
+      <Cot ds={DS_PHUT} gtri={p} doi={(x) => doi({ ngay: k.ngay, g: `${g}:${x}` })} nhan={nd('bx.phutNhac')} />
     </div>
   );
 }
@@ -61,9 +62,9 @@ export function BanhNgay({ ngay, homNay, doi }) {
   const ghi = (dd, mm, yy) => doi(`${yy}-${pad(mm)}-${pad(Math.min(dd, soNgayThang(mm, yy)))}`);
   return (
     <div className="bx">
-      <Cot ds={DS_THU} gtri={String(d)} doi={(x) => ghi(+x, m, y)} nhan="Ngày" /><span>/</span>
-      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => ghi(d, +x, y)} nhan="Tháng" /><span>/</span>
-      <Cot ds={nam} gtri={String(y)} doi={(x) => ghi(d, m, +x)} nhan="Năm" />
+      <Cot ds={DS_THU} gtri={String(d)} doi={(x) => ghi(+x, m, y)} nhan={nd('bx.ngay')} /><span>/</span>
+      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => ghi(d, +x, y)} nhan={nd('bx.thang')} /><span>/</span>
+      <Cot ds={nam} gtri={String(y)} doi={(x) => ghi(d, m, +x)} nhan={nd('bx.nam')} />
     </div>
   );
 }
@@ -73,8 +74,8 @@ export function BanhNgayThang({ d, m, cal, doi }) {
   const toiDa = (mm) => (cal === 'am' ? 30 : soNgayThang(mm, 2000));
   return (
     <div className="bx">
-      <Cot ds={DS_THU.slice(0, toiDa(m))} gtri={String(d)} doi={(x) => doi(+x, m)} nhan="Ngày" /><span>/</span>
-      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => doi(Math.min(d, toiDa(+x)), +x)} nhan="Tháng" />
+      <Cot ds={DS_THU.slice(0, toiDa(m))} gtri={String(d)} doi={(x) => doi(+x, m)} nhan={nd('bx.ngay')} /><span>/</span>
+      <Cot ds={DS_THANG} gtri={String(m)} doi={(x) => doi(Math.min(d, toiDa(+x)), +x)} nhan={nd('bx.thang')} />
     </div>
   );
 }

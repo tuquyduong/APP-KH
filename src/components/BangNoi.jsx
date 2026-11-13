@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Ico } from './BieuTuong.jsx';
+import { nd, ndDau } from '../noiDung/nd.js';
 import '../giaoDien/bang_ngay.css';
 
 const NGUONG_VUOT = 80; // kéo xuống quá ngần này px rồi thả = đóng
@@ -27,7 +28,7 @@ export default function BangNoi({ tieuDe, phu, dong, nhan, children }) {
           <div className="bn-keo" />
           <div className="bn-tieu">
             <div style={{ flex: 1, minWidth: 0 }}><h3>{tieuDe}</h3>{phu && <small>{phu}</small>}</div>
-            <button type="button" className="bn-x" aria-label="Đóng" onClick={dong} onPointerDown={(e) => e.stopPropagation()}><Ico ten="close" s={14} /></button>
+            <button type="button" className="bn-x" aria-label={nd('kh.dongHang')} {...ndDau('kh.dongHang')} onClick={dong} onPointerDown={(e) => e.stopPropagation()}><Ico ten="close" s={14} /></button>
           </div>
         </div>
         {children}

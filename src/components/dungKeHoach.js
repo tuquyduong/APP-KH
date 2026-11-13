@@ -1,9 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { bayGio } from '../bayGio.js';
-import { docKeHoach, ghiKeHoach, xoaKeHoach, keHoachTrong } from '../kehoach.js';
+import { docKeHoach, ghiKeHoach, xoaKeHoach, keHoachTrong, coChuKy } from '../kehoach.js';
 import { cuaToi } from '../duLieuKhach.js';
 import { taoDuongDan } from '../duongDan.js';
-import { nd } from '../noiDung/nd.js';
+import { nd, ndHien } from '../noiDung/nd.js';
 
 // Bản Kế hoạch (kh_kehoach) giữ ở MỘT chỗ trong bộ nhớ trang để ô Trang chủ, màn Kế hoạch, màn tiện ích cùng thấy một bản.
 // `san` = đã biết khách là ai (luuMay.doiKhach xong, như trắc nghiệm): chưa biết thì CHƯA hiện / CHƯA ghi bản của người trước.
@@ -68,6 +68,11 @@ export function luiDen(veNeuHet) {
   window.history.replaceState({ kh: 0 }, '', veNeuHet);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
+
+// Ô tiện ích có công tắc ẩn / hiện ở /admin (CLAUDE.md §11).
+const KHOA_HIEN_O = { xeco: 'hien.ocXe', uongthuoc: 'hien.ocThuoc', chuky: 'hien.ocChuKy' };
+/** Ô tiện ích `id` có hiện không (KH-ND-3d B1) — MỘT chỗ quyết định cho lưới (KeHoach.jsx) và chỗ mở màn (TienIch.jsx): Chu kỳ ẩn khi xưng hô anh / chú / bác / ông; ô tắt ở /admin thì ẩn. */
+export const ocHien = (id, xung) => (id !== 'chuky' || coChuKy(xung)) && (!KHOA_HIEN_O[id] || ndHien(KHOA_HIEN_O[id]));
 
 /** Hồ sơ khách đang đăng nhập đã có sẵn trong kho chung của App (không gọi mạng): { ten, xung_ho }; chưa biết → {}. */
 export const hoSoKhach = () => { const s = cuaToi.kho.lay(); return (s.dl && s.dl.khach) || {}; };
