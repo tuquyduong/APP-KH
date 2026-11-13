@@ -4,6 +4,8 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 12.11.2026
+- **Thứ tự hai việc lớn** (chủ quán 12.11, theo đề nghị): KH-THE-1 (bán thẻ hạng — POS đã xong phần thẻ, thử được với dữ liệu thật) mở NGAY, chạy song song KH-ND-3d; KH-ADMIN-1 (/admin) mở khoảng 14.11 khi POS kho nội dung ND-API-1 sắp gộp — làm khớp bản thật, đỡ sửa lại; tránh ba việc Opus cùng lúc.
+- **Mua thẻ trên App** (làm theo QĐ 07–08.11): màn "Hạng thành viên" theo demo, khách vãng lai xem được, Mua cần đăng nhập; giỏ có cả thẻ + đồ uống → App gợi ý và cho "Trả thẻ trước" bằng một nút (đơn riêng, không dùng mã giảm); trả xong đồ uống còn trong giỏ, tính theo hạng mới. Giỏ chỉ có thẻ đặt được mọi giờ (như POS).
 - **Đợt 6 đã gộp** (12.11): chữ Ưu đãi / Tài khoản / Hồ sơ / Hỗ trợ / Đăng nhập / Mã thành viên / Trắc nghiệm vào danh mục (KH-ND-3c); Mã thành viên to, nền trắng, giữ màn sáng; vệt sáng luôn chạy; tiện ích Xe cộ, Uống thuốc, Chu kỳ (không khoá mã), Văn khấn điền sẵn Tín chủ / Địa chỉ (KH-UI-5f).
 - **Ô tiện ích bị ẩn thì đường dẫn cũng không mở** (chủ quán 12.11, theo đề nghị): Chu kỳ với khách xưng anh / chú / bác / ông, hoặc ô đã tắt ở /admin → mở thẳng link thì về Kế hoạch (KH-ND-3d).
 - **Mã thành viên** (12.11): chủ quán thử quét thật ở quầy; quét chậm thì phóng to mã thêm (một dòng CSS).
