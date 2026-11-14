@@ -86,7 +86,6 @@ export const DON_HANG = [
   td('td.soDon', 'Khung số đơn to: dòng dặn', 'Số đơn của bạn — đọc cho nhân viên'),
   td('td.xong', 'Đơn xong: câu báo', 'Đơn đã xong — mời bạn ra quầy'),
   td('td.giuApp', 'Dặn giữ App mở', 'Giữ App mở để được báo khi đồ uống xong'),
-  khoa(TT, 'tt.the', 'Tên dòng thẻ hạng trong đơn chưa rõ', 'POS › Cài đặt › Hạng thành viên'),
   td('td.chiTiet', 'Tiêu đề mục Chi tiết đơn', 'Chi tiết đơn'),
   td('td.tong', 'Dòng Tổng cộng', 'Tổng cộng'),
   td('td.huy', 'Nút huỷ đơn', 'Huỷ đơn'),

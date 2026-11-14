@@ -21,7 +21,7 @@ function PhuToi({ ds }) {
   const toi = dungCua(cuaToi);
   const tt = trangThaiTheUuDai(ds, toi.dl && toi.dl.khach ? toi.dl.khach.hang : null, bayGio());
   const h = tt && tt.hang;
-  const [k, bien] = !tt || tt.kieu === 'chua' ? ['tier.phu.thuong'] : tt.kieu === 'tang' ? [h.het_han ? 'tier.phu.tang' : 'tier.phu.tangKhongHan', { hang: h.ten }]
+  const [k, bien] = !tt || tt.kieu === 'chua' ? ['tier.phu.thuong'] : tt.kieu === 'tang' ? [h.het_han === null ? 'tier.phu.tangKhongHan' : 'tier.phu.tang', { hang: h.ten }]
     : h.het_han ? ['tier.phu.hang', { hang: h.ten, ngay: ngay(h.het_han) }] : ['tier.phu.hangKhongHan', { hang: h.ten }];
   return <span {...ndDau(k)}>{nd(k, bien)}</span>;
 }

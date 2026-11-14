@@ -6,7 +6,7 @@ import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan, laThe, trangThaiDong } from '../gio.js';
 import { dungGia } from '../heThong.js';
-import { tenDongThe } from '../giaHang.js';
+import { tenDongThe, khoaDongThe } from '../giaHang.js';
 import { soDon } from '../hoaDon.js';
 import {
   KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, dungViCho, chanDatGio, docBaoGia, laLoiThe, maDonDaTra, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
@@ -193,7 +193,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
             : guiDo.quaHan ? canhBao(nd('tt.quaHan.t'), nd('tt.quaHan.p'), 'tt.quaHan.t', 'tt.quaHan.p')
               : canhBao(nd('tt.chuaRo.t'), nd('tt.chuaRo.p'), 'tt.chuaRo.t', 'tt.chuaRo.p')}
           <div className="card bang-tien">
-            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau(laThe(m) ? 'tt.the' : 'tt.so')}>{tenGui(m)}</span></div>)}
+            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau(laThe(m) ? khoaDongThe(m, dsHang) : 'tt.so')}>{tenGui(m)}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><Chu k="tt.tong" /><span {...ndDau('tt.so')}>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
@@ -272,7 +272,7 @@ function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
       <div className="card the-tom">
         <div className="points-card pc-mini the-mini" aria-hidden="true" />
         <div className="the-tom-chu">
-          <b {...ndDau('the.tt.ten')}>{hang ? nd('the.tt.ten', { hang: hang.ten }) : nd('the.tt.chung')}</b>
+          <b {...ndDau(hang ? 'the.tt.ten' : 'the.tt.chung')}>{hang ? nd('the.tt.ten', { hang: hang.ten }) : nd('the.tt.chung')}</b>
           <span {...ndDau('the.tt.thang')}>{nd('the.tt.thang', { so: the.so_thang })}</span>
         </div>
         {bg && <span className="the-tom-gia" {...pos}>{dinhDangGia(bg.tong)}</span>}

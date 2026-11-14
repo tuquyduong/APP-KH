@@ -88,6 +88,7 @@ export const TAI_KHOAN = [
   cU('ud.the.nutGiaHan', 'Thẻ hội viên (sắp hết hạn): nút', 'Gia hạn ngay ›'),
   cU('ud.the.tang', 'Thẻ hội viên (quán tặng, không thời hạn): dòng dưới', 'Dành tặng khách thân thiết · không thời hạn'),
   cU('ud.the.tangHan', 'Thẻ hội viên (quán tặng, có hạn): dòng dưới', 'Dành tặng khách thân thiết · hết hạn {ngay}', { bien: ['ngay'] }),
+  cU('ud.the.tangChung', 'Thẻ hội viên (quán tặng, POS không gửi hạn): dòng dưới', 'Dành tặng khách thân thiết'),
   cU('ud.the.nutTang', 'Thẻ hội viên (quán tặng): nút', 'Quyền lợi ›'),
   { khoa: 'hien.ud.the', man: 'Ưu đãi', ten: 'Hiện khối: thẻ hội viên', loai: 'battat', macDinh: true },
   kU('ud.the.pos', 'Tên hạng, % giảm, giá gói, hạn thẻ của khách', 'pos', 'POS › Cài đặt › Hạng thành viên'),

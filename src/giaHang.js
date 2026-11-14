@@ -36,6 +36,8 @@ export function tenDongThe(dong, ds) {
   const h = Array.isArray(ds) ? ds.find((x) => x && x.id === dong.hang_id) : null;
   return h ? nd('the.tt.dong', { hang: h.ten, so: dong.so_thang }) : nd('the.tt.chung');
 }
+/** Khoá danh mục của chữ tenDongThe vừa chọn (gắn data-nd đúng mục sửa được). */
+export const khoaDongThe = (dong, ds) => (Array.isArray(ds) && ds.some((x) => x && x.id === dong.hang_id) ? 'the.tt.dong' : 'the.tt.chung');
 
 // ---- Thẻ hạng bán trên App (KH-THE-1, hợp đồng v13). Chỉ HIỂN THỊ / quyết định nút — giá thật, hạng thật do POS (không gửi số nào đi).
 export const NGAY_NHAC_GIA_HAN = 7; // Trang chủ nhắc gia hạn khi thẻ còn ≤ ngần này ngày

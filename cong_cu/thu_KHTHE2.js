@@ -175,7 +175,7 @@ async function trinhDuyet(pw) {
       if (gio) localStorage.setItem('kh_gio', JSON.stringify(gio));
       if (dungVi) localStorage.setItem('kh_dung_vi', '1');
     }, { dn, gio, dungVi, chu0 });
-    const S = { vi: 500000, hang: null, don: new Map(), soDon: 41, guiDon: [], baoGia: [], loiThe: '', ...S0 };
+    const S = { vi: 500000, hang: null, don: new Map(), soDon: 41, guiDon: [], baoGia: [], loiThe: '', loiDon: '', loi500: 0, mo: true, hangDs: HANG, ...S0 };
     const loiTrang = [];
     const json = (r, st, o) => r.fulfill({ status: st, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
     const loi400 = (r, code, st = 400) => json(r, st, { error: `Lời POS giả: ${code}`, code });
@@ -206,10 +206,11 @@ async function trinhDuyet(pw) {
       const duong = p.slice('/api/kh'.length);
       let than = null; try { than = JSON.parse(req.postData()); } catch { /* không thân */ }
       if (duong === '/gio-vang') return json(r, 200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
-      if (duong === '/hang') return json(r, 200, { success: true, data: HANG });
-      if (duong === '/gio-hoat-dong') return json(r, 200, { success: true, bay_gio: B('20:30:00'), dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
+      if (duong === '/hang') return json(r, 200, { success: true, data: S.hangDs });
+      if (duong === '/gio-hoat-dong') return json(r, 200, { success: true, bay_gio: B('20:30:00'), dang_mo: S.mo, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       if (duong === '/menu') return json(r, 200, { success: true, data: MENU_DS });
       if (duong === '/chuong-trinh') return json(r, 200, { success: true, data: [] });
+      if (!S.mo && duong === '/don' && pt === 'POST' && than && than.mon.some((m) => !('loai' in m))) return loi400(r, 'NGOAI_GIO'); // v13: chỉ đơn có đồ uống bị chặn ngoài giờ
       if (!/tok-A/.test(req.headers().authorization || '')) return json(r, 401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/toi') return json(r, 200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: B('08:00:00'), xung_ho: 'chi', dia_chi: null, ngay_sinh: null, qr: 'QR', hang: S.hang, so_du_vi: S.vi } });
       if (duong === '/diem') return json(r, 200, { success: true, points: 0, history: [] });
@@ -218,6 +219,8 @@ async function trinhDuyet(pw) {
       if (duong === '/gio/bao-gia') { S.baoGia.push(than); const b = baoGia(than); return b.loi ? loi400(r, b.loi) : json(r, 200, { success: true, ...b }); }
       if (duong === '/don' && pt === 'POST') {
         S.guiDon.push(than);
+        if (S.loi500 > 0) { S.loi500--; return json(r, 500, { error: 'Lỗi máy chủ' }); } // mất kết nối giữa chừng → "chưa rõ"
+        if (S.loiDon) return loi400(r, S.loiDon); // POS chặn ở POST /don (báo giá vẫn được)
         const b = baoGia(than);
         if (b.loi) return loi400(r, b.loi);
         if (than.tong_da_xem !== b.tong) return json(r, 409, { error: 'Giá đã đổi', code: 'GIA_DA_DOI', bao_gia: b });
@@ -325,6 +328,11 @@ async function trinhDuyet(pw) {
     k('D2 Ưu đãi: "Hạng của bạn · Vàng"', await doiChu(t, '#rewards', /Hạng của bạn[\s\S]*Vàng/));
     await mo(t, '/uudai/hang?h=2');
     k('D2 Hạng thành viên: dòng phụ "Bạn đang ở Vàng · hết hạn 13/02/2027", nút Gia hạn', await doiChu(t, '#buycard .topbar', /Bạn đang ở Vàng · hết hạn 13\/02\/2027/) && /Gia hạn · Vàng 3 tháng/.test(await chu(t, '#buycard .checkout-btn')));
+    await mo(t, '/trangchu');
+    k('D2 Trang chủ: thẻ hội viên hiện hạng mới Vàng', await doiChu(t, '#home .points-card', /Vàng/));
+    await t.evaluate(() => { localStorage.removeItem('kh_don_gui'); localStorage.setItem('kh_gio', '[]'); });
+    await mo(t, '/don/TQD42');
+    k('D1 mở đơn thẻ từ máy khác (không bản ghi) → "Chào mừng hội viên!" câu chung, không %; giỏ rỗng → không nút Về giỏ', await doiChu(t, '#tracking', /Chào mừng hội viên!/) && !/Giảm \d+% áp dụng/.test(await chu(t, '#tracking')) && !/Về giỏ/.test(await chu(t, '#tracking')));
   });
 
   await may('C1 tham số / không còn bán', {}, async ({ t, S }) => {
@@ -361,6 +369,49 @@ async function trinhDuyet(pw) {
     k('D1 "Tạo mã mới" đơn chỉ thẻ → /uudai/hang/thanhtoan?h=2&thang=1', await doi(t, async () => /\/uudai\/hang\/thanhtoan\?h=2&thang=1$/.test(t.url())), t.url());
   });
 
+  await may('C5 POS chặn ở POST /don (mã thẻ)', {}, async ({ t, S }) => {
+    await mo(t, '/uudai/hang/thanhtoan?h=2&thang=1');
+    await doiChu(t, '#checkout .nut-dat', /Quét QR · 100\.000đ/);
+    S.loiDon = 'DA_CO_HANG_CAO_HON';
+    await nutDat(t).click();
+    k('C5 POST /don trả mã thẻ → hiện nguyên lời POS, xoá bản ghi gửi (không "chưa rõ"), nút khoá, nút "Về Hạng thành viên"', await doiChu(t, '#checkout', /Lời POS giả: DA_CO_HANG_CAO_HON/) && (await t.evaluate(() => localStorage.getItem('kh_don_gui'))) === null && !/Chưa rõ/i.test(await chu(t, '#checkout')) && (await nutDat(t).getAttribute('aria-disabled')) === 'true' && /Về Hạng thành viên/.test(await chu(t, '#checkout')));
+  });
+  await may('C5 mã lạ ở POST /don', {}, async ({ t, S }) => {
+    await mo(t, '/uudai/hang/thanhtoan?h=2&thang=1');
+    await doiChu(t, '#checkout .nut-dat', /Quét QR · 100\.000đ/);
+    S.loiDon = 'THE_KHONG_TRA_VI';
+    await nutDat(t).click();
+    k('C5 mã lạ 400 THE_KHONG_TRA_VI → hiện nguyên lời POS, không "chưa rõ" (bản ghi gửi xoá)', await doiChu(t, '#checkout', /Lời POS giả: THE_KHONG_TRA_VI/) && (await t.evaluate(() => localStorage.getItem('kh_don_gui'))) === null && S.guiDon.length === 1);
+  });
+  await may('K5 mua thẻ khi quán đóng', { S0: { mo: false } }, async ({ t, S }) => {
+    await mo(t, '/uudai/hang/thanhtoan?h=2&thang=3');
+    await doiChu(t, '#checkout .nut-dat', /Quét QR · 295\.000đ/);
+    await nutDat(t).click();
+    k('K5 quán đóng: mua thẻ (đơn chỉ thẻ) vẫn đặt được → Theo dõi đơn', await doi(t, async () => /\/don\/TQD42/.test(t.url())) && S.guiDon.length === 1);
+  });
+  await may('C2 chưa rõ → gửi lại đúng đơn thẻ', { dungVi: true, S0: { loi500: 4 } }, async ({ t, S }) => {
+    await mo(t, '/uudai/hang/thanhtoan?h=2&thang=3');
+    await doiChu(t, '#checkout .nut-dat', /Quét QR · 295\.000đ/);
+    await nutDat(t).click();
+    const roi = await doiChu(t, '#checkout', /Gửi lại đúng đơn này/, 15000);
+    const khoa1 = S.guiDon[0] && S.guiDon[0].khoa_gui;
+    await t.locator('#checkout .checkout-btn', { hasText: 'Gửi lại đúng đơn này' }).click();
+    k('C2 lần gửi chưa rõ → "Gửi lại đúng đơn này" gửi CÙNG khoá + thân thẻ (qr, không pin / ma_giam), ra đơn', roi && await doi(t, async () => /\/don\/TQD42/.test(t.url()), 8000) && S.guiDon.length >= 2 && S.guiDon.every((x) => x.khoa_gui === khoa1 && bang(x.mon, [THE(2, 3)]) && x.cach_tra === 'qr' && !('pin' in x) && !('ma_giam' in x)), `${S.guiDon.length} lần`);
+  });
+  const H3 = [...HANG, { id: 4, ten: 'Bạch Kim', phan_tram: 6, phan_tram_nhom_dac_biet: 6, chi_cap: false, goi: [{ so_thang: 1, gia: 200000 }], thu_bac: 4, quyen_loi: [] }];
+  const H5 = [...H3, { id: 5, ten: 'Ngọc Bích', phan_tram: 8, phan_tram_nhom_dac_biet: 0, chi_cap: false, goi: [{ so_thang: 1, gia: 300000 }], thu_bac: 5, quyen_loi: [] }, { id: 6, ten: 'Lục Bảo', phan_tram: 12, phan_tram_nhom_dac_biet: 0, chi_cap: true, goi: [], thu_bac: 6, quyen_loi: [] }];
+  await may('B2 3 hạng ở 360', { dn: false, rong: 360, S0: { hangDs: H3 } }, async ({ t }) => {
+    await mo(t, '/uudai/hang');
+    await doiChu(t, '#buycard .ss', /Bạch Kim/);
+    k('B2 [360] 3 hạng vừa khít: bảng không cuộn ngang trong khung, trang không cuộn ngang', await t.evaluate(() => { const x = document.querySelector('#buycard .ss-khung'); return x.scrollWidth <= x.clientWidth + 1; }) && await khongTran(t));
+    await chup(t, 'hang_3hang_360');
+  });
+  await may('B2 5 hạng ở 360', { dn: false, rong: 360, S0: { hangDs: H5 } }, async ({ t }) => {
+    await mo(t, '/uudai/hang');
+    await doiChu(t, '#buycard .ss', /Lục Bảo/);
+    k('B2 [360] > 3 hạng: bảng cuộn ngang trong khung riêng, trang KHÔNG cuộn ngang', await t.evaluate(() => { const x = document.querySelector('#buycard .ss-khung'); return x.scrollWidth > x.clientWidth + 1; }) && await khongTran(t));
+  });
+
   await may('A1 giỏ lưu cũ có thẻ', { gio: [LY('TLB', 1), THE(2, 3)] }, async ({ t }) => {
     await mo(t, '/giohang');
     await doiChu(t, '#cart', /Trà Lục Bảo/);
@@ -384,6 +435,7 @@ async function trinhDuyet(pw) {
     ['co', TOI('2026-11-26T23:59:59'), /Hạng của bạn[\s\S]*Vàng[\s\S]*Giảm 3% mọi đơn hàng[\s\S]*Hết hạn 26\/11\/2026[\s\S]*còn 12 ngày/, /Quyền lợi & gia hạn ›/, /\/uudai\/hang\?h=2$/],
     ['sap', TOI('2026-11-17T23:59:59'), /Còn 3 ngày[\s\S]*Gia hạn trước 17\/11 để không mất ưu đãi\. Ngày còn lại được cộng dồn\./, /Gia hạn ngay ›/, /\/uudai\/hang\?h=2$/],
     ['homnay', TOI('2026-11-14T23:59:59'), /Hết hạn hôm nay/, /Gia hạn ngay ›/, /\/uudai\/hang\?h=2$/],
+    ['tangThieu', (({ het_han, ...x }) => x)(TOI(null, 3)), /Kim Cương[\s\S]*Dành tặng khách thân thiết/, /Quyền lợi ›/, /\/uudai\/hang\?h=3$/],
     ['tang', TOI(null, 3), /Hạng của bạn[\s\S]*Kim Cương[\s\S]*Giảm 10% mọi đơn hàng[\s\S]*Dành tặng khách thân thiết · không thời hạn/, /Quyền lợi ›/, /\/uudai\/hang\?h=3$/],
   ];
   for (const [ten, hang, mau, nut, dich] of caE) {
@@ -391,9 +443,10 @@ async function trinhDuyet(pw) {
       await mo(t, '/uudai');
       await doiChu(t, '#rewards .the-ud', /Hạng của bạn/);
       const v = await theUD(t).innerText();
-      k(`E2 [${ten}] đúng chữ, đầu màn`, mau.test(v) && await dau(t), v);
+      k(`E2 [${ten}] đúng chữ, đầu màn`, mau.test(v) && await dau(t) && (ten !== 'tangThieu' || !/thời hạn|hết hạn/.test(v)), v);
       k(`E2 [${ten}] đúng MỘT nút`, (await theUD(t).locator('button').count()) === 1 && nut.test(await theUD(t).locator('button').innerText()));
       if (ten === 'co') k('E2 [co] không thanh tiến độ', (await theUD(t).locator('.prog, [role=progressbar]').count()) === 0);
+      if (ten === 'tang') { await mo(t, '/uudai/hang?h=3'); k('B1 khách Kim Cương không thời hạn: "Kim Cương · quán tặng · không thời hạn"', await doiChu(t, '#buycard .topbar', /Kim Cương · quán tặng · không thời hạn/)); await mo(t, '/uudai'); await doiChu(t, '#rewards .the-ud', /Hạng của bạn/); }
       if (ten === 'tang') k('E2 [tang] thẻ xanh l2 + huy chương bạch kim', (await t.locator('#rewards .the-ud.l2').count()) === 1 && (await theUD(t).locator('use[href="#m-medal-plat"], [data-med="m-medal-plat"]').count()) === 1);
       await chup(t, `uudai_${ten}`);
       await theUD(t).locator('button').click();

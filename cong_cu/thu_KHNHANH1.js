@@ -289,7 +289,7 @@ async function trinhDuyet(pw) {
       await cho(TRE);
       if (S.cua) { await S.cua; S.daTra = true; }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
-      if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1 }] });
+      if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1, goi: [{ so_thang: 1, gia: 50000 }] }] }); // KH-THE-2: Vàng có gói bán → thẻ "chưa có thẻ" hiện (đối chứng G1)
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY, dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       if (duong === '/menu') return json(200, MENU);
       if (duong === '/dang-nhap/xin-ma') return json(200, { success: true });
@@ -364,9 +364,9 @@ async function trinhDuyet(pw) {
     const t = await trang();
     await mo(t, '/uudai'); await yen(t, S);
     k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
-    // KH-THE-2 E2: vãng lai thấy MỘT hạng bán được (không bảng mọi hạng); /hang ở đây không có gói bán nào → ẩn thẻ; hạng 0 % không bao giờ hiện.
-    const the = await t.locator('#rewards').innerText();
-    k(`G1 [${rong}] vãng lai: không hạng nào bán được → không thẻ hạng; không hiện hạng 0% (Test0d)`, (await t.locator('#rewards .tier-card').count()) === 0 && !/Test0d/.test(the), the.slice(0, 200));
+    // KH-THE-2 E2: vãng lai thấy MỘT hạng bán được (hạng bán đầu tiên — Test0d 0 % đứng trước nhưng bị lọc), không bảng mọi hạng.
+    const the = await chu(t, '#rewards .tier-card');
+    k(`G1 [${rong}] vãng lai: thẻ "chưa có thẻ" hiện Vàng 10% (hạng 0% Test0d đứng trước bị lọc, không hiện)`, /Trở thành hội viên[\s\S]*Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
     await chup(t, `ung-dung_uudai-vanglai-hang_${rong}`);
   });
 

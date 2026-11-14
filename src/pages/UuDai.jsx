@@ -167,6 +167,7 @@ function TheHang({ hangKhach, moHang }) {
     );
   }
   const tang = tt.kieu === 'tang', sap = tt.kieu === 'sap';
+  const kTang = h.het_han ? 'ud.the.tangHan' : h.het_han === null ? 'ud.the.tang' : 'ud.the.tangChung'; // thiếu hẳn het_han (≠ null) → không nói "không thời hạn"
   return (
     <div className={`tier-card the-ud${tang ? ' l2' : ''}`}>
       <div className="ud-hang">
@@ -175,7 +176,7 @@ function TheHang({ hangKhach, moHang }) {
       </div>
       {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
       {tang ? (
-        <div className="ud-day"><span {...ndDau(h.het_han ? 'ud.the.tangHan' : 'ud.the.tang')}>{nd(h.het_han ? 'ud.the.tangHan' : 'ud.the.tang', { ngay: ngayThe(h.het_han) })}</span><NutThe k="ud.the.nutTang" mo={mo} /></div>
+        <div className="ud-day"><span {...ndDau(kTang)}>{nd(kTang, { ngay: ngayThe(h.het_han) })}</span><NutThe k="ud.the.nutTang" mo={mo} /></div>
       ) : <>
         {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
         <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
