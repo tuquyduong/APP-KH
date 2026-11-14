@@ -11,7 +11,7 @@
 .the-tom-chu{ flex:1; min-width:0; } .the-tom-chu b{ display:block; font-size:14.5px; color:var(--ink); } .the-tom-chu span{ display:block; font-size:12.5px; color:var(--muted); margin-top:2px; }
 .the-tom-gia{ font-size:15px; font-weight:800; color:var(--pink-deep); }
 .the-kich{ align-items:flex-start; font-weight:500; line-height:1.45; }
-.the-qr{ display:flex; align-items:center; gap:12px; padding:14px 16px; box-shadow:0 0 0 2px var(--pink-dark); }
+.the-qr{ display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--white); border-radius:16px; box-shadow:0 0 0 2px var(--pink-dark); }
 .the-qr-ic{ width:40px; height:40px; border-radius:12px; background:var(--line); color:var(--pink-dark); display:flex; align-items:center; justify-content:center; flex:none; }
 .the-qr > div{ flex:1; min-width:0; } .the-qr b{ display:block; font-size:14px; color:var(--ink); } .the-qr small{ display:block; font-size:12.5px; color:var(--muted); margin-top:2px; }
 .the-qr .the-qr-dau{ color:var(--pink-dark); flex:none; }

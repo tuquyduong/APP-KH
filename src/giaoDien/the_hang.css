@@ -74,5 +74,7 @@ button.ss-cot{ border:none; cursor:pointer; font:inherit; font-size:12.5px; min-
 .cm-the .cm-ten{ font-size:26px; font-weight:800; margin-top:16px; }
 .cm-the .cm-duoi{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; margin-top:10px; font-size:12.5px; font-weight:600; }
 #tracking .cm-nut{ justify-content:center; }
-#tracking .cm-gio{ width:100%; margin-top:10px; }
+#tracking .cm-gio{ width:100%; margin-top:10px; text-align:center; }
+.cm-the .tqd-logo{ width:30px; height:30px; border-radius:50%; }
+.cm-the .card-top, .cm-the .hang-logo{ margin:0; }
 .cm-nho{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:8px; }
