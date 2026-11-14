@@ -253,6 +253,7 @@ async function trinhDuyet(pw) {
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const nutDat = (t) => t.locator('#checkout .nut-dat').first();
   const nutMua = (t) => t.locator('#buycard .checkout-btn').first();
+  const diApp = async (t, d) => { await t.evaluate((x) => { window.history.pushState({ kh: 1 }, '', x); window.dispatchEvent(new PopStateEvent('popstate')); }, d); await t.waitForTimeout(200); }; // đi trong App (giữ mã giảm trong bộ nhớ trang)
 
   for (const rong of [360, 390, 430]) {
     await may(`B vãng lai ${rong}`, { dn: false, rong }, async ({ t }) => {
@@ -287,8 +288,12 @@ async function trinhDuyet(pw) {
     });
   }
 
-  await may('B5 C2–C4 D1 mua thẻ QR (ví bật nhớ, số dư đủ)', { gio: [LY('TLB', 1)], dungVi: true }, async ({ t, S }) => {
-    await mo(t, '/uudai/hang?h=2');
+  await may('B5 C2–C4 D1 mua thẻ QR (ví bật nhớ, số dư đủ, đã gõ mã giảm ở giỏ)', { gio: [LY('TLB', 1)], dungVi: true }, async ({ t, S }) => {
+    await mo(t, '/giohang');
+    await doiChu(t, '#cart', /Trà Lục Bảo/);
+    await t.locator('#cart .promo-box input').fill('GIAM10'); await t.locator('#cart .promo-box button').click();
+    await doi(t, async () => S.baoGia.some((b) => b.ma_giam === 'GIAM10'));
+    await diApp(t, '/uudai/hang?h=2');
     await doiChu(t, '#buycard .checkout-btn', /Mua ngay · Vàng 3 tháng/);
     await nutMua(t).click();
     k('B5 đã đăng nhập: Mua ngay → /uudai/hang/thanhtoan?h=2&thang=3; giỏ không đổi; không "Đã thêm"', await doi(t, async () => /\/uudai\/hang\/thanhtoan\?h=2&thang=3$/.test(t.url())) && bang(await gioMay(t), [LY('TLB', 1)]) && !/Đã thêm/.test(await chu(t, '.toast')));
@@ -297,7 +302,8 @@ async function trinhDuyet(pw) {
     k('C4 không "Hình thức nhận hàng" / thẻ quầy / công tắc ví; dòng phụ "Thẻ hội viên"', (await t.locator('#checkout .mode-row, #checkout .the-quay, #checkout .the-vi').count()) === 0 && /Thẻ hội viên/.test(await chu(t, '#checkout .topbar')));
     k('C4 thẻ tóm tắt (.pc-mini) "Thẻ hội viên Vàng" + "3 tháng" + 295.000đ; không "hạn tới"', (await t.locator('#checkout .pc-mini').count()) === 1 && /Thẻ hội viên Vàng[\s\S]*3 tháng[\s\S]*295\.000đ/.test(v) && !/hạn tới/i.test(v));
     k('C4 dòng kích hoạt với 3%; một lựa chọn "Chuyển khoản QR"; dòng khoá không ví / mã giảm', /Thẻ kích hoạt ngay khi tiền về, không cần ra quầy\. Đơn đồ uống tiếp theo được giảm 3% luôn\./.test(v) && /Chuyển khoản QR[\s\S]*Quét mã bằng app ngân hàng bất kỳ/.test(v) && /Thẻ hội viên không trả bằng số dư ví và không dùng mã giảm giá\./.test(v));
-    k('C2 báo giá gửi đúng mon thẻ, không ma_giam', S.baoGia.length > 0 && S.baoGia.every((b) => bang(b.mon, [THE(2, 3)]) && !('ma_giam' in b)));
+    const bgThe = S.baoGia.filter((b) => b.mon.some((m) => 'loai' in m));
+    k('C2 báo giá thẻ gửi đúng mon thẻ, KHÔNG ma_giam (dù giỏ đang có mã GIAM10)', bgThe.length > 0 && bgThe.every((b) => bang(b.mon, [THE(2, 3)]) && !('ma_giam' in b)), JSON.stringify(bgThe[0]));
     await chup(t, 'thanhtoan_the');
     await nutDat(t).click();
     await doi(t, async () => /\/don\/TQD42/.test(t.url()));
