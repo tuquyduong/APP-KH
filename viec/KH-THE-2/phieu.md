@@ -8,7 +8,7 @@
      Trả thẻ trước"); thư `thiet_ke/trao_doi/YEU_CAU_APPKH_GUI_POS_14112026.md` (POS sẽ chặn trả thẻ bằng số dư). Hợp đồng `/api/kh` KHÔNG đổi (v13 đã có ở `thiet_ke/`).
      Đọc CLAUDE.md §4, §5, §6, §8, §11; `LUAT_XAY_APP.md` §5; phiếu + `trang_thai.md` của KH-THE-1. -->
 
-**Chờ duyệt kế hoạch:** viết `viec/KH-THE-2/ke_hoach.md`, commit, push, rồi DỪNG ở bước 3 của `/lam-viec`.
+**Kế hoạch ĐÃ DUYỆT** (chủ quán 14.11, chat soát `ke_hoach.md` 88d5262) kèm "Trả lời câu hỏi kế hoạch" ở cuối phiếu — làm thẳng tới hết, không dừng chờ duyệt nữa.
 
 ## Mục tiêu
 Khách nhìn một bảng là thấy lên hạng được lợi gì so với giá thường, mua thẻ trong 3 bước (Hạng thành viên → Thanh toán → xong) mà không qua giỏ, trả bằng QR (thẻ KHÔNG trả bằng
@@ -112,6 +112,7 @@ App vẫn KHÔNG tự tính giá, KHÔNG tự cấp hạng, KHÔNG tự tính h�
 
 ## Phạm vi
 - viec/KH-THE-2/**
+- src/dangKySW.js
 - src/pages/HangThanhVien.jsx
 - src/pages/ThanhToan.jsx
 - src/pages/TheoDoiDon.jsx
@@ -157,3 +158,12 @@ không
   `thiet_ke/**`, `tu_chay/`, `.claude/`, `.github/`, `kiem_tra_truoc_khi_giao.js`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - Màu / phông / bóng chỉ từ demo (K9); biểu tượng chép từ demo, không vẽ mới.
 - Chỉ push `git push -u origin viec/KH-THE-2`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời câu hỏi kế hoạch (chủ quán duyệt 14.11 theo đề nghị của chat)
+1. **Q1 `src/dangKySW.js`:** ĐỒNG Ý — đã thêm vào Phạm vi. CHỈ thêm `uudai\/hang\/thanhtoan` vào regex `KHONG_AN_TOAN` (không đổi gì khác trong tệp) + ca
+   `coTheTaiLai('/uudai/hang/thanhtoan')` → false ở `thu_KHTHE2.js` (đỏ trên gốc); KHÔNG sửa `thu_KHPWA1.js`.
+2. **Q2 đầu màn "Chào mừng hội viên":** GIỮ `DauManCon` (nút quay lại + số đơn) như mọi màn Theo dõi đơn.
+3. Mục 7 "Sửa sau khi agent phụ soát" và mọi phần khác của `ke_hoach.md` (88d5262): DUYỆT nguyên.
+4. **Việc chạy song song từ 14.11:** KH-ADMIN-1 (Opus — /admin, Chế độ sửa) và KH-QC-1 (Sonnet — dải quảng cáo đọc `/quang-cao`). Việc này KHÔNG sửa: dòng `/admin` trong
+   `src/duongDan.js` / `src/App.jsx`, phần quảng cáo của `src/App.jsx`, `src/noiDung/nd.js`, `src/components/Chu.jsx`, `src/components/Man.jsx`, `src/quangCao.js`, `src/pages/TrangChu.jsx`.
+   Thêm vào `src/duongDan.js` / `src/App.jsx` ở dòng RIÊNG của mình (dòng `BANG` mới, `muaThe`, màn Thanh toán thẻ, `veThanhToan`, `soMonGio`) để gộp không xung đột.
