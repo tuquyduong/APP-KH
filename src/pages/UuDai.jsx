@@ -145,8 +145,8 @@ const so = (x) => typeof x === 'number' && Number.isFinite(x);
 
 function TheHang({ hangKhach, moHang }) {
   const { dsHang } = dungGia();
-  dungKho(khoGioHoatDong);
-  if (!Array.isArray(dsHang)) return null; // /hang chưa về / lỗi: chưa biết hạng của khách là hạng bán hay quán tặng → chưa vẽ (không chớp sai thẻ) // "bây giờ" theo giờ POS (về sau /toi) — vẽ lại để đếm ngày đúng
+  dungKho(khoGioHoatDong); // "bây giờ" theo giờ POS (về sau /toi) — vẽ lại để đếm ngày đúng
+  if (!Array.isArray(dsHang)) return null; // /hang chưa về / lỗi: chưa biết hạng của khách là hạng bán hay quán tặng → chưa vẽ (không chớp sai thẻ)
   const ds = hangCoGiam(dsHang);
   const tt = trangThaiTheUuDai(ds, hangKhach, bayGio());
   if (!tt || !ndHien('hien.ud.the')) return null;
@@ -172,13 +172,13 @@ function TheHang({ hangKhach, moHang }) {
     <div className={`tier-card the-ud${tang ? ' l2' : ''}`}>
       <div className="ud-hang">
         <div><Chu k="ud.the.cua" as="div" className="ud-nho" /><div className="ud-ten" {...POS}>{h.ten}</div>{so(pt) && <div className="ud-giam" {...ndDau('ud.the.giam')}>{nd('ud.the.giam', { phanTram: pt })}</div>}</div>
-        {sap ? <span className="ud-do" {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span> : <MedHang tang={tang} s={52} />}
+        {sap ? <span className="ud-do" {...TU_TINH}><span {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span></span> : <MedHang tang={tang} s={52} />}
       </div>
       {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
       {tang ? (
         <div className="ud-day"><DongTang h={h} /><NutThe k="ud.the.nutTang" mo={mo} /></div>
       ) : <>
-        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
+        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}><span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span></span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
         <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
       </>}
     </div>

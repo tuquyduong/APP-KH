@@ -19,6 +19,7 @@ const ngay = (s) => dinhDangNgay(String(s || '').slice(0, 10));
 /** Dòng phụ đầu màn = tình trạng của khách; CHỈ vẽ khi App đã biết khách (`daBiet` — chỉ khi đó mới đọc /toi). */
 function PhuToi({ ds }) {
   const toi = dungCua(cuaToi);
+  if (!Array.isArray(ds)) return null; // /hang chưa về: chưa biết hạng của khách là hạng bán hay quán tặng
   const tt = trangThaiTheUuDai(ds, toi.dl && toi.dl.khach ? toi.dl.khach.hang : null, bayGio());
   const h = tt && tt.hang;
   const [k, bien] = !tt || tt.kieu === 'chua' ? ['tier.phu.thuong'] : tt.kieu === 'tang' ? [h.het_han === null ? 'tier.phu.tangKhongHan' : 'tier.phu.tang', { hang: h.ten }]

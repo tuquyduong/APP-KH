@@ -186,7 +186,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
 
   return (
     <Man id="checkout">
-      <DauManCon tieuDe={nd('tt.tieuDe')} phu={nd(cheDoThe ? 'the.tt.phu' : 'tt.phu')} lui={lui} canTrai />
+      <DauManCon tieuDe={nd('tt.tieuDe')} phu={cheDoThe ? <span {...ndDau('the.tt.phu')}>{nd('the.tt.phu')}</span> : nd('tt.phu')} lui={lui} canTrai />
       {chuaRo && (
         <>
           {guiDo.da_dung ? canhBao(nd('tt.daDung.t'), '', 'tt.daDung.t')
