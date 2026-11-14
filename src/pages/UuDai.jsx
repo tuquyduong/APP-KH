@@ -171,7 +171,7 @@ function TheHang({ hangKhach, moHang }) {
     <div className={`tier-card the-ud${tang ? ' l2' : ''}`}>
       <div className="ud-hang">
         <div><Chu k="ud.the.cua" as="div" className="ud-nho" /><div className="ud-ten" {...POS}>{h.ten}</div>{so(pt) && <div className="ud-giam" {...ndDau('ud.the.giam')}>{nd('ud.the.giam', { phanTram: pt })}</div>}</div>
-        {sap ? <span className="ud-do" {...TU_TINH}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span> : <MedHang tang={tang} s={52} />}
+        {sap ? <span className="ud-do" {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span> : <MedHang tang={tang} s={52} />}
       </div>
       {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
       {tang ? (
