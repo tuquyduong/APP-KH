@@ -350,7 +350,7 @@ async function trinhDuyet(pw) {
       k(`A3 [${rong}] mỗi lần chuyển tab nội dung có trong < 300 ms, không khung xám`, Math.max(...cham) < 300, cham.join(','));
       await t.locator('.tabbar .tab:nth-child(5)').click();
       const the = await chu(t, '#rewards .tier-card');
-      k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng)`, /Hạng Vàng/.test(the), the);
+      k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng; KH-THE-2: "Hạng của bạn · <tên POS>")`, /Hạng của bạn[\s\S]*Vàng/.test(the) && !/Test0d/.test(the), the);
       const tran = await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
       k(`H1 [${rong}] không tràn ngang`, tran);
     });
@@ -363,8 +363,9 @@ async function trinhDuyet(pw) {
     const t = await trang();
     await mo(t, '/uudai'); await yen(t, S);
     k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
-    const the = await chu(t, '#rewards .tier-card');
-    k(`G1 [${rong}] bảng hạng vãng lai không hiện hạng 0% (Test0d), vẫn hiện Vàng 10%`, /Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
+    // KH-THE-2 E2: vãng lai thấy MỘT hạng bán được (không bảng mọi hạng); /hang ở đây không có gói bán nào → ẩn thẻ; hạng 0 % không bao giờ hiện.
+    const the = await t.locator('#rewards').innerText();
+    k(`G1 [${rong}] vãng lai: không hạng nào bán được → không thẻ hạng; không hiện hạng 0% (Test0d)`, (await t.locator('#rewards .tier-card').count()) === 0 && !/Test0d/.test(the), the.slice(0, 200));
     await chup(t, `ung-dung_uudai-vanglai-hang_${rong}`);
   });
 
