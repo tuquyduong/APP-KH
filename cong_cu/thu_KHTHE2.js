@@ -112,6 +112,8 @@ const TOI = (het_han, id = 2) => ({ id, ten: HANG.find((h) => h.id === id).ten, 
     const gThe = { khoa_gui: 'K'.repeat(20), ma_don: 'TQD42', than: { mon: [THE(2, 3)] } }, gLy = { ...gThe, than: { mon: [{ ma: 'TLB', so_luong: 1 }] } };
     k('D1 thamTaoMaMoi đơn chỉ thẻ → thanhtoanthe { h, thang }', bang(D.thamTaoMaMoi(gThe), { trang: 'thanhtoanthe', tham: { h: 2, thang: 3 } }), JSON.stringify(D.thamTaoMaMoi(gThe)));
     k('D1 thamTaoMaMoi đơn đồ uống / không bản ghi → thanhtoan {}', bang(D.thamTaoMaMoi(gLy), { trang: 'thanhtoan', tham: {} }) && bang(D.thamTaoMaMoi(null), { trang: 'thanhtoan', tham: {} }));
+    const td = doc('src/pages/TheoDoiDon.jsx');
+    k('D1 tắt khối hien.the.cm chỉ ẩn màn chúc mừng: đơn chỉ thẻ vẫn không số đơn ra quầy / các bước / "mời ra quầy" (theXong không phụ thuộc ndHien)', /const theXong = !!don && tt === 'xong' && laDonChiThe\(don\);/.test(td) && /const chaoMung = theXong && ndHien\('hien\.the\.cm'\)/.test(td) && /\{!theXong && <div className="card the-buoc">/.test(td));
     k('D1 hangCuaDon trả bản ghi hạng (tên + %)', D.hangCuaDon(gThe, HANG) && D.hangCuaDon(gThe, HANG).ten === 'Vàng' && D.hangCuaDon(gThe, HANG).phan_tram === 3 && D.hangCuaDon(null, HANG) === null);
   });
 
@@ -317,6 +319,7 @@ async function trinhDuyet(pw) {
     k('D1 trả xong → "Chào mừng hội viên Vàng!"', await doiChu(t, '#tracking', /Chào mừng hội viên Vàng!/, 9000));
     const td = await chu(t, '#tracking');
     k('D1 "Giảm 3% …", thẻ vàng: hạn POS nguyên văn, số đơn APP0042, 295.000đ', /Giảm 3% áp dụng ngay từ đơn tiếp theo, ở quầy và trên App\./.test(td) && /Hạn mới: 13\/02\/2027/.test(td) && /APP0042[\s\S]*295\.000đ/.test(td));
+    k('D1 không dải "Đơn … đã sẵn sàng / mời ra quầy" cho đơn chỉ thẻ', (await t.locator('.bao-don').count()) === 0);
     k('D1 không các bước / số đơn ra quầy / danh sách món', (await t.locator('#tracking .the-buoc, #tracking .pick-num, #tracking .cart-item, #tracking .order-card').count()) === 0);
     k('D1 giỏ còn ly → nút "Về giỏ · 1 món"', /Về giỏ · 1 món/.test(td));
     k('A2 giỏ đồ uống giữ nguyên sau khi trả thẻ', bang(await gioMay(t), [LY('TLB', 1)]));

@@ -77,9 +77,10 @@ export const THE_HANG = [
   chu('the.cm.chung', 'Tiêu đề khi chưa biết tên hạng', 'Chào mừng hội viên!', {}, C),
   chu('the.cm.p', 'Dòng dưới tiêu đề', 'Giảm {phanTram}% áp dụng ngay từ đơn tiếp theo, ở quầy và trên App.', { bien: ['phanTram'] }, C),
   chu('the.cm.don', 'Thẻ vàng: số đơn + tổng', 'Đơn {so} · {tong}', { bien: ['so', 'tong'] }, C),
+  chu('the.cm.donSo', 'Thẻ vàng: số đơn (POS chưa trả tổng)', 'Đơn {so}', { bien: ['so'] }, C),
   chu('the.cm.nut', 'Nút chính', 'Đặt đồ uống ngay', {}, C),
   chu('the.cm.veGio', 'Nút phụ (chỉ khi giỏ còn đồ uống)', 'Về giỏ · {so} món', { bien: ['so'] }, C),
   chu('the.cm.nho', 'Dòng nhỏ dưới nút (khi giỏ còn đồ uống)', 'Đồ uống bạn đã chọn vẫn còn trong giỏ', {}, C),
-  hien('hien.the.cm', 'màn chúc mừng (tắt → hiện như đơn thường)', C),
+  hien('hien.the.cm', 'màn chúc mừng (tắt → chỉ còn hoá đơn POS, không các bước pha chế)', C),
   khoa('the.cm.pos', 'Tên hạng, %, hạn mới của thẻ, số đơn, tổng', 'pos', 'POS › Cài đặt › Hạng thành viên', C),
 ];

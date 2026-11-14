@@ -31,9 +31,10 @@ const O = ({ lop = '', dau, children }) => <span className={`o ${lop}`} {...dau}
 
 function SoSanh({ ds, h, doiHang }) {
   const db = coDacBiet(ds);
-  const pt = (x) => (typeof x === 'number' && x > 0 ? nd('tier.cmp.pt', { phanTram: x }) : nd('tier.cmp.trong'));
-  const gia = (x) => { const c = giaCot(x); return c.gia === null ? <O dau={ndDau(c.k)}><span className="ss-gia">{nd(c.k)}</span></O> : <O dau={POS}><span className="ss-gia">{dinhDangGia(c.gia)}</span><span className="ss-phu">{nd(c.k, { so: c.so })}</span></O>; };
-  const loi = (x) => { const t = tietKiemMotTrieu(x); return <O dau={TU_TINH}>{t === null ? nd('tier.cmp.trong') : <span className="ss-loi">{dinhDangGia(t)}</span>}</O>; };
+  // Ô số: phần tử ngoài gắn khoá POS / App tự tính; chữ định dạng ("{phanTram}%", "/ tháng", "—") gắn đúng khoá của nó (sửa được ở /admin).
+  const pt = (x, lop) => (typeof x === 'number' && x > 0 ? <span className={lop} {...ndDau('tier.cmp.pt')}>{nd('tier.cmp.pt', { phanTram: x })}</span> : <span {...ndDau('tier.cmp.trong')}>{nd('tier.cmp.trong')}</span>);
+  const gia = (x) => { const c = giaCot(x); return c.gia === null ? <O dau={ndDau(c.k)}><span className="ss-gia">{nd(c.k)}</span></O> : <O dau={POS}><span className="ss-gia">{dinhDangGia(c.gia)}</span><span className="ss-phu" {...ndDau(c.k)}>{nd(c.k, { so: c.so })}</span></O>; };
+  const loi = (x) => { const t = tietKiemMotTrieu(x); return <O dau={TU_TINH}>{t === null ? <span {...ndDau('tier.cmp.trong')}>{nd('tier.cmp.trong')}</span> : <span className="ss-loi">{dinhDangGia(t)}</span>}</O>; };
   return (
     <div className="ss-khung">
       <div className={`ss${ds.length > 3 ? ' ss-rong' : ''}`} role="radiogroup" aria-label={nd('tier.cmp')} style={{ '--cot': ds.length + 1 }}>
@@ -57,8 +58,8 @@ function SoSanh({ ds, h, doiHang }) {
             <button type="button" key={x.id} role="radio" aria-checked={on} className={`ss-cot ${x.chi_cap === true ? 'l2' : 'l1'}${on ? ' on' : ''}`} onClick={() => doiHang(x.id)}>
               {on && <Chu k="tier.cmp.dang" className="ss-dang" />}
               <O lop="o-dau"><MedHang tang={x.chi_cap === true} s={22} /><span className="ss-ten" {...POS}>{x.ten}</span></O>
-              <O dau={POS}><span className="ss-so">{pt(x.phan_tram)}</span></O>
-              {db && <O dau={POS}><span className="ss-so nho">{pt(x.phan_tram_nhom_dac_biet)}</span></O>}
+              <O dau={POS}>{pt(x.phan_tram, 'ss-so')}</O>
+              {db && <O dau={POS}>{pt(x.phan_tram_nhom_dac_biet, 'ss-so nho')}</O>}
               {loi(x)}
               {gia(x)}
             </button>

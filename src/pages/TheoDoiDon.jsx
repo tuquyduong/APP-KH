@@ -71,7 +71,7 @@ function ChaoMung({ don, hang, soMonGio, veGio, moMenu }) {
       <div className="points-card cm-the">
         <div className="hang-logo"><img className="tqd-logo" src={ndAnh('home.logo')} alt="" {...ndDau('home.logo')} /><div className="brand"><Chu k="home.the.nhan" /><Chu k="home.the.phu" as="small" /></div></div>
         {hang && <div className="cm-ten" {...pos}>{hang.ten}</div>}
-        <div className="cm-duoi">{han && <span {...pos}>{han}</span>}<span {...ndDau('the.cm.don')}>{nd('the.cm.don', { so: soDon(don.soHd, don.ma), tong: dinhDangGia(don.tong) })}</span></div>
+        <div className="cm-duoi">{han && <span {...pos}>{han}</span>}{don.tong !== null ? <span {...ndDau('the.cm.don')}>{nd('the.cm.don', { so: soDon(don.soHd, don.ma), tong: dinhDangGia(don.tong) })}</span> : <span {...ndDau('the.cm.donSo')}>{nd('the.cm.donSo', { so: soDon(don.soHd, don.ma) })}</span>}</div>
       </div>
       <Chu k="the.cm.nut" as="button" type="button" className="checkout-btn cm-nut" onClick={moMenu} />
       {soMonGio > 0 && <><button type="button" className="ghost-btn cm-gio" onClick={veGio} {...ndDau('the.cm.veGio')}>{nd('the.cm.veGio', { so: soMonGio })}</button><Chu k="the.cm.nho" as="div" className="cm-nho" /></>}
@@ -104,7 +104,8 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, soMonGi
     datDangHuy(true); datLoiHuy('');
     huyDon(ma).then(() => { datDangHuy(false); taiLai(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
   };
-  const theXong = !!don && tt === 'xong' && laDonChiThe(don) && ndHien('hien.the.cm');
+  const theXong = !!don && tt === 'xong' && laDonChiThe(don); // đơn chỉ thẻ đã trả: không bước pha chế / số đơn ra quầy (KH-THE-1 D2)
+  const chaoMung = theXong && ndHien('hien.the.cm'); // tắt khối → chỉ ẩn màn chúc mừng, còn hoá đơn POS (có hạn mới)
   return (
     <Man id="tracking">
       <DauManCon tieuDe={don ? nd('td.tieuDe', { so: soDon(don.soHd, don.ma) }) : nd('td.tieuDe.cho')} phu={don && dinhDangNgay(don.ngay) ? nd('td.phu', { ngay: dinhDangNgay(don.ngay) }) : ''} lui={lui} canTrai />
@@ -114,12 +115,12 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, soMonGi
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi" {...ndDau('td.vi.giu')}>{ndPhan('td.vi.giu', { giu: <b key="giu" {...ndDau('td.tien')}>{dinhDangGia(tra.giu_vi)}</b>, qr: <b key="qr" {...ndDau('td.tien')}>{dinhDangGia(tra.con_lai)}</b> })}</div>}
           {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau(don.cauTienVe ? 'td.cauTienVe' : 'td.tienVe')}>{don.cauTienVe || nd('td.tienVe')}</div></div>}
-          {theXong && <ChaoMung don={don} hang={hangCuaDon(banGhiCuaDon(ma), dsHang)} soMonGio={soMonGio} veGio={veGio} moMenu={moMenu} />}
+          {chaoMung && <ChaoMung don={don} hang={hangCuaDon(banGhiCuaDon(ma), dsHang)} soMonGio={soMonGio} veGio={veGio} moMenu={moMenu} />}
           {!theXong && tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><Chu k="td.soDon" as="div" className="pick-chu" /><div className="n" {...ndDau('td.so')}>{soDon(don.soHd, don.ma)}</div></div>}
           {tt === 'xong' && !theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><Chu k="td.xong" as="div" /></div>}
           {(tt === 'da_tra' || tt === 'dang_lam') && <Chu k="td.giuApp" as="div" className="care-disclaimer qr-chu" />}
           {!theXong && <div className="card the-buoc"><CacBuoc tt={tt} /></div>}
-          {theXong ? null : docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
+          {chaoMung ? null : docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
             {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><Chu k="td.chiTiet" as="h2" /></div>}
             {don.mon.map((m, i) => (
               <div className="cart-item" key={i}>

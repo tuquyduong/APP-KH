@@ -67,7 +67,7 @@ export const tietKiemMotTrieu = (h) => (h && typeof h.phan_tram === 'number' && 
 /** Ô "Giá" của một hạng: { k: khoá chữ đơn vị, gia, so } — gói rẻ nhất "/ tháng" hoặc "/ N tháng"; chỉ cấp → quanTang; không gói → chuaBan. */
 export function giaCot(h) {
   if (h && h.chi_cap === true) return { k: 'tier.cmp.quanTang', gia: null, so: null };
-  const g = goiBan(h).reduce((a, x) => (!a || x.gia < a.gia ? x : a), null);
+  const g = goiBan(h).find((x) => x.gia === giaRe(h)) || null;
   if (!g) return { k: 'tier.cmp.chuaBan', gia: null, so: null };
   return { k: g.so_thang === 1 ? 'tier.cmp.moiThang' : 'tier.cmp.moiNThang', gia: g.gia, so: g.so_thang };
 }

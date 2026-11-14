@@ -34,7 +34,7 @@ const TRINH_DUYET = [
   ['BV-GUI-DON-KHI-KHONG-CON-BAN', [[T, '  const coThe = duocThanhToan(gio, ds, dsHang);', '  const coThe = gio.length > 0;']]],
   ['VS-GHI-DE-CONG-TAC-VI-KHI-MUA-THE', [[T, '  const dungVi = dungViCho(gio, congTac);', '  const dungVi = dungViCho(gio, congTac); if (cheDoThe && congTac) datDungVi(false);']]],
   ['BV-THE-UU-DAI-XUONG-CUOI', [[U, "      {dangNhap ? <TheHangToi moHang={moHang} /> : <TheHang hangKhach={null} moHang={moHang} />}\n      <BannerGioVang mo={moGioVang} />", '      <BannerGioVang mo={moGioVang} />\n      <div />{dangNhap ? <TheHangToi moHang={moHang} /> : <TheHang hangKhach={null} moHang={moHang} />}']]],
-  ['BV-CHAO-MUNG-THANH-DON-THUONG', [['src/pages/TheoDoiDon.jsx', "laDonChiThe(don) && ndHien('hien.the.cm')", 'false']]],
+  ['BV-CHAO-MUNG-THANH-DON-THUONG', [['src/pages/TheoDoiDon.jsx', "const theXong = !!don && tt === 'xong' && laDonChiThe(don);", 'const theXong = false;']]],
 ];
 
 function chay(ten, sua, trinhDuyet) {

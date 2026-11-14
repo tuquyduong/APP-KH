@@ -145,7 +145,8 @@ const so = (x) => typeof x === 'number' && Number.isFinite(x);
 
 function TheHang({ hangKhach, moHang }) {
   const { dsHang } = dungGia();
-  dungKho(khoGioHoatDong); // "bây giờ" theo giờ POS (về sau /toi) — vẽ lại để đếm ngày đúng
+  dungKho(khoGioHoatDong);
+  if (!Array.isArray(dsHang)) return null; // /hang chưa về / lỗi: chưa biết hạng của khách là hạng bán hay quán tặng → chưa vẽ (không chớp sai thẻ) // "bây giờ" theo giờ POS (về sau /toi) — vẽ lại để đếm ngày đúng
   const ds = hangCoGiam(dsHang);
   const tt = trangThaiTheUuDai(ds, hangKhach, bayGio());
   if (!tt || !ndHien('hien.ud.the')) return null;
@@ -177,7 +178,7 @@ function TheHang({ hangKhach, moHang }) {
       {tang ? (
         <div className="ud-day"><DongTang h={h} /><NutThe k="ud.the.nutTang" mo={mo} /></div>
       ) : <>
-        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
+        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
         <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
       </>}
     </div>
