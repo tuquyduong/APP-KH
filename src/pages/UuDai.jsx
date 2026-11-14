@@ -167,7 +167,6 @@ function TheHang({ hangKhach, moHang }) {
     );
   }
   const tang = tt.kieu === 'tang', sap = tt.kieu === 'sap';
-  const kTang = h.het_han ? 'ud.the.tangHan' : h.het_han === null ? 'ud.the.tang' : 'ud.the.tangChung'; // thiếu hẳn het_han (≠ null) → không nói "không thời hạn"
   return (
     <div className={`tier-card the-ud${tang ? ' l2' : ''}`}>
       <div className="ud-hang">
@@ -176,13 +175,17 @@ function TheHang({ hangKhach, moHang }) {
       </div>
       {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
       {tang ? (
-        <div className="ud-day"><span {...ndDau(kTang)}>{nd(kTang, { ngay: ngayThe(h.het_han) })}</span><NutThe k="ud.the.nutTang" mo={mo} /></div>
+        <div className="ud-day"><DongTang h={h} /><NutThe k="ud.the.nutTang" mo={mo} /></div>
       ) : <>
         {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
         <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
       </>}
     </div>
   );
+}
+/** Dòng dưới của thẻ quán tặng: có hạn → "· hết hạn …"; het_han null → "· không thời hạn"; POS không gửi hẳn het_han → không nói gì về hạn (không bịa). */
+function DongTang({ h }) {
+  const k = h.het_han ? 'ud.the.tangHan' : h.het_han === null ? 'ud.the.tang' : 'ud.the.tangChung'; return <span {...ndDau(k)}>{nd(k, { ngay: ngayThe(h.het_han) })}</span>;
 }
 /** Khách đã đăng nhập: hạng từ /toi; /toi chưa về → chưa vẽ (không chớp "Chưa có thẻ"). */
 function TheHangToi({ moHang }) {
