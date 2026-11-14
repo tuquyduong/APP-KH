@@ -94,7 +94,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     // KH-NHANH-1 B1: có phiên → App tải trước cả bốn cửa khách (có /don) — ca Chromium B4 đổi theo, khoá thêm bằng đọc nguồn (đỏ trên gốc).
     k('B4 có phiên: App tải trước /toi, /diem, /voucher, /don một chỗ (lamMoi(CUA_KHACH))', /lamMoi\(CUA_KHACH\)/.test(app));
     // KH-HANG-2 (HANG-1, v10): thẻ hạng đọc `goi[]` / `chi_cap` / `het_han: null`, không còn `gia_the` — đỏ trên gốc.
-    k('B2 KH-HANG-2: thẻ hạng không còn đọc gia_the; có "Không thời hạn" và dòng hạng tặng', !/gia_the/.test(uu.replace(/\/\/.*$/gm, '')) && /<Chu k="ud\.hang\.khongHan"/.test(uu) && /<Chu k="ud\.hang\.tang"/.test(uu));
+    k('B2 KH-HANG-2 / KH-THE-2: thẻ hạng không đọc gia_the; có "Không thời hạn" và dòng hạng tặng (khoá ud.the.*)', !/gia_the/.test(uu.replace(/\/\/.*$/gm, '')) && /<Chu k="ud\.the\.khongHan"/.test(uu) && /'ud\.the\.tang'/.test(uu));
   });
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');
