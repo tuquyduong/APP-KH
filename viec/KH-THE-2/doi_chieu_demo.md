@@ -69,3 +69,16 @@ nên khác điểm ảnh là chuyện bình thường; bảng dưới liệt kê
 - Giỏ hàng (chỉ đồ uống) và Thanh toán đơn đồ uống: trước (cây gốc `e7bc071`) ↔ sau — `*_cu_gio_*`, `*_cu_thanhtoan_*`. Số đo ở dưới.
 
 ## Số đo (điểm ảnh khác)
+`node viec/KH-THE-2/chup_anh.js --truoc <cây gốc e7bc071>` (14.11.2026, sau sửa ô QR / logo thẻ chào mừng / nút Về giỏ). Phép đo: hai ảnh cùng cỡ (ảnh khác cỡ → phần thừa tính là khác),
+một điểm "khác" khi tổng chênh R+G+B > 48 — cùng công cụ với KH-THE-1. Ảnh PNG có thể khác vài byte khi nội dung điểm ảnh trùng (nén), nên kết luận theo số đo, không theo cỡ tệp.
+
+| Cặp | Khác | Ghi chú |
+|---|---|---|
+| 390 `man1_uudai` app ↔ thiết kế | 26 % | thanh tab + đầu màn của demo; thiết kế ép Điểm / Ví lên trên Chương trình (app giữ thứ tự cũ, E1) |
+| 390 `man2_hang` | 23,4 % | phông / cỡ của demo, thanh tab; bảng cùng bố cục |
+| 390 `man3_thanhtoan` | 21,8 % | bảng tiền dùng chung (2 dòng của POS), không "hạn tới" (C4), biểu tượng `i-card` thay ổ khoá |
+| 390 `man4_chaomung` | 39,8 % | giữ `DauManCon` (Q2), không nền radial vàng (K9) |
+| 390 `the_chua` / `the_co` / `the_sap` / `the_tang` | 59 / 67 / 54 / 54 % | ảnh thẻ khác khổ (ô thiết kế ~400 px, thẻ app 354 px) nên lệch toàn bộ hoa văn; `the_co` thêm: không thanh tiến độ (a) |
+| 360 / 390 / 430 `cu_gio` (Giỏ chỉ đồ uống) trước ↔ sau | **0 % / 0 % / 0 %** | không đổi |
+| 360 / 390 / 430 `cu_thanhtoan` (Thanh toán đồ uống) trước ↔ sau | **0 % / 0 % / 0 %** | không đổi |
+Thêm (bài thử): `so_anh` không lưu ảnh `hang_3hang_360` (chỉ chụp khi chạy bài với `LUU_ANH_DIR`); ca B2 3 hạng / 5 hạng ở 360 kiểm bằng số đo cuộn ngang trong `thu_KHTHE2.js`.
