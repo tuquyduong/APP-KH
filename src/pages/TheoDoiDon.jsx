@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
-import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
+import { nd, ndAnh, ndDau, ndHien, ndPhan } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
 import { bayGio } from '../bayGio.js';
 import { banGhiCuaDon, buocTienTrinh, conLaiQR, daThanhToan, hangCuaDon, hanMoiThe, huyDon, laDonChiThe, xongChua } from '../datDon.js';
@@ -10,9 +10,10 @@ import { docHoaDon, soDon } from '../hoaDon.js';
 import { LIEN_HE } from '../noiDung/lienHe.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import { KhungLoi } from '../components/TrangTai.jsx';
-import { Ico } from '../components/BieuTuong.jsx';
+import { Ico, MedHang } from '../components/BieuTuong.jsx';
 import HoaDonKhach from '../components/HoaDonKhach.jsx';
 import TheQR from '../components/TheQR.jsx';
+import '../giaoDien/the_hang.css';
 
 // Theo dõi đơn theo demo (tracking), đường dẫn /don/<ma>. Đơn chờ trả: QR lấy từ GET /don/:ma (tải lại / máy khác vẫn thấy), đếm ngược tới het_han
 // theo "bây giờ" của POS, hỏi trạng thái mỗi 3 giây; hết hạn → "Tạo mã mới" / "Huỷ đơn". Số giữ ví / QR còn lại: `cach_tra`, `giu_vi`, `con_lai` của
@@ -55,9 +56,30 @@ function CacBuoc({ tt }) {
   });
 }
 
-// Đơn CHỈ thẻ hạng (KH-THE-1 D2): POS đi thẳng cho_tra → xong, quầy không pha → thay số đơn / các bước / "mời ra quầy" bằng "Đã lên hạng …" + hạn mới (chữ POS);
-// còn đồ uống trong giỏ (vừa "Trả thẻ trước") → nút về giỏ. Tên hạng: dòng thẻ của bản ghi lần gửi tra /hang (không chờ /toi); không biết → câu chung.
-export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUong = false, veGio }) {
+// Đơn CHỈ thẻ hạng đã trả (POS đi thẳng cho_tra → xong, quầy không pha) → màn "Chào mừng hội viên" (bản thiết kế 14.11 Màn 4, KH-THE-2 D1) thay số đơn /
+// các bước / danh sách món (hoá đơn vẫn xem ở Lịch sử đơn). Hạng: dòng thẻ của bản ghi lần gửi tra /hang (không chờ /toi); không biết → câu chung, không %.
+// Hạn mới = `ghi_chu` POS NGUYÊN VĂN (App không tự tính). "Về giỏ · N món" chỉ khi giỏ còn đồ uống.
+function ChaoMung({ don, hang, soMonGio, veGio, moMenu }) {
+  const han = hanMoiThe(don), pos = ndDau('the.cm.pos');
+  return (
+    <>
+      <div className="cm-dau">
+        <MedHang tang={!!hang && hang.chi_cap === true} s={96} />
+        <h2 {...ndDau(hang ? 'the.cm.t' : 'the.cm.chung')}>{hang ? nd('the.cm.t', { hang: hang.ten }) : nd('the.cm.chung')}</h2>
+        {hang && typeof hang.phan_tram === 'number' && <p {...ndDau('the.cm.p')}>{nd('the.cm.p', { phanTram: hang.phan_tram })}</p>}
+      </div>
+      <div className="points-card cm-the">
+        <div className="hang-logo"><img className="tqd-logo" src={ndAnh('home.logo')} alt="" {...ndDau('home.logo')} /><div className="brand"><Chu k="home.the.nhan" /><Chu k="home.the.phu" as="small" /></div></div>
+        {hang && <div className="cm-ten" {...pos}>{hang.ten}</div>}
+        <div className="cm-duoi">{han && <span {...pos}>{han}</span>}<span {...ndDau('the.cm.don')}>{nd('the.cm.don', { so: soDon(don.soHd, don.ma), tong: dinhDangGia(don.tong) })}</span></div>
+      </div>
+      <Chu k="the.cm.nut" as="button" type="button" className="checkout-btn cm-nut" onClick={moMenu} />
+      {soMonGio > 0 && <><button type="button" className="ghost-btn cm-gio" onClick={veGio} {...ndDau('the.cm.veGio')}>{nd('the.cm.veGio', { so: soMonGio })}</button><Chu k="the.cm.nho" as="div" className="cm-nho" /></>}
+    </>
+  );
+}
+
+export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, soMonGio = 0, veGio, moMenu }) {
   const { don, loi, taiLai } = dungTheoDoi(ma);
   const { dsHang } = dungGia();
   const [loiHuy, datLoiHuy] = useState('');
@@ -82,10 +104,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUo
     datDangHuy(true); datLoiHuy('');
     huyDon(ma).then(() => { datDangHuy(false); taiLai(); }, (e) => { datDangHuy(false); datLoiHuy(e.message); taiLai(); });
   };
-  const theXong = !!don && tt === 'xong' && laDonChiThe(don);
-  const hangMoi = theXong ? hangCuaDon(banGhiCuaDon(ma), dsHang) : '';
-  const kThe = hangMoi ? 'td.the.xong' : 'td.the.xongChung';
-  const han = theXong ? hanMoiThe(don) : '';
+  const theXong = !!don && tt === 'xong' && laDonChiThe(don) && ndHien('hien.the.cm');
   return (
     <Man id="tracking">
       <DauManCon tieuDe={don ? nd('td.tieuDe', { so: soDon(don.soHd, don.ma) }) : nd('td.tieuDe.cho')} phu={don && dinhDangNgay(don.ngay) ? nd('td.phu', { ngay: dinhDangNgay(don.ngay) }) : ''} lui={lui} canTrai />
@@ -95,13 +114,12 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, conDoUo
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi" {...ndDau('td.vi.giu')}>{ndPhan('td.vi.giu', { giu: <b key="giu" {...ndDau('td.tien')}>{dinhDangGia(tra.giu_vi)}</b>, qr: <b key="qr" {...ndDau('td.tien')}>{dinhDangGia(tra.con_lai)}</b> })}</div>}
           {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau(don.cauTienVe ? 'td.cauTienVe' : 'td.tienVe')}>{don.cauTienVe || nd('td.tienVe')}</div></div>}
-          {theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><div {...ndDau(kThe)}>{nd(kThe, { hang: hangMoi })}{han && <small {...ndDau('td.the.han')}>{han}</small>}</div></div>}
-          {theXong && conDoUong && <button type="button" className="checkout-btn" onClick={veGio} {...ndDau('td.the.veGio')}>{nd('td.the.veGio')}</button>}
+          {theXong && <ChaoMung don={don} hang={hangCuaDon(banGhiCuaDon(ma), dsHang)} soMonGio={soMonGio} veGio={veGio} moMenu={moMenu} />}
           {!theXong && tt && !choTra && tt !== 'da_huy' && <div className="pick-num"><Chu k="td.soDon" as="div" className="pick-chu" /><div className="n" {...ndDau('td.so')}>{soDon(don.soHd, don.ma)}</div></div>}
           {tt === 'xong' && !theXong && <div className="nt-state on" role="status"><Ico ten="check" s={18} /><Chu k="td.xong" as="div" /></div>}
           {(tt === 'da_tra' || tt === 'dang_lam') && <Chu k="td.giuApp" as="div" className="care-disclaimer qr-chu" />}
           {!theXong && <div className="card the-buoc"><CacBuoc tt={tt} /></div>}
-          {docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
+          {theXong ? null : docHoaDon(don).length > 0 ? <div className="order-card"><HoaDonKhach don={don} /></div> : <>
             {don.mon.length > 0 && <div className="sec-head" style={{ marginTop: 0 }}><Chu k="td.chiTiet" as="h2" /></div>}
             {don.mon.map((m, i) => (
               <div className="cart-item" key={i}>

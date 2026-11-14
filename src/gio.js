@@ -1,6 +1,7 @@
 // Giỏ hàng (hàm thuần, không đụng DOM / mạng — bài thử cong_cu/thu_KHMUA1.js nạp thẳng). Kho tiêm vào để thử (như tracNghiemLuu.js).
 // Giỏ lưu TRÊN MÁY khoá `kh_gio`, mỗi dòng CHỈ { ma, so_luong, ghi_chu } — KHÔNG lưu giá (giá thật do POS báo lúc đặt). Xoá theo luật luuMay.js.
-// Dòng thẻ hạng (KH-THE-1, hợp đồng v13): { loai: 'the', hang_id, so_thang } — không giá, không ghi chú, số lượng luôn 1; giỏ có tối đa MỘT dòng thẻ.
+// Thẻ hạng KHÔNG vào giỏ (KH-THE-2, chủ quán 14.11): mua thẳng ở Thanh toán thẻ — dòng { loai: 'the', hang_id, so_thang } dựng từ đường dẫn (dongTheTuDuongDan).
+// Bản lưu cũ còn dòng thẻ → đọc bỏ dòng đó.
 import { giaChoKhach, goiBan } from './giaHang.js';
 
 export const KHOA_GIO = 'kh_gio';
@@ -10,18 +11,15 @@ const kho = () => localStorage;
 const lay = (k) => (typeof k === 'function' ? k() : k);
 const kep = (n) => Math.min(SO_LUONG_TOI_DA, n);
 
-const soDuong = (n) => Number.isInteger(n) && n > 0;
 export const laThe = (d) => !!d && d.loai === 'the';
 
-/** Một dòng hợp lệ → bản sạch (món: ba trường; thẻ: đúng ba khoá); sai dạng → null. */
+/** Một dòng món hợp lệ → bản sạch (ba trường); dòng thẻ / sai dạng → null. */
 function sach(d) {
-  if (laThe(d)) return soDuong(d.hang_id) && soDuong(d.so_thang) && !('ma' in d) ? { loai: 'the', hang_id: d.hang_id, so_thang: d.so_thang } : null;
   if (!d || d.loai !== undefined || typeof d.ma !== 'string' || !d.ma || !Number.isInteger(d.so_luong) || d.so_luong < 1) return null;
   return { ma: d.ma, so_luong: kep(d.so_luong), ghi_chu: typeof d.ghi_chu === 'string' ? d.ghi_chu.slice(0, GHI_CHU_TOI_DA) : '' };
 }
 
-/** Bản sạch của cả giỏ: bỏ dòng hỏng, chỉ giữ dòng thẻ ĐẦU TIÊN. */
-const sachGio = (ds) => ds.map(sach).filter((d, i, a) => d && (!laThe(d) || a.findIndex(laThe) === i));
+const sachGio = (ds) => ds.map(sach).filter(Boolean);
 
 /** Đọc giỏ đã lưu; không có / hỏng / kho chặn → []. */
 export function docGio(k = kho) {
@@ -36,21 +34,16 @@ export function ghiGio(gio, k = kho) {
   try { lay(k).setItem(KHOA_GIO, JSON.stringify(sachGio(gio))); return true; } catch { return false; }
 }
 
-/** Thêm thẻ: giỏ đã có thẻ → THAY tại chỗ (`doi` = thẻ cũ khác thẻ mới); chưa có → thêm cuối. */
-export function themThe(gio, hangId, soThang) {
-  const moi = { loai: 'the', hang_id: hangId, so_thang: soThang };
-  const i = gio.findIndex(laThe);
-  if (i < 0) return { gio: [...gio, moi], doi: false };
-  return { gio: gio.map((d, j) => (j === i ? moi : d)), doi: gio[i].hang_id !== hangId || gio[i].so_thang !== soThang };
-}
+const SO_NGUYEN = /^[1-9]\d{0,5}$/;
+/** Dòng thẻ của Thanh toán thẻ từ tham số đường dẫn `?h=&thang=` (chuỗi chỉ chữ số, > 0); sai → null. Còn bán hay không: trangThaiDong. */
+export const dongTheTuDuongDan = ({ h, thang } = {}) => (SO_NGUYEN.test(String(h ?? '')) && SO_NGUYEN.test(String(thang ?? '')) ? { loai: 'the', hang_id: Number(h), so_thang: Number(thang) } : null);
 export const coDoUong = (gio) => gio.some((d) => !laThe(d));
 
-/** Dọn giỏ sau khi đơn đã trả: bỏ ĐÚNG các dòng đã gửi (`monGui` = mon[] của thân đơn) — món trừ đúng số đã gửi, thẻ cùng hạng + gói thì bỏ; dòng thêm sau giữ. */
+/** Dọn giỏ sau khi đơn đã trả: bỏ ĐÚNG các dòng đã gửi (`monGui` = mon[] của thân đơn) — món trừ đúng số đã gửi (dòng thẻ không có trong giỏ); dòng thêm sau giữ. */
 export function boDongDaGui(gio, monGui) {
   let con = gio;
   for (const m of monGui || []) {
-    if (laThe(m)) { con = con.filter((d) => !(laThe(d) && d.hang_id === m.hang_id && d.so_thang === m.so_thang)); continue; }
-    const i = con.findIndex((d) => !laThe(d) && d.ma === m.ma && d.ghi_chu === (m.ghi_chu || ''));
+    const i = con.findIndex((d) => d.ma === m.ma && d.ghi_chu === (m.ghi_chu || ''));
     if (i >= 0) con = doiSoLuong(con, i, con[i].so_luong - m.so_luong);
   }
   return con;
@@ -69,12 +62,11 @@ export const doiSoLuong = (gio, i, soLuong) => (soLuong <= 0 ? xoaDong(gio, i) :
 export const xoaDong = (gio, i) => gio.filter((_, j) => j !== i);
 /** Hoàn tác xoá: trả `dong` về vị trí cũ; đã có dòng cùng mã + ghi chú (khách vừa thêm lại) thì cộng số lượng như `themMon`. */
 export function chenDong(gio, dong, vitri) {
-  if (laThe(dong) && gio.some(laThe)) return themThe(gio, dong.hang_id, dong.so_thang).gio;
   if (gio.some((d) => d.ma === dong.ma && d.ghi_chu === dong.ghi_chu)) return themMon(gio, dong.ma, dong.so_luong, dong.ghi_chu);
   const i = Math.min(Math.max(vitri, 0), gio.length);
   return [...gio.slice(0, i), dong, ...gio.slice(i)];
 }
-export const demMon = (gio) => gio.reduce((s, d) => s + (laThe(d) ? 1 : d.so_luong), 0);
+export const demMon = (gio) => gio.reduce((s, d) => s + d.so_luong, 0);
 
 /**
  * Dòng giỏ đối chiếu menu: { mon (null = không còn trong menu), conBan }. `con_hang` null (chưa biết) vẫn bán.

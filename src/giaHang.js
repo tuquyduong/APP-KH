@@ -1,6 +1,5 @@
 // Giá theo hạng — App KHÔNG tự tính: chỉ TRA bảng `gia_hang[]` POS gửi kèm từng món (máy chủ tính cùng hàm với quầy).
 // Hạng khách (`hangToi`) = { id, ten } lấy từ /toi; `dsHang` = /hang (POS đã xếp theo thu_bac tăng dần — App không sắp lại).
-import { dinhDangGia } from './dinhDang.js';
 import { nd } from './noiDung/nd.js';
 
 /** Giá khách phải trả theo hạng: dòng `hang_id` = hạng khách; không có dòng (không hạng / bảng rỗng) → giá gốc. */
@@ -32,19 +31,10 @@ export const hangCoGiam = (ds) => (Array.isArray(ds) ? ds.filter((h) => typeof h
 /** Hạng `id` trong /hang có phải hạng chỉ chủ quán cấp (`chi_cap === true`)? Thiếu / sai kiểu → false. */
 export const laHangChiCap = (ds, id) => Array.isArray(ds) && ds.some((h) => h && h.id === id && h.chi_cap === true);
 
-/** Dòng chữ các gói tháng ĐANG BÁN của một hạng ("3 tháng — 300.000đ"): chỉ `goi[]` (không đọc gia_the); hạng chỉ cấp, thiếu / sai kiểu → []. */
-export function dongGoi(h) {
-  if (!h || h.chi_cap === true || !Array.isArray(h.goi)) return [];
-  return h.goi.flatMap((g) => {
-    const gia = g && Number.isInteger(g.so_thang) && g.so_thang > 0 && g.gia > 0 ? dinhDangGia(g.gia) : '';
-    return gia ? [nd('ud.hang.goi', { soThang: g.so_thang, gia })] : [];
-  });
-}
-
-/** Tên dòng thẻ trong giỏ / đơn chưa rõ: "Thẻ hội viên <hạng> · N tháng"; hạng không còn trong /hang → "Thẻ hội viên". */
+/** Tên dòng thẻ của đơn chưa rõ (Thanh toán): "Thẻ hội viên <hạng> · N tháng"; hạng không còn trong /hang → "Thẻ hội viên". */
 export function tenDongThe(dong, ds) {
   const h = Array.isArray(ds) ? ds.find((x) => x && x.id === dong.hang_id) : null;
-  return h ? nd('gio.the.ten', { hang: h.ten, so: dong.so_thang }) : nd('gio.the.chung');
+  return h ? nd('the.tt.dong', { hang: h.ten, so: dong.so_thang }) : nd('the.tt.chung');
 }
 
 // ---- Thẻ hạng bán trên App (KH-THE-1, hợp đồng v13). Chỉ HIỂN THỊ / quyết định nút — giá thật, hạng thật do POS (không gửi số nào đi).
@@ -68,8 +58,19 @@ export function tietKiem(goi, g) {
 
 const thuBac = (ds, id) => { const h = (Array.isArray(ds) ? ds : []).find((x) => x && x.id === id); return h && Number.isFinite(h.thu_bac) ? h.thu_bac : null; };
 
-/** Lớp màu thẻ "Hạng hiện tại" của demo: l0 chưa hạng · l1 hạng bán · l2 hạng chỉ cấp. */
-export const lopHang = (hangToi, ds) => (!hangToi ? 'l0' : laHangChiCap(ds, hangToi.id) ? 'l2' : 'l1');
+// ---- So sánh nhanh (KH-THE-2 B2). App tự tính "Chi 1 triệu, tiết kiệm" CHỈ để hiện; không gửi đi.
+export const MOC_TIET_KIEM = 1000000; // "Chi 1 triệu" của bản thiết kế 14.11
+/** Số tiết kiệm khi chi MOC_TIET_KIEM: làm tròn XUỐNG đồng; `phan_tram` thiếu / sai kiểu → null (ẩn ô). */
+export const tietKiemMotTrieu = (h) => (h && typeof h.phan_tram === 'number' && Number.isFinite(h.phan_tram) ? Math.floor((MOC_TIET_KIEM * h.phan_tram) / 100) : null);
+/** Ô "Giá" của một hạng: { k: khoá chữ đơn vị, gia, so } — gói rẻ nhất "/ tháng" hoặc "/ N tháng"; chỉ cấp → quanTang; không gói → chuaBan. */
+export function giaCot(h) {
+  if (h && h.chi_cap === true) return { k: 'tier.cmp.quanTang', gia: null, so: null };
+  const g = goiBan(h).reduce((a, x) => (!a || x.gia < a.gia ? x : a), null);
+  if (!g) return { k: 'tier.cmp.chuaBan', gia: null, so: null };
+  return { k: g.so_thang === 1 ? 'tier.cmp.moiThang' : 'tier.cmp.moiNThang', gia: g.gia, so: g.so_thang };
+}
+/** Có hạng nào giảm thêm nhóm đặc biệt (> 0)? Không → ẩn cả hàng "Món nhóm đặc biệt". */
+export const coDacBiet = (ds) => Array.isArray(ds) && ds.some((h) => h && typeof h.phan_tram_nhom_dac_biet === 'number' && h.phan_tram_nhom_dac_biet > 0);
 
 /**
  * Nút chính của màn Hạng thành viên cho hạng `h`: { kieu: 'mua' | 'giaHan' | 'mo', lyDo, hang }. POS vẫn là người quyết (mã lỗi v13).
@@ -89,6 +90,19 @@ const ngayJd = (chuoi) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(chu
 export function soNgayCon(hetHan, bayGio) {
   const a = ngayJd(hetHan), b = ngayJd(bayGio);
   return a === null || b === null ? null : a - b;
+}
+
+/**
+ * Tình trạng thẻ của khách (Ưu đãi E2 + dòng phụ Hạng thành viên B1) — MỘT hàm: { kieu, hang, soNgay } hoặc null (ẩn thẻ).
+ * `ds` = hạng có giảm (/hang); `hangKhach` = /toi.khach.hang (POS chỉ trả hạng còn hạn; null = chưa có). kieu:
+ *   chua — chưa hạng / đã quá hạn: hang = hạng bán ĐẦU TIÊN (null → không hạng nào bán được → trả null)
+ *   tang — hạng chỉ cấp · sap — hạng bán còn 0…NGAY_NHAC_GIA_HAN ngày · co — còn lại (het_han null: soNgay null).
+ */
+export function trangThaiTheUuDai(ds, hangKhach, bayGio) {
+  const soNgay = hangKhach && hangKhach.het_han ? soNgayCon(hangKhach.het_han, bayGio) : null;
+  if (!hangKhach || (soNgay !== null && soNgay < 0)) { const h = hangBanDuoc(ds)[0]; return h ? { kieu: 'chua', hang: h, soNgay: null } : null; }
+  if (laHangChiCap(ds, hangKhach.id)) return { kieu: 'tang', hang: hangKhach, soNgay };
+  return { kieu: soNgay !== null && soNgay <= NGAY_NHAC_GIA_HAN ? 'sap' : 'co', hang: hangKhach, soNgay };
 }
 
 /** Nhắc gia hạn ở Trang chủ: hạng của khách bán được (có trong /hang, không chỉ cấp), còn 0…NGAY_NHAC_GIA_HAN ngày → { id, ten, soNgay }; còn lại null. */

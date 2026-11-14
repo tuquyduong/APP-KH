@@ -1,22 +1,78 @@
-/* KH-THE-1 — màn Hạng thành viên (/uudai/hang). CHÉP NGUYÊN demo app_kh_demo.html "===== hạng thành viên =====" (.ti-*), bỏ .ti-crit / .ti-demo (khối không làm — lý do (a)). */
-.ti-card{ border-radius:20px; padding:16px; color:#fff; } .ti-card.l0{ background:linear-gradient(135deg,#8B6877,#B48C9B); } .ti-card.l1{ background:linear-gradient(135deg,#B57A2A,#E2B865); } .ti-card.l2{ background:linear-gradient(135deg,#2C3E5E,#5B7FB8); }
-.ti-card small{ opacity:.85; font-size:11.5px; } .ti-card b{ display:block; font-size:22px; margin:2px 0; } .ti-card span{ font-size:12.5px; }
-.ti-tabs{ display:flex; gap:6px; margin:14px 0 6px; } .ti-tabs button{ flex:1; border:none; font:inherit; padding:9px 4px; border-radius:12px; background:#F3EBEE; font-weight:700; font-size:12.5px; cursor:pointer; color:var(--muted); }
-.ti-tabs button.on.l0{ background:var(--pink-deep); color:#fff; } .ti-tabs button.on.l1{ background:#C38C40; color:#fff; } .ti-tabs button.on.l2{ background:#3D5A8C; color:#fff; }
-.ti-how{ font-size:12px; color:var(--muted); text-align:center; margin-bottom:8px; }
-.ti-ben{ background:#FFFDFB; border-radius:16px; padding:4px 14px; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+/* KH-THE-1, KH-THE-2 — màn Hạng thành viên (/uudai/hang), thẻ hội viên ở Ưu đãi, màn "Chào mừng hội viên". Bố cục theo bản thiết kế chủ quán duyệt 14.11
+   (viec/KH-THE-2/ban_thiet_ke.html); MÀU / bóng chỉ lấy từ demo app_kh_demo.html (K9) — màu thiết kế không có trong demo đổi sang màu demo gần nhất cùng vai trò
+   (bảng ở viec/KH-THE-2/doi_chieu_demo.md). Khối .ti-ben / .ti-buy chép NGUYÊN demo "===== hạng thành viên =====". */
+.ti-ben{ background:#FFFDFB; border-radius:16px; padding:4px 14px; box-shadow:0 0 0 1px rgba(215,185,129,.45); margin-top:14px; }
 .ti-ben > div{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #F4E6EA; font-size:13px; color:var(--ink); } .ti-ben > div:last-child{ border:none; }
-.ti-ben > div > span{ flex:1; } .ti-ben em{ font-style:normal; color:var(--muted); font-size:12.5px; } .ti-ben svg{ color:#C38C40; flex:none; }
-.ti-buy{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-.ti-buy button{ border:1.5px solid #E7CFA5; background:#fff; border-radius:16px; padding:12px 8px; cursor:pointer; text-align:center; font:inherit; }
-.ti-buy button.on{ border-color:#C38C40; background:#FFF1DC; } .ti-buy small{ display:block; color:var(--muted); font-size:11.5px; } .ti-buy b{ display:block; font-size:18px; color:#9E5A12; } .ti-buy em{ font-style:normal; font-size:10.5px; font-weight:800; color:#2F6B3A; }
-.ti-cmp{ width:100%; border-collapse:collapse; font-size:12px; background:#FFFDFB; border-radius:14px; overflow:hidden; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
-.ti-cmp th, .ti-cmp td{ padding:8px 6px; text-align:center; border-bottom:1px solid #F4E6EA; } .ti-cmp td:first-child{ text-align:left; padding-left:10px; color:var(--muted); }
-.ti-cmp th.l1{ color:#9E5A12; } .ti-cmp th.l2{ color:#3D5A8C; } .ti-cmp .me{ background:#FFF8EE; font-weight:700; }
-/* App đặt lại :where(button){ text-align:inherit } (giaoDien.css); demo để nút theo mặc định trình duyệt = chữ giữa. */
-.ti-tabs button{ text-align:center; }
-/* Nút chính dưới gói: demo đặt kiểu ngay trên thẻ (style="justify-content:center;margin-top:12px"). */
-#buycard .checkout-btn{ justify-content:center; margin-top:12px; }
-/* Nút "Quyền lợi & nâng hạng ›" trên thẻ hạng Ưu đãi: demo đặt kiểu ngay trên nút (#rewards .tier-card button). */
-/* Màu theo bản vá thẻ vàng dập của demo (".tier-card button" — chữ nâu trên nền trắng mờ, đè màu trắng của kiểu ngay trên nút). */
-.tier-card .ud-hang-nut{ width:100%; background:rgba(255,255,255,.55); color:#4A2410; border:none; border-radius:10px; padding:9px; font-size:12px; font-weight:600; font-family:inherit; margin-top:10px; cursor:pointer; text-align:center; position:relative; }
+.ti-ben > div > span{ flex:1; } .ti-ben svg{ color:#C38C40; flex:none; }
+.ti-ben > .ti-ben-t{ display:block; font-size:13px; font-weight:800; color:#9E5A12; padding:10px 0 2px; border:none; }
+.ti-buy{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+.ti-buy button{ border:1.5px solid #E7CFA5; background:#fff; border-radius:16px; padding:12px 8px; cursor:pointer; text-align:center; font:inherit; min-height:76px; }
+.ti-buy button.on{ border-color:#C38C40; background:#FFF1DC; } .ti-buy small{ display:block; color:var(--muted); font-size:11.5px; } .ti-buy b{ display:block; font-size:18px; color:#9E5A12; } .ti-buy em{ display:block; font-style:normal; font-size:10.5px; font-weight:800; color:#2F6B3A; }
+.ti-goi{ font-size:15px; font-weight:700; color:var(--pink-deep); margin-top:14px; }
+#buycard .checkout-btn{ margin-top:12px; gap:8px; }
+#buycard .checkout-btn.btn-disabled{ justify-content:center; }
+.ti-qr{ display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:var(--muted); margin-top:8px; }
+.ti-note{ font-size:12px; color:var(--muted); text-align:center; line-height:1.5; margin-top:12px; }
+
+/* So sánh nhanh — lưới cột (nhãn | Thường | mỗi hạng một nút chọn). > 3 hạng: khung riêng cuộn ngang, trang không cuộn ngang. */
+.ss-dau{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin:4px 0 10px; }
+.ss-dau h2{ margin:0; font-size:16px; font-weight:800; color:var(--pink-deep); } .ss-dau small{ font-size:11.5px; color:var(--muted); }
+.ss-khung{ overflow-x:auto; padding-top:10px; margin:-10px -2px 0; padding-left:2px; padding-right:2px; padding-bottom:10px; }
+.ss{ display:grid; grid-template-columns:78px repeat(var(--cot),minmax(0,1fr)); gap:6px; align-items:stretch; }
+.ss.ss-rong{ grid-template-columns:78px repeat(var(--cot),84px); }
+.ss-nhan, .ss-cot{ display:flex; flex-direction:column; min-width:0; }
+.ss .o{ height:46px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; line-height:1.2; overflow-wrap:anywhere; }
+.ss .o-dau{ height:62px; gap:3px; }
+.ss-nhan .o{ align-items:flex-start; text-align:left; font-size:11.5px; font-weight:600; color:var(--muted); border-bottom:1px dashed #F4E6EA; }
+.ss-nhan .o-dau, .ss-nhan .o:last-child{ border-bottom:none; }
+.ss-cot{ position:relative; border-radius:16px; padding:0 4px 4px; font-family:inherit; font-size:12.5px; color:var(--ink); background:#FFFFFF; box-shadow:0 0 0 1px rgba(215,185,129,.45); }
+button.ss-cot{ border:none; cursor:pointer; font:inherit; font-size:12.5px; min-height:44px; text-align:center; }
+.ss-cot.on{ background:linear-gradient(180deg,#FFF6E2 0%,#FFF1DC 100%); box-shadow:0 0 0 2px #C38C40, 0 6px 16px rgba(185,143,60,.22); }
+.ss-dang{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#C38C40; color:#FFFFFF; font-size:9.5px; font-weight:800; letter-spacing:.3px; padding:3px 8px; border-radius:10px; white-space:nowrap; }
+.ss-ten{ font-size:13px; font-weight:800; } .c-thuong .ss-ten{ color:var(--muted); } .ss-cot.l1 .ss-ten{ color:#8A5A12; } .ss-cot.l2 .ss-ten{ color:#3D5A8C; }
+.ss-phu{ font-size:10.5px; color:var(--muted); font-weight:500; }
+.ss-so{ font-size:22px; font-weight:800; letter-spacing:-.3px; } .ss-so.nho{ font-size:17px; }
+.ss-cot.l1 .ss-so{ color:#9E5A12; } .ss-cot.l2 .ss-so{ color:#3D5A8C; }
+.ss-loi{ font-size:13px; font-weight:800; color:#2F6B3A; }
+.ss-gia{ font-size:12.5px; font-weight:800; }
+.ss .mo{ color:var(--muted); font-weight:700; }
+
+/* Thẻ hội viên ở Ưu đãi (E2) — dùng nền thẻ vàng dập + hoa văn của demo (.tier-card ở demo_1.css); hạng chỉ cấp = l2 của demo. */
+#rewards .the-ud{ padding:16px 18px; border-radius:20px; margin-bottom:16px; }
+#rewards .the-ud.l2{ background:linear-gradient(135deg,#2C3E5E,#5B7FB8) !important; color:#fff !important; box-shadow:0 6px 18px rgba(44,62,94,.28); }
+#rewards .the-ud.l2::before{ display:none; }
+.the-ud .ud-hang{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.the-ud .ud-nho{ font-size:12px; font-weight:600; opacity:.8; }
+.the-ud .ud-ten{ font-size:26px; font-weight:800; letter-spacing:-.3px; line-height:1.15; }
+.the-ud .ud-giam{ font-size:13px; font-weight:600; margin-top:2px; }
+.the-ud .ud-nhan{ font-size:11px; font-weight:700; color:#8A5A12; background:rgba(255,255,255,.55); padding:4px 10px; border-radius:20px; white-space:nowrap; }
+.the-ud .ud-do{ font-size:12px; font-weight:800; color:#FFFFFF; background:#AB3F37; padding:5px 10px; border-radius:20px; white-space:nowrap; }
+.the-ud .ud-chip{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.the-ud .ud-chip span{ font-size:12px; font-weight:600; background:rgba(255,255,255,.55); padding:5px 10px; border-radius:20px; }
+.the-ud .ud-chip span:first-child{ font-weight:700; }
+.the-ud .ud-day{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px 10px; margin-top:12px; font-size:12px; font-weight:600; }
+.the-ud .ud-gia{ font-size:12px; font-weight:600; } .the-ud .ud-gia b{ display:block; font-size:18px; font-weight:800; }
+.the-ud .ud-gia b span{ font-size:12px; font-weight:600; }
+.the-ud .ud-loi{ margin-top:12px; font-size:12.5px; font-weight:600; }
+.the-ud .ud-nut{ display:flex; align-items:center; justify-content:center; min-height:44px; padding:0 14px; border:none; border-radius:12px; font:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
+  background:rgba(255,255,255,.55); color:#4A2410; text-align:center; position:relative; }
+.the-ud .ud-day .ud-nut{ flex:none; }
+.the-ud > .ud-nut{ width:100%; margin-top:12px; }
+.the-ud .ud-nut.dam{ background:#7A2647; color:#FFFFFF; box-shadow:0 4px 12px rgba(122,38,71,.25); }
+.the-ud.l2 .ud-nut{ background:rgba(255,255,255,.18); color:#FFFFFF; }
+.the-ud .hang-logo{ display:flex; align-items:center; gap:8px; }
+.the-ud .tqd-logo{ width:30px; height:30px; border-radius:50%; }
+.the-ud .brand{ font-size:12.5px; font-weight:800; letter-spacing:.6px; color:#4A2410; }
+.the-ud .brand small{ display:block; font-size:9.5px; font-weight:500; letter-spacing:.3px; color:rgba(74,36,16,.7); }
+.the-ud .ud-tren{ margin-top:14px; }
+
+/* Chào mừng hội viên (D1) — Theo dõi đơn chỉ thẻ đã trả. */
+.cm-dau{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:12px; text-align:center; }
+.cm-dau h2{ margin:0; font-size:24px; font-weight:800; color:#7A2647; }
+.cm-dau p{ margin:0; font-size:14px; color:var(--muted); line-height:1.5; max-width:300px; }
+#tracking .cm-the{ margin-top:16px; }
+.cm-the .cm-ten{ font-size:26px; font-weight:800; margin-top:16px; }
+.cm-the .cm-duoi{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; margin-top:10px; font-size:12.5px; font-weight:600; }
+#tracking .cm-nut{ justify-content:center; }
+#tracking .cm-gio{ width:100%; margin-top:10px; }
+.cm-nho{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:8px; }

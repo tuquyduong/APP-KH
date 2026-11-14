@@ -4,12 +4,12 @@ import { dungTai } from '../dungTai.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
-import { duocThanhToan, laThe } from '../gio.js';
+import { duocThanhToan, laThe, trangThaiDong } from '../gio.js';
 import { dungGia } from '../heThong.js';
 import { tenDongThe } from '../giaHang.js';
 import { soDon } from '../hoaDon.js';
 import {
-  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, chanDatGio, docBaoGia, laLoiThe, maDonDaTra, phanGui, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, dungViCho, chanDatGio, docBaoGia, laLoiThe, maDonDaTra, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
@@ -17,7 +17,7 @@ import { docDungVi, ghiDungVi } from '../luuMay.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import PinSheet from '../components/PinSheet.jsx';
-import { Ico, Med } from '../components/BieuTuong.jsx';
+import { Ico, IcoVe, Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 import Chu from '../components/Chu.jsx';
 import { BangTien } from './GioHang.jsx';
@@ -36,16 +36,23 @@ const layDonDau = () => layDon(1);
 const KHOA_LOI_APP = ['loi.GIA_DA_DOI', 'loi.GIA_DA_DOI_CU', 'loi.CHUA_MO', 'loi.CHUA_RO', 'loi.NGOAI_GIO']; // câu App tự viết (sửa được); câu khác là lời POS (🔒 tt.thongBao)
 const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 
-// `chiThe` (/thanhtoan?chi=the, KH-THE-1 C3): "Trả thẻ trước" — gửi CHỈ dòng thẻ, không mã giảm (phanGui); mọi luật khác của đơn giữ nguyên.
-export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu, moDon, veGio, danhDauMon, sauHuy, chiThe = false, daTra }) {
+// Thanh toán thẻ (/uudai/hang/thanhtoan, KH-THE-2 — bản thiết kế 14.11 Màn 3): prop `the` (dòng thẻ dựng từ đường dẫn; null = tham số sai) → CHÍNH màn này với "giỏ"
+// MỘT dòng thẻ (không đọc / ghi kh_gio), không mã giảm, cách trả LUÔN QR (dungViCho — thẻ không trả bằng số dư), không nhận hàng / công tắc ví / PIN.
+// Khoá gửi, tong_da_xem, kh_don_gui, chưa rõ / gửi lại đúng đơn, đơn chờ trả, trần lượt, C7 dùng chung với đơn đồ uống (không đường đặt đơn thứ hai).
+const KHONG_MA = { maGiam: '' };
+const laSo = (x) => typeof x === 'number' && Number.isFinite(x);
+export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLichSu, moDon, veGio, veHang, danhDauMon, sauHuy, daTra }) {
   const { dsHang } = dungGia();
-  const { gio, tuy } = phanGui(gioCa, { maGiam }, chiThe);
+  const cheDoThe = the !== undefined;
+  const gio = cheDoThe ? (the ? [the] : []) : gioCa;
+  const tuy = cheDoThe ? KHONG_MA : { maGiam };
   const toi = dungTai(layToi);
   const dsDon = dungTai(layDonDau); // gọi MỚI mỗi lần mở (không kho chung): đơn chờ trả của tab / lần mở trước
   const gh = dungKho(khoGioHoatDong);
   // Công tắc nhớ lần trước (kh_dung_vi). Bật SẴN chỉ có tác dụng khi ví bật được: cachTra bên dưới tự về QR lúc /toi lỗi / đang tải / ví 0đ.
-  const [dungVi, datDungViTho] = useState(docDungVi);
-  const datDungVi = (bat) => { datDungViTho(bat); ghiDungVi(bat); };
+  const [congTac, datCongTac] = useState(docDungVi);
+  const datDungVi = (bat) => { datCongTac(bat); ghiDungVi(bat); };
+  const dungVi = dungViCho(gio, congTac); // đơn có thẻ hạng: không bao giờ dùng ví (QR) — công tắc nhớ giữ nguyên, không ghi đè
   const [moPin, datMoPin] = useState(null);   // { cu?: bản ghi gửi lại } khi cần PIN
   const [moDatPin, datMoDatPin] = useState(false);
   const [dang, datDang] = useState(false);
@@ -78,6 +85,7 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
   }, [conGiay > 0]);
 
   const coThe = duocThanhToan(gio, ds, dsHang);
+  const khongBan = cheDoThe && (!the || (Array.isArray(dsHang) && !coThe)); // tham số sai / hạng hoặc gói không còn bán: không báo giá, không đặt
   const { bg, loi, datBg } = dungBaoGia(gio, tuy, coThe);
   const soDu = toi.dl && toi.dl.khach ? toi.dl.khach.so_du_vi : null;
   const duoc = cachTraDuoc(bg && bg.tong, soDu);
@@ -99,7 +107,7 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
     if (e.code === 'GIA_DA_DOI') { const b = docBaoGia(dl.bao_gia); if (b) datBg(b); datThongBao(nd('loi.GIA_DA_DOI')); return; }
     if (e.code === 'QUA_NHIEU_LAN') { datHetLuc(Date.now() + (Number(dl.thu_lai_sau_giay) || 60) * 1000); datThongBao(e.message); return; }
     if (MA_NGOAI_GIO.includes(e.code)) { datChanPos(e.message); return; }
-    if (laLoiThe(e)) { datMonLoi(true); datThongBao(e.message); danhDauMon({ the: true, chu: e.message }); return; } // lời POS nguyên văn, đánh dấu dòng thẻ
+    if (laLoiThe(e)) { datMonLoi(true); datThongBao(e.message); return; } // lời POS nguyên văn; nút phụ về Hạng thành viên
     if (MA_MON[e.code]) {
       const m = ds.find((x) => x.ma === dl.ma);
       datMonLoi(true); datThongBao(m ? `${e.message} — ${m.ten}` : e.message);
@@ -170,7 +178,7 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
   const batDuocVi = duoc.vi || duoc.viQr;
   const [kNut, bienNut] = !DAT_ONLINE ? ['loi.CHUA_MO'] : dang ? [guiLai ? 'tt.nut.guiLai' : 'tt.nut.dangGui'] : dsDon.dangTai ? ['tt.nut.kiemTra']
     : chuaRo || donKhac || donCho ? ['tt.nut.xuLyTruoc'] : conGiay ? ['tt.nut.thuLai', { giay: conGiay }] : !bg ? ['tt.nut.xacNhan']
-      : cachTra === 'qr' ? ['tt.nut.qr', { tong: dinhDangGia(bg.tong) }] : cachTra === 'vi' ? ['tt.nut.vi', { tong: dinhDangGia(bg.tong) }] : ['tt.nut.viQr', { vi: dinhDangGia(soDu), qr: dinhDangGia(thieu) }];
+      : cachTra === 'qr' ? [cheDoThe ? 'the.tt.nut' : 'tt.nut.qr', { tong: dinhDangGia(bg.tong) }] : cachTra === 'vi' ? ['tt.nut.vi', { tong: dinhDangGia(bg.tong) }] : ['tt.nut.viQr', { vi: dinhDangGia(soDu), qr: dinhDangGia(thieu) }];
   const [kGuiLai, bienGuiLai] = !DAT_ONLINE ? ['loi.CHUA_MO'] : conGiay ? ['tt.guiLai.cho', { giay: conGiay }] : ['tt.guiLai.nut'];
   // Khối cảnh báo / chờ: khuôn .nt-state của demo (biểu tượng + dòng đậm + dòng nhỏ).
   // kT / kP = khoá chữ của dòng đậm / dòng nhỏ (danh mục nội dung) để gắn data-nd.
@@ -178,7 +186,7 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
 
   return (
     <Man id="checkout">
-      <DauManCon tieuDe={nd('tt.tieuDe')} phu={nd('tt.phu')} lui={lui} canTrai />
+      <DauManCon tieuDe={nd('tt.tieuDe')} phu={nd(cheDoThe ? 'the.tt.phu' : 'tt.phu')} lui={lui} canTrai />
       {chuaRo && (
         <>
           {guiDo.da_dung ? canhBao(nd('tt.daDung.t'), '', 'tt.daDung.t')
@@ -209,39 +217,74 @@ export default function ThanhToan({ gio: gioCa, ds, maGiam, lui, xong, moLichSu,
           <Chu k="tt.donCho.huy" as="button" type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho} />
         </>
       )}
-      <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><Chu k="tt.nhan.tieuDe" as="h2" /></div>
-      <div className="mode-row">
-        <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><Chu k="tt.nhan.giao" as="b" /><Chu k="tt.nhan.giao.phu" /></div>
-        <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><Chu k="tt.nhan.quay" as="b" /><Chu k="tt.nhan.quay.phu" /></div>
-      </div>
-      <div className="card the-quay">
-        <div className="quay-ten"><Ico ten="store" s={16} lop="ico-mint" /> <Chu k="tt.quay.ten" /></div>
-        <div className="quay-chu" {...ndDau('tt.quay.chu')}>{ndPhan('tt.quay.chu', { so: <b key="so" {...ndDau('tt.quay.so')}>{nd('tt.quay.so')}</b> })}</div>
-      </div>
-
-      {soDu !== 0 && (
+      {cheDoThe ? <KhoiThe the={the} dsHang={dsHang} bg={bg} khongBan={khongBan} canhBao={canhBao} /> : (
         <>
-          <div className="sec-head"><Chu k="tt.tra.tieuDe" as="h2" /></div>
-          {/* CẢ dòng là chỗ bấm (ngón tay trên iPhone không trúng ô 42×24); .switch chỉ là hình. */}
-          <div className={`notif-row the-vi${batDuocVi || loiSoDu ? '' : ' the-vi-khoa'}`} {...(loiSoDu ? bam(toi.taiLai) : batDuocVi ? bam(() => datDungVi(!dungVi)) : {})}
-            role={loiSoDu ? 'button' : 'switch'} aria-label={loiSoDu ? undefined : nd('tt.vi.nhan')} aria-checked={loiSoDu ? undefined : viBat} aria-disabled={loiSoDu ? undefined : !batDuocVi}>
-            <div><Chu k="tt.vi.nhan" as="div" className="t" /><div className="s" {...ndDau(kVi)}>{dongVi}</div></div>
-            <div className={`switch${viBat ? ' on' : ''}`} aria-hidden="true" />
-          </div>
+        <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><Chu k="tt.nhan.tieuDe" as="h2" /></div>
+        <div className="mode-row">
+          <div className="mode-opt btn-disabled" aria-disabled="true"><div className="e"><Med ten="scooter" s={50} /></div><Chu k="tt.nhan.giao" as="b" /><Chu k="tt.nhan.giao.phu" /></div>
+          <div className="mode-opt active"><div className="e"><Med ten="store" s={50} /></div><Chu k="tt.nhan.quay" as="b" /><Chu k="tt.nhan.quay.phu" /></div>
+        </div>
+        <div className="card the-quay">
+          <div className="quay-ten"><Ico ten="store" s={16} lop="ico-mint" /> <Chu k="tt.quay.ten" /></div>
+          <div className="quay-chu" {...ndDau('tt.quay.chu')}>{ndPhan('tt.quay.chu', { so: <b key="so" {...ndDau('tt.quay.so')}>{nd('tt.quay.so')}</b> })}</div>
+        </div>
+
+        {soDu !== 0 && (
+          <>
+            <div className="sec-head"><Chu k="tt.tra.tieuDe" as="h2" /></div>
+            {/* CẢ dòng là chỗ bấm (ngón tay trên iPhone không trúng ô 42×24); .switch chỉ là hình. */}
+            <div className={`notif-row the-vi${batDuocVi || loiSoDu ? '' : ' the-vi-khoa'}`} {...(loiSoDu ? bam(toi.taiLai) : batDuocVi ? bam(() => datDungVi(!congTac)) : {})}
+              role={loiSoDu ? 'button' : 'switch'} aria-label={loiSoDu ? undefined : nd('tt.vi.nhan')} aria-checked={loiSoDu ? undefined : viBat} aria-disabled={loiSoDu ? undefined : !batDuocVi}>
+              <div><Chu k="tt.vi.nhan" as="div" className="t" /><div className="s" {...ndDau(kVi)}>{dongVi}</div></div>
+              <div className={`switch${viBat ? ' on' : ''}`} aria-hidden="true" />
+            </div>
+          </>
+        )}
         </>
       )}
 
-      <BangTien bg={bg} loi={loi} />
+      {!khongBan && <BangTien bg={bg} loi={loi} />}
       {chan && canhBao(chan, '', khoaLoi(chan))}
       {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}
       {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}
-      <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
-        <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
-      </button>
-      {monLoi && <Chu k="tt.veGio" as="button" type="button" className="ghost-btn" onClick={veGio} />}
+      {!khongBan && (
+        <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
+          <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
+        </button>
+      )}
+      {cheDoThe ? (monLoi || khongBan || !!loi) && <Chu k="the.tt.veHang" as="button" type="button" className="ghost-btn" onClick={veHang} />
+        : monLoi && <Chu k="tt.veGio" as="button" type="button" className="ghost-btn" onClick={veGio} />}
       {canPin && <Chu k="tt.datPin" as="button" type="button" className="ghost-btn" onClick={() => datMoDatPin(true)} />}
       {moPin && <PinSheet gui={(pin) => guiDon(pin, moPin.cu)} dong={() => datMoPin(null)} />}
       {moDatPin && <PinSheet dong={() => { datMoDatPin(false); datCanPin(false); }} />}
     </Man>
+  );
+}
+
+// Phần riêng của Thanh toán thẻ (Màn 3): thẻ tóm tắt (thẻ vàng thu nhỏ .pc-mini của demo), dòng kích hoạt, MỘT cách trả QR (không đổi được), dòng khoá.
+// KHÔNG tự tính "hạn tới" (POS cộng nối khi gia hạn — hạn mới hiện ở màn Chào mừng từ hoá đơn POS). Giá = tổng báo giá POS.
+function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
+  if (khongBan) return canhBao(nd('the.tt.khongBan'), nd('the.tt.khongBan.p'), 'the.tt.khongBan', 'the.tt.khongBan.p');
+  const { hang } = trangThaiDong(the, null, dsHang);
+  const pos = ndDau('the.tt.pos');
+  return (
+    <>
+      <div className="card the-tom">
+        <div className="points-card pc-mini the-mini" aria-hidden="true" />
+        <div className="the-tom-chu">
+          <b {...ndDau('the.tt.ten')}>{hang ? nd('the.tt.ten', { hang: hang.ten }) : nd('the.tt.chung')}</b>
+          <span {...ndDau('the.tt.thang')}>{nd('the.tt.thang', { so: the.so_thang })}</span>
+        </div>
+        {bg && <span className="the-tom-gia" {...pos}>{dinhDangGia(bg.tong)}</span>}
+      </div>
+      {hang && laSo(hang.phan_tram) && <div className="nt-state on the-kich"><IcoVe ten="bolt" s={18} /><div {...ndDau('the.tt.kichHoat')}>{nd('the.tt.kichHoat', { phanTram: hang.phan_tram })}</div></div>}
+      <div className="sec-head"><Chu k="the.tt.tra" as="h2" /></div>
+      <div className="card the-qr" aria-checked="true" role="radio" aria-disabled="true">
+        <span className="the-qr-ic"><Ico ten="qr" s={20} /></span>
+        <div><Chu k="the.tt.qr" as="b" /><Chu k="the.tt.qr.phu" as="small" /></div>
+        <Ico ten="check" s={22} lop="the-qr-dau" />
+      </div>
+      <div className="the-khoa"><Ico ten="card" s={16} /><Chu k="the.tt.khongVi" /></div>
+    </>
   );
 }

@@ -32,8 +32,6 @@ export function thanDatDon(gio, tuy, { cachTra, pin, khoaGui, tongDaXem } = {}) 
   return t;
 }
 
-/** Phần giỏ gửi đi: "Trả thẻ trước" (`chiThe`) = CHỈ dòng thẻ, KHÔNG mã giảm (giữ mã cho đơn đồ uống); thường = cả giỏ + mã như cũ. */
-export const phanGui = (gio, tuy, chiThe) => (chiThe ? { gio: gio.filter(laThe), tuy: { maGiam: '' } } : { gio, tuy });
 
 /** Khoá gửi mới (16–64 ký tự A-Z a-z 0-9 -): randomUUID, máy cũ thì 32 số hex từ getRandomValues. Mỗi lần khách BẤM đặt một khoá. */
 export function taoKhoaGui(cr = globalThis.crypto) {
@@ -105,7 +103,7 @@ const LAN_GUI_LAI = 3;    // "chưa rõ" thường: tự gửi lại tối đa n
 // 1 + 8 = 9 lần dưới trần 10 lần / 10 phút của POS).
 const LUOT_GUI_LAI = { DANG_XU_LY: 30, KHO_BAN: 8 };
 const MA_DUNG = ['KHOA_GUI_DA_DUNG'];
-// Mã chặn mua thẻ (v13, 400 — trả TRƯỚC khi tạo đơn → loaiLoi 'chua_tao'): màn hiện nguyên lời POS và đánh dấu dòng thẻ trong giỏ.
+// Mã chặn mua thẻ (v13, 400 — trả TRƯỚC khi tạo đơn → loaiLoi 'chua_tao'): Thanh toán thẻ hiện nguyên lời POS, khoá nút, mời về Hạng thành viên.
 export const MA_THE = ['NHIEU_THE', 'HANG_CHI_CAP', 'GOI_HANG_KHONG_BAN', 'DA_CO_HANG_CAO_HON'];
 export const laLoiThe = (e) => !!e && MA_THE.includes(e.code);
 
@@ -140,6 +138,12 @@ export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat
     await cho(MS_GUI_LAI);
   }
 }
+
+/**
+ * Đơn sắp gửi có được dùng ví không — MỘT luật (chủ quán 14.11: thẻ hạng không trả bằng số dư — tiền nạp có thưởng): đơn có dòng thẻ → KHÔNG BAO GIỜ
+ * (kể cả công tắc nhớ `kh_dung_vi` đang bật) → cách trả 'qr'; đơn đồ uống → theo công tắc (`congTac`) như cũ.
+ */
+export const dungViCho = (gio, congTac) => !!congTac && !gio.some(laThe);
 
 /** Cách trả được chọn theo số dư /toi mới và tổng báo giá: ví đủ → vi; 0 < dư < tổng → vi_qr. Số thật (giu_vi, con_lai) do POS trả. */
 export function cachTraDuoc(tong, soDu) {
@@ -215,14 +219,17 @@ export function maDonDaTra(g, ds) {
   const d = ds.find((x) => x && String(x.ma) === String(g.ma_don));
   return d && daThanhToan(d.tien_trinh) ? String(g.ma_don) : '';
 }
-/** Tên hạng của dòng thẻ trong bản ghi lần gửi (`than.mon`) tra /hang; không có → ''. ("Đã lên hạng …" không chờ /toi.) */
+const theCuaBanGhi = (g) => (g && g.than && Array.isArray(g.than.mon) ? g.than.mon.find(laThe) : null) || null;
+/** Hạng (bản ghi /hang) của dòng thẻ trong bản ghi lần gửi (`than.mon`); không có → null. ("Chào mừng hội viên …" không chờ /toi.) */
 export function hangCuaDon(g, dsHang) {
-  const the = g && g.than && Array.isArray(g.than.mon) ? g.than.mon.find(laThe) : null;
-  const h = the && Array.isArray(dsHang) ? dsHang.find((x) => x && x.id === the.hang_id) : null;
-  return h ? chu(h.ten) : '';
+  const the = theCuaBanGhi(g);
+  return (the && Array.isArray(dsHang) ? dsHang.find((x) => x && x.id === the.hang_id) : null) || null;
 }
-/** Về Thanh toán lại (Tạo mã mới) của đơn "trả thẻ trước" (chỉ thẻ, không mã giảm) → giữ { chi: 'the' }; đơn khác (kể cả chỉ thẻ CÓ mã — đặt từ "Thanh toán") → {}. */
-export const thamThanhToanLai = (g) => (g && g.than && !g.than.ma_giam && laDonChiThe(g.than) ? { chi: 'the' } : {});
+/** "Tạo mã mới": đơn CHỈ thẻ → Thanh toán thẻ đúng hạng + gói của đơn đó; đơn khác / không bản ghi → Thanh toán giỏ. */
+export function thamTaoMaMoi(g) {
+  const the = g && g.than && laDonChiThe(g.than) ? theCuaBanGhi(g) : null;
+  return the ? { trang: 'thanhtoanthe', tham: { h: the.hang_id, thang: the.so_thang } } : { trang: 'thanhtoan', tham: {} };
+}
 /** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
 export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
