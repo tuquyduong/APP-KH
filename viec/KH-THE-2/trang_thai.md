@@ -144,3 +144,53 @@ BÀI HỌC: KHOÁ mọi nd(k) hiện cho khách nằm trong phần tử ndDau(k)
 - Cổng `node tu_chay/cong.js tinh . d90937f^ HEAD viec/KH-THE-2`: chỉ `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi cuối cùng).
 - Cổng `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d90937f^ HEAD viec/KH-THE-2` (lần trước vòng 2): `✓ CỔNG CHẠY ĐẠT` (2 cảnh báo A16: THE2 / HANG2 dừng sớm trên gốc — "bỏ qua").
   Chạy lại ở HEAD cuối — ghi ở dưới.
+
+## Soát độc lập — vòng 3 (agent phụ mới, chỉ đọc) — kết luận chép nguyên
+```
+KHÔNG ĐẠT — 4 lỗi vòng 2 đã sửa đúng; SỐ CA khớp; K9 đúng; tệp cấm không đổi.
+LỖI TÌM ĐƯỢC: src/pages/ThanhToan.jsx:189 — phu={nd('the.tt.phu')} truyền chuỗi trần vào DauManCon (Man.jsx:18 không gắn data-nd) → chữ mới "Thẻ hội viên"
+  không có ✎ ở Chế độ sửa — §11 / F1 / K4.
+NGHI NGỜ: UuDai.jsx TU_TINH thành biến chết (số ngày mất ổ khoá "App tự tính"); hai chú thích dồn một dòng; PhuToi khi /hang chưa về → Kim Cương thấy
+  "Bạn đang ở Kim Cương"; Thanh toán thẻ khi /hang lỗi hẳn không có nút Về Hạng thành viên (còn Back); gửi lại đơn chưa rõ cũ — chấp nhận; ca D1 [T] là regex nguồn.
+NGHIỆM THU: 22/24 · thiếu F1 (the.tt.phu), F7 (chờ cổng chay + HEAD ĐÃ KIỂM).
+BÀI HỌC: KHOÁ chữ truyền qua prop của khung chung (DauManCon tieuDe / phu) cũng phải bọc ndDau — bài F1 nên kiểm DOM [data-nd="<khoá mới>"] · NGUYÊN TẮC đổi khoá data-nd của ô
+  thì kiểm khoá pos / tutinh còn được gắn ở đâu.
+```
+### Sửa sau vòng 3 (vòng sửa thứ 3 — trần `so_vong_sua_toi_da`)
+- `ThanhToan.jsx` dòng phụ Thanh toán thẻ: `<span {...ndDau('the.tt.phu')}>` (như HangThanhVien).
+- `UuDai.jsx`: số ngày ("còn N ngày", "Còn N ngày" / "Hết hạn hôm nay") bọc phần tử khoá `ud.the.tutinh` (🔒 App tự tính) ngoài, chữ gắn khoá của chính nó bên trong; tách lại chú thích.
+- `HangThanhVien.jsx` PhuToi: `/hang` chưa về → chưa vẽ dòng phụ (như thẻ Ưu đãi).
+- Không sửa: Thanh toán thẻ khi `/hang` lỗi hẳn chỉ còn nút Back (không nút "Về Hạng thành viên") — khách vẫn quay lại được; ghi để chat soát cuối xem.
+
+## Câu hỏi
+- Đã dùng đủ 3 vòng sửa theo soát độc lập (vòng 3 còn 1 lỗi một dòng — đã sửa, bài thử / `--day-du` / cổng chạy lại xanh ở HEAD cuối, xem dưới) — KHÔNG mở vòng soát thứ 4 theo luật
+  `so_vong_sua_toi_da`. Nhờ chat soát cuối xác nhận phần "Sửa sau vòng 3" khi so ảnh lần cuối.
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-THE-2 — thẻ hội viên theo thiết kế 14.11: thẻ không vào giỏ; "Mua ngay" thẳng Thanh toán thẻ (chỉ QR, không ví, không mã giảm); So sánh nhanh ở đầu màn Hạng thành viên;
+  màn "Chào mừng hội viên"; thẻ ở Ưu đãi theo 4 tình trạng.
+- **ĐÃ SỬA:** `src/gio.js` (bỏ dòng thẻ, `dongTheTuDuongDan`), `src/datDon.js` (`dungViCho`, `thamTaoMaMoi`, `hangCuaDon` trả bản ghi; bỏ `phanGui`, `thamThanhToanLai`),
+  `src/giaHang.js` (`MOC_TIET_KIEM`, `tietKiemMotTrieu`, `giaCot`, `coDacBiet`, `trangThaiTheUuDai`, `khoaDongThe`; bỏ `lopHang`, `dongGoi`), `src/duongDan.js` (đường
+  `/uudai/hang/thanhtoan`, `chaTv`), `src/dangKySW.js` (không tự tải lại ở Thanh toán thẻ — Q1), `src/App.jsx` (`muaThe`, `veThanhToan`, màn Thanh toán thẻ; bỏ `traTheTruoc`),
+  `src/pages/ThanhToan.jsx` (chế độ thẻ — `KhoiThe`), `TheoDoiDon.jsx` (`ChaoMung`), `HangThanhVien.jsx` (viết lại — `SoSanh`, `PhuToi`), `UuDai.jsx` (thẻ 4 trạng thái đầu màn),
+  `GioHang.jsx` (bỏ dòng thẻ / Trả thẻ trước), `components/BieuTuong.jsx` (`MedVe`, `MedHang`), CSS `the_hang.css` / `thanh_toan.css`, danh mục `theHang.js` / `taiKhoan.js` /
+  `donHang.js` / `menu.js`. +~560 / −330 dòng app — trong ngân sách.
+- **BÀI THỬ:** mới `cong_cu/thu_KHTHE2.js` (45 không trình duyệt / 154 Chromium; đỏ trên gốc 6 · 18); sửa ca thẻ của THE1, HANG2, ND3c, UI3a, UI3d, NHANH1 (mỗi bài đỏ trên gốc —
+  `bang_chung_do.txt`); đột biến tay 18 / 18 bắt (`dot_bien_tay.js --trinh-duyet`); `--day-du` 54 / 54; cổng `chay` — dưới.
+- **ĐÃ RÀ K4:** grep `src/` không còn `themThe|phanGui|thamThanhToanLai|lopHang|dongGoi|chiThe|traTheTruoc|gio.the|ud.hang.|td.the.|tt.the`; chỉ một chỗ dựng dòng thẻ (App → `dongTheTuDuongDan`),
+  một luật cách trả (`dungViCho` + dòng `cachTra` cũ), `ma_giam` chặn bằng `KHONG_MA`; mọi chỗ "không thời hạn" phân biệt null / thiếu; data-nd từng chữ mới đúng khoá (3 vòng soát).
+- **CHƯA KIỂM:** điện thoại thật / trình duyệt Zalo / chữ to theo cài đặt máy (chỉ Chromium 360 / 390 / 430); POS thật (chỉ POS giả theo hợp đồng v13 — chưa có mã lỗi "trả thẻ bằng số dư"
+  của thư 14.11, app hiện nguyên lời mọi mã 4xx lạ); ảnh thiết kế chỉ khung 390; Chế độ sửa /admin chưa có (KH-ADMIN-1) nên ✎ chưa thử thật — chỉ kiểm data-nd.
+- **GIT:** nhánh `viec/KH-THE-2`, commit từng bước có mã việc, đã push; không merge, không PR.
+- **BÀI HỌC:** dưới.
+
+## Bài học
+1. **KHOÁ** (ngoài Phạm vi — đề xuất, không tự làm): bài thử chung kiểm DOM — mọi phần tử hiện chữ `nd(k)` phải mang `data-nd="k"` (kể cả `tieuDe` / `phu` của DauManCon); lỗi lặp 3 vòng soát
+   (ThanhToan the.tt.ten / the.tt.phu, UuDai ud.the.con, HangThanhVien tier.cmp.*). Tệp: `cong_cu/thu_KHND3a.js` hoặc bài chung mới; ca đỏ: phần tử `.sub` của #checkout chế độ thẻ.
+2. **KHOÁ** (đã làm trong Phạm vi): ca "không thời hạn" thử cả `het_han` thiếu hẳn (E2 [tangThieu], HANG2 A3) · tắt `hien.the.cm` không đổi luồng (ca D1 [T]) · dải báo đơn không báo đơn
+   chỉ thẻ (ca .bao-don).
+3. **NGUYÊN TẮC** (đề xuất KHUON_LOI.md, ngoài Phạm vi): "Sửa / bỏ ca của bài cũ → chỉ ra ca mới thử CÙNG nhánh code; ca 'không có X' phải có đối chứng làm X hiện ra" (vòng 1: ca POST /don
+   lỗi thẻ, ca G1 NHANH1 luôn xanh).
+4. **NGUYÊN TẮC**: phiếu dặn "không sửa ca" bài cũ đọc NGUYÊN dòng mã (BAO-1 / TT-1) → thiết kế quanh dòng đó (giữ dòng, đưa luật vào hàm thuần đứng trước) thay vì sửa bài.
+5. **BỎ**: người gác chặn `git add <thư mục>` làm phần `cat >>` trước đó trong cùng lệnh không chạy → mục "Số đo" trống (vòng 1). Một lần; bài học: lệnh ghi tệp tách khỏi lệnh git.
+6. **BỎ**: `chu()` trả chữ in hoa theo CSS (`text-transform`) → regex phân biệt hoa thường hỏng (ca D2 Menu). Một lần.
