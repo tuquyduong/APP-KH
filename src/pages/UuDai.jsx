@@ -177,7 +177,7 @@ function TheHang({ hangKhach, moHang }) {
       {tang ? (
         <div className="ud-day"><span {...ndDau(h.het_han ? 'ud.the.tangHan' : 'ud.the.tang')}>{nd(h.het_han ? 'ud.the.tangHan' : 'ud.the.tang', { ngay: ngayThe(h.het_han) })}</span><NutThe k="ud.the.nutTang" mo={mo} /></div>
       ) : <>
-        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : <Chu k="ud.the.khongHan" />}</div>}
+        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}>{nd('ud.the.con', { so: tt.soNgay })}</span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
         <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
       </>}
     </div>

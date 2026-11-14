@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// THỬ KH-HANG-2 — thẻ hạng theo HANG-1 (hợp đồng v10: chi_cap, goi[], het_han null, thu_bac) + hai sửa khối "Chương trình đặc biệt" (B1 giờ POS về sau, B2 nhiều thẻ sinh nhật).
+// THỬ KH-HANG-2 — thẻ hạng theo HANG-1 (KH-THE-2: thẻ Ưu đãi theo tình trạng — ca thẻ sửa theo hành vi mới) (hợp đồng v10: chi_cap, goi[], het_han null, thu_bac) + hai sửa khối "Chương trình đặc biệt" (B1 giờ POS về sau, B2 nhiều thẻ sinh nhật).
 // Phần 1: hàm thuần + đọc nguồn (không trình duyệt) · Phần 2: App thật trong Chromium + POS giả theo v10.
 // Chạy: node cong_cu/thu_KHHANG2.js → dòng cuối "n đạt · m hỏng". KHONG_TRINH_DUYET=1 hoặc không có Playwright → phần 2 BỎ QUA (không tính hỏng).
 'use strict';
@@ -29,27 +29,27 @@ const CT_SN2 = { ma: 'SN2', ten: 'Sinh nhật vàng', mo_ta: 'Thêm quà sinh nh
 const CT_HS = { ma: 'HSG', ten: 'Học sinh giỏi', mo_ta: '', loai: 'hoc_sinh_gioi', dang_bat: true };
 const MOI_SN = 'Chúc mừng sinh nhật! Mời bạn đến quán, đưa căn cước để nhận ưu đãi hôm nay.';
 const MOI_NHAP = 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đãi sinh nhật';
-const TANG = 'Hạng dành tặng khách thân thiết';
+const TANG = 'Dành tặng khách thân thiết';
 
 (async () => {
   console.log('Phần 1 — hàm thuần + đọc nguồn');
   const g = await nap('src/giaHang.js');
   const uuDai = boChuThich(doc('src/pages/UuDai.jsx'));
-  k('A2 (KH-THE-1 E2) thẻ hạng Ưu đãi có nút ud.hang.nutCo (có hạng) / ud.hang.nutMua (chưa) → màn Hạng thành viên (moHang)', /['"]ud\.hang\.nutCo['"]/.test(uuDai) && /['"]ud\.hang\.nutMua['"]/.test(uuDai) && /moHang/.test(uuDai));
+  k('A2 (KH-THE-2 E2) thẻ Ưu đãi có nút ud.the.nutCo / nutMua / nutGiaHan / nutTang → màn Hạng thành viên (moHang)', ['nutCo', 'nutMua', 'nutGiaHan', 'nutTang'].every((x) => new RegExp(`['"]ud\\.the\\.${x}['"]`).test(uuDai)) && /moHang/.test(uuDai));
 
   await thu('A1', async () => {
     k('A1 laHangChiCap: đúng id + chi_cap true → true', g.laHangChiCap([H_BAC, H_TANG], 3) === true);
     k('A1 laHangChiCap: hạng thường / id lạ / ds không phải mảng / chi_cap sai kiểu → false', [g.laHangChiCap([H_BAC, H_TANG], 1), g.laHangChiCap([H_BAC], 99), g.laHangChiCap(null, 3), g.laHangChiCap(undefined, 3), g.laHangChiCap([{ id: 3, chi_cap: 'true' }], 3), g.laHangChiCap([null, 7], 3)].every((x) => x === false));
-    k('A1 chữ cố định: "Hạng dành tặng khách thân thiết" / "Không thời hạn"', !('CHU_HANG_TANG' in g) && !('CHU_KHONG_THOI_HAN' in g) && new RegExp(`'ud\\.hang\\.tang', '[^']*', '${TANG}'`).test(doc('src/noiDung/nd/taiKhoan.js')) && /'ud\.hang\.khongHan', '[^']*', 'Không thời hạn'/.test(doc('src/noiDung/nd/taiKhoan.js'))); // KH-ND-3c: chữ ở danh mục
+    k('A1 chữ cố định: "Dành tặng khách thân thiết · không thời hạn" / "Không thời hạn" (KH-THE-2: khoá ud.the.*)', !('CHU_HANG_TANG' in g) && !('CHU_KHONG_THOI_HAN' in g) && new RegExp(`'ud\\.the\\.tang', '[^']*', '${TANG} · không thời hạn'`).test(doc('src/noiDung/nd/taiKhoan.js')) && /'ud\.the\.khongHan', '[^']*', 'Không thời hạn'/.test(doc('src/noiDung/nd/taiKhoan.js'))); // KH-ND-3c: chữ ở danh mục
   });
 
   await thu('A2', async () => {
-    k('A2 dongGoi: hai gói → "3 tháng — 300.000đ", "12 tháng — 1.000.000đ" đúng thứ tự POS', JSON.stringify(g.dongGoi(H_BAC)) === JSON.stringify(['3 tháng — 300.000đ', '12 tháng — 1.000.000đ']), JSON.stringify(g.dongGoi(H_BAC)));
-    k('A2 dongGoi: goi rỗng → []', g.dongGoi(H_VANG).length === 0);
-    k('A2 dongGoi: hạng chi_cap → [] dù goi có dữ liệu', g.dongGoi({ ...H_TANG, goi: [{ so_thang: 1, gia: 100000 }] }).length === 0);
-    k('A2 dongGoi: thiếu goi / goi không phải mảng / h null → []', [g.dongGoi({ ten: 'X' }), g.dongGoi({ goi: 'x' }), g.dongGoi(null), g.dongGoi(undefined)].every((x) => Array.isArray(x) && x.length === 0));
-    k('A2 dongGoi: dòng hỏng (gia chuỗi / 0 / âm / NaN, so_thang 0 / lẻ / chuỗi, null) bị bỏ, dòng tốt giữ', JSON.stringify(g.dongGoi({ goi: [{ so_thang: 1, gia: '5' }, { so_thang: 2, gia: 0 }, { so_thang: 3, gia: -1 }, { so_thang: 4, gia: NaN }, { so_thang: 0, gia: 9 }, { so_thang: 1.5, gia: 9 }, { so_thang: '3', gia: 9 }, null, { so_thang: 6, gia: 600000 }] })) === JSON.stringify(['6 tháng — 600.000đ']));
-    k('A2 dongGoi KHÔNG đọc gia_the (chỉ có gia_the, không có goi → [])', g.dongGoi({ gia_the: 99000 }).length === 0);
+    // KH-THE-2: thẻ Ưu đãi không liệt kê mọi gói nữa (dongGoi bỏ) — giá "Từ …" = gói rẻ nhất của giaCot, cùng luật lọc gói hỏng (goiBan), không đọc gia_the.
+    k('A2 dongGoi bỏ; giaCot: gói rẻ nhất "/ N tháng" (300.000đ / 3 tháng), đúng thứ tự POS không sắp lại', !('dongGoi' in g) && JSON.stringify(g.giaCot(H_BAC)) === JSON.stringify({ k: 'tier.cmp.moiNThang', gia: 300000, so: 3 }), JSON.stringify(g.giaCot(H_BAC)));
+    k('A2 giaCot: goi rỗng → chuaBan; chi_cap → quanTang dù goi có dữ liệu', g.giaCot(H_VANG).k === 'tier.cmp.chuaBan' && g.giaCot({ ...H_TANG, goi: [{ so_thang: 1, gia: 100000 }] }).k === 'tier.cmp.quanTang');
+    k('A2 giaCot: thiếu goi / goi không phải mảng / h null → chuaBan', [g.giaCot({ ten: 'X' }), g.giaCot({ goi: 'x' }), g.giaCot(null), g.giaCot(undefined)].every((x) => x.k === 'tier.cmp.chuaBan' && x.gia === null));
+    k('A2 giaCot: dòng hỏng (gia chuỗi / 0 / âm / NaN, so_thang 0 / lẻ / chuỗi, null) bị bỏ, dòng tốt giữ', JSON.stringify(g.giaCot({ goi: [{ so_thang: 1, gia: '5' }, { so_thang: 2, gia: 0 }, { so_thang: 3, gia: -1 }, { so_thang: 4, gia: NaN }, { so_thang: 0, gia: 9 }, { so_thang: 1.5, gia: 9 }, { so_thang: '3', gia: 9 }, null, { so_thang: 6, gia: 600000 }] })) === JSON.stringify({ k: 'tier.cmp.moiNThang', gia: 600000, so: 6 }));
+    k('A2 giaCot KHÔNG đọc gia_the (chỉ có gia_the, không có goi → chuaBan)', g.giaCot({ gia_the: 99000 }).k === 'tier.cmp.chuaBan');
     k('A2 nguồn: UuDai.jsx + giaHang.js không còn đọc gia_the', !/gia_the/.test(boChuThich(doc('src/pages/UuDai.jsx'))) && !/gia_the/.test(boChuThich(doc('src/giaHang.js'))));
     k('A2 nguồn: giaHang.js KHÔNG sắp lại hạng (không .sort)', !/\.sort\(/.test(doc('src/giaHang.js')));
   });
@@ -65,7 +65,7 @@ const TANG = 'Hạng dành tặng khách thân thiết';
   await thu('A1b', async () => {
     const f = doc('src/pages/UuDai.jsx');
     const jsx = boChuThich(f);
-    k('A1 nguồn: TheHang DÙNG (không chỉ import) khoá ud.hang.khongHan, ud.hang.tang, laHangChiCap(dsHang…), dongGoi(h)', /<Chu k="ud\.hang\.khongHan"/.test(jsx) && /<Chu k="ud\.hang\.tang"/.test(jsx) && /laHangChiCap\(dsHang,/.test(jsx) && /dongGoi\(h\)/.test(jsx));
+    k('A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)', /<Chu k="ud\.the\.khongHan"/.test(jsx) && /'ud\.the\.tang'/.test(jsx) && /trangThaiTheUuDai\(ds, /.test(jsx) && /const ds = hangCoGiam\(dsHang\)/.test(jsx));
   });
 
   await thu('B1n', async () => {
@@ -162,21 +162,21 @@ async function trinhDuyet(pw) {
     await ca(`khach-co-han-${rong}`, { rong, khach: { hang: HANG_CO_HAN } }, async (t) => {
       await mo(t, '/uudai');
       const v = await theHang(t);
-      k(`A1 [${n}] khách có hạng + het_han → "Thẻ hết hạn: 23:59 15/12/2026", không "Không thời hạn", không dòng tặng`, /Thẻ hết hạn:\s*23:59 15\/12\/2026/.test(v) && !/Không thời hạn/.test(v) && !v.includes(TANG), v);
+      k(`A1 [${n}] khách có hạng + het_han → "Hết hạn 15/12/2026 · còn 40 ngày", không "Không thời hạn", không dòng tặng`, /Hết hạn 15\/12\/2026[\s\S]*còn 40 ngày/.test(v) && !/Không thời hạn/.test(v) && !v.includes(TANG), v);
       k(`A1 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `the-co-han_${rong}`);
     });
     await ca(`khach-khong-han-${rong}`, { rong, khach: { hang: { ...HANG_CO_HAN, phan_tram_nhom_dac_biet: 0, het_han: null } } }, async (t) => {
       await mo(t, '/uudai');
       const v = await theHang(t);
-      k(`A1 [${n}] het_han null (hạng bán thường) → "Không thời hạn", KHÔNG "Thẻ hết hạn", KHÔNG dòng tặng`, /Không thời hạn/.test(v) && !/Thẻ hết hạn/.test(v) && !v.includes(TANG), v);
+      k(`A1 [${n}] het_han null (hạng bán thường) → "Không thời hạn", KHÔNG "Hết hạn", KHÔNG dòng tặng`, /Không thời hạn/.test(v) && !/Hết hạn/.test(v) && !v.includes(TANG), v);
       k(`A1 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `the-khong-thoi-han_${rong}`);
     });
     await ca(`khach-hang-tang-${rong}`, { rong, khach: { hang: { id: 3, ten: 'Kim Cương', phan_tram: 15, phan_tram_nhom_dac_biet: 0, het_han: null } } }, async (t) => {
       await mo(t, '/uudai');
       const v = await theHang(t);
-      k(`A1 [${n}] hạng chi_cap + het_han null → "Không thời hạn" + "${TANG}"`, /Không thời hạn/.test(v) && v.includes(TANG) && /Hạng Kim Cương/.test(v), v);
+      k(`A1 [${n}] hạng chi_cap + het_han null → "${TANG} · không thời hạn"`, v.includes(`${TANG} · không thời hạn`) && /Kim Cương/.test(v), v);
       k(`A1 [${n}] hạng tặng KHÔNG hiện giá`, !/\d+\.\d{3}đ|\d+ tháng/.test(v));
       k(`A1 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `the-hang-tang_${rong}`);
@@ -184,11 +184,9 @@ async function trinhDuyet(pw) {
     await ca(`vang-lai-${rong}`, { rong, dn: false }, async (t) => {
       await mo(t, '/uudai');
       const v = await theHang(t);
-      k(`A2 [${n}] bảng hạng: Bạc có hai gói, Vàng không dòng giá, Kim Cương = dòng tặng, không hạng 0%`, /Bạc — giảm 5%/.test(v) && /3 tháng — 300\.000đ/.test(v) && /12 tháng — 1\.000\.000đ/.test(v) && /Vàng — giảm 10%/.test(v) && /Kim Cương — giảm 15%/.test(v) && v.includes(TANG) && !/Thường/.test(v), v);
-      k(`A2 [${n}] đúng hai dòng giá (chỉ hạng Bạc); hạng tặng một dòng, không giá`, dem(v, 'đ') === 2 && dem(v, TANG) === 1, v);
-      k(`A2 [${n}] thứ tự hạng như POS gửi (Bạc, Vàng, Kim Cương)`, v.indexOf('Bạc') < v.indexOf('Vàng') && v.indexOf('Vàng') < v.indexOf('Kim Cương'));
-      // KH-THE-1 E2: thẻ hạng có MỘT nút demo "Mua thẻ ›" mở màn Hạng thành viên — vẫn không mua / gia hạn ngay trên Ưu đãi.
-      k(`A2 [${n}] chỉ một nút "Mua thẻ ›" (mở màn Hạng thành viên), không nút Gia hạn`, (await t.locator('#rewards .tier-card button').count()) === 1 && (await t.locator('#rewards .tier-card button').innerText()).trim() === 'Mua thẻ ›' && !/Gia hạn/.test(v));
+      // KH-THE-2 E2: chưa hạng → MỘT hạng bán đầu tiên (Bạc), giá gói rẻ nhất, không liệt kê mọi hạng / mọi gói.
+      k(`A2 [${n}] chưa có thẻ: hạng bán đầu tiên Bạc, "Giảm 5% mọi đơn", "Từ 300.000đ / 3 tháng"; không liệt kê Vàng / Kim Cương / 12 tháng`, /Trở thành hội viên[\s\S]*Bạc/.test(v) && /Giảm 5% mọi đơn/.test(v) && /Từ[\s\S]*300\.000đ[\s\S]*\/ 3 tháng/.test(v) && !/Vàng|Kim Cương|1\.000\.000đ|Thường/.test(v), v);
+      k(`A2 [${n}] chỉ một nút "Xem & mua thẻ ›" (mở màn Hạng thành viên), không nút Gia hạn`, (await t.locator('#rewards .tier-card button').count()) === 1 && (await t.locator('#rewards .tier-card button').innerText()).trim() === 'Xem & mua thẻ ›' && !/Gia hạn/.test(v));
       k(`A2 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `bang-hang-vang-lai_${rong}`);
     });
@@ -196,17 +194,17 @@ async function trinhDuyet(pw) {
   await ca('vang-lai-khong-goi', { dn: false, hang: [H_VANG, H_TANG] }, async (t) => {
     await mo(t, '/uudai');
     const v = await theHang(t);
-    k('A2 đối chứng: không hạng nào có gói → không dòng giá nào', dem(v, 'đ') === 0 && !/tháng —/.test(v) && /Vàng — giảm 10%/.test(v));
+    k('A2 đối chứng: không hạng nào bán được → ẩn thẻ (không dòng giá nào)', (await t.locator('#rewards .tier-card').count()) === 0 && dem(await manText(t), 'đ') === 0);
   });
   await ca('vang-lai-du-lieu-hong', { dn: false, hang: [{ id: 1, ten: 'Bạc', phan_tram: 5, goi: 'hỏng', chi_cap: 'x' }, { id: 2, ten: 'Vàng', phan_tram: 10 }] }, async (t) => {
     await mo(t, '/uudai');
-    const v = await theHang(t);
-    k('A3 dữ liệu hạng thiếu / sai kiểu → vẫn hiện tên + %, ẩn phần gói, không "undefined"/"NaN"', /Bạc — giảm 5%/.test(v) && /Vàng — giảm 10%/.test(v) && !/undefined|NaN|tháng —|Hạng dành tặng/.test(v), v);
+    const v = await manText(t);
+    k('A3 dữ liệu hạng thiếu / sai kiểu (không gói bán được) → ẩn thẻ, không "undefined"/"NaN"', (await t.locator('#rewards .tier-card').count()) === 0 && !/undefined|NaN/.test(v), v.slice(0, 200));
   });
   await ca('khach-thieu-het-han', { khach: { hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 0 } } }, async (t) => {
     await mo(t, '/uudai');
     const v = await theHang(t);
-    k('A3 het_han THIẾU hẳn (không phải null) → không "Không thời hạn", không "Thẻ hết hạn", không "undefined"', !/Không thời hạn|Thẻ hết hạn|undefined/.test(v), v);
+    k('A3 het_han THIẾU hẳn (không phải null) → không "Không thời hạn", không "Hết hạn", không "undefined"', /Hạng của bạn[\s\S]*Vàng/.test(v) && !/Không thời hạn|Hết hạn|undefined/.test(v), v);
   });
 
   // B1 — /toi về TRƯỚC giờ POS; đồng hồ máy lệch ngày
