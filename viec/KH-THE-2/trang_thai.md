@@ -79,3 +79,38 @@ Việc chỉ đổi `src/` (không `server/` / `client/src/`) → không `dot_bi
   ngoài Phạm vi → đề xuất việc dọn: xoá tệp + bỏ import + sửa ca C1.
 - `src/noiDung/bieuTuongMua.js` / `index.html` chưa có `<symbol>` m-medal-gold / m-medal-plat / i-lock của demo (demo cũng không có i-lock) — nay vẽ thẳng ở BieuTuong.jsx.
 - Bài `thu_KHND3b.js:27` chú thích còn nhắc `dongGoi` (đã bỏ) — chỉ chữ chú thích.
+
+## Soát độc lập — vòng 1 (agent phụ, chỉ đọc) — báo cáo chép nguyên phần kết luận
+```
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:
+- viec/KH-THE-2/doi_chieu_demo.md:69-71 — mục "## Số đo" TRỐNG; F6 "0 điểm khác" không có số — K1.
+- viec/KH-THE-2/trang_thai.md — không ghi kết quả npm test, --day-du, cổng tinh, K10, thao tác thử tay (F7, F8) — K1.
+- src/pages/UuDai.jsx:178, src/pages/HangThanhVien.jsx:24 — hạng chỉ cấp THIẾU hẳn het_han vẫn hiện "không thời hạn" — K3.
+- src/pages/ThanhToan.jsx:275 — không biết hạng: chữ the.tt.chung mà data-nd the.tt.ten; :196 dòng thẻ đơn chưa rõ gắn khoá pos tt.the trong khi chữ là the.tt.dong/chung — §11 / F1.
+- cong_cu/thu_KHTHE1.js — bỏ ca Chromium "mã thẻ ở POST /don → xoá kh_don_gui" và "giỏ chỉ thẻ đặt được khi quán đóng", THE2 không có ca thay cùng nhánh — K3.
+- cong_cu/thu_KHNHANH1.js:369 — ca G1 vãng lai bị nới (thẻ ẩn nên "không Test0d" luôn đúng) — K3.
+NGHI NGỜ: gửi lại đơn chưa rõ thời KH-THE-1 (thẻ + ly trả ví) gửi vi + PIN; chưa ca 3 hạng ở 360 / > 3 hạng; thiếu ca C2 gửi lại cùng khoá, C5 mã lạ [C], D1 câu chung, D2 Trang chủ,
+B1 Kim Cương không thời hạn; duongDan.js ra() là hàm chung (dễ xung đột KH-ADMIN-1); td.the.han xoá mà không ghi "Khác kế hoạch".
+NGHIỆM THU: 21/24 · thiếu F6, F7, F8.
+BÀI HỌC: KHOÁ ndDau(k) phải đi cùng nd(k); KHOÁ ca "không thời hạn" thử cả het_han thiếu; KHOÁ doi_chieu "Số đo" không trống; NGUYÊN TẮC bỏ ca cũ phải chỉ ca mới cùng nhánh.
+```
+### Sửa sau vòng 1
+- Số đo: đã ghi bảng đầy đủ ở `doi_chieu_demo.md` (lần trước lệnh ghi bị người gác chặn — git add thư mục — nên phần ghi không chạy).
+- Hạng tặng thiếu `het_han`: `UuDai.jsx` hàm `DongTang` (có hạn → "· hết hạn …", null → "· không thời hạn", thiếu → mục mới `ud.the.tangChung` "Dành tặng khách thân thiết");
+  `HangThanhVien.jsx` dòng phụ chỉ "· không thời hạn" khi `het_han === null`. Ca Chromium mới E2 [tangThieu].
+- data-nd: Thanh toán thẻ gắn `the.tt.ten` / `the.tt.chung` đúng chữ; đơn chưa rõ gắn `khoaDongThe()` (giaHang.js, cùng luật tenDongThe); bỏ khoá `tt.the` (không còn dùng).
+- Ca thay cùng nhánh (thu_KHTHE2 Chromium): "C5 POS chặn ở POST /don (mã thẻ)" — xoá bản ghi gửi, không chưa rõ, nút khoá, Về Hạng thành viên; "C5 mã lạ ở POST /don" (THE_KHONG_TRA_VI);
+  "K5 mua thẻ khi quán đóng" (POS giả chặn đơn CÓ đồ uống ngoài giờ như v13); "C2 chưa rõ → gửi lại đúng đơn thẻ" (4 lần 500 → chưa rõ → bấm gửi lại: mọi lần CÙNG khoá, thân thẻ, qr,
+  không pin / ma_giam); "B2 3 hạng ở 360" (không cuộn) + "B2 5 hạng ở 360" (cuộn trong khung, trang không cuộn); D1 không bản ghi → "Chào mừng hội viên!" không %, giỏ rỗng không nút Về giỏ;
+  D2 Trang chủ hiện Vàng; B1 "Kim Cương · quán tặng · không thời hạn".
+- NHANH1 G1 vãng lai: POS giả cho Vàng một gói → thẻ "chưa có thẻ" hiện, kiểm Vàng 10% và KHÔNG Test0d (đối chứng thật).
+- Không sửa (ghi lý do): (1) "Gửi lại đúng đơn này" của bản ghi CŨ (thời KH-THE-1, thẻ + ly, trả ví) gửi NGUYÊN thân cũ — đây là luật chống đơn đôi (cùng khoá + cùng thân, POS có thể
+  đã tạo đơn đó); đổi thân thì POS coi là đơn khác. Bản ghi chỉ sống 24 giờ; POS sẽ chặn trả thẻ bằng số dư (thư 14.11) → khách thấy lời POS. (2) `duongDan.js` `ra()` thêm một dòng
+  đọc `chaTv` (cần cho Back của Thanh toán thẻ — C1); dòng /admin không đụng; ghi để chat gộp với KH-ADMIN-1 để ý. (3) `td.the.han` (kế hoạch ghi "giữ") đã bỏ vì màn chúc mừng dùng
+  khoá `the.cm.pos` cho hạn mới — bổ sung vào "Khác kế hoạch".
+
+## Thao tác chủ quán thử tay (F8) — điện thoại
+1. Mở tab **Ưu đãi**: thẻ hội viên ở TRÊN CÙNG, đúng tình trạng của chị (chưa thẻ / còn hạn / sắp hết hạn / quán tặng), MỘT nút.
+2. Bấm nút thẻ → **Hạng thành viên**: bảng "So sánh nhanh" ở đầu; chạm cột Kim Cương (nút mờ "Hạng dành tặng…") rồi cột Hạng vàng (gói + nút "Mua ngay · …" đổi theo).
+3. Bấm **Mua ngay** với gói rẻ → Thanh toán chỉ có "Chuyển khoản QR" (không công tắc ví, không nhận hàng) → quét QR trả → màn **Chào mừng hội viên** → "Đặt đồ uống ngay" → giá Menu đã giảm.
