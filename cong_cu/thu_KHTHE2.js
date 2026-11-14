@@ -161,19 +161,20 @@ async function trinhDuyet(pw) {
   const anhDir = process.env.LUU_ANH_DIR || '';
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
   const giaGoi = (id, n) => { const h = HANG.find((x) => x.id === id); const g = h && h.goi.find((x) => x.so_thang === n); return g ? g.gia : null; };
+  const chu0 = (await nap('src/luuMay.js')).dauVet('0909123456'); // máy đã của đúng khách này (không xoá giỏ / công tắc ví khi /toi về)
 
   async function may(ten, { dn = true, gio = null, dungVi = false, S0 = {}, rong = 390 } = {}, chay) {
     const ctx = await trinh.newContext({ viewport: { width: rong, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     await ctx.clock.install({ time: new Date('2026-11-14T20:30:00+07:00') }); await ctx.clock.resume();
-    await ctx.addInitScript(({ dn, gio, dungVi }) => {
+    await ctx.addInitScript(({ dn, gio, dungVi, chu0 }) => {
       if (location.protocol !== 'http:') return;
       if (sessionStorage.getItem('da_gieo')) return;
       sessionStorage.setItem('da_gieo', '1');
       localStorage.setItem('kh_ngay_man_dau', '2026-11-14');
-      if (dn) localStorage.setItem('kh_token', 'tok-A');
+      if (dn) { localStorage.setItem('kh_token', 'tok-A'); localStorage.setItem('kh_chu', chu0); }
       if (gio) localStorage.setItem('kh_gio', JSON.stringify(gio));
       if (dungVi) localStorage.setItem('kh_dung_vi', '1');
-    }, { dn, gio, dungVi });
+    }, { dn, gio, dungVi, chu0 });
     const S = { vi: 500000, hang: null, don: new Map(), soDon: 41, guiDon: [], baoGia: [], loiThe: '', ...S0 };
     const loiTrang = [];
     const json = (r, st, o) => r.fulfill({ status: st, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
