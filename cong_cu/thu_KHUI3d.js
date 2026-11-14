@@ -178,8 +178,8 @@ async function trinhDuyet(pw) {
         await mo(t, '/uudai', cs);
         k(`B1 [${nhan}] vãng lai mở /uudai → ở lại /uudai (không bị đẩy sang đăng nhập)`, new URL(t.url()).pathname === '/uudai', t.url());
         k(`B2 [${nhan}] đầu trang "Ưu đãi" (không "của tôi")`, (await chu(t, '#rewards h1')) === 'Ưu đãi', await chu(t, '#rewards h1'));
-        const the = await chu(t, '#rewards .tier-card');
-        k(`B2 [${nhan}] thẻ "Hạng thành viên" liệt kê các hạng của POS (tên + % giảm)`, /Hạng thành viên/.test(the) && /Bạc/.test(the) && /5%/.test(the) && /Vàng/.test(the) && /10%/.test(the), the);
+        const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+        k(`B2 [${nhan}] thẻ hội viên (KH-THE-2 E2): chưa có thẻ → hạng bán đầu tiên của POS (Bạc, giảm 5%, từ 99.000đ / 3 tháng), không liệt kê mọi hạng`, /Trở thành hội viên[\s\S]*Bạc/.test(the) && /Giảm 5% mọi đơn/.test(the) && /99\.000đ[\s\S]*\/ 3 tháng/.test(the) && !/Vàng/.test(the), the);
         k(`B2 [${nhan}] khối khoá "Đăng nhập để xem điểm, ví và voucher"`, /Đăng nhập để xem điểm, ví và voucher/.test(await chu(t, '#rewards .the-moi')));
         k(`B2 [${nhan}] KHÔNG thấy điểm, ví, voucher, ô nhập mã, lịch sử`, !(await co(t, '#rewards .wallet-row')) && !(await co(t, '#rewards .voucher')) && !(await co(t, '#ma-bill')) && !/Lịch sử điểm|Ví voucher|Nhập mã trên hoá đơn/.test(await chu(t, '#rewards')));
         k(`B2 [${nhan}] không có banner Giờ vàng khi POS không có`, !(await co(t, '#rewards .rw-ban')));
@@ -223,8 +223,8 @@ async function trinhDuyet(pw) {
         const nhan = `${rong}/${cs}`;
         await mo(t, '/uudai', cs);
         k(`B2 [${nhan}] đã đăng nhập: "Ưu đãi của tôi"`, (await chu(t, '#rewards h1')) === 'Ưu đãi của tôi');
-        const the = await chu(t, '#rewards .tier-card');
-        k(`B2 [${nhan}] thẻ hạng của khách: Hạng Vàng · Giảm 10% · Thẻ hết hạn 15/11/2026`, /Hạng Vàng/.test(the) && /Giảm 10%/.test(the) && /Thẻ hết hạn:\s*23:59 15\/11\/2026/.test(the) && !/Hạng thành viên/.test(the), the);
+        const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+        k(`B2 [${nhan}] thẻ hạng của khách (KH-THE-2): Hạng của bạn · Vàng · Giảm 10% mọi đơn hàng · hạn 15/11`, /Hạng của bạn[\s\S]*Vàng[\s\S]*Giảm 10% mọi đơn hàng/.test(the) && /15\/11/.test(the) && !/Trở thành hội viên/.test(the), the);
         const vi = await chu(t, '#rewards .wallet-row');
         k(`B2 [${nhan}] điểm 1.250 và số dư ví 85.000đ`, /1\.250/.test(vi) && /85\.000đ/.test(vi) && (await t.locator('#rewards .wallet-box').count()) === 2, vi);
         k(`B2 [${nhan}] có voucher, ô nhập mã, lịch sử điểm; không khối khoá`, (await co(t, '#rewards .voucher')) && (await co(t, '#ma-bill')) && /Lịch sử điểm/.test(await chu(t, '#rewards')) && !(await co(t, '#rewards .the-moi')));
@@ -236,8 +236,9 @@ async function trinhDuyet(pw) {
   }
   await ca('dangnhap-hang-null', { pos: { khach: { hang: null } } }, async (t) => {
     await mo(t, '/uudai');
-    const the = await chu(t, '#rewards .tier-card');
-    k('B2 đã đăng nhập, hang: null → bảng hạng như vãng lai, vẫn có điểm + ví', /Hạng thành viên/.test(the) && /Vàng/.test(the) && (await t.locator('#rewards .wallet-box').count()) === 2, the);
+    await t.waitForSelector('#rewards .tier-card');
+    const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+    k('B2 đã đăng nhập, hang: null → thẻ "chưa có thẻ" như vãng lai (KH-THE-2), vẫn có điểm + ví', /Trở thành hội viên[\s\S]*Bạc/.test(the) && (await t.locator('#rewards .wallet-box').count()) === 2, the);
   });
   await ca('dangnhap-vi-thieu', { pos: { khach: { so_du_vi: undefined } } }, async (t) => {
     await mo(t, '/uudai');
