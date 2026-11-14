@@ -314,7 +314,7 @@ async function trinhDuyet(pw) {
     await chup(t, 'chao_mung');
     await t.locator('#tracking .checkout-btn', { hasText: 'Đặt đồ uống ngay' }).click();
     k('D1 "Đặt đồ uống ngay" → /menu', await doi(t, async () => /\/menu$/.test(t.url())));
-    k('D2 Menu: cột giá của khách (.lad .me) là hạng mới Vàng', await doiChu(t, '#catalog .lad .me', /Vàng[\s\S]*29\.100/));
+    k('D2 Menu: cột giá của khách (.lad .me) là hạng mới Vàng', await doiChu(t, '#catalog .lad .me', /Vàng[\s\S]*29\.100/), (await chu(t, '#catalog .lad')).replace(/\s+/g, ' '));
     await mo(t, '/uudai');
     k('D2 Ưu đãi: "Hạng của bạn · Vàng"', await doiChu(t, '#rewards', /Hạng của bạn[\s\S]*Vàng/));
     await mo(t, '/uudai/hang?h=2');
