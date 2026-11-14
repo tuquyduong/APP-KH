@@ -1,4 +1,4 @@
-# Bàn giao chat App KH (cập nhật 14.11.2026)
+# Bàn giao chat App KH (cập nhật 14.11.2026 tối)
 
 <!-- Bản MỚI NHẤT nằm ở Project (claude/BAN_GIAO_CHAT_APPKH.md). Bản trong kho APP-KH (thiet_ke/BAN_GIAO_CHAT_APPKH.md) do script ghi-xong chép — có thể cũ hơn Project. -->
 
@@ -9,7 +9,8 @@
 1. Đọc hết file này. Rồi `git clone https://github.com/tuquyduong/APP-KH` (đọc được, KHÔNG có quyền GitHub API — `gh` báo 403; chỉ dùng `git fetch`). Đọc: `CLAUDE.md` (nhất là §5, §8–§11),
    `thiet_ke/QUYET_DINH_APPKH.md` (mục 12.11 → 14.11), `TIEN_DO_APPKH.json` (sổ việc), `thiet_ke/trao_doi/` (thư mới nhất).
 2. `git clone --depth 50 https://github.com/pos-tuquyduong/pos-tuquyduong` (công khai, chỉ đọc): `LICH_KHAI_TRUONG.md`, `TIEN_DO_POS.json`, `HOP_DONG_API_KH.md`
-   (POS main 14.11 = **v14**; QC-APP-1 mang **v16** — v15 để dành VOUCHER-2; bản chép trong kho App = **v13**). Kho POS nhiều nhánh — chỉ đọc main.
+   (POS main 1a714246 = **v16** — v15 để dành VOUCHER-2; bản chép trong kho App = **v13**, KH-QC-1 chép v16) và `HOP_DONG_API_ND.md` (**v1**, hợp đồng RIÊNG của kho nội dung `/api/nd`).
+   Kho POS nhiều nhánh — chỉ đọc main.
 3. Xem App thật: sandbox KHÔNG vào được app-kh.pages.dev / POS (proxy 403) → dùng **trình duyệt trong app Claude trên máy chủ quán** (`Claude_Browser__*`: `preview_start`
    rồi `javascript_tool` để đo / bấm). POS thật: `https://www.pos-tuquyduong.io.vn` (cửa `/api/kh/hang` không cần token).
 4. Fetch nhánh đang chạy (mục Tình trạng) → xem máy làm tới đâu → báo chủ quán vài dòng: đang ở đâu, chị cần làm gì tiếp.
@@ -41,8 +42,16 @@
 - Câu hỏi của máy → kể lại bằng lời thường + đề xuất của chat → chị quyết; đã quyết thì ghi sổ, không hỏi lại. Chị muốn: "hệ thống thông minh, code chuẩn, đơn giản, không lằng nhằng".
   Muốn xem giao diện trước khi làm → dựng trang HTML so sánh (Artifact) "Hiện tại | Đề xuất" từng màn, lật qua lại trên điện thoại. Project gần đầy — chỉ lưu script / phiếu cần thiết.
 
-## Tình trạng 14.11.2026 (main 6f9ffac = PR #37 KH-THE-1; sổ v58 → script `xong_DOT7_mo_KHTHE2.py` đưa lên v59)
-- **Đã gộp:** #36 KH-ND-3d (đầu 3380dc7), #37 KH-THE-1 (đầu a9d98b7 sau `gop_KHTHE1.py`, cây gộp c54750c2). Script DOT7 ghi hai việc xong + mở **KH-THE-2** + QĐ 14.11 + thêm việc
+## Tình trạng 14.11.2026 tối (main 474eda6 = sổ v59 sau `xong_DOT7_mo_KHTHE2.py`; script `mo_KHADMIN1_KHQC1.py` đưa lên v60)
+- **Ba việc chạy song song:** KH-THE-2 (Opus — kế hoạch 88d5262 chat duyệt 14.11, script `claude/duyet_KHTHE2.py`: Q1 thêm `src/dangKySW.js`, Q2 giữ `DauManCon`) ·
+  **KH-ADMIN-1** (Opus, CÓ chờ duyệt kế hoạch; hạn 20.11; phiếu `claude/phieu_KH-ADMIN-1.md`, hợp đồng nd v1 nhúng) · **KH-QC-1** (Sonnet, chạy thẳng; hạn 17.11; hợp đồng v16 nhúng).
+  Chia tệp: THE-2 sửa màn thẻ / Thanh toán / Ưu đãi; ADMIN-1 KHÔNG sửa màn khách (chữ thiếu `data-nd` → "Chữ của màn này"), chỉ dòng `/admin` ở App.jsx / duongDan.js, hàm `goi` ở api.js;
+  QC-1 chỉ phần quảng cáo ở App.jsx, `layQuangCao` + `CUA_CONG_KHAI` ở api.js, `quangCao.js`. Xung đột còn lại khi gộp: `cong_cu/no_chu_cung.txt`, có thể `App.jsx` — dùng khuôn gộp.
+- **Thêm việc KH-HUY-1** (Sonnet, chờ THE-2 + QC-1): App chưa hiện đơn bị quán huỷ theo hợp đồng v14 (`hoan_vao_tai_khoan`, `ly_do_huy` — "Đã hoàn <số> vào tài khoản").
+- **POS 14.11:** ND-API-1 gộp (#93, kho nội dung `/api/nd` v1, quyền nd_xem / nd_sua / nd_cap_nhat / nd_xuat_nhap, khoá sao lưu `ndk_…` chỉ `GET /xuat` → KH-SL-1 mở được khi cần);
+  QC-APP-1 gộp (hợp đồng `/api/kh` v16). CORS `/api/nd` chỉ tuquyduong.com + app-kh.pages.dev → /admin chỉ thử thật được sau khi gộp main.
+- **Trước đó (sáng 14.11):**
+  - Đã gộp #36 KH-ND-3d (đầu 3380dc7), #37 KH-THE-1 (đầu a9d98b7 sau `gop_KHTHE1.py`, cây gộp c54750c2). Script DOT7 ghi hai việc xong + mở **KH-THE-2** + QĐ 14.11 + thêm việc
   KH-THU-2 (bài thử không phụ thuộc lịch sử git — từ Câu hỏi 4 của THE-1) + chép thư 13.11 / 14.11 vào `thiet_ke/trao_doi/` + chép bàn giao này.
 - **KH-THE-2** (Opus, việc TIỀN — CÓ chờ duyệt kế hoạch; hạn 18.11): làm theo trang so sánh chủ quán duyệt 14.11 (Artifact "So sánh thẻ hội viên"
   https://claude.ai/artifact/Ddrw9SiX95XhW3KJWXfRWR; bản chép cho máy: `viec/KH-THE-2/ban_thiet_ke.html`). So sánh nhanh lên đầu màn Hạng thành viên (Thường / các hạng: giảm mọi đơn,
@@ -53,11 +62,9 @@
   Hạng Ruồi id 7 (`thu_bac` 4; 2.000đ) → **thứ bậc ngược** (khách Kim Cương mua Vàng sẽ tụt hạng) — chủ quán sửa ▲▼ ở POS, tắt Hạng Ruồi, nhập quyền lợi; % và giá là số thử.
 - **Thẻ trả bằng số dư:** POS main VẪN cho (App: v13 `cach_tra` vi / vi_qr; quầy: `orders.js` `membership_buy` không chặn balance) → thư `claude/YEU_CAU_APPKH_GUI_POS_14112026.md`
   (chủ quán đã tải về gửi chat POS 14.11; mục 3 thư = trả lời thư QC 13.11). App ẩn ví cho thẻ trong KH-THE-2; mã lỗi mới của POS → App chỉ hiện lời.
-- **Chờ POS:** QC-APP-1 XONG (thư `claude/TRA_LOI_POS_13112026_QC.md`; gộp POS 13–14.11, hợp đồng **v16**) → **KH-QC-1** (Sonnet) mở khi main POS có v16: nhúng hợp đồng v16 vào commit PHIEU
-  (máy không tải được), đọc `GET /quang-cao` một lần khi mở Trang chủ / quay lại sau lâu, khung giờ theo `bay_gio`, `uu_tien` TĂNG dần, dòng `gio_vang` thay nguồn Giờ vàng tự dựng.
-  ND-API-1 (POS đang làm, Opus lần 2) → **KH-ADMIN-1** (Opus; ghi chú sẵn trong sổ: `data-nd` cho DauManCon / Thongbao, bảng sửa không cắt khoảng trắng, "Danh sách chữ của màn",
-  `KHONG_VAO_SAP_TOI` theo cờ thay vì tên lễ, bỏ `TERM_TIPS` Proxy khi được sửa tracNghiem.js). Còn lại như lịch POS: VOUCHER-2 (v15) · COMBO-1a · TOPPING-1 · KH-NAP-1 + QUA-1 ·
-  GIOVANG-1 · KH-MUA-2 · MATKHAU-1 (~20–21.11) → KH-MK-1. Sau khai trương: DOI-DIEM-1, QUET-2, GIOI-THIEU-1, QUA-TANG-1, CHU-KHACH-1.
+- **Chờ POS** (lịch POS): VOUCHER-2 (v15) → App nhiều voucher / đơn · COMBO-1a → App combo · TOPPING-1 → KH-GHICHU-1 + topping · KH-NAP-1 + QUA-1 → KH-NAP-1 + KH-VI-2 ·
+  GIOVANG-1 `gia_mon[]` → giá Giờ vàng từng món · KH-MUA-2 · MATKHAU-1 (~20–21.11) → KH-MK-1 · chặn trả thẻ bằng số dư (thư 14.11) → App chỉ hiện lời. Sau khai trương: DOI-DIEM-1,
+  QUET-2, GIOI-THIEU-1, QUA-TANG-1, CHU-KHACH-1.
 - **Khai trương:** thực tế khoảng T5 03.12 (POS 11.11). Đánh giá chi tiết: `claude/DANH_GIA_TIEN_DO_11112026.md`.
 
 ## Quyết định 10–14.11 (đủ ở `thiet_ke/QUYET_DINH_APPKH.md`)
