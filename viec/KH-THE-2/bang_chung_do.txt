@@ -1,0 +1,66 @@
+KH-THE-2 — bằng chứng đỏ trên code gốc (mốc e7bc071 = PHIEU đã duyệt), bài thử của HEAD, KHONG_TRINH_DUYET=1 (đúng như GitHub chạy — không trình duyệt).
+Cây gốc dựng bằng `git archive e7bc071 src index.html public thiet_ke package.json viec/KH-THE-1/hop_dong_v13.md viec/KH-ND-3c` + `git archive HEAD cong_cu` ở thư mục nháp.
+Số ca (dòng SỐ CA) = dòng tổng bài in trên code ĐÃ VÁ với KHONG_TRINH_DUYET=1. Phần trình duyệt chạy thật ở máy — kết quả ở trang_thai.md.
+
+== cong_cu/thu_KHTHE2.js (bài MỚI) — trên gốc: 6 đạt · 18 hỏng
+  ✗ A1 docGio bản lưu cũ [ly, thẻ] → chỉ [ly] (không báo, không lỗi)
+  ✗ A1 ghiGio không lưu dòng thẻ  — [{"loai":"the","hang_id":2,"so_thang":3},{"ma":"TLB","so_luong":2,"ghi_chu":""}]
+  ✗ A1 gio.js không còn themThe; datDon.js không còn phanGui / thamThanhToanLai; giaHang.js không còn lopHang / dongGoi
+  ✗ A1 /thanhtoan?chi=the → không còn tham số chi
+  ✗ A1 nguồn: GioHang.jsx không còn DongThe / traTheTruoc / gio.truocThe; App.jsx không còn traTheTruoc / themThe / chiThe
+  ✗ B2 MOC_TIET_KIEM = 1.000.000, khai MỘT chỗ
+  ✗ B2 dừng giữa chừng  — H.tietKiemMotTrieu is not a function
+  ✗ E2 dừng giữa chừng  — H.trangThaiTheUuDai is not a function
+  ✗ C1 /uudai/hang/thanhtoan?h=2&thang=3 → trang thanhtoanthe, tab uudai, cần đăng nhập, cha /uudai/hang?h=2  — {"trang":"khongthay",…}
+  ✗ C1 taoDuongDan(thanhtoanthe, {h, thang})
+  ✗ C1 tiepHopLe giữ cả hai tham số
+  ✗ C1 dừng giữa chừng  — G.dongTheTuDuongDan is not a function
+  ✗ C3 dừng giữa chừng  — D.dungViCho is not a function
+  ✗ D1 dừng giữa chừng  — D.thamTaoMaMoi is not a function
+  ✗ F1 các khoá mới có trong danh mục  — tier.cmp.chon, tier.cmp.loi, tier.goi, tier.qr, …
+  ✗ F1 khoá không còn dùng đã xoá khỏi danh mục  — tier.hienTai, tier.how, tier.buynote, tier.daThem, …
+  ✗ F1 phần POS → khoá pos; tiết kiệm / số ngày → tutinh
+  ✗ F1 không còn câu "2 ly/tuần" ở danh mục
+SỐ CA cong_cu/thu_KHTHE2.js: 44
+
+== cong_cu/thu_KHTHE1.js (bài cũ sửa — ca thẻ trong giỏ / trả thẻ trước) — trên gốc: 67 đạt · 11 hỏng
+  ✗ C1 (KH-THE-2) gio.js không còn themThe — Mua ngay đi thẳng Thanh toán thẻ
+  ✗ C1 (KH-THE-2) bản lưu cũ có dòng thẻ (đúng dạng hay hỏng) → bỏ dòng thẻ, giữ món
+  ✗ C1 (KH-THE-2) ghiGio không lưu dòng thẻ
+  ✗ C3 (KH-THE-2) không còn "trả thẻ trước": datDon.js không còn phanGui; đơn có thẻ không dùng ví (dungViCho)
+  ✗ D2 hạng của màn chúc mừng lấy từ dòng thẻ đã gửi + /hang (… KH-THE-2 trả bản ghi hạng)
+  ✗ C3 (KH-THE-2) "Tạo mã mới" đơn chỉ thẻ → Thanh toán thẻ đúng hạng + gói (thamTaoMaMoi); đơn có ly → Thanh toán giỏ
+  ✗ B2 (KH-THE-2) thẻ xám "Hạng hiện tại" bỏ: giaHang.js không còn lopHang
+  ✗ B1 màn Hạng thành viên: phần chung KHÔNG gọi /toi (dungCua) — … (KH-THE-2: dòng phụ PhuToi)
+  ✗ C2 tên dòng thẻ của đơn chưa rõ MỘT hàm (tenDongThe) ở Thanh toán; Giỏ không còn dòng thẻ (KH-THE-2)
+  ✗ B1 taoDuongDan(hang, { h }); (KH-THE-2) /thanhtoan không còn ?chi=the
+  ✗ F1 các khoá mới của việc có trong danh mục  — tier.note, the.tt.dong, the.cm.t, ud.the.nutCo, ud.the.nutMua
+SỐ CA cong_cu/thu_KHTHE1.js: 78
+
+== cong_cu/thu_KHHANG2.js (bài cũ sửa — thẻ hạng Ưu đãi) — trên gốc: 6 đạt · 4 hỏng
+  ✗ A2 (KH-THE-2 E2) thẻ Ưu đãi có nút ud.the.nutCo / nutMua / nutGiaHan / nutTang → màn Hạng thành viên (moHang)
+  ✗ A1 chữ cố định: "Dành tặng khách thân thiết · không thời hạn" / "Không thời hạn" (KH-THE-2: khoá ud.the.*)
+  ✗ A2 dừng giữa chừng  — g.giaCot is not a function
+  ✗ A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+
+== cong_cu/thu_KHND3c.js (bài cũ sửa — khoá ud.hang.* / dongGoi bỏ) — trên gốc: 36 đạt · 6 hỏng
+  ✗ A1 phần POS (…) có mục khoá pos + chỉ đường POS ›  — ud.the.pos
+  ✗ D1 các khoá hay quên: ndDau thật ở màn (không chỉ có tên khoá trong mã)
+  ✗ D1 mọi khoá còn lại có chỗ gắn (…) hoặc khai cờ KHONG_GAN + lý do  — ud.hang.db
+  ✗ D1 mọi khoá KHONG_GAN đều có thật trong danh mục  — hien.ud.the
+  ✗ B1 tenDongThe / dinhDangGia / moTaGiam: mặc định (…)
+  ✗ C3 no_chu_cung.txt: …
+SỐ CA cong_cu/thu_KHND3c.js: 42
+
+== cong_cu/thu_KHUI3a.js (bài cũ sửa — ca D1 "không nhân phần trăm" chừa tietKiemMotTrieu) — trên gốc: 43 đạt · 1 hỏng
+  ✗ D1 src/giaHang.js không nhân phần trăm vào giá (chỉ tietKiemMotTrieu — số tiết kiệm để hiện)
+SỐ CA cong_cu/thu_KHUI3a.js: 44
+
+== cong_cu/thu_KHUI3d.js (bài cũ sửa — ca B2 thẻ hạng Ưu đãi) — trên gốc: 33 đạt · 1 hỏng
+  ✗ B2 KH-HANG-2 / KH-THE-2: thẻ hạng không đọc gia_the; có "Không thời hạn" và dòng hạng tặng (khoá ud.the.*)
+SỐ CA cong_cu/thu_KHUI3d.js: 34
+
+== cong_cu/thu_KHNHANH1.js (bài cũ sửa — ca G1 thẻ hạng Ưu đãi) — trên gốc: 84 đạt · 1 hỏng
+  ✗ G1 (KH-THE-2 E2) thẻ Ưu đãi vẽ MỘT trạng thái từ trangThaiTheUuDai(hạng có giảm, …) — hạng 0% không bao giờ là hạng bán đầu tiên
+SỐ CA cong_cu/thu_KHNHANH1.js: 85
