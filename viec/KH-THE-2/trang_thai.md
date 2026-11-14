@@ -26,7 +26,7 @@
   ```
 
 ## Bước 4–5 — bài thử đỏ trước, rồi sửa
-- Bài MỚI `cong_cu/thu_KHTHE2.js`: trên gốc 6 đạt · 18 hỏng (KHONG_TRINH_DUYET=1; có trình duyệt 23 đạt · 64 hỏng). Sau vá: 44 / 44 (không trình duyệt), 133 / 133 (Chromium).
+- Bài MỚI `cong_cu/thu_KHTHE2.js`: trên gốc 6 đạt · 18 hỏng (KHONG_TRINH_DUYET=1; có trình duyệt 23 đạt · 64 hỏng). Sau vá (bản cuối): 45 / 45 (không trình duyệt), 154 / 154 (Chromium) — lần đầu 44 / 133, thêm ca ở soát vòng 1–2.
 - Bằng chứng: `bang_chung_do.txt` (7 bài, mỗi bài đỏ trên gốc + dòng `SỐ CA`).
 
 ## Khác kế hoạch (ghi rõ)
@@ -114,3 +114,33 @@ BÀI HỌC: KHOÁ ndDau(k) phải đi cùng nd(k); KHOÁ ca "không thời hạn
 1. Mở tab **Ưu đãi**: thẻ hội viên ở TRÊN CÙNG, đúng tình trạng của chị (chưa thẻ / còn hạn / sắp hết hạn / quán tặng), MỘT nút.
 2. Bấm nút thẻ → **Hạng thành viên**: bảng "So sánh nhanh" ở đầu; chạm cột Kim Cương (nút mờ "Hạng dành tặng…") rồi cột Hạng vàng (gói + nút "Mua ngay · …" đổi theo).
 3. Bấm **Mua ngay** với gói rẻ → Thanh toán chỉ có "Chuyển khoản QR" (không công tắc ví, không nhận hàng) → quét QR trả → màn **Chào mừng hội viên** → "Đặt đồ uống ngay" → giá Menu đã giảm.
+
+## Soát độc lập — vòng 2 (agent phụ mới, chỉ đọc) — kết luận chép nguyên
+```
+KHÔNG ĐẠT — 6 lỗi vòng 1 đã sửa đúng; đường tiền đúng; tệp cấm không đổi; K9 đúng.
+LỖI TÌM ĐƯỢC:
+- trang_thai.md chưa ghi kết quả npm test / --day-du / cổng tinh / K10; dòng 29 còn số cũ 133/133 — K1 / F7.
+- UuDai.jsx:180 "còn N ngày" (nd ud.the.con) gắn data-nd ud.the.tutinh; HangThanhVien.jsx:34–35 tier.cmp.pt / moiThang / moiNThang / trong nằm trong ô chỉ gắn tier.pos / tier.tutinh — §11 / F1.
+- TheoDoiDon.jsx:107 — tắt hien.the.cm làm đơn chỉ thẻ hiện như đơn đồ uống (số đơn, các bước, "mời ra quầy") — K5 / D1.
+NGHI NGỜ: không còn ca khoá "đơn chỉ thẻ không có dải báo đơn"; /hang chưa về / lỗi → khách Kim Cương bị xếp "co" (thẻ vàng); tong null → "Đơn APP0042 · " cụt; giaCot tự tìm gói rẻ nhất
+thay vì dùng giaRe; ra() của duongDan là hàm chung.
+NGHIỆM THU: 22/24 · thiếu F7 (kết quả kiểm chưa ghi), F1 (data-nd hai tệp).
+BÀI HỌC: KHOÁ mọi nd(k) hiện cho khách nằm trong phần tử ndDau(k) của chính khoá đó · NGUYÊN TẮC tắt khối hien.* chỉ ẩn khối đó · KHOÁ lỗi vòng trước phải có dòng "đã sửa".
+```
+### Sửa sau vòng 2
+- F7: mục "Kết quả kiểm" bên dưới (số mới). Dòng số ca THE2 đã sửa.
+- data-nd: `UuDai.jsx` "còn N ngày" gắn `ud.the.con`; `HangThanhVien.jsx` ô số: phần tử ngoài giữ khoá `tier.pos` / `tier.tutinh`, chữ định dạng bên trong gắn `tier.cmp.pt`,
+  `tier.cmp.moiThang|moiNThang`, `tier.cmp.trong` của chính nó.
+- `TheoDoiDon.jsx`: `theXong` (đơn chỉ thẻ đã trả) KHÔNG phụ thuộc `hien.the.cm`; `chaoMung = theXong && ndHien(...)` chỉ ẩn màn chúc mừng (còn hoá đơn POS). Ca [T] mới D1 ở thu_KHTHE2;
+  đột biến BV-CHAO-MUNG-THANH-DON-THUONG đổi theo dòng mới.
+- Nghi ngờ đã xử lý: ca Chromium "không dải .bao-don cho đơn chỉ thẻ" (THE2 B5); thẻ Ưu đãi chờ `/hang` (mảng) mới vẽ — `/hang` lỗi → không vẽ (không sai thẻ); `tong` null → mục mới
+  `the.cm.donSo` "Đơn {so}"; `giaCot` dùng `giaRe`. `ra()` của duongDan: giữ, đã ghi ở "Sửa sau vòng 1".
+
+## Kết quả kiểm (bản cuối, 14.11.2026)
+- `node kiem_tra_truoc_khi_giao.js --day-du` (có Playwright + dựng app): **54 đạt · 0 hỏng** — gồm K9 (màu chỉ từ demo), K10 (chữ cứng chỉ được giảm — không tệp nào tăng / giảm),
+  dựng app + kiểm dist/, mọi `cong_cu/thu_*.js` xanh (thu_KHTHE2 154/154, THE1 91, HANG2 67, ND3c 79, NHANH1 229, UI3a 87, UI3d 174 có trình duyệt).
+- `npm test` = cùng bộ không `--day-du` — xanh (các lần chạy trong việc).
+- Đột biến tay: nhóm không trình duyệt 11/11 bắt (chạy lại sau vòng 2); nhóm trình duyệt — ghi ở dưới.
+- Cổng `node tu_chay/cong.js tinh . d90937f^ HEAD viec/KH-THE-2`: chỉ `✗ [A19]` (thiếu dòng HEAD ĐÃ KIỂM — ghi cuối cùng).
+- Cổng `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d90937f^ HEAD viec/KH-THE-2` (lần trước vòng 2): `✓ CỔNG CHẠY ĐẠT` (2 cảnh báo A16: THE2 / HANG2 dừng sớm trên gốc — "bỏ qua").
+  Chạy lại ở HEAD cuối — ghi ở dưới.
