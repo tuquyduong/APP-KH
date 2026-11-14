@@ -21,7 +21,8 @@ Số ca (dòng SỐ CA) = dòng tổng bài in trên code ĐÃ VÁ với KHONG_T
   ✗ F1 khoá không còn dùng đã xoá khỏi danh mục  — tier.hienTai, tier.how, tier.buynote, tier.daThem, …
   ✗ F1 phần POS → khoá pos; tiết kiệm / số ngày → tutinh
   ✗ F1 không còn câu "2 ly/tuần" ở danh mục
-SỐ CA cong_cu/thu_KHTHE2.js: 44
+SỐ CA cong_cu/thu_KHTHE2.js: 45
+(soát vòng 2 thêm 1 ca [T] D1 "tắt hien.the.cm" — chạy lại trên gốc 14.11: vẫn 6 đạt · 18 hỏng, khối D1 dừng ở thamTaoMaMoi trước ca mới)
 
 == cong_cu/thu_KHTHE1.js (bài cũ sửa — ca thẻ trong giỏ / trả thẻ trước) — trên gốc: 67 đạt · 11 hỏng
   ✗ C1 (KH-THE-2) gio.js không còn themThe — Mua ngay đi thẳng Thanh toán thẻ
