@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 58,
-  "cap_nhat": "2026-11-12",
+  "phien_ban_so": 59,
+  "cap_nhat": "2026-11-14",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -202,15 +202,16 @@
       "ma": "KH-ND-3d",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-ND-3a",
         "KH-UI-5f"
       ],
       "ten": "Gom noi dung ve danh muc: Ke hoach + moi tien ich (loi khuyen tiet khi, theo mua, ngay le, van khan dang danh sach); ten can chi / tiet khi sang noiDung/coDinh",
-      "ghi_chu": "11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 12.11 mo SAU KH-UI-5f gop (cung tep Ke hoach / tien ich); kehoach.js gan 500 dong — xem tach tep | 12.11 mo (sau 3c + 5f gop): ngay le / theo mua / tiet khi / van khan thanh muc sua duoc (bai khan moi dip mot doan, bien dung cho tu dien); lich co dinh (thu, can chi, tiet khi, thang am) sang src/noiDung/coDinh/lich.js — muc khoa tutinh; B1 o tien ich an (Chu ky voi xung ho nam, o tat o /admin) thi duong dan cung khong mo -> thay ve /kehoach; B2 GiaMon bo replace(d) -> dinhDangSoTien; B3 tel: o Theo doi don chi so",
+      "ghi_chu": "11.11 chay song song: chat tao san tep nhom + dong trong src/noiDung/nd/index.js khi mo viec (cac viec khong sua chung dong). No nhieu nhat (KH-ND-3a do): lich.js 68, tracNghiem.js 62, BangNgay.jsx 54, ThanhToan.jsx 54, KeHoach.jsx 44, kehoach.js 41, UuDai.jsx 34, NguoiThan.jsx 33 | 12.11 mo SAU KH-UI-5f gop (cung tep Ke hoach / tien ich); kehoach.js gan 500 dong — xem tach tep | 12.11 mo (sau 3c + 5f gop): ngay le / theo mua / tiet khi / van khan thanh muc sua duoc (bai khan moi dip mot doan, bien dung cho tu dien); lich co dinh (thu, can chi, tiet khi, thang am) sang src/noiDung/coDinh/lich.js — muc khoa tutinh; B1 o tien ich an (Chu ky voi xung ho nam, o tat o /admin) thi duong dan cung khong mo -> thay ve /kehoach; B2 GiaMon bo replace(d) -> dinhDangSoTien; B3 tel: o Theo doi don chi so | 13.11 chat soat cuoi DAT: dau nhanh 3380dc7; cong tinh + chay kieu GitHub DAT; --day-du co Chromium 52/0; ghi nhan TERM_TIPS con Proxy (bo khi duoc sua tracNghiem.js) va KHONG_VAO_SAP_TOI so theo TEN le (doi sang co o KH-ADMIN-1). Gop PR #36 (cf07b98)",
       "ngay": "2026-11-12",
-      "han": "2026-11-15"
+      "han": "2026-11-15",
+      "commit": "cf07b98"
     },
     {
       "ma": "KH-ND-3e",
@@ -259,24 +260,38 @@
       "trang_thai": "cho",
       "phu_thuoc": [
         "KH-UI-5d",
-        "POS QC-APP-1 (hop dong v14)"
+        "POS QC-APP-1 (hop dong v16)"
       ],
       "ten": "Dai quang cao + banner Trang chu doc GET /quang-cao (chu quan dat trong Cai dat POS theo ngay / khung gio); dong id gio_vang uu tien 0",
-      "ghi_chu": "09.11 POS nhan QC-APP-1, du kien 12-13.11, hop dong v14 (sau KH-THE-1 v13) | 09.11 tu soat KH-UI-5d: chonQuangCao (src/quangCao.js) dang xep dong quangCao theo uu_tien LON truoc va de dong thuong truoc dong gio_vang — POS chot uu_tien NHO = uu tien cao, dong id gio_vang uu_tien 0: khi noi /quang-cao phai xep TANG dan, gop dong gio_vang vao cung mot thu tu (chi dung khi Gio vang dang chay) + sua ca thu | 11.11 phan HIEN THI (dai kieu A anh sang nhu demo + banner Hom nay Trang chu luon chay, cung nguon chonQuangCao) lam o KH-UI-5g — KH-QC-1 chi doc GET /quang-cao + sua uu_tien | 12.11 KH-UI-5g gop: chonQuangCao tra { chu, tieuDe, phu, nut, dich, khoa } — KH-QC-1 chi them nguon GET /quang-cao + uu_tien TANG dan"
+      "ghi_chu": "09.11 POS nhan QC-APP-1, du kien 12-13.11, hop dong v14 (sau KH-THE-1 v13) | 09.11 tu soat KH-UI-5d: chonQuangCao (src/quangCao.js) dang xep dong quangCao theo uu_tien LON truoc va de dong thuong truoc dong gio_vang — POS chot uu_tien NHO = uu tien cao, dong id gio_vang uu_tien 0: khi noi /quang-cao phai xep TANG dan, gop dong gio_vang vao cung mot thu tu (chi dung khi Gio vang dang chay) + sua ca thu | 11.11 phan HIEN THI (dai kieu A anh sang nhu demo + banner Hom nay Trang chu luon chay, cung nguon chonQuangCao) lam o KH-UI-5g — KH-QC-1 chi doc GET /quang-cao + sua uu_tien | 12.11 KH-UI-5g gop: chonQuangCao tra { chu, tieuDe, phu, nut, dich, khoa } — KH-QC-1 chi them nguon GET /quang-cao + uu_tien TANG dan | 14.11 POS bao QC-APP-1 xong (thu thiet_ke/trao_doi/TRA_LOI_POS_13112026_QC.md): GET /quang-cao khong token, data[] da xep uu_tien tang; khung gio App tu so voi bay_gio; chu thuan (khong HTML); gioi han chu_dai 32 / tieu_de 40 / phu 80 / chu_nut 20 / 20 dong; dich menu|mon|uudai|tracnghiem|\"\"; dong gio_vang = data[0] khi cong tac bat; chung tran luot voi /menu (429) -> doc mot lan khi mo Trang chu / quay lai sau lau. Mo khi main POS co hop dong v16 (v15 de VOUCHER-2) — nhung hop dong vao commit PHIEU"
     },
     {
       "ma": "KH-THE-1",
       "loai": "T",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "POS DIEM-MON-1",
         "POS KH-THE-1 (hop dong /api/kh dong the trong mon[])"
       ],
       "ten": "Ban the hang tren App: man Mua the hoi vien theo demo (buycard), nhom \"The thanh vien\" o Menu, nut Mua o Uu dai, Trang chu nhac gia han; the vao chung gio voi do uong; chi_cap → nut Mua mo + \"Hang danh tang khach than thiet\"",
-      "ghi_chu": "08.11 chu quan chot (thu POS 08.11): hang phai co truoc — don co the + do uong thi do uong tinh hang dang co; muon giam ngay → goi y mua the truoc (don rieng); POS tu cap hang khi da thu; tich diem theo tung mon (POS). App cho ban hop dong cua POS | 10.11 POS: ma giam / voucher KHONG ap len the hang, nap, goi tra truoc, the qua; gio co mon thuong thi ma chi tinh tren mon thuong — App lay so giam tu bao gia | 12.11 mo (chu quan dong y: song song KH-ND-3d, ADMIN-1 sau): viec TIEN (dung luong gio / dat don) -> cho duyet ke hoach; hop dong v13 chep nguyen van (POS 162a908); man Hang thanh vien /uudai/hang theo demo buycard (khach vang lai xem duoc, Mua can dang nhap); the la dong gio {loai:the,hang_id,so_thang}, toi da 1, thay khi mua the khac; tra the truoc (/thanhtoan?chi=the, khong gui ma_giam, xong chi bo dong the); gio chi the dat moi gio; don chi the khong bao ra quay; dat lai bo the; nhac gia han <= 7 ngay o Trang chu; Menu nhom The thanh vien (the hoi vien thu nho cua demo); hang Diem / Giao / dieu kien Kim cuong: POS chua co du lieu -> khong lam",
+      "ghi_chu": "08.11 chu quan chot (thu POS 08.11): hang phai co truoc — don co the + do uong thi do uong tinh hang dang co; muon giam ngay → goi y mua the truoc (don rieng); POS tu cap hang khi da thu; tich diem theo tung mon (POS). App cho ban hop dong cua POS | 10.11 POS: ma giam / voucher KHONG ap len the hang, nap, goi tra truoc, the qua; gio co mon thuong thi ma chi tinh tren mon thuong — App lay so giam tu bao gia | 12.11 mo (chu quan dong y: song song KH-ND-3d, ADMIN-1 sau): viec TIEN (dung luong gio / dat don) -> cho duyet ke hoach; hop dong v13 chep nguyen van (POS 162a908); man Hang thanh vien /uudai/hang theo demo buycard (khach vang lai xem duoc, Mua can dang nhap); the la dong gio {loai:the,hang_id,so_thang}, toi da 1, thay khi mua the khac; tra the truoc (/thanhtoan?chi=the, khong gui ma_giam, xong chi bo dong the); gio chi the dat moi gio; don chi the khong bao ra quay; dat lai bo the; nhac gia han <= 7 ngay o Trang chu; Menu nhom The thanh vien (the hoi vien thu nho cua demo); hang Diem / Giao / dieu kien Kim cuong: POS chua co du lieu -> khong lam | 13.11 chat soat cuoi DAT: dau may 47187ff (soat doc lap 3 vong, 28 dot bien); gop main sau 3d: xung dot DUY NHAT src/App.jsx -> gop_KHTHE1.py, cay gop c54750c2 da chay --day-du Chromium + cong tinh / chay kieu GitHub DAT; Cau hoi 4 (thu_KHND3e B1 so moc git): KHONG them \"## Bai thu cu sua\" (cong doi ban goc bai cu xanh tren PR) — giu ban sua cua may, viec sau KH-THU-2. 14.11 chu quan xem tren dien thoai: mua the 7 buoc qua gio, the Uu dai liet ke moi hang -> KH-THE-2 lam lai theo thiet ke. Gop PR #37 (6f9ffac)",
       "ngay": "2026-11-12",
-      "han": "2026-11-16"
+      "han": "2026-11-16",
+      "commit": "6f9ffac"
+    },
+    {
+      "ma": "KH-THE-2",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-THE-1"
+      ],
+      "ten": "The hoi vien theo thiet ke chu quan duyet 14.11: so sanh nhanh len dau man Hang thanh vien (cham cot chon hang, \"Chi 1 trieu, tiet kiem\"), Mua ngay thang Thanh toan the (the khong vao gio, chi QR, khong vi / PIN / ma giam, khong phan nhan hang), man Chao mung hoi vien, the Uu dai len dau theo 4 tinh trang",
+      "ghi_chu": "14.11 mo: chu quan duyet trang so sanh \"So sanh the hoi vien\" (Artifact Ddrw9SiX95XhW3KJWXfRWR; ban chep viec/KH-THE-2/ban_thiet_ke.html); the KHONG tra bang so du (tien nap co thuong) — App an vi cho the, POS chan o may chu (thu YEU_CAU_APPKH_GUI_POS_14112026.md); bo \"Tra the truoc\" + the trong gio; bo cau \"Uong tu 2 ly/tuan...\"; App khong tu tinh han moi; Thanh toan the = chinh man Thanh toan voi \"gio\" mot dong the dung tu duong dan /uudai/hang/thanhtoan?h=&thang=",
+      "ngay": "2026-11-14",
+      "han": "2026-11-18"
     },
     {
       "ma": "KH-UI-4",
@@ -396,6 +411,15 @@
       "ngay": "2026-11-08",
       "han": "2026-11-09",
       "commit": "aad5082"
+    },
+    {
+      "ma": "KH-THU-2",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "cho",
+      "phu_thuoc": [],
+      "ten": "Bai thu khong phu thuoc lich su git: thu_KHND3e B1 so moc git -> do tren goc cua cong (git archive khong co .git); doc tep / hang so thay vi git log",
+      "ghi_chu": "13.11 tu Cau hoi 4 cua KH-THE-1 (chat thu cong: \"## Bai thu cu sua\" doi ban goc xanh tren PR -> khong dung duoc); gom them bai nao goi git trong cong_cu/thu_*.js"
     },
     {
       "ma": "KH-KHOP-1",
@@ -704,7 +728,7 @@
         "KH-ND-3a",
         "POS ND-API-1 (gop ~15.11; hop dong RIENG HOP_DONG_API_ND.md v1)"
       ],
-      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai | 10.11 chu quan: lam TRUOC khai truong; bang sua TU SINH tu danh muc; moi bang co nut \"Luu\" (nhap) + nut \"Cap nhat toan bo\" moi doi giao dien khach; giu moi phien ban, so cu-moi, quay lai ban cu; an/hien khoi; mo het chu (ke ca nut, bao loi); phan POS / tu tinh hien khoa co chi duong | 11.11 chu quan: kho noi dung o nho POS (/api/nd, nha rieng — tach sau chi doi 1 dia chi), quyen trong Cai dat › Phan quyen POS; nut but ✎ rieng, cham cho khac van chuyen man; \"Di toi man\" + \"Danh sach chu cua man\"; nut lam that bi khoa khi sua; App noi kho qua MOT tep src/noiDung/khoNoiDung.js | 11.11 bo phu thuoc KH-TACH-1 (noi dung o nho POS /api/nd, khong can may rieng truoc). Truoc khi mo sua chao.dau: HoSo.jsx dung coBuoi (KH-ND-3c); danhsach chua chan muc trung (home.feat.mon nhap trung ma -> trung key React) — chan trung chung cho moi danhsach o bang sua | 11.11 POS tra loi thu (a) (TRA_LOI_POS_11112026_a.md): ND-API-1 NHAN, Opus, bat dau ~13.11, gop ~15.11; nhan NGUYEN ten cua / bang / ma loi / gioi han thu App 11.11 a -> App lam KH-ADMIN-1 NGAY theo ten do. POS chot: anh luu trong bang nd_anh (Xuat / Nhap mang ca anh); ve /api/nd RIENG (~12 gio, gioi han sai nhu dang nhap POS, kiem quyen moi lan ghi) — thay cho \"cua xac nhan tai khoan nhan vien D9\"; CORS chi tuquyduong.com + app-kh.pages.dev; quyen nhom \"App khach hang — noi dung\" (4 quyen, mac dinh chi chu quan) | 12.11 tu soat KH-ND-3b: ~10 khoa qua ham tra chuoi (gv.ghi.*, thu.t2..t8…) chua gan data-nd tai cho — /admin tim qua \"Danh sach chu cua man nay\"; mot so chu co dau cach cuoi (gio.daXoa, gv.ghi.truocA) — bang sua KHONG cat khoang trang dau / cuoi | 12.11 tu soat KH-ND-3c: DauManCon va Thongbao chua gan data-nd — gan khi lam Che do sua (hoac \"Danh sach chu cua man nay\"); loi POS (nm.loi, qc.pos, ud.ct.pos) la muc khoa | 12.11 chu quan (theo de nghi): mo ~14.11 khi POS ND-API-1 sap gop — lam khop ban that, do sua lai; chay song song KH-THE-1 thi chia ro dong App.jsx / duongDan.js"
+      "ghi_chu": "sau khai truong; chu quan chot 29.10: khong co muc quan tri trong app khach | 31.10: chuyen trang Kiem khop POS (/kiemkhop, KH-KHOP-1) vao /admin va XOA duong dan cong khai | 10.11 chu quan: lam TRUOC khai truong; bang sua TU SINH tu danh muc; moi bang co nut \"Luu\" (nhap) + nut \"Cap nhat toan bo\" moi doi giao dien khach; giu moi phien ban, so cu-moi, quay lai ban cu; an/hien khoi; mo het chu (ke ca nut, bao loi); phan POS / tu tinh hien khoa co chi duong | 11.11 chu quan: kho noi dung o nho POS (/api/nd, nha rieng — tach sau chi doi 1 dia chi), quyen trong Cai dat › Phan quyen POS; nut but ✎ rieng, cham cho khac van chuyen man; \"Di toi man\" + \"Danh sach chu cua man\"; nut lam that bi khoa khi sua; App noi kho qua MOT tep src/noiDung/khoNoiDung.js | 11.11 bo phu thuoc KH-TACH-1 (noi dung o nho POS /api/nd, khong can may rieng truoc). Truoc khi mo sua chao.dau: HoSo.jsx dung coBuoi (KH-ND-3c); danhsach chua chan muc trung (home.feat.mon nhap trung ma -> trung key React) — chan trung chung cho moi danhsach o bang sua | 11.11 POS tra loi thu (a) (TRA_LOI_POS_11112026_a.md): ND-API-1 NHAN, Opus, bat dau ~13.11, gop ~15.11; nhan NGUYEN ten cua / bang / ma loi / gioi han thu App 11.11 a -> App lam KH-ADMIN-1 NGAY theo ten do. POS chot: anh luu trong bang nd_anh (Xuat / Nhap mang ca anh); ve /api/nd RIENG (~12 gio, gioi han sai nhu dang nhap POS, kiem quyen moi lan ghi) — thay cho \"cua xac nhan tai khoan nhan vien D9\"; CORS chi tuquyduong.com + app-kh.pages.dev; quyen nhom \"App khach hang — noi dung\" (4 quyen, mac dinh chi chu quan) | 12.11 tu soat KH-ND-3b: ~10 khoa qua ham tra chuoi (gv.ghi.*, thu.t2..t8…) chua gan data-nd tai cho — /admin tim qua \"Danh sach chu cua man nay\"; mot so chu co dau cach cuoi (gio.daXoa, gv.ghi.truocA) — bang sua KHONG cat khoang trang dau / cuoi | 12.11 tu soat KH-ND-3c: DauManCon va Thongbao chua gan data-nd — gan khi lam Che do sua (hoac \"Danh sach chu cua man nay\"); loi POS (nm.loi, qc.pos, ud.ct.pos) la muc khoa | 12.11 chu quan (theo de nghi): mo ~14.11 khi POS ND-API-1 sap gop — lam khop ban that, do sua lai; chay song song KH-THE-1 thi chia ro dong App.jsx / duongDan.js | 13.11 tu soat KH-ND-3d: KHONG_VAO_SAP_TOI so theo TEN le -> doi sang co; TERM_TIPS con Proxy -> bo khi duoc sua tracNghiem.js | 14.11 POS ND-API-1 dang lam (POS main 4434ad5 mo lan 2, Opus) -> mo khi gop"
     },
     {
       "ma": "KH-CHU-MA-1",
