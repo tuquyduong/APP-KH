@@ -98,10 +98,10 @@ const TOI = (het_han, id = 2) => ({ id, ten: HANG.find((h) => h.id === id).ten, 
     k('C2 thân đặt đơn thẻ: mon đúng 3 khoá, cach_tra qr, không ma_giam, không pin', bang(than.mon, [THE(2, 3)]) && than.cach_tra === 'qr' && !('ma_giam' in than) && !('pin' in than));
   });
   await thu('C3', async () => {
-    k('C3 cachTraDon: giỏ có thẻ → qr dù công tắc ví bật + số dư đủ', D.cachTraDon([THE()], true, { vi: true, viQr: false }) === 'qr' && D.cachTraDon([THE()], true, { vi: false, viQr: true }) === 'qr');
-    k('C3 đối chứng: đơn đồ uống cùng điều kiện → vi / vi_qr / qr như cũ', D.cachTraDon([LY()], true, { vi: true, viQr: false }) === 'vi' && D.cachTraDon([LY()], true, { vi: false, viQr: true }) === 'vi_qr' && D.cachTraDon([LY()], false, { vi: true, viQr: false }) === 'qr');
+    k('C3 dungViCho: đơn có thẻ → KHÔNG dùng ví dù công tắc nhớ bật', D.dungViCho([THE()], true) === false && D.dungViCho([LY(), THE()], true) === false);
+    k('C3 đối chứng: đơn đồ uống theo công tắc như cũ (bật → dùng ví, tắt → không)', D.dungViCho([LY()], true) === true && D.dungViCho([LY()], false) === false);
     const tt = doc('src/pages/ThanhToan.jsx');
-    k('C3 ThanhToan.jsx quyết cách trả qua cachTraDon (một hàm)', /cachTraDon\(/.test(tt) && !/const cachTra = !dungVi/.test(tt));
+    k('C3 ThanhToan.jsx: dungVi = dungViCho(gio, công tắc) — MỘT luật; dòng cachTra của đơn đồ uống giữ nguyên', /const dungVi = dungViCho\(gio, \w+\)/.test(tt) && /const cachTra = !dungVi \? 'qr' : duoc\.vi \? 'vi' : duoc\.viQr \? 'vi_qr' : 'qr'/.test(tt));
   });
   await thu('C5', async () => {
     k('C5 mã lạ 4xx có code (vd THE_KHONG_TRA_VI) → chua_tao (hiện lời POS, không "chưa rõ")', D.loaiLoi(loi(400, 'THE_KHONG_TRA_VI')) === 'chua_tao' && !D.laLoiThe(loi(400, 'THE_KHONG_TRA_VI')));
