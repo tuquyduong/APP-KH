@@ -193,7 +193,7 @@ async function trinhDuyet(pw) {
   }
   await ca('vang-lai-khong-goi', { dn: false, hang: [H_VANG, H_TANG] }, async (t) => {
     await mo(t, '/uudai');
-    k('A2 đối chứng: không hạng nào bán được → ẩn thẻ (không dòng giá nào)', (await t.locator('#rewards .tier-card').count()) === 0 && dem(await manText(t), 'đ') === 0);
+    k('A2 đối chứng: không hạng nào bán được → ẩn thẻ (không giá nào)', (await t.locator('#rewards .tier-card').count()) === 0 && !/\d\.\d{3}đ/.test(await manText(t)));
   });
   await ca('vang-lai-du-lieu-hong', { dn: false, hang: [{ id: 1, ten: 'Bạc', phan_tram: 5, goi: 'hỏng', chi_cap: 'x' }, { id: 2, ten: 'Vàng', phan_tram: 10 }] }, async (t) => {
     await mo(t, '/uudai');
