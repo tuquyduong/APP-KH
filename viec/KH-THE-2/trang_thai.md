@@ -194,3 +194,11 @@ BÀI HỌC: KHOÁ chữ truyền qua prop của khung chung (DauManCon tieuDe / 
 4. **NGUYÊN TẮC**: phiếu dặn "không sửa ca" bài cũ đọc NGUYÊN dòng mã (BAO-1 / TT-1) → thiết kế quanh dòng đó (giữ dòng, đưa luật vào hàm thuần đứng trước) thay vì sửa bài.
 5. **BỎ**: người gác chặn `git add <thư mục>` làm phần `cat >>` trước đó trong cùng lệnh không chạy → mục "Số đo" trống (vòng 1). Một lần; bài học: lệnh ghi tệp tách khỏi lệnh git.
 6. **BỎ**: `chu()` trả chữ in hoa theo CSS (`text-transform`) → regex phân biệt hoa thường hỏng (ca D2 Menu). Một lần.
+
+## Kiểm cuối ở HEAD e3f4b9b (sau sửa vòng 3, cây sạch)
+- `node kiem_tra_truoc_khi_giao.js --day-du`: 54 đạt · 0 hỏng (thu_KHTHE2 154 / 154 có trình duyệt).
+- `node viec/KH-THE-2/dot_bien_tay.js --trinh-duyet` (sau vòng 2): TẤT CẢ ĐỘT BIẾN BỊ BẮT — 18 / 18; nhóm không trình duyệt chạy lại sau vòng 3 đổi code chỉ giao diện chữ — không đổi chỗ đột biến.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d90937f^ HEAD viec/KH-THE-2`: ✓ CỔNG CHẠY ĐẠT (cảnh báo A16: thu_KHHANG2 10 ≠ 16, thu_KHTHE2 24 ≠ 45 ca — hai bài dừng sớm trên gốc vì hàm mới chưa có; bỏ qua theo cổng).
+- `node tu_chay/cong.js tinh …`: chỉ ✗ [A19] trước dòng dưới.
+
+HEAD ĐÃ KIỂM: e3f4b9b
