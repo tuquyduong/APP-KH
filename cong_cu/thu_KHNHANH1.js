@@ -220,6 +220,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('G1 bỏ hạng phan_tram = 0 / không phải số > 0', JSON.stringify(GH.hangCoGiam(ds).map((h) => h.id)) === '[2]', JSON.stringify(GH.hangCoGiam(ds)));
     k('G2 không còn hạng nào → [] (thẻ ẩn); không phải mảng → []', GH.hangCoGiam([{ phan_tram: 0 }]).length === 0 && GH.hangCoGiam(null).length === 0);
     k('G1 thẻ hạng Ưu đãi lọc bằng hangCoGiam', /hangCoGiam\(dsHang\)/.test(doc('src/pages/UuDai.jsx')));
+    k('G1 (KH-THE-2 E2) thẻ Ưu đãi vẽ MỘT trạng thái từ trangThaiTheUuDai(hạng có giảm, …) — hạng 0% không bao giờ là hạng bán đầu tiên', /trangThaiTheUuDai\(ds, /.test(doc('src/pages/UuDai.jsx')) && GH.trangThaiTheUuDai([{ id: 1, ten: 'Test0d', phan_tram: 0, goi: [{ so_thang: 1, gia: 1000 }] }, { id: 2, ten: 'Vàng', phan_tram: 10, goi: [{ so_thang: 1, gia: 9000 }] }].filter((h) => h.phan_tram > 0), null, '2026-11-14T08:00:00').hang.id === 2);
   });
 
   await thu('H2', async () => {
