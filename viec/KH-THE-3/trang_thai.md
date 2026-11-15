@@ -61,7 +61,7 @@ C5 (so ảnh toàn bộ màn ngoài phạm vi), ảnh "trước" đủ 6 màn, t
 - KHOÁ (đã làm): ca "tên dài nhất ở 360 px, hạn vẫn đọc đủ"; ca `reducedMotion` đo `animation-name` cho CẢ Vàng và Kim Cương; ca "thẻ không vẽ được vẫn hiện thông tin ở chỗ khác".
 - NGUYÊN TẮC (đề xuất K11, ngoài Phạm vi): chép nguyên CSS từ bản thiết kế vẫn phải thử với dữ liệu dài hơn mẫu; đo hiệu ứng bằng computed style, không chỉ khớp regex CSS. Đã gây: KH-THE-3 soát v1.
 - NGUYÊN TẮC (đề xuất): trước khi tạo tệp theo phiếu, `ls` xem tệp đã có chưa (TheHoiVien.jsx có sẵn bị ghi đè nhầm, khôi phục kịp).
-- BỎ: cổng GitHub chạy `--trinh-duyet` khác máy — chỉ một lần, đã có ghi chú ở CLAUDE.md §9.
+- BỎ: không có sự cố một-lần nào đáng ghi.
 
 ## Báo cáo 7 mục
 VIỆC: KH-THE-3 thẻ hội viên Vàng & Kim Cương dùng chung. ĐÃ SỬA: danh sách các tệp ở `git diff 158773d^ HEAD`. BÀI THỬ: thu_KHTHE3 (23 ca không trình duyệt / 105 có Chromium) + 5 bài cũ sửa ca; 14 đột biến bị bắt. ĐÃ RÀ K4: grep MedHang / the-mini / cm-the / 🎟️ — sạch. CHƯA KIỂM: xem trên. GIT: nhánh viec/KH-THE-3, không merge, không PR. BÀI HỌC: trên.
