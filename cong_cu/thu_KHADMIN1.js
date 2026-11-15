@@ -295,6 +295,8 @@ const HEX = 'a'.repeat(64);
         'pin.xoa': 'phím xoá số PIN đang gõ', 'menu.xoaLoc': 'bỏ bộ lọc menu', 'gio.daXoa': 'chữ báo đã xoá (không phải nút)' };
       const khoaXoa = [...new Set([...nguon.matchAll(/(?:ndDau\('|k=")([\w.]*(?:[xX]oa|dangXuat)[\w.]*)['"]/g)].map((x) => x[1]))];
       const thieu = khoaXoa.filter((x) => !nut.includes(x) && !(x in KHONG_XOA));
+      const cd = doc('src/components/CheDoSua.jsx');
+      k('D7 / K5 khoá dùng chung (hx.xoa — BangQuaHan, NguoiThan chỉ MỞ hỏi lại) chỉ khoá TRONG hộp hỏi lại .hoi-xoa', (QT.NUT_CHI_TRONG_HOI_LAI || []).includes('hx.xoa') && /NUT_CHI_TRONG_HOI_LAI\.includes\(el\.dataset\.nd\) && !el\.closest\('\.hoi-xoa'\)/.test(cd) && /className="hoi-xoa"/.test(doc('src/components/HoiXoa.jsx')));
       k('D7 danh sách nút khoá khi sửa ĐỦ: mọi khoá xoá / đăng xuất trong màn đều khoá hoặc chỉ mở hỏi lại (xe.hangXoa, ti.xoaNgay xoá thẳng)', khoaXoa.length >= 10 && thieu.length === 0 && nut.includes('xe.hangXoa') && nut.includes('ti.xoaNgay'), thieu.join(','));
     }
     // khoá chữ khu quản trị
@@ -467,6 +469,7 @@ async function trinhDuyet(pw) {
       if (p.startsWith('/api/nd/')) {
         const duong = p.slice('/api/nd'.length);
         if (pt === 'GET' && /^\/anh\/[0-9a-f]{64}$/.test(duong)) { const a = kho.anh.get(duong.slice(5)); return a ? r.fulfill({ status: 200, contentType: `image/${a.loai}`, body: a.du_lieu }) : json(404, { error: 'x', code: 'KHONG_TIM_THAY' }); }
+        if (kho.treNhap && pt === 'GET' && duong === '/nhap') await new Promise((x) => setTimeout(x, kho.treNhap));
         let than; try { than = JSON.parse(req.postData()); } catch { than = undefined; }
         const x = kho.traLoi(pt, duong, u.searchParams, than, req.headers().authorization || '', req.postDataBuffer());
         return json(x.st, x.o);
@@ -627,6 +630,10 @@ async function trinhDuyet(pw) {
       k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00 \(lan\)/.test(await chu(t, '[data-bang-sua="home.mo"]')));
       await t.click('[data-bang-sua="home.mo"] .cs-h button');
     } else k('D3 (Người khác vừa lưu) cần bút home.mo trên Trang chủ', false);
+    K.nhap.set('home.mo', { khoa: 'home.mo', gia_tri: 'Chính tôi lưu ở tab khác', nguoi: { ten_dang_nhap: 'linh', ten_hien: null }, luc: '2026-10-30T20:59:30', ban_goc: 2 });
+    await moBut(t, 'home.mo');
+    k('D3 nháp đổi do CHÍNH người đang đăng nhập (so ten_dang_nhap) → không báo "Người khác…"', !/Người khác vừa lưu/.test(await chu(t, '[data-bang-sua="home.mo"]')));
+    await t.click('[data-bang-sua="home.mo"] .cs-h button');
     K.nhap.delete('home.mo');
     // nháp sai dạng (danh mục đổi loại giữa hai bản App / kho nhận mọi JSON) → bảng sửa KHÔNG vỡ, mở bằng giá trị đang chạy
     K.nhap.set('today.cta', { khoa: 'today.cta', gia_tri: 'chuỗi thay vì {chu,dich}', nguoi: { ten_dang_nhap: 'lan', ten_hien: null }, luc: '2026-10-30T20:58:00', ban_goc: 2 });
@@ -781,6 +788,16 @@ async function trinhDuyet(pw) {
     await t.goto(URL0 + '/trangchu'); await t.locator('.today b').waitFor(); await t.waitForTimeout(300);
     k('B4 chữ chứa <img onerror> hiện như CHỮ, không thành thẻ, không chạy', (await chu(t, '.today b')) === banXss.gia_tri['today.t'] && (await t.locator('.today b img').count()) === 0 && !(await t.evaluate(() => window.__xss)));
   });
+  // D4 tranh chấp: tắt sửa (✕) khi GET /nhap còn đang chờ → lời trả muộn KHÔNG bật lại lớp nháp
+  K.nhap.set('today.k', { khoa: 'today.k', gia_tri: 'NHÁP TRẢ MUỘN', nguoi: { ten_dang_nhap: 'linh', ten_hien: 'Chủ quán Linh' }, luc: '2026-10-30T21:00:00', ban_goc: K.dangChay });
+  K.treNhap = 1500;
+  await may('tat-giua-chung', { dn: false, ve: { ve: [...K.ve.entries()].find(([, a]) => a === 'linh')[0], het_han: '', quyen: ['nd_xem', 'nd_sua', 'nd_cap_nhat'], nguoi: { ten_dang_nhap: 'linh', ten_hien: 'Chủ quán Linh' } }, sua: true }, async ({ t }) => {
+    await t.goto(URL0 + '/trangchu'); await t.locator('.cms-bar').waitFor();
+    await t.click('.cms-bar button.x');
+    await t.waitForTimeout(2200);
+    k('D4 tắt sửa khi nháp còn đang tải → lời trả muộn KHÔNG bật lại lớp nháp (trang không hiện nháp)', (await chu(t, '[data-nd="today.k"]')) !== 'NHÁP TRẢ MUỘN' && (await t.locator('.cms-bar').count()) === 0, await chu(t, '[data-nd="today.k"]'));
+  });
+  K.treNhap = 0; K.nhap.delete('today.k');
   await may('tiep-ra-ngoai', { dn: false }, async ({ t }) => {
     for (const tiep of ['//evil.test/x', 'https://evil.test/', '/\\evil.test']) {
       await t.goto(URL0 + '/admin?tiep=' + encodeURIComponent(tiep)); await t.locator('#qt-dang-nhap').waitFor();
