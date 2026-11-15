@@ -430,7 +430,8 @@ async function trinhDuyet(pw) {
   const chup = process.env.LUU_ANH === '1';
   if (chup) fs.mkdirSync(ANH_DIR, { recursive: true });
   const DM = (await import(pathToFileURL(path.join(GOC, 'src/noiDung/nd/index.js')).href)).DANH_MUC;
-  const QT = await import(pathToFileURL(path.join(GOC, 'src/noiDung/quanTri.js')).href);
+  const QT0 = await nap('src/noiDung/quanTri.js');
+  const QT = QT0.qt ? QT0 : { qt: (x) => x, CHAN_KHI_SUA: 'Đang ở Chế độ sửa' }; // bản gốc chưa có tệp này → các ca vẫn chạy (và đỏ)
   const MENU_DS = [
     { ma: 'TLB', ten: 'Trà Lục Bảo', nhom: 'Trà Đông Y', gia: 30000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [] },
     { ma: 'CFM', ten: 'Cà phê Muối', nhom: 'Cà phê', gia: 39000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [] },
