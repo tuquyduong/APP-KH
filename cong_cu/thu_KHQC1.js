@@ -50,7 +50,7 @@ const dong = (o = {}) => {
 
   console.log('B/C — chonQuangCao: thứ tự POS, khung giờ, dải ≠ banner, đích, nguồn cũ');
   const QC = await nap('src/quangCao.js');
-  const chon = (o) => (QC ? QC.chonQuangCao({ gioVang: null, chuongTrinh: [], bayGio: BAY, quangCao: [], ...o }) : {});
+  const chon = (o) => ({ dai: {}, ...(QC ? QC.chonQuangCao({ gioVang: null, chuongTrinh: [], bayGio: BAY, quangCao: [], ...o }) : {}) }); // `dai` = đích riêng của dải
   const dai = (o) => chon(o).chu;
   const R = (o) => dong({ chu_dai: 'Dải A', tieu_de: 'Banner A', phu: 'Phụ A', chu_nut: 'Vào ngay', dich: 'menu', ...o });
 
