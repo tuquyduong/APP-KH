@@ -17,9 +17,14 @@ Phiếu, CLAUDE.md, KHUON_LOI.md, hợp đồng `/api/nd` v1 (sha256 `836eb6ba25
 ## Bước 3 — kế hoạch
 `viec/KH-ADMIN-1/ke_hoach.md`. Phiếu dặn **Chờ duyệt kế hoạch** → commit, push, DỪNG. Câu hỏi xin duyệt cùng kế hoạch: `ke_hoach.md` §6 (Q1–Q4).
 
+Agent phụ (chỉ đọc) soát 4 câu → sửa ghi ở `ke_hoach.md` §5b (lỗi thật: chặn ghi status 0 làm `POST /don` "chưa rõ" — đổi sang 4xx; cờ chặn bật đồng bộ trước render;
+bài cũ `thu_KHPWA1.js`, `thu_KHUI3b.js` sẽ đổi; thêm ca thử; `role="dialog"` cho bảng sửa).
+
 ## Câu hỏi
 Xem `ke_hoach.md` §6 — Q1 (thêm một dòng `export DS_MAN` ở `src/duongDan.js` cho "Đi tới màn"), Q2 (`/kiemkhop` → Trang chủ), Q3 (`/admin/kiemkhop` vẫn dùng token khách của máy),
-Q4 (khoá nút Đăng xuất / xoá theo danh sách khoá `data-nd`).
+Q4 (khoá nút Đăng xuất / xoá theo danh sách khoá `data-nd`), Q5 (đổi 3 chỗ cũ /admin trong `duongDan.js`), Q6 (import hàm `denLucKiem` của `dangKySW.js`).
 
 ## Phát hiện
+- `public/sw.js:17` còn nhắc `/kiemkhop`, không loại `/admin` (public Cấm) — việc sau.
+- `kh.leQua` (`src/noiDung/nd/keHoach.js:116`) khớp lễ theo TÊN — đổi tên lễ ở /admin thì mất gợi ý quà — việc sau.
 - `src/kehoach.js:121` `holList` gộp lễ âm theo TÊN (`thay[n]`): chủ quán đổi tên MỘT trong ba ngày Tết ở /admin → Tết hiện hai lần trong "ngày lễ gần nhất". Ngoài F1 — việc sau.
