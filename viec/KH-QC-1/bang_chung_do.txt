@@ -21,6 +21,15 @@ BẰNG CHỨNG ĐỎ KH-QC-1 — chạy với KHONG_TRINH_DUYET=1 trên code G�
   ✗ B4 KH-QC-1: api.js có layQuangCao gọi '/quang-cao' và '/quang-cao' nằm trong CUA_CONG_KHAI
 
 SỐ CA thu_KHUI3d: 35
+== bốn bài ghim hợp đồng / cửa cũ, sửa sau `npm test` (trên gốc + hop_dong_v16.md, KHONG_TRINH_DUYET=1)
+thu_KHMUA1c: 27 đạt · 1 hỏng (A1 hợp đồng = v16)
+thu_KHSOHD1: 0 đạt · 1 hỏng (A1 hợp đồng = v16)
+thu_KHTHE1: 84 đạt · 1 hỏng (A1 hợp đồng = v16, PHIEN_BAN 16)
+thu_KHKHOP1: 49 đạt · 1 hỏng (A2 KiemKhop.jsx có 'GET /quang-cao')
+SỐ CA thu_KHMUA1c: 28
+SỐ CA thu_KHSOHD1: 40
+SỐ CA thu_KHTHE1: 85
+SỐ CA thu_KHKHOP1: 50
 SỐ CA thu_KHQC1: 40
 SỐ CA thu_KHUI5d: 31
 SỐ CA thu_KHUI5g: 34
