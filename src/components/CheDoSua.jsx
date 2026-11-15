@@ -9,9 +9,9 @@ import { dangSua, batSua, coQuyen, docVe, layNhap, capNhat, boNhap, hoiBanMoi, G
 import { DS_MAN, taoDuongDan, slugMon } from '../duongDan.js';
 import { cuaDon } from '../duLieuKhach.js';
 import { dungKho } from '../kho.js';
-import { qt, NUT_KHOA_KHI_SUA, CHAN_KHI_SUA } from '../noiDung/quanTri.js';
+import { qt, NUT_KHOA_KHI_SUA, NUT_CHI_TRONG_HOI_LAI, CHAN_KHI_SUA } from '../noiDung/quanTri.js';
 import Thongbao from './Thongbao.jsx';
-import CheDoSuaBang, { hienGiaTri, giaTriChay, tenNguoi } from './CheDoSuaBang.jsx';
+import CheDoSuaBang, { hienGiaTri, giaTriChay, tenNguoi, laToi } from './CheDoSuaBang.jsx';
 
 const MUC = new Map(DANH_MUC.map((m) => [m.khoa, m]));
 const NGOAI = '.cms-lop, .cms-bar, #sheetCms, .toast';
@@ -119,6 +119,7 @@ export default function CheDoSua({ di, ds }) {
       if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
       const el = e.target.closest && e.target.closest('[data-nd]');
       if (!el || !NUT_KHOA_KHI_SUA.includes(el.dataset.nd)) return;
+      if (NUT_CHI_TRONG_HOI_LAI.includes(el.dataset.nd) && !el.closest('.hoi-xoa')) return; // chỉ mở hỏi lại → cho đi tới bước kế
       e.preventDefault(); e.stopPropagation(); datTb(CHAN_KHI_SUA);
     };
     phone.addEventListener('click', chan, true);
@@ -135,7 +136,7 @@ export default function CheDoSua({ di, ds }) {
   const moSua = async (khoa) => {
     const cu = nhapRef.current[khoa];
     const moi = (await taiNhap())[khoa];
-    const doi = moi && (!cu || cu.luc !== moi.luc) && tenNguoi(moi.nguoi) !== tenNguoi((docVe() || {}).nguoi); // nháp đổi do NGƯỜI KHÁC từ lần đọc trước
+    const doi = moi && (!cu || cu.luc !== moi.luc) && !laToi(moi.nguoi, docVe()); // nháp đổi do NGƯỜI KHÁC từ lần đọc trước
     datBang({ loai: 'sua', khoa, canhBao: doi ? qt('nguoiKhacLuu', { luc: moi.luc, nguoi: tenNguoi(moi.nguoi) }) : '' });
   };
   // tập màn chụp LÚC BẤM (bảng nổi che màn → lớp bút tính lại thành rỗng)

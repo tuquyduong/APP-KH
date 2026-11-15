@@ -12,6 +12,13 @@ export const giaTriTrong = (m, giaTri) => { const g = giaTri ? giaTri[m.khoa] : 
 export const giaTriChay = (m) => giaTriTrong(m, banDangDung().gia_tri);
 /** Tên người của nháp / phiên bản: hợp đồng v1 chưa ghi dạng `nguoi` → nhận chuỗi hoặc { ten_hien, ten_dang_nhap }; khác → rỗng (không vẽ object). */
 export const tenNguoi = (n) => (typeof n === 'string' ? n : n && typeof n === 'object' ? String(n.ten_hien || n.ten_dang_nhap || '') : '');
+/** Nháp này do CHÍNH người đang đăng nhập lưu? So mã tài khoản (ten_dang_nhap) khi có; `nguoi` dạng chuỗi so với cả tên đăng nhập lẫn tên hiện của vé. */
+export function laToi(n, ve) {
+  const v = (ve && ve.nguoi) || {};
+  if (typeof n === 'string') return !!n && (n === v.ten_dang_nhap || n === v.ten_hien);
+  if (!n || typeof n !== 'object') return false;
+  return n.ten_dang_nhap ? n.ten_dang_nhap === v.ten_dang_nhap : !!n.ten_hien && n.ten_hien === v.ten_hien;
+}
 const cat = (s) => { const t = String(s); return t.length > 70 ? t.slice(0, 70) + '…' : t; };
 
 /** Giá trị để xem nhanh (Xem lại, Lịch sử) — luôn là CHỮ / ảnh, không HTML. */
