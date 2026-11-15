@@ -290,6 +290,12 @@ const HEX = 'a'.repeat(64);
       const nguon = ['src/pages', 'src/components'].flatMap((d) => fs.readdirSync(path.join(GOC, d)).filter((f) => /\.jsx$/.test(f)).map((f) => doc(`${d}/${f}`))).join('\n');
       k('D7 nút làm thật không qua mạng (Đăng xuất, xoá trên máy) khoá theo khoá data-nd có thật trong màn + danh mục',
         ['tk.dangXuat', 'hx.xoa', 'tnk.xoa', 'kh.xoaHoiLai'].every((x) => nut.includes(x)) && nut.every((x) => m(x) && (nguon.includes(`'${x}'`) || nguon.includes(`"${x}"`))), JSON.stringify(nut));
+      // ĐỦ: mọi khoá data-nd kiểu xoá / đăng xuất gắn trong màn phải nằm trong danh sách, hoặc thuộc nhóm KHÔNG xoá dữ liệu (lý do từng khoá)
+      const KHONG_XOA = { 'bn.xoaViec': 'chỉ mở HoiXoa', 'thuoc.xoa': 'chỉ mở HoiXoa', 'xe.xoaXe': 'chỉ mở HoiXoa', 'kh.xoaHet': 'chỉ mở hỏi lại kh.xoaHoiLai',
+        'pin.xoa': 'phím xoá số PIN đang gõ', 'menu.xoaLoc': 'bỏ bộ lọc menu', 'gio.daXoa': 'chữ báo đã xoá (không phải nút)' };
+      const khoaXoa = [...new Set([...nguon.matchAll(/(?:ndDau\('|k=")([\w.]*(?:[xX]oa|dangXuat)[\w.]*)['"]/g)].map((x) => x[1]))];
+      const thieu = khoaXoa.filter((x) => !nut.includes(x) && !(x in KHONG_XOA));
+      k('D7 danh sách nút khoá khi sửa ĐỦ: mọi khoá xoá / đăng xuất trong màn đều khoá hoặc chỉ mở hỏi lại (xe.hangXoa, ti.xoaNgay xoá thẳng)', khoaXoa.length >= 10 && thieu.length === 0 && nut.includes('xe.hangXoa') && nut.includes('ti.xoaNgay'), thieu.join(','));
     }
     // khoá chữ khu quản trị
     const QT = await nap('src/noiDung/quanTri.js');
@@ -337,7 +343,7 @@ function khoGiaND() {
   const QUYEN_HET = MAY.quyen.map((q) => q.ma);
   const K = {
     ban: [], dangChay: 0, nhap: new Map(), anh: new Map(), nhatKy: [], goi: [], ngoaiHopDong: [], chen409: 0, luc: 0,
-    tk: { linh: { mk: 'dung', quyen: QUYEN_HET, ten_hien: 'Chủ quán Linh' }, nv: { mk: 'dung', quyen: ['nd_xem'], ten_hien: 'Nhân viên Lan' }, sua: { mk: 'dung', quyen: ['nd_xem', 'nd_sua'], ten_hien: 'Bạn Sửa' } },
+    tk: { linh: { mk: 'dung', quyen: QUYEN_HET, ten_hien: 'Chủ quán Linh' }, nv: { mk: 'dung', quyen: ['nd_xem'], ten_hien: 'Nhân viên Lan' }, sua: { mk: 'dung', quyen: ['nd_xem', 'nd_sua'], ten_hien: '' } },
     ve: new Map(),
   };
   const gio = () => `2026-10-30T20:${String(31 + (K.luc++ % 28)).padStart(2, '0')}:00`;
@@ -357,7 +363,7 @@ function khoGiaND() {
       if (!ai) return loi('CHUA_DANG_NHAP');
       if (!K.tk[ai].quyen.includes(c.quyen)) return loi('KHONG_DU_QUYEN');
     }
-    const nguoi = ai ? K.tk[ai].ten_hien : null;
+    const nguoi = ai ? { ten_dang_nhap: ai, ten_hien: K.tk[ai].ten_hien || null } : null; // hợp đồng v1 chưa ghi dạng nguoi → giả dạng object (khó nhất)
     const key = `${pt} ${c.duong}`;
     if (key === 'GET /ban-dang-chay') { const b = banChay(); return truyVan.get('co') !== null && +truyVan.get('co') === b.so_ban ? ok({ khong_doi: true, so_ban: b.so_ban }) : ok({ so_ban: b.so_ban, gia_tri: b.gia_tri }); }
     if (key === 'POST /dang-nhap') {
@@ -614,14 +620,25 @@ async function trinhDuyet(pw) {
     k('D3 "Bỏ thay đổi" → DELETE /nhap/today.bg', await doi(t, async () => goiKho('DELETE', '/nhap/today.bg').length === 1));
     await t.click('[data-bang-sua="today.bg"] .cs-h button');
     // D3 người khác vừa lưu
-    K.nhap.set('home.mo', { khoa: 'home.mo', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
+    K.nhap.set('home.mo', { khoa: 'home.mo', gia_tri: 'Món của người khác', nguoi: { ten_dang_nhap: 'lan', ten_hien: null }, luc: '2026-10-30T20:59:00', ban_goc: 2 });
     if (await hienBut(t, 'home.mo')) {
       await but(t, 'home.mo').first().click();
       await t.locator('[data-bang-sua="home.mo"]').waitFor();
-      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.mo"]')));
+      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00 \(lan\)/.test(await chu(t, '[data-bang-sua="home.mo"]')));
       await t.click('[data-bang-sua="home.mo"] .cs-h button');
     } else k('D3 (Người khác vừa lưu) cần bút home.mo trên Trang chủ', false);
     K.nhap.delete('home.mo');
+    // nháp sai dạng (danh mục đổi loại giữa hai bản App / kho nhận mọi JSON) → bảng sửa KHÔNG vỡ, mở bằng giá trị đang chạy
+    K.nhap.set('today.cta', { khoa: 'today.cta', gia_tri: 'chuỗi thay vì {chu,dich}', nguoi: { ten_dang_nhap: 'lan', ten_hien: null }, luc: '2026-10-30T20:58:00', ban_goc: 2 });
+    await moBut(t, 'today.cta');
+    k('D3 nháp sai dạng → bảng sửa vẫn mở (giá trị đang chạy), không vỡ trang', (await t.locator('[data-bang-sua="today.cta"] select').count()) === 1 && (await t.locator('[data-bang-sua="today.cta"] input.cs-in').inputValue()) === 'Xem Menu ›');
+    await t.click('[data-bang-sua="today.cta"] .cs-h button');
+    K.nhap.set('today.bg', { khoa: 'today.bg', gia_tri: 'http://evil.test/a.png', nguoi: { ten_dang_nhap: 'lan', ten_hien: null }, luc: '2026-10-30T20:58:30', ban_goc: 2 });
+    await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
+    await t.locator('[data-xem-lai="today.bg"]').waitFor();
+    k('B3 / G5 Xem lại: ảnh lạ trong nháp KHÔNG vẽ (cùng luật anhDung); tên người dạng object hiện chữ ("lan")', (await t.locator('#sheetCms img[src*="evil"]').count()) === 0 && /lan · 2026-10-30T20:58:30/.test(await chu(t, '[data-xem-lai="today.bg"]')));
+    await t.click('#sheetCms .cs-h button');
+    K.nhap.delete('today.cta'); K.nhap.delete('today.bg');
     // D6 Đi tới màn
     await t.click(`.cms-bar button:has-text("${QT.qt('diToi')}")`);
     const dsDi = await t.locator('#sheetCms .cs-go button').allTextContents();
@@ -675,6 +692,9 @@ async function trinhDuyet(pw) {
     k('C2 đăng nhập lại → về đúng chỗ (Trang chủ) và Chế độ sửa bật; nháp trên kho vẫn còn', await doi(t, async () => (await tren(t)) === '/trangchu' && (await t.locator('.cms-bar').count()) === 1 && /1 thay đổi/.test(await chu(t, '.cms-bar .cb-t')), 8000));
     k('C2 nháp hiện trên trang khi sửa (lớp nháp)', await doi(t, async () => (await chu(t, '[data-nd="today.k"]')) === 'Nháp còn trên kho'));
     K.nhap.delete('today.k');
+    await t.click(`.cms-bar button:has-text("${QT.qt('diToi')}")`);
+    await t.click('#sheetCms .cs-go button:text-is("Tài khoản")');
+    k('D6 "Đi tới màn" màn cần đăng nhập khách (Tài khoản) → qua đăng nhập khách như thường', await doi(t, async () => (await tren(t)) === '/dangnhap?tiep=%2Ftaikhoan'));
   });
   await may('thu-quyen', { dn: false }, async ({ t }) => {
     await t.goto(URL0 + '/admin/lichsu'); await t.locator('#qt-dang-nhap').waitFor();
@@ -760,6 +780,14 @@ async function trinhDuyet(pw) {
     await ctx.route(`${URL0}/api/nd/ban-dang-chay*`, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, khong_doi: true, so_ban: 99 }) }));
     await t.goto(URL0 + '/trangchu'); await t.locator('.today b').waitFor(); await t.waitForTimeout(300);
     k('B4 chữ chứa <img onerror> hiện như CHỮ, không thành thẻ, không chạy', (await chu(t, '.today b')) === banXss.gia_tri['today.t'] && (await t.locator('.today b img').count()) === 0 && !(await t.evaluate(() => window.__xss)));
+  });
+  await may('tiep-ra-ngoai', { dn: false }, async ({ t }) => {
+    for (const tiep of ['//evil.test/x', 'https://evil.test/', '/\\evil.test']) {
+      await t.goto(URL0 + '/admin?tiep=' + encodeURIComponent(tiep)); await t.locator('#qt-dang-nhap').waitFor();
+      await t.fill('input[name="ten"]', 'nv'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+      k(`C1 / G5 ?tiep=${tiep} → KHÔNG chuyển ra ngoài, ở lại /admin`, await doi(t, async () => (await t.evaluate(() => location.host)) === 'kh.test' && (await tren(t)) === '/admin' && (await t.locator('#qt-bang').count()) === 1));
+      await t.evaluate(() => sessionStorage.removeItem('nd_ve'));
+    }
   });
   await may('kiemkhop-dong', { dn: false }, async ({ t }) => {
     await t.goto(URL0 + '/kiemkhop');
