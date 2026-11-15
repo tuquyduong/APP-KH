@@ -77,7 +77,7 @@ const TOI = (het_han, id = 2) => { const h = HANG.find((x) => x.id === id); retu
     const cp = doc('src/components/TheHoiVien.jsx');
     k('A3 TheHoiVien.jsx: role="img" + aria-label ở cỡ lớn, aria-hidden ở cỡ nhỏ, lớp chieu, lấp lánh Kim Cương', /role="img"/.test(cp) && /aria-label/.test(cp) && /aria-hidden/.test(cp) && /chieu/.test(cp) && /thv-lap/.test(cp));
     const DM = (await nap('src/noiDung/nd/index.js')).DANH_MUC, khoa = new Set(DM.map((m) => m.khoa));
-    const can = ['the.thv.hoiVien', 'the.thv.giam', 'the.thv.hetHan', 'the.thv.tang', 'the.thv.khongHan', 'the.thv.hanMoi', 'the.thv.aria', 'the.td.kichHoat', 'the.td.kichHoat.s', 'the.td.kichHoat.sPhanTram', 'the.td.dong', 'the.td.dongThang', 'hien.ud.the.duoi'];
+    const can = ['the.thv.hoiVien', 'the.thv.giam', 'the.thv.hetHan', 'the.thv.tang', 'the.thv.khongHan', 'the.thv.aria', 'the.td.kichHoat', 'the.td.kichHoat.s', 'the.td.kichHoat.sPhanTram', 'the.td.dong', 'the.td.dongThang', 'the.thv.pos', 'the.thv.khach', 'the.td.pos'];
     k('A5 khoá mới có trong danh mục', can.every((x) => khoa.has(x)), can.filter((x) => !khoa.has(x)).join(', '));
   });
 
