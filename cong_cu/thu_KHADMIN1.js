@@ -613,14 +613,14 @@ async function trinhDuyet(pw) {
     k('D3 "Bỏ thay đổi" → DELETE /nhap/today.bg', await doi(t, async () => goiKho('DELETE', '/nhap/today.bg').length === 1));
     await t.click('[data-bang-sua="today.bg"] .cs-h button');
     // D3 người khác vừa lưu
-    K.nhap.set('home.needs', { khoa: 'home.needs', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
-    if (await hienBut(t, 'home.needs')) {
-      await but(t, 'home.needs').first().click();
-      await t.locator('[data-bang-sua="home.needs"]').waitFor();
-      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.needs"]')));
-      await t.click('[data-bang-sua="home.needs"] .cs-h button');
-    } else k('D3 (Người khác vừa lưu) cần bút home.needs trên Trang chủ', false);
-    K.nhap.delete('home.needs');
+    K.nhap.set('home.mo', { khoa: 'home.mo', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
+    if (await hienBut(t, 'home.mo')) {
+      await but(t, 'home.mo').first().click();
+      await t.locator('[data-bang-sua="home.mo"]').waitFor();
+      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.mo"]')));
+      await t.click('[data-bang-sua="home.mo"] .cs-h button');
+    } else k('D3 (Người khác vừa lưu) cần bút home.mo trên Trang chủ', false);
+    K.nhap.delete('home.mo');
     // D6 Đi tới màn
     await t.click(`.cms-bar button:has-text("${QT.qt('diToi')}")`);
     const dsDi = await t.locator('#sheetCms .cs-go button').allTextContents();
@@ -648,18 +648,18 @@ async function trinhDuyet(pw) {
     await t.goto(URL0 + '/trangchu'); await t.reload();
     k('D1 tải lại trang → Chế độ sửa còn (còn vé)', await doi(t, async () => (await t.locator('.cms-bar').count()) === 1));
     // D8 "Tới chỗ này" + "Bỏ"
-    await moBut(t, 'home.needs');
-    await t.locator('[data-bang-sua="home.needs"] input.cs-in').fill('Món ngon');
-    await t.click('[data-bang-sua="home.needs"] .cs-next');
-    await doi(t, async () => K.nhap.has('home.needs'));
-    await t.click('[data-bang-sua="home.needs"] .cs-h button');
+    await moBut(t, 'today.k');
+    await t.locator('[data-bang-sua="today.k"] input.cs-in').fill('Món ngon');
+    await t.click('[data-bang-sua="today.k"] .cs-next');
+    await doi(t, async () => K.nhap.has('today.k'));
+    await t.click('[data-bang-sua="today.k"] .cs-h button');
     await t.evaluate(() => { document.querySelector('.screens').scrollTop = 0; });
     await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
-    await t.click(`[data-xem-lai="home.needs"] button:has-text("${QT.qt('toiCho')}")`);
-    k('D8 "Tới chỗ này" → đóng bảng, cuộn tới phần tử', await doi(t, async () => (await bang(t).count()) === 0 && await t.locator('[data-nd="home.needs"]').first().isVisible()));
+    await t.click(`[data-xem-lai="today.k"] button:has-text("${QT.qt('toiCho')}")`);
+    k('D8 "Tới chỗ này" → đóng bảng, cuộn tới phần tử', await doi(t, async () => (await bang(t).count()) === 0 && await t.locator('[data-nd="today.k"]').first().isVisible()));
     await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
-    await t.click(`[data-xem-lai="home.needs"] button:has-text("${QT.qt('bo')}")`);
-    k('D8 "Bỏ" → DELETE /nhap/home.needs, dòng biến mất', await doi(t, async () => !K.nhap.has('home.needs') && (await t.locator('[data-xem-lai="home.needs"]').count()) === 0));
+    await t.click(`[data-xem-lai="today.k"] button:has-text("${QT.qt('bo')}")`);
+    k('D8 "Bỏ" → DELETE /nhap/today.k, dòng biến mất', await doi(t, async () => !K.nhap.has('today.k') && (await t.locator('[data-xem-lai="today.k"]').count()) === 0));
     await t.click(`#sheetCms .cs-h button`);
     await t.click('.cms-bar button.x');
     k('D1 ✕ tắt: không còn thanh, không còn bút, bỏ lớp nháp', await doi(t, async () => (await t.locator('.cms-bar').count()) === 0 && (await t.locator('.cms-lop').count()) === 0 && (await t.locator('.phone.cms-on').count()) === 0));
