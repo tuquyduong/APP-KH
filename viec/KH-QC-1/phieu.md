@@ -55,6 +55,7 @@ không có thì App tự dùng nguồn cũ (Giờ vàng đang chạy → chươn
 - viec/KH-QC-1/**
 - thiet_ke/HOP_DONG_API_KH.md
 - src/kiemKhop/canTuPos.js
+- src/pages/KiemKhop.jsx
 - src/api.js
 - src/quangCao.js
 - src/App.jsx
@@ -76,8 +77,16 @@ không
 ## Cấm
 - **Chạy song song với KH-THE-2 và KH-ADMIN-1:** `src/App.jsx` CHỈ sửa phần quảng cáo (biến / hiệu ứng hỏi `/quang-cao`, dòng `chonQuangCao`, truyền xuống dải / banner) — KHÔNG đụng
   `muaThe`, Thanh toán thẻ, `daTra`, `/admin`, dòng `<TienIch …>`. `src/api.js` CHỈ thêm `layQuangCao` + `'/quang-cao'` trong `CUA_CONG_KHAI` (KHÔNG sửa hàm `goi` — KH-ADMIN-1 sửa).
-- KHÔNG sửa `src/pages/**`, `src/components/**` (dải / banner đã nhận `{ chu, tieuDe, phu, nut, khoa }` — cần đổi thì ghi `## Câu hỏi`), `src/dangKySW.js` (chỉ `import` hằng),
+- KHÔNG sửa `src/pages/**` (TRỪ đúng một dòng `'GET /quang-cao': layQuangCao` + import trong `src/pages/KiemKhop.jsx` — trả lời Câu hỏi 1), `src/components/**` (dải / banner đã nhận `{ chu, tieuDe, phu, nut, khoa }` — cần đổi thì ghi `## Câu hỏi`), `src/dangKySW.js` (chỉ `import` hằng),
   `src/noiDung/nd.js`, `src/noiDung/nd/index.js`, tệp nhóm danh mục khác ngoài `khungChung.js`, `src/gioVang.js`, `src/chuongTrinh.js`, `src/main.jsx`, `public/**`, `index.html`,
   `thiet_ke/**` ngoài `HOP_DONG_API_KH.md`, `tu_chay/`, `.claude/`, `.github/`, `kiem_tra_truoc_khi_giao.js`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - KHÔNG làm phần v14 (đơn bị quán huỷ) — việc KH-HUY-1. KHÔNG thêm nút tắt quảng cáo. KHÔNG lưu quảng cáo trên máy.
 - Chỉ push `git push -u origin viec/KH-QC-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời câu hỏi (chủ quán duyệt 15.11 theo đề nghị của chat)
+1. **`src/pages/KiemKhop.jsx`:** ĐỒNG Ý — đã thêm vào Phạm vi. CHỈ thêm `'GET /quang-cao': layQuangCao` vào bảng `GOI` + `import` (không sửa gì khác trong tệp — KH-ADMIN-1 chạy
+   song song cũng không sửa tệp này). GIỮ dòng A2 trong `canTuPos.js`.
+2. **`cong_cu/thu_KHUI3d.js`:** KHÔNG dùng `## Bài thử cũ sửa`. Sửa thẳng bài: thêm `/quang-cao` vào danh sách cửa được gọi của ca B4 + thêm MỘT ca TĨNH (không cần trình duyệt):
+   `src/api.js` có `layQuangCao` gọi `'/quang-cao'` và `'/quang-cao'` nằm trong `CUA_CONG_KHAI` → ca này ĐỎ trên gốc kể cả `KHONG_TRINH_DUYET=1` (cổng A11 chạy trên GitHub không có
+   trình duyệt nên bài sửa phải đỏ ở phần tĩnh). Ghi lại `SỐ CA thu_KHUI3d` trong `bang_chung_do.txt`.
+3. Làm tiếp D3 (chạy đột biến), D4, D5, D6, báo cáo — chạy thẳng tới hết, không dừng.
