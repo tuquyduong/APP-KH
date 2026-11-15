@@ -1,12 +1,12 @@
 KH-ADMIN-1 — bằng chứng ĐỎ trên code gốc (mốc 3d35772 = PHIEU: KH-ADMIN-1), bài thử của HEAD chép vào cây gốc (git archive 3d35772, node_modules nối tắt).
 Chạy KHONG_TRINH_DUYET=1 (đúng như cổng GitHub — không trình duyệt). Phần Chromium của thu_KHADMIN1.js chạy thêm ở máy (cuối tệp).
 
-SỐ CA cong_cu/thu_KHADMIN1.js: 83
+SỐ CA cong_cu/thu_KHADMIN1.js: 84
 SỐ CA cong_cu/thu_KHLINK1.js: 97
 SỐ CA cong_cu/thu_KHKHOP1.js: 49
 SỐ CA cong_cu/thu_KHPWA1.js: 53
 SỐ CA cong_cu/thu_KHUI3b.js: 58
-(N = số ca bài in ở dòng tổng khi chạy trên code ĐÃ VÁ với KHONG_TRINH_DUYET=1: 83 · 97 · 49 · 53 · 58 đạt, 0 hỏng.)
+(N = số ca bài in ở dòng tổng khi chạy trên code ĐÃ VÁ với KHONG_TRINH_DUYET=1: 84 · 97 · 49 · 53 · 58 đạt, 0 hỏng.)
 
 === cong_cu/thu_KHADMIN1.js (MỚI) trên gốc, KHONG_TRINH_DUYET=1 → 7 đạt · 20 hỏng
   ✗ A1 thiet_ke/HOP_DONG_API_ND.md có, sha256 bắt đầu 836eb6ba2554e82d (POS 1a714246, PHIEN_BAN 1)
@@ -59,4 +59,5 @@ SỐ CA cong_cu/thu_KHUI3b.js: 58
   ✗ C1 /kiemkhop công khai đã đóng → Trang chủ (không có trang Kiểm khớp)
   ✗ C1 /admin/kiemkhop chưa vé → màn đăng nhập quản trị
 19 đạt · 28 hỏng
-Trên code đã vá (có Chromium): thu_KHADMIN1.js 160 đạt · 0 hỏng.
+Trên code đã vá (có Chromium): thu_KHADMIN1.js 168 đạt · 0 hỏng (sau sửa vòng 1 /ra-soat; bài thêm ca D7 đủ, nháp sai dạng, ảnh lạ ở Xem lại, ?tiep= ra ngoài, D6 cần đăng nhập).
+Sau sửa vòng 1, chạy lại trên gốc (KHONG_TRINH_DUYET=1): vẫn 7 đạt · 20 hỏng (phần D dừng sớm vì gốc chưa có hopLe).

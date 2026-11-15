@@ -30,11 +30,13 @@ const DS = [
   ['BV-BO-CHAN-TRUNG-DANH-SACH', ND, '        && !dongTrung(m, gt);', '        ;'],
   ['BV-401-KHONG-THOAT', KHO, 'if (e.status === 401 && v) { thoatQuanTri(); khiHetVe(); }', ''],
   ['BV-DANG-XUAT-KHONG-KHOA', 'src/noiDung/quanTri.js', "['tk.dangXuat', 'hx.xoa',", "['hx.xoa',"],
+  ['BV-XOA-HANG-XE-KHONG-KHOA', 'src/noiDung/quanTri.js', ", 'xe.hangXoa', 'ti.xoaNgay']", "]"],
   ['VS-ADMIN-LA-TRANG-KHACH', 'src/duongDan.js', "|| r.trang === 'dangnhap' || r.quanTri ? ''", "|| r.trang === 'dangnhap' ? ''"],
 ];
 const TRINH_DUYET = [
   ['VS-409-TU-GUI-LAI', SUA, "if (e.code === 'CO_BAN_MOI_HON') { await hoiBanMoi(); await taiNhap();", "if (e.code === 'CO_BAN_MOI_HON') { await hoiBanMoi(); await taiNhap(); await capNhat(banDangDung().so_ban, ghiChu).catch(() => {});"],
   ['BV-BUT-MO-KHI-CHAM-PHAN-TU', SUA, "    phone.addEventListener('click', chan, true);", "    phone.addEventListener('click', chan, true); phone.addEventListener('click', (e) => { const el = e.target.closest && e.target.closest('[data-nd]'); if (el && !el.closest(NGOAI)) { e.preventDefault(); e.stopPropagation(); } }, true);"],
+  ['BV-NHAP-SAI-DANG-VO-BANG', BANG, 'nhap && hopLe(m, nhap.gia_tri) ? nhap.gia_tri', 'nhap ? nhap.gia_tri'],
   ['BV-KHOA-KHONG-CHI-DUONG', SUA, "m.khoaBoi === 'pos' ? qt('khoaPos', { chiDuong: m.chiDuong })", "m.khoaBoi === 'pos' ? qt('khoaTuTinh')"],
 ];
 
