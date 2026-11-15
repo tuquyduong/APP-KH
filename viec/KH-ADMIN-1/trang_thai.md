@@ -101,3 +101,7 @@ BÀI HỌC: KHOÁ danh sách nút khoá phải ĐỦ (quét khoá xoá/đăng xu
 | nghi ngờ | cảnh báo "Người khác vừa lưu" chỉ khi người lưu KHÁC tên người đang đăng nhập, xoá cảnh báo sau khi tự Lưu; Xem lại đọc lại nháp khi mở; thêm ca `?tiep=` ra ngoài (3 dạng) + ca D6 màn cần đăng nhập | các ca tương ứng |
 | K2 | giữ — đã ghi `## Phát hiện` + đề xuất sửa bộ kiểm (tệp Cấm) | — |
 Sau sửa: thu_KHADMIN1.js 84/0 (KHONG_TRINH_DUYET=1), 168/0 (Chromium); đột biến tay 22/22 BẮT ĐƯỢC.
+
+Sau sửa vòng 1: `--day-du` 54 đạt · 0 hỏng (thu_KHADMIN1.js 168/0 có Chromium).
+
+HEAD ĐÃ KIỂM: 5930480
