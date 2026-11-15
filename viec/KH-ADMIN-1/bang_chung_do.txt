@@ -1,0 +1,62 @@
+KH-ADMIN-1 — bằng chứng ĐỎ trên code gốc (mốc 3d35772 = PHIEU: KH-ADMIN-1), bài thử của HEAD chép vào cây gốc (git archive 3d35772, node_modules nối tắt).
+Chạy KHONG_TRINH_DUYET=1 (đúng như cổng GitHub — không trình duyệt). Phần Chromium của thu_KHADMIN1.js chạy thêm ở máy (cuối tệp).
+
+SỐ CA cong_cu/thu_KHADMIN1.js: 83
+SỐ CA cong_cu/thu_KHLINK1.js: 97
+SỐ CA cong_cu/thu_KHKHOP1.js: 49
+SỐ CA cong_cu/thu_KHPWA1.js: 53
+SỐ CA cong_cu/thu_KHUI3b.js: 58
+(N = số ca bài in ở dòng tổng khi chạy trên code ĐÃ VÁ với KHONG_TRINH_DUYET=1: 83 · 97 · 49 · 53 · 58 đạt, 0 hỏng.)
+
+=== cong_cu/thu_KHADMIN1.js (MỚI) trên gốc, KHONG_TRINH_DUYET=1 → 7 đạt · 20 hỏng
+  ✗ A1 thiet_ke/HOP_DONG_API_ND.md có, sha256 bắt đầu 836eb6ba2554e82d (POS 1a714246, PHIEN_BAN 1)
+  ✗ A1 bản chép bằng TỪNG BYTE bản gốc trong viec/KH-ADMIN-1/
+  ✗ A2 đọc được khối HOP_DONG_ND_MAY_DOC (phiên bản 1)
+  ✗ A2 MỌI cửa khoNoiDung.js gọi (phương thức + đường) có trong khối máy đọc  — không thấy lời gọi nào
+  ✗ A2 App dùng đủ mọi cửa của hợp đồng (trừ GET /anh/:ma — trình duyệt tải bằng <img>)
+  ✗ A2 mọi mã lỗi App xử lý riêng (code === …) có trong ma_loi (ít nhất CO_BAN_MOI_HON của D8 / E2)  — thấy:
+  ✗ A2 giới hạn App kiểm trước (GIOI_HAN một chỗ) = đúng số gioi_han của hợp đồng  — Cannot find module '…/src/noiDung/khoNoiDung.js'
+  ✗ B1 nạp được khoNoiDung.js  — Cannot find module '…/src/noiDung/khoNoiDung.js'
+  ✗ B3 ảnh lạ (http…, //…, data:, javascript:, /anh/../, mã không đủ 64 hex) → macDinh  — http://x.test/a.png | https://x.test/a.png | //x.test/a.png | data:image/png;base64,AAAA | …
+  ✗ B3 ảnh kho /api/nd/anh/<64 hex> nhận, ghép địa chỉ kho ở MỘT chỗ khi vẽ  — /api/nd/anh/aaaa…
+  ✗ C1 /admin, /admin/lichsu, /admin/kiemkhop là trang quản trị  — {"trang":"trangchu",…,"chuan":"/trangchu",…}
+  ✗ C1 /Admin/ và /admin/<lạ> → /admin
+  ✗ C1 /kiemkhop công khai đã đóng → Trang chủ
+  ✗ C1 đăng nhập KHÁCH không quay về trang quản trị (tiepHopLe)
+  ✗ C1 DS_MAN (Đi tới màn) có màn khách, không có màn quản trị / giữ chỗ
+  ✗ C1 main.jsx thôi dựng /kiemkhop theo pathname; /admin* chọn theo bảng đường dẫn (quanTri)
+  ✗ C1 main.jsx nạp bản nội dung máy TRƯỚC render
+  ✗ D3 nd.js xuất hopLe (một luật cho khách, bảng sửa, bài thử)
+  ✗ F1 đổi tên "Tết Trung thu" → "Rằm tháng Tám" ở /admin: vẫn KHÔNG vào "Sắp tới"  — Quốc khánh,Rằm tháng Tám
+  ✗ F1 KHONG_VAO_SAP_TOI không so theo TÊN lễ
+7 đạt · 20 hỏng
+
+=== cong_cu/thu_KHLINK1.js (SỬA — /admin thành khu quản trị) trên gốc → 94 đạt · 3 hỏng
+  ✗ /admin và /admin/… → khu quản trị riêng (KH-ADMIN-1: cờ quanTri, không thuộc tab nào; /admin/<lạ> → /admin)
+  ✗ tiep hợp lệ được giữ, đã chuẩn hoá
+  ✗ không có mục quản trị trong app khách (KH-ADMIN-1: khu /admin dựng riêng ở main.jsx; App chỉ gắn lớp Chế độ sửa khi có vé)
+94 đạt · 3 hỏng
+
+=== cong_cu/thu_KHKHOP1.js (SỬA — trang Kiểm khớp vào /admin/kiemkhop) trên gốc → 46 đạt · 3 hỏng
+  ✗ B1 (KH-ADMIN-1) trang Kiểm khớp ở /admin/kiemkhop — khu quản trị, không thuộc tab nào; đường công khai /kiemkhop đã đóng → Trang chủ  — {"trang":"trangchu",…}
+  ✗ B1 /Admin/Kiemkhop/ chuẩn hoá về /admin/kiemkhop; tiêu đề tab có tên trang (tieuDe.kiemkhop, QuanTri.jsx)
+  ✗ B1/B4 (KH-ADMIN-1) main.jsx dựng khu /admin* riêng (vỏ App không chạy → không tự gọi cửa nào, không gọi theo giờ); QuanTri.jsx dựng KiemKhop cho /admin/kiemkhop
+46 đạt · 3 hỏng
+
+=== cong_cu/thu_KHPWA1.js (SỬA — dòng dựng của main.jsx) trên gốc → 52 đạt · 1 hỏng
+  ✗ A1 main.jsx giữ nguyên dòng dựng App / khu quản trị (KH-ADMIN-1: /admin* dựng QuanTri)
+52 đạt · 1 hỏng
+
+=== cong_cu/thu_KHUI3b.js (SỬA — ca F1 mở /admin/kiemkhop) trên gốc → 57 đạt · 1 hỏng
+  ✗ F1 (KH-ADMIN-1) trang Kiểm khớp ca F1 mở ở /admin/kiemkhop (đường công khai /kiemkhop đã đóng)
+57 đạt · 1 hỏng
+
+=== cong_cu/thu_KHADMIN1.js phần Chromium (máy làm việc, có Playwright) trên gốc (+ hợp đồng chép vào thiet_ke/ của cây gốc) → 19 đạt · 28 hỏng
+  ✗ ca quan-tri dừng giữa chừng  — locator.waitFor: Timeout 6000ms exceeded.   (không có màn đăng nhập /admin)
+  ✗ C2 vé hết hạn (401 ở GET /nhap) → về màn đăng nhập quản trị với ?tiep=/trangchu  — /trangchu
+  ✗ ca ve-het-han / thu-quyen / lich-su / nhap-kho-trong / khach-moi dừng giữa chừng
+  ✗ B4 chữ chứa <img onerror> hiện như CHỮ, không thành thẻ, không chạy   (gốc không đọc bản máy kh_nd_ban)
+  ✗ C1 /kiemkhop công khai đã đóng → Trang chủ (không có trang Kiểm khớp)
+  ✗ C1 /admin/kiemkhop chưa vé → màn đăng nhập quản trị
+19 đạt · 28 hỏng
+Trên code đã vá (có Chromium): thu_KHADMIN1.js 160 đạt · 0 hỏng.
