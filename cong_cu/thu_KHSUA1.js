@@ -101,8 +101,8 @@ async function trinhDuyet(pw) {
     await mo(t, '/uudai/hang/thanhtoan?h=2&thang=3');
     const co = await doi(t, async () => (await t.locator('.tt-qr').count()) === 1);
     k('B1 Thanh toán thẻ: có ô .tt-qr', co);
-    if (!co) return;
     await t.waitForTimeout(300);
+    if (!co) { await chup(t, 'thanhtoan_the_390'); return; }
     const s = await t.evaluate(() => { const e = document.querySelector('.tt-qr'); const c = getComputedStyle(e); return { d: c.display, bs: c.boxShadow, nen: c.backgroundColor, vien: c.borderTopWidth, ic: !!e.querySelector('.tt-qr-ic'), v: !!e.querySelector('.tt-qr-v') }; });
     k('B1 Thanh toán thẻ: .tt-qr là flex, có biểu tượng + dấu chọn', s.d === 'flex' && s.ic && s.v, JSON.stringify(s));
     k('B1 Thanh toán thẻ: viền là box-shadow hồng như bản 14.11', s.bs !== 'none' && /\b2px\b/.test(s.bs) && !/176,\s*128,\s*40/.test(s.bs), s.bs);
