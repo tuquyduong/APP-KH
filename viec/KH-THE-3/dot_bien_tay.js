@@ -27,7 +27,7 @@ const DS = [
 const TRINH_DUYET = [
   ['BV-CON-EMOJI-VE-O-DONG-THE', [[TD, 'tachBieuTuong(m.ten).chu', 'm.ten']]],
   ['VS-UU-DAI-THE-CHAY-ANH-LUOT', [[U, 'het_han={h.het_han} tang={tang} />', 'het_han={h.het_han} tang={tang} chieu />']]],
-  ['BV-CHAO-MUNG-THE-KHONG-CHIEU', [[TD, 'tang={!!hang && hang.chi_cap === true} chieu />', 'tang={!!hang && hang.chi_cap === true} />']]],
+  ['BV-CHAO-MUNG-THE-KHONG-CHIEU', [[TD, 'tang={!!hang && hang.chi_cap === true} chieu thay=', 'tang={!!hang && hang.chi_cap === true} thay=']]],
   ['BV-CHAO-MUNG-MAT-HAN-KHI-KHONG-VE-DUOC-THE', [[TD, 'chieu thay={han && <div className="cm-han" {...pos}>{han}</div>} />', 'chieu />']]],
   ['VS-THE-VUA-O-THANH-TOAN-DUNG-CO-NHO', [[T, '<TheHoiVienChung co="vua" hang={hang} />', '<TheHoiVienChung co="nho" hang={hang} />']]],
   ['VS-THE-NHO-KHONG-AN-KHOI-TRINH-DOC', [[C, 'aria-hidden="true"><i className="thv-van" /></span>', '><i className="thv-van" /></span>']]],
