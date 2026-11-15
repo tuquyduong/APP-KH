@@ -21,9 +21,9 @@ B — các bước đơn chỉ thẻ
 [2] Có Chromium (Playwright): 22 đạt · 57 hỏng — mọi ca Ưu đãi có hạng (Vàng / Kim Cương / sắp hết hạn / hạng khác), Theo dõi đơn thẻ (2 bước, dòng thẻ nhỏ),
 Chào mừng (thẻ lớn, ánh lướt), Thanh toán thẻ (thẻ vừa), So sánh nhanh (thẻ nhỏ) ĐỎ; ca đối chứng xanh trên gốc: `chua` giữ nguyên, đơn đồ uống 4 bước, Trang chủ giữ thẻ điểm.
 
-Sau khi vá (cùng bài, cùng lệnh): có Chromium 97 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 21 đạt · 0 hỏng.
+Sau khi vá (cùng bài, cùng lệnh): có Chromium 97 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 21 đạt · 0 hỏng (sau soát vòng 1 thêm 2 ca nguồn → 23; có Chromium 105).
 
-SỐ CA cong_cu/thu_KHTHE3.js: 21
+SỐ CA cong_cu/thu_KHTHE3.js: 23
 
 Bài cũ sửa đúng ca (mỗi bài thêm 1 ca nguồn "TheHoiVienChung" — ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1; số ca đếm khi chạy trên code đã vá):
 SỐ CA cong_cu/thu_KHHANG2.js: 16
