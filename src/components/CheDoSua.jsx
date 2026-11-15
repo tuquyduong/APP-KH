@@ -71,7 +71,8 @@ export default function CheDoSua({ di, ds }) {
   const [tb, datTb] = useState('');
   const nhapRef = useRef({});
   const khoDon = dungKho(cuaDon.kho);
-  const phone = typeof document !== 'undefined' ? document.querySelector('.phone') : null;
+  const [phone, datPhone] = useState(null); // khung .phone của App — chỉ có sau lần gắn đầu
+  useLayoutEffect(() => { datPhone(document.querySelector('.phone')); }, []);
 
   const datNhap = (b) => { nhapRef.current = b; datNhapBang(b); datLopNhap(giaTriNhap(b)); };
   const taiNhap = async () => {
@@ -91,7 +92,7 @@ export default function CheDoSua({ di, ds }) {
     phone.classList.add('cms-on');
     taiNhap();
     return () => phone.classList.remove('cms-on');
-  }, [bat]);
+  }, [bat, phone]);
 
   // lớp phủ bút: vẽ lại khi cuộn / đổi cỡ / DOM màn đổi / bản nội dung đổi (gộp một khung hình)
   useLayoutEffect(() => {
@@ -108,7 +109,7 @@ export default function CheDoSua({ di, ds }) {
     const bo = ngheNoiDung(hoi);
     hoi();
     return () => { mo.disconnect(); window.removeEventListener('resize', hoi); phone.removeEventListener('scroll', hoi, true); phone.removeEventListener('load', hoi, true); phone.removeEventListener('transitionend', hoi, true); bo(); cancelAnimationFrame(hen); };
-  }, [bat]);
+  }, [bat, phone]);
 
   // nút làm thật không qua mạng (Đăng xuất, xoá trên máy): chặn ở pha bắt
   useEffect(() => {
@@ -122,7 +123,7 @@ export default function CheDoSua({ di, ds }) {
     phone.addEventListener('click', chan, true);
     phone.addEventListener('keydown', chan, true);
     return () => { phone.removeEventListener('click', chan, true); phone.removeEventListener('keydown', chan, true); };
-  }, [bat]);
+  }, [bat, phone]);
 
   if (!phone) return null;
   if (!bat) return tb ? <Thongbao chu={tb} het={() => datTb('')} /> : null;
@@ -136,6 +137,8 @@ export default function CheDoSua({ di, ds }) {
     const doi = moi && (!cu || cu.luc !== moi.luc);
     datBang({ loai: 'sua', khoa, canhBao: doi ? qt('nguoiKhacLuu', { luc: moi.luc, nguoi: (moi.nguoi && moi.nguoi.ten_hien) || moi.nguoi || '' }) : '' });
   };
+  // tập màn chụp LÚC BẤM (bảng nổi che màn → lớp bút tính lại thành rỗng)
+  const moChuMan = () => datBang({ loai: 'chuMan', man: [...new Set(buts.map((b) => (MUC.get(b.khoa) || {}).man).filter(Boolean))] });
   const chamBut = (b) => (b.khoaBoi ? datTb(loiKhoa(MUC.get(b.khoa))) : moSua(b.khoa));
   const toiCho = (khoa) => {
     const el = phone.querySelector(`[data-nd="${CSS.escape(khoa)}"]`);
@@ -200,8 +203,7 @@ export default function CheDoSua({ di, ds }) {
       </Tam>
     );
   } else if (bang && bang.loai === 'chuMan') {
-    const man = new Set(buts.map((b) => (MUC.get(b.khoa) || {}).man).filter(Boolean));
-    const ds2 = DANH_MUC.filter((m) => man.has(m.man));
+    const ds2 = DANH_MUC.filter((m) => bang.man.includes(m.man));
     noi = (
       <Tam dong={() => datBang(null)}>
         <div className="cs-h"><b>{qt('chuManTieu', { so: ds2.length })}</b><button type="button" onClick={() => datBang(null)}>{qt('dong')}</button></div>
@@ -227,7 +229,7 @@ export default function CheDoSua({ di, ds }) {
       <div className="cms-bar show" role="toolbar" aria-label={qt('dangSua')}>
         <span className="cb-t">{qt('dangSua')}<small>{n ? qt('soNhap', { so: n }) : qt('banChay', { so: soBan })}</small></span>
         <button type="button" className="mn" onClick={() => datBang({ loai: 'diToi' })}>{qt('diToi')}</button>
-        <button type="button" className="mn" onClick={() => datBang({ loai: 'chuMan' })}>{qt('chuMan')}</button>
+        <button type="button" className="mn" onClick={moChuMan}>{qt('chuMan')}</button>
         <button type="button" onClick={() => datBang({ loai: 'xemLai' })}>{qt('xemLai')}</button>
         <button type="button" className="pri" disabled={!n || !coQuyen('nd_cap_nhat')} onClick={() => datBang({ loai: 'xemLai' })}>{qt('capNhatN', { so: n })}</button>
         <button type="button" className="x" aria-label={qt('tatSua')} onClick={tat}>✕</button>
