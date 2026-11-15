@@ -231,6 +231,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 
   console.log('Phần 2 — Chromium + POS giả trễ 700 ms');
   let pw = null;
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     try { pw = require('playwright'); } catch { /* không có */ }

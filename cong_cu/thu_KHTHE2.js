@@ -137,6 +137,7 @@ const TOI = (het_han, id = 2) => ({ id, ten: HANG.find((h) => h.id === id).ten, 
 
   console.log('Phần 2 — App thật trong Chromium');
   let pw = null;
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     try { pw = require('playwright'); } catch { /* không có */ }

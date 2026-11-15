@@ -23,4 +23,4 @@ Chào mừng (thẻ lớn, ánh lướt), Thanh toán thẻ (thẻ vừa), So s�
 
 Sau khi vá (cùng bài, cùng lệnh): có Chromium 97 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 21 đạt · 0 hỏng.
 
-SỐ CA thu_KHTHE3: 21
+SỐ CA cong_cu/thu_KHTHE3.js: 21

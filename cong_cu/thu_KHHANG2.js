@@ -65,7 +65,7 @@ const TANG = 'Dành tặng khách thân thiết';
   await thu('A1b', async () => {
     const f = doc('src/pages/UuDai.jsx');
     const jsx = boChuThich(f);
-    k('A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)', /ud\.the\.khongHan/.test(jsx) && /'ud\.the\.tang'/.test(jsx) && /trangThaiTheUuDai\(ds, /.test(jsx) && /const ds = hangCoGiam\(dsHang\)/.test(jsx));
+    k('A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)', /ud\.the\.khongHan/.test(jsx) && /TheHoiVienChung/.test(jsx) && /'ud\.the\.tang'/.test(jsx) && /trangThaiTheUuDai\(ds, /.test(jsx) && /const ds = hangCoGiam\(dsHang\)/.test(jsx));
   });
 
   await thu('B1n', async () => {

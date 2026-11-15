@@ -261,6 +261,7 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
   k('C4 vệt sáng LUÔN chạy: kiểm ở thu_KHUI5g (luật @media ghi đè trong giaoDien.css, ca Chromium reduce → sweepP); demo_*.css KHÔNG bị sửa', /prefers-reduced-motion/.test(doc('src/giaoDien/demo_2.css')) && /\.fx-a, \.fx-a::before\{ animation:none !important; \}/.test(doc('src/giaoDien/demo_2.css')) && /sweepP/.test(css) && /sweepL/.test(css));
 
   console.log('Phần 2 — Chromium');
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     let pw = null;
