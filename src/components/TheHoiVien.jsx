@@ -63,8 +63,8 @@ export function TheHoiVienChung({ hang, co = 'lon', khach, het_han, tang = false
   );
 }
 
-/** Thẻ lớn của khách đang đăng nhập (Chào mừng): tên + SĐT lấy từ /toi trong kho chung; không biết hạng đơn → hạng hiện tại của khách (/toi); không có cả hai → không vẽ thẻ. */
-export function TheHoiVienToi({ hang, ...con }) {
+/** Thẻ lớn của khách đang đăng nhập (Chào mừng): tên + SĐT lấy từ /toi trong kho chung; không biết hạng đơn → hạng hiện tại của khách (/toi); không có cả hai → không vẽ thẻ, hiện `thay` (vd chữ hạn của POS). */
+export function TheHoiVienToi({ hang, thay = null, ...con }) {
   const toi = dungCua(cuaToi), khach = toi.dl && toi.dl.khach, h = hang || (khach && khach.hang);
-  return h ? <TheHoiVienChung hang={h} khach={khach} {...con} /> : null;
+  return h ? <TheHoiVienChung hang={h} khach={khach} {...con} /> : thay;
 }

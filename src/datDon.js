@@ -286,7 +286,7 @@ export function buocTienTrinh(tt, { chiThe = false, phanTram = null } = {}) {
   if (chiThe && tt !== 'da_huy') {
     const ks = so(phanTram) ? 'the.td.kichHoat.sPhanTram' : 'the.td.kichHoat.s';
     const ds = THE_CHI.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(m === 'the_kich_hoat' ? { s: nd(ks, { phanTram }), ks } : {}) }));
-    return { ds, hien: tt === 'cho_tra' || !tt ? 0 : 1, xongBuocHien: DA_XONG.includes(tt) || tt === 'dang_lam' };
+    return { ds, hien: tt === 'cho_tra' || !tt ? 0 : 1, xongBuocHien: tt === 'xong' }; // chỉ tích "Thẻ kích hoạt" khi POS báo xong
   }
   const ma = tt === 'da_huy' ? ['da_huy'] : GIAO.slice(3).includes(tt) ? GIAO : TAI_QUAN;
   return { ds: ma.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(BUOC[m].s ? { s: nd(BUOC[m].s), ks: BUOC[m].s } : {}) })), hien: Math.max(0, ma.indexOf(tt)), xongBuocHien: DA_XONG.includes(tt) };

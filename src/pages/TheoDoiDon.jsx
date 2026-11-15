@@ -67,7 +67,7 @@ function ChaoMung({ don, hang, soMonGio, veGio, moMenu }) {
   return (
     <>
       <div className="cm-dau">
-        <TheHoiVienToi hang={hang} het_han={hetHan} tang={!!hang && hang.chi_cap === true} chieu />
+        <TheHoiVienToi hang={hang} het_han={hetHan} tang={!!hang && hang.chi_cap === true} chieu thay={han && <div className="cm-han" {...pos}>{han}</div>} />
         {han && hetHan === undefined && <div className="cm-han" {...pos}>{han}</div>}
         <h2 {...ndDau(hang ? 'the.cm.t' : 'the.cm.chung')}>{hang ? nd('the.cm.t', { hang: hang.ten }) : nd('the.cm.chung')}</h2>
         {hang && typeof hang.phan_tram === 'number' && <p {...ndDau('the.cm.p')}>{nd('the.cm.p', { phanTram: hang.phan_tram })}</p>}
@@ -87,7 +87,7 @@ function DongThe({ m, hang, soThang }) {
       <TheHoiVienChung co="nho" hang={{ ten: hang ? hang.ten : m.ten }} />
       <div className="cart-info" {...ndDau('td.tien')}>
         <div className="cart-name" {...ndDau(hang ? 'the.td.dong' : 'the.td.pos')}>{ten}</div>
-        {hang && soThang && <div className="cart-opt" {...ndDau('the.td.dongThang')}>{nd('the.td.dongThang', { so: soThang })}</div>}
+        {hang && soThang > 0 && <div className="cart-opt" {...ndDau('the.td.dongThang')}>{nd('the.td.dongThang', { so: soThang })}</div>}
         <div className="cart-price">{dinhDangGia(m.thanh_tien)}</div>
       </div>
     </div>

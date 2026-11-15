@@ -60,3 +60,11 @@
 .thv.mini.kc::before{background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%)}
 .thv.mini.vua{width:64px;border-radius:8px}
 .thv.mini .mini-ten{display:none}
+
+/* ===== Bổ sung KH-THE-3 sau soát (không có trong bản thiết kế; chỉ hình học, không màu) ===== */
+.thv-chan > div:first-child{min-width:0}
+.thv-chan > div:first-child b{overflow:hidden;text-overflow:ellipsis}
+.thv-chan .phai{flex:none}
+.thv.chieu{cursor:default}
+.thv.mini{display:block}
+@media (prefers-reduced-motion:reduce){.thv.kc.chieu .thv-sang{animation:none}}

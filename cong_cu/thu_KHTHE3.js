@@ -74,6 +74,8 @@ const TOI = (het_han, id = 2) => { const h = HANG.find((x) => x.id === id); retu
     k('A1 đường dẫn ảnh: /anh/the-vang-hoa-van.webp, /anh/the-vang-van.svg, /anh/the-kc-mat.svg; hai tệp svg có trong public/anh', /url\(\/anh\/the-vang-hoa-van\.webp\)/.test(css) && /url\(\/anh\/the-vang-van\.svg\)/.test(css) && /url\(\/anh\/the-kc-mat\.svg\)/.test(css)
       && fs.existsSync(path.join(GOC, 'public/anh/the-vang-van.svg')) && fs.existsSync(path.join(GOC, 'public/anh/the-kc-mat.svg')));
     k('A4 css: giảm chuyển động tắt ánh lướt + lấp lánh', /prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.thv\.chieu \.thv-sang\{animation:none\}[^}]*\.thv-lap i\{animation:none/.test(css));
+    k('A4 css: Kim Cương cũng tắt ánh lướt khi giảm chuyển động (độ ưu tiên không bị luật sang-kc đè)', /prefers-reduced-motion:\s*reduce\)\s*\{\.thv\.kc\.chieu \.thv-sang\{animation:none\}/.test(css));
+    k('A1 tên dài không đẩy hạn ra ngoài thẻ: ô tên min-width:0 + ellipsis, ô hạn flex:none', /\.thv-chan > div:first-child\{min-width:0\}/.test(css) && /text-overflow:ellipsis/.test(css) && /\.thv-chan \.phai\{flex:none\}/.test(css));
     const cp = doc('src/components/TheHoiVien.jsx');
     k('A3 TheHoiVien.jsx: role="img" + aria-label ở cỡ lớn, aria-hidden ở cỡ nhỏ, lớp chieu, lấp lánh Kim Cương', /role="img"/.test(cp) && /aria-label/.test(cp) && /aria-hidden/.test(cp) && /chieu/.test(cp) && /thv-lap/.test(cp));
     const DM = (await nap('src/noiDung/nd/index.js')).DANH_MUC, khoa = new Set(DM.map((m) => m.khoa));
@@ -163,7 +165,7 @@ async function trinhDuyet(pw) {
       if (duong === '/menu') return json(r, 200, { success: true, data: MENU_DS });
       if (duong === '/chuong-trinh') return json(r, 200, { success: true, data: [] });
       if (!/tok-A/.test(req.headers().authorization || '')) return json(r, 401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
-      if (duong === '/toi') return json(r, 200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: B('08:00:00'), xung_ho: 'chi', dia_chi: null, ngay_sinh: null, qr: 'QR', hang: S.hang, so_du_vi: 500000 } });
+      if (duong === '/toi') return json(r, 200, { success: true, khach: { sdt: '0909123456', ten: S.ten || 'Linh', ngay_tao: B('08:00:00'), xung_ho: 'chi', dia_chi: null, ngay_sinh: null, qr: 'QR', hang: S.hang, so_du_vi: 500000 } });
       if (duong === '/diem') return json(r, 200, { success: true, points: 0, history: [] });
       if (duong === '/voucher') return json(r, 200, { success: true, data: [], ma_khach_moi: [] });
       if (duong === '/gia-han') return json(r, 200, { success: true, token: 'tok-A', het_han: B('08:00:00', '2026-12-14') });
@@ -271,6 +273,18 @@ async function trinhDuyet(pw) {
     await doi(t, async () => (await dem(t, '#tracking .thv')) === 1);
     k('A4 reducedMotion: reduce → .thv-sang animation-name none', await t.evaluate(() => getComputedStyle(document.querySelector('#tracking .thv-sang')).animationName === 'none'));
   });
+  await may('B3 Chào mừng Kim Cương giảm chuyển động', { giam: true, guiDo: GUI('TQD53', THE(3, 1)), S0: { hang: TOI(null, 3) } }, async ({ t, S }) => {
+    S.donMoi('TQD53', [THE(3, 1)], 'xong');
+    await mo(t, '/don/TQD53');
+    await doi(t, async () => (await dem(t, '#tracking .thv.kc')) === 1);
+    k('A4 reducedMotion: reduce → Kim Cương cũng animation-name none', await t.evaluate(() => getComputedStyle(document.querySelector('#tracking .thv-sang')).animationName === 'none'));
+  });
+  await may('B3 Chào mừng không vẽ được thẻ → vẫn hiện hạn POS', {}, async ({ t, S }) => {
+    S.donMoi('TQD53', [THE(2, 3)], 'xong');
+    await mo(t, '/don/TQD53');
+    await doiChu(t, '#tracking', /Chào mừng hội viên/);
+    k('B3 không biết hạng (không bản ghi, /toi chưa có hạng) → không thẻ, hạn "Hạn mới: 13/02/2027" của POS vẫn hiện', (await dem(t, '#tracking .thv')) === 0 && /Hạn mới: 13\/02\/2027/.test(await chu(t, '#tracking .cm-han')));
+  });
   await may('B3 Chào mừng không đọc được hạn', { guiDo: GUI('TQD53', THE(2, 3)), S0: { hanMoi: 'Thẻ có hiệu lực từ hôm nay', hang: TOI('2027-02-13T23:59:59', 2) } }, async ({ t, S }) => {
     S.donMoi('TQD53', [THE(2, 3)], 'xong');
     await mo(t, '/don/TQD53');
@@ -301,6 +315,11 @@ async function trinhDuyet(pw) {
     await mo(t, '/trangchu');
     await doiChu(t, '#home .points-card', /Vàng|vàng/);
     k('B4 Trang chủ: thẻ điểm .points-card còn, không .thv', (await dem(t, '#home .points-card')) >= 1 && (await dem(t, '#home .thv')) === 0);
+  });
+  await may('B1 tên dài 360', { rong: 360, S0: { ten: 'Nguyễn Thị Thanh Tuyền', hang: TOI('2026-11-26T23:59:59', 2) } }, async ({ t }) => {
+    await mo(t, '/uudai');
+    await doi(t, async () => (await dem(t, `${khoiUD} .thv`)) > 0);
+    k('B1 [360] tên khách dài: hạn trên thẻ vẫn nằm trọn trong thẻ và đọc đủ ngày', await t.evaluate(() => { const c = document.querySelector('#rewards .thv'), p = c.querySelector('.phai'), r = c.getBoundingClientRect(), q = p.getBoundingClientRect(); return q.right <= r.right + 1 && p.querySelector('b').scrollWidth <= p.querySelector('b').clientWidth + 1 && /26\/11\/2026/.test(p.innerText); }));
   });
   for (const rong of [360, 430]) {
     await may(`Ưu đãi ${rong}`, { rong, S0: { hang: TOI(null, 3) } }, async ({ t }) => {
