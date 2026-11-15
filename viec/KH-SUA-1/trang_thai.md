@@ -44,4 +44,19 @@ Nhánh `viec/KH-SUA-1`; HEAD = FETCH_HEAD = `85e151d`.
 
 ✓ CỔNG CHẠY ĐẠT (`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 85e151d^ HEAD viec/KH-SUA-1`, HEAD d4ad6e1). Lần đầu đỏ A16 vì dòng `SỐ CA` thiếu đường dẫn đầy đủ `cong_cu/thu_KHSUA1.js` — đã sửa.
 
+## Báo cáo /ra-soat (agent độc lập, vòng 1)
+ĐẠT (có nghi ngờ nhỏ, không có lỗi chặn)
+
+LỖI TÌM ĐƯỢC (mức thấp, K4, không chặn):
+- `cong_cu/thu_KHSUA1.js:24-28` — canh chung chỉ bắt bộ chọn đứng MỘT lớp (đúng phiếu B1); hai tệp cùng định nghĩa `.x:hover`, `.x.y`, `.x > div` thì lọt.
+- `cong_cu/thu_KHSUA1.js:17` — bỏ `demo*.css` nên lớp ngoài demo trùng lớp demo không bị bắt (đã có từ trước: `.cart-item`, `.cart-info`, `.hb-k`, `.sex`, `.nt-state`, `.back-btn`, `.ghost-btn`, `.phone`, `.qr-header-btn`); phiếu cho phép loại demo.
+
+NGHI NGỜ: `bang_chung_do.txt` dòng "SAU VÁ" ghi mốc `bac5c5f` (code không đổi từ đó, chỉ thêm tệp thử/hồ sơ); canh chung không chặn lớp mới trùng lớp demo; agent không mở ảnh.
+
+NGHIỆM THU: 9/9 mục có bằng chứng (A1, A2, B1–B6; B6 là chủ quán thử tay) · mục thiếu: không. Không vi phạm Phạm vi / Cấm.
+
+CHƯA SOÁT ĐƯỢC: agent không chạy lại bài thử / npm test / cổng (số liệu lấy từ hồ sơ); không mở ảnh. Phiên chính đã tự xem ảnh sau: thẻ QR đúng mẫu, Thanh toán thẻ đúng bản 14.11.
+
+BÀI HỌC (đề xuất, ngoài Phạm vi — chờ chat soát duyệt): (1) mở rộng canh trùng sang bộ chọn có đuôi và đối chiếu với `demo*.css` — việc sau; (2) gom hàm "nạp nốt css theo màn" cho máy giả vào `thu_KHMUA1b.js` thay vì mỗi bài tự làm.
+
 HEAD ĐÃ KIỂM: d4ad6e1
