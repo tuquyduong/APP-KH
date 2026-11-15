@@ -484,7 +484,10 @@ async function trinhDuyet(pw) {
     });
     const t = await ctx.newPage(); t.on('pageerror', (e) => loiTrang.push(e.message)); t.setDefaultTimeout(6000);
     t.on('console', (m) => { if (m.type() === 'error' && /removeChild|insertBefore/.test(m.text())) loiTrang.push(m.text()); });
-    try { await chay({ t, S, ctx }); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); }
+    try { await chay({ t, S, ctx }); } catch (e) {
+      k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]);
+      if (process.env.ANH_LOI) await t.screenshot({ path: path.join(process.env.ANH_LOI, `loi_${ten}.png`) }).catch(() => {});
+    }
     k(`[${ten}] trang không báo lỗi JS (kể cả removeChild)`, loiTrang.length === 0, loiTrang[0]);
     await ctx.close();
   }
@@ -607,14 +610,14 @@ async function trinhDuyet(pw) {
     k('D3 "Bỏ thay đổi" → DELETE /nhap/today.bg', await doi(t, async () => goiKho('DELETE', '/nhap/today.bg').length === 1));
     await t.click('[data-bang-sua="today.bg"] .cs-h button');
     // D3 người khác vừa lưu
-    K.nhap.set('home.feat', { khoa: 'home.feat', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
-    await but(t, 'home.feat').first().click().catch(() => {});
-    if (await but(t, 'home.feat').count()) {
-      await t.locator('[data-bang-sua="home.feat"]').waitFor();
-      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.feat"]')));
-      await t.click('[data-bang-sua="home.feat"] .cs-h button');
-    } else k('D3 (Người khác vừa lưu) cần bút home.feat trên Trang chủ', false);
-    K.nhap.delete('home.feat');
+    K.nhap.set('home.needs', { khoa: 'home.needs', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
+    await but(t, 'home.needs').first().click().catch(() => {});
+    if (await but(t, 'home.needs').count()) {
+      await t.locator('[data-bang-sua="home.needs"]').waitFor();
+      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.needs"]')));
+      await t.click('[data-bang-sua="home.needs"] .cs-h button');
+    } else k('D3 (Người khác vừa lưu) cần bút home.needs trên Trang chủ', false);
+    K.nhap.delete('home.needs');
     // D6 Đi tới màn
     await t.click(`.cms-bar button:has-text("${QT.qt('diToi')}")`);
     const dsDi = await t.locator('#sheetCms .cs-go button').allTextContents();
@@ -642,18 +645,18 @@ async function trinhDuyet(pw) {
     await t.goto(URL0 + '/trangchu'); await t.reload();
     k('D1 tải lại trang → Chế độ sửa còn (còn vé)', await doi(t, async () => (await t.locator('.cms-bar').count()) === 1));
     // D8 "Tới chỗ này" + "Bỏ"
-    await moBut(t, 'home.feat');
-    await t.locator('[data-bang-sua="home.feat"] input.cs-in').fill('Món ngon');
-    await t.click('[data-bang-sua="home.feat"] .cs-next');
-    await doi(t, async () => K.nhap.has('home.feat'));
-    await t.click('[data-bang-sua="home.feat"] .cs-h button');
+    await moBut(t, 'home.needs');
+    await t.locator('[data-bang-sua="home.needs"] input.cs-in').fill('Món ngon');
+    await t.click('[data-bang-sua="home.needs"] .cs-next');
+    await doi(t, async () => K.nhap.has('home.needs'));
+    await t.click('[data-bang-sua="home.needs"] .cs-h button');
     await t.evaluate(() => { document.querySelector('.screens').scrollTop = 0; });
     await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
-    await t.click(`[data-xem-lai="home.feat"] button:has-text("${QT.qt('toiCho')}")`);
-    k('D8 "Tới chỗ này" → đóng bảng, cuộn tới phần tử', await doi(t, async () => (await bang(t).count()) === 0 && await t.locator('[data-nd="home.feat"]').first().isVisible()));
+    await t.click(`[data-xem-lai="home.needs"] button:has-text("${QT.qt('toiCho')}")`);
+    k('D8 "Tới chỗ này" → đóng bảng, cuộn tới phần tử', await doi(t, async () => (await bang(t).count()) === 0 && await t.locator('[data-nd="home.needs"]').first().isVisible()));
     await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
-    await t.click(`[data-xem-lai="home.feat"] button:has-text("${QT.qt('bo')}")`);
-    k('D8 "Bỏ" → DELETE /nhap/home.feat, dòng biến mất', await doi(t, async () => !K.nhap.has('home.feat') && (await t.locator('[data-xem-lai="home.feat"]').count()) === 0));
+    await t.click(`[data-xem-lai="home.needs"] button:has-text("${QT.qt('bo')}")`);
+    k('D8 "Bỏ" → DELETE /nhap/home.needs, dòng biến mất', await doi(t, async () => !K.nhap.has('home.needs') && (await t.locator('[data-xem-lai="home.needs"]').count()) === 0));
     await t.click(`#sheetCms .cs-h button`);
     await t.click('.cms-bar button.x');
     k('D1 ✕ tắt: không còn thanh, không còn bút, bỏ lớp nháp', await doi(t, async () => (await t.locator('.cms-bar').count()) === 0 && (await t.locator('.cms-lop').count()) === 0 && (await t.locator('.phone.cms-on').count()) === 0));
@@ -661,12 +664,13 @@ async function trinhDuyet(pw) {
 
   // ---- C2: 401 giữa lúc sửa → đăng nhập quản trị → quay lại đúng chỗ; nháp ở kho còn. 403 không thoát. ----
   await may('ve-het-han', { dn: false, ve: { ve: 've-da-thu-hoi', het_han: '', quyen: ['nd_xem', 'nd_sua', 'nd_cap_nhat'], nguoi: { ten_hien: 'Chủ quán Linh' } }, sua: true }, async ({ t }) => {
-    K.nhap.set('home.feat', { khoa: 'home.feat', gia_tri: 'Nháp còn trên kho', nguoi: 'Chủ quán Linh', luc: '2026-10-30T20:40:00', ban_goc: 2 });
+    K.nhap.set('today.k', { khoa: 'today.k', gia_tri: 'Nháp còn trên kho', nguoi: 'Chủ quán Linh', luc: '2026-10-30T20:40:00', ban_goc: 2 });
     await t.goto(URL0 + '/trangchu');
     k('C2 vé hết hạn (401 ở GET /nhap) → về màn đăng nhập quản trị với ?tiep=/trangchu', await doi(t, async () => (await tren(t)) === '/admin?tiep=%2Ftrangchu' && (await t.locator('#qt-dang-nhap').count()) === 1, 8000), await tren(t));
     await t.fill('input[name="ten"]', 'linh'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
     k('C2 đăng nhập lại → về đúng chỗ (Trang chủ) và Chế độ sửa bật; nháp trên kho vẫn còn', await doi(t, async () => (await tren(t)) === '/trangchu' && (await t.locator('.cms-bar').count()) === 1 && /1 thay đổi/.test(await chu(t, '.cms-bar .cb-t')), 8000));
-    k('C2 nháp hiện trên trang khi sửa (lớp nháp)', await doi(t, async () => (await chu(t, '[data-nd="home.feat"]')) === 'Nháp còn trên kho'));
+    k('C2 nháp hiện trên trang khi sửa (lớp nháp)', await doi(t, async () => (await chu(t, '[data-nd="today.k"]')) === 'Nháp còn trên kho'));
+    K.nhap.delete('today.k');
   });
   await may('thu-quyen', { dn: false }, async ({ t }) => {
     await t.goto(URL0 + '/admin/lichsu'); await t.locator('#qt-dang-nhap').waitFor();
@@ -705,10 +709,10 @@ async function trinhDuyet(pw) {
     K.chen409 = 1;
     await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLai')}")`);
     k('E2 "Quay lại bản này" hỏi lại MỘT lần trước khi gửi', /Chắc chắn quay lại bản 1/.test(await chu(t, '#qt-mot-ban')) && goiKho('POST', '/quay-lai').length === 0);
-    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLaiCo')}")`);
+    await t.click(`#qt-mot-ban button:text-is("${QT.qt('lsQuayLaiCo')}")`);
     k('E2 quay lại gặp 409 → tải lại, báo, KHÔNG tự gửi lại', await doi(t, async () => /Có bản mới hơn/.test(await toast(t))) && goiKho('POST', '/quay-lai').length === 1);
     await t.locator('[data-ban="1"] .cs-hi').click(); await t.locator('#qt-mot-ban').waitFor();
-    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLai')}")`); await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLaiCo')}")`);
+    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLai')}")`); await t.click(`#qt-mot-ban button:text-is("${QT.qt('lsQuayLaiCo')}")`);
     k('E2 quay lại → POST /quay-lai { so: 1, ban_goc: bản đang chạy } → bản MỚI "từ bản 1"', await doi(t, async () => goiKho('POST', '/quay-lai').length === 2 && /Đã quay lại nội dung bản 1/.test(await toast(t)))
       && goiKho('POST', '/quay-lai')[1].than.so === 1 && goiKho('POST', '/quay-lai')[1].than.ban_goc === K.dangChay - 1 && K.ban[K.ban.length - 1].tu_ban === 1);
     const [xuat] = await Promise.all([t.waitForEvent('download'), t.click(`#xuat-nhap button:has-text("${QT.qt('xnXuat')}")`)]);
@@ -716,7 +720,10 @@ async function trinhDuyet(pw) {
     k('E3 "Xuất toàn bộ" → GET /xuat → tải tệp', goiKho('GET', '/xuat').length === 1 && JSON.parse(tep).dinh_dang === 1);
     await t.locator('#xuat-nhap input[type="file"]').setInputFiles({ name: 'xuat.json', mimeType: 'application/json', buffer: tep });
     k('E3 "Nhập toàn bộ" khi kho đã có dữ liệu → 409 KHO_DA_CO_DU_LIEU, hiện NGUYÊN lời', await doi(t, async () => (await toast(t)) === 'Lời kho giả: KHO_DA_CO_DU_LIEU'));
-    await t.locator('#xuat-nhap input[type="file"]').setInputFiles({ name: 'to.json', mimeType: 'application/json', buffer: Buffer.alloc(MAY.gioi_han.nhap_toan_bo_toi_da_byte + 10, 32) });
+    const tepTo = path.join(require('os').tmpdir(), `kh-admin-1-to-${process.pid}.json`);
+    fs.writeFileSync(tepTo, Buffer.alloc(MAY.gioi_han.nhap_toan_bo_toi_da_byte + 10, 32));
+    await t.locator('#xuat-nhap input[type="file"]').setInputFiles(tepTo);
+    fs.rmSync(tepTo, { force: true });
     k('E3 tệp > 50 MB chặn trước khi gửi', await doi(t, async () => /lớn quá 50 MB/.test(await toast(t))) && goiKho('POST', '/nhap-toan-bo').length === 1);
     K.tepXuat = tep;
   });
