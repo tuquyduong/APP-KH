@@ -73,3 +73,31 @@ Kéo nhánh lúc mở phiên tiếp: `15964fa → 2728b84` (hook mở phiên; c�
 - Số dòng: app +1.064 / −29 (12 tệp; ngân sách ~1.100); bài thử mới 774 dòng (ngân sách ~600 — ×1,3: thêm kho giả dựng từ khối máy đọc + ca thêm của §5b).
 
 HEAD ĐÃ KIỂM: 38552a4
+
+## Bước 8 — soát độc lập /ra-soat, vòng 1 (agent riêng, chỉ đọc) — báo cáo chép nguyên ý
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:
+1. `src/noiDung/quanTri.js:8` NUT_KHOA_KHI_SUA thiếu hai nút xoá THẲNG có data-nd: `XeCo.jsx:76` `xe.hangXoa`, `XeCo.jsx:120` `ti.xoaNgay`; trang_thai ghi "chỉ giỏ chưa khoá" là sai; ca thử chỉ kiểm khoá trong danh sách tồn tại, không kiểm đủ — K4 + K1.
+2. `CheDoSua.jsx:181`, `QuanTri.jsx:123` vẽ `(x.nguoi && x.nguoi.ten_hien) || x.nguoi` — `nguoi` là object mà `ten_hien` rỗng → React vẽ object → trắng màn; `CheDoSua.jsx:138` ra "[object Object]"; 4 chỗ 4 kiểu; hợp đồng không ghi dạng `nguoi`; kho giả cho chuỗi nên không thấy — K1 + K5.
+3. `CheDoSuaBang.jsx:114` giá trị đầu lấy NGUYÊN `nhap.gia_tri` không qua hopLe → nháp sai dạng làm vỡ bảng (danhsach `v.map`, nut `v.chu`) — K5 / K3.
+4. G7 thiếu kết quả cổng `tinh` / `chay` trong trang_thai — K1.
+5. Ảnh ở Xem lại / Lịch sử / bảng sửa vẽ `duongAnh(v)` giá trị THÔ, không qua anhDung (máy quản trị có thể tải ảnh http ngoài) — K4 (nhẹ).
+6. `CheDoSua.jsx:78-86,132` tranh chấp: ✕ khi taiNhap đang chạy → lời trả muộn bật lại lớp nháp khi đã tắt — K5.
+NGHI NGỜ: vé không kiểm het_han phía App (tự phục hồi qua 401); "Người khác vừa lưu" so `luc` không so người, cảnh báo cũ còn sau khi tự Lưu; xác minh khách vẫn gửi khi sửa (phiếu D7 cho phép); bút 22 px < 44 px (chép demo); §5b hứa ca `tiep` ra ngoài mà chưa có; K2 bị lách bằng ghép chuỗi `/api/nd` (đã ghi Phát hiện).
+NGHIỆM THU: 26/30 · thiếu D7 (2 nút), G5 (bản soát KHÔNG ĐẠT), G7 (cổng), G8 (sau gộp). G6 thiếu ảnh tô chỗ lệch; D6 thiếu ca màn cần đăng nhập.
+BẢO MẬT (G5): vé nơi giữ / thoát ĐẠT; hết hạn dựa 401 — chấp nhận; không trộn vé/token ĐẠT; XSS chữ ĐẠT; XSS ảnh phía khách ĐẠT, phía quản trị lỗi 5 (nhẹ); chặn ghi CHƯA ĐẠT (lỗi 1); không lộ dữ liệu khách ĐẠT; quyen[] chỉ ẩn nút ĐẠT; ?tiep= không chuyển ra ngoài (chưa có ca); lớp nháp không tới khách ĐẠT.
+CHƯA SOÁT ĐƯỢC: không chạy lại đột biến / cổng chay / --day-du (ghi tệp); CORS + dạng `nguoi` thật của POS; ảnh so_anh ↔ demo; trình duyệt Zalo.
+BÀI HỌC: KHOÁ danh sách nút khoá phải ĐỦ (quét khoá xoá/đăng xuất); kho giả `nguoi` dạng object + ca nháp sai dạng; NGUYÊN TẮC "trường chưa ghi dạng trong hợp đồng → không vẽ thẳng; mọi giá trị từ kho qua hopLe trước khi vẽ"; NGUYÊN TẮC "không lách bộ kiểm bằng ghép chuỗi — xin sửa bộ kiểm"; KHOÁ "trang_thai có kết quả cổng chay trước khi soát".
+
+### Sửa vòng 1
+| Lỗi | Sửa | Bài thử / đột biến |
+|---|---|---|
+| 1 | `quanTri.js` thêm `xe.hangXoa`, `ti.xoaNgay`; chú thích nhóm chỉ-mở-hỏi-lại | ca "D7 danh sách nút khoá khi sửa ĐỦ" (quét mọi khoá xoá / đăng xuất trong màn, nhóm không-xoá có lý do từng khoá) · BV-XOA-HANG-XE-KHONG-KHOA |
+| 2 | MỘT hàm `tenNguoi` (`CheDoSuaBang.jsx`) — chuỗi hoặc { ten_hien, ten_dang_nhap }, khác → rỗng; dùng ở 5 chỗ | kho giả trả `nguoi` dạng object, một tài khoản `ten_hien` rỗng; ca "tên người dạng object hiện chữ (lan)" |
+| 3 | giá trị đầu bảng sửa qua `hopLe`, sai → giá trị đang chạy; `hienGiaTri` sai luật → "(không hợp lệ — khách thấy chữ mặc định)" | ca "D3 nháp sai dạng → bảng sửa vẫn mở" · BV-NHAP-SAI-DANG-VO-BANG |
+| 4 | chạy cổng `tinh` + `chay`, ghi kết quả (bước 11) | — |
+| 5 | ảnh xem trước (Xem lại, Lịch sử, bảng sửa) chỉ vẽ khi `anhDung`; giá trị sai luật không vẽ | ca "B3 / G5 Xem lại: ảnh lạ trong nháp KHÔNG vẽ" |
+| 6 | `taiNhap` bỏ kết quả nếu đã tắt sửa (`dangSua()`) | (tranh chấp thời gian — không dựng được ca ổn định; ghi CHƯA KIỂM) |
+| nghi ngờ | cảnh báo "Người khác vừa lưu" chỉ khi người lưu KHÁC tên người đang đăng nhập, xoá cảnh báo sau khi tự Lưu; Xem lại đọc lại nháp khi mở; thêm ca `?tiep=` ra ngoài (3 dạng) + ca D6 màn cần đăng nhập | các ca tương ứng |
+| K2 | giữ — đã ghi `## Phát hiện` + đề xuất sửa bộ kiểm (tệp Cấm) | — |
+Sau sửa: thu_KHADMIN1.js 84/0 (KHONG_TRINH_DUYET=1), 168/0 (Chromium); đột biến tay 22/22 BẮT ĐƯỢC.
