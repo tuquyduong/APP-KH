@@ -152,7 +152,7 @@ async function trinhDuyet(pw) {
     const loi = [];
     t.on('pageerror', (e) => loi.push(e.message));
     if (dongHo) { await t.clock.install({ time: new Date('2026-10-30T20:30:00+07:00') }); await t.clock.resume(); }
-    await t.addInitScript(({ dn }) => { try { if (!sessionStorage.getItem('gieo')) { sessionStorage.setItem('gieo', '1'); if (dn) localStorage.setItem('kh_token', 'tok-A'); } } catch { /* bỏ qua */ } }, { dn });
+    await t.addInitScript(({ dn }) => { try { if (!sessionStorage.getItem('gieo')) { sessionStorage.setItem('gieo', '1'); if (dn) localStorage.setItem('kh_token', 'tok-A'); } sessionStorage.setItem('nd_ve', JSON.stringify({ ve: 've-gia', het_han: '', quyen: ['nd_xem'], nguoi: {} })); } catch { /* bỏ qua */ } }, { dn }); // KH-ADMIN-1: trang ở /admin/kiemkhop — cần vé quản trị (giả; trang không gọi /api/nd)
     const P = { goi: [], ...pos };
     t.P = P;
     await t.route(`${URL0}/**`, async (rq) => {
@@ -189,7 +189,7 @@ async function trinhDuyet(pw) {
     try { await chay(t, loi, P); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
   }
   const mo = async (t, co = '100%') => {
-    await t.goto(URL0 + '/kiemkhop'); await t.waitForSelector('#kiemkhop'); await t.waitForTimeout(900);
+    await t.goto(URL0 + '/admin/kiemkhop'); await t.waitForSelector('#kiemkhop'); await t.waitForTimeout(900);
     if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130% !important}' });
   };
   const chu = (t) => t.locator('#kiemkhop').innerText();
