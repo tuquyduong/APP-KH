@@ -54,6 +54,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
     k('A2 mục POST/PUT chỉ ghi "có trong hợp đồng" (không có truong để kiểm)', ds.filter((m) => /^(POST|PUT)/.test(m.cua)).every((m) => m.truong.length === 0));
     const kk = doc('src/pages/KiemKhop.jsx');
     const thieuGoi = [...new Set(ds.filter((m) => m.co && m.cua.startsWith('GET ') && m.cua !== 'GET /don/:ma').map((m) => m.cua))].filter((c) => !kk.includes(`'${c}'`));
+    k("A2 KH-QC-1: /kiemkhop có hàm gọi 'GET /quang-cao' (layQuangCao) — ca TĨNH", kk.includes("'GET /quang-cao': layQuangCao") && /import \{[^}]*layQuangCao[^}]*\} from '\.\.\/api\.js'/.test(kk));
     k('A2 trang /kiemkhop có hàm gọi cho MỌI cửa GET co:true (KH-MUA-1c: có GET /chuong-trinh của v9)', kk.includes("'GET /chuong-trinh'") && thieuGoi.length === 0, thieuGoi.join(','));
   }
 
