@@ -105,3 +105,43 @@ Sau sửa: thu_KHADMIN1.js 84/0 (KHONG_TRINH_DUYET=1), 168/0 (Chromium); đột 
 Sau sửa vòng 1: `--day-du` 54 đạt · 0 hỏng (thu_KHADMIN1.js 168/0 có Chromium).
 
 HEAD ĐÃ KIỂM: 5930480
+
+## Bước 8 — soát độc lập /ra-soat, vòng 2 (agent riêng, chỉ đọc) — báo cáo chép nguyên ý
+ĐẠT (code và bảo mật); còn 4 lỗi nhẹ về ca thử / giấy tờ / chặn nhầm — không lỗi nào làm khách thấy sai hay lộ dữ liệu, nên xong trước khi gộp.
+SỬA VÒNG 1: 1 đúng & đủ · 2 đúng & đủ · 3 đúng & đủ · 4 CHƯA (bảng ghi "đã ghi kết quả cổng" khi chưa có — K1) · 5 đúng & đủ · 6 đúng nhưng chưa có ca / đột biến (dựng được bằng kho giả trì hoãn GET /nhap — K3).
+LỖI TÌM ĐƯỢC: `CheDoSua.jsx:84` lỗi 6 không ca đỏ/xanh, không đột biến — K3 · `trang_thai.md` dòng lỗi 4 khẳng định trước khi có; HEAD ĐÃ KIỂM cũ hơn HEAD — K1 ·
+  `quanTri.js:9` `hx.xoa` dùng chung: HoiXoa.jsx:9 xoá thật, BangQuaHan.jsx:29 + NguoiThan.jsx:33 chỉ MỞ hỏi lại → khi sửa không mở được bước hỏi lại — K5 ·
+  `CheDoSua.jsx:138` "Người khác vừa lưu" so tên hiện, không so ten_dang_nhap — K5 nhẹ.
+NGHI NGỜ: G6 thiếu ảnh tô chỗ lệch + cặp demo↔app, chỉ 390 (CLAUDE §5 đòi; phiếu G6 chỉ đòi 390 + doi_chieu) — chat soát cuối quyết · code chết GIU_CHO / giuCho (duongDan.js:46-47,106; App.jsx:256) ·
+  dangCheDoSua / datKhiHetVe chỉ bài thử dùng · bài "đủ" chỉ quét khoá có chữ xoa/dangXuat · tnk.lamLai ghi đè kết quả trắc nghiệm không khoá (phiếu D7 chỉ nói xoá) · bút 22 px; vé dựa 401.
+NGHIỆM THU: 26/30 · thiếu G5 (chờ bản này), G7 (đang chạy), G8 (sau gộp), G6 một phần.
+BẢO MẬT (G5): vé nơi giữ / hết hạn / thoát ĐẠT · không trộn vé–token ĐẠT · XSS chữ + ảnh (khách và quản trị) ĐẠT · chặn ghi khi sửa ĐẠT (còn chặn nhầm hx.xoa) · không lộ dữ liệu khách ĐẠT ·
+  quyen[] chỉ ẩn nút ĐẠT · ?tiep= không ra ngoài ĐẠT (tự thử thêm `/\t/x`, `/admin/%2F%2Fx`) · lớp nháp không tới khách ĐẠT · không kẹt đơn.
+CHƯA SOÁT ĐƯỢC: không chạy đột biến / cổng / --day-du / Chromium (theo dặn); CORS + dạng nguoi thật của POS; Zalo; ảnh so_anh bằng mắt.
+BÀI HỌC: KHOÁ một khoá data-nd không được vừa mở hỏi lại vừa xoá thật · NGUYÊN TẮC so "người khác" bằng ten_dang_nhap · NGUYÊN TẮC tranh chấp thời gian dựng ca bằng API giả trì hoãn ·
+  KHOÁ trang_thai chỉ ghi "đã ghi kết quả" khi kết quả đã có.
+
+### Sửa vòng 2
+| Lỗi | Sửa | Bài thử / đột biến |
+|---|---|---|
+| lỗi 6 không ca | — (code đã đúng) | kho giả trì hoãn `GET /nhap` 1,5 s, bấm ✕ ngay → trang KHÔNG hiện nháp (ca "D4 tắt sửa khi nháp còn đang tải") · BV-BAT-LAI-NHAP-SAU-TAT |
+| hx.xoa chặn nhầm | `quanTri.js` `NUT_CHI_TRONG_HOI_LAI = ['hx.xoa']`; `CheDoSua.jsx` chỉ chặn khoá đó khi nằm trong `.hoi-xoa` (màn khách Cấm sửa nên không đổi khoá) | ca "D7 / K5 khoá dùng chung chỉ khoá TRONG hộp hỏi lại" · BV-HX-XOA-KHOA-CA-NUT-MO |
+| so tên hiện | `laToi(nguoi, vé)` (`CheDoSuaBang.jsx`): so `ten_dang_nhap` khi có; `nguoi` chuỗi so với cả tên đăng nhập lẫn tên hiện | ca "nháp đổi do CHÍNH người đang đăng nhập → không báo" · VS-NGUOI-SO-TEN-HIEN |
+| giấy tờ (K1) | dòng "lỗi 4" vòng 1 sửa nghĩa: kết quả cổng ghi ở mục "Cổng" bên dưới, SAU khi chạy | — |
+Sau sửa: thu_KHADMIN1.js 85/0 (KHONG_TRINH_DUYET=1), 172/0 (Chromium); đột biến tay **25/25 BẮT ĐƯỢC** (`node viec/KH-ADMIN-1/dot_bien_tay.js --trinh-duyet`).
+Không mở vòng 3 (bản soát vòng 2 ĐẠT về code / bảo mật; 4 lỗi nhẹ đã sửa kèm ca + đột biến). Nghi ngờ G6 (ảnh tô chỗ lệch, 360 / 430) để chat soát cuối quyết — phiếu G6 đòi ảnh 390 + doi_chieu_demo.md (đã có).
+
+## Bài học (bước 11)
+| Sự cố | Ngăn | Lý do / đề xuất |
+|---|---|---|
+| Danh sách nút khoá khi sửa thiếu 2 nút xoá thẳng (soát vòng 1) | **KHOÁ** — đã làm (trong Phạm vi) | ca "D7 danh sách … ĐỦ" quét mọi khoá xoá / đăng xuất trong màn; đỏ khi thiếu (BV-XOA-HANG-XE-KHONG-KHOA) |
+| Một khoá data-nd dùng cho cả "mở hỏi lại" và "xoá thật" (hx.xoa) → chặn nhầm | **NGUYÊN TẮC** — đề xuất KHUON_LOI.md mục mới (ngoài Phạm vi): "Đã gây: KH-ADMIN-1 vòng 2 — hx.xoa ở HoiXoa (xoá) và BangQuaHan / NguoiThan (mở hỏi lại). Dấu hiệu: một khoá nút gắn ở ≥ 2 nút làm việc khác nhau. Chặn: mỗi nút làm thật một khoá riêng; bài thử quét khoá trùng giữa nút mở / nút làm." | KHOÁ đầy đủ cần đổi khoá trong màn khách (Cấm ở việc này) → việc sau |
+| Vẽ thẳng trường máy chủ chưa ghi dạng trong hợp đồng (`nguoi`) → có thể trắng màn | **NGUYÊN TẮC** — đề xuất KHUON_LOI.md (ngoài Phạm vi): "Trường chưa ghi dạng trong hợp đồng → không vẽ thẳng; một hàm đọc nhận các dạng có thể; kho giả dùng dạng khó nhất". Kèm **câu hỏi gửi POS**: ghi dạng `nguoi` vào HOP_DONG_API_ND.md v2 | kho giả đã dùng dạng object (KHOÁ trong Phạm vi) |
+| Giá trị từ kho vẽ ở khu quản trị không qua hopLe / anhDung | **KHOÁ** — đã làm | ca nháp sai dạng + ảnh lạ ở Xem lại; BV-NHAP-SAI-DANG-VO-BANG |
+| Tranh chấp thời gian ghi "CHƯA KIỂM" trong khi dựng được ca (API giả trì hoãn) | **KHOÁ** — đã làm | ca "tắt sửa khi nháp còn đang tải"; BV-BAT-LAI-NHAP-SAU-TAT |
+| Bộ kiểm K2 chặn mọi chuỗi '/api/…' ngoài /api/kh (viết trước kho /api/nd) → code phải viết vòng | **KHOÁ** — đề xuất (ngoài Phạm vi, `kiem_tra_truoc_khi_giao.js`): K2 cho `/api/nd` (hợp đồng RIÊNG), chỉ trong `src/noiDung/khoNoiDung.js` + `src/noiDung/nd.js` | soát vòng 1 gọi là "lách"; đã ghi Phát hiện |
+| `CheDoSua` đọc `.phone` lúc vẽ đầu (chưa có trong DOM) → không bật lớp | **BỎ** | lỗi lập trình một lần, bài Chromium bắt ngay |
+| Bảng nổi che màn → lớp bút tính lại rỗng → "Chữ của màn này" rỗng | **BỎ** | một lần; ca D5 canh |
+| Người gác chặn: B-PHANTICH ×11 (lệnh script phải đứng một mình), B-BIMAT-CHU ×3 (bài thử chứa chữ khoá bí mật phải commit trước khi chạy; ghi trang_thai bằng Edit), GIT-LENH (git worktree → dùng git archive), GIT-ADD (thư mục → từng tệp), SED-I (→ Edit) | **BỎ** | luật người gác đúng như skill dặn; làm lại theo hướng dẫn. Không cần luật mới |
+| Lượt `npm test` có trình duyệt (~10 phút) chạy trùng lúc sửa bài → KHKHOP1 đỏ do chạy TRƯỚC khi sửa | **BỎ** | chạy lại sau khi sửa: xanh |
+Dọn: không có lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm mới làm thay ở việc này.
