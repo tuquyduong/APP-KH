@@ -84,6 +84,8 @@ const dong = (o = {}) => {
   k('C1/C2 data rỗng → nguồn cũ: Giờ vàng đang chạy (dải "⏰ Giờ vàng: giảm 30% đến 10:00", banner Giờ vàng)', (() => { const x = chon({ gioVang: GV(), quangCao: [] }); return x.chu === '⏰ Giờ vàng: giảm 30% đến 10:00' && x.tieuDe === 'Giờ vàng: giảm 30%'; })());
   k('C1/C2 data rỗng + chương trình → dải "🎁 Quà sinh nhật", banner = tên chương trình', (() => { const x = chon({ chuongTrinh: CT }); return x.chu === '🎁 Quà sinh nhật' && x.tieuDe === 'Quà sinh nhật' && x.dich === 'uudai'; })());
   k('C1/C2 data rỗng, không gì → dải rỗng (ẩn), banner chữ mặc định', (() => { const x = chon({}); return x.chu === '' && x.macDinh === true; })());
+  const gvChua = chon({ gioVang: null, quangCao: [dong({ id: 'gio_vang', uu_tien: 0, den_gio: '10:00', dich: 'menu', chu_dai: '⏰ Giờ vàng: giảm 30% đến 10:00' }), R({ id: 3, uu_tien: 2 })] });
+  k('K5 dòng gio_vang của POS nhưng /gio-vang chưa tải / không chạy: dải vẫn hiện chữ POS; banner KHÔNG vào Giờ vàng (không lộ {phanTram}), lấy dòng sau có tieu_de', gvChua.chu === '⏰ Giờ vàng: giảm 30% đến 10:00' && gvChua.tieuDe === 'Banner A' && !/[{}]/.test(gvChua.tieuDe + gvChua.phu + gvChua.nut), JSON.stringify(gvChua));
   k('K5 dòng hỏng (null, số, chu_dai rỗng) bị bỏ; quangCao không phải mảng không vỡ', chon({ quangCao: [null, 5, R({ chu_dai: '' })] }).chu === '' && chon({ quangCao: null }).chu === '' && chon({ quangCao: 'x' }).chu === '');
   k('K5 dòng POS thắng Giờ vàng + chương trình App tự dựng khi hợp giờ', chon({ gioVang: GV(), chuongTrinh: CT, quangCao: [R({ chu_dai: 'Của POS' })] }).chu === 'Của POS');
 
@@ -101,6 +103,8 @@ const dong = (o = {}) => {
   const ap = doc('src/api.js'), app = doc('src/App.jsx'), qcs = doc('src/quangCao.js');
   k('B1 api.js: layQuangCao = goi GET /quang-cao', /export const layQuangCao = \(\) => goi\('GET', '\/quang-cao'\)/.test(ap));
   k('B1 /quang-cao nằm trong CUA_CONG_KHAI (không bao giờ gửi token khách)', /CUA_CONG_KHAI = \[[^\]]*'\/quang-cao'/.test(ap));
+  k('B2 (tĩnh, cổng GitHub không có Chromium) ngưỡng quay lại: `Date.now() - luc >= PHUT_KIEM * 60000`; lỗi / 429 → đặt [] (nguồn cũ)', /Date\.now\(\) - luc >= PHUT_KIEM \* 60000/.test(app) && /\(\) => datQuangCaoPos\(\[\]\)/.test(app));
+  k('C4 (tĩnh) dải và banner không dùng dangerouslySetInnerHTML (chữ POS hiện như chữ)', !/dangerouslySetInnerHTML/.test(doc('src/components/DaiQuangCao.jsx') + doc('src/components/BannerHomNay.jsx') + doc('src/pages/TrangChu.jsx') + app));
   k('B2 App.jsx: hỏi bằng layQuangCao đúng một chỗ, dùng PHUT_KIEM của dangKySW.js, không setInterval, không lưu máy', (app.match(/layQuangCao\(/g) || []).length === 1 && /import \{[^}]*PHUT_KIEM[^}]*\} from '\.\/dangKySW\.js'/.test(app) && !/quangCao[^\n]*(localStorage|ghi\w*May)|kh_quangcao/i.test(app) && !/setInterval/.test((app.match(/layQuangCao[\s\S]{0,600}/) || [''])[0]));
   k('B2 chonQuangCao nhận `quangCao: quangCaoPos` từ trạng thái, gọi MỘT lần ở App', /chonQuangCao\(\{[^}]*quangCao: quangCaoPos/.test(app) && (app.match(/chonQuangCao\(/g) || []).length === 1);
   k('B2/C3 App.jsx: chỉ hỏi lần đầu (daHoiQc) và dải dùng đích riêng `quangCaoTho.dai`', /if \(daHoiQc\.current \|\| !\(coDai\(trang\)/.test(app) && /\.\.\.quangCaoTho, \.\.\.quangCaoTho\.dai/.test(app));

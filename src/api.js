@@ -59,7 +59,7 @@ export const layHang = () => goi('GET', '/hang');
 export const layGioVang = () => goi('GET', '/gio-vang');
 export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — không token (CUA_CONG_KHAI); dùng ở UuDai
 export const layQuangCao = () => goi('GET', '/quang-cao'); // v16 QC-APP-1 — không token (CUA_CONG_KHAI); chữ dải + banner Trang chủ do chủ quán đặt ở POS
-export const layGioHoatDong =() => goi('GET', '/gio-hoat-dong');
+export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
 export const suaHoSo = (truong) => goi('PUT', '/toi', truong);
