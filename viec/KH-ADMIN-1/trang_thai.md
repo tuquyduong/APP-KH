@@ -62,3 +62,14 @@ Kéo nhánh lúc mở phiên tiếp: `15964fa → 2728b84` (hook mở phiên; c�
 | `khoNoiDung.js` 401 → thoát | BV-401-KHONG-THOAT |
 | `quanTri.js` NUT_KHOA_KHI_SUA | BV-DANG-XUAT-KHONG-KHOA |
 | `CheDoSua.jsx` 409 không gửi lại · chạm phần tử chạy như khách · lời khoá theo chiDuong (Chromium) | VS-409-TU-GUI-LAI · BV-BUT-MO-KHI-CHAM-PHAN-TU · BV-KHOA-KHONG-CHI-DUONG |
+
+## Bước 6 — kiểm (15.11)
+- `npm test` (KHONG_TRINH_DUYET=1): 52 đạt · 0 hỏng (K1–K10 xanh: K9 màu demo, K10 chữ cứng không tăng — tệp mới 0).
+- Bài thử có Chromium (máy làm việc): thu_KHADMIN1.js 160/0 · thu_KHKHOP1.js 86/0 · thu_KHUI3b.js 175/0.
+- `node kiem_tra_truoc_khi_giao.js --day-du` (dựng app + mọi bài thử, có Chromium): **54 đạt · 0 hỏng**.
+- Đột biến tay `node viec/KH-ADMIN-1/dot_bien_tay.js --trinh-duyet`: **20/20 BẮT ĐƯỢC** (17 hàm thuần + 3 Chromium) — tên ở bảng "Chỗ vá → đột biến" trên.
+- G6 so ảnh màn khách KHÔNG sửa, gốc 3d35772 ↔ HEAD (390, cùng POS giả, tắt chuyển động; công cụ ở nháp): Trang chủ (đã đăng nhập) 0 điểm khác · Menu 0 · Ưu đãi 0 ·
+  Trang chủ (khách) 0 ngoài ảnh nền banner — vùng ảnh nền banner lệch CẢ khi so gốc ↔ gốc (vẽ ảnh không ổn định), không phải do việc này. Ảnh: `so_anh/390_khach_*`.
+- Số dòng: app +1.064 / −29 (12 tệp; ngân sách ~1.100); bài thử mới 774 dòng (ngân sách ~600 — ×1,3: thêm kho giả dựng từ khối máy đọc + ca thêm của §5b).
+
+HEAD ĐÃ KIỂM: 38552a4
