@@ -560,10 +560,11 @@ async function trinhDuyet(pw) {
     await t.click('[data-bang-sua="home.sub"] .cs-h button');
     k('D4 đóng bảng chưa Lưu → trang về bản đang chạy', await doi(t, async () => (await chu(t, '[data-nd="home.sub"]')) === truocSub));
     // D5 Chữ của màn này
+    await doi(t, async () => (await t.locator('.cms-lop .cms-pen').count()) > 8);
+    const manThay = new Set((await t.locator('.cms-lop .cms-pen').evaluateAll((ds) => ds.map((d) => d.dataset.but))).map((x) => (DM.find((m) => m.khoa === x) || {}).man).filter(Boolean));
     await t.click(`.cms-bar button:has-text("${QT.qt('chuMan')}")`);
     await t.locator('[data-chu-man]').first().waitFor();
     const coRow = new Set(await t.locator('[data-chu-man]').evaluateAll((ds) => ds.map((d) => d.dataset.chuMan)));
-    const manThay = new Set((await t.locator('.cms-lop .cms-pen').evaluateAll((ds) => ds.map((d) => d.dataset.but))).map((x) => (DM.find((m) => m.khoa === x) || {}).man).filter(Boolean));
     const can = DM.filter((m) => manThay.has(m.man)).map((m) => m.khoa);
     k('D5 "Chữ của màn này" = MỌI mục danh mục cùng `man` với phần tử đang hiện (gồm công tắc hien.*, chữ thỉnh thoảng mới hiện)', can.length === coRow.size && can.every((x) => coRow.has(x)) && can.some((x) => x.startsWith('hien.')), `${can.length} ≠ ${coRow.size}`);
     await anh(t, '390_chu_cua_man');
