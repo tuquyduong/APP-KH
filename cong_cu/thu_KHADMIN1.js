@@ -332,6 +332,432 @@ const HEX = 'a'.repeat(64);
 })().catch((e) => { console.error(e); console.log(`\n${dat} đạt · ${hong + 1} hỏng`); process.exit(1); });
 
 // ===== Phần 2 (Chromium) =====
+// KHO GIẢ dựng TỪ khối HOP_DONG_ND_MAY_DOC: chỉ trả lời đúng các cửa trong `cua[]`, quyền theo `quyen`, mã lỗi + status theo `ma_loi`, giới hạn theo `gioi_han`.
+function khoGiaND() {
+  const QUYEN_HET = MAY.quyen.map((q) => q.ma);
+  const K = {
+    ban: [], dangChay: 0, nhap: new Map(), anh: new Map(), nhatKy: [], goi: [], ngoaiHopDong: [], chen409: 0, luc: 0,
+    tk: { linh: { mk: 'dung', quyen: QUYEN_HET, ten_hien: 'Chủ quán Linh' }, nv: { mk: 'dung', quyen: ['nd_xem'], ten_hien: 'Nhân viên Lan' }, sua: { mk: 'dung', quyen: ['nd_xem', 'nd_sua'], ten_hien: 'Bạn Sửa' } },
+    ve: new Map(),
+  };
+  const gio = () => `2026-10-30T20:${String(31 + (K.luc++ % 28)).padStart(2, '0')}:00`;
+  const loi = (code, them = {}) => ({ st: MAY.ma_loi[code], o: { error: `Lời kho giả: ${code}`, code, ...them } });
+  const ok = (o) => ({ st: 200, o: { success: true, ...o } });
+  const banChay = () => K.ban.find((b) => b.so_ban === K.dangChay) || { so_ban: 0, gia_tri: {} };
+  const taoBan = (gia_tri, nguoi, ghi_chu, tu_ban, tom_tat) => { const so = K.ban.length + 1; K.ban.push({ so_ban: so, gia_tri, ghi_chu: ghi_chu || '', tom_tat, nguoi, luc: gio(), tu_ban }); K.dangChay = so; return so; };
+  const khop = (mau, duong) => { const a = mau.split('/'), b = duong.split('/'); if (a.length !== b.length) return null; const t = {}; return a.every((x, i) => (x.startsWith(':') ? ((t[x.slice(1)] = decodeURIComponent(b[i])), !!b[i]) : x === b[i])) ? t : null; };
+  K.traLoi = (pt, duong, truyVan, than, auth, tho) => {
+    const cua = MAY.cua.map((c) => ({ c, t: c.phuong_thuc === pt ? khop(c.duong, duong) : null })).find((x) => x.t);
+    K.goi.push({ pt, duong, truyVan, than, auth });
+    if (!cua) { K.ngoaiHopDong.push(`${pt} ${duong}`); return loi('KHONG_TIM_THAY'); }
+    const { c, t } = cua;
+    let ai = null;
+    if (c.quyen) {
+      ai = K.ve.get((auth || '').replace(/^Bearer /, ''));
+      if (!ai) return loi('CHUA_DANG_NHAP');
+      if (!K.tk[ai].quyen.includes(c.quyen)) return loi('KHONG_DU_QUYEN');
+    }
+    const nguoi = ai ? K.tk[ai].ten_hien : null;
+    const key = `${pt} ${c.duong}`;
+    if (key === 'GET /ban-dang-chay') { const b = banChay(); return truyVan.get('co') !== null && +truyVan.get('co') === b.so_ban ? ok({ khong_doi: true, so_ban: b.so_ban }) : ok({ so_ban: b.so_ban, gia_tri: b.gia_tri }); }
+    if (key === 'POST /dang-nhap') {
+      const tk = K.tk[than && than.ten_dang_nhap];
+      if (!tk || tk.mk !== than.mat_khau) return loi('SAI_DANG_NHAP');
+      const ve = 've-' + crypto.randomBytes(6).toString('hex'); K.ve.set(ve, than.ten_dang_nhap);
+      return ok({ ve, het_han: '2026-10-31T08:30:00', quyen: tk.quyen, nguoi: { ten_dang_nhap: than.ten_dang_nhap, ten_hien: tk.ten_hien } });
+    }
+    if (key === 'GET /nhap') return ok({ so_ban: K.dangChay, nhap: [...K.nhap.values()] });
+    if (key === 'PUT /nhap') {
+      if (!than || typeof than.khoa !== 'string' || !/^[a-zA-Z0-9._-]{1,80}$/.test(than.khoa)) return loi('KHOA_KHONG_HOP_LE');
+      if (than.gia_tri === undefined || than.gia_tri === null) return loi('GIA_TRI_KHONG_HOP_LE');
+      K.nhap.set(than.khoa, { khoa: than.khoa, gia_tri: than.gia_tri, nguoi, luc: gio(), ban_goc: than.ban_goc });
+      return ok({ khoa: than.khoa, luc: K.nhap.get(than.khoa).luc });
+    }
+    if (key === 'DELETE /nhap/:khoa') return K.nhap.delete(t.khoa) ? ok({ khoa: t.khoa }) : loi('KHONG_TIM_THAY');
+    if (key === 'POST /cap-nhat' || key === 'POST /quay-lai') {
+      if (K.chen409 > 0) { K.chen409--; taoBan({ ...banChay().gia_tri, 'home.feat': 'Người khác vừa cập nhật' }, 'Người khác', '', null, 'chen'); }
+      if (than.ban_goc !== K.dangChay) return loi('CO_BAN_MOI_HON');
+      if (than.ghi_chu && than.ghi_chu.length > MAY.gioi_han.ghi_chu_toi_da) return loi('DU_LIEU_KHONG_HOP_LE');
+      if (key === 'POST /cap-nhat') {
+        if (!K.nhap.size) return loi('KHONG_CO_NHAP');
+        const gt = { ...banChay().gia_tri }; K.nhap.forEach((x) => { gt[x.khoa] = x.gia_tri; });
+        const so = taoBan(gt, nguoi, than.ghi_chu, null, `${K.nhap.size} mục`); const n = K.nhap.size; K.nhap.clear();
+        return ok({ so_ban: so, tu_ban: null, so_khoa: n });
+      }
+      const cu = K.ban.find((b) => b.so_ban === than.so); if (!cu) return loi('KHONG_TIM_THAY');
+      return ok({ so_ban: taoBan({ ...cu.gia_tri }, nguoi, than.ghi_chu, cu.so_ban, `Quay lại bản ${cu.so_ban}`), tu_ban: cu.so_ban });
+    }
+    if (key === 'GET /phien-ban') return ok({ data: K.ban.slice().reverse().map(({ gia_tri, ...b }) => ({ ...b, dang_chay: b.so_ban === K.dangChay })) });
+    if (key === 'GET /phien-ban/:so') { const b = K.ban.find((x) => x.so_ban === +t.so); return b ? ok({ ban: { ...b, dang_chay: b.so_ban === K.dangChay } }) : loi('KHONG_TIM_THAY'); }
+    if (key === 'POST /anh') {
+      const buf = tho || Buffer.alloc(0);
+      const i = buf.indexOf('\r\n\r\n'), j = buf.lastIndexOf('\r\n--');
+      const ten = /name="([^"]+)"/.exec(buf.slice(0, Math.max(i, 0)).toString()) || [];
+      const tep = i > 0 && j > i ? buf.slice(i + 4, j) : Buffer.alloc(0);
+      K.anhTruong = ten[1];
+      if (tep.length > MAY.gioi_han.anh_toi_da_byte) return loi('QUA_LON');
+      const loai = tep.slice(0, 4).toString() === 'RIFF' && tep.slice(8, 12).toString() === 'WEBP' ? 'webp' : tep[0] === 0xff && tep[1] === 0xd8 ? 'jpeg' : tep[1] === 0x50 && tep[2] === 0x4e ? 'png' : '';
+      if (!loai || ten[1] !== 'anh') return loi('ANH_KHONG_HOP_LE');
+      const ma = crypto.createHash('sha256').update(tep).digest('hex'); const moi = !K.anh.has(ma); K.anh.set(ma, { loai, du_lieu: tep });
+      return ok({ ma, url: `/api/nd/anh/${ma}`, loai, kich_thuoc: tep.length, moi });
+    }
+    if (key === 'GET /xuat') return ok({ dinh_dang: 1, xuat_luc: gio(), ban: K.ban.map((b) => ({ ...b, dang_chay: b.so_ban === K.dangChay })), nhap: [...K.nhap.values()], anh: [], nhat_ky: K.nhatKy });
+    if (key === 'POST /nhap-toan-bo') {
+      if (K.ban.length || K.nhap.size || K.anh.size) return loi('KHO_DA_CO_DU_LIEU');
+      if (!than || than.dinh_dang !== 1 || !Array.isArray(than.ban)) return loi('DU_LIEU_KHONG_HOP_LE');
+      than.ban.forEach((b) => K.ban.push({ ...b })); K.dangChay = (than.ban.find((b) => b.dang_chay) || {}).so_ban || 0;
+      (than.nhap || []).forEach((x) => K.nhap.set(x.khoa, x));
+      return ok({ so_luong_ban: than.ban.length, so_nhap: (than.nhap || []).length, so_anh: 0, so_nhat_ky: 0 });
+    }
+    return loi('LOI_MAY_CHU');
+  };
+  return K;
+}
+
 async function trinhDuyet(pw) {
-  k('Phần 2 chưa viết', false);
+  if (!MAY) { k('Phần 2 cần khối HOP_DONG_ND_MAY_DOC', false); return; }
+  const esbuild = require('esbuild');
+  const goiApp = (await esbuild.build({
+    stdin: { contents: `import './main.jsx';`, resolveDir: path.join(GOC, 'src'), loader: 'jsx' },
+    bundle: true, write: false, format: 'iife', jsx: 'automatic', logLevel: 'silent',
+    loader: { '.css': 'empty', '.json': 'json' }, define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.VITE_POS_API': '""' },
+  })).outputFiles[0].text;
+  const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
+  const css = [...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => cssTron('src/' + m[1])).join('\n');
+  const HTML = docTho('index.html').replace(/<script type="module"[^>]*><\/script>/, '<script src="/bundle.js"></script>').replace('</head>', `<style>${css}</style></head>`);
+  const URL0 = 'http://kh.test';
+  const ANH_DIR = path.join(GOC, 'viec/KH-ADMIN-1/so_anh');
+  const chup = process.env.LUU_ANH === '1';
+  if (chup) fs.mkdirSync(ANH_DIR, { recursive: true });
+  const DM = (await import(pathToFileURL(path.join(GOC, 'src/noiDung/nd/index.js')).href)).DANH_MUC;
+  const QT = await import(pathToFileURL(path.join(GOC, 'src/noiDung/quanTri.js')).href);
+  const MENU_DS = [
+    { ma: 'TLB', ten: 'Trà Lục Bảo', nhom: 'Trà Đông Y', gia: 30000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [] },
+    { ma: 'CFM', ten: 'Cà phê Muối', nhom: 'Cà phê', gia: 39000, con_hang: true, ton_cu: false, ton_luc: null, gia_hang: [] },
+  ];
+  const BG = { dong: [{ ma: 'TLB', so_luong: 1, don_gia: 30000, thanh_tien: 30000 }], tam_tinh: 30000, giam: [], phi_giao: 0, tong: 30000, ma_giam_loi: null };
+  const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
+  const K = khoGiaND();
+
+  async function may(ten, { dn = true, ve = null, sua = false, gio = null, kho = K } = {}, chay) {
+    const ctx = await trinh.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh', acceptDownloads: true });
+    await ctx.clock.install({ time: new Date('2026-10-30T20:30:00+07:00') }); await ctx.clock.resume();
+    await ctx.addInitScript(({ dn, ve, sua, gio }) => {
+      if (sessionStorage.getItem('da_gieo')) return;
+      sessionStorage.setItem('da_gieo', '1');
+      localStorage.setItem('kh_ngay_man_dau', '2026-10-30');
+      if (dn) localStorage.setItem('kh_token', 'tok-A');
+      if (ve) sessionStorage.setItem('nd_ve', JSON.stringify(ve));
+      if (sua) sessionStorage.setItem('nd_sua', '1');
+      if (gio) localStorage.setItem('kh_gio', JSON.stringify(gio));
+    }, { dn, ve, sua, gio });
+    const S = { goi: [], guiDon: 0 };
+    const loiTrang = [];
+    await ctx.route(`${URL0}/**`, async (r) => {
+      const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
+      const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
+      if (p === '/bundle.js') return r.fulfill({ contentType: 'text/javascript', body: goiApp });
+      if (p.startsWith('/api/nd/')) {
+        const duong = p.slice('/api/nd'.length);
+        if (pt === 'GET' && /^\/anh\/[0-9a-f]{64}$/.test(duong)) { const a = kho.anh.get(duong.slice(5)); return a ? r.fulfill({ status: 200, contentType: `image/${a.loai}`, body: a.du_lieu }) : json(404, { error: 'x', code: 'KHONG_TIM_THAY' }); }
+        let than; try { than = JSON.parse(req.postData()); } catch { than = undefined; }
+        const x = kho.traLoi(pt, duong, u.searchParams, than, req.headers().authorization || '', req.postDataBuffer());
+        return json(x.st, x.o);
+      }
+      if (!p.startsWith('/api/kh')) return /\.[a-z0-9]+$/.test(p) ? r.fulfill({ status: 204, body: '' }) : r.fulfill({ contentType: 'text/html', body: HTML });
+      const duong = p.slice('/api/kh'.length);
+      S.goi.push({ pt, duong, auth: req.headers().authorization || '' });
+      if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
+      if (duong === '/hang') return json(200, { success: true, data: [] });
+      if (duong === '/chuong-trinh') return json(200, { success: true, data: [] });
+      if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: '2026-10-30T20:30:00', dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
+      if (duong === '/menu') return json(200, { success: true, data: MENU_DS });
+      if (!/tok-A/.test(req.headers().authorization || '')) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
+      if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: '2026-10-30T08:00:00', xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: null, so_du_vi: 0 } });
+      if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
+      if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
+      if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [] });
+      if (duong === '/gio/bao-gia') return json(200, { success: true, ...BG });
+      if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-11-29T08:00:00' });
+      if (pt !== 'GET') { S.guiDon++; return json(200, { success: true }); }
+      return json(500, { error: 'chưa giả', code: 'LOI_MAY_CHU' });
+    });
+    const t = await ctx.newPage(); t.on('pageerror', (e) => loiTrang.push(e.message)); t.setDefaultTimeout(6000);
+    t.on('console', (m) => { if (m.type() === 'error' && /removeChild|insertBefore/.test(m.text())) loiTrang.push(m.text()); });
+    try { await chay({ t, S, ctx }); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); }
+    k(`[${ten}] trang không báo lỗi JS (kể cả removeChild)`, loiTrang.length === 0, loiTrang[0]);
+    await ctx.close();
+  }
+  const doi = async (t, fn, ms = 6000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await fn().catch(() => false)) return true; await t.waitForTimeout(40); } return false; };
+  const chu = (t, sel) => t.locator(sel).first().textContent().catch(() => '');
+  const anh = async (t, ten) => { if (chup) await t.screenshot({ path: path.join(ANH_DIR, `${ten}.png`) }); };
+  const but = (t, khoa) => t.locator(`.cms-lop .cms-pen[data-but="${khoa}"]`);
+  const bang = (t) => t.locator('#sheetCms');
+  const toast = (t) => chu(t, '.toast.show');
+  const moBut = async (t, khoa) => { await but(t, khoa).first().click(); await t.locator(`[data-bang-sua="${khoa}"]`).waitFor(); };
+  const tren = (t) => t.evaluate(() => location.pathname + location.search);
+  const goiKho = (pt, duong) => K.goi.filter((g) => g.pt === pt && g.duong === duong);
+
+  // ---- C1, C2, C3: đăng nhập quản trị ----
+  await may('quan-tri', { dn: true }, async ({ t, S }) => {
+    await t.goto(URL0 + '/admin'); await t.locator('#qt-dang-nhap').waitFor();
+    k('C1 /admin: màn đăng nhập quản trị, không thanh tab, không gọi cửa khách nào', (await t.locator('.tabbar').count()) === 0 && S.goi.length === 0, JSON.stringify(S.goi));
+    k('C1 /admin* có meta robots noindex', (await t.locator('meta[name="robots"][content="noindex"]').count()) === 1);
+    await anh(t, '390_admin_dang_nhap');
+    await t.fill('input[name="ten"]', 'linh'); await t.fill('input[name="mat_khau"]', 'sai');
+    await t.click('#qt-dang-nhap button[type="submit"]');
+    k('C2 sai mật khẩu → hiện NGUYÊN error của máy chủ', await doi(t, async () => (await chu(t, '#qt-dang-nhap [role="alert"]')) === 'Lời kho giả: SAI_DANG_NHAP'));
+    await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    await t.locator('#qt-bang').waitFor();
+    const kho = await t.evaluate(() => ({ l: JSON.stringify({ ...localStorage }), s: JSON.stringify({ ...sessionStorage }) }));
+    k('C2 vé ở sessionStorage nd_ve, không ở localStorage; không lưu mật khẩu', /"nd_ve"/.test(kho.s) && /ve-/.test(kho.s) && !/ve-/.test(kho.l) && !/dung/.test(kho.l + kho.s.replace(/"ve":"[^"]*"/, '')), kho.s);
+    k('C3 bảng quản trị: tên người, bản đang chạy (kho trống), số nháp, đủ 5 nút (có Xuất / Nhập vì có quyền)', await doi(t, async () => /Chủ quán Linh/.test(await chu(t, '#qt-bang')) && /chưa có bản/.test(await chu(t, '#qt-bang')) && /Không có thay đổi/.test(await chu(t, '#qt-bang')))
+      && (await t.locator('#qt-bang button').count()) === 5);
+    await anh(t, '390_admin_bang');
+    await t.click(`#qt-bang button:has-text("${QT.qt('nutSua')}")`);
+    await t.waitForURL(URL0 + '/trangchu'); await t.locator('.cms-bar').waitFor();
+    k('C3 "Bật Chế độ sửa" → Trang chủ, Chế độ sửa bật', (await t.locator('.phone.cms-on').count()) === 1);
+    // D2 bút
+    k('D2 tiêu đề banner Trang chủ có ĐÚNG một bút ✎', await doi(t, async () => (await but(t, 'today.t').count()) === 1));
+    const buts = await t.locator('.cms-lop .cms-pen').evaluateAll((ds) => ds.map((d) => d.dataset.but));
+    k('D2 mỗi phần tử đang thấy một bút, bút khoá 🔒 cho mục khoá', buts.length > 8 && (await t.locator('.cms-lop .cms-pen.khoa').count()) >= 1, buts.length);
+    await anh(t, '390_trangchu_dang_sua');
+    // D3 + D4: gõ → trang đổi ngay → Lưu (không cắt khoảng trắng)
+    await moBut(t, 'today.t');
+    k('D3 bảng sửa nằm trong role="dialog"', (await t.locator('#sheetCms [role="dialog"]').count()) >= 1);
+    await t.locator('[data-bang-sua="today.t"] input.cs-in').fill('Chào mùa đông ');
+    k('D4 gõ tới đâu trang phía sau đổi tới đó (xem trước)', await doi(t, async () => (await chu(t, '.today b')) === 'Chào mùa đông '));
+    await anh(t, '390_bang_sua_chu');
+    await t.click('[data-bang-sua="today.t"] .cs-next');
+    k('D3 Lưu → PUT /nhap với chữ NGUYÊN (dấu cách cuối còn), ban_goc = bản đang chạy', await doi(t, async () => goiKho('PUT', '/nhap').some((g) => g.than.khoa === 'today.t' && g.than.gia_tri === 'Chào mùa đông ' && g.than.ban_goc === 0)));
+    k('D1 thanh: "1 thay đổi chưa cập nhật"; nút Cập nhật sáng', await doi(t, async () => /1 thay đổi chưa cập nhật/.test(await chu(t, '.cms-bar .cb-t')) && !(await t.locator('.cms-bar button.pri').isDisabled())));
+    await t.click('[data-bang-sua="today.t"] .cs-h button');
+    // D8 Xem lại + 409
+    await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
+    k('D8 Xem lại: tên mục, cũ ↔ mới', await doi(t, async () => /Hôm nay bạn muốn uống gì\?/.test(await chu(t, '[data-xem-lai="today.t"] del')) && /Chào mùa đông/.test(await chu(t, '[data-xem-lai="today.t"] ins'))));
+    await anh(t, '390_xem_lai');
+    K.chen409 = 1;
+    await t.click('#sheetCms .cs-pub');
+    k('D8 409 CO_BAN_MOI_HON → báo "Có bản mới hơn…", KHÔNG tự gửi lại', await doi(t, async () => /Có bản mới hơn/.test(await toast(t))) && goiKho('POST', '/cap-nhat').length === 1);
+    await t.waitForTimeout(300);
+    k('D8 409: sau khi báo vẫn chỉ MỘT lần POST /cap-nhat', goiKho('POST', '/cap-nhat').length === 1);
+    await t.click('#sheetCms .cs-pub');
+    k('D8 Cập nhật lại (ban_goc mới) → bản mới; trình duyệt đang sửa áp ngay + lưu máy', await doi(t, async () => /Đã cập nhật bản 2/.test(await toast(t)))
+      && goiKho('POST', '/cap-nhat')[1].than.ban_goc === 1 && JSON.parse(await t.evaluate(() => localStorage.getItem('kh_nd_ban'))).so_ban === 2 && (await chu(t, '.today b')) === 'Chào mùa đông ');
+    // D3 chip
+    const truocSub = await chu(t, '[data-nd="home.sub"]');
+    await moBut(t, 'home.sub');
+    const o = t.locator('[data-bang-sua="home.sub"] input.cs-in'); const goc = await o.inputValue();
+    await o.fill(goc.replace('{khauHieu}', ''));
+    k('D3 thiếu chip {biến} → Lưu mờ + lý do', (await t.locator('[data-bang-sua="home.sub"] .cs-next').isDisabled()) && /Thiếu chỗ điền/.test(await chu(t, '[data-bang-sua="home.sub"]')));
+    await t.click('[data-bang-sua="home.sub"] .cs-chips button');
+    k('D3 bấm chip chèn lại → Lưu sáng', !(await t.locator('[data-bang-sua="home.sub"] .cs-next').isDisabled()));
+    await o.fill(goc + ' {la}');
+    k('D3 thừa chip lạ → Lưu mờ', await t.locator('[data-bang-sua="home.sub"] .cs-next').isDisabled());
+    await t.click('[data-bang-sua="home.sub"] .cs-h button');
+    k('D4 đóng bảng chưa Lưu → trang về bản đang chạy', await doi(t, async () => (await chu(t, '[data-nd="home.sub"]')) === truocSub));
+    // D5 Chữ của màn này
+    await t.click(`.cms-bar button:has-text("${QT.qt('chuMan')}")`);
+    await t.locator('[data-chu-man]').first().waitFor();
+    const coRow = new Set(await t.locator('[data-chu-man]').evaluateAll((ds) => ds.map((d) => d.dataset.chuMan)));
+    const manThay = new Set((await t.locator('.cms-lop .cms-pen').evaluateAll((ds) => ds.map((d) => d.dataset.but))).map((x) => (DM.find((m) => m.khoa === x) || {}).man).filter(Boolean));
+    const can = DM.filter((m) => manThay.has(m.man)).map((m) => m.khoa);
+    k('D5 "Chữ của màn này" = MỌI mục danh mục cùng `man` với phần tử đang hiện (gồm công tắc hien.*, chữ thỉnh thoảng mới hiện)', can.length === coRow.size && can.every((x) => coRow.has(x)) && can.some((x) => x.startsWith('hien.')), `${can.length} ≠ ${coRow.size}`);
+    await anh(t, '390_chu_cua_man');
+    // D3 sáu loại bảng sửa (mở từ danh sách)
+    const loai = { chu: 'input.cs-in', doan: 'textarea.cs-ta', nut: 'select', anh: '.cs-up input[type="file"]', danhsach: '.cs-dong, .cs-undo', battat: 'input[type="checkbox"]' };
+    const daLoai = {};
+    for (const [l, sel] of Object.entries(loai)) {
+      const m = DM.find((x) => x.loai === l && coRow.has(x.khoa));
+      if (!m) { daLoai[l] = 'không có mục'; continue; }
+      if (!(await t.locator('#sheetCms [data-chu-man]').count())) { await t.click(`.cms-bar button:has-text("${QT.qt('chuMan')}")`); await t.locator('[data-chu-man]').first().waitFor(); }
+      await t.locator(`[data-chu-man="${m.khoa}"]`).click();
+      await t.locator(`[data-bang-sua="${m.khoa}"]`).waitFor();
+      daLoai[l] = (await t.locator(`[data-bang-sua="${m.khoa}"] ${sel.split(', ')[0]}`).count()) > 0 || (await t.locator(`[data-bang-sua="${m.khoa}"] ${sel.split(', ')[1] || 'xx'}`).count()) > 0;
+      await anh(t, `390_bang_sua_${l}`);
+      if (l === 'danhsach' && !(m.khoaCauTruc || []).length) {
+        await t.locator(`[data-bang-sua="${m.khoa}"] .cs-undo:has-text("${QT.qt('themDong')}")`).click();
+        await t.locator(`[data-bang-sua="${m.khoa}"] .cs-undo:has-text("${QT.qt('themDong')}")`).click();
+        const o2 = t.locator(`[data-bang-sua="${m.khoa}"] .cs-dong input.cs-in`);
+        await o2.nth(0).fill('TLB'); await o2.nth(1).fill('TLB');
+        k(`F2/D3 danh sách ${m.khoa}: hai dòng trùng → Lưu mờ + "hai dòng giống hệt"`, (await t.locator(`[data-bang-sua="${m.khoa}"] .cs-next`).isDisabled()) && /giống hệt/.test(await chu(t, `[data-bang-sua="${m.khoa}"]`)));
+      }
+      await t.click(`[data-bang-sua="${m.khoa}"] .cs-h button`);
+    }
+    k('D3 sinh đủ 6 loại bảng sửa (chu, doan, nut, anh, danhsach, battat)', Object.values(daLoai).every((x) => x === true), JSON.stringify(daLoai));
+    const dsCauTruc = DM.find((x) => x.loai === 'danhsach' && (x.khoaCauTruc || []).length && coRow.has(x.khoa));
+    if (dsCauTruc) {
+      await t.click(`.cms-bar button:has-text("${QT.qt('chuMan')}")`); await t.locator(`[data-chu-man="${dsCauTruc.khoa}"]`).click();
+      k(`D3 danh sách có khoaCauTruc (${dsCauTruc.khoa}): trường cấu trúc chỉ đọc, không thêm / bớt dòng`, (await t.locator(`[data-bang-sua="${dsCauTruc.khoa}"] input[readonly]`).count()) > 0 && (await t.locator(`[data-bang-sua="${dsCauTruc.khoa}"] .cs-undo:has-text("${QT.qt('themDong')}")`).count()) === 0);
+      await t.click(`[data-bang-sua="${dsCauTruc.khoa}"] .cs-h button`);
+    }
+    // D3 ảnh: cắt đúng tiLe, nén ≤ 500 KB, multipart trường "anh"
+    const png = await t.screenshot({ fullPage: false });
+    await moBut(t, 'today.bg');
+    await t.locator('[data-bang-sua="today.bg"] input[type="file"]').setInputFiles({ name: 'chup.png', mimeType: 'image/png', buffer: png });
+    k('D3 ảnh: POST /anh (multipart trường "anh") → url ảnh kho; ảnh ≤ 500 KB, WebP', await doi(t, async () => goiKho('POST', '/anh').length === 1 && K.anhTruong === 'anh' && K.anh.size === 1, 10000)
+      && [...K.anh.values()][0].du_lieu.length <= 512000 && [...K.anh.values()][0].loai === 'webp');
+    const tl = await t.evaluate(() => new Promise((ok) => { const i = document.querySelector('[data-bang-sua="today.bg"] .cs-img img'); const x = () => ok(i.naturalWidth / i.naturalHeight); if (i.complete && i.naturalWidth) x(); else i.onload = x; }));
+    k('D3 ảnh cắt đúng tỉ lệ của mục (today.bg 2:1)', Math.abs(tl - 2) < 0.02, tl);
+    k('D4 ảnh mới hiện ngay trên trang (đường ảnh kho ghép gốc kho)', await doi(t, async () => /\/api\/nd\/anh\/[0-9a-f]{64}$/.test(await t.locator('.today .t-img').getAttribute('src'))));
+    await t.click('[data-bang-sua="today.bg"] .cs-next');
+    await doi(t, async () => goiKho('PUT', '/nhap').some((g) => g.than.khoa === 'today.bg'));
+    await moBut(t, 'today.bg');
+    await t.click(`[data-bang-sua="today.bg"] .cs-undo:has-text("${QT.qt('boThayDoi')}")`);
+    k('D3 "Bỏ thay đổi" → DELETE /nhap/today.bg', await doi(t, async () => goiKho('DELETE', '/nhap/today.bg').length === 1));
+    await t.click('[data-bang-sua="today.bg"] .cs-h button');
+    // D3 người khác vừa lưu
+    K.nhap.set('home.feat', { khoa: 'home.feat', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
+    await but(t, 'home.feat').first().click().catch(() => {});
+    if (await but(t, 'home.feat').count()) {
+      await t.locator('[data-bang-sua="home.feat"]').waitFor();
+      k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.feat"]')));
+      await t.click('[data-bang-sua="home.feat"] .cs-h button');
+    } else k('D3 (Người khác vừa lưu) cần bút home.feat trên Trang chủ', false);
+    K.nhap.delete('home.feat');
+    // D6 Đi tới màn
+    await t.click(`.cms-bar button:has-text("${QT.qt('diToi')}")`);
+    const dsDi = await t.locator('#sheetCms .cs-go button').allTextContents();
+    k('D6 "Đi tới màn" liệt kê màn khách (tên = tieuDe), có Món', dsDi.length >= 15 && dsDi.includes('Món') && dsDi.includes('Menu'), dsDi.join(','));
+    await t.click('#sheetCms .cs-go button:text-is("Món")');
+    k('D6 bấm "Món" → /mon/<món có thật đầu tiên>', await doi(t, async () => (await tren(t)) === '/mon/tra-luc-bao'));
+    // D2 chạm chỗ khác App chạy như khách; 🔒 chỉ đường POS
+    await t.goto(URL0 + '/menu'); await t.locator('.cms-bar').waitFor(); await t.locator('.prod-card').first().waitFor();
+    await doi(t, async () => (await but(t, 'menu.mon').count()) > 0);
+    await but(t, 'menu.mon').first().click();
+    k('D2 chạm 🔒 tên / giá món → "🔒 Lấy từ POS — sửa ở POS › Sản phẩm"', await doi(t, async () => (await toast(t)) === '🔒 Lấy từ POS — sửa ở POS › Sản phẩm'));
+    await t.locator('.prod-card').first().click();
+    k('D2 đang sửa, chạm thẻ món (không phải bút) → vẫn mở món như khách', await doi(t, async () => /^\/mon\//.test(await tren(t))));
+    // D7 nút đặt đơn bị khoá, báo giá vẫn chạy
+    await t.goto(URL0 + '/thanhtoan'); await t.locator('.cms-bar').waitFor();
+    const coNut = await doi(t, async () => /^(Thanh toán qua QR|Trừ ví) /.test(await t.locator('#checkout .nut-dat').first().innerText()) && (await t.locator('#checkout .nut-dat').first().getAttribute('aria-disabled')) !== 'true', 8000);
+    k('D7 khi sửa: báo giá (POST /gio/bao-gia) vẫn gửi để xem màn Thanh toán đủ số', coNut && S.goi.some((g) => g.duong === '/gio/bao-gia'));
+    if (coNut) await t.locator('#checkout .nut-dat').first().click();
+    k('D7 bấm đặt đơn khi sửa → KHÔNG gửi POST /don, báo "Đang ở Chế độ sửa…"', await doi(t, async () => (await t.locator('body').innerText()).includes(QT.CHAN_KHI_SUA)) && S.guiDon === 0 && !S.goi.some((g) => g.duong === '/don' && g.pt === 'POST'));
+    k('D7 đơn bị chặn KHÔNG kẹt bản ghi "chưa rõ" (kh_don_gui không có / không chờ)', !/"chua_ro"|khong_biet/.test(String(await t.evaluate(() => localStorage.getItem('kh_don_gui')))));
+    await t.goto(URL0 + '/taikhoan'); await t.locator('[data-nd="tk.dangXuat"]').waitFor();
+    await t.locator('[data-nd="tk.dangXuat"]').click();
+    k('D7 "Đăng xuất" khoá khi sửa (token khách còn, báo chặn)', await doi(t, async () => (await toast(t)) === QT.CHAN_KHI_SUA) && (await t.evaluate(() => localStorage.getItem('kh_token'))) === 'tok-A');
+    // D1 tải lại giữ Chế độ sửa; ✕ tắt
+    await t.goto(URL0 + '/trangchu'); await t.reload();
+    k('D1 tải lại trang → Chế độ sửa còn (còn vé)', await doi(t, async () => (await t.locator('.cms-bar').count()) === 1));
+    // D8 "Tới chỗ này" + "Bỏ"
+    await moBut(t, 'home.feat');
+    await t.locator('[data-bang-sua="home.feat"] input.cs-in').fill('Món ngon');
+    await t.click('[data-bang-sua="home.feat"] .cs-next');
+    await doi(t, async () => K.nhap.has('home.feat'));
+    await t.click('[data-bang-sua="home.feat"] .cs-h button');
+    await t.evaluate(() => { document.querySelector('.screens').scrollTop = 0; });
+    await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
+    await t.click(`[data-xem-lai="home.feat"] button:has-text("${QT.qt('toiCho')}")`);
+    k('D8 "Tới chỗ này" → đóng bảng, cuộn tới phần tử', await doi(t, async () => (await bang(t).count()) === 0 && await t.locator('[data-nd="home.feat"]').first().isVisible()));
+    await t.click(`.cms-bar button:has-text("${QT.qt('xemLai')}")`);
+    await t.click(`[data-xem-lai="home.feat"] button:has-text("${QT.qt('bo')}")`);
+    k('D8 "Bỏ" → DELETE /nhap/home.feat, dòng biến mất', await doi(t, async () => !K.nhap.has('home.feat') && (await t.locator('[data-xem-lai="home.feat"]').count()) === 0));
+    await t.click(`#sheetCms .cs-h button`);
+    await t.click('.cms-bar button.x');
+    k('D1 ✕ tắt: không còn thanh, không còn bút, bỏ lớp nháp', await doi(t, async () => (await t.locator('.cms-bar').count()) === 0 && (await t.locator('.cms-lop').count()) === 0 && (await t.locator('.phone.cms-on').count()) === 0));
+  });
+
+  // ---- C2: 401 giữa lúc sửa → đăng nhập quản trị → quay lại đúng chỗ; nháp ở kho còn. 403 không thoát. ----
+  await may('ve-het-han', { dn: false, ve: { ve: 've-da-thu-hoi', het_han: '', quyen: ['nd_xem', 'nd_sua', 'nd_cap_nhat'], nguoi: { ten_hien: 'Chủ quán Linh' } }, sua: true }, async ({ t }) => {
+    K.nhap.set('home.feat', { khoa: 'home.feat', gia_tri: 'Nháp còn trên kho', nguoi: 'Chủ quán Linh', luc: '2026-10-30T20:40:00', ban_goc: 2 });
+    await t.goto(URL0 + '/trangchu');
+    k('C2 vé hết hạn (401 ở GET /nhap) → về màn đăng nhập quản trị với ?tiep=/trangchu', await doi(t, async () => (await tren(t)) === '/admin?tiep=%2Ftrangchu' && (await t.locator('#qt-dang-nhap').count()) === 1, 8000), await tren(t));
+    await t.fill('input[name="ten"]', 'linh'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    k('C2 đăng nhập lại → về đúng chỗ (Trang chủ) và Chế độ sửa bật; nháp trên kho vẫn còn', await doi(t, async () => (await tren(t)) === '/trangchu' && (await t.locator('.cms-bar').count()) === 1 && /1 thay đổi/.test(await chu(t, '.cms-bar .cb-t')), 8000));
+    k('C2 nháp hiện trên trang khi sửa (lớp nháp)', await doi(t, async () => (await chu(t, '[data-nd="home.feat"]')) === 'Nháp còn trên kho'));
+  });
+  await may('thu-quyen', { dn: false }, async ({ t }) => {
+    await t.goto(URL0 + '/admin/lichsu'); await t.locator('#qt-dang-nhap').waitFor();
+    await t.fill('input[name="ten"]', 'sua'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    k('C1 chưa vé vào /admin/lichsu → đăng nhập → ở lại /admin/lichsu', await doi(t, async () => (await tren(t)) === '/admin/lichsu' && (await t.locator('#qt-lich-su').count()) === 1));
+    k('E3 không có quyền nd_xuat_nhap → không có nút Xuất / Nhập', (await t.locator('#xuat-nhap button').count()) === 0);
+    await t.goto(URL0 + '/admin'); await t.locator('#qt-bang').waitFor();
+    k('C3 thiếu nd_xuat_nhap → bảng quản trị ẩn nút Xuất / Nhập', (await t.locator('#qt-bang button').count()) === 4);
+    await t.click(`#qt-bang button:has-text("${QT.qt('nutSua')}")`); await t.locator('.cms-bar').waitFor();
+    k('D1 thiếu nd_cap_nhat → "Cập nhật toàn bộ" mờ', await t.locator('.cms-bar button.pri').isDisabled());
+    K.tk.sua.quyen = ['nd_xem']; // chủ quán thu quyền "Sửa nội dung App" ở POS — có hiệu lực ngay
+    await doi(t, async () => (await but(t, 'today.k').count()) > 0);
+    await moBut(t, 'today.k');
+    await t.locator('[data-bang-sua="today.k"] input.cs-in').fill('Hôm nay');
+    await t.click('[data-bang-sua="today.k"] .cs-next');
+    k('C2 / G8(5) bị thu quyền → Lưu bị từ chối ngay (403 hiện nguyên lời), KHÔNG thoát quản trị', await doi(t, async () => /KHONG_DU_QUYEN/.test(await toast(t))) && (await t.locator('.cms-bar').count()) === 1 && !!(await t.evaluate(() => sessionStorage.getItem('nd_ve'))));
+    K.tk.sua.quyen = ['nd_xem', 'nd_sua'];
+    await t.click('[data-bang-sua="today.k"] .cs-h button');
+  });
+
+  // ---- E: Lịch sử phiên bản, Xuất / Nhập ----
+  await may('lich-su', { dn: false }, async ({ t }) => {
+    await t.goto(URL0 + '/admin/lichsu'); await t.locator('#qt-dang-nhap').waitFor();
+    await t.fill('input[name="ten"]', 'linh'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    await t.locator('#qt-lich-su [data-ban]').first().waitFor();
+    const n = await t.locator('#qt-lich-su [data-ban]').count();
+    k('E1 danh sách mọi bản (mới trước): số, lúc, người, tóm tắt, "đang chạy", "từ bản X"', n === K.ban.length && /đang chạy/.test(await chu(t, `[data-ban="${K.dangChay}"]`)) && /Chủ quán Linh/.test(await chu(t, '#qt-lich-su')), n);
+    await anh(t, '390_lich_su');
+    await t.locator('[data-ban="1"] .cs-hi').click(); await t.locator('#qt-mot-ban').waitFor();
+    k('E2 "Xem" bản 1: các mục đã sửa (tên tiếng Việt + giá trị)', /Banner Hôm nay: tiêu đề mặc định/.test(await chu(t, '#qt-mot-ban')) || /Món nổi bật/.test(await chu(t, '#qt-mot-ban')));
+    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsSo')}")`);
+    k('E2 "So với bản đang chạy": mục khác cũ ↔ mới', await doi(t, async () => (await t.locator('#qt-mot-ban [data-khac="today.t"]').count()) === 1 && /Chào mùa đông/.test(await chu(t, '#qt-mot-ban [data-khac="today.t"] del'))));
+    const [tai] = await Promise.all([t.waitForEvent('download'), t.click(`#qt-mot-ban button:has-text("${QT.qt('lsTai')}")`)]);
+    const noi = JSON.parse(fs.readFileSync(await tai.path(), 'utf8'));
+    k('E2 "Tải về máy": tệp JSON của đúng bản đó', tai.suggestedFilename() === 'noi-dung-ban-1.json' && noi.so_ban === 1 && !!noi.gia_tri);
+    K.chen409 = 1;
+    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLai')}")`);
+    k('E2 "Quay lại bản này" hỏi lại MỘT lần trước khi gửi', /Chắc chắn quay lại bản 1/.test(await chu(t, '#qt-mot-ban')) && goiKho('POST', '/quay-lai').length === 0);
+    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLaiCo')}")`);
+    k('E2 quay lại gặp 409 → tải lại, báo, KHÔNG tự gửi lại', await doi(t, async () => /Có bản mới hơn/.test(await toast(t))) && goiKho('POST', '/quay-lai').length === 1);
+    await t.locator('[data-ban="1"] .cs-hi').click(); await t.locator('#qt-mot-ban').waitFor();
+    await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLai')}")`); await t.click(`#qt-mot-ban button:has-text("${QT.qt('lsQuayLaiCo')}")`);
+    k('E2 quay lại → POST /quay-lai { so: 1, ban_goc: bản đang chạy } → bản MỚI "từ bản 1"', await doi(t, async () => goiKho('POST', '/quay-lai').length === 2 && /Đã quay lại nội dung bản 1/.test(await toast(t)))
+      && goiKho('POST', '/quay-lai')[1].than.so === 1 && goiKho('POST', '/quay-lai')[1].than.ban_goc === K.dangChay - 1 && K.ban[K.ban.length - 1].tu_ban === 1);
+    const [xuat] = await Promise.all([t.waitForEvent('download'), t.click(`#xuat-nhap button:has-text("${QT.qt('xnXuat')}")`)]);
+    const tep = fs.readFileSync(await xuat.path());
+    k('E3 "Xuất toàn bộ" → GET /xuat → tải tệp', goiKho('GET', '/xuat').length === 1 && JSON.parse(tep).dinh_dang === 1);
+    await t.locator('#xuat-nhap input[type="file"]').setInputFiles({ name: 'xuat.json', mimeType: 'application/json', buffer: tep });
+    k('E3 "Nhập toàn bộ" khi kho đã có dữ liệu → 409 KHO_DA_CO_DU_LIEU, hiện NGUYÊN lời', await doi(t, async () => (await toast(t)) === 'Lời kho giả: KHO_DA_CO_DU_LIEU'));
+    await t.locator('#xuat-nhap input[type="file"]').setInputFiles({ name: 'to.json', mimeType: 'application/json', buffer: Buffer.alloc(MAY.gioi_han.nhap_toan_bo_toi_da_byte + 10, 32) });
+    k('E3 tệp > 50 MB chặn trước khi gửi', await doi(t, async () => /lớn quá 50 MB/.test(await toast(t))) && goiKho('POST', '/nhap-toan-bo').length === 1);
+    K.tepXuat = tep;
+  });
+  const K2 = khoGiaND();
+  await may('nhap-kho-trong', { dn: false, kho: K2 }, async ({ t }) => {
+    await t.goto(URL0 + '/admin/lichsu'); await t.locator('#qt-dang-nhap').waitFor();
+    await t.fill('input[name="ten"]', 'linh'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    await t.locator('#xuat-nhap input[type="file"]').waitFor({ state: 'attached' });
+    await t.locator('#xuat-nhap input[type="file"]').setInputFiles({ name: 'xuat.json', mimeType: 'application/json', buffer: K.tepXuat });
+    k('E3 "Nhập toàn bộ" vào kho TRỐNG → POST /nhap-toan-bo, báo số đã nhập', await doi(t, async () => /Đã nhập: \d+ bản/.test(await toast(t))) && K2.ban.length === K.ban.length && K2.dangChay === K.dangChay);
+  });
+
+  // ---- B, D4: khách (không vé) ----
+  K.nhap.set('today.k', { khoa: 'today.k', gia_tri: 'NHÁP BÍ MẬT', nguoi: 'Chủ quán Linh', luc: '2026-10-30T20:50:00', ban_goc: K.dangChay });
+  await may('khach-moi', { dn: false }, async ({ t }) => {
+    await t.goto(URL0 + '/trangchu'); await t.locator('.today b').waitFor();
+    const chuMoi = K.ban[K.ban.length - 1].gia_tri['today.t'];
+    k('B2 / G3 khách mới mở App → thấy chữ của bản đang chạy', await doi(t, async () => (await chu(t, '.today b')) === (chuMoi || 'Hôm nay bạn muốn uống gì?')), `${await chu(t, '.today b')} ≠ ${chuMoi}`);
+    k('D4 khách KHÔNG BAO GIỜ thấy nháp; không thanh sửa, không bút', !(await t.locator('body').innerText()).includes('NHÁP BÍ MẬT') && (await t.locator('.cms-bar, .cms-lop').count()) === 0);
+    const goiKh = K.goi.filter((g) => g.duong === '/ban-dang-chay').slice(-1)[0];
+    k('B1 khách chỉ gọi GET /ban-dang-chay, không gắn vé / token', goiKh && goiKh.auth === '');
+    await t.reload(); await t.locator('.today b').waitFor();
+    k('B2 lần mở sau: chữ bản máy có NGAY ở lần vẽ đầu (trước khi hỏi kho)', (await t.evaluate(() => document.querySelector('.today b').textContent)) === (chuMoi || 'Hôm nay bạn muốn uống gì?'));
+    k('B2 lần mở sau hỏi kèm ?co=<số bản trên máy>', K.goi.filter((g) => g.duong === '/ban-dang-chay').slice(-1)[0].truyVan.get('co') === String(K.dangChay));
+  });
+  K.nhap.delete('today.k');
+  const banXss = { so_ban: 99, gia_tri: { 'today.t': '<img src=x onerror="window.__xss=1">' } };
+  await may('xss', { dn: false }, async ({ t, ctx }) => {
+    await ctx.addInitScript((b) => localStorage.setItem('kh_nd_ban', JSON.stringify(b)), banXss);
+    await ctx.route(`${URL0}/api/nd/ban-dang-chay*`, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, khong_doi: true, so_ban: 99 }) }));
+    await t.goto(URL0 + '/trangchu'); await t.locator('.today b').waitFor(); await t.waitForTimeout(300);
+    k('B4 chữ chứa <img onerror> hiện như CHỮ, không thành thẻ, không chạy', (await chu(t, '.today b')) === banXss.gia_tri['today.t'] && (await t.locator('.today b img').count()) === 0 && !(await t.evaluate(() => window.__xss)));
+  });
+  await may('kiemkhop-dong', { dn: false }, async ({ t }) => {
+    await t.goto(URL0 + '/kiemkhop');
+    k('C1 /kiemkhop công khai đã đóng → Trang chủ (không có trang Kiểm khớp)', await doi(t, async () => (await tren(t)) === '/trangchu') && (await t.locator('#kiemkhop').count()) === 0);
+    await t.goto(URL0 + '/admin/kiemkhop');
+    k('C1 /admin/kiemkhop chưa vé → màn đăng nhập quản trị', await doi(t, async () => (await t.locator('#qt-dang-nhap').count()) === 1));
+    await t.fill('input[name="ten"]', 'nv'); await t.fill('input[name="mat_khau"]', 'dung'); await t.click('#qt-dang-nhap button[type="submit"]');
+    k('C3 có vé → /admin/kiemkhop là trang Kiểm khớp POS', await doi(t, async () => (await t.locator('#kiemkhop').count()) === 1 && (await tren(t)) === '/admin/kiemkhop'));
+  });
+  k('A2 kho giả: App KHÔNG gọi cửa nào ngoài hợp đồng /api/nd v1', K.ngoaiHopDong.length === 0 && K2.ngoaiHopDong.length === 0, K.ngoaiHopDong.concat(K2.ngoaiHopDong).join(','));
+  await trinh.close();
 }
