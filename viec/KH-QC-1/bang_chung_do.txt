@@ -21,6 +21,6 @@ BẰNG CHỨNG ĐỎ KH-QC-1 — chạy với KHONG_TRINH_DUYET=1 trên code G�
   ✗ B4 KH-QC-1: api.js có layQuangCao gọi '/quang-cao' và '/quang-cao' nằm trong CUA_CONG_KHAI
 
 SỐ CA thu_KHUI3d: 35
-SỐ CA thu_KHQC1: 39
+SỐ CA thu_KHQC1: 40
 SỐ CA thu_KHUI5d: 31
 SỐ CA thu_KHUI5g: 34
