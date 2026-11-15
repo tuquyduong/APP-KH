@@ -1,5 +1,6 @@
-// Dải quảng cáo mảnh ở đầu các trang (KH-UI-5d) — hàm thuần. Chọn MỘT câu để hiện; không có gì → null (ẩn dải, không chữ mẫu).
-// Thứ tự: dòng `quangCao` của POS hợp giờ (KH-QC-1, chưa có cửa — mặc định rỗng) → Giờ vàng ĐANG chạy → chương trình đặc biệt → chữ mặc định (`macDinh: true`; dải ẩn, banner Trang chủ vẫn hiện).
+// Dải quảng cáo mảnh ở đầu các trang (KH-UI-5d) + banner "Hôm nay" Trang chủ (KH-UI-5g) — hàm thuần. Chọn chữ cho CẢ HAI cùng lúc (App gọi MỘT lần).
+// Nguồn: dòng `quangCao` của POS (GET /quang-cao, KH-QC-1, hợp đồng v16 — POS đã xếp `uu_tien` tăng dần, App KHÔNG sắp lại) hợp giờ → Giờ vàng ĐANG chạy → chương trình đặc biệt → chữ mặc định (`macDinh: true`; dải ẩn, banner Trang chủ vẫn hiện).
+// Dải lấy dòng hợp giờ ĐẦU TIÊN; banner lấy dòng hợp giờ đầu tiên CÓ `tieu_de` (hoặc dòng `gio_vang` → banner Giờ vàng của App) — hai nơi có thể là hai dòng khác nhau.
 import { mocTuChuoi } from './bayGio.js';
 import { trangThaiGioVang, gioPhut } from './gioVang.js';
 import { nd, ndNut } from './noiDung/nd.js';
@@ -30,38 +31,45 @@ function hopGio(tu, den, bay) {
 /** Biểu tượng (emoji) ở đầu chuỗi tách riêng: "⏰ Giờ vàng" → { bieuTuong: '⏰', chu: 'Giờ vàng' }. Không có emoji → bieuTuong rỗng. */
 export function tachBieuTuong(chu) {
   const s = String(chu == null ? '' : chu).trim();
-  const m = /^(\p{Extended_Pictographic}(?:\uFE0F|\p{Emoji_Modifier}|\u200D\p{Extended_Pictographic})*)\s*/u.exec(s);
+  const m = /^(\p{Extended_Pictographic}(?:️|\p{Emoji_Modifier}|‍\p{Extended_Pictographic})*)\s*/u.exec(s);
   return m ? { bieuTuong: m[1], chu: s.slice(m[0].length) } : { bieuTuong: '', chu: s };
 }
 
-const tuDong = (r) => {
-  const dich = DICH.includes(r.dich) && (r.dich !== 'mon' || r.ma_mon) ? r.dich : '';
-  const chu = r.chu_dai.trim();
-  return { chu, tieuDe: tachBieuTuong(chu).chu || chu /* dòng chỉ có emoji: không để tiêu đề rỗng */, phu: '', nut: dich ? nd('qc.xem') : '', dich, maMon: dich === 'mon' ? r.ma_mon : '', khoaDai: 'qc.pos', khoa: { t: 'qc.pos', s: 'qc.pos', nut: 'qc.xem' } };
+const chuoi = (v) => (typeof v === 'string' ? v.trim() : '');
+const dongHopLe = (r) => r && typeof r === 'object' && !!chuoi(r.chu_dai);
+/** Đích bấm của một dòng POS: ngoài 4 đích → '' (không bấm); `mon` thiếu `ma_mon` → Menu. */
+const dichDong = (r) => {
+  const dich = DICH.includes(r.dich) ? r.dich : '';
+  return dich === 'mon' && !r.ma_mon ? { dich: 'menu', maMon: '' } : { dich, maMon: dich === 'mon' ? String(r.ma_mon) : '' };
 };
-const dongHopLe = (r) => r && typeof r === 'object' && typeof r.chu_dai === 'string' && r.chu_dai.trim();
+const bannerPos = (r) => {
+  const nut = chuoi(r.chu_nut), d = dichDong(r);
+  return { tieuDe: chuoi(r.tieu_de), phu: chuoi(r.phu), nut: d.dich ? nut || nd('qc.xem') : '', ...d, khoa: { t: 'qc.pos', s: 'qc.pos', nut: nut ? 'qc.pos' : 'qc.xem' } };
+};
 
 /**
  * { gioVang: dữ liệu /gio-vang của POS, chuongTrinh: docChuongTrinh(...), bayGio: 'YYYY-MM-DD HH:mm:ss', quangCao: [dòng POS] }
- * → { chu (một dòng cho dải, có biểu tượng), khoaDai (khoá nội dung của dòng đó: 'qc.pos' lời POS · 'qc.dai.gv' / 'qc.dai.ct' câu App tự viết), tieuDe, phu, nut (chữ nút), dich: 'menu'|'mon'|'uudai'|'tracnghiem'|'', maMon, macDinh? }. `dich` rỗng = bấm không làm gì.
- * Luôn trả một kết quả: không có gì thì là chữ mặc định trong danh mục (`macDinh: true`, today.*).
+ * → { banner: tieuDe, phu, nut (chữ nút), dich: 'menu'|'mon'|'uudai'|'tracnghiem'|'', maMon, khoa (khoá danh mục từng chữ), macDinh? ;
+ *     dải: chu (một dòng, có biểu tượng), khoaDai ('qc.pos' lời POS · 'qc.dai.gv' / 'qc.dai.ct' câu App tự viết), dai: { dich, maMon } (đích RIÊNG của dải) }. `dich` rỗng = bấm không làm gì.
+ * Luôn trả một kết quả: không có gì thì banner là chữ mặc định trong danh mục (`macDinh: true`, today.*) và dải rỗng.
  */
 export function chonQuangCao({ gioVang, chuongTrinh, bayGio, quangCao = [] }) {
-  const dong = (Array.isArray(quangCao) ? quangCao : []).filter(dongHopLe);
-  const thuong = dong.filter((r) => r.id !== 'gio_vang' && hopGio(r.tu_gio, r.den_gio, bayGio)).sort((p, q) => (+q.uu_tien || 0) - (+p.uu_tien || 0));
-  if (thuong.length) return tuDong(thuong[0]);
-  const tt = trangThaiGioVang(gioVang, bayGio);
-  if (tt && tt.pha === 'dang') {
-    const rieng = dong.find((r) => r.id === 'gio_vang');
-    const bien = { phanTram: tt.phanTram, ketThuc: tt.ketThuc };
-    const kq = { phu: nd('qc.gv.phu', bien), nut: nd('qc.gv.nut'), dich: 'menu', maMon: '' };
-    const k = { s: 'qc.gv.phu', nut: 'qc.gv.nut' };
-    return rieng
-      ? { ...kq, chu: rieng.chu_dai.trim(), tieuDe: tachBieuTuong(rieng.chu_dai).chu || rieng.chu_dai.trim(), khoaDai: 'qc.pos', khoa: { t: 'qc.pos', ...k } }
-      : { ...kq, chu: nd('qc.dai.gv', bien), tieuDe: nd('qc.gv.tieuDe', bien), khoaDai: 'qc.dai.gv', khoa: { t: 'qc.gv.tieuDe', ...k } };
-  }
-  const ct = Array.isArray(chuongTrinh) ? chuongTrinh[0] : null;
-  if (ct && ct.ten) return { chu: nd('qc.dai.ct', { ten: ct.ten }), tieuDe: ct.ten, phu: ct.moTa || '', nut: nd('qc.ct.nut'), dich: 'uudai', maMon: '', khoaDai: 'qc.dai.ct', khoa: { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' } };
+  const dong = (Array.isArray(quangCao) ? quangCao : []).filter((r) => dongHopLe(r) && hopGio(r.tu_gio, r.den_gio, bayGio)); // giữ thứ tự POS
+  const tt = trangThaiGioVang(gioVang, bayGio), gvChay = tt && tt.pha === 'dang';
+  const bien = gvChay ? { phanTram: tt.phanTram, ketThuc: tt.ketThuc } : null;
+  const ct = Array.isArray(chuongTrinh) && chuongTrinh[0] && chuongTrinh[0].ten ? chuongTrinh[0] : null;
+  const gv = () => ({ tieuDe: nd('qc.gv.tieuDe', bien), phu: nd('qc.gv.phu', bien), nut: nd('qc.gv.nut'), dich: 'menu', maMon: '', khoa: { t: 'qc.gv.tieuDe', s: 'qc.gv.phu', nut: 'qc.gv.nut' } });
+
+  const rDai = dong[0];
+  const dai = rDai ? { chu: rDai.chu_dai.trim(), khoaDai: 'qc.pos', dai: dichDong(rDai) }
+    : gvChay ? { chu: nd('qc.dai.gv', bien), khoaDai: 'qc.dai.gv', dai: { dich: 'menu', maMon: '' } }
+    : ct ? { chu: nd('qc.dai.ct', { ten: ct.ten }), khoaDai: 'qc.dai.ct', dai: { dich: 'uudai', maMon: '' } }
+    : { chu: '', khoaDai: '', dai: { dich: '', maMon: '' } };
+
+  const rBanner = dong.find((r) => (r.id === 'gio_vang' && gvChay) || chuoi(r.tieu_de));
+  if (rBanner) return { ...(rBanner.id === 'gio_vang' ? gv() : bannerPos(rBanner)), ...dai };
+  if (gvChay) return { ...gv(), ...dai };
+  if (ct) return { tieuDe: ct.ten, phu: ct.moTa || '', nut: nd('qc.ct.nut'), dich: 'uudai', maMon: '', khoa: { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' }, ...dai };
   const nut = ndNut('today.cta');
-  return { chu: '', tieuDe: nd('today.t'), phu: nd('today.s'), nut: nut.chu, dich: nut.dich, maMon: '', macDinh: true, khoaDai: '', khoa: { t: 'today.t', s: 'today.s', nut: 'today.cta' } };
+  return { tieuDe: nd('today.t'), phu: nd('today.s'), nut: nut.chu, dich: nut.dich, maMon: '', macDinh: true, khoa: { t: 'today.t', s: 'today.s', nut: 'today.cta' }, ...dai };
 }

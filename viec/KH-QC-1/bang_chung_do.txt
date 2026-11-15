@@ -1,0 +1,21 @@
+BẰNG CHỨNG ĐỎ KH-QC-1 — chạy với KHONG_TRINH_DUYET=1 trên code GỐC (git archive 0a5f194 + bài thử mới / sửa chép vào cong_cu/)
+
+== thu_KHQC1.js (bài mới) trên gốc
+18 đạt · 21 hỏng
+  ✗ A1 hợp đồng chép nguyên / khối máy đọc có GET /quang-cao · A2 canTuPos.js
+  ✗ B4 thứ tự POS · C1 dải dòng đầu · C2 banner dòng có tieu_de / khoá qc.pos / gio_vang / mặc định · C3 đích (4 ca) · C4 chữ giữ nguyên
+  ✗ B1 api.js layQuangCao + CUA_CONG_KHAI · B2 App.jsx hỏi một chỗ + PHUT_KIEM · K10 không .sort
+
+== thu_KHUI5d.js (D2: sửa đúng ca thứ tự uu_tien / mon thiếu ma_mon) trên gốc
+29 đạt · 2 hỏng
+  ✗ A4 nhiều dòng hợp giờ: giữ THỨ TỰ POS
+  ✗ A5 đích: … `mon` thiếu ma_mon → Menu
+
+== thu_KHUI5g.js (D2: banner dòng gio_vang của POS = Giờ vàng của App) trên gốc
+32 đạt · 2 hỏng
+  ✗ C2.2 dòng POS id="gio_vang" … banner = Giờ vàng của App
+  ✗ C2 khoá /admin của từng chữ banner
+
+SỐ CA thu_KHQC1: 39
+SỐ CA thu_KHUI5d: 31
+SỐ CA thu_KHUI5g: 34

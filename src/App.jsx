@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh } from './api.js';
+import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh, layQuangCao } from './api.js';
+import { PHUT_KIEM } from './dangKySW.js';
 import { cuaToi, cuaDiem, cuaDon, CUA_KHACH, lamMoi, xoaKhoKhach, napTomTat, luuTomTat, dungLamMoiNgam } from './duLieuKhach.js';
 import { docMaTuDiaChi, boMaKhoiDiaChi } from './maBill.js';
 import { dungDuongDan, viTriCuonKhiDoiMan } from './dieuHuong.js';
@@ -114,6 +115,24 @@ export default function App() {
     daHoiCt.current = true;
     layChuongTrinh().then((d) => { const ds = docChuongTrinh(d); datChuongTrinh(ds); ghiCtMay(ds); }, () => {});
   }, [trang]);
+  // /quang-cao (KH-QC-1): chữ dải + banner do chủ quán đặt ở POS. Hỏi cùng nhịp /chuong-trinh (tới Trang chủ / trang có dải đầu tiên) và khi quay lại App sau ≥ PHUT_KIEM phút; KHÔNG chu kỳ, KHÔNG lưu máy; lỗi → [] (nguồn cũ)
+  const [quangCaoPos, datQuangCaoPos] = useState([]);
+  const daHoiQc = useRef(false);
+  const hoiQuangCao = () => layQuangCao().then((d) => datQuangCaoPos(d && Array.isArray(d.data) ? d.data : []), () => datQuangCaoPos([]));
+  useEffect(() => {
+    if (daHoiQc.current || !(coDai(trang) || trang === 'trangchu')) return;
+    daHoiQc.current = true;
+    hoiQuangCao();
+  }, [trang]);
+  useEffect(() => {
+    let luc = 0;
+    const khiDoi = () => {
+      if (document.visibilityState === 'hidden') luc = Date.now();
+      else if (luc && daHoiQc.current && Date.now() - luc >= PHUT_KIEM * 60000) { luc = 0; hoiQuangCao(); }
+    };
+    document.addEventListener('visibilitychange', khiDoi);
+    return () => document.removeEventListener('visibilitychange', khiDoi);
+  }, []);
   const [daVaoMenu, datDaVaoMenu] = useState(false);
   const [lanVaoMenu, datLanVaoMenu] = useState(0);
   const [nhuCau, datNhuCau] = useState('');
@@ -179,8 +198,8 @@ export default function App() {
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
   const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
-  const quangCaoTho = chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio() }); // MỘT lần: dải các trang + banner Trang chủ cùng đọc
-  const quangCao = coDai(trang) && (dangNhap || !r.canDN) && !quangCaoTho.macDinh && !(quangCaoTho.dich === 'uudai' && trang === 'uudai') ? quangCaoTho : null; // dải dẫn tới chính trang đang đứng thì thừa
+  const quangCaoTho = chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio(), quangCao: quangCaoPos }); // MỘT lần: dải các trang + banner Trang chủ cùng đọc (có thể là hai dòng POS khác nhau)
+  const quangCao = coDai(trang) && (dangNhap || !r.canDN) && quangCaoTho.chu && !(quangCaoTho.dai.dich === 'uudai' && trang === 'uudai') ? { ...quangCaoTho, ...quangCaoTho.dai } : null; // dải dẫn tới chính trang đang đứng thì thừa
 
   // Mở một món: đang ở Menu thì nhớ vị trí cuộn để quay lại đúng chỗ.
   const chonMon = (mon) => {

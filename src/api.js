@@ -27,7 +27,7 @@ function loiApi(status, code, error, duLieu = null) {
 }
 
 // Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
-const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh'];
+const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh', '/quang-cao'];
 
 // `choMs` (tuỳ chọn): quá ngần này ms chưa xong → huỷ, ném như mất mạng (status 0) — người gọi coi là "chưa rõ".
 async function goi(phuongThuc, duong, than, choMs) {
@@ -58,7 +58,8 @@ export const xacMinh = (sdt, ma, ten, them) => goi('POST', '/dang-nhap/xac-minh'
 export const layHang = () => goi('GET', '/hang');
 export const layGioVang = () => goi('GET', '/gio-vang');
 export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — không token (CUA_CONG_KHAI); dùng ở UuDai
-export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
+export const layQuangCao = () => goi('GET', '/quang-cao'); // v16 QC-APP-1 — không token (CUA_CONG_KHAI); chữ dải + banner Trang chủ do chủ quán đặt ở POS
+export const layGioHoatDong =() => goi('GET', '/gio-hoat-dong');
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
 export const suaHoSo = (truong) => goi('PUT', '/toi', truong);

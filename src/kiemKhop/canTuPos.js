@@ -27,6 +27,7 @@ export const CAN_TU_POS = [
   { ma: 'the_bao_gia', ten: 'Báo giá giỏ có thẻ hạng', cua: 'POST /gio/bao-gia', token: true, truong: [], khi: T, co: true, viec_pos: 'KH-THE-1' },
   { ma: 'the_dat_don', ten: 'Mua thẻ hạng trong đơn (chung giỏ đồ uống)', cua: 'POST /don', token: true, truong: [], khi: T, co: true, viec_pos: 'KH-THE-1' },
   { ma: 'chuong_trinh', ten: 'Chương trình đặc biệt đang bật', cua: 'GET /chuong-trinh', token: false, truong: ['data[].ma', 'data[].ten', 'data[].mo_ta', 'data[].loai', 'data[].dang_bat'], khi: T, co: true, viec_pos: 'CT-1a' },
+  { ma: 'quang_cao', ten: 'Chữ dải quảng cáo + banner Trang chủ do chủ quán đặt', cua: 'GET /quang-cao', token: false, truong: ['bay_gio', 'data[].id', 'data[].chu_dai', 'data[].tieu_de', 'data[].phu', 'data[].chu_nut', 'data[].dich', 'data[].ma_mon', 'data[].tu_gio', 'data[].den_gio', 'data[].uu_tien'], khi: T, co: true, viec_pos: 'QC-APP-1' },
   { ma: 'xin_ma', ten: 'Xin mã đăng nhập', cua: 'POST /dang-nhap/xin-ma', token: false, truong: [], khi: T, co: true },
   { ma: 'xac_minh', ten: 'Xác minh mã, đăng ký', cua: 'POST /dang-nhap/xac-minh', token: false, truong: [], khi: T, co: true },
   { ma: 'sua_toi', ten: 'Sửa tên, xưng hô, địa chỉ', cua: 'PUT /toi', token: true, truong: [], khi: T, co: true },

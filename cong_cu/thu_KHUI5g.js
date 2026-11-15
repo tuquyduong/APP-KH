@@ -34,7 +34,7 @@ const duyet = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).
   k('B1 rỗng / null / không phải chuỗi không vỡ', !!tb && bang(tb(''), { bieuTuong: '', chu: '' }) && bang(tb(null), { bieuTuong: '', chu: '' }) && bang(tb(undefined), { bieuTuong: '', chu: '' }));
 
   console.log('C2 — chonQuangCao: tiêu đề / dòng phụ / nút / đích cho 4 trường hợp (thứ tự giữ nguyên)');
-  const R = (o) => ({ chu_dai: '🎉 Mua 2 tặng 1 Trà Đông Y', dich: 'menu', ma_mon: '', tu_gio: '', den_gio: '', uu_tien: 0, ...o });
+  const R = (o) => ({ chu_dai: '🎉 Mua 2 tặng 1 Trà Đông Y', tieu_de: 'Mua 2 tặng 1 Trà Đông Y' /* KH-QC-1 C2: banner chỉ hiện khi dòng POS có tieu_de */, dich: 'menu', ma_mon: '', tu_gio: '', den_gio: '', uu_tien: 0, ...o });
   const p1 = chon({ gioVang: GV(), chuongTrinh: CT, quangCao: [R({ tu_gio: '08:00', den_gio: '12:00' })] });
   k('C2.1 dòng POS hợp giờ thắng Giờ vàng + chương trình: tiêu đề = chữ POS (bỏ emoji đầu), dải giữ nguyên chuỗi, nút "Xem ›", đích menu', !!p1 && p1.tieuDe === 'Mua 2 tặng 1 Trà Đông Y' && p1.chu === '🎉 Mua 2 tặng 1 Trà Đông Y' && p1.nut === 'Xem ›' && p1.dich === 'menu' && !p1.macDinh, JSON.stringify(p1));
   const p1b = chon({ quangCao: [R({ dich: '' })] });
@@ -42,7 +42,7 @@ const duyet = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).
   const g = chon({ gioVang: GV(), chuongTrinh: CT });
   k('C2.2 Giờ vàng ĐANG chạy: tiêu đề "Giờ vàng: giảm 30%", phụ "Đến 10:00 hôm nay", nút "Xem Menu ›", đích menu; dải "⏰ Giờ vàng: giảm 30% đến 10:00"', !!g && g.tieuDe === 'Giờ vàng: giảm 30%' && g.phu === 'Đến 10:00 hôm nay' && g.nut === 'Xem Menu ›' && g.dich === 'menu' && g.chu === '⏰ Giờ vàng: giảm 30% đến 10:00' && !g.macDinh, JSON.stringify(g));
   const gr = chon({ gioVang: GV(), quangCao: [R({ id: 'gio_vang', chu_dai: '⏰ Giờ vàng −30% hôm nay' })] });
-  k('C2.2 dòng POS id="gio_vang" khi Giờ vàng đang chạy: tiêu đề = chữ POS (bỏ emoji), vẫn phụ + nút Giờ vàng, đích menu', !!gr && gr.tieuDe === 'Giờ vàng −30% hôm nay' && gr.chu === '⏰ Giờ vàng −30% hôm nay' && gr.phu === 'Đến 10:00 hôm nay' && gr.nut === 'Xem Menu ›' && gr.dich === 'menu', JSON.stringify(gr));
+  k('C2.2 dòng POS id="gio_vang" khi Giờ vàng đang chạy: dải = chữ POS; banner = Giờ vàng của App (KH-QC-1 C2: tiêu đề / phụ / nút qc.gv.*), đích menu', !!gr && gr.tieuDe === 'Giờ vàng: giảm 30%' && gr.chu === '⏰ Giờ vàng −30% hôm nay' && gr.phu === 'Đến 10:00 hôm nay' && gr.nut === 'Xem Menu ›' && gr.dich === 'menu', JSON.stringify(gr));
   const c = chon({ chuongTrinh: CT });
   k('C2.3 chương trình đặc biệt (cái đầu): tiêu đề = tên, phụ = mô tả, nút "Xem ưu đãi ›", đích uudai; dải "🎁 Quà sinh nhật"', !!c && c.tieuDe === 'Quà sinh nhật' && c.phu === 'Tặng 1 ly cho khách sinh nhật' && c.nut === 'Xem ưu đãi ›' && c.dich === 'uudai' && c.chu === '🎁 Quà sinh nhật' && !c.macDinh, JSON.stringify(c));
   const c2 = chon({ chuongTrinh: [CT[1]] });
@@ -51,8 +51,8 @@ const duyet = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).
   k('C2.4 không có gì: chữ mặc định trong danh mục — "Hôm nay bạn muốn uống gì?", nút "Xem Menu ›", đích menu, macDinh = true, dải rỗng', !!m && m.tieuDe === 'Hôm nay bạn muốn uống gì?' && m.phu === '' && m.nut === 'Xem Menu ›' && m.dich === 'menu' && m.macDinh === true && m.chu === '', JSON.stringify(m));
   k('C2 thứ tự giữ nguyên: Giờ vàng đã hết khung → rơi xuống chương trình; sắp tới → coi như không có', (chon({ gioVang: GV({ ket_thuc: '2026-11-08T08:30:00' }), chuongTrinh: CT }) || {}).dich === 'uudai' && (chon({ gioVang: GV({ dang_chay: false, bat_dau: '2026-11-08T20:00:00', ket_thuc: '2026-11-08T22:00:00' }) }) || {}).macDinh === true);
 
-  k('C2 khoá /admin của từng chữ banner: khung câu có khoá riêng (qc.gv.tieuDe / qc.gv.phu / qc.gv.nut / qc.ct.nut / qc.xem / today.*), chỉ phần chữ POS là "qc.pos"', !!g && !!c && !!m && !!p1 && bang(g.khoa, { t: 'qc.gv.tieuDe', s: 'qc.gv.phu', nut: 'qc.gv.nut' }) && bang(c.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' }) && bang(m.khoa, { t: 'today.t', s: 'today.s', nut: 'today.cta' }) && bang(p1.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.xem' }) && gr.khoa.t === 'qc.pos' && gr.khoa.nut === 'qc.gv.nut');
-  const pe = chon({ quangCao: [R({ chu_dai: '🎁' })] });
+  k('C2 khoá /admin của từng chữ banner: khung câu có khoá riêng (qc.gv.tieuDe / qc.gv.phu / qc.gv.nut / qc.ct.nut / qc.xem / today.*), chỉ phần chữ POS là "qc.pos"', !!g && !!c && !!m && !!p1 && bang(g.khoa, { t: 'qc.gv.tieuDe', s: 'qc.gv.phu', nut: 'qc.gv.nut' }) && bang(c.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.ct.nut' }) && bang(m.khoa, { t: 'today.t', s: 'today.s', nut: 'today.cta' }) && bang(p1.khoa, { t: 'qc.pos', s: 'qc.pos', nut: 'qc.xem' }) && gr.khoa.t === 'qc.gv.tieuDe' && gr.khoaDai === 'qc.pos' && gr.khoa.nut === 'qc.gv.nut');
+  const pe = chon({ quangCao: [R({ chu_dai: '🎁', tieu_de: '🎁' })] });
   k('K5 dòng POS chỉ có emoji → tiêu đề banner không rỗng', !!pe && pe.tieuDe === '🎁', JSON.stringify(pe));
 
   console.log('D1 — lời chào gọi theo tên');
