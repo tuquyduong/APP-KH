@@ -8,7 +8,7 @@
      ghi chú KH-ADMIN-1 trong `TIEN_DO_APPKH.json` (các điểm tự soát 3b / 3c / 3d để lại). Demo: Chế độ sửa PATCH30–39 của `thiet_ke/app_kh_demo.html` (CSS `.cms-*`, `.cs-*`, `[data-sec]`;
      JS `cmsToggle`, `cmsDecorate`, `cmsBar`, `cmsOpen`, `cmsPic`, `cmsReview`, `cmsPublish`, `LOCK_MSG`). -->
 
-**Chờ duyệt kế hoạch:** viết `viec/KH-ADMIN-1/ke_hoach.md`, commit, push, rồi DỪNG ở bước 3 của `/lam-viec`.
+**Kế hoạch ĐÃ DUYỆT** (chủ quán 15.11, chat soát `ke_hoach.md` 15964fa) kèm "Trả lời câu hỏi kế hoạch" ở cuối phiếu — làm thẳng tới hết, không dừng chờ duyệt nữa.
 
 ## Mục tiêu
 Chủ quán (và người được cấp quyền trong Phân quyền POS) mở `tuquyduong.com/admin`, đăng nhập bằng tài khoản POS, bật Chế độ sửa rồi đi trên CHÍNH App như khách: chỗ sửa được có viền
@@ -134,11 +134,24 @@ không
 ## Cấm
 - **Chạy song song với KH-THE-2 và KH-QC-1:** KHÔNG sửa màn / thành phần khách (`src/pages/**` trừ `QuanTri*.jsx` mới + `KiemKhop.jsx`; `src/components/**` trừ `CheDoSua*.jsx` mới) —
   KHÔNG gắn thêm `data-nd` vào màn (dùng D5). `src/App.jsx` CHỈ thêm dòng riêng (đường dẫn / màn `/admin*`, gắn lớp Chế độ sửa, nạp bản nội dung lúc mở) — KHÔNG đụng phần quảng cáo,
-  `muaThe`, Thanh toán thẻ, `daTra`, dòng `<TienIch …>`. `src/duongDan.js` CHỈ thêm dòng `/admin*` + bỏ `/kiemkhop` công khai. `src/api.js`: thêm hàm gọi kho + chặn ghi trong `goi`
+  `muaThe`, Thanh toán thẻ, `daTra`, dòng `<TienIch …>`. `src/duongDan.js` CHỈ thêm dòng `/admin*` + bỏ `/kiemkhop` công khai + dòng xuất `DS_MAN` (Q1) + ba chỗ cũ về /admin (Q5). `src/api.js`: thêm hàm gọi kho + chặn ghi trong `goi`
   — KHÔNG đổi các hàm `lay*` / `CUA_CONG_KHAI` (KH-QC-1 thêm `/quang-cao`).
-- KHÔNG sửa `src/quangCao.js`, `src/gio.js`, `src/datDon.js`, `src/giaHang.js`, `src/dangKySW.js` (chỉ `import` hằng), `src/luuMay.js` (`kh_nd_ban` KHÔNG vào danh sách xoá),
+- KHÔNG sửa `src/quangCao.js`, `src/gio.js`, `src/datDon.js`, `src/giaHang.js`, `src/dangKySW.js` (chỉ `import` hằng `PHUT_KIEM` và hàm thuần `denLucKiem` — không sửa tệp), `src/luuMay.js` (`kh_nd_ban` KHÔNG vào danh sách xoá),
   `src/noiDung/nd/index.js`, tệp nhóm danh mục khác ngoài `keHoach.js` (F1), `src/tracNghiem.js`, `src/lich.js`, `public/**`, `index.html`, `thiet_ke/**` ngoài `HOP_DONG_API_ND.md`,
   `tu_chay/`, `.claude/`, `.github/`, `kiem_tra_truoc_khi_giao.js`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - KHÔNG gọi cửa ngoài hợp đồng `/api/nd` v1; KHÔNG để App tự quyết quyền (máy chủ quyết); KHÔNG lưu mật khẩu; KHÔNG `dangerouslySetInnerHTML` / `innerHTML` với nội dung.
 - KHÔNG sửa danh mục / chữ của màn khách để "cho đẹp" — việc này chỉ làm khu sửa; chữ thiếu khoá phát hiện được → ghi `## Phát hiện` (việc sau).
 - Chỉ push `git push -u origin viec/KH-ADMIN-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Trả lời câu hỏi kế hoạch (chủ quán duyệt 15.11 theo đề nghị của chat)
+1. **Q1** dòng `export const DS_MAN = …` trong `src/duongDan.js`: ĐỒNG Ý (không đổi dòng cũ nào của bảng).
+2. **Q2** `/kiemkhop` đóng → `thay` về `/trangchu`: ĐÚNG.
+3. **Q3** `/admin/kiemkhop` hỏi POS bằng token KHÁCH đang có trên máy như trang cũ (vé `/api/nd` không dùng ở `/api/kh`): ĐÚNG.
+4. **Q4** chặn nút làm thật không qua mạng theo danh sách khoá `data-nd` (`NUT_KHOA_KHI_SUA`) bằng bộ nghe pha bắt, không sửa màn khách: ĐỒNG Ý; nút chưa có `data-nd` → `## Phát hiện`.
+5. **Q5** đổi ba chỗ cũ của `src/duongDan.js` về /admin (nhánh `dau === 'admin'`, cờ `quanTri` trong `ra()`, `tiepHopLe` từ chối trang quản trị cho đăng nhập khách): ĐỒNG Ý.
+   KH-THE-2 (sắp gộp trước) cũng sửa `ra()` (thêm `chaTv`) → sửa `ra()` ở dòng RIÊNG, ít nhất có thể, để gộp không xung đột.
+6. **Q6** import hàm thuần `denLucKiem` từ `src/dangKySW.js` (không sửa tệp): ĐỒNG Ý.
+7. Mục 5b "Sửa sau soát của agent phụ" (mã 423 `CHE_DO_SUA`, cờ chặn ghi bật đồng bộ trước lần vẽ đầu, 401 về `/admin?tiep=`, tiêu đề /admin, `role="dialog"`, bài cũ đếm
+   `/api/nd/`, bài cũ đổi, ca thêm, rút gọn, phát hiện) và mọi phần khác của `ke_hoach.md` (15964fa): DUYỆT nguyên.
+8. Thứ tự gộp dự kiến: KH-THE-2 → KH-QC-1 → KH-ADMIN-1 (gộp sau cùng; chat soạn script gộp main nếu xung đột). KH-QC-1 thêm MỘT dòng vào `src/pages/KiemKhop.jsx` — việc này
+   để tệp đó 0 dòng như kế hoạch.
