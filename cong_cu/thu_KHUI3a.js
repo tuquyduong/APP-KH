@@ -118,7 +118,9 @@ const GHD_DONG = GHD({ bay_gio: BAY('23:10:00'), dang_mo: false, nhan_don: false
       k('D1 gia_hang rỗng / thiếu → giá gốc', gh.giaChoKhach(cfs, HANG_VANG) === 25000 && gh.giaChoKhach({ ...cfs, gia_hang: undefined }, HANG_VANG) === 25000);
       k('D1 hạng 0 % (bảng = giá gốc) → giá gốc', gh.giaChoKhach(epc, HANG_VANG) === 35000);
       k('D1 hạng khách không có dòng trong gia_hang → giá gốc (không đoán)', gh.giaChoKhach(tlb, { id: 9, ten: 'Lạ' }) === 30000);
-      k('D1 src/giaHang.js không nhân phần trăm', !/Math\.round|\*\s*\(?\s*1\s*-|\/\s*100|\*\s*0?\.\d/.test(doc('src/giaHang.js')));
+      // KH-THE-2: giá theo hạng vẫn KHÔNG tự tính; chỗ DUY NHẤT nhân phần trăm là tietKiemMotTrieu (số "Chi 1 triệu, tiết kiệm" chỉ để hiện, không phải giá).
+      const ghNguon = doc('src/giaHang.js'), dongTk = (ghNguon.match(/^export const tietKiemMotTrieu = [^\n]*$/m) || [''])[0];
+      k('D1 src/giaHang.js không nhân phần trăm vào giá (chỉ tietKiemMotTrieu — số tiết kiệm để hiện)', !!dongTk && /\/\s*100/.test(dongTk) && !/Math\.round|\*\s*\(?\s*1\s*-|\/\s*100|\*\s*0?\.\d/.test(ghNguon.replace(dongTk, '')));
       const bac = gh.bacThang(HANG.data, tpn, HANG_VANG);
       k('D2 bậc thang: Thường + từng hạng POS trả, đúng giá, đánh dấu hạng của khách', bac.length === 3 && bac[0].ten === 'Thường' && bac[0].gia === 28000 && bac[1].gia === 25200 && bac[1].laToi === true && bac[2].gia === 23800 && !bac[0].laToi, JSON.stringify(bac));
       k('D2 khách không hạng → "Thường" là của mình', gh.bacThang(HANG.data, tpn, null).find((x) => x.laToi).ten === 'Thường');

@@ -220,6 +220,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     k('G1 bỏ hạng phan_tram = 0 / không phải số > 0', JSON.stringify(GH.hangCoGiam(ds).map((h) => h.id)) === '[2]', JSON.stringify(GH.hangCoGiam(ds)));
     k('G2 không còn hạng nào → [] (thẻ ẩn); không phải mảng → []', GH.hangCoGiam([{ phan_tram: 0 }]).length === 0 && GH.hangCoGiam(null).length === 0);
     k('G1 thẻ hạng Ưu đãi lọc bằng hangCoGiam', /hangCoGiam\(dsHang\)/.test(doc('src/pages/UuDai.jsx')));
+    k('G1 (KH-THE-2 E2) thẻ Ưu đãi vẽ MỘT trạng thái từ trangThaiTheUuDai(hạng có giảm, …) — hạng 0% không bao giờ là hạng bán đầu tiên', /trangThaiTheUuDai\(ds, /.test(doc('src/pages/UuDai.jsx')) && GH.trangThaiTheUuDai(GH.hangCoGiam([{ id: 1, ten: 'Test0d', phan_tram: 0, goi: [{ so_thang: 1, gia: 1000 }] }, { id: 2, ten: 'Vàng', phan_tram: 10, goi: [{ so_thang: 1, gia: 9000 }] }]), null, '2026-11-14T08:00:00').hang.id === 2);
   });
 
   await thu('H2', async () => {
@@ -288,7 +289,7 @@ async function trinhDuyet(pw) {
       await cho(TRE);
       if (S.cua) { await S.cua; S.daTra = true; }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
-      if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1 }] });
+      if (duong === '/hang') return json(200, { success: true, data: [{ id: 9, ten: 'Test0d', phan_tram: 0, phan_tram_nhom_dac_biet: 0, thu_tu: 0 }, { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, thu_tu: 1, goi: [{ so_thang: 1, gia: 50000 }] }] }); // KH-THE-2: Vàng có gói bán → thẻ "chưa có thẻ" hiện (đối chứng G1)
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY, dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
       if (duong === '/menu') return json(200, MENU);
       if (duong === '/dang-nhap/xin-ma') return json(200, { success: true });
@@ -350,7 +351,7 @@ async function trinhDuyet(pw) {
       k(`A3 [${rong}] mỗi lần chuyển tab nội dung có trong < 300 ms, không khung xám`, Math.max(...cham) < 300, cham.join(','));
       await t.locator('.tabbar .tab:nth-child(5)').click();
       const the = await chu(t, '#rewards .tier-card');
-      k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng)`, /Hạng Vàng/.test(the), the);
+      k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng; KH-THE-2: "Hạng của bạn · <tên POS>")`, /Hạng của bạn[\s\S]*Vàng/.test(the) && !/Test0d/.test(the), the);
       const tran = await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
       k(`H1 [${rong}] không tràn ngang`, tran);
     });
@@ -363,8 +364,9 @@ async function trinhDuyet(pw) {
     const t = await trang();
     await mo(t, '/uudai'); await yen(t, S);
     k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
+    // KH-THE-2 E2: vãng lai thấy MỘT hạng bán được (hạng bán đầu tiên — Test0d 0 % đứng trước nhưng bị lọc), không bảng mọi hạng.
     const the = await chu(t, '#rewards .tier-card');
-    k(`G1 [${rong}] bảng hạng vãng lai không hiện hạng 0% (Test0d), vẫn hiện Vàng 10%`, /Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
+    k(`G1 [${rong}] vãng lai: thẻ "chưa có thẻ" hiện Vàng 10% (hạng 0% Test0d đứng trước bị lọc, không hiện)`, /Trở thành hội viên[\s\S]*Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
     await chup(t, `ung-dung_uudai-vanglai-hang_${rong}`);
   });
 

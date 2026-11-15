@@ -65,6 +65,30 @@ export function DenLong({ s = 44, lop = '' }) {
   );
 }
 
+// Huy chương hạng của demo (<symbol id="m-medal-gold"> / "m-medal-plat" — chép NGUYÊN) vẽ thẳng: bộ <symbol> ở index.html (ngoài phạm vi) chưa có hai cái này,
+// và thiếu gradient gSv của demo → nhúng <defs> chép từ demo (id riêng). Các gradient khác (bgPc, bgLv, gG, gGr, gPlum, mClip) đã có ở index.html.
+const MED_HANG = { 'medal-gold': { nen: 'url(#bgPc)', giua: 'url(#gG)', vien: '#B98F3C' }, 'medal-plat': { nen: 'url(#bgLv)', giua: 'url(#gSvVe)', vien: '#8F86B8' } };
+export function MedVe({ ten, s = 24, lop = '' }) {
+  const m = MED_HANG[ten];
+  return (
+    <svg className={`med ${lop}`} width={s} height={s} viewBox="0 0 64 64" aria-hidden="true" data-med={`m-${ten}`}>
+      {ten === 'medal-plat' && <defs><linearGradient id="gSvVe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#FAF8FF" /><stop offset=".5" stopColor="#C9C0E4" /><stop offset="1" stopColor="#9F95C7" /></linearGradient></defs>}
+      <circle cx="32" cy="32" r="30" fill={m.nen} />
+      <g clipPath="url(#mClip)">
+        <path d="M0 45 C9 38 16 43 25 40 S45 34 64 43 V64 H0Z" fill="#fff" opacity=".34" /><path d="M0 52 C12 46 23 52 35 48 S54 44 64 50 V64 H0Z" fill="#fff" opacity=".5" />
+        <ellipse cx="32" cy="52.6" rx="15" ry="2.4" fill="#7A2647" opacity=".13" /><path d="M24.5 36 21 51l11-4 11 4-3.5-15z" fill="url(#gPlum)" /><path d="M32 40v7" stroke="#fff" strokeWidth="1" opacity=".5" />
+        <circle cx="32" cy="29" r="13" fill={m.giua} /><circle cx="32" cy="29" r="10.2" fill="none" stroke={m.vien} strokeWidth="1" />
+        <g transform="translate(32 30)"><path d="M0 5.4C-4.4 2.4-4.4-3.6 0-6.4 4.4-3.6 4.4 2.4 0 5.4z" fill="#fff" opacity=".95" /><path d="M0 5.4C-8-.4-7-5-3.4-5 0-4.2 0 2 0 5.4zM0 5.4C8-.4 7-5 3.4-5 0-4.2 0 2 0 5.4z" fill="#fff" opacity=".7" /></g>
+        <path d="M24 22c3-3.4 8-4.6 12-3.2" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity=".75" fill="none" />
+      </g>
+      <circle cx="32" cy="32" r="30" fill="none" stroke="url(#gGr)" strokeWidth="1.7" /><circle cx="32" cy="32" r="27.7" fill="none" stroke="url(#gGr)" strokeWidth=".55" opacity=".75" />
+      <path d="M4.3 28v8M59.7 28v8" stroke="url(#gGr)" strokeWidth="1.1" strokeLinecap="round" />
+    </svg>
+  );
+}
+/** Huy chương của một hạng: chỉ cấp (`tang`) → bạch kim, hạng bán → vàng. */
+export const MedHang = ({ tang, s }) => <MedVe ten={tang ? 'medal-plat' : 'medal-gold'} s={s} />;
+
 export function En({ ten, s = 44, lop = '' }) {
   return <svg className={`en ${lop}`} width={s} height={s} viewBox="0 0 64 64" aria-hidden="true"><use href={bien('p', ten)} /></svg>;
 }

@@ -3,6 +3,7 @@
 //   mau = mẫu đường dẫn (":ten" = tham số) · tab = tab sáng trên thanh tab (null = giữ tab trước) · canDN = khách phải đăng nhập
 //   cha = nơi nút quay lại về khi trang được mở thẳng (không có lịch sử) · giuCho = chỉ giữ chỗ cho việc sau · cho = các giá trị hợp lệ của tham số
 //   tv = tham số TRUY VẤN của trang { tên: [giá trị hợp lệ] | null (mã ngắn bất kỳ) } — giữ trong `chuan` (đăng nhập xong quay về đúng); tham số lạ bỏ
+//   chaTv = tham số truy vấn `cha` giữ lại khi mở thẳng rồi bấm quay lại (Thanh toán thẻ → /uudai/hang?h=<id>)
 import { boDau } from './menuLoc.js';
 import { nd } from './noiDung/nd.js';
 
@@ -18,10 +19,11 @@ const BANG = [
   { trang: 'menu', mau: '/menu/:nhom', tab: 'menu', tieuDe: 'tieuDe.menu' },
   { trang: 'mon', mau: '/mon/:slug', tab: 'menu', tieuDe: 'tieuDe.mon', cha: '/menu' },
   { trang: 'giohang', mau: '/giohang', tab: 'giohang', tieuDe: 'tieuDe.giohang' },
-  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/giohang', tv: { chi: ['the'] } },
+  { trang: 'thanhtoan', mau: '/thanhtoan', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/giohang' },
   { trang: 'theodoi', mau: '/don/:ma', tab: 'giohang', canDN: true, tieuDe: 'tieuDe.theodoi', cha: '/taikhoan/donhang' },
   { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'tieuDe.uudai' },
   { trang: 'hang', mau: '/uudai/hang', tab: 'uudai', tieuDe: 'tieuDe.hang', cha: '/uudai', tv: { h: null } },
+  { trang: 'thanhtoanthe', mau: '/uudai/hang/thanhtoan', tab: 'uudai', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/uudai/hang', tv: { h: null, thang: null }, chaTv: ['h'] }, // KH-THE-2: Thanh toán thẻ (chỉ QR)
   { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.taikhoan' },
   { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.thongtin', cha: '/taikhoan' },
   { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.donhang', cha: '/taikhoan' },
@@ -67,7 +69,8 @@ export function taoDuongDan(trang, tham = {}) {
 }
 
 function ra(e, tham) {
-  return { trang: e.trang, tham, chuan: taoDuongDan(e.trang, tham), tab: e.tab || null, canDN: !!e.canDN, cha: e.cha || TRANG_CHU, giuCho: !!e.giuCho };
+  const chaTv = new URLSearchParams(Object.fromEntries((e.chaTv || []).filter((t) => tham[t]).map((t) => [t, tham[t]]))).toString();
+  return { trang: e.trang, tham, chuan: taoDuongDan(e.trang, tham), tab: e.tab || null, canDN: !!e.canDN, cha: (e.cha || TRANG_CHU) + (chaTv ? `?${chaTv}` : ''), giuCho: !!e.giuCho };
 }
 
 /**

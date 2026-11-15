@@ -47,8 +47,8 @@ const KHONG_GAN = {
   'hs.tieuDe': 'tên màn do DauManCon (Man.jsx) vẽ', 'hs.phu': 'DauManCon', 'ht.tieuDe': 'DauManCon', 'mqr.tieuDe': 'DauManCon', 'tn.tieuDe': 'DauManCon', 'tn.phu': 'DauManCon', 'tnk.tieuDe': 'DauManCon', 'tnk.phu': 'DauManCon',
   'tnk.gopYMau': 'placeholder ô góp ý', 'gia.donVi': 'hàm thuần dinhDangGia (không có phần tử)', 'gia.giam': 'hàm thuần moTaGiam',
   'dn.ma.quay': 'lời của hàm loiMa (dangNhap.js); màn gắn ndDau theo loại', 'dn.ma.zalo': 'như trên', 'dn.ma.zaloChung': 'như trên',
-  'ud.hang.goi': 'dongGoi (giaHang.js) trả chuỗi; màn gắn ndDau("ud.hang.goi")',
-  'ud.hang.db': 'nối vào dòng ud.hang.pct (data-nd của dòng đó)', 'ud.voucher.donTu': 'ghép vào dòng phụ của thẻ voucher (data-nd="ud.khach")', 'ud.voucher.han': 'như trên',
+  'hien.ud.the': 'mục bật / tắt khối thẻ hội viên (ndHien) — không phải chữ, không có phần tử riêng', // KH-THE-2 (ud.hang.goi / ud.hang.db bỏ cùng thẻ cũ)
+  'ud.voucher.donTu': 'ghép vào dòng phụ của thẻ voucher (data-nd="ud.khach")', 'ud.voucher.han': 'như trên',
   'tnk.duaTren': 'KhoiTheChat.jsx (ngoài Phạm vi) đọc qua getter trong tracNghiemChu.js — chưa gắn data-nd; ghi ở ## Phát hiện', 'tnk.khongNoiBat': 'như trên', 'tnk.dacDiem': 'như trên', 'tnk.chamSoc': 'như trên', 'tnk.thucUong': 'như trên', 'tnk.mucNhe': 'như trên',
   'tnk.tinhNguoc': 'nối vào dòng câu hỏi trong bảng xem lại (data-nd="tnk.diem" của cả bảng)',
 };
@@ -67,7 +67,7 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
   k('A1 man của mục thuộc 8 màn: Tài khoản · Ưu đãi · Hồ sơ · Hỗ trợ · Đăng nhập · Mã thành viên · Trắc nghiệm · Khung chung', TK.every((m) => MAN.includes(m.man)) && MAN.slice(0, 7).every((x) => TK.some((m) => m.man === x)), [...new Set(TK.map((m) => m.man))].join('|'));
   k('A1 kiemDanhMuc(TOÀN BỘ danh mục) = 0 lỗi', typeof ND.kiemDanhMuc === 'function' && ND.kiemDanhMuc(DM).length === 0, ND.kiemDanhMuc ? ND.kiemDanhMuc(DM).join(' | ') : 'thiếu hàm');
   k('A1 danh mục không có chữ "nợ" (quán không có công nợ); bản giả "Công nợ" bị bắt', !/nợ/i.test(JSON.stringify(TK)) && /nợ/i.test(JSON.stringify([{ macDinh: 'Công nợ' }])));
-  const phanPOS = ['tk.khach', 'ud.gv.so', 'ud.ct.pos', 'ud.hang.pos', 'ud.khach', 'nm.loi', 'hs.khach', 'hs.loi', 'dn.loi', 'mqr.ma'];
+  const phanPOS = ['tk.khach', 'ud.gv.so', 'ud.ct.pos', 'ud.the.pos', 'ud.khach', 'nm.loi', 'hs.khach', 'hs.loi', 'dn.loi', 'mqr.ma'];
   k('A1 phần POS (khách, hạng, điểm, ví, voucher, chương trình, Giờ vàng, mã, lời lỗi) có mục khoá pos + chỉ đường POS ›', phanPOS.every((x) => theo.get(x)?.khoaBoi === 'pos' && /POS/.test(theo.get(x).chiDuong)), phanPOS.filter((x) => theo.get(x)?.khoaBoi !== 'pos').join(','));
   // A2 — trắc nghiệm chuyên môn KHOÁ
   const chuyenMon = ['tn.the', 'tnl.cauHoi', 'tnk.the', 'tnk.diem'];
@@ -78,8 +78,8 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
   // macDinh = chữ đang chạy (chép nguyên từ mã cũ) — mẫu tay
   const GOC_CHU = {
     'tk.nhomSucKhoe': 'Sức khỏe', 'tk.tracNghiem.chua': 'Làm trắc nghiệm 7–8 phút', 'tk.donHang.phu': 'Lịch sử các đơn đã mua', 'tk.thongTin.phu': 'Xưng hô, mã PIN, địa chỉ', 'tk.hoTro.phu': 'Gọi, nhắn Zalo cho quán',
-    'ud.ct.chuc': 'Chúc mừng sinh nhật! Mời bạn đến quán, đưa căn cước để nhận ưu đãi hôm nay.', 'ud.ct.moiNhap': 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đãi sinh nhật', 'ud.hang.tang': 'Hạng dành tặng khách thân thiết',
-    'ud.moi.p': 'Đăng nhập để xem điểm, ví và voucher', 'ud.hang.dong': '{ten} — giảm {phanTram}%', 'ud.hang.goi': '{soThang} tháng — {gia}', 'ud.voucher.donTu': 'đơn từ {gia}', 'ud.voucher.han': 'hạn dùng đến {ngay}',
+    'ud.ct.chuc': 'Chúc mừng sinh nhật! Mời bạn đến quán, đưa căn cước để nhận ưu đãi hôm nay.', 'ud.ct.moiNhap': 'Nhập ngày sinh ở Thông tin cá nhân để nhận ưu đãi sinh nhật',
+    'ud.moi.p': 'Đăng nhập để xem điểm, ví và voucher', 'ud.voucher.donTu': 'đơn từ {gia}', 'ud.voucher.han': 'hạn dùng đến {ngay}',
     'nm.loiDang': 'Mã chỉ gồm chữ và số (tối đa 32 ký tự). Kiểm tra lại mã trên hoá đơn.', 'nm.daNhanMoi': 'Đã nhận ưu đãi khách mới: mã {ma} {giam}', 'nm.goiY': 'Dán hoặc gõ mã trên hoá đơn',
     'hs.ns.hoi': 'Ngày sinh {ngay} — sau khi lưu bạn không tự sửa được. Lưu?', 'hs.ns.goiY': 'Nhập đúng như căn cước — quán đối chiếu khi áp ưu đãi sinh nhật. Chỉ nhập được một lần.',
     'hs.dc.goiY': 'Địa chỉ này dùng chung với quầy và được in trên hoá đơn. Để trống rồi lưu là xoá địa chỉ.', 'hs.pin.phu': '4 số · đặt hoặc đổi mã PIN của bạn', 'hs.pin.ghiChu': 'Nhân viên quán không xem được mã PIN của bạn.',
@@ -105,7 +105,9 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
   DM.forEach((m) => tron(m.macDinh));
   const kho = mo.join('\u0001');
   const thieu = [];
-  for (const [f, ds] of Object.entries(gocJson)) for (const s of ds) { if (f === 'src/noiDung/dangNhap.js' && CHU_MAY.includes(s)) continue; if (!kho.includes(s.trim())) thieu.push(`${f}: ${s.slice(0, 50)}`); }
+  // KH-THE-2 bỏ thẻ hạng cũ ở Ưu đãi (bảng mọi hạng, dòng gói "N tháng — giá", "% món thường", "Thẻ hết hạn:") — các chữ chỉ thuộc thẻ đó không còn trong danh mục
+  const BO_THE2 = [' · nhóm đặc biệt ', '% món thường', 'Thẻ hết hạn:', '— giảm', ' tháng — '];
+  for (const [f, ds] of Object.entries(gocJson)) for (const s of ds) { if (f === 'src/noiDung/dangNhap.js' && CHU_MAY.includes(s)) continue; if (['src/pages/UuDai.jsx', 'src/giaHang.js'].includes(f) && BO_THE2.includes(s)) continue; if (!kho.includes(s.trim())) thieu.push(`${f}: ${s.slice(0, 50)}`); }
   const tongGoc = Object.values(gocJson).reduce((a, b) => a + b.length, 0);
   k(`A1 mọi chữ có dấu của 17 tệp A1 ở bản trước việc (${tongGoc} chuỗi) còn trong danh mục (trừ 7 chữ xưng hô của mã gửi POS)`, tongGoc > 200 && thieu.length === 0, thieu.slice(0, 6).join(' | '));
 
@@ -141,7 +143,7 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
     if (!ganDuoc) khongGan.push(m.khoa);
   }
   const kiemGan = (f, re) => re.test(doc(f));
-  k('D1 các khoá hay quên: ndDau thật ở màn (không chỉ có tên khoá trong mã)', kiemGan('src/pages/TaiKhoan.jsx', /ndDau\('tk\.khach'\)/) && kiemGan('src/pages/TaiKhoan.jsx', /<Chu k="tk\.dangXuat"/) && kiemGan('src/pages/UuDai.jsx', /ndDau\('ud\.hang\.pos'\)/)
+  k('D1 các khoá hay quên: ndDau thật ở màn (không chỉ có tên khoá trong mã)', kiemGan('src/pages/TaiKhoan.jsx', /ndDau\('tk\.khach'\)/) && kiemGan('src/pages/TaiKhoan.jsx', /<Chu k="tk\.dangXuat"/) && kiemGan('src/pages/UuDai.jsx', /ndDau\('ud\.the\.pos'\)/)
     && kiemGan('src/pages/UuDai.jsx', /ndDau\('ud\.khach'\)/) && kiemGan('src/pages/HoSo.jsx', /ndDau\('hs\.xh\.chu'\)/) && kiemGan('src/pages/HoSo.jsx', /ndDau\('hs\.khach'\)/) && kiemGan('src/pages/DangNhap.jsx', /ndDau\('dn\.xh\.chu'\)/)
     && kiemGan('src/pages/DangNhap.jsx', /ndDau\('dn\.loi'\)/) && kiemGan('src/pages/ManQR.jsx', /ndDau\('mqr\.ma'\)/) && kiemGan('src/pages/TracNghiem.jsx', /ndDau\('tn\.the'\)/) && kiemGan('src/pages/TracNghiemLam.jsx', /ndDau\('tnl\.cauHoi'\)/)
     && kiemGan('src/pages/TracNghiemKetQua.jsx', /ndDau\('tnk\.the'\)/) && kiemGan('src/pages/TracNghiemKetQua.jsx', /ndDau\('tnk\.diem'\)/) && kiemGan('src/pages/TracNghiemKetQua.jsx', /ndDau\('tnk\.mon'\)/) && kiemGan('src/pages/HoTro.jsx', /ndDau\(h\.so\)/));
@@ -176,15 +178,15 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
       && b[0] === 'Lấy mã ở quầy nhé' && b[1] === 'Zalo gửi 090 xxx 4567' && b[2] === 'Zalo gửi bạn' && c === 'Mã đã gửi qua Zalo tới số 090 xxx 4567' && DN.loiMa(true, '1') === a[0]);
   } else k('B1 nạp được noiDung/dangNhap.js', false, DN.loiNap);
   const GH = await nap('src/giaHang.js');
-  if (GH.dongGoi && DD.dinhDangGia && ND.datBanNoiDung) {
-    const h = { chi_cap: false, goi: [{ so_thang: 3, gia: 300000 }, { so_thang: 12, gia: 1000000 }, { so_thang: 0, gia: 5 }] };
-    const a = [GH.dongGoi(h), DD.dinhDangGia(25000), DD.moTaGiam('percent', 10), DD.moTaGiam('fixed', 20000)];
-    ND.datBanNoiDung({ so_ban: 4, gia_tri: { 'ud.hang.goi': '{soThang}T {gia}', 'gia.donVi': '₫', 'gia.giam': 'bớt {giaTri}' } });
-    const b = [GH.dongGoi(h), DD.dinhDangGia(25000), DD.moTaGiam('percent', 10), DD.moTaGiam('fixed', 20000)];
+  if (GH.tenDongThe && DD.dinhDangGia && ND.datBanNoiDung) { // KH-THE-2: dongGoi bỏ cùng thẻ cũ — hàm chữ của giaHang.js còn lại là tenDongThe
+    const ds = [{ id: 2, ten: 'Vàng' }], d = { loai: 'the', hang_id: 2, so_thang: 3 };
+    const a = [GH.tenDongThe(d, ds), GH.tenDongThe({ ...d, hang_id: 9 }, ds), DD.dinhDangGia(25000), DD.moTaGiam('percent', 10), DD.moTaGiam('fixed', 20000)];
+    ND.datBanNoiDung({ so_ban: 4, gia_tri: { 'the.tt.dong': '{hang} {so}T', 'gia.donVi': '₫', 'gia.giam': 'bớt {giaTri}' } });
+    const b = [GH.tenDongThe(d, ds), GH.tenDongThe({ ...d, hang_id: 9 }, ds), DD.dinhDangGia(25000), DD.moTaGiam('percent', 10), DD.moTaGiam('fixed', 20000)];
     ND.datBanNoiDung(null);
-    k('B1 dongGoi / dinhDangGia / moTaGiam: mặc định như cũ ("3 tháng — 300.000đ", "25.000đ", "giảm 10%", "giảm 20.000đ"); bản giả đổi chữ / đơn vị → đổi theo; không còn hằng CHU_HANG_TANG / CHU_KHONG_THOI_HAN',
-      JSON.stringify(a) === JSON.stringify([['3 tháng — 300.000đ', '12 tháng — 1.000.000đ'], '25.000đ', 'giảm 10%', 'giảm 20.000đ']) && JSON.stringify(b) === JSON.stringify([['3T 300.000₫', '12T 1.000.000₫'], '25.000₫', 'bớt 10%', 'bớt 20.000₫'])
-      && !('CHU_HANG_TANG' in GH) && !('CHU_KHONG_THOI_HAN' in GH) && DD.dinhDangGia('x') === '');
+    k('B1 tenDongThe / dinhDangGia / moTaGiam: mặc định ("Thẻ hội viên Vàng · 3 tháng", "25.000đ", "giảm 10%", "giảm 20.000đ"); bản giả đổi chữ / đơn vị → đổi theo; không còn dongGoi / CHU_HANG_TANG / CHU_KHONG_THOI_HAN',
+      JSON.stringify(a) === JSON.stringify(['Thẻ hội viên Vàng · 3 tháng', 'Thẻ hội viên', '25.000đ', 'giảm 10%', 'giảm 20.000đ']) && JSON.stringify(b) === JSON.stringify(['Vàng 3T', 'Thẻ hội viên', '25.000₫', 'bớt 10%', 'bớt 20.000₫'])
+      && !('dongGoi' in GH) && !('CHU_HANG_TANG' in GH) && !('CHU_KHONG_THOI_HAN' in GH) && DD.dinhDangGia('x') === '');
   } else k('B1 nạp được giaHang.js + dinhDang.js', false, GH.loiNap || DD.loiNap);
   const LH = await nap('src/noiDung/lienHe.js');
   if (LH.LIEN_HE && ND.datBanNoiDung) {
@@ -355,17 +357,17 @@ async function trinhDuyet(pw) {
     // ── Ưu đãi (đã đăng nhập) ──
     await ca('Ưu đãi hội viên', { dn: true }, async (t, loi) => {
       await mo(t, '/uudai'); await t.waitForSelector('#rewards .wallet-row'); await t.waitForSelector('#rewards .tx-item');
-      const v0 = await t.evaluate(() => ({ h1: document.querySelector('#rewards h1')?.textContent, heads: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent), nhan: [...document.querySelectorAll('#rewards .wallet-box .l')].map((e) => e.textContent), more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .tier-card .name')?.textContent, pct: document.querySelector('#rewards .tier-card .pct')?.textContent, hh: document.querySelector('#rewards .tier-card .prog-lbl')?.textContent }));
+      const v0 = await t.evaluate(() => ({ h1: document.querySelector('#rewards h1')?.textContent, heads: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent), nhan: [...document.querySelectorAll('#rewards .wallet-box .l')].map((e) => e.textContent), more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .the-ud .ud-ten')?.textContent, pct: document.querySelector('#rewards .the-ud .ud-giam')?.textContent, hh: document.querySelector('#rewards .the-ud .ud-day span')?.textContent }));
       const d0 = await dau(t, '#rewards');
-      k('E1 Ưu đãi (hội viên) mặc định như cũ: "Ưu đãi của tôi", 3 tiêu đề, nhãn điểm / ví, "Xem tất cả", thẻ hạng (tên, % giảm + nhóm đặc biệt, hạn thẻ); có data-nd (≥ 12) và data-nd-khoa (≥ 5)', v0.h1 === 'Ưu đãi của tôi' && v0.heads.join('|') === 'Nhập mã trên hoá đơn|Ví voucher|Lịch sử điểm' && v0.nhan.join('|') === 'Điểm tích lũy|Số dư ví' && v0.more === 'Xem tất cả'
-        && v0.ten === 'Hạng Vàng' && v0.pct === 'Giảm 10% món thường · nhóm đặc biệt 5%' && /^Thẻ hết hạn: 00:00 01\/01\/2027$/.test(v0.hh || '') && d0.nd >= 12 && d0.khoa >= 5, JSON.stringify({ v0, d0 }));
-      await datBan(t, { 'ud.tieuDeToi': 'Của tôi nè', 'ud.diem': 'Điểm hiện có', 'ud.xemTatCa': 'Mở hết', 'ud.hang.ten': 'Bậc {ten}', 'ud.hang.hetHan': 'Hết hạn thẻ {ngay}', 'ud.lichSu': 'Điểm đã dùng', 'nm.nhanDiem': 'Cộng điểm' });
+      k('E1 Ưu đãi (hội viên) mặc định như cũ: "Ưu đãi của tôi", 3 tiêu đề, nhãn điểm / ví, "Xem tất cả", thẻ hội viên (tên, % giảm, hạn thẻ — KH-THE-2); có data-nd (≥ 12) và data-nd-khoa (≥ 5)', v0.h1 === 'Ưu đãi của tôi' && v0.heads.join('|') === 'Nhập mã trên hoá đơn|Ví voucher|Lịch sử điểm' && v0.nhan.join('|') === 'Điểm tích lũy|Số dư ví' && v0.more === 'Xem tất cả'
+        && v0.ten === 'Vàng' && v0.pct === 'Giảm 10% mọi đơn hàng' && /^Hết hạn 01\/01\/2027$/.test(v0.hh || '') && d0.nd >= 12 && d0.khoa >= 5, JSON.stringify({ v0, d0 }));
+      await datBan(t, { 'ud.tieuDeToi': 'Của tôi nè', 'ud.diem': 'Điểm hiện có', 'ud.xemTatCa': 'Mở hết', 'ud.the.giam': 'Bớt {phanTram}%', 'ud.the.hetHan': 'Hết hạn thẻ {ngay}', 'ud.lichSu': 'Điểm đã dùng', 'nm.nhanDiem': 'Cộng điểm' });
       await t.waitForFunction(() => document.querySelector('#rewards h1')?.textContent === 'Của tôi nè');
-      const v1 = await t.evaluate(() => ({ nhan: document.querySelector('#rewards .wallet-box .l')?.textContent, more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .tier-card .name')?.textContent, hh: document.querySelector('#rewards .tier-card .prog-lbl')?.textContent, ls: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent)[2], nut: document.querySelector('#rewards .promo-box button')?.textContent }));
-      k('E1 bản giả đổi 7 khoá Ưu đãi hội viên (tên màn, nhãn điểm, Xem tất cả, tên hạng, hạn thẻ, lịch sử, nút Nhận điểm) → đổi theo', v1.nhan === 'Điểm hiện có' && v1.more === 'Mở hết' && v1.ten === 'Bậc Vàng' && v1.hh === 'Hết hạn thẻ 00:00 01/01/2027' && v1.ls === 'Điểm đã dùng' && v1.nut === 'Cộng điểm', JSON.stringify(v1));
+      const v1 = await t.evaluate(() => ({ nhan: document.querySelector('#rewards .wallet-box .l')?.textContent, more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .the-ud .ud-giam')?.textContent, hh: document.querySelector('#rewards .the-ud .ud-day span')?.textContent, ls: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent)[2], nut: document.querySelector('#rewards .promo-box button')?.textContent }));
+      k('E1 bản giả đổi 7 khoá Ưu đãi hội viên (tên màn, nhãn điểm, Xem tất cả, % giảm của thẻ, hạn thẻ, lịch sử, nút Nhận điểm) → đổi theo', v1.nhan === 'Điểm hiện có' && v1.more === 'Mở hết' && v1.ten === 'Bớt 10%' && v1.hh === 'Hết hạn thẻ 01/01/2027' && v1.ls === 'Điểm đã dùng' && v1.nut === 'Cộng điểm', JSON.stringify(v1));
       await lamRong(t);
       await t.waitForFunction(() => document.querySelector('#rewards h1')?.textContent === 'Ưu đãi của tôi');
-      k('E1 bản rỗng → như cũ; không lỗi trang', (await chuTrong(t, '#rewards .tier-card .prog-lbl')) === 'Thẻ hết hạn: 00:00 01/01/2027' && loi.length === 0, loi.join('|'));
+      k('E1 bản rỗng → như cũ; không lỗi trang', (await chuTrong(t, '#rewards .the-ud .ud-day span')) === 'Hết hạn 01/01/2027' && loi.length === 0, loi.join('|'));
     });
     // ── Tài khoản + Hồ sơ + Hỗ trợ ──
     await ca('Tài khoản', { dn: true }, async (t, loi) => {
