@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 60,
-  "cap_nhat": "2026-11-14",
+  "phien_ban_so": 61,
+  "cap_nhat": "2026-11-15",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -231,12 +231,12 @@
       "ma": "KH-SL-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "bo",
       "phu_thuoc": [
         "POS ND-API-1 (khoa sao luu chi doc)"
       ],
       "ten": "Sao luu noi dung App moi dem: tac vu tu dong (GitHub Actions) goi GET /api/nd/xuat bang khoa sao luu chi doc, cat tep noi dung + anh vao nhanh sao luu rieng cua kho App",
-      "ghi_chu": "11.11 chu quan hoi sao luu App KH; code o GitHub, ban dung o Cloudflare Pages (rollback), du lieu khach chi tren may | 11.11 POS (ND-API-1): khoa sao luu chi doc chi goi duoc GET /api/nd/xuat; chu quan tao / thu hoi trong Cai dat; khoa chi hien MOT lan luc tao | 14.11 POS ND-API-1 gop: khoa sao luu ndk_ chi goi GET /api/nd/xuat; chu quan tao / thu hoi o Cai dat POS › App khach hang (co PIN), khoa hien MOT lan — mo viec khi chu quan muon"
+      "ghi_chu": "11.11 chu quan hoi sao luu App KH; code o GitHub, ban dung o Cloudflare Pages (rollback), du lieu khach chi tren may | 11.11 POS (ND-API-1): khoa sao luu chi doc chi goi duoc GET /api/nd/xuat; chu quan tao / thu hoi trong Cai dat; khoa chi hien MOT lan luc tao | 14.11 POS ND-API-1 gop: khoa sao luu ndk_ chi goi GET /api/nd/xuat; chu quan tao / thu hoi o Cai dat POS › App khach hang (co PIN), khoa hien MOT lan — mo viec khi chu quan muon | 15.11 BO (chu quan + POS, thu TRA_LOI_POS_15112026_SAOLUU / _b): sao luu bang Google Apps Script \"TQD Sao Luu Tu Dong\" trong tai khoan Google cua quan (chay tu 15.11 12:27; ban 2 do App giu ma: thiet_ke/sao_luu/TQD_Sao_Luu_Tu_Dong.gs) -> Drive TQD-SAO-LUU/{App KH,POS}/{Noi dung|Du lieu, Ma nguon, Thiet ke}, giu theo tang; khoa ndk_ cu o GitHub da thu hoi; khong tac vu GitHub, khong kho rieng"
     },
     {
       "ma": "KH-UI-5f",
@@ -273,11 +273,11 @@
       "model": "Sonnet",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-THE-2 (TheoDoiDon)",
+        "KH-THE-3 (TheoDoiDon.jsx)",
         "KH-QC-1 (hop dong v16 trong thiet_ke)"
       ],
       "ten": "Don bi quan huy (hop dong v14 HUY-1): Lich su don + Theo doi don + Chi tiet don hien \"Da hoan <so> vao tai khoan\" (hoan_vao_tai_khoan) va ly do (ly_do_huy); lam moi so du vi",
-      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop"
+      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop | 15.11 lam SAU KH-THE-3 (cung TheoDoiDon.jsx)"
     },
     {
       "ma": "KH-THE-1",
@@ -298,14 +298,53 @@
       "ma": "KH-THE-2",
       "loai": "T",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-THE-1"
       ],
       "ten": "The hoi vien theo thiet ke chu quan duyet 14.11: so sanh nhanh len dau man Hang thanh vien (cham cot chon hang, \"Chi 1 trieu, tiet kiem\"), Mua ngay thang Thanh toan the (the khong vao gio, chi QR, khong vi / PIN / ma giam, khong phan nhan hang), man Chao mung hoi vien, the Uu dai len dau theo 4 tinh trang",
-      "ghi_chu": "14.11 mo: chu quan duyet trang so sanh \"So sanh the hoi vien\" (Artifact Ddrw9SiX95XhW3KJWXfRWR; ban chep viec/KH-THE-2/ban_thiet_ke.html); the KHONG tra bang so du (tien nap co thuong) — App an vi cho the, POS chan o may chu (thu YEU_CAU_APPKH_GUI_POS_14112026.md); bo \"Tra the truoc\" + the trong gio; bo cau \"Uong tu 2 ly/tuan...\"; App khong tu tinh han moi; Thanh toan the = chinh man Thanh toan voi \"gio\" mot dong the dung tu duong dan /uudai/hang/thanhtoan?h=&thang= | 14.11 chat soat ke hoach 88d5262 DAT -> chu quan duyet (duyet_KHTHE2.py): Q1 them src/dangKySW.js (regex khong tu tai lai), Q2 giu DauManCon man Chao mung; chay song song KH-ADMIN-1 / KH-QC-1 — khong sua dong /admin, phan quang cao, nd.js, Chu.jsx, Man.jsx",
+      "ghi_chu": "14.11 mo: chu quan duyet trang so sanh \"So sanh the hoi vien\" (Artifact Ddrw9SiX95XhW3KJWXfRWR; ban chep viec/KH-THE-2/ban_thiet_ke.html); the KHONG tra bang so du (tien nap co thuong) — App an vi cho the, POS chan o may chu (thu YEU_CAU_APPKH_GUI_POS_14112026.md); bo \"Tra the truoc\" + the trong gio; bo cau \"Uong tu 2 ly/tuan...\"; App khong tu tinh han moi; Thanh toan the = chinh man Thanh toan voi \"gio\" mot dong the dung tu duong dan /uudai/hang/thanhtoan?h=&thang= | 14.11 chat soat ke hoach 88d5262 DAT -> chu quan duyet (duyet_KHTHE2.py): Q1 them src/dangKySW.js (regex khong tu tai lai), Q2 giu DauManCon man Chao mung; chay song song KH-ADMIN-1 / KH-QC-1 — khong sua dong /admin, phan quang cao, nd.js, Chu.jsx, Man.jsx | 15.11 chat soat cuoi DAT: dau nhanh 6b2a02d; cong tinh + chay kieu GitHub DAT (base ea0281e); --day-du Chromium 54/0; gop thu main sach; anh khop ban thiet ke. Gop PR #38 (e6a01ce). SAU GOP chu quan chup don APP0001: the ma QR o Theo doi don xep ngang cho MOI don QR — .the-qr trong thanh_toan.css trung lop TheQR (CSS mot goi) -> KH-SUA-1; bai hoc soat cuoi: chup anh moi bai thu tren goc va PR, man ngoai pham vi doi = KHONG DAT",
       "ngay": "2026-11-14",
-      "han": "2026-11-18"
+      "han": "2026-11-18",
+      "commit": "e6a01ce"
+    },
+    {
+      "ma": "KH-SUA-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-THE-2"
+      ],
+      "ngay": "2026-11-15",
+      "han": "2026-11-16",
+      "ten": "Sua gap: the ma QR o Theo doi don bi xep ngang cho MOI don QR (lop .the-qr cua o Thanh toan the trung lop TheQR) -> doi ten tt-qr / tt-qr-ic / tt-qr-v; bai canh chung \"lop goc khong dinh nghia o >= 2 tep css khong phai demo\" + ca Chromium canh ben trong the QR",
+      "ghi_chu": "15.11 chu quan chup don APP0001; chat tim nguyen nhan + thu ban sua tren ban sao (thu_KHSOHD1 103/0, thu_KHTHE2 154/0); bai canh thu tren main e6a01ce -> bat dung the-qr, ea0281e -> 0"
+    },
+    {
+      "ma": "KH-THE-3",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "phu_thuoc": [
+        "KH-THE-2"
+      ],
+      "ngay": "2026-11-15",
+      "han": "2026-11-19",
+      "ten": "The hoi vien Vang & Kim Cuong theo thiet ke chu quan duyet 15.11: MOT khoi the (85,6 x 54, 3 co) dung chung o Uu dai, Theo doi don chi the (2 buoc, khong pha che / ra quay, dong the co the nho), Chao mung (the len dau, anh luot mot lan), Thanh toan the, So sanh nhanh",
+      "ghi_chu": "15.11 chu quan duyet Artifact \"The Vang & Kim Cuong\" ban 2 (https://claude.ai/artifact/AcJNE4yBCgPzoCoTzMoq7x; ban cho may viec/KH-THE-3/ban_thiet_ke.html): CSS the chi mau demo (chat kiem K9: 0 mau la), co chu cqw co px du phong (iOS 15); mau the theo TEN hang khong phan biet hoa thuong (co \"kim cuong\" -> KC, \"vang\" -> Vang, khac -> hong); the ghi xung ho + ten + 4 so cuoi SDT; POS khong phai lam gi"
+    },
+    {
+      "ma": "KH-VC-2",
+      "loai": "T",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "POS VOUCHER-2 (hop dong v15 trong PHIEN_BAN 16)",
+        "thiet ke chu quan duyet"
+      ],
+      "ten": "Voucher theo hop dong v15: Thanh toan chon nhieu voucher tu vi + o ma chung (vouchers: [ma]), voucher_loi hien canh ma, Vi voucher hien mo_ta POS + dieu kien (voucher giam phi giao: an hoac \"dung khi giao hang, dat o quay\"), Nhan uu dai khach moi hien data.mo_ta, ten dong giam voucher / voucher_ship",
+      "ghi_chu": "15.11 POS bao VOUCHER-2 xong (thu TRA_LOI_POS_15112026_VOUCHER2); App cu khong vo; QD 15.11: cau \"giam gi / uu dai gi\" LUON lay mo_ta tu cai dat POS, App khong tu ghep. Mo khi chu quan bao \"XONG VOUCHER-2\" + duyet trang thiet ke; chep hop dong POS main SAU gop"
     },
     {
       "ma": "KH-UI-4",
@@ -563,11 +602,11 @@
       "model": "Opus",
       "trang_thai": "cho",
       "phu_thuoc": [
-        "KH-MUA-1b",
-        "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026.md muc 5)"
+        "KH-THE-2 (khuon Thanh toan mot dong)",
+        "POS KH-NAP-1 (hop dong v17 ~17-18.11)"
       ],
-      "ten": "Khach tu nap tien vao vi tren App bang QR: chon goi (GET /goi-nap), tao phien nap co khoa_gui + luat 4xx/5xx nhu dat don, man QR doc lai duoc khi tai lai, nap xong lam moi so du; Lich su vi (nap · tang · tra don · het han tien tang)",
-      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Dung lai co che gui lai / khoa cua KH-MUA-1b | 03.11: vi 0d → cong tac \"Tru tu so du vi\" xam + nut \"Nap vi\" (KH-MUA-1b dang an cong tac) | 10.11 POS: nap tien (va the qua) CHI tra bang tien that (QR) — App an \"Tru tai khoan\" + o ma giam khi gio co nap / the qua; may chu POS chan"
+      "ten": "Khach tu nap tien vao vi tren App bang QR: chon goi (GET /goi-nap { ma, ten, tra, vao }) -> MOT dong { loai: \"nap\", ma_goi } di thang Thanh toan chi QR (dung lai khuon Thanh toan mot dong cua KH-THE-2; /gio/bao-gia + /don, khoa_gui, luat 4xx / 5xx, Theo doi don nhu don App); man \"Da nap\"; Lich su vi (GET /vi)",
+      "ghi_chu": "02.11: truoc khai truong (chu quan chot 02.11, lui khai truong neu can). Dung lai co che gui lai / khoa cua KH-MUA-1b | 03.11: vi 0d → cong tac \"Tru tu so du vi\" xam + nut \"Nap vi\" (KH-MUA-1b dang an cong tac) | 10.11 POS: nap tien (va the qua) CHI tra bang tien that (QR) — App an \"Tru tai khoan\" + o ma giam khi gio co nap / the qua; may chu POS chan | 14.11 POS doi thiet ke (thu TRA_LOI_POS_14112026_THE_NAP): BO POST /nap, GET /nap/:ma; nap = dong { loai: \"nap\", ma_goi } trong /gio/bao-gia + /don; ma NAP_KHONG_GOP, NAP_CHI_TIEN_MAT_QR, GOI_NAP_KHONG_CO, THE_KHONG_TRA_VI (the chi QR); tien ve muon van du quyen loi. App dong y (thu 14.11 b); POS nhan 4 diem ghi ro o v17 (thu 15.11 SAOLUU muc 2). Mo khi POS main co hop dong v17"
     },
     {
       "ma": "KH-VI-2",

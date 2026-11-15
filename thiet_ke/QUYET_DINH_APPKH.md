@@ -3,6 +3,20 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 15.11.2026
+- **Thẻ hội viên Vàng & Kim Cương** (chủ quán duyệt 15.11 — Artifact "Thẻ Vàng & Kim Cương" bản 2; KH-THE-3): mỗi hạng một tấm thẻ đúng tỉ lệ thẻ thật, dùng CHUNG ở Ưu đãi,
+  đơn thẻ, Chào mừng hội viên, Thanh toán thẻ, So sánh nhanh. Vàng = lá vàng + vân khắc chìm + biểu tượng bốn mùa ẩn; Kim Cương = xanh đêm + mặt cắt kim cương + chữ bạc; hạng
+  khác (hạng thử) = thẻ hồng của quán. Thẻ chọn theo TÊN hạng ở POS (không phân biệt hoa thường). Thẻ ghi xưng hô + tên + 4 số cuối SĐT. Màu CHỈ trong bảng màu demo (không
+  ngoại lệ). Đơn chỉ có thẻ: không bước pha chế / ra quầy — "Thẻ kích hoạt ngay khi tiền về".
+- **Câu ưu đãi lấy từ POS** (15.11): App KHÔNG tự ghép câu "giảm gì / ưu đãi gì" — hiện nguyên `mo_ta` POS dựng từ cài đặt / mẫu voucher; App chỉ giữ khung chữ sửa được ở /admin.
+- **Sửa gấp thẻ mã QR** (15.11): lỗi sau #38 (lớp CSS `.the-qr` trùng) → KH-SUA-1. Từ nay: soát cuối chụp ảnh MỌI bài thử trên gốc và trên PR, màn ngoài phạm vi đổi = KHÔNG ĐẠT;
+  tên lớp CSS mới phải có tiền tố riêng; bài canh "lớp gốc không định nghĩa ở ≥ 2 tệp css".
+- **Sao lưu** (15.11, chủ quán + POS): lưu HẾT về Drive `TQD-SAO-LUU` (App KH + POS; bỏ SX); GitHub vẫn là nơi làm việc. Apps Script "TQD Sao Lưu Tự Động" — App giữ mã (bản 2:
+  `thiet_ke/sao_luu/TQD_Sao_Luu_Tu_Dong.gs`), POS soát phần khoá + phần POS; chỉ lưu khi đổi (trừ dữ liệu POS lưu mỗi đêm); giữ theo tầng 7 ngày + 4 tuần + 12 tháng (mã nguồn
+  4 tuần + 6 tháng); lỗi → Google email chủ quán; khoá chỉ ở thuộc tính Apps Script. KH-SL-1 bỏ.
+- **Voucher v15** (15.11): KH-VC-2 (nhiều voucher / đơn, Ví voucher theo `mo_ta`) làm TRƯỚC khai trương, sau khi chủ quán duyệt trang thiết kế.
+- **Khai trương** thực tế khoảng T6 04.12 (lịch POS 14.11).
+
 ## 14.11.2026
 - **Thẻ hội viên làm lại theo trang so sánh chủ quán duyệt 14.11** (KH-THE-2; thay QĐ 08.11 / 12.11 "thẻ chung giỏ, Trả thẻ trước"): màn Hạng thành viên đặt **So sánh nhanh lên đầu** (Thường và các hạng: giảm mọi đơn, món nhóm đặc biệt, chi 1 triệu tiết kiệm bao nhiêu, giá) — chạm một cột để chọn hạng, gói và nút "Mua ngay" ngay dưới bảng, ngắn gọn mà đủ để khách thấy lên hạng hời, hấp dẫn; **"Mua ngay" đi thẳng Thanh toán**, thẻ KHÔNG vào giỏ; Thanh toán thẻ không có phần nhận hàng; trả xong có màn "Chào mừng hội viên" + nút "Đặt đồ uống ngay"; thẻ ở Ưu đãi lên đầu, chỉ nói đúng tình trạng của khách (chưa có / đang có / sắp hết hạn ≤ 7 ngày / quán tặng) với một nút. Bỏ câu "Uống từ 2 ly/tuần là thẻ Vàng có lời". % và giá gói do chủ quán đặt ở POS (14.11 còn là số thử).
 - **Thẻ hạng KHÔNG trả bằng số dư tài khoản** (chủ quán 14.11 — nạp tiền được cộng thưởng, tránh gian lận): cả tiền nạp, tiền thưởng, ví mẹ; ở quầy và trên App. App: thẻ chỉ trả QR, không công tắc ví, không PIN, không mã giảm. POS chặn ở máy chủ (thư `trao_doi/YEU_CAU_APPKH_GUI_POS_14112026.md`).
