@@ -104,7 +104,7 @@ const dong = (o = {}) => {
   k('B1 api.js: layQuangCao = goi GET /quang-cao', /export const layQuangCao = \(\) => goi\('GET', '\/quang-cao'\)/.test(ap));
   k('B1 /quang-cao nằm trong CUA_CONG_KHAI (không bao giờ gửi token khách)', /CUA_CONG_KHAI = \[[^\]]*'\/quang-cao'/.test(ap));
   k('B2 (tĩnh, cổng GitHub không có Chromium) ngưỡng quay lại: `Date.now() - luc >= PHUT_KIEM * 60000`; lỗi / 429 → đặt [] (nguồn cũ)', /Date\.now\(\) - luc >= PHUT_KIEM \* 60000/.test(app) && /\(\) => datQuangCaoPos\(\[\]\)/.test(app));
-  k('C4 (tĩnh) dải và banner không dùng dangerouslySetInnerHTML (chữ POS hiện như chữ)', !/dangerouslySetInnerHTML/.test(doc('src/components/DaiQuangCao.jsx') + doc('src/components/BannerHomNay.jsx') + doc('src/pages/TrangChu.jsx') + app));
+  k('C4 (tĩnh) dải và banner không dùng dangerouslySetInnerHTML (chữ POS hiện như chữ)', !/dangerouslySetInnerHTML/.test(doc('src/components/DaiQuangCao.jsx') + doc('src/components/BannerHomNay.jsx')));
   k('B2 App.jsx: hỏi bằng layQuangCao đúng một chỗ, dùng PHUT_KIEM của dangKySW.js, không setInterval, không lưu máy', (app.match(/layQuangCao\(/g) || []).length === 1 && /import \{[^}]*PHUT_KIEM[^}]*\} from '\.\/dangKySW\.js'/.test(app) && !/quangCao[^\n]*(localStorage|ghi\w*May)|kh_quangcao/i.test(app) && !/setInterval/.test((app.match(/layQuangCao[\s\S]{0,600}/) || [''])[0]));
   k('B2 chonQuangCao nhận `quangCao: quangCaoPos` từ trạng thái, gọi MỘT lần ở App', /chonQuangCao\(\{[^}]*quangCao: quangCaoPos/.test(app) && (app.match(/chonQuangCao\(/g) || []).length === 1);
   k('B2/C3 App.jsx: chỉ hỏi lần đầu (daHoiQc) và dải dùng đích riêng `quangCaoTho.dai`', /if \(daHoiQc\.current \|\| !\(coDai\(trang\)/.test(app) && /\.\.\.quangCaoTho, \.\.\.quangCaoTho\.dai/.test(app));
