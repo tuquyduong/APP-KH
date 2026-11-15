@@ -272,7 +272,7 @@ async function trinhDuyet(pw) {
       const cot = (i) => chu(t, `#buycard .ss .ss-cot >> nth=${i}`);
       k(`B2 [${rong}] ô số: Thường — / — / 0đ / Miễn phí; Vàng 3% / 4% / 30.000đ / 100.000đ / tháng; Kim Cương 10% / 10% / 100.000đ / Quán tặng`, /—[\s\S]*—[\s\S]*0đ[\s\S]*Miễn phí/.test(await cot(0)) && /3%[\s\S]*4%[\s\S]*30\.000đ[\s\S]*100\.000đ[\s\S]*\/ tháng/.test(await cot(1)) && /10%[\s\S]*10%[\s\S]*100\.000đ[\s\S]*Quán tặng/.test(await cot(2)), [await cot(0), await cot(1), await cot(2)].join(' | '));
       k(`B2 [${rong}] mỗi cột hạng là nút role=radio ≥ 44px; Vàng chọn sẵn, có "Đang chọn"; Thường không phải nút`, (await t.locator('#buycard .ss [role=radio]').count()) === 2 && (await t.locator('#buycard .ss [role=radio][aria-checked=true]').innerText()).includes('Vàng') && /Đang chọn/.test(await t.locator('#buycard .ss [aria-checked=true]').innerText()) && (await t.locator('#buycard .ss .c-thuong[role=radio], #buycard .ss button.c-thuong').count()) === 0 && (await t.locator('#buycard .ss [role=radio]').first().boundingBox()).height >= 44);
-      k(`B2 [${rong}] huy chương demo: hạng bán m-medal-gold (l1), chỉ cấp m-medal-plat (l2)`, (await t.locator('#buycard .ss .l1 use[href="#m-medal-gold"], #buycard .ss .l1 [data-med="m-medal-gold"]').count()) >= 1 && (await t.locator('#buycard .ss .l2 use[href="#m-medal-plat"], #buycard .ss .l2 [data-med="m-medal-plat"]').count()) >= 1);
+      k(`B2 [${rong}] thẻ nhỏ KH-THE-3: hạng bán (l1) = thẻ vàng, chỉ cấp (l2) = thẻ Kim Cương`, (await t.locator('#buycard .ss .l1 .thv.mini.vang').count()) >= 1 && (await t.locator('#buycard .ss .l2 .thv.mini.kc').count()) >= 1);
       k(`B2 [${rong}] trang không cuộn ngang`, await khongTran(t));
       k(`B3 [${rong}] "Chọn gói Vàng", gói 3 tháng chọn sẵn "Tiết kiệm 5.000đ", nút "Mua ngay · Vàng 3 tháng" + 295.000đ, dòng QR`, /Chọn gói Vàng/.test(v) && /3 tháng/.test(await chu(t, '#buycard .ti-buy button.on')) && /Tiết kiệm 5\.000đ/.test(await chu(t, '#buycard .ti-buy')) && /Mua ngay · Vàng 3 tháng[\s\S]*295\.000đ/.test(await chu(t, '#buycard .checkout-btn')) && /Trả bằng QR chuyển khoản · thẻ dùng được ngay/.test(v));
       if (rong === 390) {
@@ -305,7 +305,7 @@ async function trinhDuyet(pw) {
     await doiChu(t, '#checkout .nut-dat', /Quét QR · 295\.000đ/);
     const v = await chu(t, '#checkout');
     k('C4 không "Hình thức nhận hàng" / thẻ quầy / công tắc ví; dòng phụ "Thẻ hội viên"', (await t.locator('#checkout .mode-row, #checkout .the-quay, #checkout .the-vi').count()) === 0 && /Thẻ hội viên/.test(await chu(t, '#checkout .topbar')));
-    k('C4 thẻ tóm tắt (.pc-mini) "Thẻ hội viên Vàng" + "3 tháng" + 295.000đ; không "hạn tới"', (await t.locator('#checkout .pc-mini').count()) === 1 && /Thẻ hội viên Vàng[\s\S]*3 tháng[\s\S]*295\.000đ/.test(v) && !/hạn tới/i.test(v));
+    k('C4 thẻ tóm tắt (thẻ vừa .thv.mini.vua) "Thẻ hội viên Vàng" + "3 tháng" + 295.000đ; không "hạn tới"', (await t.locator('#checkout .thv.mini.vua').count()) === 1 && /Thẻ hội viên Vàng[\s\S]*3 tháng[\s\S]*295\.000đ/.test(v) && !/hạn tới/i.test(v));
     k('C4 dòng kích hoạt với 3%; một lựa chọn "Chuyển khoản QR"; dòng khoá không ví / mã giảm', /Thẻ kích hoạt ngay khi tiền về, không cần ra quầy\. Đơn đồ uống tiếp theo được giảm 3% luôn\./.test(v) && /Chuyển khoản QR[\s\S]*Quét mã bằng app ngân hàng bất kỳ/.test(v) && /Thẻ hội viên không trả bằng số dư ví và không dùng mã giảm giá\./.test(v));
     const bgThe = S.baoGia.filter((b) => b.mon.some((m) => 'loai' in m));
     k('C2 báo giá thẻ gửi đúng mon thẻ, KHÔNG ma_giam (dù giỏ đang có mã GIAM10)', bgThe.length > 0 && bgThe.every((b) => bang(b.mon, [THE(2, 3)]) && !('ma_giam' in b)), JSON.stringify(bgThe[0]));
@@ -318,7 +318,7 @@ async function trinhDuyet(pw) {
     S.traQR('TQD42');
     k('D1 trả xong → "Chào mừng hội viên Vàng!"', await doiChu(t, '#tracking', /Chào mừng hội viên Vàng!/, 9000));
     const td = await chu(t, '#tracking');
-    k('D1 "Giảm 3% …", thẻ vàng: hạn POS nguyên văn, số đơn APP0042, 295.000đ', /Giảm 3% áp dụng ngay từ đơn tiếp theo, ở quầy và trên App\./.test(td) && /Hạn mới: 13\/02\/2027/.test(td) && /APP0042[\s\S]*295\.000đ/.test(td));
+    k('D1 "Giảm 3% …", thẻ vàng: hạn POS nguyên văn, số đơn APP0042, 295.000đ', /Giảm 3% áp dụng ngay từ đơn tiếp theo, ở quầy và trên App\./.test(td) && /13\/02\/2027/.test(td) && /APP0042[\s\S]*295\.000đ/.test(td));
     k('D1 không dải "Đơn … đã sẵn sàng / mời ra quầy" cho đơn chỉ thẻ', (await t.locator('.bao-don').count()) === 0);
     k('D1 không các bước / số đơn ra quầy / danh sách món', (await t.locator('#tracking .the-buoc, #tracking .pick-num, #tracking .cart-item, #tracking .order-card').count()) === 0);
     k('D1 giỏ còn ly → nút "Về giỏ · 1 món"', /Về giỏ · 1 món/.test(td));
@@ -422,11 +422,11 @@ async function trinhDuyet(pw) {
   });
 
   // E — thẻ Ưu đãi: 4 trạng thái, mỗi thẻ một nút, đứng đầu màn
-  const theUD = (t) => t.locator('#rewards .the-ud').first();
-  const dau = (t) => t.evaluate(() => { const a = document.querySelector('#rewards .topbar'); return a && a.nextElementSibling && a.nextElementSibling.classList.contains('the-ud'); });
+  const theUD = (t) => t.locator('#rewards .ud-the, #rewards .the-ud').first();
+  const dau = (t) => t.evaluate(() => { const a = document.querySelector('#rewards .topbar'); return a && a.nextElementSibling && a.nextElementSibling.classList.contains('the-ud') || a.nextElementSibling.classList.contains('ud-the'); });
   await may('E chưa đăng nhập', { dn: false }, async ({ t }) => {
     await mo(t, '/uudai');
-    await doiChu(t, '#rewards .the-ud', /Trở thành hội viên/);
+    await doiChu(t, '#rewards .ud-the, #rewards .the-ud', /Trở thành hội viên/);
     const v = await theUD(t).innerText();
     k('E1 thẻ là khối đầu của Ưu đãi (cả khi chưa đăng nhập)', await dau(t));
     k('E2 chưa hạng: "Chưa có thẻ", "Trở thành hội viên", Vàng, 2 chip, "Từ 100.000đ / tháng", một nút "Xem & mua thẻ ›"', /Chưa có thẻ/.test(v) && /Trở thành hội viên[\s\S]*Vàng/.test(v) && /Giảm 3% mọi đơn/.test(v) && /Món đặc biệt giảm 4%/.test(v) && /Từ[\s\S]*100\.000đ[\s\S]*\/ tháng/.test(v) && (await theUD(t).locator('button').count()) === 1 && /Xem & mua thẻ ›/.test(await theUD(t).locator('button').innerText()), v);
@@ -444,13 +444,13 @@ async function trinhDuyet(pw) {
   for (const [ten, hang, mau, nut, dich] of caE) {
     await may(`E ${ten}`, { S0: { hang } }, async ({ t }) => {
       await mo(t, '/uudai');
-      await doiChu(t, '#rewards .the-ud', /Hạng của bạn/);
+      await doiChu(t, '#rewards .ud-the, #rewards .the-ud', /Hạng của bạn/);
       const v = await theUD(t).innerText();
       k(`E2 [${ten}] đúng chữ, đầu màn`, mau.test(v) && await dau(t) && (ten !== 'tangThieu' || !/thời hạn|hết hạn/.test(v)), v);
       k(`E2 [${ten}] đúng MỘT nút`, (await theUD(t).locator('button').count()) === 1 && nut.test(await theUD(t).locator('button').innerText()));
       if (ten === 'co') k('E2 [co] không thanh tiến độ', (await theUD(t).locator('.prog, [role=progressbar]').count()) === 0);
-      if (ten === 'tang') { await mo(t, '/uudai/hang?h=3'); k('B1 khách Kim Cương không thời hạn: "Kim Cương · quán tặng · không thời hạn"', await doiChu(t, '#buycard .topbar', /Kim Cương · quán tặng · không thời hạn/)); await mo(t, '/uudai'); await doiChu(t, '#rewards .the-ud', /Hạng của bạn/); }
-      if (ten === 'tang') k('E2 [tang] thẻ xanh l2 + huy chương bạch kim', (await t.locator('#rewards .the-ud.l2').count()) === 1 && (await theUD(t).locator('use[href="#m-medal-plat"], [data-med="m-medal-plat"]').count()) === 1);
+      if (ten === 'tang') { await mo(t, '/uudai/hang?h=3'); k('B1 khách Kim Cương không thời hạn: "Kim Cương · quán tặng · không thời hạn"', await doiChu(t, '#buycard .topbar', /Kim Cương · quán tặng · không thời hạn/)); await mo(t, '/uudai'); await doiChu(t, '#rewards .ud-the, #rewards .the-ud', /Hạng của bạn/); }
+      if (ten === 'tang') k('E2 [tang] thẻ Kim Cương (xanh đêm) KH-THE-3', (await t.locator('#rewards .ud-the .thv.kc').count()) === 1);
       await chup(t, `uudai_${ten}`);
       await theUD(t).locator('button').click();
       k(`E2 [${ten}] nút → đúng màn`, await doi(t, async () => dich.test(t.url())), t.url());
