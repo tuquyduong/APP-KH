@@ -174,6 +174,32 @@ Khu `/admin*` dựng RIÊNG ở `main.jsx` (như `/kiemkhop` hôm nay): vỏ App
 App ~1.050 dòng (khoNoiDung 130, api +32, nd +35, duongDan +8, main +8, App +2, kehoach +4, KiemKhop ±6, QuanTri 110, QuanTriLichSu 140, CheDoSua 200, CheDoSuaBang 260, css 70,
 quanTri.js 60) — trong ngân sách ~1.100. Thử ~600 (+ sửa vài ca bài cũ).
 
+## 5b. Sửa sau soát của agent phụ (đã đối chiếu code — THẮNG các dòng tương ứng ở §1–§4)
+- **P4 chặn ghi — lỗi thật của bản đầu:** ném `loiApi(0, …)` làm `datDon.loaiLoi` (`src/datDon.js:112-115`) coi là `'khong_biet'` → `guiDonAnToan` tự gửi lại rồi kẹt bản ghi
+  `kh_don_gui` "chưa rõ". Sửa: ném `loiApi(423, 'CHE_DO_SUA', …)` (4xx có `code`, không thuộc `LUOT_GUI_LAI`) → `'chua_tao'`, không ghi kẹt. Ca thử: `loaiLoi(lỗi chặn) === 'chua_tao'`;
+  Chromium: bấm đặt đơn khi sửa → `kh_don_gui` không ở trạng thái chưa rõ, POS giả không nhận `POST /don`. Đột biến thêm `VS-CHAN-GHI-STATUS-0`.
+- **Cờ chặn ghi bật ĐỒNG BỘ:** `khoNoiDung.napBanMay()` (gọi ở `main.jsx` trước render) đọc cờ `nd_sua` + vé từ sessionStorage và gọi `datCheDoSua(true)` + nạp lớp nháp rỗng trước
+  lần vẽ đầu — effect của màn (vd Ưu đãi nhận mã `?ma=`) không kịp gửi trước cờ. `CheDoSua` chỉ tải nháp và vẽ lớp phủ.
+- **401 khi đang sửa trên màn khách:** về `/admin?tiep=<đường đang đứng>`; `QuanTri` nhận `tiep` là `/admin*` HOẶC đường khách hợp lệ (`tiepHopLe`) — khách thì đăng nhập xong bật lại sửa
+  và `location.assign(tiep)`; lạ / ra ngoài (`//x`, `http…`) → `/admin`. Ca thử cả hai + ca `tiep` ra ngoài.
+- **Tiêu đề `/admin*`:** `khungChung.js` bị Cấm → dòng BANG `/admin*` KHÔNG có `tieuDe`; `QuanTri` tự đặt tiêu đề tab từ `quanTri.js`; nhánh `/admin/kiemkhop` dùng `nd('tieuDe.kiemkhop')`
+  (khoá cũ vẫn có người dùng, không mồ côi). `tieuDeTrang` không bao giờ gọi với trang quản trị (vỏ App không mount ở `/admin*`) — ca thử canh.
+- **Bảng sửa / Xem lại / Đi tới màn mang `role="dialog"`** → `dangKySW.coTheTaiLai` (`src/dangKySW.js:7`) không tự tải lại khi đang gõ. Ca thử Chromium: bảng mở → `[role=dialog]` có.
+- **`hoiBanMoi` trong bài Chromium cũ:** nhiều bài tự dựng App (`thu_KHND3*` đặt `window.__datBan`, `thu_KHNHANH1.js:309,365` đếm yêu cầu). Mặc định bản dựng không có `VITE_ND_API`
+  ⇒ gốc kho suy từ `VITE_POS_API` của bài → bài cũ đếm thêm `GET /api/nd/ban-dang-chay`. Xử lý: khi chạy lúc làm, bài nào lệch → sửa bài (Phạm vi có `cong_cu/thu_*.js`): bỏ qua đường
+  `/api/nd/` khi đếm, POS giả trả `khong_doi`. Nếu bài sửa vẫn xanh trên gốc → gom MỘT câu hỏi `## Bài thử cũ sửa` (bước 4 skill).
+- **Bài cũ sẽ đổi (bổ sung):** `thu_KHPWA1.js:252-253` (so nguyên văn dòng dựng `main.jsx` — dòng đó đổi), `thu_KHUI3b.js:431-434` (F1 mở `/kiemkhop` → đổi sang `/admin/kiemkhop`
+  có vé giả). `thu_KHPWA1.js:83` là ca của `public/sw.js` — không đổi (public Cấm).
+- **Ca thử thêm vào §2:** A2 quét cả chuỗi mẫu `` `/nhap/${…}` `` và `code` ở `CheDoSua*.jsx` / `QuanTri*.jsx`; B2 không `setInterval` / không hỏi lần hai khi chưa tới 30 phút, Chromium: chữ
+  bản máy có ngay ở lần vẽ đầu (đọc DOM ngay sau `load`, chặn yêu cầu `/api/nd`); C2 sessionStorage không có mật khẩu; C3 nút "Bật Chế độ sửa" → `/trangchu` có `.cms-bar`, nút
+  "Kiểm khớp POS" → `/admin/kiemkhop`; D1 ✕ tắt → không còn `.cms-bar`, lớp nháp bỏ; D3 ảnh (canvas ra đúng `tiLe`, ≤ 500 KB, FormData trường `anh`, `url` vào giá trị), "Bỏ thay đổi"
+  gửi `DELETE /nhap/<khoá>`, `nut` chọn `DICH`; D5 thêm Kế hoạch / Giờ vàng: có khoá trả chuỗi `gv.ghi.*` / `thu.t2…`, chữ `Thongbao`; D6 bấm màn cần đăng nhập khách → `/dangnhap?tiep=`;
+  D7 thêm `/nhan-ma-bill` và nút xác nhận xoá (`NUT_KHOA_KHI_SUA` so với nguồn); D8 "Tới chỗ này" cuộn tới phần tử, "Bỏ" gửi `DELETE`.
+- **Rút gọn:** gộp `QuanTriLichSu` vào `QuanTri.jsx` nếu tệp ≤ ~300 dòng (còn quá thì tách theo việc); `KiemKhop.jsx` để nguyên (0 dòng) — `QuanTri` lo tiêu đề / meta ở nhánh này
+  (trang cũ tự thêm meta noindex — trùng vô hại; đầu tệp đã ghi KH-ADMIN-1 — bài `thu_KHKHOP1.js:113` canh).
+- **Phát hiện (ngoài phạm vi, ghi `trang_thai.md`):** `public/sw.js:17` còn nhắc `/kiemkhop`, không loại `/admin`; `kh.leQua` (`src/noiDung/nd/keHoach.js:116`) khớp lễ theo TÊN —
+  đổi tên lễ ở /admin thì mất gợi ý quà.
+
 ## 6. Câu hỏi / điểm xin duyệt cùng kế hoạch
 - Q1 `src/duongDan.js`: ngoài các dòng `/admin*` và bỏ `/kiemkhop`, cần MỘT dòng `export const DS_MAN = …` (danh sách màn cho "Đi tới màn", D6 ghi "danh sách màn từ bảng `src/duongDan.js`").
   Phiếu Cấm ghi "CHỈ thêm dòng `/admin*` + bỏ `/kiemkhop`" — xin cho thêm dòng xuất này (không đổi dòng cũ nào của bảng).
@@ -181,3 +207,6 @@ quanTri.js 60) — trong ngân sách ~1.100. Thử ~600 (+ sửa vài ca bài c�
 - Q3 `/admin/kiemkhop` giữ nguyên cách hỏi POS bằng token KHÁCH đang có trên máy (như trang cũ) — không dùng vé quản trị (vé `/api/nd` không dùng được ở `/api/kh`). Đúng ý?
 - Q4 Nút khoá khi sửa (D7 phần không qua mạng): chặn theo danh sách khoá `data-nd` (`NUT_KHOA_KHI_SUA` ở `quanTri.js`) bằng bộ nghe pha bắt — không sửa màn khách. Nút xoá nào chưa có
   `data-nd` thì không chặn được ở việc này → ghi `## Phát hiện` (việc sau gắn `data-nd`).
+- Q5 `src/duongDan.js` — ngoài thêm dòng, phải đổi 3 chỗ cũ có liên quan /admin: nhánh `dau === 'admin' → Trang chủ` (dòng 83, bỏ), `ra()` (dòng 70, thêm cờ `quanTri`), `tiepHopLe`
+  (dòng 55, từ chối trang quản trị cho đăng nhập KHÁCH). Xin cho đổi ba chỗ này (đều thuộc /admin).
+- Q6 `src/dangKySW.js` — phiếu ghi "chỉ `import` hằng"; kế hoạch import thêm HÀM thuần `denLucKiem` (không sửa tệp) để dùng đúng một luật "quay lại ≥ 30 phút". Xin cho.
