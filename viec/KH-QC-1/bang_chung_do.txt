@@ -1,0 +1,35 @@
+BẰNG CHỨNG ĐỎ KH-QC-1 — chạy với KHONG_TRINH_DUYET=1 trên code GỐC (git archive 0a5f194 + bài thử mới / sửa chép vào cong_cu/)
+
+== thu_KHQC1.js (bài mới) trên gốc
+18 đạt · 21 hỏng
+  ✗ A1 hợp đồng chép nguyên / khối máy đọc có GET /quang-cao · A2 canTuPos.js
+  ✗ B4 thứ tự POS · C1 dải dòng đầu · C2 banner dòng có tieu_de / khoá qc.pos / gio_vang / mặc định · C3 đích (4 ca) · C4 chữ giữ nguyên
+  ✗ B1 api.js layQuangCao + CUA_CONG_KHAI · B2 App.jsx hỏi một chỗ + PHUT_KIEM · K10 không .sort
+
+== thu_KHUI5d.js (D2: sửa đúng ca thứ tự uu_tien / mon thiếu ma_mon) trên gốc
+29 đạt · 2 hỏng
+  ✗ A4 nhiều dòng hợp giờ: giữ THỨ TỰ POS
+  ✗ A5 đích: … `mon` thiếu ma_mon → Menu
+
+== thu_KHUI5g.js (D2: banner dòng gio_vang của POS = Giờ vàng của App) trên gốc
+32 đạt · 2 hỏng
+  ✗ C2.2 dòng POS id="gio_vang" … banner = Giờ vàng của App
+  ✗ C2 khoá /admin của từng chữ banner
+
+== thu_KHUI3d.js (chủ quán 15.11: thêm /quang-cao vào danh sách cửa + 1 ca TĨNH) trên gốc, KHONG_TRINH_DUYET=1
+34 đạt · 1 hỏng
+  ✗ B4 KH-QC-1: api.js có layQuangCao gọi '/quang-cao' và '/quang-cao' nằm trong CUA_CONG_KHAI
+
+SỐ CA cong_cu/thu_KHUI3d.js: 35
+== bốn bài ghim hợp đồng / cửa cũ, sửa sau `npm test` (trên gốc + hop_dong_v16.md, KHONG_TRINH_DUYET=1)
+thu_KHMUA1c: 27 đạt · 1 hỏng (A1 hợp đồng = v16)
+thu_KHSOHD1: 0 đạt · 1 hỏng (A1 hợp đồng = v16)
+thu_KHTHE1: 84 đạt · 1 hỏng (A1 hợp đồng = v16, PHIEN_BAN 16)
+thu_KHKHOP1: 49 đạt · 1 hỏng (A2 KiemKhop.jsx có 'GET /quang-cao')
+SỐ CA cong_cu/thu_KHMUA1c.js: 28
+SỐ CA cong_cu/thu_KHSOHD1.js: 40
+SỐ CA cong_cu/thu_KHTHE1.js: 85
+SỐ CA cong_cu/thu_KHKHOP1.js: 50
+SỐ CA cong_cu/thu_KHQC1.js: 43
+SỐ CA cong_cu/thu_KHUI5d.js: 31
+SỐ CA cong_cu/thu_KHUI5g.js: 34

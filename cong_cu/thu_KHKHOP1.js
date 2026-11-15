@@ -54,6 +54,7 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
     k('A2 mục POST/PUT chỉ ghi "có trong hợp đồng" (không có truong để kiểm)', ds.filter((m) => /^(POST|PUT)/.test(m.cua)).every((m) => m.truong.length === 0));
     const kk = doc('src/pages/KiemKhop.jsx');
     const thieuGoi = [...new Set(ds.filter((m) => m.co && m.cua.startsWith('GET ') && m.cua !== 'GET /don/:ma').map((m) => m.cua))].filter((c) => !kk.includes(`'${c}'`));
+    k("A2 KH-QC-1: /kiemkhop có hàm gọi 'GET /quang-cao' (layQuangCao) — ca TĨNH", kk.includes("'GET /quang-cao': layQuangCao") && /import \{[^}]*layQuangCao[^}]*\} from '\.\.\/api\.js'/.test(kk));
     k('A2 trang /kiemkhop có hàm gọi cho MỌI cửa GET co:true (KH-MUA-1c: có GET /chuong-trinh của v9)', kk.includes("'GET /chuong-trinh'") && thieuGoi.length === 0, thieuGoi.join(','));
   }
 
@@ -169,6 +170,7 @@ async function trinhDuyet(pw) {
       }
       if (duong === '/hang') { const h = { id: 1, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }; if (P.thieuHang) delete h[P.thieuHang]; return json(200, { success: true, data: [h] }); }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [], ...(P.gvMoi ? { gia_mon: [{ ma: 'TLB', gia_goc: 30000, gia: 25000 }] } : {}) });
+      if (duong === '/quang-cao') return json(200, { success: true, bay_gio: '2026-11-08T09:00:00', data: [{ id: 1, chu_dai: 'Quảng cáo', tieu_de: '', phu: '', chu_nut: '', dich: '', ma_mon: null, tu_gio: null, den_gio: null, uu_tien: 1 }] }); // v16 QC-APP-1
       if (duong === '/chuong-trinh') return json(200, { success: true, data: [{ ma: 'SN', ten: 'Sinh nhật', mo_ta: 'a', loai: 'sinh_nhat', dang_bat: true }] }); // v9 CT-1a
       const auth = req.headers().authorization || '';
       if (duong === '/menu') {
@@ -193,7 +195,7 @@ async function trinhDuyet(pw) {
   };
   const chu = (t) => t.locator('#kiemkhop').innerText();
   const dem = (P, pt, d) => P.goi.filter((g) => g.pt === pt && g.duong === d).length;
-  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu', '/chuong-trinh'];
+  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu', '/chuong-trinh', '/quang-cao'];
   const hang = (t, ten) => t.locator('#kiemkhop .muc', { hasText: ten }).first();
 
   await ca('thong-vang-lai', {}, async (t, loi, P) => {
