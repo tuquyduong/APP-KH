@@ -592,6 +592,7 @@ async function trinhDuyet(pw) {
     const dsCauTruc = DM.find((x) => x.loai === 'danhsach' && (x.khoaCauTruc || []).length && coRow.has(x.khoa));
     if (dsCauTruc) {
       await t.click(`.cms-bar button:has-text("${QT.qt('chuMan')}")`); await t.locator(`[data-chu-man="${dsCauTruc.khoa}"]`).click();
+      await t.locator(`[data-bang-sua="${dsCauTruc.khoa}"]`).waitFor();
       k(`D3 danh sách có khoaCauTruc (${dsCauTruc.khoa}): trường cấu trúc chỉ đọc, không thêm / bớt dòng`, (await t.locator(`[data-bang-sua="${dsCauTruc.khoa}"] input[readonly]`).count()) > 0 && (await t.locator(`[data-bang-sua="${dsCauTruc.khoa}"] .cs-undo:has-text("${QT.qt('themDong')}")`).count()) === 0);
       await t.click(`[data-bang-sua="${dsCauTruc.khoa}"] .cs-h button`);
     }
@@ -606,7 +607,7 @@ async function trinhDuyet(pw) {
     k('D4 ảnh mới hiện ngay trên trang (đường ảnh kho ghép gốc kho)', await doi(t, async () => /\/api\/nd\/anh\/[0-9a-f]{64}$/.test(await t.locator('.today .t-img').getAttribute('src'))));
     await t.click('[data-bang-sua="today.bg"] .cs-next');
     await doi(t, async () => goiKho('PUT', '/nhap').some((g) => g.than.khoa === 'today.bg'));
-    await moBut(t, 'today.bg');
+    await t.locator('[data-bang-sua="today.bg"] .cs-hint:has-text("Có nháp chưa cập nhật")').waitFor();
     await t.click(`[data-bang-sua="today.bg"] .cs-undo:has-text("${QT.qt('boThayDoi')}")`);
     k('D3 "Bỏ thay đổi" → DELETE /nhap/today.bg', await doi(t, async () => goiKho('DELETE', '/nhap/today.bg').length === 1));
     await t.click('[data-bang-sua="today.bg"] .cs-h button');
