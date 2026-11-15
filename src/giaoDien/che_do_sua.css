@@ -1,0 +1,68 @@
+/* Chế độ sửa (/admin, KH-ADMIN-1) — CHÉP NGUYÊN giá trị CSS của demo PATCH30–39 (.cms-*, .cs-*); khác demo ghi viec/KH-ADMIN-1/doi_chieu_demo.md.
+   Mọi luật chỉ có tác dụng khi .phone có lớp cms-on (đang sửa) hoặc trong khu quản trị — màn khách KHÔNG đổi khi không sửa. */
+
+/* viền chỗ sửa (demo [data-cms] / [data-lock]) — chỉ viền, không đổi bố cục */
+.cms-on [data-nd]{ outline:1.5px dashed #C38C40; outline-offset:2px; }
+.cms-on [data-nd-khoa]{ outline:1px dotted rgba(138,126,120,.45); outline-offset:2px; }
+.cms-on .screen{ padding-bottom:170px; }
+.cms-on .toast{ bottom:150px; }
+
+/* lớp phủ bút ✎ / 🔒 (demo .cms-pen — ở lớp riêng, không chèn vào màn) */
+.cms-lop{ position:absolute; inset:0; z-index:65; pointer-events:none; overflow:hidden; }
+.cms-lop .cms-pen{ display:grid; place-items:center; position:absolute; z-index:6; width:22px; height:22px; border-radius:50%; font-style:normal; font-size:12px;
+  background:#C38C40; color:#fff; box-shadow:0 1px 4px rgba(0,0,0,.2); pointer-events:auto; border:none; padding:0; font-family:inherit; cursor:pointer; }
+.cms-lop .cms-pen.ch{ background:#B42A60; }
+.cms-lop .cms-pen.khoa{ background:#2E2430; font-size:10.5px; }
+.cms-lop .cms-pen.nho{ width:20px; height:20px; font-size:10.5px; box-shadow:0 0 0 2px #fff; }
+
+/* thanh nổi (demo .cms-bar) */
+.cms-bar{ display:none; position:absolute; left:10px; right:10px; bottom:86px; z-index:70; align-items:center; gap:6px; padding:8px 8px 8px 12px; border-radius:16px;
+  background:#2E2430; color:#fff; box-shadow:0 6px 18px rgba(40,10,20,.3); }
+.cms-bar.show{ display:flex; flex-wrap:wrap; }
+.cms-bar .cb-t{ flex:1; min-width:0; font-size:12.5px; font-weight:700; } .cms-bar .cb-t small{ display:block; font-size:10.5px; font-weight:500; color:#D9CFC6; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cms-bar button{ border:none; font:inherit; font-size:11.5px; font-weight:700; padding:7px 9px; border-radius:10px; background:rgba(255,255,255,.14); color:#fff; cursor:pointer; white-space:nowrap; }
+.cms-bar button.pri{ background:#C38C40; } .cms-bar button.pri:disabled{ opacity:.45; } .cms-bar button.x{ background:none; padding:7px 4px; }
+.cms-bar .mn{ padding:7px 8px; }
+
+/* bảng sửa (demo #sheetCms + .cs-*) */
+#sheetCms{ z-index:95; background:rgba(74,46,58,.12); } #sheetCms .panel{ max-height:62%; overflow-y:auto; } #sheetCms .panel.short{ max-height:46%; }
+.cs-h{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; } .cs-h b{ font-size:15px; color:var(--pink-deep); }
+.cs-h button{ border:none; font:inherit; font-weight:700; font-size:13px; padding:7px 14px; border-radius:12px; background:var(--pink-dark); color:#fff; cursor:pointer; }
+.cs-img{ display:flex; gap:12px; align-items:flex-start; } .cs-img > img, .cs-ph{ width:112px; height:112px; border-radius:16px; object-fit:cover; flex-shrink:0; display:grid; place-items:center; }
+.cs-img > img.tu-do{ object-fit:contain; }
+.cs-up{ position:relative; display:inline-block; overflow:hidden; font-weight:700; font-size:13px; padding:9px 14px; border-radius:12px; background:#fff; color:var(--ink); box-shadow:0 0 0 1px rgba(215,185,129,.7); cursor:pointer; }
+.cs-up input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+.cs-lnk{ display:block; border:none; background:none; font:inherit; font-size:12px; color:#C9443F; font-weight:600; margin-top:8px; cursor:pointer; padding:0; }
+.cs-hint{ font-size:11.5px; color:var(--muted); margin-top:8px; line-height:1.45; }
+.cs-hint.loi{ color:#C9443F; font-weight:600; }
+.cs-l{ font-size:12px; font-weight:800; color:var(--muted); margin:12px 0 6px; }
+.cs-ta, .cs-in{ width:100%; border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-family:inherit; font-size:14px; background:#fff; color:var(--ink); line-height:1.5; }
+.cs-in[readonly]{ background:#F4EFE9; color:var(--muted); }
+.cs-chips{ display:flex; flex-wrap:wrap; gap:6px; } .cs-chips button{ border:none; font:inherit; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:16px; background:#fff; color:var(--ink); box-shadow:0 0 0 1px rgba(215,185,129,.7); cursor:pointer; }
+.cs-chips button.on{ background:var(--pink-dark); color:#fff; box-shadow:none; }
+.cs-feat{ display:grid; gap:8px; } .cs-feat select{ width:100%; border:1px solid var(--line); border-radius:12px; padding:10px; font-family:inherit; font-size:13.5px; background:#fff; }
+.cs-next, .cs-pub{ width:100%; margin-top:12px; border:none; font:inherit; font-weight:800; font-size:14px; padding:12px; border-radius:14px; background:#C38C40; color:#fff; cursor:pointer; }
+.cs-pub{ background:var(--pink-dark); }
+.cs-next:disabled, .cs-pub:disabled{ opacity:.45; cursor:default; }
+.cs-undo{ display:block; margin:12px auto 0; border:none; background:none; font:inherit; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; text-decoration:underline; }
+.cs-todo{ display:flex; flex-wrap:wrap; align-items:center; gap:2px 10px; padding:12px; border-radius:14px; background:#fff; box-shadow:0 0 0 1px rgba(215,185,129,.6); margin-bottom:8px; cursor:pointer; }
+.cs-todo b{ flex:1; font-size:14px; color:var(--ink); } .cs-todo small{ order:3; width:100%; font-size:11.5px; color:var(--muted); } .cs-todo span{ color:var(--muted); font-size:18px; }
+.cs-ch{ display:flex; gap:8px; padding:10px 0; border-top:1px solid rgba(215,185,129,.35); } .cs-ch:first-of-type{ border-top:none; }
+.cs-cw{ flex:1; min-width:0; font-size:12.5px; line-height:1.5; overflow-wrap:anywhere; } .cs-cw b{ display:block; font-size:13px; color:var(--ink); }
+.cs-cw del{ color:#A66; text-decoration:line-through; } .cs-cw ins{ color:#2E7A50; text-decoration:none; font-weight:600; }
+.cs-mini{ width:34px; height:34px; border-radius:8px; object-fit:cover; vertical-align:middle; } .cs-mini.wide{ width:60px; }
+.cs-cb{ display:flex; flex-direction:column; gap:6px; } .cs-cb button{ border:none; font:inherit; font-size:11.5px; font-weight:700; padding:6px 10px; border-radius:10px; background:#fff; color:var(--ink); box-shadow:0 0 0 1px rgba(215,185,129,.6); cursor:pointer; white-space:nowrap; }
+.cs-cb button.dg{ color:#C9443F; }
+.cs-hi{ display:flex; gap:10px; align-items:center; padding:6px 0; } .cs-hi i{ font-style:normal; width:36px; height:36px; border-radius:10px; display:grid; place-items:center; font-weight:800; background:#F4EFE9; color:#9E281B; flex-shrink:0; }
+.cs-hi i.live{ background:#9E281B; color:#FFF6E0; } .cs-hi b{ display:block; font-size:12.5px; } .cs-hi small{ font-size:11px; color:var(--muted); }
+.cs-go{ display:flex; flex-wrap:wrap; gap:6px; } .cs-go button{ border:none; font:inherit; font-size:12px; font-weight:700; padding:7px 11px; border-radius:12px; background:#fff; color:var(--ink); box-shadow:0 0 0 1px rgba(215,185,129,.6); cursor:pointer; }
+
+/* dòng của bảng danh sách / chữ của màn (khung theo .cs-todo, .cs-ch của demo) */
+.cs-dong{ padding:10px 12px; border-radius:14px; background:#fff; box-shadow:0 0 0 1px rgba(215,185,129,.6); margin-bottom:8px; display:grid; gap:6px; }
+.cs-dong .cs-go{ justify-content:flex-end; }
+.cs-bat{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:14px; }
+
+/* khu quản trị /admin (bố cục — màu, chữ dùng lại .cs-*) */
+.qt-khung{ padding:18px 16px 40px; display:grid; gap:10px; align-content:start; }
+.qt-khung h1{ font-size:20px; color:var(--pink-deep); }
+.qt-khung .cs-hi{ cursor:pointer; }
