@@ -103,6 +103,7 @@ const dong = (o = {}) => {
   k('B1 /quang-cao nằm trong CUA_CONG_KHAI (không bao giờ gửi token khách)', /CUA_CONG_KHAI = \[[^\]]*'\/quang-cao'/.test(ap));
   k('B2 App.jsx: hỏi bằng layQuangCao đúng một chỗ, dùng PHUT_KIEM của dangKySW.js, không setInterval, không lưu máy', (app.match(/layQuangCao\(/g) || []).length === 1 && /import \{[^}]*PHUT_KIEM[^}]*\} from '\.\/dangKySW\.js'/.test(app) && !/quangCao[^\n]*(localStorage|ghi\w*May)|kh_quangcao/i.test(app) && !/setInterval/.test((app.match(/layQuangCao[\s\S]{0,600}/) || [''])[0]));
   k('B2 chonQuangCao nhận `quangCao: quangCaoPos` từ trạng thái, gọi MỘT lần ở App', /chonQuangCao\(\{[^}]*quangCao: quangCaoPos/.test(app) && (app.match(/chonQuangCao\(/g) || []).length === 1);
+  k('B2/C3 App.jsx: chỉ hỏi lần đầu (daHoiQc) và dải dùng đích riêng `quangCaoTho.dai`', /if \(daHoiQc\.current \|\| !\(coDai\(trang\)/.test(app) && /\.\.\.quangCaoTho, \.\.\.quangCaoTho\.dai/.test(app));
   k('K10 quangCao.js không sắp lại thứ tự POS (không .sort) và không dùng đồng hồ máy (Date.now / new Date)', !/\.sort\(/.test(qcs) && !/Date\.now|new Date/.test(qcs));
 
   let pw = null;
@@ -165,10 +166,18 @@ async function trinhDuyet(pw) {
     await t.locator('.today.fx-a').click();
     await t.waitForFunction(() => location.pathname === '/uudai', null, { timeout: 3000 }).catch(() => {});
     k('D1 bấm banner → đích của dòng 2 (/uudai)', new URL(t.url()).pathname === '/uudai', t.url());
+    k('B2 đổi trang trong App (Trang chủ → Ưu đãi) KHÔNG hỏi lại /quang-cao: vẫn 1 lượt', tr.lan === 1, String(tr.lan));
     await t.goto(GOC_URL + '/menu'); await t.locator('.dai-qc').waitFor();
     await t.waitForFunction(() => document.querySelector('.dai-qc .dai-qc-chu')?.textContent === 'Chỉ chữ dải', null, { timeout: 4000 }).catch(() => {});
     k('D1 Menu: dải = dòng 1 (chữ dải, emoji tách riêng)', (await daiChu(t)) === 'Chỉ chữ dải', String(await daiChu(t)));
     k('D1 không lỗi trang', loi.length === 0, loi.join('|'));
+  });
+  await ca('đích dải ≠ đích banner', { qc: ok([dong({ id: 1, chu_dai: 'Dải đi ưu đãi', dich: 'uudai', uu_tien: 1 }), dong({ id: 2, chu_dai: 'x', tieu_de: 'Banner đi trắc nghiệm', dich: 'tracnghiem', uu_tien: 2 })]) }, async (t) => {
+    await mo(t, '/menu'); await t.locator('.dai-qc').waitFor();
+    await t.waitForFunction(() => document.querySelector('.dai-qc .dai-qc-chu')?.textContent === 'Dải đi ưu đãi', null, { timeout: 4000 }).catch(() => {});
+    await t.locator('.dai-qc').click();
+    await t.waitForFunction(() => location.pathname !== '/menu', null, { timeout: 3000 }).catch(() => {});
+    k('C3 bấm DẢI → đích của dòng dải (/uudai), không phải đích của banner', new URL(t.url()).pathname === '/uudai', t.url());
   });
   await ca('không token', { qc: ok(HAI_DONG), token: true }, async (t, loi, tr) => {
     await mo(t, '/trangchu'); await t.waitForSelector('.today.fx-a'); await t.waitForTimeout(500);
