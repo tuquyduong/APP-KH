@@ -20,12 +20,15 @@ const DS = [
   ['VS-HAN-QUAN-TANG-GHI-HET-HAN', [[TH, "tang ? { nhan: nd('the.thv.tang')", "tang ? { nhan: nd('the.thv.hetHan')"]]],
   ['BV-DON-CHI-THE-CON-BUOC-PHA-CHE', [[D, "if (chiThe && tt !== 'da_huy') {", "if (false && chiThe && tt !== 'da_huy') {"]]],
   ['VS-ANH-LUOT-VAN-CHAY-KHI-GIAM-CHUYEN-DONG', [[CSS, '@media (prefers-reduced-motion:reduce){.thv.chieu .thv-sang{animation:none}', '@media (prefers-reduced-motion:reduce){.thv.chieu .thv-sang{}']]],
+  ['VS-KIM-CUONG-VAN-CHAY-ANH-LUOT-KHI-GIAM-CHUYEN-DONG', [[CSS, '@media (prefers-reduced-motion:reduce){.thv.kc.chieu .thv-sang{animation:none}}', '']]],
+  ['VS-TEN-DAI-DAY-HAN-RA-NGOAI-THE', [[CSS, '.thv-chan > div:first-child{min-width:0}', '']]],
   ['VS-CSS-MAU-NGOAI-DEMO', [[CSS, '.thv.hong{color:#FFFFFF;', '.thv.hong{color:#123456;']]],
 ];
 const TRINH_DUYET = [
   ['BV-CON-EMOJI-VE-O-DONG-THE', [[TD, 'tachBieuTuong(m.ten).chu', 'm.ten']]],
   ['VS-UU-DAI-THE-CHAY-ANH-LUOT', [[U, 'het_han={h.het_han} tang={tang} />', 'het_han={h.het_han} tang={tang} chieu />']]],
   ['BV-CHAO-MUNG-THE-KHONG-CHIEU', [[TD, 'tang={!!hang && hang.chi_cap === true} chieu />', 'tang={!!hang && hang.chi_cap === true} />']]],
+  ['BV-CHAO-MUNG-MAT-HAN-KHI-KHONG-VE-DUOC-THE', [[TD, 'chieu thay={han && <div className="cm-han" {...pos}>{han}</div>} />', 'chieu />']]],
   ['VS-THE-VUA-O-THANH-TOAN-DUNG-CO-NHO', [[T, '<TheHoiVienChung co="vua" hang={hang} />', '<TheHoiVienChung co="nho" hang={hang} />']]],
   ['VS-THE-NHO-KHONG-AN-KHOI-TRINH-DOC', [[C, 'aria-hidden="true"><i className="thv-van" /></span>', '><i className="thv-van" /></span>']]],
 ];
