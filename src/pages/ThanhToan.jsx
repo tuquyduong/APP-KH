@@ -20,6 +20,7 @@ import PinSheet from '../components/PinSheet.jsx';
 import { Ico, IcoVe, Med } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
 import Chu from '../components/Chu.jsx';
+import { TheHoiVienChung } from '../components/TheHoiVien.jsx';
 import { BangTien } from './GioHang.jsx';
 import '../giaoDien/thanh_toan.css';
 
@@ -261,7 +262,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
   );
 }
 
-// Phần riêng của Thanh toán thẻ (Màn 3): thẻ tóm tắt (thẻ vàng thu nhỏ .pc-mini của demo), dòng kích hoạt, MỘT cách trả QR (không đổi được), dòng khoá.
+// Phần riêng của Thanh toán thẻ (Màn 3): thẻ tóm tắt (thẻ VỪA dùng chung .thv.mini.vua, KH-THE-3), dòng kích hoạt, MỘT cách trả QR (không đổi được), dòng khoá.
 // KHÔNG tự tính "hạn tới" (POS cộng nối khi gia hạn — hạn mới hiện ở màn Chào mừng từ hoá đơn POS). Giá = tổng báo giá POS.
 function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
   if (khongBan) return canhBao(nd('the.tt.khongBan'), nd('the.tt.khongBan.p'), 'the.tt.khongBan', 'the.tt.khongBan.p');
@@ -270,7 +271,7 @@ function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
   return (
     <>
       <div className="card the-tom">
-        <div className="points-card pc-mini the-mini" aria-hidden="true" />
+        <TheHoiVienChung co="vua" hang={hang} />
         <div className="the-tom-chu">
           <b {...ndDau(hang ? 'the.tt.ten' : 'the.tt.chung')}>{hang ? nd('the.tt.ten', { hang: hang.ten }) : nd('the.tt.chung')}</b>
           <span {...ndDau('the.tt.thang')}>{nd('the.tt.thang', { so: the.so_thang })}</span>

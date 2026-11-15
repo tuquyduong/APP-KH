@@ -15,7 +15,9 @@ import NhanMa from '../components/NhanMa.jsx';
 import TheMoi from '../components/TheMoi.jsx';
 import GvDem from '../components/GvDem.jsx';
 import { bam } from '../components/bam.js';
-import { Med, MedHang } from '../components/BieuTuong.jsx';
+import { Med } from '../components/BieuTuong.jsx';
+import { TheHoiVienChung } from '../components/TheHoiVien.jsx';
+import { mauThe } from '../theHoiVien.js';
 import { docChuongTrinh, sinhNhatHomNay } from '../chuongTrinh.js';
 import { bayGio } from '../bayGio.js';
 import '../giaoDien/chuong_trinh.css';
@@ -135,15 +137,15 @@ function KhoiChuongTrinh({ dangNhap, moHoSo }) {
   );
 }
 
-// Thẻ hội viên theo tình trạng (bản thiết kế 14.11 "Thẻ ở Ưu đãi theo tình trạng", KH-THE-2 E2): khuôn thẻ vàng dập của demo (.tier-card), MỘT nút → Hạng thành viên.
-// chua (chưa hạng / hết hạn) · co · sap (còn ≤ 7 ngày — cùng soNgayCon + NGAY_NHAC_GIA_HAN của Trang chủ) · tang (hạng chỉ cấp, thẻ xanh l2). Không thanh tiến độ
+// Thẻ hội viên theo tình trạng (bản thiết kế 14.11 "Thẻ ở Ưu đãi theo tình trạng", KH-THE-2 E2; thẻ LỚN dùng chung KH-THE-3): chưa hạng = khuôn thẻ vàng dập của demo (.tier-card); có hạng = thẻ lớn + chip + MỘT nút → Hạng thành viên.
+// chua (chưa hạng / hết hạn) · co · sap (còn ≤ 7 ngày — cùng soNgayCon + NGAY_NHAC_GIA_HAN của Trang chủ, dải đỏ + lời nhắc dưới thẻ) · tang (hạng chỉ cấp, thẻ theo tên hạng). Không thanh tiến độ
 // của bản thiết kế: POS chưa trả ngày bắt đầu gói (lý do a). Tên hạng, %, giá, hạn từ POS; số ngày còn App tự tính theo `bay_gio` POS.
 const POS = ndDau('ud.the.pos'), TU_TINH = ndDau('ud.the.tutinh');
 const ngayThe = (s) => dinhDangNgay(String(s || '').slice(0, 10));
 const NutThe = ({ k, mo, dam }) => <button type="button" className={`ud-nut${dam ? ' dam' : ''}`} onClick={() => mo()} {...ndDau(k)}>{nd(k)}</button>;
 const so = (x) => typeof x === 'number' && Number.isFinite(x);
 
-function TheHang({ hangKhach, moHang }) {
+function TheHang({ hangKhach, moHang, khach }) {
   const { dsHang } = dungGia();
   dungKho(khoGioHoatDong); // "bây giờ" theo giờ POS (về sau /toi) — vẽ lại để đếm ngày đúng
   if (!Array.isArray(dsHang)) return null; // /hang chưa về / lỗi: chưa biết hạng của khách là hạng bán hay quán tặng → chưa vẽ (không chớp sai thẻ)
@@ -168,19 +170,20 @@ function TheHang({ hangKhach, moHang }) {
     );
   }
   const tang = tt.kieu === 'tang', sap = tt.kieu === 'sap';
+  const db = h.phan_tram_nhom_dac_biet;
   return (
-    <div className={`tier-card the-ud${tang ? ' l2' : ''}`}>
-      <div className="ud-hang">
-        <div><Chu k="ud.the.cua" as="div" className="ud-nho" /><div className="ud-ten" {...POS}>{h.ten}</div>{so(pt) && <div className="ud-giam" {...ndDau('ud.the.giam')}>{nd('ud.the.giam', { phanTram: pt })}</div>}</div>
-        {sap ? <span className="ud-do" {...TU_TINH}><span {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span></span> : <MedHang tang={tang} s={52} />}
+    <div className="ud-the">
+      <Chu k="ud.the.cua" as="div" className="ud-nho" />
+      <TheHoiVienChung hang={{ ten: h.ten, phan_tram: pt }} khach={khach} het_han={h.het_han} tang={tang} />
+      <div className={`ud-duoi${mauThe(h.ten) === 'kc' ? ' kc-chip' : ''}`}>
+        <div className="ud-hang">
+          <div className="ud-chip">{so(pt) && <span {...ndDau('ud.the.chipGiam')}>{nd('ud.the.chipGiam', { phanTram: pt })}</span>}{db > 0 && <span {...ndDau('ud.the.chipDb')}>{nd('ud.the.chipDb', { phanTram: db })}</span>}</div>
+          {tang ? <DongTang h={h} /> : !sap && h.het_han && tt.soNgay !== null && <span className="ud-con" {...TU_TINH}><span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span></span>}
+        </div>
+        {sap && <div className="ud-do" {...TU_TINH}><span {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span></div>}
+        {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
+        <NutThe k={tang ? 'ud.the.nutTang' : sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
       </div>
-      {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
-      {tang ? (
-        <div className="ud-day"><DongTang h={h} /><NutThe k="ud.the.nutTang" mo={mo} /></div>
-      ) : <>
-        {!sap && <div className="ud-day">{h.het_han ? <><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <span {...TU_TINH}><span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span></span>}</> : h.het_han === null && <Chu k="ud.the.khongHan" />}</div>}
-        <NutThe k={sap ? 'ud.the.nutGiaHan' : 'ud.the.nutCo'} mo={mo} dam={sap} />
-      </>}
     </div>
   );
 }
@@ -191,7 +194,7 @@ function DongTang({ h }) {
 /** Khách đã đăng nhập: hạng từ /toi; /toi chưa về → chưa vẽ (không chớp "Chưa có thẻ"). */
 function TheHangToi({ moHang }) {
   const toi = dungCua(cuaToi);
-  return toi.dl && toi.dl.khach ? <TheHang hangKhach={toi.dl.khach.hang || null} moHang={moHang} /> : null;
+  return toi.dl && toi.dl.khach ? <TheHang hangKhach={toi.dl.khach.hang || null} moHang={moHang} khach={toi.dl.khach} /> : null;
 }
 
 // Phần riêng của khách đã đăng nhập: điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).

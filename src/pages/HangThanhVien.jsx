@@ -7,7 +7,8 @@ import { hangCoGiam, goiBan, goiMacDinh, tietKiem, nutMua, tietKiemMotTrieu, gia
 import { nd, ndDau, ndHien } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
-import { Ico, MedHang } from '../components/BieuTuong.jsx';
+import { Ico } from '../components/BieuTuong.jsx';
+import { TheHoiVienChung } from '../components/TheHoiVien.jsx';
 import '../giaoDien/the_hang.css';
 
 // Màn "Hạng thành viên" (/uudai/hang?h=<id>) theo bản thiết kế chủ quán duyệt 14.11 (Màn 2, KH-THE-2): So sánh nhanh ở NGAY dưới đầu màn (chạm một cột = chọn hạng),
@@ -47,7 +48,7 @@ function SoSanh({ ds, h, doiHang }) {
           <Chu k="tier.cmp.gia" className="o" />
         </div>
         <div className="ss-cot c-thuong">
-          <span className="o o-dau"><Chu k="tier.cmp.thuong" className="ss-ten" /><Chu k="tier.cmp.khongHang" className="ss-phu" /></span>
+          <span className="o o-dau"><span className="thv-trong" aria-hidden="true" /><Chu k="tier.cmp.thuong" className="ss-ten" /><Chu k="tier.cmp.khongHang" className="ss-phu" /></span>
           <Chu k="tier.cmp.trong" className="o mo" />
           {db && <Chu k="tier.cmp.trong" className="o mo" />}
           <Chu k="tier.cmp.khong" className="o mo" />
@@ -58,7 +59,7 @@ function SoSanh({ ds, h, doiHang }) {
           return (
             <button type="button" key={x.id} role="radio" aria-checked={on} className={`ss-cot ${x.chi_cap === true ? 'l2' : 'l1'}${on ? ' on' : ''}`} onClick={() => doiHang(x.id)}>
               {on && <Chu k="tier.cmp.dang" className="ss-dang" />}
-              <O lop="o-dau"><MedHang tang={x.chi_cap === true} s={22} /><span className="ss-ten" {...POS}>{x.ten}</span></O>
+              <O lop="o-dau"><TheHoiVienChung co="nho" hang={x} /><span className="ss-ten" {...POS}>{x.ten}</span></O>
               <O dau={POS}>{pt(x.phan_tram, 'ss-so')}</O>
               {db && <O dau={POS}>{pt(x.phan_tram_nhom_dac_biet, 'ss-so nho')}</O>}
               {loi(x)}

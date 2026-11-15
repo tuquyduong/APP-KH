@@ -29,6 +29,8 @@
 button.ss-cot{ border:none; cursor:pointer; font:inherit; font-size:12.5px; min-height:44px; text-align:center; }
 .ss-cot.on{ background:linear-gradient(180deg,#FFF6E2 0%,#FFF1DC 100%); box-shadow:0 0 0 2px #C38C40, 0 6px 16px rgba(185,143,60,.22); }
 .ss-dang{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#C38C40; color:#FFFFFF; font-size:9.5px; font-weight:800; letter-spacing:.3px; padding:3px 8px; border-radius:10px; white-space:nowrap; }
+.ss-cot .thv.mini{ width:44px; border-radius:6px; }
+.ss-cot .thv-trong{ display:block; width:44px; height:28px; border-radius:6px; border:1.5px dashed var(--line); box-sizing:border-box; }
 .ss-ten{ font-size:13px; font-weight:800; } .c-thuong .ss-ten{ color:var(--muted); } .ss-cot.l1 .ss-ten{ color:#8A5A12; } .ss-cot.l2 .ss-ten{ color:#3D5A8C; }
 .ss-phu{ font-size:10.5px; color:var(--muted); font-weight:500; }
 .ss-so{ font-size:22px; font-weight:800; letter-spacing:-.3px; } .ss-so.nho{ font-size:17px; }
@@ -37,44 +39,55 @@ button.ss-cot{ border:none; cursor:pointer; font:inherit; font-size:12.5px; min-
 .ss-gia{ font-size:12.5px; font-weight:800; }
 .ss .mo{ color:var(--muted); font-weight:700; }
 
-/* Thẻ hội viên ở Ưu đãi (E2) — dùng nền thẻ vàng dập + hoa văn của demo (.tier-card ở demo_1.css); hạng chỉ cấp = l2 của demo. */
+/* Thẻ hội viên ở Ưu đãi (E2) — chưa có hạng: nền thẻ vàng dập + hoa văn của demo (.tier-card ở demo_1.css), một nút. */
 #rewards .the-ud{ padding:16px 18px; border-radius:20px; margin-bottom:16px; }
-#rewards .the-ud.l2{ background:linear-gradient(135deg,#2C3E5E,#5B7FB8) !important; color:#fff !important; box-shadow:0 6px 18px rgba(44,62,94,.28); }
-#rewards .the-ud.l2::before{ display:none; }
 .the-ud .ud-hang{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
 .the-ud .ud-nho{ font-size:12px; font-weight:600; opacity:.8; }
 .the-ud .ud-ten{ font-size:26px; font-weight:800; letter-spacing:-.3px; line-height:1.15; }
-.the-ud .ud-giam{ font-size:13px; font-weight:600; margin-top:2px; }
 .the-ud .ud-nhan{ font-size:11px; font-weight:700; color:#8A5A12; background:rgba(255,255,255,.55); padding:4px 10px; border-radius:20px; white-space:nowrap; }
-.the-ud .ud-do{ font-size:12px; font-weight:800; color:#FFFFFF; background:#AB3F37; padding:5px 10px; border-radius:20px; white-space:nowrap; }
 .the-ud .ud-chip{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
 .the-ud .ud-chip span{ font-size:12px; font-weight:600; background:rgba(255,255,255,.55); padding:5px 10px; border-radius:20px; }
 .the-ud .ud-chip span:first-child{ font-weight:700; }
 .the-ud .ud-day{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px 10px; margin-top:12px; font-size:12px; font-weight:600; }
 .the-ud .ud-gia{ font-size:12px; font-weight:600; } .the-ud .ud-gia b{ display:block; font-size:18px; font-weight:800; }
 .the-ud .ud-gia b span{ font-size:12px; font-weight:600; }
-.the-ud .ud-loi{ margin-top:12px; font-size:12.5px; font-weight:600; }
 .the-ud .ud-nut{ display:flex; align-items:center; justify-content:center; min-height:44px; padding:0 14px; border:none; border-radius:12px; font:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
   background:rgba(255,255,255,.55); color:#4A2410; text-align:center; position:relative; }
 .the-ud .ud-day .ud-nut{ flex:none; }
-.the-ud > .ud-nut{ width:100%; margin-top:12px; }
 .the-ud .ud-nut.dam{ background:#7A2647; color:#FFFFFF; box-shadow:0 4px 12px rgba(122,38,71,.25); }
-.the-ud.l2 .ud-nut{ background:rgba(255,255,255,.18); color:#FFFFFF; }
 .the-ud .hang-logo{ display:flex; align-items:center; gap:8px; }
 .the-ud .tqd-logo{ width:30px; height:30px; border-radius:50%; }
 .the-ud .brand{ font-size:12.5px; font-weight:800; letter-spacing:.6px; color:#4A2410; }
 .the-ud .brand small{ display:block; font-size:9.5px; font-weight:500; letter-spacing:.3px; color:rgba(74,36,16,.7); }
 .the-ud .ud-tren{ margin-top:14px; }
 
+/* Thẻ hội viên ở Ưu đãi — CÓ hạng (KH-THE-3): thẻ LỚN dùng chung (TheHoiVien.jsx) + chip mức giảm / còn N ngày / dải đỏ / lời nhắc / nút viền ngay dưới thẻ. */
+#rewards .ud-the{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.ud-the .ud-nho{ font-size:12px; font-weight:600; color:var(--muted); }
+.ud-the .thv{ cursor:default; }
+.ud-duoi{ display:flex; flex-direction:column; gap:10px; margin-top:-2px; }
+.ud-duoi .ud-hang{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.ud-duoi .ud-chip{ display:flex; gap:6px; flex-wrap:wrap; }
+.ud-duoi .ud-chip span{ font-size:12px; font-weight:700; padding:5px 10px; border-radius:20px; background:#FFF1DC; color:#8A5A12; }
+.ud-duoi.kc-chip .ud-chip span{ background:#FFFFFF; color:#2C3E5E; box-shadow:inset 0 0 0 1px #5B7FB8; }
+.ud-duoi .ud-hang > span{ font-size:12.5px; font-weight:700; color:var(--muted); }
+.ud-duoi .ud-do{ align-self:flex-start; font-size:12px; font-weight:800; color:#FFFFFF; background:#AB3F37; padding:5px 10px; border-radius:20px; white-space:nowrap; }
+.ud-duoi .ud-loi{ font-size:12.5px; font-weight:600; color:var(--ink); line-height:1.45; }
+.ud-duoi .ud-nut{ display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; padding:0 14px; border-radius:12px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; background:#FFFFFF; border:1.5px solid #E7CFA5; color:#8A5A12; }
+.ud-duoi.kc-chip .ud-nut{ border-color:#5B7FB8; color:#2C3E5E; }
+.ud-duoi .ud-nut.dam{ background:#7A2647; border-color:#7A2647; color:#FFFFFF; box-shadow:0 4px 12px rgba(122,38,71,.25); }
+
 /* Chào mừng hội viên (D1) — Theo dõi đơn chỉ thẻ đã trả. */
 .cm-dau{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:12px; text-align:center; }
 .cm-dau h2{ margin:0; font-size:24px; font-weight:800; color:#7A2647; }
 .cm-dau p{ margin:0; font-size:14px; color:var(--muted); line-height:1.5; max-width:300px; }
-#tracking .cm-the{ margin-top:16px; }
-.cm-the .cm-ten{ font-size:26px; font-weight:800; margin-top:16px; }
-.cm-the .cm-duoi{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; margin-top:10px; font-size:12.5px; font-weight:600; }
+.cm-dau .thv{ max-width:340px; transform:rotate(-2.2deg); margin:4px 0 14px; }
+.cm-han{ font-size:12.5px; font-weight:600; color:var(--muted); }
+.cm-don{ font-size:13px; font-weight:600; color:var(--ink); background:var(--white); border-radius:20px; padding:6px 14px; box-shadow:0 2px 10px rgba(142,27,76,.12); }
 #tracking .cm-nut{ justify-content:center; }
 #tracking .cm-gio{ width:100%; margin-top:10px; text-align:center; }
-.cm-the .tqd-logo{ width:30px; height:30px; border-radius:50%; }
-.cm-the .card-top, .cm-the .hang-logo{ margin:0; }
 .cm-nho{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:8px; }
+
+/* Dòng thẻ ở Chi tiết đơn (KH-THE-3): thẻ nhỏ 72 px đúng mẫu thay ô hộp. */
+.the-dong{ align-items:center; }
+.the-dong .thv.mini{ width:72px; border-radius:9px; }
