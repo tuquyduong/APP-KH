@@ -23,4 +23,4 @@ SAU VÁ (HEAD bac5c5f):
   KHONG_TRINH_DUYET=1 → 7 đạt · 0 hỏng
   có Chromium → 27 đạt · 0 hỏng
 
-SỐ CA thu_KHSUA1: 7
+SỐ CA cong_cu/thu_KHSUA1.js: 7
