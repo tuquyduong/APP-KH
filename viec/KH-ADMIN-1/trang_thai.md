@@ -145,3 +145,7 @@ Không mở vòng 3 (bản soát vòng 2 ĐẠT về code / bảo mật; 4 lỗi
 | Người gác chặn: B-PHANTICH ×11 (lệnh script phải đứng một mình), B-BIMAT-CHU ×3 (bài thử chứa chữ khoá bí mật phải commit trước khi chạy; ghi trang_thai bằng Edit), GIT-LENH (git worktree → dùng git archive), GIT-ADD (thư mục → từng tệp), SED-I (→ Edit) | **BỎ** | luật người gác đúng như skill dặn; làm lại theo hướng dẫn. Không cần luật mới |
 | Lượt `npm test` có trình duyệt (~10 phút) chạy trùng lúc sửa bài → KHKHOP1 đỏ do chạy TRƯỚC khi sửa | **BỎ** | chạy lại sau khi sửa: xanh |
 Dọn: không có lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm mới làm thay ở việc này.
+
+Sau sửa vòng 2: `--day-du` 54 đạt · 0 hỏng (thu_KHADMIN1.js 172/0 có Chromium).
+
+HEAD ĐÃ KIỂM: 41f062e
