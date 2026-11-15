@@ -24,3 +24,10 @@ Chào mừng (thẻ lớn, ánh lướt), Thanh toán thẻ (thẻ vừa), So s�
 Sau khi vá (cùng bài, cùng lệnh): có Chromium 97 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 21 đạt · 0 hỏng.
 
 SỐ CA cong_cu/thu_KHTHE3.js: 21
+
+Bài cũ sửa đúng ca (mỗi bài thêm 1 ca nguồn "TheHoiVienChung" — ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1; số ca đếm khi chạy trên code đã vá):
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHND3c.js: 43
+SỐ CA cong_cu/thu_KHNHANH1.js: 86
+SỐ CA cong_cu/thu_KHTHE2.js: 46
+SỐ CA cong_cu/thu_KHUI3d.js: 36
