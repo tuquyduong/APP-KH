@@ -149,3 +149,64 @@ Dọn: không có lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép ki�
 Sau sửa vòng 2: `--day-du` 54 đạt · 0 hỏng (thu_KHADMIN1.js 172/0 có Chromium).
 
 HEAD ĐÃ KIỂM: 41f062e
+
+## Cổng (G7)
+- `node tu_chay/cong.js tinh . 3d35772^ HEAD viec/KH-ADMIN-1` (trước bước 11): chỉ `✗ [A19]` (chưa ghi HEAD ĐÃ KIỂM — bình thường lúc đó).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 3d35772^ HEAD viec/KH-ADMIN-1` ở HEAD 99992f8: **✓ CỔNG CHẠY ĐẠT**
+  (· CẢNH BÁO A16: thu_KHADMIN1.js trên gốc in 27 ca ≠ 85 ca ở head — bài dừng sớm trên gốc: phần D trả về sớm vì gốc chưa có `hopLe`).
+- Lượt chạy KHÔNG đặt KHONG_TRINH_DUYET=1 (máy có Chromium) đỏ đúng A16 × 4 vì đếm cả ca trình duyệt — đúng như CLAUDE.md §9: SỐ CA ghi theo số GitHub đếm.
+
+## Nghiệm thu — đếm từng mục
+| Mục | Bằng chứng |
+|---|---|
+| A1 | ca "A1 … sha256 836eb6ba2554e82d" + "A1 bản chép bằng TỪNG BYTE" (thu_KHADMIN1.js phần 1) |
+| A2 | ca A2 × 5: mọi cửa khoNoiDung.js ∈ khối máy đọc, đủ cửa, mã lỗi ∈ ma_loi, GIOI_HAN = gioi_han; Chromium "kho giả: App KHÔNG gọi cửa ngoài hợp đồng" |
+| B1 | ca B1 × 7 (địa chỉ kho 2 ca, fetch chỉ api.js, goiKho không đọc token khách, vé không sang /api/kh, token không sang /api/nd); đột biến BV-GUI-TOKEN-KHACH-SANG-ND, VS-GUI-VE-SANG-API-KH |
+| B2 | ca B2 × 12 (bản máy trước vẽ đầu, ?co=, khong_doi, bản mới lưu máy, mất mạng / lỗi giữ bản, hỏng → mặc định, không chu kỳ, PHUT_KIEM, mở 1 lần, 10 phút không / 31 phút một lần, luuMay không xoá); Chromium "khách mới thấy chữ bản đang chạy", "lần mở sau có ngay ở lần vẽ đầu" |
+| B3 | ca B3 × 5 (9 dạng ảnh lạ → macDinh, /anh/ nhận, ảnh kho ghép gốc, danh sách ghép + giữ danh tính, trường ảnh lạ); Chromium ảnh lạ trong Xem lại không vẽ; VS-NHAN-ANH-HTTP |
+| B4 | ca B4 phần 1 + Chromium "chữ chứa <img onerror> hiện như CHỮ, không chạy" |
+| C1 | ca C1 × 9 phần 1 + Chromium (/admin không thanh tab, noindex, /kiemkhop đóng, /admin/kiemkhop cần vé, /admin/lichsu quay về đúng chỗ, ?tiep= ra ngoài × 3); bài cũ KHLINK1, KHKHOP1, KHPWA1, UI3b; BV-KIEMKHOP-CONG-KHAI |
+| C2 | ca C2 × 9 phần 1 (lỗi nguyên văn, vé chỉ sessionStorage, không mật khẩu, 403 không thoát, 401 thoát) + Chromium (401 → /admin?tiep=/trangchu → đăng nhập lại về đúng chỗ, nháp còn; thu quyền → 403 không thoát); VS-VE-VAO-LOCALSTORAGE, BV-401-KHONG-THOAT |
+| C3 | Chromium "bảng quản trị: tên, bản, số nháp, 5 nút", "thiếu nd_xuat_nhap ẩn nút", "Bật Chế độ sửa → Trang chủ", "/admin/kiemkhop là trang Kiểm khớp"; phần 1 "Thoát quản trị" |
+| D1 | Chromium "1 thay đổi chưa cập nhật; nút sáng", "thiếu nd_cap_nhat → mờ", "tải lại → còn", "✕ tắt" |
+| D2 | Chromium "đúng một bút", "bút khoá 🔒", "🔒 giá món → POS › Sản phẩm", "chạm thẻ món vẫn mở món", không lỗi removeChild; phần 1 portal, không chèn DOM; BV-BUT-MO-KHI-CHAM-PHAN-TU, BV-KHOA-KHONG-CHI-DUONG |
+| D3 | phần 1 chip / khoảng trắng / trùng / hopLe dùng chung / 6 loại; Chromium 6 loại bảng, chip thiếu / thừa, Lưu giữ dấu cách, trùng danh sách, khoaCauTruc chỉ đọc, ảnh 2:1 ≤ 500 KB multipart "anh", Bỏ thay đổi DELETE, người khác vừa lưu, chính mình lưu không báo, nháp sai dạng không vỡ; VS-CAT-KHOANG-TRANG, BV-BO-KIEM-CHIP, BV-NHAP-SAI-DANG-VO-BANG, VS-NGUOI-SO-TEN-HIEN |
+| D4 | phần 1 lớp nháp + khách có cờ giả không bật; Chromium gõ → trang đổi, đóng chưa Lưu về bản chạy, khách KHÔNG thấy nháp, tắt khi nháp đang tải không bật lại; BV-KHACH-THAY-NHAP, BV-BAT-LAI-NHAP-SAU-TAT |
+| D5 | Chromium "Chữ của màn này = MỌI mục cùng man (gồm hien.*)" |
+| D6 | Chromium "Đi tới màn liệt kê màn khách", "Món → /mon/<món đầu>", "Tài khoản → /dangnhap?tiep=%2Ftaikhoan" |
+| D7 | phần 1 chặn 6 lệnh ghi (4xx CHE_DO_SUA), lời báo, loaiLoi = chua_tao, GET / báo giá / đăng nhập vẫn gửi, tắt → chạy lại, danh sách nút khoá ĐỦ, hx.xoa chỉ trong hỏi lại, cờ chặn bật đồng bộ; Chromium báo giá gửi, đặt đơn không gửi POST /don, không kẹt "chưa rõ", Đăng xuất khoá; BV-BO-CHAN-GHI-KHI-SUA, VS-CHAN-CA-BAO-GIA, VS-CHAN-GHI-STATUS-0, BV-DANG-XUAT-KHONG-KHOA, BV-XOA-HANG-XE-KHONG-KHOA, BV-HX-XOA-KHOA-CA-NUT-MO |
+| D8 | Chromium Xem lại cũ ↔ mới, 409 không gửi lại (đúng 1 lần), cập nhật lại → bản mới áp ngay + lưu máy, Tới chỗ này, Bỏ; VS-409-TU-GUI-LAI |
+| E1 | Chromium "danh sách mọi bản: số, lúc, người, đang chạy, từ bản X" |
+| E2 | Chromium Xem, So với bản đang chạy, Tải về (tệp JSON đúng bản), Quay lại hỏi 1 lần, 409 không gửi lại, quay lại → bản mới từ bản 1 |
+| E3 | Chromium Xuất → tệp, Nhập khi kho có dữ liệu → 409 nguyên lời, > 50 MB chặn trước, Nhập vào kho trống, thiếu quyền ẩn nút |
+| F1 | ca F1 × 4 (mặc định, đổi tên vẫn không vào Sắp tới, đối chứng Quốc khánh, không so tên); BV-SAP-TOI-THEO-TEN |
+| F2 | ca F2 × 3 (hopLe, khách dùng macDinh, danh mục vẫn hợp lệ) + Chromium bảng sửa trùng → Lưu mờ; BV-BO-CHAN-TRUNG-DANH-SACH |
+| G1 | ca G1 + K10 xanh (tệp mới 0, tệp cũ không tăng) |
+| G2 | K9 (màu chỉ từ demo) + K6 (không thư viện mới) xanh; cắt / nén ảnh bằng canvas |
+| G3 | thu_KHADMIN1.js: 85/0 (KHONG_TRINH_DUYET=1), 172/0 (Chromium) |
+| G4 | dot_bien_tay.js 25 đột biến, `--trinh-duyet` 25/25 BẮT ĐƯỢC |
+| G5 | /ra-soat vòng 1 (KHÔNG ĐẠT → sửa) + vòng 2 (ĐẠT code / bảo mật, 4 lỗi nhẹ đã sửa) — mục BẢO MẬT chép ở trên; CORS ghi Phát hiện |
+| G6 | 14 ảnh 390 trong so_anh/ + doi_chieu_demo.md; màn khách trước ↔ sau: Trang chủ / Menu / Ưu đãi 0 điểm khác (ảnh nền banner lệch cả gốc ↔ gốc) |
+| G7 | npm test 52/0 · --day-du 54/0 · cổng tinh (A19 lúc đó) · cổng chay ĐẠT · K10 không tăng · HEAD ĐÃ KIỂM |
+| G8 | chủ quán thử tay SAU gộp (trên app-kh.pages.dev/admin — CORS) — 5 thao tác ở báo cáo dưới |
+30/30 mục có bằng chứng của máy (G8 là thử tay sau gộp).
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-ADMIN-1 — khu quản trị /admin (đăng nhập tài khoản POS), Chế độ sửa trên App (✎ / 🔒, bảng sửa tự sinh, Lưu → Cập nhật toàn bộ), phiên bản, Xuất / Nhập; khách nhận bản nội dung mới; F1, F2.
+- **ĐÃ SỬA:** `thiet_ke/HOP_DONG_API_ND.md` (chép nguyên văn v1) · `src/noiDung/khoNoiDung.js` (MỚI — một tệp nói chuyện với kho) · `src/noiDung/quanTri.js` (MỚI — chữ khu quản trị) ·
+  `src/noiDung/nd.js` (hopLe xuất, anhDung, chặn dòng trùng, lớp nháp, ghép ảnh kho) · `src/api.js` (goiKho; chặn ghi trong goi) · `src/duongDan.js` (/admin*, bỏ /kiemkhop, DS_MAN) ·
+  `src/main.jsx` (nạp bản máy trước vẽ, dựng /admin* riêng) · `src/App.jsx` (+1 dòng gắn CheDoSua) · `src/kehoach.js` (F1) · `src/components/CheDoSua.jsx`, `CheDoSuaBang.jsx`,
+  `src/pages/QuanTri.jsx`, `src/giaoDien/che_do_sua.css` (MỚI). App +~1.080 dòng (ngân sách ~1.100).
+- **BÀI THỬ:** MỚI `cong_cu/thu_KHADMIN1.js` 85/0 (không trình duyệt) · 172/0 (Chromium); bài cũ đổi KHLINK1 97/0, KHKHOP1 49/0 (86/0 Chromium), KHPWA1 53/0, UI3b 58/0 (175/0 Chromium);
+  đỏ trên gốc — `bang_chung_do.txt`; đột biến tay 25/25; `--day-du` 54/0; cổng chay ĐẠT.
+- **ĐÃ RÀ K4:** mọi `fetch` (chỉ api.js); mọi lệnh ghi /api/kh (15 hàm đều qua goi); mọi nơi đọc ảnh (ndAnh / ndDs, xem trước quản trị qua anhDung); mọi chỗ /kiemkhop, /admin (còn public/sw.js:17 — Phát hiện);
+  mọi nơi đọc / ghi vé (khoNoiDung.js); mọi khoá nút xoá / đăng xuất (ca "ĐỦ").
+- **CHƯA KIỂM:** kho /api/nd THẬT của POS (CORS chỉ tuquyduong.com + app-kh.pages.dev → bản xem thử nhánh không gọi được; máy không vào được POS) — dạng `nguoi` thật, 401 / 403 / 409 thật, ảnh thật;
+  trình duyệt Zalo; màn 360 / 430 của khu quản trị (chỉ chụp 390); nén ảnh trên điện thoại thật (ảnh máy ảnh lớn, HEIC); máy không thấy POS › Phân quyền.
+  **Chủ quán thử tay SAU khi gộp (app-kh.pages.dev/admin):** (1) đăng nhập tài khoản POS; (2) Bật Chế độ sửa, chạm ✎ câu banner Trang chủ → sửa → Lưu → Cập nhật toàn bộ;
+  (3) điện thoại khác đóng hẳn App, mở lại thấy câu mới; (4) /admin › Lịch sử phiên bản → quay lại bản trước; (5) POS › Phân quyền bỏ quyền "Sửa nội dung App" của một tài khoản → tài khoản đó Lưu bị từ chối ngay.
+- **GIT:** nhánh `viec/KH-ADMIN-1`, mốc `3d35772`; đã push. Không merge, không PR.
+- **BÀI HỌC:** xem mục "Bài học (bước 11)" — KHOÁ đã làm: danh sách nút khoá ĐỦ, kho giả `nguoi` object, nháp sai dạng, tranh chấp tắt sửa; đề xuất ngoài Phạm vi: K2 cho /api/nd,
+  KHUON_LOI "một khoá nút một việc", "trường chưa ghi dạng thì không vẽ thẳng", hỏi POS ghi dạng `nguoi` trong hợp đồng v2.
+
+HEAD ĐÃ KIỂM: 99992f8
