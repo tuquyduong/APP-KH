@@ -177,8 +177,8 @@ function TheHang({ hangKhach, moHang, khach }) {
       <TheHoiVienChung hang={{ ten: h.ten, phan_tram: pt }} khach={khach} het_han={h.het_han} tang={tang} />
       <div className={`ud-duoi${mauThe(h.ten) === 'kc' ? ' kc-chip' : ''}`}>
         <div className="ud-hang">
-          <div className="ud-chip">{so(pt) && <span {...ndDau('ud.the.chipGiam')}>{nd('ud.the.chipGiam', { phanTram: pt })}</span>}{db > 0 && <span {...ndDau('ud.the.chipDb')}>{nd('ud.the.chipDb', { phanTram: db })}</span>}</div>
-          {tang ? <DongTang h={h} /> : !sap && h.het_han && tt.soNgay !== null && <span className="ud-con" {...TU_TINH}><span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span></span>}
+          <div className="ud-chip">{so(pt) && <span {...ndDau('ud.the.giam')}>{nd('ud.the.giam', { phanTram: pt })}</span>}{db > 0 && <span {...ndDau('ud.the.chipDb')}>{nd('ud.the.chipDb', { phanTram: db })}</span>}</div>
+          {tang ? <DongTang h={h} /> : !sap && (h.het_han ? <span className="ud-con"><span {...ndDau('ud.the.hetHan')}>{nd('ud.the.hetHan', { ngay: ngayThe(h.het_han) })}</span>{tt.soNgay !== null && <> · <span {...TU_TINH}><span {...ndDau('ud.the.con')}>{nd('ud.the.con', { so: tt.soNgay })}</span></span></>}</span> : h.het_han === null && <Chu k="ud.the.khongHan" />)}
         </div>
         {sap && <div className="ud-do" {...TU_TINH}><span {...ndDau(tt.soNgay === 0 ? 'ud.the.homNay' : 'ud.the.nhan')}>{tt.soNgay === 0 ? nd('ud.the.homNay') : nd('ud.the.nhan', { so: tt.soNgay })}</span></div>}
         {sap && <div className="ud-loi" {...ndDau('ud.the.nhac')}>{nd('ud.the.nhac', { ngay: ngayThe(h.het_han).slice(0, 5) })}</div>}
