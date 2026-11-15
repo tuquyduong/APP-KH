@@ -69,3 +69,12 @@ Ngân sách: `quangCao.js` ~+30 dòng ròng, `App.jsx` +20, `api.js` +2, `canTuP
 - K4: một lời gọi `chonQuangCao` (`App.jsx`), không còn đường sắp `uu_tien` cũ. K5: không thấy dòng hợp lệ bị bỏ oan trừ `chu_dai` rỗng. §6: `quangCao.js` không dùng `Date`; `Date.now` ở `App.jsx` chỉ đo thời gian ẩn.
 - NGHIỆM THU 17/21 có bằng chứng lúc soát; thiếu D4 (chữ phiếu), D5 (đã bổ sung), D6 (chủ quán thử tay), C4 tĩnh (đã bổ sung).
 - Phạm vi: mọi tệp đổi nằm trong Phạm vi. K10 không tăng; không thêm khoá `/admin` (đúng).
+
+## Cổng (sau vòng sửa 1)
+- `--day-du`: 54 đạt · 0 hỏng (dựng được app). `thu_KHQC1`: 43 ca (KHONG_TRINH_DUYET=1), 56 ca có Chromium; đột biến 9/9 đỏ.
+- `node tu_chay/cong.js chay . 0a5f194^ HEAD viec/KH-QC-1` (KHONG_TRINH_DUYET=1):
+✓ CỔNG CHẠY ĐẠT
+  (kèm 2 CẢNH BÁO A16 không chặn: `thu_KHQC1` trên gốc in 1 ca vì bài văng sớm; `thu_KHTHE1` gốc 82 ≠ 85 ca vì bài thêm ca A1 — đã ghi `SỐ CA` đúng số ở head.)
+- Kiểm lại vòng 2 của `/ra-soat`: không chạy (các lỗi vòng 1 đã sửa, đều nhẹ / bổ sung bằng chứng).
+
+HEAD ĐÃ KIỂM: c86904a
