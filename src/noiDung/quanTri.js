@@ -78,6 +78,7 @@ const CHU = {
   an: 'Ẩn',
   soDong: '{so} dòng',
   trong: '(trống)',
+  saiLuat: '(không hợp lệ — khách thấy chữ mặc định)',
   // Xem lại
   xemLaiTieu: '{so} thay đổi chưa cập nhật',
   khongThayDoi: 'Không có thay đổi',

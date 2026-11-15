@@ -140,6 +140,7 @@ export default function CheDoSua({ di, ds }) {
   };
   // tập màn chụp LÚC BẤM (bảng nổi che màn → lớp bút tính lại thành rỗng)
   const moChuMan = () => datBang({ loai: 'chuMan', man: [...new Set(buts.map((b) => (MUC.get(b.khoa) || {}).man).filter(Boolean))] });
+  const moXemLai = async () => { await taiNhap(); datBang({ loai: 'xemLai' }); }; // đọc lại nháp: người khác có thể vừa lưu
   const chamBut = (b) => (b.khoaBoi ? datTb(loiKhoa(MUC.get(b.khoa))) : moSua(b.khoa));
   const toiCho = (khoa) => {
     const el = phone.querySelector(`[data-nd="${CSS.escape(khoa)}"]`);
@@ -231,8 +232,8 @@ export default function CheDoSua({ di, ds }) {
         <span className="cb-t">{qt('dangSua')}<small>{n ? qt('soNhap', { so: n }) : qt('banChay', { so: soBan })}</small></span>
         <button type="button" className="mn" onClick={() => datBang({ loai: 'diToi' })}>{qt('diToi')}</button>
         <button type="button" className="mn" onClick={moChuMan}>{qt('chuMan')}</button>
-        <button type="button" onClick={() => datBang({ loai: 'xemLai' })}>{qt('xemLai')}</button>
-        <button type="button" className="pri" disabled={!n || !coQuyen('nd_cap_nhat')} onClick={() => datBang({ loai: 'xemLai' })}>{qt('capNhatN', { so: n })}</button>
+        <button type="button" onClick={moXemLai}>{qt('xemLai')}</button>
+        <button type="button" className="pri" disabled={!n || !coQuyen('nd_cap_nhat')} onClick={moXemLai}>{qt('capNhatN', { so: n })}</button>
         <button type="button" className="x" aria-label={qt('tatSua')} onClick={tat}>✕</button>
       </div>
       {noi}

@@ -17,6 +17,7 @@ const cat = (s) => { const t = String(s); return t.length > 70 ? t.slice(0, 70) 
 /** Giá trị để xem nhanh (Xem lại, Lịch sử) — luôn là CHỮ / ảnh, không HTML. */
 export function hienGiaTri(m, v) {
   if (!m) return <span>{cat(JSON.stringify(v))}</span>;
+  if (!hopLe(m, v)) return <span>{qt('saiLuat')}</span>; // nháp / phiên bản sai luật: khách dùng macDinh — không vẽ giá trị thô
   if (m.loai === 'anh') return anhDung(v) ? <img className="cs-mini" src={duongAnh(v)} alt="" /> : <span>{qt('trong')}</span>;
   if (m.loai === 'battat') return <span>{v === false ? qt('an') : qt('hien')}</span>;
   if (m.loai === 'nut') return <span>{cat(v && v.chu)} → {((DICH.find((d) => d[0] === (v && v.dich)) || [])[1]) || ''}</span>;
