@@ -2,7 +2,7 @@
 // (bản thiết kế chủ quán duyệt 14.11). Khuôn mục và luật: src/noiDung/nd.js (CLAUDE.md §11). Tên hạng, %, gói, giá, quyền lợi, hạn → mục KHOÁ `pos`;
 // số tiết kiệm → `tutinh`. Không import tệp nào nhập src/dinhDang.js (vòng nạp — bài thử thu_KHND3a canh).
 
-const M = 'Hạng thành viên', T = 'Thanh toán thẻ', C = 'Chào mừng hội viên';
+const M = 'Hạng thành viên', T = 'Thanh toán thẻ', C = 'Chào mừng hội viên', V = 'Thẻ hội viên (khối thẻ dùng chung)', D = 'Theo dõi đơn chỉ thẻ';
 const chu = (khoa, ten, macDinh, them = {}, man = M) => ({ khoa, man, ten, loai: 'chu', macDinh, ...them });
 const hien = (khoa, ten, man = M) => ({ khoa, man, ten: `Hiện khối: ${ten}`, loai: 'battat', macDinh: true });
 const khoa = (k, ten, khoaBoi, chiDuong, man = M) => ({ khoa: k, man, ten, khoaBoi, chiDuong });
@@ -83,4 +83,22 @@ export const THE_HANG = [
   chu('the.cm.nho', 'Dòng nhỏ dưới nút (khi giỏ còn đồ uống)', 'Đồ uống bạn đã chọn vẫn còn trong giỏ', {}, C),
   hien('hien.the.cm', 'màn chúc mừng (tắt → chỉ còn hoá đơn POS, không các bước pha chế)', C),
   khoa('the.cm.pos', 'Tên hạng, %, hạn mới của thẻ, số đơn, tổng', 'pos', 'POS › Cài đặt › Hạng thành viên', C),
+
+  // Khối thẻ dùng chung (KH-THE-3): Ưu đãi, Chào mừng (cỡ lớn); Thanh toán thẻ, So sánh nhanh, Chi tiết đơn (cỡ nhỏ — không chữ). Tên quán / "Thẻ hội viên" / logo: mục `home.the.*`, `home.logo`.
+  chu('the.thv.hoiVien', 'Thẻ: nhãn trên tên khách', 'Hội viên', {}, V),
+  chu('the.thv.giam', 'Thẻ: mức giảm góc phải', '−{phanTram}%', { bien: ['phanTram'] }, V),
+  chu('the.thv.hetHan', 'Thẻ: nhãn ngày hết hạn', 'Hết hạn', {}, V),
+  chu('the.thv.tang', 'Thẻ: nhãn hạng quán tặng', 'Quán tặng', {}, V),
+  chu('the.thv.khongHan', 'Thẻ: không thời hạn', 'Không thời hạn', {}, V),
+  chu('the.thv.aria', 'Thẻ: câu đọc cho người dùng đọc màn hình (đầu câu)', 'Thẻ hội viên {hang}', { bien: ['hang'] }, V),
+  khoa('the.thv.pos', 'Tên hạng, mức giảm, ngày hết hạn trên thẻ', 'pos', 'POS › Cài đặt › Hạng thành viên', V),
+  khoa('the.thv.khach', 'Tên khách + 4 số cuối số điện thoại trên thẻ', 'khach', 'Hồ sơ của khách (Tài khoản › Hồ sơ)', V),
+
+  // Theo dõi đơn chỉ thẻ: hai bước + dòng thẻ ở Chi tiết đơn
+  chu('the.td.kichHoat', 'Các bước đơn thẻ: bước 2', 'Thẻ kích hoạt', {}, D),
+  chu('the.td.kichHoat.s', 'Các bước đơn thẻ: bước 2, dòng nhỏ (chưa biết mức giảm)', 'Ngay khi tiền về, không cần ra quầy.', {}, D),
+  chu('the.td.kichHoat.sPhanTram', 'Các bước đơn thẻ: bước 2, dòng nhỏ (biết mức giảm)', 'Ngay khi tiền về, không cần ra quầy. Đơn đồ uống tiếp theo được giảm {phanTram}%.', { bien: ['phanTram'] }, D),
+  chu('the.td.dong', 'Chi tiết đơn: tên dòng thẻ', 'Thẻ hội viên {hang}', { bien: ['hang'] }, D),
+  chu('the.td.dongThang', 'Chi tiết đơn: dòng phụ dòng thẻ', '{so} tháng', { bien: ['so'] }, D),
+  khoa('the.td.pos', 'Tên hạng, số tháng, giá thẻ trong Chi tiết đơn', 'pos', 'POS › Cài đặt › Hạng thành viên', D),
 ];

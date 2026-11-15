@@ -1,0 +1,62 @@
+/* ===== THẺ HỘI VIÊN (mẫu đề xuất — một khối, ba cỡ) ===== */
+.thv{position:relative;width:100%;aspect-ratio:85.6/54;border-radius:16px;overflow:hidden;isolation:isolate;container-type:inline-size;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;line-height:1.2;cursor:pointer}
+.thv-than{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:20px 22px 18px;padding:6cqw 6.4cqw 5.6cqw;z-index:2}
+.thv-van{position:absolute;inset:0;z-index:0;pointer-events:none}
+.thv::after{content:"";position:absolute;right:-7%;bottom:-17%;width:50%;aspect-ratio:1;background:url(/anh/the-vang-hoa-van.webp) center/contain no-repeat;opacity:.2;z-index:1;pointer-events:none}
+.thv-sang{position:absolute;top:-30%;bottom:-30%;left:-40%;width:60%;z-index:1;pointer-events:none;transform:translateX(-120%) skewX(-18deg);opacity:0}
+.thv.chieu .thv-sang{animation:sang 1.9s cubic-bezier(.45,.05,.3,1) .35s 1 both}
+@keyframes sang{0%{transform:translateX(-120%) skewX(-18deg);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateX(330%) skewX(-18deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.thv.chieu .thv-sang{animation:none}.thv-lap i{animation:none !important}}
+.thv-dau{display:flex;justify-content:space-between;align-items:flex-start;gap:3cqw}
+.thv-hieu{display:flex;align-items:center;gap:2.6cqw;min-width:0}
+.thv-hieu img{width:32px;height:32px;width:9.4cqw;height:9.4cqw;border-radius:50%;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.thv-hieu b{display:block;font-size:13.5px;font-size:4cqw;font-weight:800;letter-spacing:.08em}
+.thv-hieu small{display:block;font-size:8.5px;font-size:2.55cqw;font-weight:600;letter-spacing:.2em;text-transform:uppercase;opacity:.72;margin-top:.5cqw}
+.thv-giam{font-size:12px;font-size:3.6cqw;font-weight:800;padding:4px 10px;padding:1.2cqw 2.8cqw;border-radius:99px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.thv-ten{font-size:36px;font-size:10.6cqw;font-weight:800;letter-spacing:-.01em;line-height:1.05;display:flex;align-items:center;gap:2.4cqw}
+.thv-ten svg{width:25px;height:25px;width:7.4cqw;height:7.4cqw;flex:none}
+.thv-chan{display:flex;justify-content:space-between;align-items:flex-end;gap:3cqw}
+.thv-chan small{display:block;font-size:8.5px;font-size:2.5cqw;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.66;margin-bottom:.8cqw}
+.thv-chan b{display:block;font-size:12.5px;font-size:3.75cqw;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.thv-chan .phai{text-align:right}
+
+/* Vàng — lá vàng đã duyệt + vân khắc chìm + biểu tượng bốn mùa ẩn */
+.thv.vang{color:#3F2412;background:linear-gradient(135deg,#F8E9BD 0%,#E6C983 34%,#CFA55C 62%,#EDD596 100%);box-shadow:0 10px 24px rgba(185,143,60,.32),inset 0 0 0 1px rgba(255,255,255,.55)}
+.thv.vang .thv-van{background:url(/anh/the-vang-van.svg) center/cover no-repeat,url(data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12C5.5 12 2.5 8.8 2.5 3.8 8 3.4 12 6.5 12 12Z' fill='%232C3E5E'/%3E%3Cpath d='M12 12C12 5.5 15.2 2.5 20.2 2.5 20.6 8 17.5 12 12 12Z' fill='%23D7B981'/%3E%3Cpath d='M12 12C18.5 12 21.5 15.2 21.5 20.2 16 20.6 12 17.5 12 12Z' fill='%23AB3F37'/%3E%3Cpath d='M12 12C12 18.5 8.8 21.5 3.8 21.5 3.4 16 6.5 12 12 12Z' fill='%23416A43'/%3E%3C/svg%3E) 0 0/240px;mix-blend-mode:soft-light;opacity:.95}
+.thv.vang .thv-hieu b{color:#4A2410}
+.thv.vang .thv-ten{color:#3F2412;text-shadow:0 1px 0 rgba(255,255,255,.55),0 -1px 0 rgba(120,80,30,.22)}
+.thv.vang .thv-giam{background:rgba(255,255,255,.5);color:#7A4C14;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.thv.vang .thv-sang{background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);mix-blend-mode:overlay}
+
+/* Kim Cương — xanh đêm của quán + mặt cắt kim cương + chữ bạc + ánh lăng kính */
+.thv.kc{color:#EEF1F7;background:radial-gradient(120% 95% at 92% -12%,#5B7FB8 0%,transparent 58%),linear-gradient(152deg,#1F2E52 0%,#22324F 50%,#2C3E5E 100%);box-shadow:0 12px 28px rgba(44,62,94,.28),0 4px 10px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.18)}
+.thv.kc .thv-van{background:url(/anh/the-kc-mat.svg) center/cover no-repeat}
+.thv.kc::after{filter:grayscale(1) brightness(1.5);opacity:.16;mix-blend-mode:screen}
+.thv.kc .thv-ten span{background:linear-gradient(180deg,#FFFFFF 12%,#E2EEFF 55%,#9FB4CC 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.thv.kc .thv-ten svg{color:#E2EEFF;filter:drop-shadow(0 0 5px rgba(255,255,255,.5))}
+.thv.kc .thv-giam{background:rgba(255,255,255,.12);color:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(255,255,255,.32)}
+.thv.kc .thv-sang{background:linear-gradient(90deg,transparent 0%,#FFFFFF 38%,#D3E2FB 50%,#F3CFDC 62%,transparent 100%);mix-blend-mode:screen}
+.thv.kc.chieu .thv-sang{animation-name:sang-kc}
+@keyframes sang-kc{0%{transform:translateX(-120%) skewX(-18deg);opacity:0}15%{opacity:.3}85%{opacity:.3}100%{transform:translateX(330%) skewX(-18deg);opacity:0}}
+.thv-lap{position:absolute;inset:0;z-index:1;pointer-events:none}
+.thv-lap i{position:absolute;width:3.2cqw;height:3.2cqw;background:#FFFFFF;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:.15}
+.thv-lap i:nth-child(1){top:16%;right:30%} .thv-lap i:nth-child(2){top:44%;right:12%;width:2.2cqw;height:2.2cqw} .thv-lap i:nth-child(3){top:9%;right:54%;width:1.8cqw;height:1.8cqw}
+@media (prefers-reduced-motion:no-preference){.thv-lap i{animation:lap 3.2s ease-in-out infinite}.thv-lap i:nth-child(2){animation-delay:1.1s}.thv-lap i:nth-child(3){animation-delay:2.2s}}
+@keyframes lap{0%,100%{opacity:.1;transform:scale(.7)}50%{opacity:.85;transform:scale(1.15)}}
+
+/* Hạng khác (vd hạng thử) — màu hồng sẵn có trong demo */
+.thv.hong{color:#FFFFFF;background:linear-gradient(135deg,#B23D6B,#B25E1E);box-shadow:0 10px 22px rgba(178,61,107,.32),inset 0 0 0 1px rgba(255,255,255,.2)}
+.thv.hong::after{opacity:.16}
+.thv.hong .thv-giam{background:rgba(255,255,255,.18)}
+
+/* Cỡ nhỏ: chỉ màu + biểu tượng, không chữ */
+.thv.mini{width:56px;flex:none;border-radius:7px;cursor:default;container-type:normal}
+.thv.mini .thv-than,.thv.mini .thv-sang,.thv.mini .thv-lap{display:none}
+.thv.mini{box-shadow:0 2px 6px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.5)}
+.thv.mini.kc{box-shadow:0 2px 6px rgba(44,62,94,.28),inset 0 0 0 1px rgba(255,255,255,.2)}
+.thv.mini::after{right:-4%;bottom:-10%;width:44%;opacity:.32}
+.thv.mini.kc::after{opacity:.22}
+.thv.mini::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 45%,transparent 60%)}
+.thv.mini.kc::before{background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%)}
+.thv.mini.vua{width:64px;border-radius:8px}
+.thv.mini .mini-ten{display:none}
