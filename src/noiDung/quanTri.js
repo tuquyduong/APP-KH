@@ -5,7 +5,8 @@
 export const CHAN_KHI_SUA = 'Đang ở Chế độ sửa — nút này chỉ để xem';
 
 /** Nút làm thật KHÔNG qua mạng bị khoá khi đang sửa — khoá `data-nd` của nút (Đăng xuất, xoá dữ liệu trên máy). Nút chưa có `data-nd`: xem trang_thai.md › Phát hiện. */
-export const NUT_KHOA_KHI_SUA = ['tk.dangXuat', 'hx.xoa', 'tnk.xoa', 'kh.xoaHoiLai'];
+// (nút chỉ MỞ hỏi lại — bn.xoaViec, thuoc.xoa, xe.xoaXe, kh.xoaHet, chuky.tat — không cần: bước xoá thật là hx.xoa / kh.xoaHoiLai; bài thử canh danh sách đủ)
+export const NUT_KHOA_KHI_SUA = ['tk.dangXuat', 'hx.xoa', 'tnk.xoa', 'kh.xoaHoiLai', 'xe.hangXoa', 'ti.xoaNgay'];
 
 const CHU = {
   tieuDe: 'Quản trị · Tứ Quý Đường',

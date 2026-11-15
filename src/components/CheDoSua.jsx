@@ -5,13 +5,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DANH_MUC } from '../noiDung/nd/index.js';
 import { nd, banDangDung, datLopNhap, ngheNoiDung } from '../noiDung/nd.js';
-import { dangSua, batSua, coQuyen, layNhap, capNhat, boNhap, hoiBanMoi, GIOI_HAN } from '../noiDung/khoNoiDung.js';
+import { dangSua, batSua, coQuyen, docVe, layNhap, capNhat, boNhap, hoiBanMoi, GIOI_HAN } from '../noiDung/khoNoiDung.js';
 import { DS_MAN, taoDuongDan, slugMon } from '../duongDan.js';
 import { cuaDon } from '../duLieuKhach.js';
 import { dungKho } from '../kho.js';
 import { qt, NUT_KHOA_KHI_SUA, CHAN_KHI_SUA } from '../noiDung/quanTri.js';
 import Thongbao from './Thongbao.jsx';
-import CheDoSuaBang, { hienGiaTri, giaTriChay } from './CheDoSuaBang.jsx';
+import CheDoSuaBang, { hienGiaTri, giaTriChay, tenNguoi } from './CheDoSuaBang.jsx';
 
 const MUC = new Map(DANH_MUC.map((m) => [m.khoa, m]));
 const NGOAI = '.cms-lop, .cms-bar, #sheetCms, .toast';
@@ -81,6 +81,7 @@ export default function CheDoSua({ di, ds }) {
       const b = Object.fromEntries((d.nhap || []).map((x) => [x.khoa, x]));
       datSoBan(d.so_ban);
       if (d.so_ban !== banDangDung().so_ban) await hoiBanMoi();
+      if (!dangSua()) return b; // đã tắt / thoát trong lúc chờ → KHÔNG bật lại lớp nháp (D4)
       datNhap(b);
       return b;
     } catch (e) { datTb(e.message); return nhapRef.current; }
@@ -134,8 +135,8 @@ export default function CheDoSua({ di, ds }) {
   const moSua = async (khoa) => {
     const cu = nhapRef.current[khoa];
     const moi = (await taiNhap())[khoa];
-    const doi = moi && (!cu || cu.luc !== moi.luc);
-    datBang({ loai: 'sua', khoa, canhBao: doi ? qt('nguoiKhacLuu', { luc: moi.luc, nguoi: (moi.nguoi && moi.nguoi.ten_hien) || moi.nguoi || '' }) : '' });
+    const doi = moi && (!cu || cu.luc !== moi.luc) && tenNguoi(moi.nguoi) !== tenNguoi((docVe() || {}).nguoi); // nháp đổi do NGƯỜI KHÁC từ lần đọc trước
+    datBang({ loai: 'sua', khoa, canhBao: doi ? qt('nguoiKhacLuu', { luc: moi.luc, nguoi: tenNguoi(moi.nguoi) }) : '' });
   };
   // tập màn chụp LÚC BẤM (bảng nổi che màn → lớp bút tính lại thành rỗng)
   const moChuMan = () => datBang({ loai: 'chuMan', man: [...new Set(buts.map((b) => (MUC.get(b.khoa) || {}).man).filter(Boolean))] });
@@ -164,7 +165,7 @@ export default function CheDoSua({ di, ds }) {
     noi = (
       <Tam dong={dongBang}>
         <CheDoSuaBang key={bang.khoa + (nhap[bang.khoa] ? nhap[bang.khoa].luc : '')} m={m} nhap={nhap[bang.khoa]} soBan={soBan} coSua={coQuyen('nd_sua')} canhBao={bang.canhBao}
-          khiGo={(v) => datLopNhap({ ...giaTriNhap(nhapRef.current), ...(v === undefined ? {} : { [m.khoa]: v }) })} khiDaLuu={taiNhap} bao={datTb} dong={dongBang} />
+          khiGo={(v) => datLopNhap({ ...giaTriNhap(nhapRef.current), ...(v === undefined ? {} : { [m.khoa]: v }) })} khiDaLuu={async () => { await taiNhap(); datBang((b) => (b && b.loai === 'sua' ? { ...b, canhBao: '' } : b)); }} bao={datTb} dong={dongBang} />
       </Tam>
     );
   } else if (bang && bang.loai === 'xemLai') {
@@ -178,7 +179,7 @@ export default function CheDoSua({ di, ds }) {
           return (
             <div className="cs-ch" key={x.khoa} data-xem-lai={x.khoa}>
               <div className="cs-cw"><b>{m ? m.ten : x.khoa}</b><div><del>{m ? hienGiaTri(m, giaTriChay(m)) : null}</del></div><div><ins>{hienGiaTri(m, x.gia_tri)}</ins></div>
-                <small>{(x.nguoi && x.nguoi.ten_hien) || x.nguoi} · {x.luc}</small></div>
+                <small>{tenNguoi(x.nguoi)} · {x.luc}</small></div>
               <div className="cs-cb"><button type="button" onClick={() => toiCho(x.khoa)}>{qt('toiCho')}</button><button type="button" className="dg" disabled={!coQuyen('nd_sua')} onClick={() => bo(x.khoa)}>{qt('bo')}</button></div>
             </div>
           );

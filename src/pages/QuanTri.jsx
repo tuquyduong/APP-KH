@@ -12,7 +12,7 @@ import { qt } from '../noiDung/quanTri.js';
 import Man from '../components/Man.jsx';
 import Thongbao from '../components/Thongbao.jsx';
 import KiemKhop from './KiemKhop.jsx';
-import { hienGiaTri, giaTriTrong } from '../components/CheDoSuaBang.jsx';
+import { hienGiaTri, giaTriTrong, tenNguoi } from '../components/CheDoSuaBang.jsx';
 
 const MUC = new Map(DANH_MUC.map((m) => [m.khoa, m]));
 
@@ -65,7 +65,7 @@ function BangQuanTri({ thoat }) {
     layBanDangChay().then((d) => datSo(d.so_ban), (e) => datLoi(e.message));
     layNhap().then((d) => datSoNhap((d.nhap || []).length), (e) => datLoi(e.message));
   }, []);
-  const ten = (v.nguoi && (v.nguoi.ten_hien || v.nguoi.ten_dang_nhap)) || '';
+  const ten = tenNguoi(v.nguoi);
   return (
     <div className="qt-khung" id="qt-bang">
       <h1>{qt('chao', { ten })}</h1>
@@ -120,7 +120,7 @@ function LichSu({ bao }) {
         <div key={b.so_ban} data-ban={b.so_ban}>
           <div className="cs-hi" role="button" tabIndex={0} onClick={() => moBan(b.so_ban, 'xem')}>
             <i className={b.dang_chay ? 'live' : ''}>{b.so_ban}</i>
-            <div><b>{b.tom_tat || b.ghi_chu || '—'}</b><small>{b.luc} · {(b.nguoi && b.nguoi.ten_hien) || b.nguoi}{b.dang_chay ? ` · ${qt('lsDangChay')}` : ''}{b.tu_ban ? ` · ${qt('lsTuBan', { so: b.tu_ban })}` : ''}{b.ghi_chu && b.tom_tat ? ` · ${b.ghi_chu}` : ''}</small></div>
+            <div><b>{b.tom_tat || b.ghi_chu || '—'}</b><small>{b.luc} · {tenNguoi(b.nguoi)}{b.dang_chay ? ` · ${qt('lsDangChay')}` : ''}{b.tu_ban ? ` · ${qt('lsTuBan', { so: b.tu_ban })}` : ''}{b.ghi_chu && b.tom_tat ? ` · ${b.ghi_chu}` : ''}</small></div>
           </div>
           {mo && mo.ban.so_ban === b.so_ban && (
             <div className="cs-dong" id="qt-mot-ban">

@@ -1,7 +1,7 @@
 // Bảng sửa TỰ SINH từ MỘT mục danh mục nội dung (KH-ADMIN-1 D3) — không làm tay từng màn. Kiểm bằng CHÍNH hopLe của nd.js (một luật với khách).
 // Không cắt khoảng trắng đầu / cuối (vài chữ cố ý có dấu cách). Ảnh: cắt đúng tiLe + nén WebP bằng canvas (như cmsPic của demo) → POST /anh → url.
 import { useState } from 'react';
-import { hopLe, choDien, duongAnh, banDangDung } from '../noiDung/nd.js';
+import { hopLe, choDien, duongAnh, banDangDung, anhDung, dongTrung } from '../noiDung/nd.js';
 import { DICH } from '../noiDung/nd/index.js';
 import { luuNhap, boNhap, taiAnhLen, GIOI_HAN } from '../noiDung/khoNoiDung.js';
 import { qt } from '../noiDung/quanTri.js';
@@ -10,12 +10,14 @@ const sao = (v) => (v === undefined ? v : JSON.parse(JSON.stringify(v)));
 /** Giá trị của mục `m` trong một bộ giá trị (bản đang chạy / một phiên bản) — sai luật hoặc thiếu → macDinh. */
 export const giaTriTrong = (m, giaTri) => { const g = giaTri ? giaTri[m.khoa] : undefined; return g !== undefined && hopLe(m, g) ? g : m.macDinh; };
 export const giaTriChay = (m) => giaTriTrong(m, banDangDung().gia_tri);
+/** Tên người của nháp / phiên bản: hợp đồng v1 chưa ghi dạng `nguoi` → nhận chuỗi hoặc { ten_hien, ten_dang_nhap }; khác → rỗng (không vẽ object). */
+export const tenNguoi = (n) => (typeof n === 'string' ? n : n && typeof n === 'object' ? String(n.ten_hien || n.ten_dang_nhap || '') : '');
 const cat = (s) => { const t = String(s); return t.length > 70 ? t.slice(0, 70) + '…' : t; };
 
 /** Giá trị để xem nhanh (Xem lại, Lịch sử) — luôn là CHỮ / ảnh, không HTML. */
 export function hienGiaTri(m, v) {
   if (!m) return <span>{cat(JSON.stringify(v))}</span>;
-  if (m.loai === 'anh') return <img className="cs-mini" src={duongAnh(v)} alt="" />;
+  if (m.loai === 'anh') return anhDung(v) ? <img className="cs-mini" src={duongAnh(v)} alt="" /> : <span>{qt('trong')}</span>;
   if (m.loai === 'battat') return <span>{v === false ? qt('an') : qt('hien')}</span>;
   if (m.loai === 'nut') return <span>{cat(v && v.chu)} → {((DICH.find((d) => d[0] === (v && v.dich)) || [])[1]) || ''}</span>;
   if (m.loai === 'danhsach') return <span>{qt('soDong', { so: Array.isArray(v) ? v.length : 0 })}{Array.isArray(v) && v.length ? ' · ' + cat(v.map((x) => Object.values(x)[0]).join(', ')) : ''}</span>;
@@ -66,7 +68,7 @@ function ChonAnh({ v, tiLe, doi, bao, nho }) {
   };
   return (
     <div className="cs-img">
-      {v ? <img src={duongAnh(v)} alt="" className={/^\d+:\d+$/.test(tiLe || '') ? '' : 'tu-do'} style={nho ? { width: 56, height: 56 } : undefined} /> : <div className="cs-ph" />}
+      {anhDung(v) ? <img src={duongAnh(v)} alt="" className={/^\d+:\d+$/.test(tiLe || '') ? '' : 'tu-do'} style={nho ? { width: 56, height: 56 } : undefined} /> : <div className="cs-ph" />}
       <div>
         <label className="cs-up">{dang ? qt('anhDangNen') : v ? qt('anhDoi') : qt('anhChon')}<input type="file" accept="image/*" onChange={chon} disabled={dang} /></label>
         {tiLe && <div className="cs-hint">{qt('tiLe', { tiLe })}</div>}
@@ -105,13 +107,13 @@ function lyDo(m, v) {
     if (thua.length) return qt('thuaChip', { ds: thua.map((b) => `{${b}}`).join(' ') });
     if (m.toiDa && chu.length > m.toiDa) return qt('quaDai', { toiDa: m.toiDa });
   }
-  if (m.loai === 'danhsach' && Array.isArray(v) && new Set(v.map((x) => JSON.stringify(x))).size !== v.length) return qt('trungDong');
+  if (m.loai === 'danhsach' && Array.isArray(v) && dongTrung(m, v)) return qt('trungDong');
   return qt('khongHopLe');
 }
 
 /** Bảng sửa một mục. `nhap` = nháp trên máy chủ của khoá này (nếu có); `khiGo(v)` = xem trước trên trang; `khiDaLuu()` = tải lại nháp. */
 export default function CheDoSuaBang({ m, nhap, soBan, coSua, canhBao, khiGo, khiDaLuu, bao, dong }) {
-  const [v, datV] = useState(() => sao(nhap ? nhap.gia_tri : giaTriChay(m)));
+  const [v, datV] = useState(() => sao(nhap && hopLe(m, nhap.gia_tri) ? nhap.gia_tri : giaTriChay(m))); // nháp sai dạng (danh mục đổi loại…) → không vỡ bảng
   const [dang, datDang] = useState(false);
   const doi = (x) => { datV(x); khiGo(x); };
   const ly = lyDo(m, v);
@@ -174,7 +176,7 @@ export default function CheDoSuaBang({ m, nhap, soBan, coSua, canhBao, khiGo, kh
     <div role="dialog" aria-modal="true" aria-label={m.ten} data-bang-sua={m.khoa}>
       <div className="cs-h"><b>{m.ten}</b><button type="button" onClick={dong}>{qt('xong')}</button></div>
       {canhBao && <div className="cs-hint loi">{canhBao}</div>}
-      {nhap && !canhBao && <div className="cs-hint">{qt('coNhap', { nguoi: (nhap.nguoi && (nhap.nguoi.ten_hien || nhap.nguoi.ten_dang_nhap)) || nhap.nguoi || '', luc: nhap.luc })}</div>}
+      {nhap && !canhBao && <div className="cs-hint">{qt('coNhap', { nguoi: tenNguoi(nhap.nguoi), luc: nhap.luc })}</div>}
       {m.goiY && <div className="cs-hint">{m.goiY}</div>}
       <div style={{ marginTop: 10 }}>{o}</div>
       {ly && <div className="cs-hint loi">{ly}</div>}

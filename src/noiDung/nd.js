@@ -25,7 +25,7 @@ const cauTruc = (m, x) => (m.khoaCauTruc || []).map((t) => x[t]).join('\u0001');
 const ANH_APP = /^\/anh\/(?!.*\.\.)[\w./-]+$/;
 const ANH_KHO = /^\/api\/nd\/anh\/[0-9a-f]{64}$/;
 export const anhDung = (s) => laChuoi(s) && (ANH_APP.test(s) || ANH_KHO.test(s));
-const dongTrung = (m, gt) => new Set(gt.map((x) => JSON.stringify(Object.keys(m.truong).map((t) => x[t])))).size !== gt.length;
+export const dongTrung = (m, gt) => new Set(gt.map((x) => JSON.stringify(Object.keys(m.truong).map((t) => x[t])))).size !== gt.length;
 
 /** Giá trị `gt` có dùng được cho mục `m` không (cùng luật cho macDinh, bản cập nhật, nháp và bảng sửa ở /admin). */
 export function hopLe(m, gt) {
