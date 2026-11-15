@@ -42,4 +42,6 @@ Nhánh `viec/KH-SUA-1`; HEAD = FETCH_HEAD = `85e151d`.
 - Bài thử máy giả dựng css rỗng → ca trình duyệt phải nạp css của màn/component import; đã xử lý trong bài.
 - Người gác chặn `sed -i`, lệnh ghép và `until` (dùng Edit, lệnh đơn).
 
-CỔNG: `tinh` chỉ còn A19 (xem dòng cuối) — `chay` ghi bên dưới sau khi chạy.
+✓ CỔNG CHẠY ĐẠT (`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 85e151d^ HEAD viec/KH-SUA-1`, HEAD d4ad6e1). Lần đầu đỏ A16 vì dòng `SỐ CA` thiếu đường dẫn đầy đủ `cong_cu/thu_KHSUA1.js` — đã sửa.
+
+HEAD ĐÃ KIỂM: d4ad6e1
