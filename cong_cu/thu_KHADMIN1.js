@@ -497,12 +497,13 @@ async function trinhDuyet(pw) {
   const but = (t, khoa) => t.locator(`.cms-lop .cms-pen[data-but="${khoa}"]`);
   const bang = (t) => t.locator('#sheetCms');
   const toast = (t) => chu(t, '.toast.show');
-  const moBut = async (t, khoa) => { await but(t, khoa).first().click(); await t.locator(`[data-bang-sua="${khoa}"]`).waitFor(); };
+  const hienBut = async (t, khoa) => { await t.locator(`.screen.active [data-nd="${khoa}"]`).first().scrollIntoViewIfNeeded().catch(() => {}); return doi(t, async () => (await but(t, khoa).count()) > 0); };
+  const moBut = async (t, khoa) => { await hienBut(t, khoa); await but(t, khoa).first().click(); await t.locator(`[data-bang-sua="${khoa}"]`).waitFor(); };
   const tren = (t) => t.evaluate(() => location.pathname + location.search);
   const goiKho = (pt, duong) => K.goi.filter((g) => g.pt === pt && g.duong === duong);
 
   // ---- C1, C2, C3: đăng nhập quản trị ----
-  await may('quan-tri', { dn: true }, async ({ t, S }) => {
+  await may('quan-tri', { dn: true, gio: [{ ma: 'TLB', so_luong: 1, ghi_chu: '' }] }, async ({ t, S }) => {
     await t.goto(URL0 + '/admin'); await t.locator('#qt-dang-nhap').waitFor();
     k('C1 /admin: màn đăng nhập quản trị, không thanh tab, không gọi cửa khách nào', (await t.locator('.tabbar').count()) === 0 && S.goi.length === 0, JSON.stringify(S.goi));
     k('C1 /admin* có meta robots noindex', (await t.locator('meta[name="robots"][content="noindex"]').count()) === 1);
@@ -613,8 +614,8 @@ async function trinhDuyet(pw) {
     await t.click('[data-bang-sua="today.bg"] .cs-h button');
     // D3 người khác vừa lưu
     K.nhap.set('home.needs', { khoa: 'home.needs', gia_tri: 'Món của người khác', nguoi: 'Nhân viên Lan', luc: '2026-10-30T20:59:00', ban_goc: 2 });
-    await but(t, 'home.needs').first().click().catch(() => {});
-    if (await but(t, 'home.needs').count()) {
+    if (await hienBut(t, 'home.needs')) {
+      await but(t, 'home.needs').first().click();
       await t.locator('[data-bang-sua="home.needs"]').waitFor();
       k('D3 mở bảng đọc lại nháp: người khác vừa lưu → báo "Người khác vừa lưu chỗ này lúc …"', /Người khác vừa lưu chỗ này lúc 2026-10-30T20:59:00/.test(await chu(t, '[data-bang-sua="home.needs"]')));
       await t.click('[data-bang-sua="home.needs"] .cs-h button');
