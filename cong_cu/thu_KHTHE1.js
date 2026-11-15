@@ -45,7 +45,7 @@ const LY = (ma = 'TLB', so_luong = 1, ghi_chu = '') => ({ ma, so_luong, ghi_chu 
     const goc = path.join(GOC, 'viec/KH-THE-1/hop_dong_v13.md');
     const tep = fs.existsSync(goc) ? fs.readFileSync(goc) : Buffer.alloc(0);
     k('A1 viec/KH-THE-1/hop_dong_v13.md sha256 bắt đầu 490976b0c438b8b4 (bản gốc POS 162a908)', crypto.createHash('sha256').update(tep).digest('hex').startsWith('490976b0c438b8b4'));
-    k('A1 thiet_ke/HOP_DONG_API_KH.md = bản gốc từng byte, PHIEN_BAN 13', tep.length > 0 && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(tep) && /^PHIEN_BAN: 13$/m.test(HD));
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hiện hành v16 (KH-QC-1) từng byte, chứa đủ mục v13 (dòng thẻ)', fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(path.join(GOC, 'viec/KH-QC-1/hop_dong_v16.md'))) && /^PHIEN_BAN: 16$/m.test(HD) && /Ghi chú v13/.test(HD));
     k('A1 4 mã lỗi thẻ đọc thẳng từ hợp đồng', bang(MA_THE_HD, ['NHIEU_THE', 'HANG_CHI_CAP', 'GOI_HANG_KHONG_BAN', 'DA_CO_HANG_CAO_HON']), MA_THE_HD.join(','));
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const ql = CAN_TU_POS.find((x) => x.cua === 'GET /hang' && x.truong.includes('data[].quyen_loi'));

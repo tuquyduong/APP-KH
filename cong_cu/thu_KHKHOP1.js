@@ -169,6 +169,7 @@ async function trinhDuyet(pw) {
       }
       if (duong === '/hang') { const h = { id: 1, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }; if (P.thieuHang) delete h[P.thieuHang]; return json(200, { success: true, data: [h] }); }
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [], ...(P.gvMoi ? { gia_mon: [{ ma: 'TLB', gia_goc: 30000, gia: 25000 }] } : {}) });
+      if (duong === '/quang-cao') return json(200, { success: true, bay_gio: '2026-11-08T09:00:00', data: [{ id: 1, chu_dai: 'Quảng cáo', tieu_de: '', phu: '', chu_nut: '', dich: '', ma_mon: null, tu_gio: null, den_gio: null, uu_tien: 1 }] }); // v16 QC-APP-1
       if (duong === '/chuong-trinh') return json(200, { success: true, data: [{ ma: 'SN', ten: 'Sinh nhật', mo_ta: 'a', loai: 'sinh_nhat', dang_bat: true }] }); // v9 CT-1a
       const auth = req.headers().authorization || '';
       if (duong === '/menu') {
@@ -193,7 +194,7 @@ async function trinhDuyet(pw) {
   };
   const chu = (t) => t.locator('#kiemkhop').innerText();
   const dem = (P, pt, d) => P.goi.filter((g) => g.pt === pt && g.duong === d).length;
-  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu', '/chuong-trinh'];
+  const CUA_GET = ['/gio-hoat-dong', '/hang', '/gio-vang', '/menu', '/chuong-trinh', '/quang-cao'];
   const hang = (t, ten) => t.locator('#kiemkhop .muc', { hasText: ten }).first();
 
   await ca('thong-vang-lai', {}, async (t, loi, P) => {
