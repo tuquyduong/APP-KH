@@ -16,6 +16,11 @@ BẰNG CHỨNG ĐỎ KH-QC-1 — chạy với KHONG_TRINH_DUYET=1 trên code G�
   ✗ C2.2 dòng POS id="gio_vang" … banner = Giờ vàng của App
   ✗ C2 khoá /admin của từng chữ banner
 
+== thu_KHUI3d.js (chủ quán 15.11: thêm /quang-cao vào danh sách cửa + 1 ca TĨNH) trên gốc, KHONG_TRINH_DUYET=1
+34 đạt · 1 hỏng
+  ✗ B4 KH-QC-1: api.js có layQuangCao gọi '/quang-cao' và '/quang-cao' nằm trong CUA_CONG_KHAI
+
+SỐ CA thu_KHUI3d: 35
 SỐ CA thu_KHQC1: 39
 SỐ CA thu_KHUI5d: 31
 SỐ CA thu_KHUI5g: 34
