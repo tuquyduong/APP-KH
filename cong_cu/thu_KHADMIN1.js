@@ -64,7 +64,7 @@ const HEX = 'a'.repeat(64);
     k('A2 App dùng đủ mọi cửa của hợp đồng (trừ GET /anh/:ma — trình duyệt tải bằng <img>)', MAY && thieu.length === 0, thieu.join(', '));
     const nguonQT = ['src/noiDung/khoNoiDung.js', ...['src/components', 'src/pages'].flatMap((d) => fs.readdirSync(path.join(GOC, d)).filter((f) => /^(CheDoSua|QuanTri).*\.jsx$/.test(f)).map((f) => `${d}/${f}`))].map(doc).join('\n');
     const ma = [...new Set([...nguonQT.matchAll(/code\s*===\s*'([A-Z_]+)'/g)].map((m) => m[1]))];
-    k('A2 mọi mã lỗi App xử lý riêng (code === …) có trong ma_loi', ma.length >= 2 && MAY && ma.every((c) => c in MAY.ma_loi), ma.filter((c) => !MAY || !(c in MAY.ma_loi)).join(',') || `chỉ thấy ${ma.length}`);
+    k('A2 mọi mã lỗi App xử lý riêng (code === …) có trong ma_loi (ít nhất CO_BAN_MOI_HON của D8 / E2)', ma.includes('CO_BAN_MOI_HON') && MAY && ma.every((c) => c in MAY.ma_loi), ma.filter((c) => !MAY || !(c in MAY.ma_loi)).join(',') || `thấy: ${ma.join(',')}`);
     const KN = await nap('src/noiDung/khoNoiDung.js');
     const G = KN.GIOI_HAN || {};
     const can = ['khoa_toi_da', 'ban_toi_da_byte', 'anh_toi_da_byte', 'nhap_toan_bo_toi_da_byte', 'ghi_chu_toi_da'];
@@ -176,8 +176,8 @@ const HEX = 'a'.repeat(64);
     }
     ND.datBanNoiDung({ so_ban: 9, gia_tri: { 'home.feat': '<img src=x onerror=alert(1)>' } });
     k('B4 chữ chứa HTML trả nguyên chữ (React vẽ như chữ; ca Chromium ở phần 2)', ND.nd('home.feat') === '<img src=x onerror=alert(1)>');
-    const tho = [...fs.readdirSync(path.join(GOC, 'src'), { recursive: true })].filter((f) => /\.(jsx?)$/.test(f) && /dangerouslySetInnerHTML|innerHTML\s*=/.test(doc(path.join('src', f))) && !/App\.jsx$/.test(f));
-    k('B4 không tệp nào (ngoài sprite SVG cố định của App.jsx) dùng dangerouslySetInnerHTML / innerHTML', tho.length === 0, tho.join(','));
+    const tho = [...fs.readdirSync(path.join(GOC, 'src'), { recursive: true })].filter((f) => /\.(jsx?)$/.test(f) && /dangerouslySetInnerHTML|innerHTML\s*=/.test(doc(path.join('src', f))) && !/(^|[\\/])(App|BieuTuongTienIch)\.jsx$/.test(f));
+    k('B4 không tệp nào (ngoài SVG cố định của App.jsx / BieuTuongTienIch.jsx) dùng dangerouslySetInnerHTML / innerHTML', tho.length === 0, tho.join(','));
     ND.datBanNoiDung(null);
   });
   console.log('Phần 1 — C. Đường dẫn /admin, vé quản trị');
@@ -306,7 +306,7 @@ const HEX = 'a'.repeat(64);
     const KH = await nap('src/kehoach.js');
     const amGoc = ND.ndDs('kh.leAmLich');
     const homNay = { d: 1, m: 9, y: 2026 }; // Trung thu 2026 = 25/9 dương — trong 30 ngày
-    const tenSapToi = () => KH.upList(homNay, KH.keHoachTrong(), 'chi').map((x) => x.t);
+    const tenSapToi = () => KH.upList(homNay, KH.keHoachTrong(), 'chi').filter((x) => x.di === 'le').map((x) => x.t); // dòng lễ (dòng "cúng" của tiện ích Văn khấn là việc khác)
     ND.datBanNoiDung(null);
     const truoc = tenSapToi();
     ND.datBanNoiDung({ so_ban: 7, gia_tri: { 'kh.leAmLich': amGoc.map((x) => (x.ten === 'Tết Trung thu' ? { ...x, ten: 'Rằm tháng Tám' } : x)) } });
