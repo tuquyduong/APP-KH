@@ -31,8 +31,9 @@ const OK = { success: true, ma_don: 'TQD42', tong: 1, giu_vi: 0, con_lai: 1, tie
   const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
 
   await thu('A', async () => {
-    const v13 = path.join(GOC, 'viec/KH-QC-1/hop_dong_v16.md'); // KH-QC-1: hợp đồng hiện hành v16 (chứa v13, v9)
-    k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-QC-1/hop_dong_v16.md từng byte (v16 chứa v9)', fs.existsSync(v13) && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(v13)));
+    // Hợp đồng hiện hành = bản chép MỚI NHẤT viec/*/hop_dong_v<N>.md (v16 KH-QC-1, v17 KH-NAP-1 …), từng byte — cùng luật thu_KHUI3b A1 (chat 16.11: thôi ghim v16).
+    const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
+    k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v16 trở lên, chứa v9), từng byte', !!banHd && banHd.n >= 16 && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(banHd.f)), banHd && banHd.f);
     const hd = JSON.parse(/<!-- HOP_DONG_MAY_DOC -->\s*```json\n([\s\S]*?)\n```/.exec(docTho('thiet_ke/HOP_DONG_API_KH.md'))[1]);
     const tra = (cua) => { const [pt, duong] = cua.split(' '); const c = hd.cua.find((x) => x.pt === pt && x.duong === duong); return c ? c.tra : null; };
     const khai = (cua) => CAN_TU_POS.filter((x) => x.cua === cua && x.co).flatMap((x) => x.truong);

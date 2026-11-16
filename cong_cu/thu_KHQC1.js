@@ -42,7 +42,9 @@ const dong = (o = {}) => {
   console.log('A — hợp đồng v16, danh sách cần từ POS');
   const sha = (f) => crypto.createHash('sha256').update(fs.readFileSync(path.join(GOC, f))).digest('hex');
   k('A1 hợp đồng v16 của chat giữ nguyên bản gốc POS (sha256 9c72dbccce3ba175…)', sha(HD_GOC).startsWith('9c72dbccce3ba175'));
-  k('A1 thiet_ke/HOP_DONG_API_KH.md = NGUYÊN VĂN bản v16 (từng byte)', fs.existsSync(path.join(GOC, HD)) && Buffer.compare(fs.readFileSync(path.join(GOC, HD)), fs.readFileSync(path.join(GOC, HD_GOC))) === 0);
+  // Chat 16.11: thôi ghim v16 — hợp đồng hiện hành = bản chép MỚI NHẤT viec/*/hop_dong_v<N>.md (v17 KH-NAP-1 …), từng byte; bản v16 vẫn phải còn nguyên ở trên.
+  const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
+  k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v16 trở lên), từng byte', !!banHd && banHd.n >= 16 && fs.existsSync(path.join(GOC, HD)) && Buffer.compare(fs.readFileSync(path.join(GOC, HD)), fs.readFileSync(banHd.f)) === 0, banHd && banHd.f);
   k('A1 khối máy đọc có GET /quang-cao, không token, đủ 10 trường dòng + bay_gio', !!TH && TH.token === false && ['bay_gio', 'data[].id', 'data[].chu_dai', 'data[].tieu_de', 'data[].phu', 'data[].chu_nut', 'data[].dich', 'data[].ma_mon', 'data[].tu_gio', 'data[].den_gio', 'data[].uu_tien'].every((x) => TH.tra.includes(x)));
   const CT_POS = await nap('src/kiemKhop/canTuPos.js');
   const m = CT_POS && CT_POS.CAN_TU_POS.find((x) => x.cua === 'GET /quang-cao');

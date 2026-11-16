@@ -13,6 +13,15 @@
 - **/admin tạm đừng đổi tên ngày lễ / Tết** (16.11) tới khi KH-SUA-2 sửa (đổi tên → mất gợi ý quà, Tết hiện 2 lần).
 - **Soát cuối chạy bài thử trên CÂY GỘP** (16.11): THE-3 gộp "sạch" với main nhưng ca B4 đỏ vì KH-SUA-1 đổi tên lớp `the-qr` → `tt-qr`; chat gộp main vào nhánh + sửa ca bằng
   script (kiểm theo cây) trước khi chủ quán Merge.
+- **Nạp tiền + Voucher chạy SONG SONG** (16.11, chủ quán chọn "A"): KH-NAP-1 và KH-VC-2 hai máy Opus cùng lúc; phiếu chia tệp / chia khối, chỗ chung chỉ THÊM;
+  việc xong trước gộp trước, việc sau chat gộp main mới vào nhánh (kiểm theo cây) + soát cuối trên cây gộp.
+- **Thiết kế Nạp tiền & Voucher duyệt** (16.11 — Artifact "Nạp tiền & Voucher — hiện tại và đề xuất" bản 3, https://claude.ai/artifact/Qy5PSiVPvSfCLaRn8viF7G): Ví mở từ ô Số dư (Ưu đãi)
+  và ô Ví (Tài khoản); chọn gói = bảng trượt trên màn Ví; hiện nhãn thưởng "+X" (vào − trả); quán tắt hết gói → ẩn nút Nạp tiền (vẫn xem số dư + lịch sử); nạp chỉ
+  chuyển khoản QR, không hoàn. Voucher chọn ở Giỏ hàng; App TỰ CHỌN SẴN mọi voucher dùng được, khách chạm để bỏ (App nhớ); voucher chưa đủ điều kiện → App tự bỏ chọn +
+  câu đỏ POS; nhiều hơn số được dùng → ưu tiên cái sắp hết hạn; voucher giảm phí giao hiện mờ "Dùng khi đặt giao hàng"; ô mã chỉ cho MỘT mã khuyến mãi chung.
+- **Đổi điểm lấy voucher / quà** (chủ quán hỏi 16.11): giữ lịch POS (DOI-DIEM-1 sau khai trương); xin POS viết hợp đồng TRƯỚC để App làm song song (KH-DOI-1).
+  Hôm nay quầy đổi giúp ở màn Khách hàng POS. Đề nghị POS sau khai trương: tự chọn bộ voucher giảm nhiều nhất (thay luật "sắp hết hạn trước").
+- **Hợp đồng /api/kh v17 chép vào kho** (16.11): bài thử thôi ghim bản cũ — luôn so với bản chép mới nhất `viec/*/hop_dong_v<N>.md`.
 
 ## 15.11.2026
 - **Thẻ hội viên Vàng & Kim Cương** (chủ quán duyệt 15.11 — Artifact "Thẻ Vàng & Kim Cương" bản 2; KH-THE-3): mỗi hạng một tấm thẻ đúng tỉ lệ thẻ thật, dùng CHUNG ở Ưu đãi,

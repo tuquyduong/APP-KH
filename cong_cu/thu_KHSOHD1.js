@@ -33,8 +33,9 @@ const MAU_CHUOI = [vietqr('TQDNOV06 APP0016'), vietqr('TQDNOV06 APP0016', 'x'.re
   const qrcode = await import('qrcode-generator').then((m) => m.default || m);
 
   // A. hợp đồng v11
-  const v13 = path.join(GOC, 'viec/KH-QC-1/hop_dong_v16.md'); // KH-QC-1: hợp đồng hiện hành v16 (chứa v13, v11)
-  k('A1 thiet_ke/HOP_DONG_API_KH.md = viec/KH-QC-1/hop_dong_v16.md từng byte (v16 chứa v11)', fs.existsSync(v13) && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(v13)));
+  // Hợp đồng hiện hành = bản chép MỚI NHẤT viec/*/hop_dong_v<N>.md (v16 KH-QC-1, v17 KH-NAP-1 …), từng byte — cùng luật thu_KHUI3b A1 (chat 16.11: thôi ghim v16).
+  const banHd = fs.readdirSync(path.join(GOC, 'viec')).flatMap((v) => { try { return fs.readdirSync(path.join(GOC, 'viec', v)).filter((x) => /^hop_dong_v\d+\.md$/.test(x)).map((x) => ({ f: path.join(GOC, 'viec', v, x), n: Number(/\d+/.exec(x)[0]) })); } catch { return []; } }).sort((x, y) => y.n - x.n)[0];
+  k('A1 thiet_ke/HOP_DONG_API_KH.md = bản hop_dong_v<N>.md mới nhất trong viec/ (v16 trở lên, chứa v11), từng byte', !!banHd && banHd.n >= 16 && fs.readFileSync(path.join(GOC, 'thiet_ke/HOP_DONG_API_KH.md')).equals(fs.readFileSync(banHd.f)), banHd && banHd.f);
   const mc = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || { truong: [] };
   k('A1 canTuPos khai trường v11 của /don/:ma và /don', ['don.so_hd', 'don.tien_ve_da_cong_vi', 'don.thong_bao_tien_ve'].every((x) => mc('don_v11').truong.includes(x)) && ['data[].so_hd', 'data[].tien_ve_da_cong_vi', 'data[].thong_bao_tien_ve'].every((x) => mc('don_ds_v11').truong.includes(x)));
   k('A1 canTuPos khai trường v10 của /hang (chi_cap, goi[], thu_bac)', ['data[].chi_cap', 'data[].goi[].so_thang', 'data[].goi[].gia', 'data[].thu_bac'].every((x) => mc('hang_v10').truong.includes(x)));

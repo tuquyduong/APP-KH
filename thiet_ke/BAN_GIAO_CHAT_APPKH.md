@@ -1,4 +1,4 @@
-# Bàn giao chat App KH (cập nhật 16.11.2026 trưa)
+# Bàn giao chat App KH (cập nhật 16.11.2026 chiều — sau khi duyệt Nạp tiền & Voucher)
 
 <!-- Bản MỚI NHẤT nằm ở Project (claude/BAN_GIAO_CHAT_APPKH.md). Bản trong kho APP-KH (thiet_ke/BAN_GIAO_CHAT_APPKH.md) do script ghi-xong chép — có thể cũ hơn Project. -->
 
@@ -24,7 +24,8 @@
 - **Thử MỌI script trên GitHub giả trước khi gửi:** `git init --bare <tmp>/gh/tuquyduong/APP-KH.git` (đường dẫn phải chứa `tuquyduong/APP-KH`), `git push` các ref THẬT vào đó,
   `symbolic-ref HEAD refs/heads/main`, clone vào `<tmp>/home/APP-KH` (đặt `user.email` / `user.name`), chạy `HOME=<tmp>/home python3 <bản chép>.py` (chép script ra file khác — script tự xoá).
   Giả lập GitHub gộp PR bằng `merge --no-ff -m "Merge pull request #N from tuquyduong/viec/<MÃ>"`. Chạy lại lần 2 phải ra "XONG TỪ TRƯỚC". Sau đó chạy cổng `tinh` + `chay` trên nhánh kết quả.
-- **Khuôn script ở Project** (copy rồi sửa, đừng viết lại): `claude/xong_QC1_SUA1_ADMIN1_gop_THE3.py` (MỚI NHẤT 16.11: ghi nhiều việc xong — tìm commit gộp có `^2` = đầu nhánh đã soát;
+- **Khuôn script ở Project** (copy rồi sửa, đừng viết lại): `claude/xong_THE3_mo_NAP1_VC2.py` (MỚI NHẤT 16.11 chiều: ghi xong + thay tệp có vân tay + mở NHIỀU việc,
+  nhúng phiếu + bản thiết kế dùng chung một bản byte), `claude/xong_QC1_SUA1_ADMIN1_gop_THE3.py` (MỚI NHẤT 16.11: ghi nhiều việc xong — tìm commit gộp có `^2` = đầu nhánh đã soát;
   thay tệp luật kiểm vân tay bản cũ; chép thư; RỒI gộp main mới vào một nhánh việc + sửa bài thử, **kiểm theo CÂY** (`git write-tree` = cây chat tính sẵn) + dòng "HEAD ĐÃ KIỂM"),
   `claude/xong_THE2_mo_SUA1_THE3.py` (ghi xong + mở việc + nhúng phiếu), `claude/mo_KHADMIN1_KHQC1.py` (mở NHIỀU việc, nhúng hợp đồng POS kèm sha256),
   `claude/duyet_KHTHE2.py` / `claude/duyet_KHADMIN1_KHQC1.py` (duyệt kế hoạch / trả lời câu hỏi: commit "PHIEU: <MÃ> - …" chỉ đổi phiếu), `claude/khung_duyet_the.py`,
@@ -34,6 +35,8 @@
   MỌI nhánh đang mở theo thứ tự định gộp; `NODE_PATH=$(npm root -g) LUU_ANH_DIR=<thư mục> node kiem_tra_truoc_khi_giao.js --day-du` CÓ Chromium **trên CÂY GỘP** (~20 phút, chạy nền);
   chạy MỌI `cong_cu/thu_*.js` có `LUU_ANH_DIR` trên gốc → so từng ảnh gốc ↔ gộp (màn NGOÀI phạm vi đổi → KHÔNG ĐẠT; vệt sáng / nút gạt / đồng hồ đếm ngược đang chạy = chấp nhận);
   đọc diff (màn tiền: chỉ đổi chữ, không đổi logic); xem ảnh `viec/<MÃ>/so_anh/`. Máy KHÔNG được `git merge`. Playwright toàn cục: `NODE_PATH=$(npm root -g)`, trình duyệt ở `/opt/pw-browsers`.
+  **Bài học 16.11 (b):** chép hợp đồng mới làm đỏ các bài thử GHIM bản cũ — đã đổi 4 bài sang "bản chép mới nhất `viec/*/hop_dong_v<N>.md`"; bài `thu_KHADMIN1` A1 vẫn ghim
+  `HOP_DONG_API_ND.md` v1 (sha 836eb6ba…) — lần chép hợp đồng ND kế tiếp phải sửa bài đó cùng lúc. Trước khi gửi script đổi tệp chung: chạy `KHONG_TRINH_DUYET=1 node kiem_tra_truoc_khi_giao.js` trên cây kết quả.
   **Bài học 16.11:** `git merge-tree` sạch ≠ bài thử xanh — THE-3 gộp "sạch" với main nhưng ca B4 thu_KHTHE3 đỏ vì SUA-1 đổi tên lớp `the-qr` → `tt-qr`. Luôn chạy `--day-du` trên cây gộp.
 - Luật cổng hay vấp: A7 (phiếu chỉ đổi ở commit "PHIEU: <MÃ>"), A11 (bài sửa phải đỏ trên gốc), A16 (SỐ CA theo `KHONG_TRINH_DUYET=1`, ở head), **A19** (`HEAD ĐÃ KIỂM: <SHA>` ĐẦU DÒNG,
   là dòng cuối có dạng đó; commit gộp main sau lần kiểm cũ cũng tính là đổi code; commit chỉ đổi `viec/<MÃ>/` sau đó thì được). **"## Bài thử cũ sửa"**: cổng chạy BẢN GỐC bài cũ trên code PR
@@ -56,16 +59,28 @@
 - Muốn xem giao diện trước khi làm → dựng trang HTML so sánh (Artifact) "Hiện tại | Đề xuất" từng màn, lật qua lại trên điện thoại; trang đã duyệt → bản gọn vào `viec/<MÃ>/ban_thiet_ke.html`.
   Project gần đầy — chỉ lưu bàn giao, phiếu / script đang dùng, thư. Chị muốn: "hệ thống thông minh, code chuẩn, đơn giản, không lằng nhằng".
 
-## Chủ quán đang ở đâu (16.11 trưa)
-1. Chạy `claude/xong_QC1_SUA1_ADMIN1_gop_THE3.py` ở Shell Replit (chat gửi 16.11). Kiểm: `git fetch` thấy main có commit "TIEN-DO: KH-QC-1 + KH-SUA-1 + KH-ADMIN-1 xong …" và
-   nhánh `viec/KH-THE-3` có 2 commit "GOP-KH-THE-3 …".
-2. Tạo PR `viec/KH-THE-3` → main → chờ cổng xanh → Merge. (KHÔNG Merge THE-3 trước khi chạy script — ca B4 thu_KHTHE3 sẽ làm main đỏ.)
-3. Thử tay sau gộp: SUA-1 (đơn QR: Theo dõi đơn thẻ QR đứng dọc); ADMIN-1 (`app-kh.pages.dev/admin` đăng nhập tài khoản POS → Chế độ sửa → ✎ banner → Lưu → Cập nhật toàn bộ →
-   máy khác mở lại App thấy chữ mới → Lịch sử phiên bản quay lại); THE-3 (Ưu đãi thẻ Vàng / Kim Cương; mua thẻ → Chào mừng).
-4. Sao lưu Drive: chat hỏi 15.11 + 16.11 chưa có trả lời — đã tạo `KHOA_GITHUB`, dán 2.3, chạy `thuNgay` chưa? Có thì xin mấy dòng cuối Sheet "Nhat ky sao luu".
-5. KH-VC-2: POS đã gộp VOUCHER-2 → chat dựng trang thiết kế (chọn nhiều voucher ở Thanh toán, voucher giảm phí giao ẩn hay ghi "dùng khi giao hàng") → chị duyệt → mở việc (Opus).
+## Chủ quán đang ở đâu (16.11 chiều)
+1. Chạy `claude/xong_THE3_mo_NAP1_VC2.py` ở Shell Replit (chat gửi 16.11 ~14:30): sổ v62 → v63 (THE-3 xong #42; mở KH-NAP-1 + KH-VC-2; ghi chú KH-DOI-1), chép hợp đồng
+   POS v17 (`thiet_ke/HOP_DONG_API_KH.md` + bản gốc `viec/KH-NAP-1/hop_dong_v17.md`), sửa 4 bài thử ghim bản v16 (thu_KHMUA1c / KHQC1 / KHSOHD1 / KHTHE1 → "bản chép mới nhất
+   `viec/*/hop_dong_v<N>.md`, N ≥ 16"), thư POS 16.11 (V17 + YEU_CAU 16.11), QĐ 16.11 (b), bàn giao → push main; rồi 2 nhánh `viec/KH-NAP-1`, `viec/KH-VC-2` (commit "PHIEU: <MÃ>":
+   phiếu + `ban_thiet_ke.html` bản cho máy + `mau_de_xuat.js`). Kiểm: `git fetch` thấy main commit "TIEN-DO: KH-THE-3 xong (PR #42); mo KH-NAP-1 + KH-VC-2 …" và 2 nhánh.
+2. Mở HAI phiên Claude Code mới, cả hai **Opus**: nhánh `viec/KH-NAP-1` gõ `/lam-viec KH-NAP-1`; nhánh `viec/KH-VC-2` gõ `/lam-viec KH-VC-2`. Cả hai DỪNG ở bước 3 "Chờ duyệt
+   kế hoạch" → chủ quán dán `ke_hoach.md` (hoặc log) cho chat duyệt → gõ "duyệt" → máy chạy tới hết.
+3. Gửi chat POS thư `claude/YEU_CAU_APPKH_GUI_POS_16112026.md` (xin viết TRƯỚC hợp đồng DOI-DIEM-1; đề nghị "chọn bộ voucher có lợi nhất" sau khai trương; ghi nhận v17, SAOLUU-DEM-1).
+4. Thử tay sau gộp: SUA-1 (Theo dõi đơn thẻ QR đứng dọc); ADMIN-1 (`app-kh.pages.dev/admin` → Chế độ sửa → ✎ → Lưu → Cập nhật toàn bộ → máy khác thấy chữ mới → Lịch sử phiên bản);
+   THE-3 (Ưu đãi thẻ Vàng / Kim Cương; mua thẻ → Chào mừng).
+5. Sao lưu Drive: chưa trả lời (`KHOA_GITHUB`, dán 2.3, `thuNgay`); POS đã gộp SAOLUU-DEM-1 → thêm `KHOA_POS` (mục Sao lưu). Có thì xin mấy dòng cuối Sheet "Nhat ky sao luu".
 
-## Tình trạng 16.11.2026 trưa (APP-KH main b48c68d = gộp #41 KH-ADMIN-1; sổ v61 — script `claude/xong_QC1_SUA1_ADMIN1_gop_THE3.py` đưa lên v62)
+### Thiết kế Nạp tiền & Voucher (chủ quán duyệt 16.11 — Artifact https://claude.ai/artifact/Qy5PSiVPvSfCLaRn8viF7G, bản 3 "Đã duyệt")
+- 7 màn: 1 Lối vào Ví · 2 Màn Ví · 3 Chọn gói (bảng trượt) · 4 Thanh toán nạp (khuôn THE-3) · 5 Đã nạp · 6 Ví voucher · 7 Giỏ hàng chọn voucher. Cả hai cột chụp từ App THẬT
+  (cây main + THE-3) với POS giả; cột đề xuất = mẫu viết bằng lớp CSS của App bơm vào App đang chạy — công cụ Project `claude/cong_cu_chat_chup_app.js` + mẫu
+  `claude/mau_thiet_ke_NAP1_VC2.js` (chép vào `viec/<MÃ>/mau_de_xuat.js`).
+- Trả lời: N1 a (Ví từ ô Số dư Ưu đãi + ô Ví Tài khoản) · N2 a (bảng trượt) · N3 a (nhãn thưởng "+X" = vao − tra) · N4 a (hết gói → ẩn nút Nạp) · V1 a (chọn ở Giỏ hàng) ·
+  V2 a (voucher ship mờ "Dùng khi đặt giao hàng") · **V3 b** (chưa đủ điều kiện → App TỰ BỎ chọn + câu đỏ POS) · **V4 b** (App TỰ CHỌN SẴN mọi voucher dùng được; khách chạm để bỏ,
+  App nhớ) · V5 a (nhiều hơn số được dùng → sắp hết hạn trước; POS xét THEO THỨ TỰ mảng — `orders.js kiemVoucherDon`) · Đ1 a (đổi điểm: giữ lịch POS DOI-DIEM-1 sau khai trương, xin
+  POS viết hợp đồng trước → KH-DOI-1).
+
+## Tình trạng 16.11.2026 chiều (APP-KH main c8146cd = gộp #42 KH-THE-3; sổ v62 — script `xong_THE3_mo_NAP1_VC2.py` đưa lên v63)
 
 ### Đã xong gần đây
 - **#41 KH-ADMIN-1** (16.11 gộp; đầu c9f400b): khu /admin đăng nhập tài khoản POS, Chế độ sửa (✎ / 🔒), bảng sửa tự sinh từ danh mục, Lưu nháp → Cập nhật toàn bộ, lịch sử phiên bản,
@@ -76,16 +91,19 @@
 - **#38 KH-THE-2**, **#37 KH-THE-1**, **#36 KH-ND-3d** — đã ghi sổ.
 - Cây gộp main + SUA-1 + ADMIN-1 (15.11): `--day-du` Chromium 57/0; so 180 ảnh gốc ↔ gộp: chỉ thẻ QR (đúng ý) + hiệu ứng đang chạy.
 
-### Đang chạy
-- **KH-THE-3 — thẻ Vàng & Kim Cương** (Sonnet; MÁY XONG 15.11 18:16, đầu 784bff0; phiếu `claude/phieu_KH-THE-3.md`; Artifact https://claude.ai/artifact/AcJNE4yBCgPzoCoTzMoq7x):
-  **chat soát cuối 16.11 ĐẠT** — cổng tinh + chay (base b48c68d) ĐẠT (A16 cảnh báo 17≠23 không chặn); `--day-du` cây gộp 57 đạt + 1 hỏng = ca B4 thu_KHTHE3 tìm `#checkout .the-qr`
-  (SUA-1 đã đổi `tt-qr`) → sửa bộ chọn → 105/0; so 180 ảnh: ngoài phạm vi chỉ vệt sáng / đồng hồ / nút gạt; ảnh sau gộp đúng bản thiết kế (thẻ QR đứng dọc + 2 bước "Thẻ kích hoạt").
-  Script `xong_QC1_SUA1_ADMIN1_gop_THE3.py` gộp main mới vào nhánh + sửa B4 (kiểm theo cây) + "HEAD ĐÃ KIỂM" → chủ quán PR + Merge (#42?). Script KẾ TIẾP ghi THE-3 xong.
-  Ghi chú soát: chữ hạn POS có thể hiện 2 lần ở Chào mừng khi thẻ KHÔNG vẽ được VÀ POS gửi hạn không đọc được (hiếm: mở đơn ở máy khác + /toi chưa có hạng) → KH-SUA-2.
-  Máy giữ dòng "Hạng của bạn" trên thẻ Ưu đãi (phiếu giữ chữ THE-2) — chủ quán xem tay, muốn bỏ thì làm ở KH-SUA-2.
+### Đang chạy (sau script 16.11)
+- **KH-NAP-1 — khách tự nạp tiền** (Opus, [T], có duyệt kế hoạch; hạn 21.11; phiếu Project `claude/phieu_KH-NAP-1.md`): màn Ví mới `/uudai/vi` (`ViTien.jsx`, `vi_tien.css` tiền tố
+  `vt-`, `viTien.js`, danh mục `nd/viTien.js`), bảng gói `BangNoi`, Thanh toán nạp `/uudai/vi/nap?goi=` = `ThanhToan.jsx` prop `nap` (khuôn một dòng của thẻ, bảng tiền RIÊNG — không đụng
+  `BangTien`), "Đã nạp" ở `TheoDoiDon.jsx` (số từ `GET /vi` dòng có `ma_don`), lối vào ô Số dư Ưu đãi (CHỈ `wallet-row`) + ô Ví Tài khoản.
+- **KH-VC-2 — voucher v15** (Opus, [T], có duyệt kế hoạch; hạn 21.11; phiếu Project `claude/phieu_KH-VC-2.md`): `voucherGio.js` (`dsGui` — bỏ ship, bỏ tay, chọn tay trước, hạn
+  sớm trước, cắt 10), `voucher.css` tiền tố `vc-`, Ví voucher (`TheVoucher` = `mo_ta` + chip nguồn + "Dùng ngay"), `NhanMa.jsx` (`data.mo_ta`), Giỏ (mục "Voucher của bạn", ô mã
+  chung, `tenGiam` "Voucher <MÃ>"), `App.jsx` trạng thái `boTay` / `chonTay` cạnh `maGiam`, Thanh toán đồ uống `tuy = { maGiam, vouchers }` + khối lỗi voucher.
+- **Chỗ chung hai máy** (phiếu ghi rõ khối của ai): `App.jsx`, `ThanhToan.jsx`, `datDon.js` (NAP: `dongGui`, `dungViCho`, `buocTienTrinh`, `laDonChiNap`, `thamTaoMaMoi`, `monDatLai`;
+  VC: `thanBaoGia`, `docBaoGia`, `tenGiam`), `UuDai.jsx` (NAP: `wallet-row`; VC: voucher), `duLieuKhach.js`, `canTuPos.js`, `no_chu_cung.txt`. Việc xong trước gộp trước; việc sau:
+  chat gộp main mới vào nhánh bằng script (kiểm theo CÂY, sửa đụng nhau) + `--day-du` trên cây gộp, như THE-3 16.11.
 
 ### Sắp mở
-- **KH-VC-2 — voucher theo hợp đồng v15** (việc TIỀN — Opus, TRƯỚC khai trương). POS đã gộp VOUCHER-2 (#95, POS main ba0d2c1; sổ POS v68 a7a09bc). Cần: (1) chat dựng trang thiết kế
+- (cũ, MỞ 16.11 — xem Đang chạy) **KH-VC-2 — voucher theo hợp đồng v15** (việc TIỀN — Opus, TRƯỚC khai trương). POS đã gộp VOUCHER-2 (#95, POS main ba0d2c1; sổ POS v68 a7a09bc). Cần: (1) chat dựng trang thiết kế
   → chủ quán duyệt: chọn nhiều voucher ở Thanh toán (tích từ ví + ô mã), voucher ship ẩn hay ghi "dùng khi giao hàng, đặt ở quầy"; (2) script mở việc chép hợp đồng POS main
   (PHIEN_BAN 16 + nhật ký v15) vào `thiet_ke/HOP_DONG_API_KH.md` (bài thử ghim phiên bản cũ có thể phải sửa). Thư POS `claude/TRA_LOI_POS_15112026_VOUCHER2.md`.
   App cũ KHÔNG vỡ (`ma_giam` vẫn chạy). Mới: `vouchers: [mã…]` ở bao-gia / don (tối đa do quán đặt, MỘT voucher %), `voucher_loi[] { ma, code, error }`, `giam[]` loai `voucher` /
@@ -94,13 +112,15 @@
   lỗi trong `ma_loi`. **3 chỗ App chưa đúng nghĩa:** `NhanMa.jsx` ghép câu từ `discount_type/value` (`nm.daNhanMoi` `{giam}`) → dùng `data.mo_ta`; Ví voucher (`UuDai.jsx` `TheVoucher`)
   chưa hiện `mo_ta`, voucher ship hiện như thường; `tenGiam` (`datDon.js`) loai `voucher`/`voucher_ship` → "Giảm giá" chung. Muốn hiện ưu đãi khách mới TRƯỚC khi nhận → xin POS mở
   `mo_ta` của mẫu khách mới (cửa công khai) ở thư POS kế tiếp.
-- **KH-NAP-1** (khi POS main có hợp đồng v17 ~17–18.11; POS đã duyệt kế hoạch NAP-1): nạp = MỘT dòng `{ loai: "nap", ma_goi }` trong `/gio/bao-gia` + `/don`, khuôn Thanh toán một dòng
+- (cũ) **KH-NAP-1** (POS main ĐÃ có hợp đồng v17 — 7cf48ee, thư `claude/TRA_LOI_POS_16112026_V17.md`; MỞ 16.11 — xem Đang chạy): nạp = MỘT dòng `{ loai: "nap", ma_goi }` trong `/gio/bao-gia` + `/don`, khuôn Thanh toán một dòng
   của THE-2; `GET /goi-nap` `{ ma, ten, tra, vao }`; mã `NAP_KHONG_GOP`, `NAP_CHI_TIEN_MAT_QR`, `GOI_NAP_KHONG_CO`, `THE_KHONG_TRA_VI`.
-- **KH-HUY-1** (Sonnet): đơn bị quán huỷ theo v14 (`hoan_vao_tai_khoan`, `ly_do_huy`); làm SAU THE-3 (cùng `TheoDoiDon.jsx`).
+- **KH-DOI-1 — đổi điểm lấy voucher / quà trên App** (chờ; có trong sổ từ 11.11 — quà hiện vật đổi ở QUẦY, App hiện "Đổi tại quầy"): chờ POS viết hợp đồng DOI-DIEM-1 (`GET /kho-qua`, `POST /doi-diem`, `GET /qua-cua-toi`) — thư
+  `claude/YEU_CAU_APPKH_GUI_POS_16112026.md` mục 2; có hợp đồng → chat dựng trang thiết kế → duyệt → mở.
+- **KH-HUY-1** (Sonnet): đơn bị quán huỷ theo v14 (`hoan_vao_tai_khoan`, `ly_do_huy`); mở SAU KH-NAP-1 (cùng `TheoDoiDon.jsx`).
 - **KH-SUA-2 — gom lỗi nhỏ** (Sonnet, chờ; ghi sổ 16.11): (1) đổi tên lễ ở /admin mất gợi ý quà (`kh.leQua` khớp TÊN) + đổi tên 1 trong 3 ngày Tết → Tết hiện 2 lần (`holList` gộp
   TÊN) → khớp theo mã; (2) nút ✕ xoá dòng giỏ (`GioHang.jsx`) gắn `data-nd`; (3) `public/sw.js` bỏ `/kiemkhop`; (4) `quangCao.js` viết `️` / `‍`; (5) Chào mừng hạn POS
   hiện 2 lần (ở trên); (6) nhãn admin `ud.the.chipDb` "(chưa có hạng)" sai nghĩa; (7) chú thích đầu `KiemKhop.jsx`. Chủ quán: tạm ĐỪNG đổi tên ngày lễ / Tết ở /admin.
-- **Thứ tự gộp:** THE-3 → VC-2 → NAP-1; HUY-1 sau THE-3; SUA-2 khi rảnh (trước khai trương nếu kịp).
+- **Thứ tự gộp:** THE-3 (xong) → NAP-1 / VC-2 song song, cái nào xong trước gộp trước; HUY-1 sau (đụng `TheoDoiDon.jsx` như NAP-1 — mở sau NAP-1); SUA-2 khi rảnh.
 
 ### Sao lưu (tình trạng 16.11)
 - **Cách làm (chủ quán + POS chốt 15.11):** lưu HẾT về Drive `TQD-SAO-LUU` (riêng tư, tài khoản Google của quán); GitHub vẫn là nơi làm việc; bỏ SX; KH-SL-1 bỏ. Apps Script
@@ -111,13 +131,15 @@
   (thư f). Theo dõi: nhật ký "chỉ tải được x/570 tệp" / "tải chưa xong trong giờ" mấy tuần liền → gắn `KHOA_GITHUB` cho lượt tải raw (giữ `followRedirects: false`) → POS soát lại.
 - **Chủ quán làm (mục 5 thư d):** tạo khoá GitHub (Fine-grained, tên `TQD sao luu`, hạn dài nhất, "Public repositories (read-only)") → thuộc tính `KHOA_GITHUB` → dán 2.3 → `thuNgay`.
   CHƯA báo đã làm (chat hỏi 15.11 + 16.11).
+- **POS gộp SAOLUU-DEM-1 (#97, POS main 1d66c61, 16.11)**: cửa `GET /api/pos/backup/tu-dong` + khoá `posk_…` (POS › Cài đặt › Sao lưu › "Tạo khoá mới", PIN chủ quán,
+  khoá hiện MỘT lần) → chủ quán dán vào thuộc tính `KHOA_POS` của Apps Script → phần POS/Du lieu chạy 3 giờ một lần. Cần POS đã triển khai bản #97.
 - **Công cụ thử của chat:** Project `claude/cong_cu_chat_thu_saoluu.js` + bản .gs cùng thư mục tên `TQD_Sao_Luu_Tu_Dong_ban2.gs` → `node cong_cu_chat_thu_saoluu.js` → "37 đạt · 0 hỏng".
 - **Thiết kế lên Drive:** ~10 trang App KH chỉ có trên claude.ai (Demo App KH ví (d), Thẻ hội viên đề xuất, Đối chiếu tính năng, Đặc tả kỹ thuật, Cẩm nang 9 thể trạng, Trắc nghiệm 60 câu,
   Menu trà theo thể, Bản đồ ghép trà, So sánh thẻ hội viên, Thẻ Vàng & Kim Cương). Chat chưa có kết nối Google Drive (15.11 chủ quán báo đã kết nối nhưng phiên không thấy) →
   kiểm lại (ToolSearch "google drive"); có công cụ thì tải lên `TQD-SAO-LUU/App KH/Thiet ke/`.
 
 ### POS
-- **Hợp đồng `/api/kh`:** POS main PHIEN_BAN 16 (VOUCHER-2 v15 gộp 15.11 #95; QC-APP-1 v16; HUY-1 v14); v17 KH-NAP-1 ~17–18.11. POS báo khi gộp.
+- **Hợp đồng `/api/kh`:** POS main PHIEN_BAN **17** (7cf48ee, 16.11: KH-NAP-1 — `GET /goi-nap`, `GET /vi`, dòng nạp, thẻ chỉ tiền thật `THE_KHONG_TRA_VI`, tiền về muộn đúng số tự chốt đủ quyền lợi); v15 VOUCHER-2, v16 QC-APP-1, v14 HUY-1. Bản trong kho App = v16 trước VOUCHER-2 → script mở việc chép v17.
 - **ND-API-1** (#93): kho nội dung `/api/nd` v1 (quyền nd_xem / nd_sua / nd_cap_nhat / nd_xuat_nhap — bước 027 gieo cho chủ quán; khoá `ndk_…` chỉ `GET /xuat`); CORS chỉ
   tuquyduong.com + app-kh.pages.dev → bản xem thử nhánh không gọi được kho. Máy ADMIN-1 đề xuất nhờ POS ghi rõ dạng trường `nguoi` ở `/nhap` vào hợp đồng (gom thư POS kế tiếp).
 - **Chờ POS** (lịch POS): COMBO-1a → App combo · TOPPING-1 → KH-GHICHU-1 + topping · KH-NAP-1 + QUA-1 → KH-NAP-1 + KH-VI-2 · GIOVANG-1 `gia_mon[]` · KH-MUA-2 · MATKHAU-1
@@ -143,9 +165,9 @@
 - Google: hồ sơ CHƯA xác minh → xác minh bằng video trước khai trương (`claude/HUONG_DAN_XAC_MINH_GOOGLE.md`).
 
 ## Chủ quán đang nợ / cần làm
-- Chạy script 16.11 → PR + Merge THE-3 → thử tay SUA-1 / ADMIN-1 / THE-3 (mục "Chủ quán đang ở đâu").
+- Trả lời 8 câu trang Nạp tiền & Voucher → chạy script mở việc → thử tay SUA-1 / ADMIN-1 / THE-3 (mục "Chủ quán đang ở đâu").
 - Sao lưu: tạo `KHOA_GITHUB`, dán 2.3, `thuNgay`, báo chat nhật ký.
-- Sau VOUCHER-2: chọn **mẫu voucher khách mới** trong Cài đặt POS (chưa chọn → `UU_DAI_CHUA_CO_MAU`); duyệt trang thiết kế KH-VC-2 khi chat gửi.
+- Sau VOUCHER-2: chọn **mẫu voucher khách mới** trong Cài đặt POS (chưa chọn → `UU_DAI_CHUA_CO_MAU`); duyệt trang Nạp tiền & Voucher (đã gửi 16.11).
 - Kết nối Google Drive cho chat (tài khoản Google của quán); bật **xác minh 2 bước** cho tài khoản Google của quán.
 - POS › Cài đặt › Hạng thành viên: ▲▼ Kim Cương lên trên cùng (rồi Hạng vàng), tắt Hạng Ruồi (thử), nhập Quyền lợi từng hạng, đặt % và giá gói thật.
 - Gắn tên miền **tuquyduong.com** vào Cloudflare Pages (KH-CF-1) — dán địa chỉ vào Cài đặt hoá đơn POS khi xong (CORS kho nội dung đã nhận tuquyduong.com).
