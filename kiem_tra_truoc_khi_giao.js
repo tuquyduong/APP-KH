@@ -32,12 +32,45 @@ const timDong = (files, re) => files.flatMap((f) => doc(f).split('\n').map((d, i
 console.log('— Kiểm tĩnh App KH');
 const src = quet('src');
 k('có src/api.js', fs.existsSync(path.join(GOC, 'src/api.js')));
-// K1 — CHỖ DUY NHẤT gọi máy chủ là src/api.js (LUAT_XAY_APP §3).
-const fetchNgoai = timDong(src.filter((f) => f !== 'src/api.js'), /\bfetch\s*\(|XMLHttpRequest|navigator\.sendBeacon/);
-k('K1 chỉ src/api.js gọi mạng', fetchNgoai.length === 0, fetchNgoai.slice(0, 5).join(', '));
-// K2 — App chỉ gọi /api/kh, không đường quầy /api/pos hay /api khác.
-const duongLa = timDong(src, /['"`]\/api\/(?!kh[/'"`$])/);
-k('K2 không gọi đường /api ngoài /api/kh', duongLa.length === 0, duongLa.slice(0, 5).join(', '));
+// Mã "NHƯ LÚC CHẠY" cho K1 / K2 (16.11, chủ quán duyệt): esbuild (đi kèm vite) bỏ chú thích, ghép sẵn chữ hằng ('/ap' + 'i/x', `/ap${'i'}`, '\x61pi' → "/api/x")
+// và chuẩn hoá cách viết (window['fe' + 'tch'] → window.fetch); tên tệp sau import / from xoá trắng cho khỏi lẫn. Đọc chữ trần thì viết vòng là lọt — đọc mã chạy thì lộ.
+let esb = null;
+try { esb = require('esbuild'); } catch { /* thiếu — K0 hỏng */ }
+const maChay = {}, loiDoc = [];
+for (const f of src.filter((t) => /\.(jsx?|mjs)$/.test(t))) {
+  try {
+    maChay[f] = esb.transformSync(doc(f), { loader: 'jsx', minifyWhitespace: true, minifySyntax: true, legalComments: 'none' }).code
+      .replace(/\b(from|import)\s*(["'`])[^"'`]*\2/g, '$1""');
+  } catch (e) { loiDoc.push(`${f}: ${String(e && e.message).split('\n')[0]}`); }
+}
+k('K0 đọc được mã như lúc chạy (esbuild)', !!esb && loiDoc.length === 0, esb ? loiDoc.slice(0, 3).join(' · ') : 'thiếu esbuild trong node_modules — chạy npm ci');
+const tu = (ds) => new RegExp(`(?<![A-Za-z0-9_$])(?:${ds.join('|')})(?![A-Za-z0-9_$])`, 'g');
+const timMa = (re, laTep = () => true) => Object.entries(maChay).filter(([f]) => laTep(f))
+  .flatMap(([f, m]) => [...m.matchAll(re)].map((x) => ({ f, x, ra: `${f}: …${m.slice(Math.max(0, x.index - 30), x.index + x[0].length + 25)}…` })));
+// K1 — CHỖ DUY NHẤT gọi máy chủ là src/api.js (LUAT_XAY_APP §3), qua ĐÚNG 2 lối: goi (/api/kh, token khách) và goiKho (/api/nd, vé quản trị). Thêm lối = chat sửa số này.
+const MANG = ['fetch', 'XMLHttpRequest', 'sendBeacon', 'WebSocket', 'EventSource', 'importScripts', 'import(?=\\s*\\()'];
+const SO_LOI_MANG_API = 2;
+const mangNgoai = timMa(tu(MANG), (f) => f !== 'src/api.js').map((m) => m.ra);
+const mangApi = timMa(tu(MANG), (f) => f === 'src/api.js');
+k('K1 chỉ src/api.js gọi mạng', mangNgoai.length === 0, mangNgoai.slice(0, 5).join(' · '));
+k(`K1b src/api.js gọi mạng đúng ${SO_LOI_MANG_API} lối fetch`, mangApi.length === SO_LOI_MANG_API && mangApi.every((m) => m.x[0] === 'fetch'), `thấy ${mangApi.length}: ${mangApi.map((m) => m.x[0]).join(', ')}`);
+// K2 — App chỉ gọi HAI cửa của POS: /api/kh (khách) và /api/nd (kho nội dung, chỉ khu quản trị). Chữ "api" đứng riêng (mọi kiểu viết, kể cả \/api\/ trong biểu thức
+//      chính quy, kể cả mảnh 'api' đem ghép) chỉ được nằm trong dạng đã khai, ở đúng tệp đã khai. Dời tệp / thêm cửa = chat sửa danh sách này.
+const CHO_API = { 'src/dinhDang.js': ['kh'], 'src/noiDung/khoNoiDung.js': ['nd'], 'src/noiDung/nd.js': ['nd'] };
+const apiLa = timMa(/(?<![A-Za-z0-9_$])api(?![A-Za-z0-9_$])/gi).filter(({ f, x }) => {
+  const m = /^\\?\/(api)\\?\/([a-z]+)(?![A-Za-z0-9_-])/.exec(maChay[f].slice(x.index - (maChay[f][x.index - 2] === '\\' ? 2 : 1)));
+  return !(m && (CHO_API[f] || []).includes(m[2]));
+}).map((m) => m.ra);
+k('K2 chỉ /api/kh (dinhDang.js) và /api/nd (kho nội dung) — mọi kiểu viết', apiLa.length === 0, apiLa.slice(0, 5).join(' · '));
+// K2b — cửa kho (goiKho) chỉ tệp kho nội dung dùng, và luôn = địa chỉ kho cố định + đường (không địa chỉ tự do).
+const goiKhoNgoai = timMa(/\bgoiKho\b/g, (f) => !['src/api.js', 'src/noiDung/khoNoiDung.js'].includes(f)).map((m) => m.ra);
+const goiKhoLa = timMa(/\bgoiKho\((?!DIA_CHI_KHO\+duong,)/g, (f) => f === 'src/noiDung/khoNoiDung.js').map((m) => m.ra);
+k('K2b cửa kho goiKho chỉ ở kho nội dung, địa chỉ cố định', goiKhoNgoai.length === 0 && goiKhoLa.length === 0, goiKhoNgoai.concat(goiKhoLa).slice(0, 5).join(' · '));
+// K2c — không viết chữ kiểu giấu (dựng chữ từ mã số / base64 / chạy chữ thành mã): bộ kiểm không đọc được thì không được dùng. Cần thật → chat thêm vào CHO_GIAU.
+const CHO_GIAU = { decodeURIComponent: ['src/duongDan.js'] };
+const giau = timMa(tu(['fromCharCode', 'fromCodePoint', 'atob', 'btoa', 'eval', 'Function', 'unescape', 'decodeURI', 'decodeURIComponent']))
+  .filter(({ f, x }) => !(CHO_GIAU[x[0]] || []).includes(f)).map((m) => m.ra);
+k('K2c không dựng chữ kiểu giấu (fromCharCode, atob, eval…)', giau.length === 0, giau.slice(0, 5).join(' · '));
 // K3 — Không bí mật trong mã nguồn chạy trên máy khách.
 const biMat = timDong(src.concat(['index.html', 'vite.config.mjs'].filter((f) => fs.existsSync(path.join(GOC, f)))),
   /eyJhbGciOi|sk-[A-Za-z0-9]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY|KH_JWT_SECRET|TURSO_AUTH|AUTH_TOKEN\s*[:=]/);
@@ -74,6 +107,24 @@ if (hd && Array.isArray(hd.cua)) {
   const tong = (api.match(/\bgoi\(/g) || []).length - (api.match(/function goi\(/g) || []).length;
   if (tong !== n) lech.push(`${tong - n} lời gọi không viết thẳng`);
   k('K8 mọi lời gọi src/api.js có trong hợp đồng', n > 0 && lech.length === 0, lech.join(', '));
+}
+// K8b — mọi lời gọi kho trong src/noiDung/khoNoiDung.js viết thẳng ('PT', '/đường') và có trong hợp đồng /api/nd (thiet_ke/HOP_DONG_API_ND.md, khối HOP_DONG_ND_MAY_DOC).
+let hdNd = null;
+try { hdNd = JSON.parse(/```json HOP_DONG_ND_MAY_DOC\n([\s\S]*?)\n```/.exec(doc('thiet_ke/HOP_DONG_API_ND.md'))[1]); } catch { /* thiếu / hỏng */ }
+const maKho = maChay['src/noiDung/khoNoiDung.js'];
+k('K8c đọc được hợp đồng /api/nd và tệp kho nội dung', !!hdNd && Array.isArray(hdNd.cua) && hdNd.cua.length > 0 && typeof maKho === 'string');
+if (hdNd && Array.isArray(hdNd.cua) && typeof maKho === 'string') {
+  const chuan = (d) => String(d).split('?')[0].replace(/\$\{[^}]*\}/g, ':x').replace(/:[A-Za-z_]+/g, ':x');
+  const coTrong = new Set(hdNd.cua.map((c) => `${c.phuong_thuc} ${chuan(c.duong)}`));
+  const PT = '(GET|POST|PUT|DELETE|PATCH)';
+  const lech = [];
+  let n = 0;
+  for (const m of maKho.matchAll(new RegExp(`\\b\\w+\\("${PT}",([\`"])([^\`"]*)\\2`, 'g'))) {
+    n++;
+    if (!coTrong.has(`${m[1]} ${chuan(m[3])}`)) lech.push(`${m[1]} ${m[3]}`);
+  }
+  for (const m of maKho.matchAll(new RegExp(`\\b\\w+\\("${PT}",(?![\`"])`, 'g'))) lech.push(`${m[1]} (đường không viết thẳng)`);
+  k('K8b mọi lời gọi kho có trong hợp đồng /api/nd', n > 0 && lech.length === 0, lech.join(', '));
 }
 // K9 — CHUẨN THEO DEMO (chủ quán chốt 29.10): màu và phông trong app CHỈ được lấy từ thiet_ke/app_kh_demo.html.
 //       Màu so theo giá trị (#abc = #aabbcc = rgb(170,187,204)); phông: họ chữ đầu phải là họ demo dùng, sau đó chỉ phông hệ thống dự phòng.
@@ -173,6 +224,14 @@ if (DAY_DU) {
     const tep = [...html.matchAll(/(?:src|href)="\/([^"]+)"/g)].map((m) => m[1]);
     const thieu = tep.filter((t) => !fs.existsSync(path.join(GOC, 'dist', t)));
     k('dist/index.html trỏ tới file có thật', tep.length > 0 && thieu.length === 0, thieu.join(', '));
+    // K2d — bản dựng (đúng tệp khách tải về, kể cả sw.js chép từ public/) chỉ chứa cửa /api/kh và /api/nd.
+    const tepDist = [];
+    const diD = (d) => { for (const t of fs.readdirSync(path.join(GOC, d), { withFileTypes: true })) { const p = path.posix.join(d, t.name); if (t.isDirectory()) diD(p); else if (/\.(m?js|html|json|webmanifest)$/.test(t.name)) tepDist.push(p); } };
+    diD('dist');
+    const cua = new Set();
+    for (const t of tepDist) for (const m of fs.readFileSync(path.join(GOC, t), 'utf8').matchAll(/\\?\/api\\?\/([A-Za-z0-9_-]*)/g)) cua.add(m[1]);
+    const cuaLa = [...cua].filter((c) => !['kh', 'nd'].includes(c));
+    k('K2d bản dựng chỉ gọi /api/kh và /api/nd', cua.has('kh') && cuaLa.length === 0, cuaLa.length ? `cửa lạ: ${cuaLa.join(', ')}` : cua.has('kh') ? '' : 'không thấy /api/kh trong bản dựng (bộ kiểm hỏng?)');
   }
 }
 

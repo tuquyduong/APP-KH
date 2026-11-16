@@ -3,6 +3,17 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 16.11.2026
+- **Bộ kiểm cửa mạng** (chủ quán duyệt 16.11 phương án chat, dặn "chuẩn, tối ưu, kỹ hơn"): K2 cũ chỉ soi MỘT kiểu viết (dấu nháy liền "/api/…") nên máy ADMIN-1 viết
+  `${gốc}/api/nd` lọt (máy tự báo). Từ nay `kiem_tra_truoc_khi_giao.js` đọc mã NHƯ LÚC CHẠY (esbuild: bỏ chú thích, ghép sẵn chữ): mạng chỉ ở `src/api.js`, đúng 2 lối fetch
+  (`goi` → /api/kh, `goiKho` → /api/nd); chữ "/api/…" chỉ ở chỗ đã khai (/api/kh: `dinhDang.js`; /api/nd: kho nội dung); `goiKho` chỉ kho nội dung dùng, địa chỉ cố định; lời gọi kho
+  viết thẳng + có trong hợp đồng /api/nd; không dựng chữ kiểu giấu (fromCharCode, atob, eval…); bản dựng chỉ chứa /api/kh + /api/nd. Thêm cửa / lối = chat sửa bộ kiểm.
+  Lớp cuối vẫn là chat soát cuối đọc từng dòng + POS kiểm vé / quyền / tên miền.
+- **Ảnh khu /admin** (16.11): KHÔNG cần đủ 3 cỡ điện thoại như màn khách — chủ quán sửa nội dung chủ yếu trên máy tính. Màn khách vẫn đủ 360 / 390 / 430.
+- **/admin tạm đừng đổi tên ngày lễ / Tết** (16.11) tới khi KH-SUA-2 sửa (đổi tên → mất gợi ý quà, Tết hiện 2 lần).
+- **Soát cuối chạy bài thử trên CÂY GỘP** (16.11): THE-3 gộp "sạch" với main nhưng ca B4 đỏ vì KH-SUA-1 đổi tên lớp `the-qr` → `tt-qr`; chat gộp main vào nhánh + sửa ca bằng
+  script (kiểm theo cây) trước khi chủ quán Merge.
+
 ## 15.11.2026
 - **Thẻ hội viên Vàng & Kim Cương** (chủ quán duyệt 15.11 — Artifact "Thẻ Vàng & Kim Cương" bản 2; KH-THE-3): mỗi hạng một tấm thẻ đúng tỉ lệ thẻ thật, dùng CHUNG ở Ưu đãi,
   đơn thẻ, Chào mừng hội viên, Thanh toán thẻ, So sánh nhanh. Vàng = lá vàng + vân khắc chìm + biểu tượng bốn mùa ẩn; Kim Cương = xanh đêm + mặt cắt kim cương + chữ bạc; hạng
