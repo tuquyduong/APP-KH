@@ -231,6 +231,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
 
   console.log('Phần 2 — Chromium + POS giả trễ 700 ms');
   let pw = null;
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     try { pw = require('playwright'); } catch { /* không có */ }
@@ -350,7 +351,7 @@ async function trinhDuyet(pw) {
       k(`A3 [${rong}] qua lại Trang chủ ↔ Tài khoản ↔ Ưu đãi 3 vòng → KHÔNG gọi thêm cửa nào`, them.length === 0, them.map((g) => g.duong).join(','));
       k(`A3 [${rong}] mỗi lần chuyển tab nội dung có trong < 300 ms, không khung xám`, Math.max(...cham) < 300, cham.join(','));
       await t.locator('.tabbar .tab:nth-child(5)').click();
-      const the = await chu(t, '#rewards .tier-card');
+      const the = await chu(t, '#rewards .ud-the, #rewards .tier-card');
       k(`G1 [${rong}] khách có hạng → thẻ hạng của khách (không bảng hạng; KH-THE-2: "Hạng của bạn · <tên POS>")`, /Hạng của bạn[\s\S]*Vàng/.test(the) && !/Test0d/.test(the), the);
       const tran = await t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
       k(`H1 [${rong}] không tràn ngang`, tran);
@@ -365,7 +366,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/uudai'); await yen(t, S);
     k(`B3 [${rong}] chưa đăng nhập → không gọi cửa cần token`, KHUNG_CUA.every((d) => dem(S, d) === 0), demHet(S));
     // KH-THE-2 E2: vãng lai thấy MỘT hạng bán được (hạng bán đầu tiên — Test0d 0 % đứng trước nhưng bị lọc), không bảng mọi hạng.
-    const the = await chu(t, '#rewards .tier-card');
+    const the = await chu(t, '#rewards .ud-the, #rewards .tier-card');
     k(`G1 [${rong}] vãng lai: thẻ "chưa có thẻ" hiện Vàng 10% (hạng 0% Test0d đứng trước bị lọc, không hiện)`, /Trở thành hội viên[\s\S]*Vàng/.test(the) && /10%/.test(the) && !/Test0d/.test(the), the);
     await chup(t, `ung-dung_uudai-vanglai-hang_${rong}`);
   });

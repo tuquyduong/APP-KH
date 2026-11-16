@@ -219,7 +219,7 @@ export function maDonDaTra(g, ds) {
   const d = ds.find((x) => x && String(x.ma) === String(g.ma_don));
   return d && daThanhToan(d.tien_trinh) ? String(g.ma_don) : '';
 }
-const theCuaBanGhi = (g) => (g && g.than && Array.isArray(g.than.mon) ? g.than.mon.find(laThe) : null) || null;
+export const theCuaBanGhi = (g) => (g && g.than && Array.isArray(g.than.mon) ? g.than.mon.find(laThe) : null) || null;
 /** Hạng (bản ghi /hang) của dòng thẻ trong bản ghi lần gửi (`than.mon`); không có → null. ("Chào mừng hội viên …" không chờ /toi.) */
 export function hangCuaDon(g, dsHang) {
   const the = theCuaBanGhi(g);
@@ -234,6 +234,12 @@ export function thamTaoMaMoi(g) {
 export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
 export const hanMoiThe = (don) => chu(((don && Array.isArray(don.hoa_don) ? don.hoa_don : []).find((d) => d && d.loai === 'the') || {}).ghi_chu);
+
+/** Chữ hạn mới của POS → hạn cho thẻ: có ngày dd/mm/yyyy → 'yyyy-mm-dd'; "không thời hạn" → null; không đọc được → undefined (thẻ bỏ dòng hạn, App không đoán). */
+export function hetHanTuChu(chuHan) {
+  const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(chu(chuHan));
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : /không\s+thời\s+hạn/i.test(chu(chuHan)) ? null : undefined;
+}
 
 /** Thẻ đơn ở Lịch sử mở Theo dõi đơn khi đơn App còn đang chạy; xong / huỷ / bill quầy → Chi tiết đơn. */
 export const moTheoDoi = (tt) => ['cho_tra', 'da_tra', 'dang_lam'].includes(tt);
@@ -263,14 +269,25 @@ const BUOC = {
   dang_giao: { t: 'td.buoc.dang_giao', ic: 'package' },
   da_giao: { t: 'td.buoc.da_giao', ic: 'flag' },
   da_huy: { t: 'td.buoc.da_huy', ic: 'close' },
+  the_kich_hoat: { t: 'the.td.kichHoat', ic: 'bolt' }, // đơn CHỈ thẻ: bước 2 (KH-THE-3); dòng phụ theo có biết mức giảm hay không
 };
+const THE_CHI = ['cho_tra', 'the_kich_hoat'];
 const TAI_QUAN = ['cho_tra', 'da_tra', 'dang_lam', 'xong'];
 const GIAO = ['cho_tra', 'da_tra', 'dang_lam', 'dang_giao', 'da_giao'];
 const KET_THUC = ['xong', 'da_giao', 'da_huy'];
 const DA_XONG = ['da_tra', 'xong', 'da_giao']; // trạng thái là "đã làm xong bước đó" (khác "đang làm": cho_tra, dang_lam, dang_giao)
 
-/** { ds[] { ma, t, s, ic, kt, ks }, hien, xongBuocHien } — t / s = chữ hiện, kt / ks = khoá nội dung của chúng; `hien` = chỉ số bước đang ở; `xongBuocHien` = bước đó đã xong. */
-export function buocTienTrinh(tt) {
+/**
+ * { ds[] { ma, t, s, ic, kt, ks }, hien, xongBuocHien } — t / s = chữ hiện, kt / ks = khoá nội dung của chúng; `hien` = chỉ số bước đang ở; `xongBuocHien` = bước đó đã xong.
+ * Đơn CHỈ thẻ (`chiThe`, KH-THE-3): hai bước "Chờ thanh toán" → "Thẻ kích hoạt" (POS đi thẳng chờ trả → xong, không pha chế / ra quầy); `phanTram` (mức giảm của hạng) có thì
+ * dòng phụ nói thêm "đơn đồ uống tiếp theo được giảm …%". Đơn đồ uống không đổi.
+ */
+export function buocTienTrinh(tt, { chiThe = false, phanTram = null } = {}) {
+  if (chiThe && tt !== 'da_huy') {
+    const ks = so(phanTram) ? 'the.td.kichHoat.sPhanTram' : 'the.td.kichHoat.s';
+    const ds = THE_CHI.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(m === 'the_kich_hoat' ? { s: nd(ks, { phanTram }), ks } : {}) }));
+    return { ds, hien: tt === 'cho_tra' || !tt ? 0 : 1, xongBuocHien: tt === 'xong' }; // chỉ tích "Thẻ kích hoạt" khi POS báo xong
+  }
   const ma = tt === 'da_huy' ? ['da_huy'] : GIAO.slice(3).includes(tt) ? GIAO : TAI_QUAN;
   return { ds: ma.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(BUOC[m].s ? { s: nd(BUOC[m].s), ks: BUOC[m].s } : {}) })), hien: Math.max(0, ma.indexOf(tt)), xongBuocHien: DA_XONG.includes(tt) };
 }

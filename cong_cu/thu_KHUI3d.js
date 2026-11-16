@@ -102,6 +102,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');
   let pw = null;
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     try { pw = require('playwright'); } catch { /* không có */ }
@@ -181,7 +182,7 @@ async function trinhDuyet(pw) {
         await mo(t, '/uudai', cs);
         k(`B1 [${nhan}] vãng lai mở /uudai → ở lại /uudai (không bị đẩy sang đăng nhập)`, new URL(t.url()).pathname === '/uudai', t.url());
         k(`B2 [${nhan}] đầu trang "Ưu đãi" (không "của tôi")`, (await chu(t, '#rewards h1')) === 'Ưu đãi', await chu(t, '#rewards h1'));
-        const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+        const the = (await t.locator('#rewards .ud-the, #rewards .tier-card').first().innerText().catch(() => ''));
         k(`B2 [${nhan}] thẻ hội viên (KH-THE-2 E2): chưa có thẻ → hạng bán đầu tiên của POS (Bạc, giảm 5%, từ 99.000đ / 3 tháng), không liệt kê mọi hạng`, /Trở thành hội viên[\s\S]*Bạc/.test(the) && /Giảm 5% mọi đơn/.test(the) && /99\.000đ[\s\S]*\/ 3 tháng/.test(the) && !/Vàng/.test(the), the);
         k(`B2 [${nhan}] khối khoá "Đăng nhập để xem điểm, ví và voucher"`, /Đăng nhập để xem điểm, ví và voucher/.test(await chu(t, '#rewards .the-moi')));
         k(`B2 [${nhan}] KHÔNG thấy điểm, ví, voucher, ô nhập mã, lịch sử`, !(await co(t, '#rewards .wallet-row')) && !(await co(t, '#rewards .voucher')) && !(await co(t, '#ma-bill')) && !/Lịch sử điểm|Ví voucher|Nhập mã trên hoá đơn/.test(await chu(t, '#rewards')));
@@ -199,7 +200,7 @@ async function trinhDuyet(pw) {
 
   await ca('vanglai-hang-hong', { token: '', pos: { hangHong: true } }, async (t) => {
     await mo(t, '/uudai');
-    k('B2 POS không trả hạng → ẩn thẻ hạng, không bịa', !(await co(t, '#rewards .tier-card')) && (await co(t, '#rewards .the-moi')));
+    k('B2 POS không trả hạng → ẩn thẻ hạng, không bịa', !(await co(t, '#rewards .ud-the, #rewards .tier-card')) && (await co(t, '#rewards .the-moi')));
   });
 
   await ca('vanglai-giovang-dang', { token: '', pos: { gv: GV_DANG } }, async (t) => {
@@ -226,7 +227,7 @@ async function trinhDuyet(pw) {
         const nhan = `${rong}/${cs}`;
         await mo(t, '/uudai', cs);
         k(`B2 [${nhan}] đã đăng nhập: "Ưu đãi của tôi"`, (await chu(t, '#rewards h1')) === 'Ưu đãi của tôi');
-        const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+        const the = (await t.locator('#rewards .ud-the, #rewards .tier-card').first().innerText().catch(() => ''));
         k(`B2 [${nhan}] thẻ hạng của khách (KH-THE-2): Hạng của bạn · Vàng · Giảm 10% mọi đơn hàng · hạn 15/11`, /Hạng của bạn[\s\S]*Vàng[\s\S]*Giảm 10% mọi đơn hàng/.test(the) && /15\/11/.test(the) && !/Trở thành hội viên/.test(the), the);
         const vi = await chu(t, '#rewards .wallet-row');
         k(`B2 [${nhan}] điểm 1.250 và số dư ví 85.000đ`, /1\.250/.test(vi) && /85\.000đ/.test(vi) && (await t.locator('#rewards .wallet-box').count()) === 2, vi);
@@ -239,8 +240,8 @@ async function trinhDuyet(pw) {
   }
   await ca('dangnhap-hang-null', { pos: { khach: { hang: null } } }, async (t) => {
     await mo(t, '/uudai');
-    await t.waitForSelector('#rewards .tier-card');
-    const the = (await t.locator('#rewards .tier-card').first().innerText().catch(() => ''));
+    await t.waitForSelector('#rewards .ud-the, #rewards .tier-card');
+    const the = (await t.locator('#rewards .ud-the, #rewards .tier-card').first().innerText().catch(() => ''));
     k('B2 đã đăng nhập, hang: null → thẻ "chưa có thẻ" như vãng lai (KH-THE-2), vẫn có điểm + ví', /Trở thành hội viên[\s\S]*Bạc/.test(the) && (await t.locator('#rewards .wallet-box').count()) === 2, the);
   });
   await ca('dangnhap-vi-thieu', { pos: { khach: { so_du_vi: undefined } } }, async (t) => {

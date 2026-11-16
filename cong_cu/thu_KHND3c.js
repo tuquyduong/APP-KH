@@ -261,6 +261,7 @@ const CHU_MAY = ['anh', 'chị', 'cô', 'chú', 'bác', 'em', 'bạn']; // XUNG_
   k('C4 vệt sáng LUÔN chạy: kiểm ở thu_KHUI5g (luật @media ghi đè trong giaoDien.css, ca Chromium reduce → sweepP); demo_*.css KHÔNG bị sửa', /prefers-reduced-motion/.test(doc('src/giaoDien/demo_2.css')) && /\.fx-a, \.fx-a::before\{ animation:none !important; \}/.test(doc('src/giaoDien/demo_2.css')) && /sweepP/.test(css) && /sweepL/.test(css));
 
   console.log('Phần 2 — Chromium');
+  k('KH-THE-3 nguồn: Ưu đãi dùng thẻ dùng chung TheHoiVienChung, không còn MedHang (thẻ hội viên có hạng KH-THE-3)', /TheHoiVienChung/.test(doc('src/pages/UuDai.jsx')) && !/MedHang/.test(doc('src/pages/UuDai.jsx')));
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
     let pw = null;
@@ -357,17 +358,17 @@ async function trinhDuyet(pw) {
     // ── Ưu đãi (đã đăng nhập) ──
     await ca('Ưu đãi hội viên', { dn: true }, async (t, loi) => {
       await mo(t, '/uudai'); await t.waitForSelector('#rewards .wallet-row'); await t.waitForSelector('#rewards .tx-item');
-      const v0 = await t.evaluate(() => ({ h1: document.querySelector('#rewards h1')?.textContent, heads: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent), nhan: [...document.querySelectorAll('#rewards .wallet-box .l')].map((e) => e.textContent), more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .the-ud .ud-ten')?.textContent, pct: document.querySelector('#rewards .the-ud .ud-giam')?.textContent, hh: document.querySelector('#rewards .the-ud .ud-day span')?.textContent }));
+      const v0 = await t.evaluate(() => ({ h1: document.querySelector('#rewards h1')?.textContent, heads: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent), nhan: [...document.querySelectorAll('#rewards .wallet-box .l')].map((e) => e.textContent), more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .ud-the .thv-ten span')?.textContent, pct: document.querySelector('#rewards .ud-the .ud-chip span')?.textContent, hh: document.querySelector('#rewards .ud-the .ud-con > span')?.textContent }));
       const d0 = await dau(t, '#rewards');
       k('E1 Ưu đãi (hội viên) mặc định như cũ: "Ưu đãi của tôi", 3 tiêu đề, nhãn điểm / ví, "Xem tất cả", thẻ hội viên (tên, % giảm, hạn thẻ — KH-THE-2); có data-nd (≥ 12) và data-nd-khoa (≥ 5)', v0.h1 === 'Ưu đãi của tôi' && v0.heads.join('|') === 'Nhập mã trên hoá đơn|Ví voucher|Lịch sử điểm' && v0.nhan.join('|') === 'Điểm tích lũy|Số dư ví' && v0.more === 'Xem tất cả'
         && v0.ten === 'Vàng' && v0.pct === 'Giảm 10% mọi đơn hàng' && /^Hết hạn 01\/01\/2027$/.test(v0.hh || '') && d0.nd >= 12 && d0.khoa >= 5, JSON.stringify({ v0, d0 }));
       await datBan(t, { 'ud.tieuDeToi': 'Của tôi nè', 'ud.diem': 'Điểm hiện có', 'ud.xemTatCa': 'Mở hết', 'ud.the.giam': 'Bớt {phanTram}%', 'ud.the.hetHan': 'Hết hạn thẻ {ngay}', 'ud.lichSu': 'Điểm đã dùng', 'nm.nhanDiem': 'Cộng điểm' });
       await t.waitForFunction(() => document.querySelector('#rewards h1')?.textContent === 'Của tôi nè');
-      const v1 = await t.evaluate(() => ({ nhan: document.querySelector('#rewards .wallet-box .l')?.textContent, more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .the-ud .ud-giam')?.textContent, hh: document.querySelector('#rewards .the-ud .ud-day span')?.textContent, ls: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent)[2], nut: document.querySelector('#rewards .promo-box button')?.textContent }));
+      const v1 = await t.evaluate(() => ({ nhan: document.querySelector('#rewards .wallet-box .l')?.textContent, more: document.querySelector('#rewards .more-l span')?.textContent, ten: document.querySelector('#rewards .ud-the .ud-chip span')?.textContent, hh: document.querySelector('#rewards .ud-the .ud-con > span')?.textContent, ls: [...document.querySelectorAll('#rewards .sec-head h2')].map((e) => e.textContent)[2], nut: document.querySelector('#rewards .promo-box button')?.textContent }));
       k('E1 bản giả đổi 7 khoá Ưu đãi hội viên (tên màn, nhãn điểm, Xem tất cả, % giảm của thẻ, hạn thẻ, lịch sử, nút Nhận điểm) → đổi theo', v1.nhan === 'Điểm hiện có' && v1.more === 'Mở hết' && v1.ten === 'Bớt 10%' && v1.hh === 'Hết hạn thẻ 01/01/2027' && v1.ls === 'Điểm đã dùng' && v1.nut === 'Cộng điểm', JSON.stringify(v1));
       await lamRong(t);
       await t.waitForFunction(() => document.querySelector('#rewards h1')?.textContent === 'Ưu đãi của tôi');
-      k('E1 bản rỗng → như cũ; không lỗi trang', (await chuTrong(t, '#rewards .the-ud .ud-day span')) === 'Hết hạn 01/01/2027' && loi.length === 0, loi.join('|'));
+      k('E1 bản rỗng → như cũ; không lỗi trang', (await chuTrong(t, '#rewards .ud-the .ud-con > span')) === 'Hết hạn 01/01/2027' && loi.length === 0, loi.join('|'));
     });
     // ── Tài khoản + Hồ sơ + Hỗ trợ ──
     await ca('Tài khoản', { dn: true }, async (t, loi) => {

@@ -1,0 +1,33 @@
+BẰNG CHỨNG ĐỎ — KH-THE-3 — bài mới cong_cu/thu_KHTHE3.js chạy trên code GỐC (HEAD 158773d, cây giải nén ở thư mục nháp)
+
+[1] KHONG_TRINH_DUYET=1 (đúng cách cổng GitHub chạy):
+A — hàm thuần
+  ✗ A2 dừng giữa chừng  — Cannot find module '…/src/theHoiVien.js'
+A — CSS, component, danh mục
+  ✗ A1 the_hoi_vien.css có, 0 màu ngoài demo (thuật toán K9)
+  ✗ A1 mọi lớp trong css bắt đầu "thv" …
+  ✗ A1 cỡ chữ cqw luôn có px dự phòng đứng trước (iOS 15)  — 0/0
+  ✗ A1 đường dẫn ảnh … hai tệp svg có trong public/anh
+  ✗ A4 css: giảm chuyển động tắt ánh lướt + lấp lánh
+  ✗ A3 TheHoiVien.jsx: role="img" + aria-label ở cỡ lớn, aria-hidden ở cỡ nhỏ, lớp chieu, lấp lánh Kim Cương
+  ✗ A5 khoá mới có trong danh mục
+B — các bước đơn chỉ thẻ
+  ✗ B2 đơn chỉ thẻ chờ trả: HAI bước "Chờ thanh toán" → "Thẻ kích hoạt" …
+  ✗ B2 dòng phụ bước 2 …  ✗ B2 không biết % …  ✗ B2 chữ các bước KHÔNG có "pha chế" …
+  ✓ B2 đơn đồ uống vẫn 4 bước (đối chứng K5, xanh cả trên gốc)
+  ✗ B2 đơn chỉ thẻ đã xong …  ✗ B2 khoá nội dung bước thẻ có trong danh mục (kt / ks)
+1 đạt · 14 hỏng
+
+[2] Có Chromium (Playwright): 22 đạt · 57 hỏng — mọi ca Ưu đãi có hạng (Vàng / Kim Cương / sắp hết hạn / hạng khác), Theo dõi đơn thẻ (2 bước, dòng thẻ nhỏ),
+Chào mừng (thẻ lớn, ánh lướt), Thanh toán thẻ (thẻ vừa), So sánh nhanh (thẻ nhỏ) ĐỎ; ca đối chứng xanh trên gốc: `chua` giữ nguyên, đơn đồ uống 4 bước, Trang chủ giữ thẻ điểm.
+
+Sau khi vá (cùng bài, cùng lệnh): có Chromium 97 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 21 đạt · 0 hỏng (sau soát vòng 1 thêm 2 ca nguồn → 23; có Chromium 105).
+
+SỐ CA cong_cu/thu_KHTHE3.js: 23
+
+Bài cũ sửa đúng ca (mỗi bài thêm 1 ca nguồn "TheHoiVienChung" — ĐỎ trên gốc kể cả KHONG_TRINH_DUYET=1; số ca đếm khi chạy trên code đã vá):
+SỐ CA cong_cu/thu_KHHANG2.js: 16
+SỐ CA cong_cu/thu_KHND3c.js: 43
+SỐ CA cong_cu/thu_KHNHANH1.js: 86
+SỐ CA cong_cu/thu_KHTHE2.js: 46
+SỐ CA cong_cu/thu_KHUI3d.js: 36

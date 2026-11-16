@@ -65,7 +65,7 @@ const TANG = 'Dành tặng khách thân thiết';
   await thu('A1b', async () => {
     const f = doc('src/pages/UuDai.jsx');
     const jsx = boChuThich(f);
-    k('A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)', /<Chu k="ud\.the\.khongHan"/.test(jsx) && /'ud\.the\.tang'/.test(jsx) && /trangThaiTheUuDai\(ds, /.test(jsx) && /const ds = hangCoGiam\(dsHang\)/.test(jsx));
+    k('A1 nguồn: TheHang DÙNG khoá ud.the.khongHan, ud.the.tang và trangThaiTheUuDai(hạng có giảm của /hang…) (KH-THE-2)', /ud\.the\.khongHan/.test(jsx) && /TheHoiVienChung/.test(jsx) && /'ud\.the\.tang'/.test(jsx) && /trangThaiTheUuDai\(ds, /.test(jsx) && /const ds = hangCoGiam\(dsHang\)/.test(jsx));
   });
 
   await thu('B1n', async () => {
@@ -153,7 +153,7 @@ async function trinhDuyet(pw) {
   const khongTran = (t) => t.evaluate(() => document.scrollingElement.scrollWidth <= window.innerWidth + 1);
   const chup = async (t, ten) => { if (luuAnh) await t.screenshot({ path: path.join(luuAnh, ten + '.png') }); };
   const manText = (t) => t.locator('#rewards').innerText();
-  const theHang = (t) => t.locator('#rewards .tier-card').first().innerText();
+  const theHang = (t) => t.locator('#rewards .ud-the, #rewards .tier-card').first().innerText();
   const dem = (van, s) => van.split(s).length - 1;
   const HANG_CO_HAN = { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-12-15T23:59:00' };
 
@@ -186,19 +186,19 @@ async function trinhDuyet(pw) {
       const v = await theHang(t);
       // KH-THE-2 E2: chưa hạng → MỘT hạng bán đầu tiên (Bạc), giá gói rẻ nhất, không liệt kê mọi hạng / mọi gói.
       k(`A2 [${n}] chưa có thẻ: hạng bán đầu tiên Bạc, "Giảm 5% mọi đơn", "Từ 300.000đ / 3 tháng"; không liệt kê Vàng / Kim Cương / 12 tháng`, /Trở thành hội viên[\s\S]*Bạc/.test(v) && /Giảm 5% mọi đơn/.test(v) && /Từ[\s\S]*300\.000đ[\s\S]*\/ 3 tháng/.test(v) && !/Vàng|Kim Cương|1\.000\.000đ|Thường/.test(v), v);
-      k(`A2 [${n}] chỉ một nút "Xem & mua thẻ ›" (mở màn Hạng thành viên), không nút Gia hạn`, (await t.locator('#rewards .tier-card button').count()) === 1 && (await t.locator('#rewards .tier-card button').innerText()).trim() === 'Xem & mua thẻ ›' && !/Gia hạn/.test(v));
+      k(`A2 [${n}] chỉ một nút "Xem & mua thẻ ›" (mở màn Hạng thành viên), không nút Gia hạn`, (await t.locator('#rewards .ud-the, #rewards .tier-card button').count()) === 1 && (await t.locator('#rewards .ud-the, #rewards .tier-card button').innerText()).trim() === 'Xem & mua thẻ ›' && !/Gia hạn/.test(v));
       k(`A2 [${n}] không tràn ngang`, await khongTran(t));
       await chup(t, `bang-hang-vang-lai_${rong}`);
     });
   }
   await ca('vang-lai-khong-goi', { dn: false, hang: [H_VANG, H_TANG] }, async (t) => {
     await mo(t, '/uudai');
-    k('A2 đối chứng: không hạng nào bán được → ẩn thẻ (không giá nào)', (await t.locator('#rewards .tier-card').count()) === 0 && !/\d\.\d{3}đ/.test(await manText(t)));
+    k('A2 đối chứng: không hạng nào bán được → ẩn thẻ (không giá nào)', (await t.locator('#rewards .ud-the, #rewards .tier-card').count()) === 0 && !/\d\.\d{3}đ/.test(await manText(t)));
   });
   await ca('vang-lai-du-lieu-hong', { dn: false, hang: [{ id: 1, ten: 'Bạc', phan_tram: 5, goi: 'hỏng', chi_cap: 'x' }, { id: 2, ten: 'Vàng', phan_tram: 10 }] }, async (t) => {
     await mo(t, '/uudai');
     const v = await manText(t);
-    k('A3 dữ liệu hạng thiếu / sai kiểu (không gói bán được) → ẩn thẻ, không "undefined"/"NaN"', (await t.locator('#rewards .tier-card').count()) === 0 && !/undefined|NaN/.test(v), v.slice(0, 200));
+    k('A3 dữ liệu hạng thiếu / sai kiểu (không gói bán được) → ẩn thẻ, không "undefined"/"NaN"', (await t.locator('#rewards .ud-the, #rewards .tier-card').count()) === 0 && !/undefined|NaN/.test(v), v.slice(0, 200));
   });
   await ca('khach-thieu-het-han', { khach: { hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 0 } } }, async (t) => {
     await mo(t, '/uudai');
