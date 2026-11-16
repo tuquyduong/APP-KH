@@ -70,3 +70,9 @@ VIỆC: KH-THE-3 thẻ hội viên Vàng & Kim Cương dùng chung. ĐÃ SỬA: 
 npm test xanh · --day-du 56 đạt · 0 hỏng · ✓ CỔNG CHẠY ĐẠT (KHONG_TRINH_DUYET=1, mốc 158773d^) · cổng tinh chỉ còn đòi dòng HEAD ĐÃ KIỂM bên dưới.
 
 HEAD ĐÃ KIỂM: 2c427f3
+
+## Gộp main (chat soát cuối 16.11)
+Chat soát cuối 16.11 ĐẠT: cổng tinh + chay (base b48c68d) ĐẠT; `--day-du` Chromium trên CÂY GỘP với main 57 đạt + 1 hỏng = ca B4 thu_KHTHE3 tìm `#checkout .the-qr` —
+KH-SUA-1 (PR #40) đã đổi lớp ô "Chuyển khoản QR" thành `tt-qr` (gộp không đụng nhau về chữ, đụng nhau về nghĩa). Sửa bộ chọn ca B4 → 105/0; so 180 ảnh gốc ↔ gộp:
+ngoài phạm vi chỉ vệt sáng / đồng hồ / nút gạt đang chạy. Script chat gộp main 2ad23f6 vào nhánh + sửa ca B4 (không đổi code App), kiểm theo cây.
+HEAD ĐÃ KIỂM: 925a15b
