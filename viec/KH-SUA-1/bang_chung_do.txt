@@ -1,0 +1,26 @@
+KH-SUA-1 — bằng chứng ĐỎ trên code gốc (HEAD 85e151d = main e6a01ce + phiếu), bài thử mới cong_cu/thu_KHSUA1.js
+
+$ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHSUA1.js     (gốc)
+  ✓ A0 tìm thấy tệp css để canh (không chỉ demo)
+  ✗ A1 canh chung: không lớp gốc nào định nghĩa ở ≥ 2 tệp css (ngoài demo*.css)  — .the-qr ở src/giaoDien/thanh_toan.css + src/giaoDien/the_qr.css
+  ✓ A1 (đối chứng) bắt .x ở hai tệp trong danh sách bộ chọn; không bắt .y .z / .y.z / chú thích / .q
+  ✗ A2 ThanhToan.jsx không còn lớp the-qr*
+  ✗ A2 ThanhToan.jsx dùng tt-qr, tt-qr-ic, tt-qr-v
+  ✗ A2 thanh_toan.css không còn lớp the-qr*; có luật .tt-qr{ display:flex … }
+  ✗ A2 lớp the-qr* chỉ còn ở src/giaoDien/the_qr.css  — src/giaoDien/thanh_toan.css,src/giaoDien/the_qr.css
+2 đạt · 5 hỏng
+
+$ node cong_cu/thu_KHSUA1.js     (gốc, có Chromium) — thêm các ca bố cục bên trong thẻ, ở 390 và 360:
+  ✗ B1 [390] phần đầu (tên quán) nằm TRÊN khung trắng  — đáy đầu 212.2 · đỉnh khung 117
+  ✗ B1 [390] mã QR rộng ≥ 200px  — 52.2
+  ✗ B1 [390] .the-qr không phải flex, không có box-shadow của ô Thanh toán thẻ  — {"d":"flex","bs":"rgb(200, 48, 108) 0px 0px 0px 2px"}
+  (360 giống 390)
+  ✗ B1 Thanh toán thẻ: có ô .tt-qr
+12 đạt · 12 hỏng
+Ảnh lỗi: viec/KH-SUA-1/so_anh/truoc/theodoi_qr_390.png (thẻ xếp ngang, số tiền tràn khung)
+
+SAU VÁ (HEAD bac5c5f):
+  KHONG_TRINH_DUYET=1 → 7 đạt · 0 hỏng
+  có Chromium → 27 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHSUA1.js: 7
