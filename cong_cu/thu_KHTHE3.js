@@ -297,7 +297,7 @@ async function trinhDuyet(pw) {
     await mo(t, '/uudai/hang/thanhtoan?h=2&thang=3');
     await doiChu(t, '#checkout', /Thẻ hội viên Hạng vàng/);
     k('B4 thẻ tóm tắt = thẻ VỪA .thv.mini.vua.vang 64px, aria-hidden; không còn .pc-mini / .the-mini', (await dem(t, '#checkout .thv.mini.vua.vang')) === 1 && (await t.locator('#checkout .thv.mini.vua').boundingBox()).width === 64 && (await dem(t, '#checkout .pc-mini, #checkout .the-mini')) === 0);
-    k('B4 vẫn "Thẻ hội viên Hạng vàng · 3 tháng", ô cách trả QR (the-qr) còn nguyên', /Thẻ hội viên Hạng vàng[\s\S]*3 tháng/.test(await chu(t, '#checkout .the-tom')) && (await dem(t, '#checkout .the-qr')) === 1);
+    k('B4 vẫn "Thẻ hội viên Hạng vàng · 3 tháng", ô cách trả QR (tt-qr) còn nguyên', /Thẻ hội viên Hạng vàng[\s\S]*3 tháng/.test(await chu(t, '#checkout .the-tom')) && (await dem(t, '#checkout .tt-qr')) === 1);
     await chup(t, 'thanhtoan_the');
     await mo(t, '/uudai/hang/thanhtoan?h=4&thang=1');
     await doiChu(t, '#checkout', /Hạng Ruồi/);

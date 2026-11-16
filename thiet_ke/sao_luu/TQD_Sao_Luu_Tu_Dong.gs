@@ -1,5 +1,9 @@
 /**
- * TQD Sao Lưu Tự Động — BẢN 2 (15.11.2026). Chat App KH giữ mã từ nay (POS đồng ý, thư 15.11 SAOLUU_b). POS cần đổi gì → gửi thư cho App.
+ * TQD Sao Lưu Tự Động — BẢN 2.3 (15.11.2026). Chat App KH giữ mã từ nay (POS đồng ý, thư 15.11 SAOLUU_b). POS cần đổi gì → gửi thư cho App.
+ *   2.1 = bản 2 + 3 chỗ POS soát (thư POS 15.11 c): cuộc gọi có khoá không đi theo chuyển hướng · kiểm Excel bằng bản sao kiểu zip · mã nguồn POS chạy trước App.
+ *   2.2 = 2.1 + nội dung App lưu .json THẲNG (gợi ý POS 15.11 c): khôi phục = /admin › Nhập toàn bộ chọn thẳng tệp trên Drive, không phải giải nén.
+ *   2.3 = 2.2 + khoá GitHub chỉ đọc KHOA_GITHUB cho MỘT cuộc gọi danh sách tệp của mã nguồn App (thư POS 15.11 e: lần chạy thật đầu bị GitHub chặn lượt)
+ *         + nhật ký báo ngày hết hạn khoá GitHub, còn < 14 ngày thì báo lỗi để chủ quán tạo khoá mới + che khoá GitHub trong thông điệp lỗi.
  *
  * Cất MỌI bản sao lưu vào Drive `TQD-SAO-LUU` (riêng tư, tài khoản Google của quán). GitHub vẫn là nơi làm việc.
  *   App KH/Noi dung/  nội dung App (GET /api/nd/xuat)         mỗi đêm ~2 giờ   chỉ lưu khi đổi   giữ 7 ngày + 4 tuần + 12 tháng
@@ -12,6 +16,7 @@
  * KHOÁ: chỉ đọc từ Thuộc tính tập lệnh, KHÔNG bao giờ ghi ra nhật ký / tên tệp.
  *   KHOA_ND  = khoá ndk_… (nếu chưa có tên này, script tự dùng thuộc tính sẵn có mà giá trị bắt đầu "ndk_" — khoá bản 1)
  *   KHOA_POS = khoá posk_… (chủ quán thêm SAU khi POS gộp SAOLUU-DEM-1; chưa có → phần POS/Du lieu "bỏ qua", không tính lỗi)
+ *   KHOA_GITHUB = khoá GitHub "fine-grained", phạm vi "Public repositories (read-only)" — chỉ gửi tới api.github.com (1 lần / tuần); chưa có → chạy không khoá như cũ
  *
  * LỖI: mỗi phần chạy riêng (phần này hỏng phần khác vẫn chạy); cuối lượt còn lỗi thì `throw` → Google tự email chủ quán
  *   (Trình kích hoạt › mỗi hẹn giờ › "Thông báo lỗi: Ngay lập tức"). Chạy tốt thì im.
@@ -61,7 +66,7 @@ function caiHenGio() {
 
 function chay2gio() { chayLuot_(['ND'], false); }
 function chay3gio() { chayLuot_(['POS_DL'], false); }
-function chay4gio() { chayLuot_(['MN_APP', 'MN_POS'], false); }
+function chay4gio() { chayLuot_(['MN_POS', 'MN_APP'], false); }   // POS một lần tải (nhanh) trước; App ~570 tệp có thể dùng gần hết lượt
 /** Thử tay ngay: chạy hết 4 phần, kể cả mã nguồn (không đợi Chủ nhật). Vẫn bỏ qua phần không đổi. */
 function thuNgay() { chayLuot_(['ND', 'POS_DL', 'MN_APP', 'MN_POS'], true); }
 
@@ -114,11 +119,10 @@ function lamNoiDung_(thuMuc) {
   // So băm phần nội dung thật (bỏ xuat_luc và nhat_ky — mỗi lần xuất nhật ký tự thêm một dòng "xuat")
   const bam = bamChu_(JSON.stringify([d.ban, d.nhap || [], d.anh || []]));
   if (bam === tt.getProperty('ND_BAM')) return { ket: 'bỏ qua', ghi: 'nội dung không đổi' };
-  const ten = 'noi_dung_app_' + ngay_('yyyy-MM-dd_HHmm');
-  const zip = Utilities.zip([Utilities.newBlob(chu, 'application/json', ten + '.json')], ten + '.zip');
-  const tep = thuMuc.createFile(zip);
-  const ra = Utilities.unzip(tep.getBlob());   // kiểm đọc lại
-  const lai = ra.length === 1 ? JSON.parse(ra[0].getDataAsString('UTF-8')) : null;
+  const ten = 'noi_dung_app_' + ngay_('yyyy-MM-dd_HHmm') + '.json';   // .json THẲNG — đúng tệp /admin › Nhập toàn bộ nhận
+  const tep = thuMuc.createFile(Utilities.newBlob(chu, 'application/json', ten));
+  let lai = null;   // kiểm đọc lại đúng tệp vừa lưu
+  try { lai = JSON.parse(tep.getBlob().getDataAsString('UTF-8')); } catch (e) { lai = null; }
   if (!lai || lai.dinh_dang !== 1 || !Array.isArray(lai.ban) || lai.ban.length !== d.ban.length) {
     tep.setTrashed(true);
     return { ket: 'lỗi', loi: true, ghi: 'kiểm lại tệp vừa lưu không khớp — đã bỏ tệp đó' };
@@ -168,8 +172,14 @@ function lamMaNguonApp_(thuMuc, epTuan, batDau) {
   if (!m) return choHoacLoi_('MN_APP', `không đọc được commit main (GitHub trả ${refs.ma})`);
   const sha = m[1];
   if (sha === tt.getProperty('MN_APP_SHA')) { boCho_('MN_APP'); return { ket: 'bỏ qua', ghi: `kho không đổi (${sha.slice(0, 7)})` }; }
-  const cay = goi_(DIA_CHI.APP_CAY(sha), { Accept: 'application/vnd.github+json' }, { dungKhi: [403, 404] });
-  if (cay.ma === 403 || cay.ma === 429) return choHoacLoi_('MN_APP', 'GitHub hạn lượt API (IP Google dùng chung) — thử lại đêm mai', true);
+  const kg = (tt.getProperty('KHOA_GITHUB') || '').trim();
+  const tieuDe = { Accept: 'application/vnd.github+json' };
+  if (kg) tieuDe.Authorization = 'Bearer ' + kg;   // khoá CHỈ cho cuộc gọi này (api.github.com); tải raw không kèm khoá; có khoá → goi_ không theo chuyển hướng
+  const cay = goi_(DIA_CHI.APP_CAY(sha), tieuDe, { dungKhi: [401, 403, 404] });
+  if (cay.ma === 401) return choHoacLoi_('MN_APP', 'khoá GitHub (KHOA_GITHUB) sai / hết hạn — tạo khoá mới');
+  if (cay.ma === 403 || cay.ma === 429) return choHoacLoi_('MN_APP', kg ? 'GitHub từ chối (403) dù có khoá — xem khoá có phạm vi "Public repositories (read-only)"'
+    : 'GitHub hạn lượt API (IP Google dùng chung) — thử lại đêm mai; thêm khoá KHOA_GITHUB để hết bị chặn', true);
+  const hk = kg ? hanKhoaGithub_(cay.res) : null;   // { ngay, con } — GitHub báo ngày hết hạn của khoá trong tiêu đề trả về
   if (cay.ma !== 200) return choHoacLoi_('MN_APP', `GitHub trả ${cay.ma} khi lấy danh sách tệp`);
   const ds = JSON.parse(cay.res.getContentText());
   if (ds.truncated) return choHoacLoi_('MN_APP', 'danh sách tệp bị cắt (kho quá lớn)');
@@ -192,7 +202,19 @@ function lamMaNguonApp_(thuMuc, epTuan, batDau) {
   tt.setProperty('MN_APP_SHA', sha);
   boCho_('MN_APP');
   const bo = giuTheoTang_(thuMuc, PHAN.MN_APP.giu, tep.getId());
-  return { ket: 'đã lưu', tep: ten, co: tep.getSize(), ghi: `${tepCan.length} tệp${bo ? ` · bỏ ${bo} tệp quá hạn` : ''}` };
+  const sapHet = !!hk && hk.con < 14;
+  const ghiKhoa = hk ? ` · khoá GitHub hết hạn ${hk.ngay} (còn ${hk.con} ngày)${sapHet ? ' — TẠO KHOÁ MỚI, dán đè KHOA_GITHUB' : ''}` : '';
+  return { ket: 'đã lưu', tep: ten, co: tep.getSize(), loi: sapHet, ghi: `${tepCan.length} tệp${bo ? ` · bỏ ${bo} tệp quá hạn` : ''}${ghiKhoa}` };
+}
+/** Ngày hết hạn khoá GitHub từ tiêu đề `github-authentication-token-expiration` (vd "2027-11-15 08:00:00 UTC"); không có → null. */
+function hanKhoaGithub_(res) {
+  let h = {};
+  try { h = res.getHeaders() || {}; } catch (e) { return null; }
+  const k = Object.keys(h).find((x) => x.toLowerCase() === 'github-authentication-token-expiration');
+  const m = k ? /(\d{4})-(\d{2})-(\d{2})/.exec(String(h[k])) : null;
+  if (!m) return null;
+  const con = Math.round((ngayLaSo_(`${m[1]}-${m[2]}-${m[3]}`) - ngayLaSo_(ngay_('yyyy-MM-dd'))) / 86400000);
+  return { ngay: `${m[3]}/${m[2]}/${m[1]}`, con };
 }
 
 // ───────────── Phần 4: mã nguồn POS (Chủ nhật) ─────────────
@@ -341,11 +363,12 @@ function laySoTay_() {
 /** Thử tối đa CAI.THU_LAI lần, cách CAI.CHO_GIAY giây. Mã trong `dungKhi` (vd 401 / 403) → dừng ngay, không thử tiếp. Trả { ma, res }. */
 function goi_(url, tieuDe, { dungKhi = [] }) {
   let res = null, ma = 0;
+  const coKhoa = !!(tieuDe && tieuDe.Authorization);   // có khoá → KHÔNG đi theo chuyển hướng (khoá không bị gửi sang địa chỉ khác)
   for (let lan = 1; lan <= CAI.THU_LAI; lan++) {
     try {
-      res = UrlFetchApp.fetch(url, { method: 'get', headers: tieuDe, muteHttpExceptions: true, followRedirects: true });
+      res = UrlFetchApp.fetch(url, { method: 'get', headers: tieuDe, muteHttpExceptions: true, followRedirects: !coKhoa });
       ma = res.getResponseCode();
-      if (ma === 200 || dungKhi.includes(ma) || (ma >= 400 && ma < 500 && ma !== 429)) break;
+      if (ma === 200 || dungKhi.includes(ma) || (ma >= 300 && ma < 500 && ma !== 429)) break;   // 3xx khi có khoá: dừng, báo lỗi
     } catch (e) { ma = 0; }   // mất mạng / hết giờ chờ — thử lại
     if (lan < CAI.THU_LAI) Utilities.sleep(CAI.CHO_GIAY * 1000);
   }
@@ -374,11 +397,18 @@ function canhChoTrong_(loi) {
     }
   } catch (e) { /* không đọc được dung lượng — bỏ qua */ }
 }
-function coTrongZip_(blob, dk) { try { return Utilities.unzip(blob).some((b) => dk(b.getName())); } catch (e) { return false; } }
+/** Mở bằng bản sao kiểu zip: blob .xlsx mang kiểu nội dung Excel, Utilities.unzip có thể từ chối → báo lỗi giả mỗi đêm. */
+function coTrongZip_(blob, dk) {
+  try { return Utilities.unzip(Utilities.newBlob(blob.getBytes(), 'application/zip', 'kiem.zip')).some((b) => dk(b.getName())); }
+  catch (e) { return false; }
+}
 function bamChu_(s) { return hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s, Utilities.Charset.UTF_8)); }
 function bamByte_(b) { return hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, b)); }
 function hex_(b) { return b.map((x) => ('0' + (x & 0xff).toString(16)).slice(-2)).join(''); }
 function ngay_(dang) { return Utilities.formatDate(new Date(), CAI.MUI_GIO, dang); }
 function ngayLaSo_(s) { return new Date(s + 'T00:00:00Z').getTime(); }
 /** Thông điệp lỗi KHÔNG chứa khoá: cắt mọi chuỗi giống khoá trước khi ghi. */
-function thongDiep_(e) { return String((e && e.message) || e).replace(/\b(ndk|posk)_[A-Za-z0-9_-]+/g, '$1_***').slice(0, 300); }
+function thongDiep_(e) {
+  return String((e && e.message) || e).replace(/\b(ndk|posk)_[A-Za-z0-9_-]+/g, '$1_***')
+    .replace(/\bgithub_pat_[A-Za-z0-9_]+/g, 'github_pat_***').replace(/\bgh[pousr]_[A-Za-z0-9]+/g, 'gh*_***').slice(0, 300);
+}

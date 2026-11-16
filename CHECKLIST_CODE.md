@@ -1,7 +1,10 @@
 # Checklist code App KH — tra trước khi sửa
 
 ## A. Gọi máy chủ
-- A1 Mọi lời gọi qua `src/api.js` (bộ kiểm K1). Chỉ `/api/kh/*` (K2).
+- A1 Mọi lời gọi mạng qua `src/api.js`, đúng 2 lối fetch: `goi` → `/api/kh/*` (token khách) và `goiKho` → `/api/nd/*` (vé quản trị) (bộ kiểm K1, K1b).
+  Chữ "/api/…" chỉ ở `dinhDang.js` (/api/kh) và kho nội dung (/api/nd); `goiKho` chỉ `src/noiDung/khoNoiDung.js` dùng; lời gọi kho viết thẳng, có trong
+  `thiet_ke/HOP_DONG_API_ND.md` (K2, K2b, K8b). Bộ kiểm đọc mã NHƯ LÚC CHẠY (bỏ chú thích, ghép sẵn chữ) — viết vòng / ghép mảnh / dựng chữ kiểu giấu
+  (fromCharCode, atob, eval…) đều bị bắt (K2, K2c); bản dựng chỉ chứa /api/kh + /api/nd (K2d). Muốn thêm cửa / lối → ghi Phát hiện, chat sửa bộ kiểm.
 - A2 Luôn hiện `error` của POS; mất mạng / 5xx không JSON → lời dự phòng trong `dinhDang.js`, không trắng màn.
 - A3 401 → xoá token, về đăng nhập.
 

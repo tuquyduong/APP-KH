@@ -280,10 +280,10 @@ function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
       </div>
       {hang && laSo(hang.phan_tram) && <div className="nt-state on the-kich"><IcoVe ten="bolt" s={18} /><div {...ndDau('the.tt.kichHoat')}>{nd('the.tt.kichHoat', { phanTram: hang.phan_tram })}</div></div>}
       <div className="sec-head"><Chu k="the.tt.tra" as="h2" /></div>
-      <div className="the-qr" aria-checked="true" role="radio" aria-disabled="true">
-        <span className="the-qr-ic"><Ico ten="qr" s={20} /></span>
+      <div className="tt-qr" aria-checked="true" role="radio" aria-disabled="true">
+        <span className="tt-qr-ic"><Ico ten="qr" s={20} /></span>
         <div><Chu k="the.tt.qr" as="b" /><Chu k="the.tt.qr.phu" as="small" /></div>
-        <Ico ten="check" s={22} lop="the-qr-dau" />
+        <Ico ten="check" s={22} lop="tt-qr-v" />
       </div>
       <div className="the-khoa"><Ico ten="card" s={16} /><Chu k="the.tt.khongVi" /></div>
     </>

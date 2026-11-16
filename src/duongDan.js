@@ -34,11 +34,18 @@ const BANG = [
   { trang: 'tracnghiem', mau: '/tracnghiem', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiem' },
   { trang: 'tracnghiemlam', mau: '/tracnghiem/lam', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiem', cha: '/tracnghiem' },
   { trang: 'tracnghiemketqua', mau: '/tracnghiem/ketqua', tab: null, canDN: true, tieuDe: 'tieuDe.tracnghiemketqua' },
-  { trang: 'kiemkhop', mau: '/kiemkhop', tab: null, tieuDe: 'tieuDe.kiemkhop', giuCho: true }, // trang thật do main.jsx dựng riêng; trong vỏ App chỉ giữ chỗ (không để trắng màn khi đi tiep=/kiemkhop)
   { trang: 'kehoach', mau: '/kehoach', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.kehoach' },
   { trang: 'tienich', mau: '/kehoach/:tienich', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.kehoach', cha: '/kehoach', cho: TIEN_ICH },
   { trang: 'tienich', mau: '/kehoach/:tienich/:dip', tab: 'trangchu', canDN: true, tieuDe: 'tieuDe.vankhan', cha: '/kehoach/vankhan', cho: { tienich: ['vankhan'], dip: MA_DIP } },
 ];
+// Khu quản trị (KH-ADMIN-1): main.jsx dựng RIÊNG (không vỏ App khách, không thanh tab); không có tieuDe (QuanTri.jsx tự đặt tên tab).
+BANG.push(
+  { trang: 'quantri', mau: '/admin', tab: null, quanTri: true },
+  { trang: 'quantrilichsu', mau: '/admin/lichsu', tab: null, quanTri: true },
+  { trang: 'quantrikiemkhop', mau: '/admin/kiemkhop', tab: null, quanTri: true }, // trang Kiểm khớp POS (KH-KHOP-1) — đường công khai /kiemkhop đã đóng (QĐ 31.10)
+);
+/** Màn khách cho "Đi tới màn" của Chế độ sửa (/admin D6). */
+export const DS_MAN = BANG.filter((e) => !e.quanTri && !e.giuCho);
 const GIU_CHO = BANG.filter((e) => e.giuCho).map((e) => e.trang);
 const tenThamSo = (e) => [...e.mau.matchAll(/:(\w+)/g)].map((m) => m[1]);
 
@@ -54,7 +61,7 @@ const docTv = (e, lay) => Object.fromEntries(Object.entries(e.tv || {}).map(([t]
 export function tiepHopLe(tiep) {
   if (typeof tiep !== 'string' || !/^\/(?![/\\])/.test(tiep)) return '';
   const r = docDuongDan(tiep);
-  return r.trang === 'khongthay' || r.trang === 'dangnhap' ? '' : r.chuan;
+  return r.trang === 'khongthay' || r.trang === 'dangnhap' || r.quanTri ? '' : r.chuan; // trang quản trị không phải chỗ quay về của đăng nhập KHÁCH
 }
 
 /** (trang, tham số) → đường dẫn. Trang không có trong bảng → Trang chủ. */
@@ -75,7 +82,7 @@ function ra(e, tham) {
 
 /**
  * Địa chỉ (đường dẫn + ?truy vấn) → { trang, tham, chuan, tab, canDN, cha, giuCho }. `chuan` = dạng chuẩn để thay vào thanh địa chỉ
- * ("/" → "/trangchu", "/Menu/" → "/menu", "/admin" → "/trangchu"); trang lạ → trang 'khongthay', chuan = nguyên địa chỉ.
+ * ("/" → "/trangchu", "/Menu/" → "/menu", "/kiemkhop" → "/trangchu", "/admin/<lạ>" → "/admin" — trang quản trị có thêm `quanTri: true`); trang lạ → trang 'khongthay', chuan = nguyên địa chỉ.
  */
 export function docDuongDan(diaChi) {
   const s = String(diaChi || '').split('#')[0];
@@ -83,7 +90,7 @@ export function docDuongDan(diaChi) {
   const doan = (i < 0 ? s : s.slice(0, i)).split('/').filter(Boolean).map(giaiMa);
   const truyVan = new URLSearchParams(i < 0 ? '' : s.slice(i + 1));
   const dau = (doan[0] || '').toLowerCase();
-  if (!doan.length || dau === 'admin') return ra(BANG[0], {});
+  if (!doan.length || (dau === 'kiemkhop' && doan.length === 1)) return ra(BANG[0], {}); // /kiemkhop công khai đã đóng (KH-ADMIN-1) → Trang chủ
   for (const e of BANG) {
     const mau = e.mau.split('/').filter(Boolean);
     if (mau.length !== doan.length) continue;
@@ -96,9 +103,10 @@ export function docDuongDan(diaChi) {
     if (!khop) continue;
     if (e.trang === 'dangnhap') { const t = tiepHopLe(truyVan.get('tiep')); if (t) tham.tiep = t; }
     Object.assign(tham, docTv(e, (t) => truyVan.get(t)));
-    return ra(e, tham);
+    return e.quanTri ? { ...ra(e, tham), quanTri: true } : ra(e, tham);
   }
   if (dau === 'kehoach') return ra(BANG.find((e) => e.trang === 'kehoach'), {}); // /kehoach/<tiện ích lạ> → màn Kế hoạch
+  if (dau === 'admin') return { ...ra(BANG.find((e) => e.trang === 'quantri'), {}), quanTri: true }; // /admin/<lạ> → bảng quản trị
   if (GIU_CHO.includes(dau)) return { ...ra(BANG.find((e) => e.trang === dau), {}), chuan: '/' + doan.map(encodeURIComponent).join('/') };
   return { trang: 'khongthay', tham: {}, chuan: s, tab: null, canDN: false, cha: TRANG_CHU, giuCho: false };
 }
