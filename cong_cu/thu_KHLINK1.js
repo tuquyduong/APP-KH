@@ -61,7 +61,7 @@ function dungThanhPhan(tep) {
   k('mã đơn giữ chữ hoa (không ép thường)', d.docDuongDan('/Taikhoan/DonHang/aB9').tham.ma === 'aB9');
   k('đường dẫn lạ → khongthay, không đổi địa chỉ', (() => { const r = d.docDuongDan('/khong-co-trang-nay'); return r.trang === 'khongthay' && r.chuan === '/khong-co-trang-nay'; })());
   k('thiếu / thừa phần: /mon, /taikhoan/xyz, /menu/a/b → khongthay', ['/mon', '/taikhoan/xyz', '/menu/a/b', '/taikhoan/donhang/x/y'].every((p) => d.docDuongDan(p).trang === 'khongthay'));
-  k('/admin và /admin/… → Trang chủ, không hiện gì về quản trị', ['/admin', '/admin/', '/Admin/san-pham'].every((p) => { const r = d.docDuongDan(p); return r.trang === 'trangchu' && r.chuan === '/trangchu'; }));
+  k('/admin và /admin/… → khu quản trị riêng (KH-ADMIN-1: cờ quanTri, không thuộc tab nào; /admin/<lạ> → /admin)', ['/admin', '/admin/', '/Admin/san-pham'].every((p) => { const r = d.docDuongDan(p); return r.trang === 'quantri' && r.quanTri === true && r.tab === null && r.chuan === '/admin'; }));
   k('/kehoach là trang thật (KH-UI-5b, hết giữ chỗ); /kehoach/<tiện ích lạ> → về /kehoach, không rơi vào khongthay; /tracnghiem/… là trang thật (KH-UI-5a), đường lạ dưới nó → khongthay', d.docDuongDan('/kehoach/x').giuCho === false && d.docDuongDan('/kehoach/x').trang === 'kehoach' && d.docDuongDan('/kehoach/x').chuan === '/kehoach' && d.docDuongDan('/kehoach').giuCho === false && d.docDuongDan('/menu').giuCho === false
     && ['/tracnghiem', '/tracnghiem/lam', '/tracnghiem/ketqua'].every((p) => d.docDuongDan(p).giuCho === false && d.docDuongDan(p).chuan === p) && d.docDuongDan('/tracnghiem/ket-qua').trang === 'khongthay');
   k('địa chỉ có #… hoặc ?x=1 lạ thì bỏ phần thừa khi chuẩn hoá', d.docDuongDan('/menu?x=1#a').chuan === '/menu' && d.docDuongDan('/uudai#top').chuan === '/uudai');
@@ -81,7 +81,7 @@ function dungThanhPhan(tep) {
   for (const x of ['http://evil.com', 'https://evil.com/uudai', '//evil.com', '//evil.com/uudai', '/\\evil.com', 'javascript:alert(1)', 'uudai', '', null, undefined, 42, '/dangnhap', '/khong-co']) {
     k(`tiep ${JSON.stringify(x)} bị bỏ`, d.tiepHopLe(x) === '');
   }
-  k('tiep hợp lệ được giữ, đã chuẩn hoá', d.tiepHopLe('/uudai') === '/uudai' && d.tiepHopLe('/Taikhoan/DonHang/') === '/taikhoan/donhang' && d.tiepHopLe('/admin') === '/trangchu' && d.tiepHopLe('/mon/tra-dao') === '/mon/tra-dao');
+  k('tiep hợp lệ được giữ, đã chuẩn hoá', d.tiepHopLe('/uudai') === '/uudai' && d.tiepHopLe('/Taikhoan/DonHang/') === '/taikhoan/donhang' && d.tiepHopLe('/admin') === '' && d.tiepHopLe('/mon/tra-dao') === '/mon/tra-dao');
   k('docDuongDan(/dangnhap?tiep=lạ) → bỏ tiep, không giữ link ngoài', (() => { const r = d.docDuongDan('/dangnhap?tiep=' + encodeURIComponent('https://evil.com')); return r.trang === 'dangnhap' && r.tham.tiep === undefined && r.chuan === '/dangnhap'; })());
   k('taoDuongDan(dangnhap, tiep lạ) cũng không ghi link ngoài', d.taoDuongDan('dangnhap', { tiep: '//evil.com' }) === '/dangnhap');
 
@@ -126,7 +126,7 @@ function dungThanhPhan(tep) {
   k('?ma= vẫn xoá khỏi thanh địa chỉ và chạy trên mọi đường dẫn (về Ưu đãi)', /replaceState/.test(app) && /'\/uudai'/.test(app) && /boMaKhoiDiaChi/.test(app));
   k('trang lạ có nút "Về Trang chủ"; món lạ có nút "Xem Menu"', /Về Trang chủ/.test(doc('src/pages/KhongTimThay.jsx')) && /Xem Menu/.test(doc('src/pages/MonTheoDuong.jsx')) && /Không tìm thấy món/.test(doc('src/pages/MonTheoDuong.jsx')));
   k('món chưa có menu (khách) → như Menu (v3: menu công khai), không còn thẻ "Đăng nhập để xem menu và giá"', !/THE_MOI_MENU|canDN/.test(doc('src/pages/MonTheoDuong.jsx')));
-  k('không có mục quản trị trong app khách', !/AdminTrang|<Admin|quan-tri|quản trị/i.test(app + doc('src/duongDan.js').replace(/\/\/[^\n]*/g, '')));
+  k('không có mục quản trị trong app khách (KH-ADMIN-1: khu /admin dựng riêng ở main.jsx; App chỉ gắn lớp Chế độ sửa khi có vé)', !/AdminTrang|<Admin|<QuanTri|quan-tri|['"`]\/admin/i.test(app) && /coVe\(\) && <CheDoSua/.test(app));
   const thuMuc = (p, re) => fs.readdirSync(path.join(GOC, p)).filter((f) => re.test(f));
   k('A4 không có 404.html / _redirects nào ở public/ và gốc', !fs.existsSync(path.join(GOC, 'public', '404.html')) && !fs.existsSync(path.join(GOC, '404.html')) && thuMuc('public', /^404|^_redirects$/).length === 0);
   const tep = [...thuMuc('src', /\.(jsx?|css)$/).map((f) => 'src/' + f), ...thuMuc('src/pages', /\.jsx$/).map((f) => 'src/pages/' + f), ...thuMuc('src/components', /\.jsx$/).map((f) => 'src/components/' + f), ...thuMuc('src/giaoDien', /\.css$/).map((f) => 'src/giaoDien/' + f), 'index.html', 'public/manifest.webmanifest'];

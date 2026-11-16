@@ -50,6 +50,8 @@ import KeHoach from './pages/KeHoach.jsx';
 import TienIch from './pages/TienIch.jsx';
 import HangThanhVien from './pages/HangThanhVien.jsx';
 import { quenKeHoach } from './components/dungKeHoach.js';
+import CheDoSua from './components/CheDoSua.jsx'; // Chế độ sửa của /admin (KH-ADMIN-1) — chỉ khi có vé quản trị
+import { coVe } from './noiDung/khoNoiDung.js';
 
 // Link QR trên hoá đơn: `?ma=<mã>` — đọc một lần, xoá khỏi thanh địa chỉ NGAY (và đi thẳng Ưu đãi để nhận điểm, trên MỌI đường dẫn),
 // giữ mã trong bộ nhớ trang (không lưu localStorage).
@@ -276,6 +278,7 @@ export default function App() {
       {dangNhap && <DaiNhacViec san={daBiet} moNgay={() => di(taoDuongDan('kehoach'))} />}
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: SPRITE_MUA }} />
       <ManDau />
+      {coVe() && <CheDoSua di={di} ds={ds} />}
     </div>
     </NguCanhGia.Provider>
   );

@@ -98,16 +98,17 @@ const chuan = (d) => String(d).split('?')[0].replace(/:[A-Za-z_]+/g, ':x');
   }
 
   // B1 — đường dẫn, không có lối vào
-  const r = D.docDuongDan('/kiemkhop');
-  k('B1 /kiemkhop là trang riêng trong bảng đường dẫn, không cần đăng nhập, không thuộc tab nào', r.trang === 'kiemkhop' && !r.canDN && r.tab === null && r.giuCho === true && r.chuan === '/kiemkhop' && D.taoDuongDan('kiemkhop') === '/kiemkhop', JSON.stringify(r));
-  k('B1 /Kiemkhop/ chuẩn hoá về /kiemkhop; tiêu đề tab có tên trang', D.docDuongDan('/Kiemkhop/').chuan === '/kiemkhop' && /Kiểm khớp/.test(D.tieuDeTrang('kiemkhop')));
-  const loiVao = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f) && !/^kiemKhop[\\/]|KiemKhop\.jsx$|duongDan\.js$|^main\.jsx$|^noiDung[\\/]nd[\\/]khungChung\.js$/.test(f)).filter((f) => /kiemkhop/i.test(doc('src/' + f)));
-  k('B1 không file nào khác của app nhắc /kiemkhop (không lối vào từ tab, menu, tài khoản)', loiVao.length === 0, loiVao.join(','));
+  const r = D.docDuongDan('/admin/kiemkhop');
+  k('B1 (KH-ADMIN-1) trang Kiểm khớp ở /admin/kiemkhop — khu quản trị, không thuộc tab nào; đường công khai /kiemkhop đã đóng → Trang chủ', r.trang === 'quantrikiemkhop' && r.quanTri === true && !r.canDN && r.tab === null && r.chuan === '/admin/kiemkhop' && D.taoDuongDan('quantrikiemkhop') === '/admin/kiemkhop'
+    && D.docDuongDan('/kiemkhop').trang === 'trangchu' && D.docDuongDan('/kiemkhop').chuan === '/trangchu', JSON.stringify(r));
+  k('B1 /Admin/Kiemkhop/ chuẩn hoá về /admin/kiemkhop; tiêu đề tab có tên trang (tieuDe.kiemkhop, QuanTri.jsx)', D.docDuongDan('/Admin/Kiemkhop/').chuan === '/admin/kiemkhop' && /nd\('tieuDe\.kiemkhop'\)/.test(doc('src/pages/QuanTri.jsx')));
+  const loiVao = fs.readdirSync(path.join(GOC, 'src'), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(f) && !/^kiemKhop[\\/]|KiemKhop\.jsx$|QuanTri\.jsx$|noiDung[\\/]quanTri\.js$|duongDan\.js$|^main\.jsx$|^noiDung[\\/]nd[\\/]khungChung\.js$/.test(f)).filter((f) => /kiemkhop/i.test(doc('src/' + f)));
+  k('B1 không file nào khác của app nhắc kiemkhop (lối vào CHỈ ở bảng quản trị /admin)', loiVao.length === 0, loiVao.join(','));
   const ndKhung = fs.existsSync(path.join(GOC, 'src/noiDung/nd/khungChung.js')) ? doc('src/noiDung/nd/khungChung.js') : '';
   const soNhacNd = (ndKhung.match(/kiemkhop/gi) || []).length;
   k('B1 (KH-ND-3a) danh mục nội dung chỉ nhắc kiemkhop ở MỘT chỗ: tên màn tieuDe.kiemkhop (không phải lối vào)', soNhacNd === 1 && /tieuDe\('kiemkhop', 'Kiểm khớp POS'\)/.test(ndKhung), `${soNhacNd} chỗ`);
   const mj = doc('src/main.jsx');
-  k('B1/B4 main.jsx chọn trang KiemKhop riêng cho /kiemkhop (vỏ App không chạy → không tự gọi cửa nào, không gọi theo giờ)', /KiemKhop/.test(mj) && /kiemkhop/i.test(mj));
+  k('B1/B4 (KH-ADMIN-1) main.jsx dựng khu /admin* riêng (vỏ App không chạy → không tự gọi cửa nào, không gọi theo giờ); QuanTri.jsx dựng KiemKhop cho /admin/kiemkhop', !/KiemKhop/.test(mj) && /quanTri \? <QuanTri/.test(mj) && /quantrikiemkhop'\) return <KiemKhop \/>/.test(doc('src/pages/QuanTri.jsx')));
 
   // B3, B4, B5, B6 — đọc nguồn
   const kk = doc('src/pages/KiemKhop.jsx');
@@ -152,7 +153,7 @@ async function trinhDuyet(pw) {
     const loi = [];
     t.on('pageerror', (e) => loi.push(e.message));
     if (dongHo) { await t.clock.install({ time: new Date('2026-10-30T20:30:00+07:00') }); await t.clock.resume(); }
-    await t.addInitScript(({ dn }) => { try { if (!sessionStorage.getItem('gieo')) { sessionStorage.setItem('gieo', '1'); if (dn) localStorage.setItem('kh_token', 'tok-A'); } } catch { /* bỏ qua */ } }, { dn });
+    await t.addInitScript(({ dn }) => { try { if (!sessionStorage.getItem('gieo')) { sessionStorage.setItem('gieo', '1'); if (dn) localStorage.setItem('kh_token', 'tok-A'); } sessionStorage.setItem('nd_ve', JSON.stringify({ ve: 've-gia', het_han: '', quyen: ['nd_xem'], nguoi: {} })); } catch { /* bỏ qua */ } }, { dn }); // KH-ADMIN-1: trang ở /admin/kiemkhop — cần vé quản trị (giả; trang không gọi /api/nd)
     const P = { goi: [], ...pos };
     t.P = P;
     await t.route(`${URL0}/**`, async (rq) => {
@@ -190,7 +191,7 @@ async function trinhDuyet(pw) {
     try { await chay(t, loi, P); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); } finally { await ctx.close(); }
   }
   const mo = async (t, co = '100%') => {
-    await t.goto(URL0 + '/kiemkhop'); await t.waitForSelector('#kiemkhop'); await t.waitForTimeout(900);
+    await t.goto(URL0 + '/admin/kiemkhop'); await t.waitForSelector('#kiemkhop'); await t.waitForTimeout(900);
     if (co === '130%') await t.addStyleTag({ content: 'html{font-size:130% !important}' });
   };
   const chu = (t) => t.locator('#kiemkhop').innerText();

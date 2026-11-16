@@ -34,7 +34,8 @@ export const leAmLich = () => bangLe('kh.leAmLich', 30);
 export const leCoQua = () => ndDs('kh.leQua').map((x) => x.ten);
 const DAI_TIEU_DE = 120;
 const TOI_DA_VIEC = 500;
-const KHONG_VAO_SAP_TOI = /Tết Nguyên đán|Trung thu|Đoan ngọ|Vu Lan/; // demo upList: các lễ này đã có ở tiện ích Cúng (việc sau)
+// demo upList: các lễ này đã có ở tiện ích Cúng — nhận theo NGÀY ÂM (Tết 1–3/1, Đoan ngọ 5/5, Vu Lan 15/7, Trung thu 15/8), KHÔNG theo tên: chủ quán đổi tên lễ ở /admin vẫn lọc đúng (KH-ADMIN-1 F1)
+const KHONG_VAO_SAP_TOI = new Set(['1/1', '2/1', '3/1', '5/5', '15/7', '15/8']);
 
 export { ngayChuoi, docNgay, viecNgay };
 /** Giờ VN "YYYY-MM-DD…" (bayGio()) → { d, m, y }; không đọc được → null. */
@@ -151,7 +152,8 @@ export function upList(homNay, bang, xung) {
     const j = vkNext(v, homNay, bang.nguoi);
     if (j && j <= cuoi) { const l = lichAm(j); out.push({ j, t: nd(`vkd.${v.id}.ten`), s: nd('kh.calAm', { d: l.d, m: l.m }), k: nd('kh.tagCung'), di: 'cung', dip: v.id }); }
   });
-  holList(homNay).filter((h) => h.j <= cuoi && !KHONG_VAO_SAP_TOI.test(h.n)).forEach((h) => out.push({ j: h.j, t: h.n, s: h.cal, k: nd('kh.tagLe'), di: 'le' }));
+  const boLe = new Set(Object.entries(leAmLich()).filter(([k]) => KHONG_VAO_SAP_TOI.has(k)).map(([, n]) => n)); // tên HIỆN TẠI của các lễ đó (đổi tên vẫn lọc)
+  holList(homNay).filter((h) => h.j <= cuoi && !boLe.has(h.n)).forEach((h) => out.push({ j: h.j, t: h.n, s: h.cal, k: nd('kh.tagLe'), di: 'le' }));
   bang.xe.forEach((x) => {
     sapHang(x, tj).forEach(({ hang, st }) => { if (st.soon || (st.denJ !== null && st.denJ <= cuoi)) out.push({ j: Math.max(tj, st.denJ ?? tj), t: `${hang.ten} · ${x.ten}`, s: chuHang(st), k: nd('ti.tagXe'), di: 'xe' }); });
     x.giayTo.forEach((g) => { const st = trangThaiGiay(g, tj); if (st.j !== null && st.j <= cuoi) out.push({ j: Math.max(tj, st.j), t: `${g.ten} · ${x.ten}`, s: chuGiay(st, homNay), k: nd('ti.tagXe'), di: 'xe' }); });

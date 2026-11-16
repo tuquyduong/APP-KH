@@ -208,6 +208,8 @@ const MA_XUNG_HO = ['anh', 'chi', 'co', 'chu', 'bac', 'em', 'ban'];
     k('G1 truongThem: địa chỉ trống không gửi; có thì gửi đã cắt khoảng trắng', JSON.stringify(lg.truongThem('chi', '  ')) === '{"xung_ho":"chi"}' && JSON.stringify(lg.truongThem('anh', ' 12 Lê Lợi ')) === '{"xung_ho":"anh","dia_chi":"12 Lê Lợi"}');
     const dn = await nap('src/noiDung/dangNhap.js');
     k('B1 XUNG_HO đúng 7 mã của hợp đồng v3', JSON.stringify(dn.XUNG_HO.map((x) => x.ma)) === JSON.stringify(MA_XUNG_HO));
+    const dd = await nap('src/duongDan.js');
+    k('F1 (KH-ADMIN-1) trang Kiểm khớp ca F1 mở ở /admin/kiemkhop (đường công khai /kiemkhop đã đóng)', dd.docDuongDan('/admin/kiemkhop').trang === 'quantrikiemkhop' && dd.docDuongDan('/kiemkhop').trang === 'trangchu');
   });
 
   console.log('Phần 2 — App thật trong Chromium + POS giả theo hợp đồng v3');
@@ -430,7 +432,8 @@ async function trinhDuyet(pw) {
 
   // F1 — /kiemkhop đọc lại đăng nhập mỗi lần kiểm
   await ca('kiemkhop', { token: '' }, async (t, S) => {
-    await t.goto(URL0 + '/kiemkhop'); await t.waitForSelector('#kiemkhop'); await yen(t);
+    await t.addInitScript(() => sessionStorage.setItem('nd_ve', JSON.stringify({ ve: 've-gia', het_han: '', quyen: ['nd_xem'], nguoi: {} }))); // KH-ADMIN-1: trang ở /admin/kiemkhop — cần vé quản trị (giả)
+    await t.goto(URL0 + '/admin/kiemkhop'); await t.waitForSelector('#kiemkhop'); await yen(t);
     const truoc = await t.locator('#kiemkhop').innerText();
     k('F1 chưa đăng nhập: các cửa cần token báo "Đăng nhập để kiểm"', /Đăng nhập để kiểm/.test(truoc));
     await t.evaluate(() => localStorage.setItem('kh_token', 'tok-A')); // chủ quán đăng nhập ở tab khác

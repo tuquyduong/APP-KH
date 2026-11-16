@@ -1,5 +1,5 @@
 // Đọc nội dung App KH — MỘT chỗ (CLAUDE.md §11). Màn hình chỉ lấy chữ / ảnh / nút / danh sách / bật tắt qua các hàm ở đây và gắn `ndDau(khoa)`.
-// Thứ tự lấy: bản đã cập nhật (datBanNoiDung — KH-ADMIN-1 sẽ tải từ kho nội dung) → `macDinh` trong danh mục. Giá trị hỏng → `macDinh` (một chữ hỏng không làm hỏng màn).
+// Thứ tự lấy: (Chế độ sửa) lớp nháp → bản đã cập nhật (datBanNoiDung — khoNoiDung.js tải từ kho /api/nd) → `macDinh` trong danh mục. Giá trị hỏng → `macDinh` (một chữ hỏng không làm hỏng màn).
 //
 // Khuôn mục (src/noiDung/nd/<nhóm>.js): { khoa, man, ten, loai, macDinh, toiDa?, bien?, goiY?, truong?, khoaCauTruc?, tiLe? }
 //   loai: chu (một dòng) · doan (nhiều dòng, "\n" = xuống dòng) · anh (đường dẫn, kèm tiLe) · nut ({ chu, dich } — dich thuộc DICH)
@@ -16,16 +16,22 @@ const BAN_THAT = ENV.DEV === false; // bản dựng thật: khoá lạ → rỗn
 
 const laChuoi = (x) => typeof x === 'string';
 const laDoiTuong = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
-const choDien = (s) => [...String(s).matchAll(/\{(\w+)\}/g)].map((m) => m[1]);
+/** Tên các chỗ điền {…} trong chữ. */
+export const choDien = (s) => [...String(s).matchAll(/\{(\w+)\}/g)].map((m) => m[1]);
 const cungTap = (a, b) => { const A = new Set(a), B = new Set(b); return A.size === B.size && [...A].every((x) => B.has(x)); };
 const chuDung = (m, s) => laChuoi(s) && cungTap(choDien(s), m.bien || []) && (!m.toiDa || s.length <= m.toiDa);
 const cauTruc = (m, x) => (m.khoaCauTruc || []).map((t) => x[t]).join('\u0001');
+// Ảnh (KH-ADMIN-1 B3): CHỈ ảnh có sẵn của App (/anh/…, không "..") hoặc ảnh kho nội dung /api/nd/anh/<SHA-256 hex>. Mọi thứ khác (http…, //…, data:, javascript:…) → macDinh.
+const ANH_APP = /^\/anh\/(?!.*\.\.)[\w./-]+$/;
+const ANH_KHO = /^\/api\/nd\/anh\/[0-9a-f]{64}$/;
+export const anhDung = (s) => laChuoi(s) && (ANH_APP.test(s) || ANH_KHO.test(s));
+export const dongTrung = (m, gt) => new Set(gt.map((x) => JSON.stringify(Object.keys(m.truong).map((t) => x[t])))).size !== gt.length;
 
-/** Giá trị `gt` có dùng được cho mục `m` không (cùng luật cho macDinh và bản cập nhật). */
-function hopLe(m, gt) {
+/** Giá trị `gt` có dùng được cho mục `m` không (cùng luật cho macDinh, bản cập nhật, nháp và bảng sửa ở /admin). */
+export function hopLe(m, gt) {
   switch (m.loai) {
     case 'chu': case 'doan': return chuDung(m, gt);
-    case 'anh': return laChuoi(gt) && gt.length > 0;
+    case 'anh': return anhDung(gt);
     case 'nut': return laDoiTuong(gt) && chuDung(m, gt.chu) && MA_DICH.includes(gt.dich);
     case 'battat': return typeof gt === 'boolean';
     case 'danhsach': {
@@ -33,8 +39,9 @@ function hopLe(m, gt) {
       const goc = new Set((Array.isArray(m.macDinh) ? m.macDinh : []).map((x) => cauTruc(m, x)));
       const kc = (m.khoaCauTruc || []).length > 0;
       return gt.every((x) => laDoiTuong(x) && Object.keys(x).every((t) => t in m.truong)
-        && Object.keys(m.truong).every((t) => laChuoi(x[t]) && (m.truong[t] !== 'anh' || x[t].length > 0)) && (!kc || goc.has(cauTruc(m, x))))
-        && (!kc || new Set(gt.map((x) => cauTruc(m, x))).size === gt.length); // mỗi ô một khoá cấu trúc (khoá React, lọc món)
+        && Object.keys(m.truong).every((t) => laChuoi(x[t]) && (m.truong[t] !== 'anh' || anhDung(x[t]))) && (!kc || goc.has(cauTruc(m, x))))
+        && (!kc || new Set(gt.map((x) => cauTruc(m, x))).size === gt.length) // mỗi ô một khoá cấu trúc (khoá React, lọc món)
+        && !dongTrung(m, gt); // F2: không hai dòng giống hệt ở MỌI danh sách (vd home.feat.mon trùng mã → trùng khoá React)
     }
     default: return false;
   }
@@ -72,9 +79,11 @@ export function kiemDanhMuc(ds) {
   }
   return loi;
 }
-
 const MUC = new Map(DANH_MUC.map((m) => [m.khoa, m]));
 let ban = { so_ban: 0, gia_tri: {} };
+let lopNhap = null; // Chế độ sửa (KH-ADMIN-1 D4): nháp của /admin + chữ đang gõ — CHỈ khoNoiDung / CheDoSua đặt khi có vé quản trị VÀ đang sửa
+let gocAnh = null; // địa chỉ kho nội dung (khoNoiDung.js đặt lúc nạp) — ghép vào ảnh kho ở MỘT chỗ khi vẽ; chưa đặt → giữ đường dẫn tương đối
+let nhoAnh = new WeakMap();
 let phien = 0;
 const nguoiNghe = new Set();
 
@@ -86,10 +95,15 @@ function muc(khoa) {
 function lay(khoa) {
   const m = muc(khoa);
   if (!m || m.khoaBoi) { if (m && !BAN_THAT) throw new Error(`nd: "${khoa}" là mục khoá (${m.khoaBoi}) — chỉ dùng ndDau()`); return undefined; }
+  const nhap = lopNhap ? lopNhap[khoa] : undefined;
+  if (nhap !== undefined && hopLe(m, nhap)) return nhap;
   const gt = ban.gia_tri[khoa];
   return gt !== undefined && hopLe(m, gt) ? gt : m.macDinh;
 }
 const dien = (s, bien) => String(s).replace(/\{(\w+)\}/g, (x, t) => (bien && bien[t] != null ? String(bien[t]) : x));
+/** Đường dẫn ảnh để vẽ: ảnh kho /api/nd/anh/<mã> → <địa chỉ kho>/anh/<mã>; ảnh có sẵn của App giữ nguyên. */
+const TIEN_TO_KHO = /^\/api\/nd(?=\/)/;
+export const duongAnh = (s) => (gocAnh !== null && typeof s === 'string' && TIEN_TO_KHO.test(s) ? s.replace(TIEN_TO_KHO, gocAnh) : s);
 
 /** Chữ (điền `{bien}`; thiếu biến thì giữ nguyên `{…}`, không bịa). */
 export const nd = (khoa, bien) => { const v = lay(khoa); return v === undefined ? '' : dien(v, bien); };
@@ -100,10 +114,17 @@ export const ndPhan = (khoa, bien) => {
 };
 /** Nút → { chu, dich }. */
 export const ndNut = (khoa) => lay(khoa) || { chu: '', dich: '' };
-/** Ảnh → đường dẫn. */
-export const ndAnh = (khoa) => lay(khoa) || '';
-/** Danh sách → mảng. */
-export const ndDs = (khoa) => lay(khoa) || [];
+/** Ảnh → đường dẫn (đã ghép địa chỉ kho nếu là ảnh kho). */
+export const ndAnh = (khoa) => duongAnh(lay(khoa) || '');
+/** Danh sách → mảng (trường ảnh đã ghép địa chỉ kho; cùng bản → cùng mảng, để nơi nhớ theo mảng — kehoach.js — không tính lại). */
+export function ndDs(khoa) {
+  const v = lay(khoa) || [];
+  const m = MUC.get(khoa);
+  const tAnh = m && m.truong ? Object.keys(m.truong).filter((t) => m.truong[t] === 'anh') : [];
+  if (!tAnh.length || !v.some((x) => tAnh.some((t) => TIEN_TO_KHO.test(String(x[t]))))) return v;
+  if (!nhoAnh.has(v)) nhoAnh.set(v, v.map((x) => ({ ...x, ...Object.fromEntries(tAnh.map((t) => [t, duongAnh(x[t])])) })));
+  return nhoAnh.get(v);
+}
 /** Bật / tắt khối (khoá lạ ở bản thật → hiện). */
 export const ndHien = (khoa) => lay(khoa) !== false;
 /** Thuộc tính đánh dấu chỗ sửa: { 'data-nd': khoá } (+ 'data-nd-khoa' cho mục khoá) — Chế độ sửa dựa vào đây để viền vàng / hiện 🔒. */
@@ -113,13 +134,19 @@ export function ndDau(khoa) {
   return m.khoaBoi ? { 'data-nd': khoa, 'data-nd-khoa': m.khoaBoi } : { 'data-nd': khoa };
 }
 
+const bao = () => { phien++; nguoiNghe.forEach((f) => f()); };
 /** Đặt bản nội dung đã cập nhật { so_ban, gia_tri: { khoá: giá trị } } (null / sai dạng = về mặc định) rồi báo người nghe. */
 export function datBanNoiDung(b) {
-  ban = laDoiTuong(b) && laDoiTuong(b.gia_tri) ? { so_ban: b.so_ban, gia_tri: b.gia_tri } : { so_ban: 0, gia_tri: {} };
-  phien++;
-  nguoiNghe.forEach((f) => f());
+  ban = laDoiTuong(b) && laDoiTuong(b.gia_tri) ? { so_ban: Number.isInteger(b.so_ban) ? b.so_ban : 0, gia_tri: b.gia_tri } : { so_ban: 0, gia_tri: {} };
+  bao();
 }
+/** Bản đang dùng { so_ban, gia_tri } (chỉ đọc). */
+export const banDangDung = () => ban;
+/** Lớp nháp của Chế độ sửa: { khoá: giá trị } — thắng bản đang chạy khi hợp lệ; null = bỏ lớp (khách KHÔNG BAO GIỜ có lớp này). */
+export function datLopNhap(lop) { lopNhap = laDoiTuong(lop) ? lop : null; bao(); }
+/** Địa chỉ kho nội dung (để ghép ảnh kho khi vẽ). */
+export function datGocAnh(goc) { gocAnh = String(goc || '').replace(/\/+$/, ''); nhoAnh = new WeakMap(); }
 /** Nghe bản mới (trả hàm bỏ nghe) — dạng của useSyncExternalStore. */
 export const ngheNoiDung = (f) => { nguoiNghe.add(f); return () => nguoiNghe.delete(f); };
-/** Số lần đổi bản (tăng mỗi lần datBanNoiDung) — để vỏ App vẽ lại. */
+/** Số lần đổi bản (tăng mỗi lần datBanNoiDung / datLopNhap) — để vỏ App vẽ lại. */
 export const phienNoiDung = () => phien;

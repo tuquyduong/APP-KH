@@ -250,7 +250,7 @@ const HTML_BAN = (js, css) => `<!DOCTYPE html><html><head><link rel="manifest" h
     const m = docTho('src/main.jsx').split('\n');
     const dong = m.filter((d) => /dangKySW/.test(d));
     k('A1 main.jsx thêm đúng 2 dòng: một import + một lời gọi', dong.length === 2 && /^import \{ dangKySW \} from '\.\/dangKySW\.js'$/.test(dong[0]) && /^dangKySW\(\)$/.test(dong[1]), JSON.stringify(dong));
-    k('A1 main.jsx giữ nguyên dòng dựng App / KiemKhop', m.includes("createRoot(document.getElementById('root')).render(laKiemKhop ? <KiemKhop /> : <App />)"));
+    k('A1 main.jsx giữ nguyên dòng dựng App / khu quản trị (KH-ADMIN-1: /admin* dựng QuanTri)', m.includes("createRoot(document.getElementById('root')).render(duong.quanTri ? <QuanTri duong={duong} /> : <App />)"));
   });
 
   await thu('A5', async () => {
