@@ -212,11 +212,11 @@ function UuDaiToi({ maSan, khiNhanXong, moVi, moNap }) {
         {(dl) => (
           <div className="wallet-row">
             <div className="wallet-box vt-o"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>
-            {/* KH-NAP-1 (N1 a): cả ô số dư là nút → màn Ví; nút nhỏ "+ Nạp tiền" chỉ khi quán có ≥ 1 gói nạp (N4 a) → Ví + bảng chọn gói. */}
+            {/* KH-NAP-1 (N1 a): số dư + nhãn là MỘT nút → màn Ví; nút nhỏ "+ Nạp tiền" (nút anh em, không lồng) chỉ khi quán có ≥ 1 gói (N4 a) → Ví + bảng chọn gói. */}
             {khach && dinhDangGia(khach.so_du_vi) && (
-              <div className="wallet-box vt-o vt-vi-mo" {...bam(moVi)}>
-                <div className="n" {...ndDau('ud.khach')}>{dinhDangGia(khach.so_du_vi)}</div><Chu k="ud.vi" as="div" className="l" />
-                {coNap && <button type="button" className="vt-nap" onClick={(e) => { e.stopPropagation(); moNap(); }} onKeyDown={(e) => e.stopPropagation()} {...ndDau('vt.ud.nap')}>{nd('vt.ud.nap')}</button>}
+              <div className="wallet-box vt-o vt-vi-mo" onClick={moVi}>
+                <button type="button" className="vt-vi-nut" onClick={(e) => { e.stopPropagation(); moVi(); }}><div className="n" {...ndDau('ud.khach')}>{dinhDangGia(khach.so_du_vi)}</div><Chu k="ud.vi" as="div" className="l" /></button>
+                {coNap && <button type="button" className="vt-nap" onClick={(e) => { e.stopPropagation(); moNap(); }} {...ndDau('vt.ud.nap')}>{nd('vt.ud.nap')}</button>}
               </div>
             )}
           </div>
