@@ -3,6 +3,18 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 17.11.2026
+- **Đổi điểm** (chủ quán 17.11 "theo POS"): KH-DOI-1 làm theo hợp đồng POS ĐÃ HẸN (thư `TRA_LOI_POS_16112026_DOIDIEM.md`: `GET /kho-qua`, `POST /doi-diem`
+  `{ ma_qua, khoa_gui, pin }`, `GET /qua-cua-toi`, dòng `redeem` / `hoan_qua` ở `GET /diem`) — CÓ hỏi PIN 4 số của khách khi đổi (mã lỗi, luật khoá như trả bằng ví).
+  Chat dựng trang thiết kế → chủ quán duyệt → mở việc. Quầy vẫn đổi giúp tới khi POS gộp DOI-DIEM-1.
+- **Sao lưu** (17.11): chủ quán đã tạo khoá `posk_` ở POS và dán vào thuộc tính `KHOA_POS` của Apps Script — phần POS / Du lieu chạy. Còn `KHOA_GITHUB` khi nhật ký báo thiếu.
+- **Gộp Nạp tiền + Voucher** (17.11): KH-VC-2 gộp trước; chat gộp main vào nhánh KH-NAP-1 (giữ cả hai phía; đơn nạp KHÔNG mã giảm, KHÔNG voucher — như thẻ) rồi gộp
+  KH-NAP-1. Soát cuối trên cây gộp: `--day-du` 67 · 0, so 187 ảnh (ngoài phạm vi chỉ hiệu ứng đang chạy).
+- **Việc nhỏ sau VC-2 / NAP-1 → KH-SUA-2** (chat đề xuất 17.11; VC-2 đã gộp nên là việc mới): thêm ca thử Giỏ "thôi hỏi POS", xoá báo giá cũ khi báo giá lỗi,
+  App bỏ mã đang ở ô mã khỏi `vouchers` (chống giảm 2 lần, dù POS trả lời thế nào), câu "đã xong" khi tắt khung nạp ở /admin.
+- **Thư POS 17.11** (`YEU_CAU_APPKH_GUI_POS_17112026.md`): hỏi mã trùng `ma_giam` + `vouchers`, dạng `expires_at`; đề nghị `GET /vi` `data[].id`, `GET /don/:ma`
+  dòng nạp `ma_goi`, `GET /don` trường đơn chỉ nạp.
+
 ## 16.11.2026
 - **Bộ kiểm cửa mạng** (chủ quán duyệt 16.11 phương án chat, dặn "chuẩn, tối ưu, kỹ hơn"): K2 cũ chỉ soi MỘT kiểu viết (dấu nháy liền "/api/…") nên máy ADMIN-1 viết
   `${gốc}/api/nd` lọt (máy tự báo). Từ nay `kiem_tra_truoc_khi_giao.js` đọc mã NHƯ LÚC CHẠY (esbuild: bỏ chú thích, ghép sẵn chữ): mạng chỉ ở `src/api.js`, đúng 2 lối fetch
