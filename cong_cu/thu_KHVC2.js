@@ -206,7 +206,7 @@ async function trinhDuyet(pw) {
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('15:30:00'), dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
-      if (duong === '/menu') return json(200, { success: true, data: MENU_DS });
+      if (duong === '/menu') return S.menuLoi ? json(500, { error: 'Lỗi máy', code: 'LOI_MAY_CHU' }) : json(200, { success: true, data: MENU_DS });
       if (!/tok-A/.test(req.headers().authorization || '')) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: null, so_du_vi: 0 } });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
@@ -409,6 +409,14 @@ async function trinhDuyet(pw) {
     await t.waitForTimeout(900);
     k('B3 ví đang tải → không mục voucher (giỏ như cũ)', (await t.locator('#cart .vc-chon').count()) === 0 && (await t.locator('#cart .cart-item').count()) === 2);
     k('B3 ví về → mục voucher hiện', await doi(t, async () => (await t.locator('#cart .vc-chon').count()) === 5, 5000));
+  });
+
+  them('chua-co-menu', { S0: { vi: VI_GIO, menuLoi: true } }, async ({ t, S }) => {
+    await mo(t, '/giohang');
+    await doi(t, async () => (await t.locator('#cart .vc-chon').count()) === 5);
+    await o(t, 'VC7').click();
+    await t.waitForTimeout(900);
+    k('B3 Giỏ không hỏi báo giá (chưa có menu) → chạm voucher KHÔNG tích (không có POS xác nhận)', S.bgGui.length === 0 && !(await tich(t, 'VC7')), `${S.bgGui.length} báo giá`);
   });
 
   them('chua-dang-nhap', { dn: false }, async ({ t }) => {

@@ -37,6 +37,7 @@ const TRINH_DUYET = [
   ['BV-THANH-TOAN-KHONG-KHOI-LOI', [[T, 'bg.voucherLoi.length > 0 &&', 'bg.voucherLoi.length > 99 &&']]],
   ['VS-NHAN-MA-CAU-CU', [[N, "r.data && String(r.data.mo_ta || '').trim() ?", 'false ?']]],
   ['BV-CHO-BAO-GIA-NHAP-NHAY', [[G, 'tt = trangThaiVoucher(v.code, bg || bgCu)', 'tt = trangThaiVoucher(v.code, bg)']]],
+  ['VS-TICH-TAM-KHI-KHONG-HOI-POS', [[G, 'const choChon = hoi && !bg && vuaChon && vuaChon.khoaGio === khoaGio', 'const choChon = !bg && vuaChon']]], // vòng sửa 2
   ['VS-THANH-TOAN-DONG-GAN-KHOA-POS', [[T, "className=\"vc-loi\" {...ndDau('tt.vc.dong')}", "className=\"vc-loi\" {...ndDau('gio.vc.loi')}"]]],
 ];
 
