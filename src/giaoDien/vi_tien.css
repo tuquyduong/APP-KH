@@ -40,6 +40,7 @@
 /* Ưu đãi: hai ô điểm / ví cân chiều cao, ô ví bấm được, nút nhỏ Nạp tiền */
 .wallet-box.vt-o{ display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .wallet-box.vt-vi-mo{ cursor:pointer; box-shadow:0 0 0 1.5px var(--line), 0 1px 4px rgba(26,54,93,.08); }
+.vt-vi-nut{ display:block; width:100%; padding:0; border:none; background:none; font:inherit; color:inherit; text-align:center; cursor:pointer; }
 .vt-nap{ margin-top:8px; font:inherit; font-size:11.5px; font-weight:700; color:var(--white); background:var(--pink-dark); border:none; padding:5px 12px; border-radius:999px; cursor:pointer; }
 /* Thanh toán nạp */
 .vt-nap-ic{ width:46px; height:46px; border-radius:14px; background:linear-gradient(135deg, var(--pink-deep), var(--forest)); color:var(--white); display:flex; align-items:center; justify-content:center; flex:none; }
