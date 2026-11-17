@@ -67,3 +67,9 @@
   `thu_KHUI3b` trang-chu-dau / menu-khach 12 điểm, `thu_KHUI3c` app_chua_dn_*, `thu_KHTHE1` trangchu_nhac, `thu_KHUI3d` trang-chu-dau) — ánh lướt chuyển động của banner "Hôm nay" chụp ở
   vị trí khác; Thanh toán ví (`thu_KHBAO1`, `thu_KHMUA1b`, `thu_KHMUA1c` pin-tra-vi, `thu_KHTT1`: 85–783 điểm) — công tắc ví đang chạy hiệu ứng bật lúc chụp. `thu_KHSOHD1` chỉ có ảnh
   ở nhánh: bản gốc trong nháp không có `.git` nên bài dừng trước khi chụp (không phải khác màn). Menu, Thanh toán thẻ, Theo dõi đơn, Chào mừng, thẻ QR, Tài khoản: không đổi.
+
+## Cổng
+- `node tu_chay/cong.js tinh . b6f66e6^ HEAD viec/KH-VC-2`: chỉ `✗ [A19]` (chưa ghi HEAD ĐÃ KIỂM — bình thường lúc đó).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở 61da624, cây sạch: `✓ CỔNG CHẠY ĐẠT`
+  (kèm `· CẢNH BÁO A16: cong_cu/thu_KHVC2.js chạy trên gốc in 19 ca ≠ 28 ca ở head` — bài dừng sớm trên gốc, đã ghi trong bang_chung_do.txt).
+HEAD ĐÃ KIỂM: 61da624
