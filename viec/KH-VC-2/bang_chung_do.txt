@@ -61,3 +61,10 @@ SỐ CA cong_cu/thu_KHUI3d.js: 36
 Đã vá, có Chromium:          96 đạt · 0 hỏng (thêm ca huỷ đơn làm mới ví + ca data-nd dòng "Voucher chưa dùng được")
 Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng (số ca không đổi — SỐ CA ở trên vẫn đúng; regex B4 chặt hơn: cuaVoucher phải nằm TRONG mảng lamMoi)
 Gốc (nháp), KHONG_TRINH_DUYET=1: vẫn đỏ (A1 dừng giữa chừng, A2 / B4 / B5 / B6 ✗)
+
+== Vòng sửa 2 (sau /ra-soat vòng 2, commit 51999d7) — thu_KHVC2.js chạy lại, bài HIỆN TẠI trên cả gốc lẫn nhánh ==
+Gốc (nháp, b6f66e6 + cong_cu 51999d7), có Chromium:  29 đạt · 42 hỏng
+Gốc (nháp), KHONG_TRINH_DUYET=1:                      2 đạt · 17 hỏng
+Nhánh, có Chromium:                                  98 đạt · 0 hỏng (thêm ca "chưa có menu → chạm voucher không tích")
+Nhánh, KHONG_TRINH_DUYET=1:                          28 đạt · 0 hỏng — SỐ CA cong_cu/thu_KHVC2.js: 28 (không đổi)
+(Các dòng "23 · 37", "87 / 93 / 96" ở trên là số của các lần trước, giữ để thấy lịch sử.)

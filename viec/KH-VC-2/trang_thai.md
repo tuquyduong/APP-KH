@@ -170,3 +170,39 @@ BÀI HỌC:
 - **GIT:** nhánh `viec/KH-VC-2`, đã push; không merge, không PR.
 - **BÀI HỌC:** xem mục Bài học ở trên (2 đề xuất ngoài Phạm vi: KHUON_LOI "Bài cũ ghim dòng mã" + K1 số ca; 1 KHOÁ đề xuất: bài chung soát data-nd / data-nd-khoa trong App thật).
 HEAD ĐÃ KIỂM: 4a50bc2
+
+## Soát độc lập — vòng 2 (agent mới, `/ra-soat`, 17.11) — chép nguyên
+```
+KHÔNG ĐẠT (một lỗi nhẹ ở hành vi Giỏ hàng. Các sửa của vòng 1 đều đúng, phần còn lại đạt.)
+
+LỖI TÌM ĐƯỢC:
+  src/pages/GioHang.jsx:94 cùng :119–123. Giỏ có thể hiện ô voucher đã tích mà POS chưa hề tính. Ô tích khi `tt === 'dung' || (!bg && vuaChon === v.code)`, còn `vuaChon` chỉ được xoá khi có báo giá về (`useEffect(() => { if (bg) datVuaChon(''); }, [bg])`). Khi Giỏ không hỏi báo giá (`bat = dangNhap && coMenu && coThe` là false: menu chưa tải hoặc lỗi, hay giỏ có món hết), `bg` luôn null. Khách chạm một ô chưa tích thì ô đó tích và giữ nguyên, không có POS nào xác nhận. Điều này trái B3 ("ô tích CHỈ khi POS tính") và cũng là khuôn K3 (hiện trạng thái không có từ POS). Trường hợp menu chưa tải còn để nút "Tiếp tục" bật (dòng 117: `coThe = gio.length > 0`). Vì vậy lý do chấp nhận ghi trong trang_thai.md ("nút Tiếp tục đã khoá theo luật cũ") chỉ đúng với trường hợp món hết, sai với trường hợp chưa có menu (thuộc K1). Cách sửa 1 dòng: chỉ tích lạc quan khi đang thật sự chờ báo giá, ví dụ truyền `bat` vào và đổi thành `(!bg && bat && vuaChon === v.code)`, hoặc xoá `vuaChon` khi `!bat`.
+  viec/KH-VC-2/bang_chung_do.txt:6. Dòng "Gốc, có Chromium: 23 đạt · 37 hỏng" đã cũ. Tôi chạy bài hiện tại trên bản gốc ở nháp (`node cong_cu/thu_KHVC2.js`) được 28 đạt · 41 hỏng. Lý do: vòng 1 thêm ca nhưng không ghi lại số trên gốc (khuôn K1, nhẹ). Bài vẫn đỏ trên gốc, kết luận không đổi.
+
+NGHI NGỜ:
+  - GioHang.jsx:94/121. Khách chạm một ô đang đỏ, mà ô đó đã đứng đầu `chonTay`. `chamVoucher` trả mảng giống hệt nên khoá báo giá không đổi, `bg` giữ nguyên, và `vuaChon` treo lại. Lần đổi giỏ sau, lúc đang chờ báo giá, ô này hiện tích rồi mới chuyển đỏ, tức có nhấp nháy. Gộp chung cách sửa với lỗi trên.
+  - Có thể đặt đơn mà không gửi voucher: ví (`cuaVoucher`) đang tải hoặc lỗi thì `viVc` null, `vouchers` là [] (App.jsx:147–149). Thanh toán có báo giá không voucher và đặt được đơn, voucher của khách bị bỏ qua mà không báo. Đúng tinh thần K5 (ví lỗi thì không chặn), và App tải trước ví ngay khi có phiên (KH-NHANH-1) nên khó xảy ra. Nên ghi vào CHƯA KIỂM.
+  - Đổi khách, đăng xuất, đơn đã trả: vẫn chỉ kiểm bằng regex trên dòng mã cộng đột biến (thu_KHVC2.js:153–158), không có ca trình duyệt. Một marker suông kiểu `void (() => datChonVc(CHON_RONG))` trong `docLaiGio` vẫn qua regex. Lý do "POS giả chưa có đăng nhập lại" còn yếu, vì đăng nhập giả được bằng chặn đường mạng như các bài khác.
+  - ThanhToan.jsx:250. `x.ma` (dữ liệu POS) nằm trong phần tử sửa được `tt.vc.dong` mà không có thẻ 🔒 riêng. Đây là nếp `{bien}` có sẵn trong app (như `nm.daNhanMoi`), nên tôi không xếp vào lỗi.
+  - Ngoài khung Cấm nhưng tối thiểu: chữ ký `ThanhToan(...)` thêm `vouchers` và dòng import css (ThanhToan.jsx:26, 46); dòng import `cuaVoucher` ở App.jsx:4 là sửa dòng cũ chứ không phải thêm dòng mới. Lúc gộp với KH-NAP-1 sẽ đụng chữ ký `ThanhToan` và dòng `tuy`; đơn nạp phải đi `KHONG_MA`.
+  - C5: ảnh chụp ở 441d677, trước vòng 1. Các ảnh Thanh toán ví lệch 85–783 điểm, được giải thích là "hiệu ứng công tắc" — hợp lý nhưng tôi không mở từng cặp ảnh.
+
+NGHIỆM THU:    14/15 mục có bằng chứng · mục thiếu: C7 (chủ quán thử tay sau gộp — đúng như dự kiến)
+  A1 ✓ · A2 ✓ · B1 ✓ · B2 ✓ · B3 ✓ trừ lỗi `vuaChon` khi không hỏi báo giá · B4 ~ (huỷ đơn, đặt xong: trình duyệt; trả đơn, đổi khách, đăng xuất: regex + đột biến) · B5 ✓ · B6 ✓ · C1 ✓ · C2 ✓ · C3 ✓ (20/20, chạy lại) · C4 ✓ · C5 ✓ · C6 ✓ · C7 —
+
+CHƯA SOÁT ĐƯỢC: chưa chạy `--day-du` và cổng `chay`; chưa chạy lại so ảnh C5; chưa thử với POS thật (cách POS xử lý mã trùng giữa `ma_giam` và `vouchers` — đã ghi ở mục Câu hỏi); chưa thử điện thoại thật / trình duyệt Zalo / Chế độ sửa /admin với các khoá mới; chưa kiểm lúc gộp với KH-NAP-1.
+
+BÀI HỌC:
+  - NGUYÊN TẮC: trạng thái "lạc quan" trên màn (tích trước khi POS trả lời) phải gắn với điều kiện "đang thật sự chờ một yêu cầu" (`bat`), không chỉ "chưa có kết quả". Ca thử: giỏ có `bat` false (chưa có menu) mà chạm voucher thì phải không tích.
+  - NGUYÊN TẮC (K1): sau khi sửa bài thử, ghi lại số trên CẢ gốc lẫn nhánh trong bang_chung_do.txt. Lý do "chấp nhận" trong trang_thai phải kiểm cho từng nhánh điều kiện (ở đây `coMenu` và `coThe` khác nhau).
+  - KHOÁ (đề xuất lại từ vòng 1): ca trình duyệt cho đăng xuất / đổi khách, đếm `vouchers` trong lần báo giá đầu sau khi đăng nhập lại, thay cho regex trên dòng mã.
+```
+
+### Sửa vòng 2 (commit 1d2525f code, 51999d7 bài thử + đột biến)
+- GioHang.jsx: ô vừa chạm chỉ tích tạm khi `hoi` (đang hỏi POS) && chưa có báo giá && giỏ CHƯA đổi kể từ lúc chạm (`vuaChon = { ma, khoaGio }`) — sửa cả lỗi lẫn nghi ngờ nhấp nháy;
+  bỏ `useEffect` xoá `vuaChon`. Ca mới "chưa có menu → chạm voucher KHÔNG tích" (0 báo giá gửi); đột biến VS-TICH-TAM-KHI-KHONG-HOI-POS. `dot_bien_tay.js --trinh-duyet`: 21 / 21 BỊ BẮT.
+- Sửa lý do chấp nhận ở vòng 1 (K1): "Giỏ khi không hỏi báo giá … nút Tiếp tục đã khoá" chỉ đúng khi có món hết; khi chưa có menu nút vẫn bật như luật cũ (Thanh toán kiểm lại) — nay mục voucher
+  ở trường hợp đó KHÔNG còn tích tạm, không ô nào tích.
+- bang_chung_do.txt: số gốc / nhánh của bài HIỆN TẠI ghi lại (gốc 29 · 42, nhánh 98 · 0, `KHONG_TRINH_DUYET=1` 2 · 17 / 28 · 0).
+- Không đổi: ví đang tải / lỗi → đặt đơn không voucher, không báo (đúng K5 — ví lỗi không chặn đặt; ghi CHƯA KIỂM). Đổi khách / đăng xuất / trả đơn vẫn nguồn + đột biến — ca trình duyệt
+  đăng nhập lại là đề xuất KHOÁ (Bài học), chưa làm trong việc này. `x.ma` trong dòng sửa được `tt.vc.dong`: nếp `{bien}` có sẵn (người soát cũng không xếp lỗi).
