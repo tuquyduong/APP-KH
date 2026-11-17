@@ -4,12 +4,14 @@ import { dungTai } from '../dungTai.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
-import { duocThanhToan, laThe, trangThaiDong } from '../gio.js';
+import { duocThanhToan, laNap, laThe, trangThaiDong } from '../gio.js';
+import { cuaGoiNap } from '../duLieuKhach.js';
+import { goiNapDs } from '../viTien.js';
 import { dungGia } from '../heThong.js';
 import { tenDongThe, khoaDongThe } from '../giaHang.js';
 import { soDon } from '../hoaDon.js';
 import {
-  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, dungViCho, chanDatGio, docBaoGia, laLoiThe, maDonDaTra, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
+  KHOA_DON_GUI, banGhiGui, chanBoiBanGhi, conChuaRo, cachTraDuoc, dungViCho, chanDatGio, docBaoGia, laLoiNap, laLoiThe, maDonDaTra, docGuiDo, ghiGuiDo, guiDonAnToan, huyDon, khoaGui, taoKhoaGui, thanDatDon, viThieu,
 } from '../datDon.js';
 import { DAT_ONLINE } from '../noiDung/caiDat.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
@@ -18,11 +20,13 @@ import { dungBaoGia } from '../dungDatDon.js';
 import Man, { DauManCon } from '../components/Man.jsx';
 import PinSheet from '../components/PinSheet.jsx';
 import { Ico, IcoVe, Med } from '../components/BieuTuong.jsx';
+import { KhungLoi } from '../components/TrangTai.jsx';
 import { bam } from '../components/bam.js';
 import Chu from '../components/Chu.jsx';
 import { TheHoiVienChung } from '../components/TheHoiVien.jsx';
 import { BangTien } from './GioHang.jsx';
 import '../giaoDien/thanh_toan.css';
+import '../giaoDien/vi_tien.css';
 
 // Thanh toán theo demo (checkout), hợp đồng v9. Cách nhận: Lấy tại quầy; Giao tận nơi (Ahamove) hiện nhưng TẮT tới KH-MUA-2.
 // Cách trả: MỘT công tắc "Trừ từ số dư ví" (khuôn .notif-row + .switch của demo; ví 0đ → ẩn): tắt → QR cả đơn; bật + số dư ≥ tổng → vi;
@@ -40,13 +44,16 @@ const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 // Thanh toán thẻ (/uudai/hang/thanhtoan, KH-THE-2 — bản thiết kế 14.11 Màn 3): prop `the` (dòng thẻ dựng từ đường dẫn; null = tham số sai) → CHÍNH màn này với "giỏ"
 // MỘT dòng thẻ (không đọc / ghi kh_gio), không mã giảm, cách trả LUÔN QR (dungViCho — thẻ không trả bằng số dư), không nhận hàng / công tắc ví / PIN.
 // Khoá gửi, tong_da_xem, kh_don_gui, chưa rõ / gửi lại đúng đơn, đơn chờ trả, trần lượt, C7 dùng chung với đơn đồ uống (không đường đặt đơn thứ hai).
+// Thanh toán nạp (/uudai/vi/nap?goi=, KH-NAP-1 — bản thiết kế 16.11 Màn 4): prop `nap` (dòng nạp dựng từ đường dẫn; null = tham số sai) → CÙNG khuôn "một dòng" của thẻ:
+// không giỏ, không mã giảm, cách trả LUÔN QR (dungViCho), giỏ chỉ nạp đặt mọi giờ (chanDatGio). Gói đối chiếu /goi-nap (cuaGoiNap, lấy mới khi mở màn).
 const KHONG_MA = { maGiam: '' };
 const laSo = (x) => typeof x === 'number' && Number.isFinite(x);
-export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLichSu, moDon, veGio, veHang, danhDauMon, sauHuy, daTra }) {
+export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, lui, xong, moLichSu, moDon, veGio, veHang, veVi, danhDauMon, sauHuy, daTra }) {
   const { dsHang } = dungGia();
   const cheDoThe = the !== undefined;
-  const gio = cheDoThe ? (the ? [the] : []) : gioCa;
-  const tuy = cheDoThe ? KHONG_MA : { maGiam };
+  const cheDoNap = nap !== undefined;
+  const gio = cheDoThe ? (the ? [the] : []) : cheDoNap ? (nap ? [nap] : []) : gioCa;
+  const tuy = cheDoThe || cheDoNap ? KHONG_MA : { maGiam };
   const toi = dungTai(layToi);
   const dsDon = dungTai(layDonDau); // gọi MỚI mỗi lần mở (không kho chung): đơn chờ trả của tab / lần mở trước
   const gh = dungKho(khoGioHoatDong);
@@ -66,6 +73,11 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
   const [, ve] = useState(0);
   // Bản ghi lần gửi (kh_don_gui) đọc LẠI mỗi lần vẽ và khi tab khác ghi (sự kiện storage) — không tin bản chụp lúc mở màn (tab mở trước, ra-soát vòng 1).
   const guiDo = docGuiDo();
+  // Gói nạp: Thanh toán nạp lấy MỚI khi mở; màn khác chỉ khi bản ghi "chưa rõ" là đơn nạp (để hiện đúng tên gói). Chưa có danh sách → null.
+  const goiKho = dungKho(cuaGoiNap.kho);
+  const dsGoi = goiKho.dl ? goiNapDs(goiKho.dl) : null;
+  const canGoi = cheDoNap || (!!guiDo && Array.isArray(guiDo.than.mon) && guiDo.than.mon.some(laNap));
+  useEffect(() => { if (cheDoNap) cuaGoiNap.lay(); else if (canGoi) cuaGoiNap.napNeuCu(); }, [canGoi]);
   // Khoá của bản ghi ĐÃ CÓ ĐƠN lúc mở màn (khách đã biết đơn đó). Bản ghi CHƯA RÕ không tính: tab khác gửi lại thành công → màn này phải báo "vừa đặt".
   const daThay = useRef(guiDo && guiDo.ma_don ? guiDo.khoa_gui : null);
   useEffect(() => {
@@ -85,8 +97,9 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
     return () => clearInterval(id);
   }, [conGiay > 0]);
 
-  const coThe = duocThanhToan(gio, ds, dsHang);
-  const khongBan = cheDoThe && (!the || (Array.isArray(dsHang) && !coThe)); // tham số sai / hạng hoặc gói không còn bán: không báo giá, không đặt
+  const coThe = duocThanhToan(gio, ds, dsHang, dsGoi);
+  // tham số sai / hạng hoặc gói (thẻ, nạp) không còn bán: không báo giá, không đặt
+  const khongBan = cheDoThe ? (!the || (Array.isArray(dsHang) && !coThe)) : cheDoNap && (!nap || (!!dsGoi && !coThe));
   const { bg, loi, datBg } = dungBaoGia(gio, tuy, coThe);
   const soDu = toi.dl && toi.dl.khach ? toi.dl.khach.so_du_vi : null;
   const duoc = cachTraDuoc(bg && bg.tong, soDu);
@@ -108,7 +121,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
     if (e.code === 'GIA_DA_DOI') { const b = docBaoGia(dl.bao_gia); if (b) datBg(b); datThongBao(nd('loi.GIA_DA_DOI')); return; }
     if (e.code === 'QUA_NHIEU_LAN') { datHetLuc(Date.now() + (Number(dl.thu_lai_sau_giay) || 60) * 1000); datThongBao(e.message); return; }
     if (MA_NGOAI_GIO.includes(e.code)) { datChanPos(e.message); return; }
-    if (laLoiThe(e)) { datMonLoi(true); datThongBao(e.message); return; } // lời POS nguyên văn; nút phụ về Hạng thành viên
+    if (laLoiThe(e) || laLoiNap(e)) { datMonLoi(true); datThongBao(e.message); return; } // lời POS nguyên văn; nút phụ về Hạng thành viên / về Ví
     if (MA_MON[e.code]) {
       const m = ds.find((x) => x.ma === dl.ma);
       datMonLoi(true); datThongBao(m ? `${e.message} — ${m.ten}` : e.message);
@@ -168,7 +181,9 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
   };
   const khongGuiLai = guiDo && (guiDo.quaHan || guiDo.da_dung); // POS không nhận lại khoá này → chỉ xem Lịch sử / bỏ qua
   const tenMon = (ma) => (ds.find((m) => m.ma === ma) || {}).ten || ma;
-  const tenGui = (m) => (laThe(m) ? tenDongThe(m, dsHang) : `${tenMon(m.ma)} ×${m.so_luong}`);
+  const goiCua = (m) => (dsGoi || []).find((g) => g.ma === m.ma_goi) || null;
+  const tenGui = (m) => (laNap(m) ? (goiCua(m) ? goiCua(m).ten : nd('nap.tt.dong')) : laThe(m) ? tenDongThe(m, dsHang) : `${tenMon(m.ma)} ×${m.so_luong}`);
+  const khoaTenGui = (m) => (laNap(m) ? (goiCua(m) ? 'nap.tt.pos' : 'nap.tt.dong') : laThe(m) ? khoaDongThe(m, dsHang) : 'tt.so');
 
   // Số dư quyết định cách trả CHỈ lấy từ /toi gọi SAU khi mở màn (KH-NHANH-1 F1); chờ thì công tắc khoá.
   const viBat = cachTra !== 'qr';
@@ -179,7 +194,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
   const batDuocVi = duoc.vi || duoc.viQr;
   const [kNut, bienNut] = !DAT_ONLINE ? ['loi.CHUA_MO'] : dang ? [guiLai ? 'tt.nut.guiLai' : 'tt.nut.dangGui'] : dsDon.dangTai ? ['tt.nut.kiemTra']
     : chuaRo || donKhac || donCho ? ['tt.nut.xuLyTruoc'] : conGiay ? ['tt.nut.thuLai', { giay: conGiay }] : !bg ? ['tt.nut.xacNhan']
-      : cachTra === 'qr' ? [cheDoThe ? 'the.tt.nut' : 'tt.nut.qr', { tong: dinhDangGia(bg.tong) }] : cachTra === 'vi' ? ['tt.nut.vi', { tong: dinhDangGia(bg.tong) }] : ['tt.nut.viQr', { vi: dinhDangGia(soDu), qr: dinhDangGia(thieu) }];
+      : cachTra === 'qr' ? [cheDoThe ? 'the.tt.nut' : cheDoNap ? 'nap.tt.nut' : 'tt.nut.qr', { tong: dinhDangGia(bg.tong) }] : cachTra === 'vi' ? ['tt.nut.vi', { tong: dinhDangGia(bg.tong) }] : ['tt.nut.viQr', { vi: dinhDangGia(soDu), qr: dinhDangGia(thieu) }];
   const [kGuiLai, bienGuiLai] = !DAT_ONLINE ? ['loi.CHUA_MO'] : conGiay ? ['tt.guiLai.cho', { giay: conGiay }] : ['tt.guiLai.nut'];
   // Khối cảnh báo / chờ: khuôn .nt-state của demo (biểu tượng + dòng đậm + dòng nhỏ).
   // kT / kP = khoá chữ của dòng đậm / dòng nhỏ (danh mục nội dung) để gắn data-nd.
@@ -187,14 +202,14 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
 
   return (
     <Man id="checkout">
-      <DauManCon tieuDe={nd('tt.tieuDe')} phu={cheDoThe ? <span {...ndDau('the.tt.phu')}>{nd('the.tt.phu')}</span> : nd('tt.phu')} lui={lui} canTrai />
+      <DauManCon tieuDe={nd('tt.tieuDe')} phu={cheDoThe ? <span {...ndDau('the.tt.phu')}>{nd('the.tt.phu')}</span> : cheDoNap ? <span {...ndDau('nap.tt.phu')}>{nd('nap.tt.phu')}</span> : nd('tt.phu')} lui={lui} canTrai />
       {chuaRo && (
         <>
           {guiDo.da_dung ? canhBao(nd('tt.daDung.t'), '', 'tt.daDung.t')
             : guiDo.quaHan ? canhBao(nd('tt.quaHan.t'), nd('tt.quaHan.p'), 'tt.quaHan.t', 'tt.quaHan.p')
               : canhBao(nd('tt.chuaRo.t'), nd('tt.chuaRo.p'), 'tt.chuaRo.t', 'tt.chuaRo.p')}
           <div className="card bang-tien">
-            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau(laThe(m) ? khoaDongThe(m, dsHang) : 'tt.so')}>{tenGui(m)}</span></div>)}
+            {guiDo.than.mon.map((m, i) => <div className="summary-row" key={i}><span {...ndDau(khoaTenGui(m))}>{tenGui(m)}</span></div>)}
             {Number.isInteger(guiDo.than.tong_da_xem) && <div className="summary-row total"><Chu k="tt.tong" /><span {...ndDau('tt.so')}>{dinhDangGia(guiDo.than.tong_da_xem)}</span></div>}
           </div>
           {/* Quá 24 giờ / POS đã báo KHOA_GUI_DA_DUNG → không mời gửi lại, chỉ xem Lịch sử / bỏ qua (khách tự bấm mới xoá bản ghi). */}
@@ -218,7 +233,8 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
           <Chu k="tt.donCho.huy" as="button" type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho} />
         </>
       )}
-      {cheDoThe ? <KhoiThe the={the} dsHang={dsHang} bg={bg} khongBan={khongBan} canhBao={canhBao} /> : (
+      {cheDoNap ? <KhoiNap goi={nap && goiCua(nap)} bg={bg} loi={loi} khongBan={khongBan} loiGoi={goiKho.loi} thuLai={cuaGoiNap.lay} canhBao={canhBao} />
+      : cheDoThe ? <KhoiThe the={the} dsHang={dsHang} bg={bg} khongBan={khongBan} canhBao={canhBao} /> : (
         <>
         <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><Chu k="tt.nhan.tieuDe" as="h2" /></div>
         <div className="mode-row">
@@ -244,7 +260,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
         </>
       )}
 
-      {!khongBan && <BangTien bg={bg} loi={loi} />}
+      {!khongBan && !cheDoNap && <BangTien bg={bg} loi={loi} />}
       {chan && canhBao(chan, '', khoaLoi(chan))}
       {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}
       {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}
@@ -253,7 +269,8 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
           <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
         </button>
       )}
-      {cheDoThe ? (monLoi || khongBan || !!loi) && <Chu k="the.tt.veHang" as="button" type="button" className="ghost-btn" onClick={veHang} />
+      {cheDoNap ? (monLoi || khongBan || !!loi) && <Chu k="nap.tt.veVi" as="button" type="button" className="ghost-btn" onClick={veVi} />
+        : cheDoThe ? (monLoi || khongBan || !!loi) && <Chu k="the.tt.veHang" as="button" type="button" className="ghost-btn" onClick={veHang} />
         : monLoi && <Chu k="tt.veGio" as="button" type="button" className="ghost-btn" onClick={veGio} />}
       {canPin && <Chu k="tt.datPin" as="button" type="button" className="ghost-btn" onClick={() => datMoDatPin(true)} />}
       {moPin && <PinSheet gui={(pin) => guiDon(pin, moPin.cu)} dong={() => datMoPin(null)} />}
@@ -286,6 +303,41 @@ function KhoiThe({ the, dsHang, bg, khongBan, canhBao }) {
         <Ico ten="check" s={22} lop="tt-qr-v" />
       </div>
       <div className="the-khoa"><Ico ten="card" s={16} /><Chu k="the.tt.khongVi" /></div>
+    </>
+  );
+}
+
+// Phần riêng của Thanh toán nạp (Màn 4): thẻ tóm tắt (ô biểu tượng ví, tên gói POS, "Vào ví …", giá = tổng báo giá), dòng xanh, MỘT cách trả QR (không đổi được),
+// dòng khoá, bảng tiền RIÊNG của nạp (Tiền nạp / Tổng cộng / Vào ví sau khi trả). Mọi số từ POS (/goi-nap, báo giá).
+function KhoiNap({ goi, bg, loi, khongBan, loiGoi, thuLai, canhBao }) {
+  if (khongBan) return canhBao(nd('nap.tt.khongBan'), nd('nap.tt.khongBan.p'), 'nap.tt.khongBan', 'nap.tt.khongBan.p');
+  if (!goi) return loiGoi ? <KhungLoi loi={loiGoi} thuLai={thuLai} /> : <div className="khung-tai" aria-busy="true" />;
+  const pos = ndDau('nap.tt.pos');
+  return (
+    <>
+      <div className="card the-tom">
+        <span className="vt-nap-ic"><IcoVe ten="wallet" s={24} /></span>
+        <div className="the-tom-chu"><b {...pos}>{goi.ten}</b><span {...ndDau('nap.tt.vao')}>{nd('nap.tt.vao', { vao: dinhDangGia(goi.vao) })}</span></div>
+        {bg && <span className="the-tom-gia" {...pos}>{dinhDangGia(bg.tong)}</span>}
+      </div>
+      <div className="nt-state on the-kich"><Ico ten="check" s={18} /><Chu k="nap.tt.ngay" as="div" /></div>
+      <div className="sec-head"><Chu k="nap.tt.tra" as="h2" /></div>
+      <div className="tt-qr" aria-checked="true" role="radio" aria-disabled="true">
+        <span className="tt-qr-ic"><Ico ten="qr" s={20} /></span>
+        <div><Chu k="nap.tt.qr" as="b" /><Chu k="nap.tt.qr.phu" as="small" /></div>
+        <Ico ten="check" s={22} lop="tt-qr-v" />
+      </div>
+      <div className="the-khoa"><Ico ten="card" s={16} /><Chu k="nap.tt.khoa" /></div>
+      <div className="card bang-tien">
+        {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('tt.thongBao')}>{loi}</div></div>}
+        {bg ? (
+          <>
+            {bg.tamTinh !== null && <div className="summary-row"><Chu k="nap.tt.tienNap" /><span {...pos}>{dinhDangGia(bg.tamTinh)}</span></div>}
+            <div className="summary-row total"><Chu k="nap.tt.tong" /><span {...pos}>{dinhDangGia(bg.tong)}</span></div>
+            <div className="summary-row vt-vao-vi"><Chu k="nap.tt.vaoSau" /><span {...pos}>{dinhDangGia(goi.vao)}</span></div>
+          </>
+        ) : !loi && <div className="summary-row"><Chu k="nap.tt.chuaTong" /></div>}
+      </div>
     </>
   );
 }
