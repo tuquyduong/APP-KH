@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { layDon, layToi } from '../api.js';
+import { layDon, layGoiNap, layToi } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
 import { dinhDangGia } from '../dinhDang.js';
 import { duocThanhToan, laNap, laThe, trangThaiDong } from '../gio.js';
-import { cuaGoiNap } from '../duLieuKhach.js';
 import { goiNapDs } from '../viTien.js';
 import { dungGia } from '../heThong.js';
 import { tenDongThe, khoaDongThe } from '../giaHang.js';
@@ -45,7 +44,7 @@ const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 // MỘT dòng thẻ (không đọc / ghi kh_gio), không mã giảm, cách trả LUÔN QR (dungViCho — thẻ không trả bằng số dư), không nhận hàng / công tắc ví / PIN.
 // Khoá gửi, tong_da_xem, kh_don_gui, chưa rõ / gửi lại đúng đơn, đơn chờ trả, trần lượt, C7 dùng chung với đơn đồ uống (không đường đặt đơn thứ hai).
 // Thanh toán nạp (/uudai/vi/nap?goi=, KH-NAP-1 — bản thiết kế 16.11 Màn 4): prop `nap` (dòng nạp dựng từ đường dẫn; null = tham số sai) → CÙNG khuôn "một dòng" của thẻ:
-// không giỏ, không mã giảm, cách trả LUÔN QR (dungViCho), giỏ chỉ nạp đặt mọi giờ (chanDatGio). Gói đối chiếu /goi-nap (cuaGoiNap, lấy mới khi mở màn).
+// không giỏ, không mã giảm, cách trả LUÔN QR (dungViCho), giỏ chỉ nạp đặt mọi giờ (chanDatGio). Gói đối chiếu GET /goi-nap (gọi mới khi mở màn).
 const KHONG_MA = { maGiam: '' };
 const laSo = (x) => typeof x === 'number' && Number.isFinite(x);
 export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, lui, xong, moLichSu, moDon, veGio, veHang, veVi, danhDauMon, sauHuy, daTra }) {
@@ -73,11 +72,12 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, lui, xong,
   const [, ve] = useState(0);
   // Bản ghi lần gửi (kh_don_gui) đọc LẠI mỗi lần vẽ và khi tab khác ghi (sự kiện storage) — không tin bản chụp lúc mở màn (tab mở trước, ra-soát vòng 1).
   const guiDo = docGuiDo();
-  // Gói nạp: Thanh toán nạp lấy MỚI khi mở; màn khác chỉ khi bản ghi "chưa rõ" là đơn nạp (để hiện đúng tên gói). Chưa có danh sách → null.
-  const goiKho = dungKho(cuaGoiNap.kho);
-  const dsGoi = goiKho.dl ? goiNapDs(goiKho.dl) : null;
+  // Gói nạp (GET /goi-nap gọi MỚI — Thanh toán không đọc kho chung): Thanh toán nạp, hoặc màn khác khi bản ghi "chưa rõ" là đơn nạp (hiện đúng tên gói). Chưa có → null.
+  const [khoGoi, datKhoGoi] = useState({ dl: null, loi: '' });
+  const taiGoi = () => { datKhoGoi((x) => ({ ...x, loi: '' })); layGoiNap().then((dl) => datKhoGoi({ dl, loi: '' }), (e) => datKhoGoi({ dl: null, loi: e.message })); };
+  const dsGoi = khoGoi.dl ? goiNapDs(khoGoi.dl) : null;
   const canGoi = cheDoNap || (!!guiDo && Array.isArray(guiDo.than.mon) && guiDo.than.mon.some(laNap));
-  useEffect(() => { if (cheDoNap) cuaGoiNap.lay(); else if (canGoi) cuaGoiNap.napNeuCu(); }, [canGoi]);
+  useEffect(() => { if (canGoi) taiGoi(); }, [canGoi]);
   // Khoá của bản ghi ĐÃ CÓ ĐƠN lúc mở màn (khách đã biết đơn đó). Bản ghi CHƯA RÕ không tính: tab khác gửi lại thành công → màn này phải báo "vừa đặt".
   const daThay = useRef(guiDo && guiDo.ma_don ? guiDo.khoa_gui : null);
   useEffect(() => {
@@ -233,7 +233,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, lui, xong,
           <Chu k="tt.donCho.huy" as="button" type="button" className={`ghost-btn${dangHuy ? ' btn-disabled' : ''}`} aria-disabled={dangHuy} onClick={dangHuy ? undefined : huyDonCho} />
         </>
       )}
-      {cheDoNap ? <KhoiNap goi={nap && goiCua(nap)} bg={bg} loi={loi} khongBan={khongBan} loiGoi={goiKho.loi} thuLai={cuaGoiNap.lay} canhBao={canhBao} />
+      {cheDoNap ? <KhoiNap goi={nap && goiCua(nap)} bg={bg} loi={loi} khongBan={khongBan} loiGoi={khoGoi.loi} thuLai={taiGoi} canhBao={canhBao} />
       : cheDoThe ? <KhoiThe the={the} dsHang={dsHang} bg={bg} khongBan={khongBan} canhBao={canhBao} /> : (
         <>
         <div className="sec-head" style={chuaRo || donKhac || donCho ? undefined : { marginTop: 0 }}><Chu k="tt.nhan.tieuDe" as="h2" /></div>
