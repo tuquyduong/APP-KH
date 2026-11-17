@@ -80,3 +80,7 @@ SỐ CA cong_cu/thu_KHTHE2.js: 46
 
 ## thu_KHBAO1.js, thu_KHNHANH1.js — KHÔNG đổi bài: code nhánh vi phạm luật "Thanh toán / Theo dõi đơn không đọc kho chung" → sửa CODE
 (ThanhToan gọi GET /goi-nap mới; DaNap gọi GET /toi mới). Nhánh: thu_KHBAO1 106 đạt · 0 hỏng · thu_KHNHANH1 230 đạt · 0 hỏng.
+
+## Rà soát vòng 1 (17.11): thu_KHNAP1 thêm ca trình duyệt "B4 /goi-nap lỗi → Thử lại + Về Ví" (chỉ phần Chromium — số ca KHONG_TRINH_DUYET=1 không đổi)
+gốc (bản sao b62c23d + bài mới), có Chromium: 26 đạt · 65 hỏng  (✗ B4 /goi-nap lỗi → câu lỗi + "Thử lại" + lối ra "Về Ví", không báo giá)
+nhánh, có Chromium: 125 đạt · 0 hỏng · KHONG_TRINH_DUYET=1: 41 đạt · 0 hỏng (SỐ CA cong_cu/thu_KHNAP1.js: 41 — giữ)
