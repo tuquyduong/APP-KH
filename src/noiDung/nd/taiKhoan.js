@@ -110,6 +110,13 @@ export const TAI_KHOAN = [
   cU('ud.voucher.han', 'Ưu đãi: thẻ voucher, hạn dùng', 'hạn dùng đến {ngay}', { bien: ['ngay'] }),
   cU('ud.voucher.daDung', 'Ưu đãi: nhãn voucher đã dùng', 'Đã dùng'),
   cU('ud.voucher.hetHan', 'Ưu đãi: nhãn voucher hết hạn', 'Hết hạn'),
+  cU('ud.voucher.chuaDung', 'Ưu đãi: nhãn voucher chưa dùng được (tắt, đơn gốc huỷ, đang giữ…)', 'Chưa dùng được'),
+  cU('ud.vc.dungNgay', 'Ưu đãi: nút Dùng ngay của voucher (mở Giỏ hàng)', 'Dùng ngay'),
+  cU('ud.vc.ship', 'Ưu đãi: nhãn voucher giảm phí giao (đơn nhận tại quán)', 'Dùng khi đặt giao hàng'),
+  cU('ud.vc.nguon.doi_diem', 'Ưu đãi: chip nguồn voucher — đổi điểm', 'Đổi điểm'),
+  cU('ud.vc.nguon.khach_moi', 'Ưu đãi: chip nguồn voucher — khách mới', 'Khách mới'),
+  cU('ud.vc.nguon.gioi_thieu', 'Ưu đãi: chip nguồn voucher — giới thiệu bạn bè', 'Giới thiệu bạn'),
+  kU('ud.vc.moTa', 'Câu voucher (giảm gì, hạn dùng) — POS dựng', 'pos', 'POS › Voucher — câu do máy chủ dựng'),
   cU('ud.lichSu', 'Ưu đãi: tiêu đề khối Lịch sử điểm', 'Lịch sử điểm'),
   cU('ud.lichSu.chua', 'Ưu đãi: chưa có lịch sử điểm', 'Chưa có điểm nào.'),
   cU('ud.loai.earn', 'Ưu đãi: lịch sử điểm, loại Tích điểm (khi POS không ghi lý do)', 'Tích điểm'),
@@ -127,6 +134,7 @@ export const TAI_KHOAN = [
   cU('nm.daNhanDiem', 'Nhập mã: báo đã nhận điểm (POS không nói số điểm)', 'Đã nhận điểm.'),
   cU('nm.daNhanMoi', 'Nhập mã: báo đã nhận ưu đãi khách mới (có mã)', 'Đã nhận ưu đãi khách mới: mã {ma} {giam}', { bien: ['ma', 'giam'] }),
   cU('nm.daNhanMoi2', 'Nhập mã: báo đã nhận ưu đãi khách mới (không có mã)', 'Đã nhận ưu đãi khách mới.'),
+  cU('nm.daThemVi', 'Nhập mã: báo đã nhận ưu đãi khách mới (POS gửi câu voucher)', 'Đã thêm vào ví voucher: {moTa}', { bien: ['moTa'] }),
   kU('nm.loi', 'Lời POS trả khi nhận điểm / ưu đãi (mã đã dùng, hết hạn…)', 'pos', 'POS › Mã hoá đơn'),
 
   // ── Hồ sơ (Thông tin cá nhân) ──
