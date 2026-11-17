@@ -16,10 +16,14 @@ const chu = (s) => String(s || '').trim();
 /** Một dòng giỏ → dòng thân: thẻ ĐÚNG { loai, hang_id, so_thang } (v13 — không ma / ghi chú / giá / số lượng); món { ma, so_luong, ghi_chu? } KHÔNG có `loai`. */
 const dongGui = (d) => (laThe(d) ? { loai: 'the', hang_id: d.hang_id, so_thang: d.so_thang } : chu(d.ghi_chu) ? { ma: d.ma, so_luong: d.so_luong, ghi_chu: d.ghi_chu } : { ma: d.ma, so_luong: d.so_luong });
 
-/** Thân `POST /gio/bao-gia`: mon[] (dongGui, giữ thứ tự giỏ), ma_giam (khi có), cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá. */
-export function thanBaoGia(gio, { maGiam } = {}) {
+/**
+ * Thân `POST /gio/bao-gia`: mon[] (dongGui, giữ thứ tự giỏ), ma_giam (khi có), vouchers (v15 — CHỈ khi mảng không rỗng: thiếu thì thân + khoá gửi y như cũ),
+ * cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá.
+ */
+export function thanBaoGia(gio, { maGiam, vouchers } = {}) {
   const t = { mon: gio.map(dongGui) };
   if (chu(maGiam)) t.ma_giam = chu(maGiam);
+  if (Array.isArray(vouchers) && vouchers.length) t.vouchers = vouchers;
   t.cach_nhan = 'tai_quan';
   return t;
 }
@@ -39,21 +43,25 @@ export function taoKhoaGui(cr = globalThis.crypto) {
   return Array.from(cr.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-/** Trả lời báo giá → { tamTinh, giam[] { loai, soTien }, phiGiao, tong, maGiamLoi { code, error } | null }. Không có `tong` là số → null. */
+/** Trả lời báo giá → { tamTinh, giam[] { loai, soTien, ma? }, phiGiao, tong, maGiamLoi { code, error } | null, voucherLoi[] { ma, code, error } }. Không có `tong` là số → null. */
 export function docBaoGia(r) {
   if (!r || !so(r.tong)) return null;
   const ml = r.ma_giam_loi;
   return {
     tamTinh: so(r.tam_tinh) ? r.tam_tinh : null,
-    giam: (Array.isArray(r.giam) ? r.giam : []).filter((g) => g && so(g.so_tien)).map((g) => ({ loai: chu(g.loai), soTien: g.so_tien })),
+    giam: (Array.isArray(r.giam) ? r.giam : []).filter((g) => g && so(g.so_tien)).map((g) => ({ loai: chu(g.loai), soTien: g.so_tien, ...(chu(g.ma) ? { ma: chu(g.ma) } : {}) })),
     phiGiao: so(r.phi_giao) ? r.phi_giao : null,
     tong: r.tong,
     maGiamLoi: ml && chu(ml.error) ? { code: chu(ml.code), error: chu(ml.error) } : null,
+    voucherLoi: (Array.isArray(r.voucher_loi) ? r.voucher_loi : []).filter((x) => x && chu(x.ma) && chu(x.error)).map((x) => ({ ma: chu(x.ma), code: chu(x.code), error: chu(x.error) })),
   };
 }
 
-/** Tên dòng giảm theo demo (checkout "Giảm giá (voucher)", giỏ "Ưu đãi hạng …", nhãn "Giờ vàng"); loại lạ → "Giảm giá". */
-export function tenGiam(loai, tenHang) {
+/** Tên dòng giảm `g` ({ loai, ma }): voucher "Voucher <MÃ>" (như hoá đơn POS), voucher_ship "Giảm phí giao", mã chung "Mã khuyến mãi", hạng, Giờ vàng; loại lạ "Giảm giá". */
+export function tenGiam(g, tenHang) {
+  const loai = g && g.loai;
+  if (loai === 'voucher' && chu(g.ma)) return nd('giam.voucherMa', { ma: chu(g.ma) }); // POS thiếu mã → "Giảm giá" (không hiện "Voucher " trống)
+  if (loai === 'voucher_ship') return nd('giam.ship');
   if (loai === 'ma_giam') return nd('giam.voucher');
   if (loai === 'hang') return chu(tenHang) ? nd('giam.hang', { hang: chu(tenHang) }) : nd('giam.hangTron');
   if (loai === 'gio_vang') return nd('giam.gioVang');

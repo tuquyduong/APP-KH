@@ -7,6 +7,7 @@ import { Ico } from './BieuTuong.jsx';
 
 // Một ô mã in trên bill, khách tự bấm — máy KHÔNG tự gửi. Mã chuẩn hoá cùng một hàm với link QR (maBill.js).
 // `maSan`: mã điền sẵn từ link QR → chỉ có nút nhận điểm (mã trên link là mã nhận điểm).
+// Nhận ưu đãi khách mới (v15): POS phát voucher MỚI vào ví và gửi câu `data.mo_ta` → "Đã thêm vào ví voucher: {mo_ta}"; POS cũ chưa gửi câu → câu cũ.
 
 export default function NhanMa({ maSan = '', khiThu, khiXong }) {
   const [ma, datMa] = useState(maSan);
@@ -44,7 +45,7 @@ export default function NhanMa({ maSan = '', khiThu, khiXong }) {
       </div>
       {!maSan && (
         <button type="button" className="ghost-btn" disabled={dang || trong}
-          onClick={() => gui(nhanMaBill, (r) => (r.data && r.data.voucher_code ? { chu: nd('nm.daNhanMoi', { ma: r.data.voucher_code, giam: moTaGiam(r.data.discount_type, r.data.discount_value) }), khoa: 'nm.daNhanMoi' } : { chu: nd('nm.daNhanMoi2'), khoa: 'nm.daNhanMoi2' }))} {...ndDau('nm.nhanMoi')}>
+          onClick={() => gui(nhanMaBill, (r) => (r.data && String(r.data.mo_ta || '').trim() ? { chu: nd('nm.daThemVi', { moTa: String(r.data.mo_ta).trim() }), khoa: 'nm.daThemVi' } : r.data && r.data.voucher_code ? { chu: nd('nm.daNhanMoi', { ma: r.data.voucher_code, giam: moTaGiam(r.data.discount_type, r.data.discount_value) }), khoa: 'nm.daNhanMoi' } : { chu: nd('nm.daNhanMoi2'), khoa: 'nm.daNhanMoi2' }))} {...ndDau('nm.nhanMoi')}>
           {nd('nm.nhanMoi')}
         </button>
       )}

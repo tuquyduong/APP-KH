@@ -23,22 +23,31 @@ import { bayGio } from '../bayGio.js';
 import '../giaoDien/chuong_trinh.css';
 import '../giaoDien/hang.css';
 import '../giaoDien/the_hang.css';
+import '../giaoDien/voucher.css';
+import { laShip } from '../voucherGio.js';
 
 // Ưu đãi theo demo (rewards): thẻ hội viên (đầu màn, KH-THE-2), banner Giờ vàng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
 // Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
 //   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
 const LOAI_DIEM = { earn: 'ud.loai.earn', redeem: 'ud.loai.redeem' }; // loại → khoá nội dung
-const TRANG_THAI_VOUCHER = { used: 'ud.voucher.daDung', expired: 'ud.voucher.hetHan' };
+const TRANG_THAI_VOUCHER = { used: 'ud.voucher.daDung', expired: 'ud.voucher.hetHan', disabled: 'ud.voucher.chuaDung' };
+const khoaNguonVoucher = { doi_diem: 'ud.vc.nguon.doi_diem', khach_moi: 'ud.vc.nguon.khach_moi', gioi_thieu: 'ud.vc.nguon.gioi_thieu' }; // nguồn lạ → không chip
 const dau = (n) => (n > 0 ? `+${n}` : String(n));
 
-function TheVoucher({ ten, khoaTen, ma, loai, giaTri, toiThieu, han, nhan, khoaNhan }) {
+// Thẻ voucher (Màn 6, KH-VC-2): có `moTa` (câu POS, v15) → tên = câu POS NGUYÊN VĂN + chip nguồn + mã nét đứt; không có → cách cũ (tên + dòng mã · giảm · đơn từ · hạn).
+// Nút: nhãn trạng thái (Xem tất cả) › voucher ship "Dùng khi đặt giao hàng" (mờ, không nút) › "Dùng ngay" (`dung`).
+function TheVoucher({ ten, khoaTen, ma, loai, giaTri, toiThieu, han, nhan, khoaNhan, moTa, nguon, ship, dung }) {
   const phu = [ma, moTaGiam(loai, giaTri), toiThieu > 0 && nd('ud.voucher.donTu', { gia: dinhDangGia(toiThieu) }), han && nd('ud.voucher.han', { ngay: dinhDangNgay(han) })].filter(Boolean).join(' · ');
   return (
-    <div className="voucher">
+    <div className={`voucher${ship ? ' vc-ship' : ''}`}>
       <div className="strip" />
-      <div className="body">
-        <div><div className="t" {...ndDau(khoaTen || (ten ? 'ud.khach' : 'ud.voucher.tenChung'))}>{ten || nd('ud.voucher.tenChung')}</div><div className="s" {...ndDau('ud.khach')}>{phu}</div></div>
-        {nhan && <div className="use" {...ndDau(khoaNhan)}>{nhan}</div>}
+      <div className="body vc-body">
+        {moTa ? (
+          <div className="vc-than"><div className="t" {...ndDau('ud.vc.moTa')}>{moTa}</div><div className="vc-dong">{khoaNguonVoucher[nguon] && <span className="vc-chip" {...ndDau(khoaNguonVoucher[nguon])}>{nd(khoaNguonVoucher[nguon])}</span>}<span className="vc-ma" {...ndDau('ud.khach')}>{ma}</span></div></div>
+        ) : <div className="vc-than"><div className="t" {...ndDau(khoaTen || (ten ? 'ud.khach' : 'ud.voucher.tenChung'))}>{ten || nd('ud.voucher.tenChung')}</div><div className="s" {...ndDau('ud.khach')}>{phu}</div></div>}
+        {nhan ? <div className="use" {...ndDau(khoaNhan)}>{nhan}</div>
+          : ship ? <div className="vc-sap" {...ndDau('ud.vc.ship')}>{nd('ud.vc.ship')}</div>
+            : dung && <button type="button" className="use vc-nut" onClick={dung} {...ndDau('ud.vc.dungNgay')}>{nd('ud.vc.dungNgay')}</button>}
       </div>
     </div>
   );
@@ -46,10 +55,11 @@ function TheVoucher({ ten, khoaTen, ma, loai, giaTri, toiThieu, han, nhan, khoaN
 
 // "Xem tất cả" (`?all=1`) gọi khi khách bấm, không giữ trong kho (A4); mã còn dùng đọc kho chung.
 const layTatCa = () => layVoucher(true);
-const VoucherTatCa = () => <DanhSachVoucher tai={dungTai(layTatCa)} />;
-const VoucherConDung = () => <DanhSachVoucher tai={dungCua(cuaVoucher)} />;
+const VoucherTatCa = ({ dungVoucher }) => <DanhSachVoucher tai={dungTai(layTatCa)} dungVoucher={dungVoucher} />;
+const VoucherConDung = ({ dungVoucher }) => <DanhSachVoucher tai={dungCua(cuaVoucher)} dungVoucher={dungVoucher} />;
 
-function DanhSachVoucher({ tai }) {
+// `dungVoucher(ma, laMaChung)`: voucher ví → chọn sẵn ở Giỏ; `ma_khach_moi` (trước v15, mã = mã bill) → điền ô mã khuyến mãi. App.jsx mở Giỏ hàng.
+function DanhSachVoucher({ tai, dungVoucher }) {
   return (
     <TrangTai tai={tai}>
       {(dl) => {
@@ -58,10 +68,11 @@ function DanhSachVoucher({ tai }) {
           <>
             {dl.ma_khach_moi.length === 0 && dung.length === 0 && <Chu k="ud.voucher.chua" as="div" className="empty-note" />}
             {dl.ma_khach_moi.map((v) => (
-              <TheVoucher key={v.code} ten={nd('ud.voucher.khachMoi')} khoaTen="ud.voucher.khachMoi" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} />
+              <TheVoucher key={v.code} ten={nd('ud.voucher.khachMoi')} khoaTen="ud.voucher.khachMoi" ma={v.code} loai={v.discount_type} giaTri={v.discount_value} toiThieu={v.min_order} han={v.valid_to} dung={dungVoucher && (() => dungVoucher(v.code, true))} />
             ))}
             {dung.map((v) => (
-              <TheVoucher key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status] ? nd(TRANG_THAI_VOUCHER[v.status]) : undefined} khoaNhan={TRANG_THAI_VOUCHER[v.status]} />
+              <TheVoucher key={v.id} ten={v.reward_name} ma={v.code} loai={v.discount_type} giaTri={v.discount_value} han={v.expires_at} nhan={TRANG_THAI_VOUCHER[v.status] ? nd(TRANG_THAI_VOUCHER[v.status]) : undefined} khoaNhan={TRANG_THAI_VOUCHER[v.status]}
+                moTa={v.mo_ta} nguon={v.nguon} ship={laShip(v)} dung={dungVoucher && (() => dungVoucher(v.code, false))} />
             ))}
           </>
         );
@@ -198,7 +209,7 @@ function TheHangToi({ moHang }) {
 }
 
 // Phần riêng của khách đã đăng nhập: điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
-function UuDaiToi({ maSan, khiNhanXong }) {
+function UuDaiToi({ maSan, khiNhanXong, dungVoucher }) {
   const tai = dungCua(cuaDiem);
   const toi = dungCua(cuaToi);
   const [tatCa, datTatCa] = useState(false);
@@ -218,7 +229,7 @@ function UuDaiToi({ maSan, khiNhanXong }) {
       <NhanMa maSan={maSan} khiThu={khiNhanXong} khiXong={() => lamMoi([cuaDiem, cuaVoucher, cuaToi])} />
 
       <div className="sec-head"><Chu k="ud.viVoucher" as="h2" /></div>
-      {tatCa ? <VoucherTatCa /> : <VoucherConDung />}
+      {tatCa ? <VoucherTatCa dungVoucher={dungVoucher} /> : <VoucherConDung dungVoucher={dungVoucher} />}
       <div className="more-l"><span role="button" tabIndex={0} onClick={() => datTatCa(!tatCa)} onKeyDown={(e) => { if (e.key === 'Enter') datTatCa(!tatCa); }} {...ndDau(tatCa ? 'ud.chiConDung' : 'ud.xemTatCa')}>{nd(tatCa ? 'ud.chiConDung' : 'ud.xemTatCa')}</span></div>
 
       <div className="sec-head"><Chu k="ud.lichSu" as="h2" /></div>
@@ -236,7 +247,7 @@ function UuDaiToi({ maSan, khiNhanXong }) {
 }
 
 // Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
-export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang }) {
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang, dungVoucher }) {
   return (
     <Man id="rewards">
       <div className="topbar"><div><Chu k={dangNhap ? 'ud.tieuDeToi' : 'ud.tieuDe'} as="h1" /></div><NutQR moQR={moQR} /></div>
@@ -244,7 +255,7 @@ export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, m
       <BannerGioVang mo={moGioVang} />
       <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
-        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} />
+        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} dungVoucher={dungVoucher} />
         : <><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );

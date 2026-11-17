@@ -23,6 +23,7 @@ import Chu from '../components/Chu.jsx';
 import { TheHoiVienChung } from '../components/TheHoiVien.jsx';
 import { BangTien } from './GioHang.jsx';
 import '../giaoDien/thanh_toan.css';
+import '../giaoDien/voucher.css';
 
 // Thanh toán theo demo (checkout), hợp đồng v9. Cách nhận: Lấy tại quầy; Giao tận nơi (Ahamove) hiện nhưng TẮT tới KH-MUA-2.
 // Cách trả: MỘT công tắc "Trừ từ số dư ví" (khuôn .notif-row + .switch của demo; ví 0đ → ẩn): tắt → QR cả đơn; bật + số dư ≥ tổng → vi;
@@ -42,11 +43,11 @@ const khoaLoi = (s) => KHOA_LOI_APP.find((k) => nd(k) === s) || 'tt.thongBao';
 // Khoá gửi, tong_da_xem, kh_don_gui, chưa rõ / gửi lại đúng đơn, đơn chờ trả, trần lượt, C7 dùng chung với đơn đồ uống (không đường đặt đơn thứ hai).
 const KHONG_MA = { maGiam: '' };
 const laSo = (x) => typeof x === 'number' && Number.isFinite(x);
-export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLichSu, moDon, veGio, veHang, danhDauMon, sauHuy, daTra }) {
+export default function ThanhToan({ gio: gioCa, the, ds, maGiam, vouchers, lui, xong, moLichSu, moDon, veGio, veHang, danhDauMon, sauHuy, daTra }) {
   const { dsHang } = dungGia();
   const cheDoThe = the !== undefined;
   const gio = cheDoThe ? (the ? [the] : []) : gioCa;
-  const tuy = cheDoThe ? KHONG_MA : { maGiam };
+  const tuy = cheDoThe ? KHONG_MA : { maGiam, vouchers }; // vouchers: CÙNG mảng Giỏ hàng gửi (App.jsx — KH-VC-2)
   const toi = dungTai(layToi);
   const dsDon = dungTai(layDonDau); // gọi MỚI mỗi lần mở (không kho chung): đơn chờ trả của tab / lần mở trước
   const gh = dungKho(khoGioHoatDong);
@@ -245,6 +246,9 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, lui, xong, moLi
       )}
 
       {!khongBan && <BangTien bg={bg} loi={loi} />}
+      {!cheDoThe && bg && bg.voucherLoi.length > 0 && (
+        <div className="vc-chua"><Chu k="tt.vc.chua" as="div" className="vc-chua-t" />{bg.voucherLoi.map((x) => <div key={x.ma} className="vc-loi" {...ndDau('tt.vc.dong')}>{ndPhan('tt.vc.dong', { ma: x.ma, loi: <span key="loi" {...ndDau('gio.vc.loi')}>{x.error}</span> })}</div>)}</div>
+      )}
       {chan && canhBao(chan, '', khoaLoi(chan))}
       {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}
       {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}

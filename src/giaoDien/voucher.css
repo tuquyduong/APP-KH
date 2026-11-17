@@ -1,0 +1,31 @@
+/* Voucher (KH-VC-2): ví voucher ở Ưu đãi, mục "Voucher của bạn" + tiêu đề ô mã ở Giỏ hàng, khối "Voucher chưa dùng được" ở Thanh toán.
+   Cấu trúc theo bản thiết kế chủ quán duyệt 16.11 (viec/KH-VC-2/mau_de_xuat.js); màu CHỈ từ bảng demo (biến :root của demo + #C62828 — đỏ báo lỗi của demo).
+   Lớp demo .voucher .strip .body .t .s .use giữ nguyên; lớp mới đều tiền tố vc-. */
+.voucher .vc-body{gap:10px}
+.voucher .vc-than{min-width:0;flex:1}
+.voucher .vc-than .t{line-height:1.4;overflow-wrap:anywhere}
+.vc-dong{display:flex;gap:6px;align-items:center;margin-top:7px;flex-wrap:wrap}
+.vc-chip{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--line);color:var(--forest)}
+.vc-ma{font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--muted);border:1px dashed var(--muted);padding:2px 7px;border-radius:6px}
+.voucher .vc-nut{border:none;font-family:inherit;cursor:pointer;flex:none}
+.voucher.vc-ship{opacity:.62}
+.voucher.vc-ship .strip{background:var(--muted)}
+.vc-sap{font-size:10.5px;font-weight:600;color:var(--muted);background:var(--cream);padding:6px 9px;border-radius:8px;text-align:center;line-height:1.3;max-width:96px;flex:none}
+
+.vc-dau-phai{font-size:11px;font-weight:500;color:var(--muted);text-align:right}
+.vc-dau-ma{margin-bottom:-6px}
+.vc-chon{display:flex;align-items:flex-start;gap:10px;width:100%;padding:12px;border:none;border-radius:14px;background:var(--white);box-shadow:0 0 0 1.5px var(--line);margin-bottom:8px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer}
+.vc-chon.vc-co{box-shadow:0 0 0 2px var(--forest);background:var(--cream)}
+.vc-o{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;margin-top:1px;color:var(--white)}
+.vc-chon.vc-co .vc-o{background:var(--forest);border-color:var(--forest)}
+.vc-chon .vc-than{display:flex;flex-direction:column;align-items:flex-start;min-width:0;flex:1}
+.vc-t{font-size:12.5px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.vc-chon .vc-ma{margin-top:6px}
+.vc-chon .vc-sap{margin-top:6px;max-width:none;padding:0;background:none;text-align:left;font-size:11.5px}
+.vc-chon.vc-tat{opacity:.62;cursor:default}
+.vc-chon.vc-tat .vc-o{border-style:dashed}
+.vc-loi{font-size:11.5px;color:#C62828;font-weight:600;margin-top:6px;line-height:1.4;overflow-wrap:anywhere}
+
+.vc-chua{margin:10px 0;padding:10px 12px;border-radius:12px;background:var(--cream)}
+.vc-chua-t{font-size:12px;font-weight:600;color:var(--navy)}
+.vc-chua .vc-loi{margin-top:4px}
