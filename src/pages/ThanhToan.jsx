@@ -247,7 +247,7 @@ export default function ThanhToan({ gio: gioCa, the, ds, maGiam, vouchers, lui, 
 
       {!khongBan && <BangTien bg={bg} loi={loi} />}
       {!cheDoThe && bg && bg.voucherLoi.length > 0 && (
-        <div className="vc-chua"><Chu k="tt.vc.chua" as="div" className="vc-chua-t" />{bg.voucherLoi.map((x) => <div key={x.ma} className="vc-loi" {...ndDau('gio.vc.loi')}>{nd('tt.vc.dong', { ma: x.ma, loi: x.error })}</div>)}</div>
+        <div className="vc-chua"><Chu k="tt.vc.chua" as="div" className="vc-chua-t" />{bg.voucherLoi.map((x) => <div key={x.ma} className="vc-loi" {...ndDau('tt.vc.dong')}>{ndPhan('tt.vc.dong', { ma: x.ma, loi: <span key="loi" {...ndDau('gio.vc.loi')}>{x.error}</span> })}</div>)}</div>
       )}
       {chan && canhBao(chan, '', khoaLoi(chan))}
       {dang && guiLai && canhBao(nd('tt.mang.t'), nd('tt.mang.p'), 'tt.mang.t', 'tt.mang.p')}

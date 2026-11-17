@@ -93,10 +93,10 @@ function VoucherGio({ vi, bg, bgCu, boTay, vuaChon, cham }) {
         const tich = !ship && !bo && (tt === 'dung' || (!bg && vuaChon === v.code));
         const loi = !ship && !bo && !tich && tt.loi;
         return (
-          <button type="button" key={v.code} className={`vc-chon${tich ? ' vc-co' : ''}${ship ? ' vc-tat' : ''}`} aria-pressed={tich} disabled={ship} onClick={() => cham(v.code, tich)}>
+          <button type="button" key={v.id ?? v.code} className={`vc-chon${tich ? ' vc-co' : ''}${ship ? ' vc-tat' : ''}`} aria-pressed={tich} disabled={ship} onClick={() => cham(v.code, tich)}>
             <span className="vc-o">{tich && <Ico ten="check" s={14} />}</span>
             <span className="vc-than">
-              <span className="vc-t" {...ndDau('gio.vc.moTa')}>{v.mo_ta || v.reward_name || nd('ud.voucher.tenChung')}</span>
+              <span className="vc-t" {...ndDau(v.mo_ta || v.reward_name ? 'gio.vc.moTa' : 'ud.voucher.tenChung')}>{v.mo_ta || v.reward_name || nd('ud.voucher.tenChung')}</span>
               <span className="vc-ma" {...ndDau('gio.vc.moTa')}>{v.code}</span>
               {ship && <span className="vc-sap" {...ndDau('gio.vc.ship')}>{nd('gio.vc.ship')}</span>}
               {loi && <span className="vc-loi" {...ndDau('gio.vc.loi')}>{loi}</span>}
