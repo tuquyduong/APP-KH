@@ -261,3 +261,12 @@ BÀI HỌC:
 ## Câu hỏi (gửi POS — bổ sung sau vòng 3, KHÔNG chặn việc này)
 - `GET /voucher` `data[].expires_at` luôn dạng `YYYY-MM-DDTHH:mm:ss` (giờ VN) chứ? App xếp "sắp hết hạn trước" bằng so chuỗi; nếu có voucher cũ dạng `YYYY-MM-DD HH:mm:ss` (dấu cách) lẫn vào,
   hai voucher CÙNG NGÀY có thể xếp sai giờ (khác ngày vẫn đúng). Xin POS ghi rõ dạng trong hợp đồng.
+
+## Kiểm sau vòng sửa 3
+- `npm test -- --day-du` ở e714b19 (code 77a773b): **66 đạt · 0 hỏng** (thu_KHVC2 102 · 0; K9, K10, vite build ✓).
+- `node viec/KH-VC-2/dot_bien_tay.js --trinh-duyet`: 22 / 22 BỊ BẮT.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở 4a43f51, cây sạch: `✓ CỔNG CHẠY ĐẠT` (+ cảnh báo A16 — bài dừng sớm trên gốc).
+- Bài học thêm (vòng 3): NGUYÊN TẮC — trạng thái tạm trên màn gắn với MỘT yêu cầu đang bay, kết thúc (kết quả / lỗi / bị thay) thì bỏ; cách chắc nhất là KHÔNG có trạng thái tạm
+  khi kế hoạch không đòi (việc này: tôi tự thêm "tích tạm" ngoài kế hoạch → hai vòng lỗi). Đề xuất `KHUON_LOI.md` K3 (ngoài Phạm vi). KHOÁ đã làm: ca không hỏi / hỏi lỗi / hỏi lại vì lý do khác
+  + một đột biến cho mỗi điều kiện con.
+HEAD ĐÃ KIỂM: 4a43f51
