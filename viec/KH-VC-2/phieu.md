@@ -104,12 +104,23 @@ không
 
 ## Cấm
 - **Song song với KH-NAP-1 (nạp tiền):** KHÔNG sửa `src/api.js`, `src/duongDan.js`, `src/gio.js`, `src/pages/TheoDoiDon.jsx`, `src/pages/TaiKhoan.jsx`, `src/noiDung/nd/index.js`,
-  tệp mới của NAP-1 (`src/pages/ViTien.jsx`, `src/viTien.js`, `src/giaoDien/vi_tien.css`, `src/noiDung/nd/viTien.js`). Trong `UuDai.jsx` KHÔNG đụng khối `wallet-row`; trong
+  tệp mới của NAP-1 (`src/pages/ViTien.jsx`, `src/viTien.js`, `src/giaoDien/vi_tien.css`, `src/noiDung/nd/viTien.js`). Trong `UuDai.jsx` KHÔNG đụng khối `wallet-row` (được thêm prop `dungVoucher` vào chữ ký `UuDai` / `UuDaiToi` / `VoucherConDung` / `VoucherTatCa` —
+  duyệt 16.11); trong
   `datDon.js` CHỈ `thanBaoGia` / `docBaoGia` / `tenGiam` (KHÔNG `dongGui`, `dungViCho`, `buocTienTrinh`, `thamTaoMaMoi`, `monDatLai`); trong `ThanhToan.jsx` CHỈ biến `tuy` của đơn
-  đồ uống + chỗ dưới `BangTien` đồ uống (KHÔNG `KhoiThe`, chế độ một dòng); trong `App.jsx` chỉ THÊM trạng thái + prop, không sửa dòng trang mới của NAP-1. `canTuPos.js`,
+  đồ uống + chỗ dưới `BangTien` đồ uống (KHÔNG `KhoiThe`, chế độ một dòng); trong `App.jsx` chỉ THÊM trạng thái + prop (+ các dòng phiếu B4 bắt buộc: `docLaiGio`, `donPhien`, `daTra`, `daHuy`, `xongDatDon`), không sửa dòng trang
+  mới của NAP-1. `canTuPos.js`,
   `no_chu_cung.txt`: chỉ THÊM dòng của mình. Đụng nhau lúc gộp: chat xử lý.
 - KHÔNG sửa `src/components/TheQR.jsx`, `src/giaoDien/the_qr.css`, `src/qrThuongHieu.js`, `src/quangCao.js`, `src/giaoDien/demo*.css`, `thiet_ke/**`, `tu_chay/`, `.claude/`, `.github/`,
   `kiem_tra_truoc_khi_giao.js`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - KHÔNG tự tính số giảm / tự đoán voucher nào áp được (App chỉ xếp thứ tự gửi); KHÔNG tự ghép câu "giảm gì" khi POS có `mo_ta`; KHÔNG đổi luật đặt đơn (khoá gửi, gửi lại, PIN, ví).
   KHÔNG thêm màu ngoài bảng demo (K9).
 - Chỉ push `git push -u origin viec/KH-VC-2`. Không đụng `main`, không merge, không tạo PR.
+
+## Chủ quán duyệt kế hoạch (16.11 tối)
+Duyệt `viec/KH-VC-2/ke_hoach.md` (ad816cd) NGUYÊN — các phương án đã chọn. Trả lời 3 điểm:
+1. **Đồng ý** — `xongDatDon` thêm `cuaVoucher` vào `lamMoi` (đơn QR chờ trả đang GIỮ voucher → ví bớt ngay).
+2. **Đồng ý** — đổi `macDinh` khoá có sẵn `giam.voucher` thành "Mã khuyến mãi"; gợi ý ô mã dùng khoá MỚI `gio.ma.goiYKm` trong `donHang.js` (khoá cũ ở `menu.js` để nguyên).
+3. **Đúng** — `chonTay`: cái MỚI chạm đứng ĐẦU mảng gửi.
+Song song KH-NAP-1: máy NAP-1 cũng sửa dòng `tuy` của `ThanhToan.jsx` (điều kiện `cheDoThe || cheDoNap`), dòng `<UuDai>` / `<TaiKhoan>` / `<TheoDoiDon>` của `App.jsx` và chữ
+ký `UuDai` / `UuDaiToi` (prop `moVi` / `moNap`) — đụng nhau lúc gộp là dự kiến, chat xử lý; KHÔNG tự sửa phần của máy kia.
+Chạy thẳng từ bước 4 tới hết, không dừng.
