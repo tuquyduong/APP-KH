@@ -1,0 +1,60 @@
+# KH-NAP-1 — bằng chứng ĐỎ trên code gốc (cây b62c23d + bài thử mới, chưa sửa src/) — 17.11.2026
+
+## node cong_cu/thu_KHNAP1.js (có Chromium) — dòng tổng
+25 đạt · 63 hỏng
+(đỏ ở mọi ca B1–B5 trong trình duyệt: không có /uudai/vi, ô ví không bấm được, không có Thanh toán nạp, đơn nạp vẫn 4 bước pha chế,
+ Chi tiết đơn "1 × 💳 Nạp…", "Tạo mã mới" đơn nạp → /thanhtoan, "Đặt lại" đơn nạp báo bỏ qua 1 món…)
+
+## KHONG_TRINH_DUYET=1 node cong_cu/thu_KHNAP1.js
+Phần 1 — hàm thuần, đọc nguồn
+  ✗ nạp src/viTien.js  — Cannot find module '/home/user/APP-KH/src/viTien.js' imported from /home/user/APP-KH/cong_cu/thu_KHNAP1.js
+  ✗ A1 '/goi-nap' nằm trong CUA_CONG_KHAI (không gửi token)  — '/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh', '/quang-cao'
+  ✗ A1 api.js: layGoiNap = () => goi('GET', '/goi-nap'); layVi = (trang) => goi('GET', `/vi?trang=${trang}`)
+  ✗ A1 canTuPos: GET /goi-nap (token false) đủ data[].ma/ten/tra/vao, co: true
+  ✗ A1 canTuPos: GET /vi (token true) đủ trang/con_nua/data[].ngay/loai/so_tien/thuong/ma_don/ghi_chu, co: true
+  ✗ A1 trang Kiểm khớp có 'GET /goi-nap' và 'GET /vi' trong bảng GOI
+  ✗ A2 laNap
+  ✗ A2 dongNapTuDuongDan({ goi: '5' }) → { loai: 'nap', ma_goi: 5 }
+  ✗ A2 dongNapTuDuongDan sai dạng ('0', '-1', 'a', '', '1.5', thiếu, '01') → null
+  ✗ A2 coDoUong: giỏ chỉ nạp → false; có ly → true; giỏ chỉ thẻ → false
+  ✗ A2 chanDatGio: quán đóng + giỏ chỉ nạp → "" (đặt MỌI giờ); giỏ có ly → chặn
+  ✗ A2 trangThaiDong dòng nạp: … — {"mon":null,"conBan":false}
+  ✗ A2 duocThanhToan(gio nạp, …, dsGoi)
+  ✓ A2 trangThaiDong ly / thẻ (3 tham số) không đổi
+  ✗ A2 dongGui dòng nạp ĐÚNG { loai, ma_goi } — {"mon":[{}],"cach_nhan":"tai_quan","cach_tra":"qr",…}
+  ✗ A2 dungViCho: có dòng nạp → false (kể cả công tắc bật); ly → theo công tắc
+  ✗ A2 laDonChiNap
+  ✗ A2 laLoiNap: 3 mã v17
+  ✗ A2 buocTienTrinh chiNap: HAI bước … — ["Chờ thanh toán","Đã thanh toán","Quán đang pha chế","Sẵn sàng — mời bạn ra quầy nhận"]
+  ✗ A2 buocTienTrinh chiNap: tích bước 2 chỉ khi xong
+  ✓ A2 buocTienTrinh đơn đồ uống / thẻ không đổi
+  ✗ A2 thamTaoMaMoi: đơn chỉ nạp → Thanh toán nạp đúng gói … — {"trang":"thanhtoan","tham":{}}
+  ✗ A2 monDatLai: dòng nạp bỏ qua, không đếm "không còn bán"
+  ✓ A2 boDongDaGui: dòng nạp không trừ giỏ đồ uống
+  ✓ A2 KHÔNG sửa thanBaoGia / docBaoGia / tenGiam (nguyên văn bản gốc)
+  ✗ A3 thuongGoi: vao > tra → vao − tra
+  ✗ A3 thuongGoi: vao = tra / vao < tra → 0
+  ✗ A3 thuongGoi: số hỏng (thực, chuỗi, null, thiếu) → 0
+  ✓ A3 nhanLoaiVi: 4 loại → khoá chữ …
+  ✗ A3 dừng giữa chừng  — nd: khoá "x" không có trong danh mục nội dung (src/noiDung/nd/)
+  ✗ C1 vi_tien.css có, 0 màu ngoài demo (thuật toán K9)
+  ✗ C1 lớp MỚI trong vi_tien.css đều tiền tố vt- (lớp demo chỉ dùng làm ngữ cảnh)
+  ✗ B6 nd/viTien.js xuất VI_TIEN, đăng ký ở nd/index.js (MỘT dòng)
+  ✓ B6 kiemDanhMuc(danh mục) không lỗi
+  ✗ B2 /uudai/vi: trang vi, tab uudai, canDN, cha /uudai; ?nap=1 giữ  — {"trang":"khongthay",…}
+  ✗ B4 /uudai/vi/nap?goi=2: trang napvi, canDN, cha /uudai/vi, tham goi  — {"trang":"khongthay",…}
+  ✗ B2 tiêu đề tab trình duyệt có tên màn mới  — Không tìm thấy trang · Tứ Quý Đường
+Phần 2 — App thật trong Chromium
+  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây
+
+6 đạt · 31 hỏng
+
+## Chạy lại bài thử BẢN CUỐI (sau 2 lần sửa bài: lớp ngữ cảnh demo ở ca C1, gieo kh_chu) trên bản sao cây gốc b62c23d trong nháp (git archive)
+KHONG_TRINH_DUYET=1 → 6 đạt · 31 hỏng
+có Chromium        → 25 đạt · 63 hỏng
+
+## Trên code đã vá (nhánh viec/KH-NAP-1)
+KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng
+có Chromium        → 122 đạt · 0 hỏng
+
+SỐ CA thu_KHNAP1: 41
