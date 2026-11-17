@@ -85,6 +85,7 @@ const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
   k('A1 Menu / Trang món / Giỏ hàng gắn data-nd (ndDau / Chu) cho chữ và data-nd-khoa cho phần POS', ['src/pages/Menu.jsx', 'src/pages/TrangMon.jsx', 'src/pages/GioHang.jsx'].every((f) => /ndDau\(|<Chu /.test(doc(f)))
     && /ndDau\('menu\.mon'\)/.test(doc('src/components/MonO.jsx')) && /ndDau\('gio\.tien'\)/.test(doc('src/pages/GioHang.jsx')) && /ndDau\(khoaDem\(tt, 'tile'\)\)/.test(doc('src/pages/Menu.jsx')) && /'menu\.gv\.dem'/.test(doc('src/pages/Menu.jsx'))
     && /ndDau\(mon \? 'gio\.hetHang' : 'gio\.khongCon'\)/.test(doc('src/pages/GioHang.jsx')));
+  k('A1 (KH-VC-2) ô mã Giỏ hàng đọc gợi ý khoá mới gio.ma.goiYKm ("Nhập mã khuyến mãi (nếu có)"), không còn gio.ma.goiY', /nd\('gio\.ma\.goiYKm'\)/.test(doc('src/pages/GioHang.jsx')) && !/'gio\.ma\.goiY'/.test(doc('src/pages/GioHang.jsx')));
 
   console.log('Phần 1 — C. Hàm thuần đọc qua nd()');
   const GV = await nap('src/gioVang.js'), GH = await nap('src/giaHang.js'), ML = await nap('src/menuLoc.js'), HH = await nap('src/gioHoatDong.js');
