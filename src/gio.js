@@ -12,6 +12,7 @@ const lay = (k) => (typeof k === 'function' ? k() : k);
 const kep = (n) => Math.min(SO_LUONG_TOI_DA, n);
 
 export const laThe = (d) => !!d && d.loai === 'the';
+export const laNap = (d) => !!d && d.loai === 'nap'; // dòng nạp ví (v17, KH-NAP-1): không vào giỏ — Thanh toán nạp dựng từ đường dẫn (dongNapTuDuongDan)
 
 /** Một dòng món hợp lệ → bản sạch (ba trường); dòng thẻ / sai dạng → null. */
 function sach(d) {
@@ -37,7 +38,9 @@ export function ghiGio(gio, k = kho) {
 const SO_NGUYEN = /^[1-9]\d{0,5}$/;
 /** Dòng thẻ của Thanh toán thẻ từ tham số đường dẫn `?h=&thang=` (chuỗi chỉ chữ số, > 0); sai → null. Còn bán hay không: trangThaiDong. */
 export const dongTheTuDuongDan = ({ h, thang } = {}) => (SO_NGUYEN.test(String(h ?? '')) && SO_NGUYEN.test(String(thang ?? '')) ? { loai: 'the', hang_id: Number(h), so_thang: Number(thang) } : null);
-export const coDoUong = (gio) => gio.some((d) => !laThe(d));
+/** Dòng nạp của Thanh toán nạp từ `?goi=` (chuỗi chỉ chữ số, > 0); sai → null. Còn bán hay không: trangThaiDong. */
+export const dongNapTuDuongDan = ({ goi } = {}) => (SO_NGUYEN.test(String(goi ?? '')) ? { loai: 'nap', ma_goi: Number(goi) } : null);
+export const coDoUong = (gio) => gio.some((d) => !laThe(d) && !laNap(d));
 
 /** Dọn giỏ sau khi đơn đã trả: bỏ ĐÚNG các dòng đã gửi (`monGui` = mon[] của thân đơn) — món trừ đúng số đã gửi (dòng thẻ không có trong giỏ); dòng thêm sau giữ. */
 export function boDongDaGui(gio, monGui) {
@@ -71,8 +74,13 @@ export const demMon = (gio) => gio.reduce((s, d) => s + d.so_luong, 0);
 /**
  * Dòng giỏ đối chiếu menu: { mon (null = không còn trong menu), conBan }. `con_hang` null (chưa biết) vẫn bán.
  * Dòng thẻ đối chiếu /hang (`dsHang`): { hang, goi, conBan } — còn bán = hạng còn trong /hang, không chỉ cấp, gói `so_thang` còn bán.
+ * Dòng nạp đối chiếu /goi-nap (`dsGoi`, tuỳ chọn): { goi, conBan } — còn bán = gói còn trong danh sách; chưa có danh sách → chưa bán.
  */
-export function trangThaiDong(dong, ds, dsHang) {
+export function trangThaiDong(dong, ds, dsHang, dsGoi) {
+  if (laNap(dong)) {
+    const goi = (Array.isArray(dsGoi) ? dsGoi : []).find((g) => g && g.ma === dong.ma_goi) || null;
+    return { goi, conBan: !!goi };
+  }
   if (laThe(dong)) {
     const hang = (Array.isArray(dsHang) ? dsHang : []).find((h) => h && h.id === dong.hang_id) || null;
     const goi = goiBan(hang).find((g) => g.so_thang === dong.so_thang) || null;
@@ -82,7 +90,7 @@ export function trangThaiDong(dong, ds, dsHang) {
   return { mon, conBan: !!mon && mon.con_hang !== false };
 }
 
-export const duocThanhToan = (gio, ds, dsHang) => gio.length > 0 && gio.every((d) => trangThaiDong(d, ds, dsHang).conBan);
+export const duocThanhToan = (gio, ds, dsHang, dsGoi) => gio.length > 0 && gio.every((d) => trangThaiDong(d, ds, dsHang, dsGoi).conBan);
 
 /** Giá CHỈ để khách hình dung: giá một ly tra bảng gia_hang (như Menu) × số lượng. Không phải số → null (ẩn). Tổng thật do POS báo. */
 export function giaHinhDung(mon, hangToi, soLuong) {
