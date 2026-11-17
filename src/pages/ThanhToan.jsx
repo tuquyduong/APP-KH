@@ -269,7 +269,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, lui, xong,
           <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
         </button>
       )}
-      {cheDoNap ? (monLoi || khongBan || !!loi) && <Chu k="nap.tt.veVi" as="button" type="button" className="ghost-btn" onClick={veVi} />
+      {cheDoNap ? (monLoi || khongBan || !!loi || !!khoGoi.loi) && <Chu k="nap.tt.veVi" as="button" type="button" className="ghost-btn" onClick={veVi} />
         : cheDoThe ? (monLoi || khongBan || !!loi) && <Chu k="the.tt.veHang" as="button" type="button" className="ghost-btn" onClick={veHang} />
         : monLoi && <Chu k="tt.veGio" as="button" type="button" className="ghost-btn" onClick={veGio} />}
       {canPin && <Chu k="tt.datPin" as="button" type="button" className="ghost-btn" onClick={() => datMoDatPin(true)} />}
