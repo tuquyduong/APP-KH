@@ -243,7 +243,15 @@ async function trinhDuyet(pw) {
   const mo = async (t, duong) => { await t.goto(URL0 + duong); await t.waitForSelector('.phone'); };
   const chu = (t, sel) => t.locator(sel).first().innerText().catch(() => '');
   const doi = async (t, fn, ms = 6000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await fn()) return true; await t.waitForTimeout(40); } return false; };
-  const chup = async (t, ten) => { if (anhDir) await t.screenshot({ path: path.join(anhDir, ten + '.png'), fullPage: true }); };
+  // Màn cuộn trong .screens → chụp đầu màn, rồi cuộn xuống cuối chụp thêm "-duoi"; cuộn lại đầu.
+  const chup = async (t, ten) => {
+    if (!anhDir) return;
+    await t.screenshot({ path: path.join(anhDir, ten + '.png') });
+    await t.evaluate(() => { const s = document.querySelector('.screens'); if (s) s.scrollTop = s.scrollHeight; });
+    await t.waitForTimeout(150);
+    await t.screenshot({ path: path.join(anhDir, ten + '-duoi.png') });
+    await t.evaluate(() => { const s = document.querySelector('.screens'); if (s) s.scrollTop = 0; });
+  };
   const the = (t, ma) => t.locator('#rewards .voucher', { hasText: ma }).first();
   const o = (t, ma) => t.locator('#cart .vc-chon', { hasText: ma }).first();
   const tich = async (t, ma) => (await o(t, ma).getAttribute('aria-pressed').catch(() => null)) === 'true';
