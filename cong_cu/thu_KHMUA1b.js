@@ -84,7 +84,7 @@ if (require.main === module) (async () => {
     k('C5 đọc GET /don/:ma: qr, thanh_toan, tien_ve_cho_doi_soat, tien_trinh',!!dn && dn.qr && dn.qr.chuoi === 'Q' && dn.tienVeChoDoiSoat === true && dn.thanhToan === null && dn.tienTrinh === 'cho_tra', JSON.stringify(dn));
     const b = D.docBaoGia({ ...BG, ma_giam_loi: { code: 'MA_KHONG_TON_TAI', error: 'Mã không tồn tại' } });
     k('C6 báo giá giữ giam[].loai và ma_giam_loi { code, error }', !!b && b.giam[0].loai === 'hang' && b.maGiamLoi && b.maGiamLoi.error === 'Mã không tồn tại' && D.docBaoGia(BG).maGiamLoi === null);
-    k('C6 tên dòng giảm theo demo: voucher / hạng / Giờ vàng / loại lạ', D.tenGiam('ma_giam') === 'Giảm giá (voucher)' && D.tenGiam('hang', 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam('gio_vang') === 'Giờ vàng' && D.tenGiam('khac') === 'Giảm giá');
+    k('C6 tên dòng giảm: mã chung "Mã khuyến mãi" (KH-VC-2) / hạng / Giờ vàng / loại lạ', D.tenGiam({ loai: 'ma_giam' }) === 'Mã khuyến mãi' && D.tenGiam({ loai: 'hang' }, 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam({ loai: 'gio_vang' }) === 'Giờ vàng' && D.tenGiam({ loai: 'khac' }) === 'Giảm giá');
   });
 
   await thu('D', async () => {
@@ -721,7 +721,7 @@ async function trinhDuyet(pw) {
     await t.fill('#cart .promo-box input', 'GIAM10'); await t.locator('#cart .promo-box button').click();
     const ok = await doiChu(t, '#cart .bang-tien', /85\.000đ/);
     const b = await chu(t, '#cart .bang-tien');
-    k('C6 dòng giảm: "Giảm giá (voucher)", "Ưu đãi hạng Vàng", "Giờ vàng", loại lạ "Giảm giá"', ok && /Giảm giá \(voucher\)/.test(b) && /Ưu đãi hạng Vàng/.test(b) && /Giờ vàng/.test(b) && /\nGiảm giá\n|^Giảm giá\n|Giảm giá\s+−2\.000đ/m.test(b), b);
+    k('C6 dòng giảm: "Mã khuyến mãi" (KH-VC-2), "Ưu đãi hạng Vàng", "Giờ vàng", loại lạ "Giảm giá"', ok && /Mã khuyến mãi/.test(b) && /Ưu đãi hạng Vàng/.test(b) && /Giờ vàng/.test(b) && /\nGiảm giá\n|^Giảm giá\n|Giảm giá\s+−2\.000đ/m.test(b), b);
     k('C6 mã được áp → nút "✓ Đã áp dụng"', /✓ Đã áp dụng/.test(await chu(t, '#cart .promo-box button')));
     await chup(t, 'giohang-giam-390');
     await t.fill('#cart .promo-box input', 'SAI'); await t.locator('#cart .promo-box button').click();

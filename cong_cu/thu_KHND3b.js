@@ -85,6 +85,7 @@ const TIEN_TO = 'menu|mon|gio|khongthay|gv|gia|khung|thu|home|tieuDe|tab';
   k('A1 Menu / Trang món / Giỏ hàng gắn data-nd (ndDau / Chu) cho chữ và data-nd-khoa cho phần POS', ['src/pages/Menu.jsx', 'src/pages/TrangMon.jsx', 'src/pages/GioHang.jsx'].every((f) => /ndDau\(|<Chu /.test(doc(f)))
     && /ndDau\('menu\.mon'\)/.test(doc('src/components/MonO.jsx')) && /ndDau\('gio\.tien'\)/.test(doc('src/pages/GioHang.jsx')) && /ndDau\(khoaDem\(tt, 'tile'\)\)/.test(doc('src/pages/Menu.jsx')) && /'menu\.gv\.dem'/.test(doc('src/pages/Menu.jsx'))
     && /ndDau\(mon \? 'gio\.hetHang' : 'gio\.khongCon'\)/.test(doc('src/pages/GioHang.jsx')));
+  k('A1 (KH-VC-2) ô mã Giỏ hàng đọc gợi ý khoá mới gio.ma.goiYKm ("Nhập mã khuyến mãi (nếu có)"), không còn gio.ma.goiY', /nd\('gio\.ma\.goiYKm'\)/.test(doc('src/pages/GioHang.jsx')) && !/'gio\.ma\.goiY'/.test(doc('src/pages/GioHang.jsx')));
 
   console.log('Phần 1 — C. Hàm thuần đọc qua nd()');
   const GV = await nap('src/gioVang.js'), GH = await nap('src/giaHang.js'), ML = await nap('src/menuLoc.js'), HH = await nap('src/gioHoatDong.js');
@@ -213,9 +214,9 @@ async function trinhDuyet(pw) {
     const g0 = await chuTrong('#cart');
     const gv0 = await t.evaluate(() => ({ h1: document.querySelector('#cart h1')?.textContent, sub: document.querySelector('#cart .sub')?.textContent, ph: document.querySelector('.promo-box input')?.placeholder, ap: document.querySelector('.promo-box button')?.textContent, tong: document.querySelector('.bang-tien')?.textContent.trim(),
       tiep: document.querySelector('.checkout-btn span')?.textContent, ten: document.querySelector('.cart-name')?.textContent, nd: document.querySelectorAll('#cart [data-nd]').length, khoa: document.querySelectorAll('#cart [data-nd-khoa]').length }));
-    k('E1 Giỏ hàng mặc định như cũ: "Giỏ hàng", "2 món", ô mã, "Áp dụng", chưa báo giá, nút "Tiếp tục · chọn cách nhận hàng"; có data-nd', gv0.h1 === 'Giỏ hàng' && gv0.sub === '2 món' && gv0.ph === 'Nhập mã giảm giá' && gv0.ap === 'Áp dụng' && gv0.tong === 'Tổng tiền sẽ hiện khi quán xác nhận'
+    k('E1 Giỏ hàng mặc định như cũ: "Giỏ hàng", "2 món", ô mã, "Áp dụng", chưa báo giá, nút "Tiếp tục · chọn cách nhận hàng"; có data-nd', gv0.h1 === 'Giỏ hàng' && gv0.sub === '2 món' && gv0.ph === 'Nhập mã khuyến mãi (nếu có)' && gv0.ap === 'Áp dụng' && gv0.tong === 'Tổng tiền sẽ hiện khi quán xác nhận'
       && gv0.tiep === 'Tiếp tục · chọn cách nhận hàng' && gv0.nd >= 8, JSON.stringify(gv0));
-    await datBan({ 'gio.tieuDe': 'Giỏ của bạn', 'gio.tiepTuc': 'Đi tiếp nhé', 'gio.ma.goiY': 'Mã ưu đãi', 'gio.ma.ap': 'Dùng mã', 'gio.chuaTong': 'Chưa có tổng', 'gio.soMon': 'Có {so} phần', 'khung.bot': 'Giảm', 'khung.them': 'Tăng' });
+    await datBan({ 'gio.tieuDe': 'Giỏ của bạn', 'gio.tiepTuc': 'Đi tiếp nhé', 'gio.ma.goiYKm': 'Mã ưu đãi', 'gio.ma.ap': 'Dùng mã', 'gio.chuaTong': 'Chưa có tổng', 'gio.soMon': 'Có {so} phần', 'khung.bot': 'Giảm', 'khung.them': 'Tăng' });
     await t.waitForFunction(() => document.querySelector('#cart h1')?.textContent === 'Giỏ của bạn');
     const gv1 = await t.evaluate(() => ({ sub: document.querySelector('#cart .sub')?.textContent, ph: document.querySelector('.promo-box input')?.placeholder, ap: document.querySelector('.promo-box button')?.textContent, tong: document.querySelector('.bang-tien')?.textContent.trim(),
       tiep: document.querySelector('.checkout-btn span')?.textContent, bot: document.querySelector('.cart-item .qty-ctrl button')?.getAttribute('aria-label'), them: document.querySelectorAll('.cart-item .qty-ctrl button')[1]?.getAttribute('aria-label') }));

@@ -91,3 +91,13 @@ trên code TRƯỚC vá vòng 2 (HEAD 4020ef4 + bài mới), có Chromium: 124 �
   ✗ ca B1 Ưu đãi — không gói dừng giữa chừng  — locator.focus: Timeout 6000ms exceeded.   (ô ví chưa có nút bên trong để Tab tới)
   ✗ B4 "Về Ví" THAY trang (Back không quay lại Thanh toán nạp lỗi — rà soát vòng 2)  — http://kh.test/uudai/vi/nap?goi=99
 sau vá: có Chromium 127 đạt · 0 hỏng · KHONG_TRINH_DUYET=1 41 đạt · 0 hỏng (SỐ CA cong_cu/thu_KHNAP1.js: 41 — giữ)
+
+## Gộp main có KH-VC-2 (chat soát cuối 17.11) — bài thử chỉnh theo cây gộp
+### thu_KHVC2.js (bài của KH-VC-2) — ca B5 nay đòi `tuy = cheDoThe || cheDoNap ? KHONG_MA : { maGiam, vouchers }` (đơn nạp: không mã giảm, không voucher)
+gốc = main sau Merge KH-VC-2 (cây 8c60519) + bài đã chỉnh, KHONG_TRINH_DUYET=1:
+  ✗ B5 Thanh toán đồ uống: tuy = { maGiam, vouchers }; thẻ / nạp: KHONG_MA  — const tuy = cheDoThe ? KHONG_MA : { maGiam, vouchers }; → 27 đạt · 1 hỏng
+nhánh (cây gộp): KHONG_TRINH_DUYET=1 28 đạt · 0 hỏng · có Chromium 102 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHVC2.js: 28
+### thu_KHNAP1.js — ca A2 "KHÔNG sửa thanBaoGia / docBaoGia / tenGiam (nguyên văn bản gốc)" đổi thành "3 hàm không có nhánh nạp" (KH-VC-2 đã sửa đúng 3 hàm này)
+nhánh (cây gộp): KHONG_TRINH_DUYET=1 41 đạt · 0 hỏng · có Chromium 127 đạt · 0 hỏng — số ca không đổi (SỐ CA cong_cu/thu_KHNAP1.js: 41 — giữ)
+Cây gộp `npm test -- --day-du`: 67 đạt · 0 hỏng.

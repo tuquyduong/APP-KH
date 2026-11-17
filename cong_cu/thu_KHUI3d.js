@@ -92,7 +92,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     // KH-QC-1 (chủ quán 15.11): cửa /quang-cao do App gọi (dải + banner), công khai — ca TĨNH, đỏ trên gốc kể cả KHONG_TRINH_DUYET=1
     const apiQc = fs.readFileSync(path.join(GOC, 'src/api.js'), 'utf8');
     k('B4 KH-QC-1: api.js có layQuangCao gọi \'/quang-cao\' và \'/quang-cao\' nằm trong CUA_CONG_KHAI (không gửi token)', /layQuangCao = \(\) => goi\('GET', '\/quang-cao'\)/.test(apiQc) && /CUA_CONG_KHAI = \[[^\]]*'\/quang-cao'/.test(apiQc));
-    k('B2 phần riêng khách (nhập mã, voucher, lịch sử) chỉ nằm trong UuDaiToi', (uu.match(/<NhanMa/g) || []).length === 1 && /function UuDaiToi[\s\S]*<NhanMa[\s\S]*<VoucherTatCa \/> : <VoucherConDung \/>[\s\S]*export default function UuDai\(/.test(uu));
+    k('B2 phần riêng khách (nhập mã, voucher + "Dùng ngay" — KH-VC-2, lịch sử) chỉ nằm trong UuDaiToi', (uu.match(/<NhanMa/g) || []).length === 1 && /function UuDaiToi[\s\S]*<NhanMa[\s\S]*<VoucherTatCa dungVoucher=\{dungVoucher\} \/> : <VoucherConDung dungVoucher=\{dungVoucher\} \/>[\s\S]*export default function UuDai\(/.test(uu));
     k('B2 UuDaiToi chỉ được vẽ ở nhánh `dangNhap ?` (vãng lai không thấy điểm / voucher)', /\{dangNhap\s*\?\s*<UuDaiToi/.test(uu) && (uu.match(/<UuDaiToi/g) || []).length === 1);
     // KH-NHANH-1 B1: có phiên → App tải trước cả bốn cửa khách (có /don) — ca Chromium B4 đổi theo, khoá thêm bằng đọc nguồn (đỏ trên gốc).
     k('B4 có phiên: App tải trước /toi, /diem, /voucher, /don một chỗ (lamMoi(CUA_KHACH))', /lamMoi\(CUA_KHACH\)/.test(app));

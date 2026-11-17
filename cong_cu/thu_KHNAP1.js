@@ -86,7 +86,10 @@ const LY = { ma: 'TLB', so_luong: 2, ghi_chu: '' };
     k('A2 monDatLai: dòng nạp bỏ qua, không đếm "không còn bán"', bang(D.monDatLai({ mon: [{ ma: null, loai: 'nap', so_luong: 1 }] }, [{ ma: 'TLB' }]), { them: [], boQua: 0 }));
     k('A2 boDongDaGui: dòng nạp không trừ giỏ đồ uống', bang(G.boDongDaGui([LY], [NAP(1)]), [LY]));
     const dd = doc('src/datDon.js');
-    k('A2 KHÔNG sửa thanBaoGia / docBaoGia / tenGiam (nguyên văn bản gốc)', ['export function thanBaoGia(gio, { maGiam } = {}) {\n  const t = { mon: gio.map(dongGui) };', 'export function docBaoGia(r) {\n  if (!r || !so(r.tong)) return null;', "export function tenGiam(loai, tenHang) {\n  if (loai === 'ma_giam') return nd('giam.voucher');"].every((x) => dd.includes(x)));
+    // Chat gộp NAP-1 + VC-2 (17.11): KH-VC-2 đã sửa ĐÚNG 3 hàm này (vouchers, voucher_loi, "Voucher <MÃ>") — ca không còn ghim bản gốc, chỉ giữ ý: dòng nạp KHÔNG đi qua 3 hàm
+    // (nạp = dongGui `{ loai: 'nap', ma_goi }`; Thanh toán nạp không mã, không voucher).
+    const than3 = ['thanBaoGia', 'docBaoGia', 'tenGiam'].map((t) => { const a = dd.indexOf(`export function ${t}(`); const b = dd.indexOf('\n}\n', a); return a < 0 || b < 0 ? null : dd.slice(a, b); });
+    k('A2 thanBaoGia / docBaoGia / tenGiam không có nhánh nạp (nạp đi qua dongGui)', than3.every((x) => x !== null && !/laNap|'nap'/.test(x)));
   });
 
   await thu('A3', async () => {

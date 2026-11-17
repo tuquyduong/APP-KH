@@ -1,0 +1,78 @@
+KH-VC-2 — bằng chứng bài thử ĐỎ trên code gốc (b6f66e6), XANH trên code đã vá.
+Gốc = `git archive b6f66e6` (src, index.html, public, thiet_ke) + cong_cu/ của commit c31d418 (bài thử mới / đã sửa), dựng trong thư mục nháp.
+(thu_KHND3e trên gốc trong nháp còn đỏ thêm 2 ca so git — bản nháp không có .git; không liên quan việc này.)
+
+== cong_cu/thu_KHVC2.js (MỚI) ==
+Gốc, có Chromium:            23 đạt · 37 hỏng
+Gốc, KHONG_TRINH_DUYET=1:     2 đạt · 17 hỏng
+  ✗ nạp src/voucherGio.js — Cannot find module …/src/voucherGio.js
+  ✗ A2 thanBaoGia có voucher → `vouchers` đúng mảng, giữ ma_giam — {"mon":[…],"ma_giam":"GIAM10","cach_nhan":"tai_quan"}
+  ✗ A2 docBaoGia giữ `ma` của dòng giảm, đọc voucherLoi[] { ma, code, error }
+  ✗ A2 tenGiam: "Voucher VC7", "Giảm phí giao", "Mã khuyến mãi"; hạng / Giờ vàng như cũ
+  ✗ B6 src/giaoDien/voucher.css có, 0 màu ngoài demo
+  ✗ B4 App tính MỘT mảng vouchers (dsGui) và đưa CÙNG biến cho Giỏ hàng và Thanh toán đồ uống
+  ✗ B5 Thanh toán đồ uống: tuy = { maGiam, vouchers } — const tuy = cheDoThe ? KHONG_MA : { maGiam };
+  ✗ B1 thẻ voucher: tên = mo_ta POS nguyên văn, chip "Đổi điểm", mã nét đứt — Mã giảm giá / VC7 · giảm · hạn dùng đến 23:59 30/11/2026
+  ✗ B3 tự tích mọi voucher POS tính (VC7, KM8, VC5)
+  ✗ B2 nhận ưu đãi khách mới → "Đã thêm vào ví voucher: {mo_ta}" — Đã nhận ưu đãi khách mới: mã KM8 giảm 10%
+  … (đủ 37 dòng ✗ khi chạy có Chromium)
+Đã vá, có Chromium:          93 đạt · 0 hỏng (từ 102c9f8 thêm 6 ca 360 / 430; vòng sửa 1 thêm ca huỷ đơn — số mới ghi ở cuối tệp)
+Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHVC2.js: 28
+(trên gốc bài dừng sớm — A1 "dừng giữa chừng" gộp 12 ca thành 1 — nên gốc in 19 ca, nhánh 28)
+
+== cong_cu/thu_KHMUA1b.js (bài cũ đổi có chủ đích: "Giảm giá (voucher)" → "Mã khuyến mãi", tenGiam nhận dòng giảm) ==
+Gốc, KHONG_TRINH_DUYET=1:    50 đạt · 1 hỏng
+  ✗ C6 tên dòng giảm: mã chung "Mã khuyến mãi" (KH-VC-2) / hạng / Giờ vàng / loại lạ
+Đã vá, KHONG_TRINH_DUYET=1:  51 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHMUA1b.js: 51
+
+== cong_cu/thu_KHND3e.js (bài cũ đổi có chủ đích: tenGiam) ==
+Gốc, KHONG_TRINH_DUYET=1:    21 đạt · 1 hỏng
+  ✗ B1 tenGiam (nhận dòng giảm — KH-VC-2): mã chung "Mã khuyến mãi" / hạng có tên / hạng trống / Giờ vàng / loại lạ
+Đã vá, KHONG_TRINH_DUYET=1:  22 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHND3e.js: 22
+
+== cong_cu/thu_KHND3b.js (bài cũ đổi có chủ đích: gợi ý ô mã khoá mới gio.ma.goiYKm) ==
+Gốc, KHONG_TRINH_DUYET=1:    20 đạt · 1 hỏng
+  ✗ A1 (KH-VC-2) ô mã Giỏ hàng đọc gợi ý khoá mới gio.ma.goiYKm ("Nhập mã khuyến mãi (nếu có)"), không còn gio.ma.goiY
+Đã vá, KHONG_TRINH_DUYET=1:  21 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHND3b.js: 21
+
+== cong_cu/thu_KHBAO1.js (bài cũ đổi có chủ đích: daTra làm mới thêm cuaVoucher) ==
+Gốc, KHONG_TRINH_DUYET=1:    33 đạt · 1 hỏng
+  ✗ A3 daTra làm mới cuaDon (đơn QR vừa trả sang da_tra thì dải bắt đầu hỏi) + cuaVoucher (KH-VC-2: voucher đã dùng rời ví)
+Đã vá, KHONG_TRINH_DUYET=1:  34 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHBAO1.js: 34
+
+== cong_cu/thu_KHNHANH1.js (bài cũ đổi có chủ đích: xongDatDon làm mới thêm cuaVoucher — chủ quán duyệt điểm 1) ==
+Gốc, KHONG_TRINH_DUYET=1:    85 đạt · 1 hỏng
+  ✗ D3 đặt đơn → lấy lại /toi, /don, /diem, /voucher (KH-VC-2: đơn QR chờ trả giữ voucher)
+Đã vá, KHONG_TRINH_DUYET=1:  86 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHNHANH1.js: 86
+
+== cong_cu/thu_KHUI3d.js (bài cũ đổi có chủ đích: danh sách voucher nhận prop dungVoucher) ==
+Gốc, KHONG_TRINH_DUYET=1:    35 đạt · 1 hỏng
+  ✗ B2 phần riêng khách (nhập mã, voucher + "Dùng ngay" — KH-VC-2, lịch sử) chỉ nằm trong UuDaiToi
+Đã vá, KHONG_TRINH_DUYET=1:  36 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHUI3d.js: 36
+
+== Vòng sửa 1 (sau /ra-soat, commit c24c9fe) — thu_KHVC2.js chạy lại ==
+Đã vá, có Chromium:          96 đạt · 0 hỏng (thêm ca huỷ đơn làm mới ví + ca data-nd dòng "Voucher chưa dùng được")
+Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng (số ca không đổi — SỐ CA ở trên vẫn đúng; regex B4 chặt hơn: cuaVoucher phải nằm TRONG mảng lamMoi)
+Gốc (nháp), KHONG_TRINH_DUYET=1: vẫn đỏ (A1 dừng giữa chừng, A2 / B4 / B5 / B6 ✗)
+
+== Vòng sửa 2 (sau /ra-soat vòng 2, commit 51999d7) — thu_KHVC2.js chạy lại, bài HIỆN TẠI trên cả gốc lẫn nhánh ==
+Gốc (nháp, b6f66e6 + cong_cu 51999d7), có Chromium:  29 đạt · 42 hỏng
+Gốc (nháp), KHONG_TRINH_DUYET=1:                      2 đạt · 17 hỏng
+Nhánh, có Chromium:                                  98 đạt · 0 hỏng (thêm ca "chưa có menu → chạm voucher không tích")
+Nhánh, KHONG_TRINH_DUYET=1:                          28 đạt · 0 hỏng — SỐ CA cong_cu/thu_KHVC2.js: 28 (không đổi)
+(Các dòng "23 · 37", "87 / 93 / 96" ở trên là số của các lần trước, giữ để thấy lịch sử.)
+
+== Vòng sửa 3 (sau /ra-soat vòng 3, code 77a773b, bài e714b19) — bài HIỆN TẠI ==
+Gốc (nháp, b6f66e6 + cong_cu e714b19), có Chromium:   31 đạt · 44 hỏng
+Code vòng 2 (1d2525f) + bài e714b19, có Chromium:      100 đạt · 2 hỏng — đúng hai ca mới đỏ:
+  ✗ B3 báo giá lỗi sau khi chạm → KHÔNG ô nào tích (POS chưa xác nhận gì)  — 4 ô tích
+  ✗ B3 hỏi lại báo giá vì áp mã (giỏ không đổi): ô POS chưa tính KHÔNG tích tạm, giữ câu đỏ
+Nhánh (77a773b), có Chromium:                          102 đạt · 0 hỏng
+KHONG_TRINH_DUYET=1: gốc 2 · 17, nhánh 28 · 0 — SỐ CA cong_cu/thu_KHVC2.js: 28 (không đổi; ca mới đều chạy trong trình duyệt)
