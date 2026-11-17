@@ -31,7 +31,7 @@ import { laShip } from '../voucherGio.js';
 //   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
 const LOAI_DIEM = { earn: 'ud.loai.earn', redeem: 'ud.loai.redeem' }; // loại → khoá nội dung
 const TRANG_THAI_VOUCHER = { used: 'ud.voucher.daDung', expired: 'ud.voucher.hetHan', disabled: 'ud.voucher.chuaDung' };
-const NGUON_VOUCHER = { doi_diem: 'ud.vc.nguon.doi_diem', khach_moi: 'ud.vc.nguon.khach_moi', gioi_thieu: 'ud.vc.nguon.gioi_thieu' }; // nguồn lạ → không chip
+const khoaNguonVoucher = { doi_diem: 'ud.vc.nguon.doi_diem', khach_moi: 'ud.vc.nguon.khach_moi', gioi_thieu: 'ud.vc.nguon.gioi_thieu' }; // nguồn lạ → không chip
 const dau = (n) => (n > 0 ? `+${n}` : String(n));
 
 // Thẻ voucher (Màn 6, KH-VC-2): có `moTa` (câu POS, v15) → tên = câu POS NGUYÊN VĂN + chip nguồn + mã nét đứt; không có → cách cũ (tên + dòng mã · giảm · đơn từ · hạn).
@@ -43,7 +43,7 @@ function TheVoucher({ ten, khoaTen, ma, loai, giaTri, toiThieu, han, nhan, khoaN
       <div className="strip" />
       <div className="body vc-body">
         {moTa ? (
-          <div className="vc-than"><div className="t" {...ndDau('ud.vc.moTa')}>{moTa}</div><div className="vc-dong">{NGUON_VOUCHER[nguon] && <span className="vc-chip" {...ndDau(NGUON_VOUCHER[nguon])}>{nd(NGUON_VOUCHER[nguon])}</span>}<span className="vc-ma" {...ndDau('ud.khach')}>{ma}</span></div></div>
+          <div className="vc-than"><div className="t" {...ndDau('ud.vc.moTa')}>{moTa}</div><div className="vc-dong">{khoaNguonVoucher[nguon] && <span className="vc-chip" {...ndDau(khoaNguonVoucher[nguon])}>{nd(khoaNguonVoucher[nguon])}</span>}<span className="vc-ma" {...ndDau('ud.khach')}>{ma}</span></div></div>
         ) : <div className="vc-than"><div className="t" {...ndDau(khoaTen || (ten ? 'ud.khach' : 'ud.voucher.tenChung'))}>{ten || nd('ud.voucher.tenChung')}</div><div className="s" {...ndDau('ud.khach')}>{phu}</div></div>}
         {nhan ? <div className="use" {...ndDau(khoaNhan)}>{nhan}</div>
           : ship ? <div className="vc-sap" {...ndDau('ud.vc.ship')}>{nd('ud.vc.ship')}</div>

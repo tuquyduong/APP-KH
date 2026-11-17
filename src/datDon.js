@@ -60,7 +60,7 @@ export function docBaoGia(r) {
 /** Tên dòng giảm `g` ({ loai, ma }): voucher "Voucher <MÃ>" (như hoá đơn POS), voucher_ship "Giảm phí giao", mã chung "Mã khuyến mãi", hạng, Giờ vàng; loại lạ "Giảm giá". */
 export function tenGiam(g, tenHang) {
   const loai = g && g.loai;
-  if (loai === 'voucher') return nd('giam.voucherMa', { ma: chu(g.ma) });
+  if (loai === 'voucher' && chu(g.ma)) return nd('giam.voucherMa', { ma: chu(g.ma) }); // POS thiếu mã → "Giảm giá" (không hiện "Voucher " trống)
   if (loai === 'voucher_ship') return nd('giam.ship');
   if (loai === 'ma_giam') return nd('giam.voucher');
   if (loai === 'hang') return chu(tenHang) ? nd('giam.hang', { hang: chu(tenHang) }) : nd('giam.hangTron');
