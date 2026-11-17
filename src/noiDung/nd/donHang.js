@@ -2,11 +2,11 @@
 // Chat tạo sẵn 11.11.2026 (mảng rỗng) để các việc chạy song song không sửa chung src/noiDung/nd/index.js. Không import tệp kéo theo src/dinhDang.js (vòng nạp).
 // Tiền, số đơn, giờ, lời POS trả → mục KHOÁ `pos` (App chỉ hiện nguyên văn). Chữ khung quanh chúng → mục sửa được.
 
-const TT = 'Thanh toán', TD = 'Theo dõi đơn', DH = 'Đơn hàng', PIN = 'Bảng PIN', KC = 'Khung chung';
+const TT = 'Thanh toán', TD = 'Theo dõi đơn', DH = 'Đơn hàng', PIN = 'Bảng PIN', KC = 'Khung chung', GH = 'Giỏ hàng';
 const mk = (man) => (khoa, ten, macDinh, them = {}) => ({ khoa, man, ten, loai: 'chu', macDinh, ...them });
 const bien = (...b) => ({ bien: b });
 const khoa = (man, k, ten, chiDuong) => ({ khoa: k, man, ten, khoaBoi: 'pos', chiDuong });
-const tt = mk(TT), td = mk(TD), dh = mk(DH), pin = mk(PIN), kc = mk(KC);
+const tt = mk(TT), td = mk(TD), dh = mk(DH), pin = mk(PIN), kc = mk(KC), gh = mk(GH);
 
 export const DON_HANG = [
   // ===== Thanh toán =====
@@ -65,11 +65,24 @@ export const DON_HANG = [
   tt('loi.CHUA_MO', 'Báo: đặt online chưa mở', 'Đặt online sắp mở — mời bạn đặt tại quầy'),
   tt('loi.CHUA_RO', 'Báo lỗi: chưa rõ quán đã nhận đơn chưa', 'Chưa rõ quán đã nhận đơn chưa.'),
   tt('loi.NGOAI_GIO', 'Báo: ngoài giờ nhận đơn (khi POS không kèm câu riêng)', 'Quán đang ngoài giờ nhận đơn online.'),
-  tt('giam.voucher', 'Tên dòng giảm: mã giảm giá', 'Giảm giá (voucher)'),
+  tt('giam.voucher', 'Tên dòng giảm: mã khuyến mãi chung (ô mã)', 'Mã khuyến mãi'),
+  tt('giam.voucherMa', 'Tên dòng giảm: một voucher trong ví (như hoá đơn POS)', 'Voucher {ma}', bien('ma')),
+  tt('giam.ship', 'Tên dòng giảm: voucher giảm phí giao', 'Giảm phí giao'),
   tt('giam.hang', 'Tên dòng giảm: ưu đãi hạng', 'Ưu đãi hạng {hang}', bien('hang')),
   tt('giam.hangTron', 'Tên dòng giảm: ưu đãi hạng (chưa biết hạng)', 'Ưu đãi hạng'),
   tt('giam.gioVang', 'Tên dòng giảm: Giờ vàng', 'Giờ vàng'),
   tt('giam.chung', 'Tên dòng giảm: loại khác', 'Giảm giá'),
+  tt('tt.vc.chua', 'Thanh toán: tiêu đề khối voucher POS chưa tính', 'Voucher chưa dùng được'),
+  tt('tt.vc.dong', 'Thanh toán: một dòng voucher chưa dùng được (mã + lời POS)', '{ma}: {loi}', bien('ma', 'loi')),
+  // ── Giỏ hàng: voucher của bạn + ô mã khuyến mãi (KH-VC-2) ──
+  gh('gio.vc.tieuDe', 'Giỏ hàng: tiêu đề mục Voucher của bạn', 'Voucher của bạn'),
+  gh('gio.vc.phai', 'Giỏ hàng: chữ bên phải tiêu đề mục voucher', 'Tự chọn sẵn · chạm để bỏ'),
+  gh('gio.vc.ship', 'Giỏ hàng: nhãn voucher giảm phí giao (đơn nhận tại quán)', 'Dùng khi đặt giao hàng'),
+  gh('gio.ma.tieuDe', 'Giỏ hàng: tiêu đề ô mã khuyến mãi', 'Mã khuyến mãi'),
+  gh('gio.ma.mot', 'Giỏ hàng: ghi chú bên phải tiêu đề ô mã', '1 mã / đơn'),
+  gh('gio.ma.goiYKm', 'Giỏ hàng: gợi ý trong ô mã khuyến mãi', 'Nhập mã khuyến mãi (nếu có)'),
+  khoa(GH, 'gio.vc.moTa', 'Câu voucher (giảm gì, hạn dùng) và mã voucher', 'POS › Voucher — câu do máy chủ dựng'),
+  khoa(GH, 'gio.vc.loi', 'Lý do POS chưa tính voucher (chưa đủ đơn, quá số voucher…)', 'POS › Cài đặt › Voucher · lời POS trả nguyên văn'),
   khoa(TT, 'tt.so', 'Số tiền, tên món của lần đặt chưa rõ', 'POS › Đơn hàng'),
   khoa(TT, 'tt.thongBao', 'Lời POS khi đặt đơn không được (ngoài giờ, hết hàng, quá lượt…)', 'POS › Cài đặt › Giờ hoạt động · lời POS trả nguyên văn'),
 
