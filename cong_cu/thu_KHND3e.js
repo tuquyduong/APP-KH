@@ -74,8 +74,8 @@ const GOC_CHU = {
   const D = await nap('src/datDon.js');
   const B = await nap('src/baoDonXong.js');
   if (typeof D.tenGiam === 'function') {
-    k('B1 tenGiam: voucher / hạng có tên / hạng trống / Giờ vàng / loại lạ như cũ', D.tenGiam('ma_giam') === 'Giảm giá (voucher)' && D.tenGiam('hang', 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam('hang') === 'Ưu đãi hạng'
-      && D.tenGiam('gio_vang') === 'Giờ vàng' && D.tenGiam('la') === 'Giảm giá');
+    k('B1 tenGiam (nhận dòng giảm — KH-VC-2): mã chung "Mã khuyến mãi" / hạng có tên / hạng trống / Giờ vàng / loại lạ', D.tenGiam({ loai: 'ma_giam' }) === 'Mã khuyến mãi' && D.tenGiam({ loai: 'hang' }, 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam({ loai: 'hang' }) === 'Ưu đãi hạng'
+      && D.tenGiam({ loai: 'gio_vang' }) === 'Giờ vàng' && D.tenGiam({ loai: 'la' }) === 'Giảm giá');
     const b = D.buocTienTrinh('xong');
     k('B1 buocTienTrinh: chữ bước + dòng nhỏ như cũ, kèm khoá kt / ks để gắn data-nd', b.ds[3].t === 'Sẵn sàng — mời bạn ra quầy nhận' && b.ds[3].s === 'Đọc số đơn cho nhân viên' && b.ds[3].kt === 'td.buoc.xong' && b.ds[3].ks === 'td.buoc.xong.s'
       && b.ds[0].s === undefined && D.buocTienTrinh('da_huy').ds[0].t === 'Đã huỷ' && D.buocTienTrinh('dang_giao').ds.length === 5);
