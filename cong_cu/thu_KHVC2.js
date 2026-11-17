@@ -419,6 +419,21 @@ async function trinhDuyet(pw) {
     }
   });
 
+  for (const rong of [360, 430]) {
+    them(`co-${rong}`, { rong, S0: { vi: VI_GIO } }, async ({ t }) => {
+      const tran = () => t.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 || [...document.querySelectorAll('.vc-chon, .voucher')].some((e) => e.scrollWidth > e.clientWidth + 1));
+      await mo(t, '/giohang');
+      await doi(t, async () => (await t.locator('#cart .vc-chon').count()) === 5);
+      await yen(t);
+      k(`B3 [${rong}] Giỏ có mục voucher không tràn ngang`, (await t.locator('#cart .vc-chon').count()) === 5 && !(await tran()));
+      await chup(t, `gio-voucher-${rong}`);
+      await mo(t, '/uudai');
+      await doi(t, async () => (await t.locator('#rewards .voucher', { hasText: 'GT3' }).count()) > 0);
+      k(`B1 [${rong}] Ví voucher không tràn ngang`, (await t.locator('#rewards .voucher', { hasText: 'GT3' }).count()) === 1 && !(await tran()));
+      await chup(t, `uudai-vi-voucher-${rong}`);
+    });
+  }
+
   const t0 = Date.now();
   const hang = [...CA];
   await Promise.all([...Array(4)].map(async () => { while (hang.length) await hang.shift()(); }));
