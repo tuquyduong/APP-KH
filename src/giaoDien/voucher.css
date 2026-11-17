@@ -12,8 +12,8 @@
 .voucher.vc-ship .strip{background:var(--muted)}
 .vc-sap{font-size:10.5px;font-weight:600;color:var(--muted);background:var(--cream);padding:6px 9px;border-radius:8px;text-align:center;line-height:1.3;max-width:96px;flex:none}
 
-.vc-dau{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 2px 8px;font-size:13px;font-weight:600;color:var(--navy)}
 .vc-dau-phai{font-size:11px;font-weight:500;color:var(--muted);text-align:right}
+.vc-dau-ma{margin-bottom:-6px}
 .vc-chon{display:flex;align-items:flex-start;gap:10px;width:100%;padding:12px;border:none;border-radius:14px;background:var(--white);box-shadow:0 0 0 1.5px var(--line);margin-bottom:8px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer}
 .vc-chon.vc-co{box-shadow:0 0 0 2px var(--forest);background:var(--cream)}
 .vc-o{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;margin-top:1px;color:var(--white)}
@@ -21,7 +21,7 @@
 .vc-chon .vc-than{display:flex;flex-direction:column;align-items:flex-start;min-width:0;flex:1}
 .vc-t{font-size:12.5px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
 .vc-chon .vc-ma{margin-top:6px}
-.vc-chon .vc-sap{margin-top:6px;max-width:none}
+.vc-chon .vc-sap{margin-top:6px;max-width:none;padding:0;background:none;text-align:left;font-size:11.5px}
 .vc-chon.vc-tat{opacity:.62;cursor:default}
 .vc-chon.vc-tat .vc-o{border-style:dashed}
 .vc-loi{font-size:11.5px;color:#C62828;font-weight:600;margin-top:6px;line-height:1.4;overflow-wrap:anywhere}

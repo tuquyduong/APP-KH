@@ -87,7 +87,7 @@ function VoucherGio({ vi, bg, bgCu, boTay, vuaChon, cham }) {
   if (!vi || !vi.length) return null;
   return (
     <>
-      <div className="vc-dau"><Chu k="gio.vc.tieuDe" /><Chu k="gio.vc.phai" className="vc-dau-phai" /></div>
+      <div className="sec-head"><Chu k="gio.vc.tieuDe" as="h2" /><Chu k="gio.vc.phai" className="vc-dau-phai" /></div>
       {vi.map((v) => {
         const ship = laShip(v), bo = coMa(boTay, v.code), tt = trangThaiVoucher(v.code, bg || bgCu);
         const tich = !ship && !bo && (tt === 'dung' || (!bg && vuaChon === v.code));
@@ -137,7 +137,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
         <>
           {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
           {dangNhap && <VoucherGio vi={vi} bg={bg} bgCu={bgCu.current} boTay={boTay} vuaChon={vuaChon} cham={cham} />}
-          <div className="vc-dau"><Chu k="gio.ma.tieuDe" /><Chu k="gio.ma.mot" className="vc-dau-phai" /></div>
+          <div className="sec-head vc-dau-ma"><Chu k="gio.ma.tieuDe" as="h2" /><Chu k="gio.ma.mot" className="vc-dau-phai" /></div>
           <div className="promo-box">
             <input placeholder={nd('gio.ma.goiYKm')} aria-label={nd('gio.ma.aria')} {...ndDau('gio.ma.goiYKm')} maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
             <button type="button" onClick={() => datMaGiam(o.trim())} {...ndDau(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}>{nd(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}</button>
