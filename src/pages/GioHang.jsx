@@ -80,17 +80,17 @@ function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
 }
 
 /**
- * Mục "Voucher của bạn" (Màn 7): mỗi voucher của ví một ô chạm. Đang chờ báo giá mới (`bg` null) → vẽ theo báo giá CUỐI (`bgCu`) + ô khách vừa chạm chọn (`vuaChon`),
- * không nhấp nháy tích ↔ đỏ. Voucher ship → mờ, không chạm. Ví chưa tải / trống → không có mục.
+ * Mục "Voucher của bạn" (Màn 7): mỗi voucher của ví một ô chạm. Ô tích CHỈ theo báo giá POS (`bg` — khi đang chờ báo giá mới, GioHang đưa báo giá CUỐI để không
+ * nhấp nháy; báo giá lỗi / không hỏi → không ô nào tích). App không tích trước khi POS trả lời. Voucher ship → mờ, không chạm. Ví chưa tải / trống → không có mục.
  */
-function VoucherGio({ vi, bg, bgCu, boTay, vuaChon, cham }) {
+function VoucherGio({ vi, bg, boTay, cham }) {
   if (!vi || !vi.length) return null;
   return (
     <>
       <div className="sec-head"><Chu k="gio.vc.tieuDe" as="h2" /><Chu k="gio.vc.phai" className="vc-dau-phai" /></div>
       {vi.map((v) => {
-        const ship = laShip(v), bo = coMa(boTay, v.code), tt = trangThaiVoucher(v.code, bg || bgCu);
-        const tich = !ship && !bo && (tt === 'dung' || (!bg && vuaChon === v.code));
+        const ship = laShip(v), bo = coMa(boTay, v.code), tt = trangThaiVoucher(v.code, bg);
+        const tich = !ship && !bo && tt === 'dung';
         const loi = !ship && !bo && !tich && tt.loi;
         return (
           <button type="button" key={v.id ?? v.code} className={`vc-chon${tich ? ' vc-co' : ''}${ship ? ' vc-tat' : ''}`} aria-pressed={tich} disabled={ship} onClick={() => cham(v.code, tich)}>
@@ -120,11 +120,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const { bg, loi } = dungBaoGia(gio, { maGiam, vouchers }, hoi);
   const bgCu = useRef(null);
   if (bg) bgCu.current = bg;
-  // Ô khách vừa chạm chọn: tích tạm CHỈ khi đang thật sự chờ báo giá cho đúng giỏ lúc chạm (không hỏi POS / giỏ đã đổi / báo giá đã về → theo POS).
-  const khoaGio = JSON.stringify(gio);
-  const [vuaChon, datVuaChon] = useState(null); // { ma, khoaGio }
-  const cham = (ma, tich) => { datVuaChon(tich ? null : { ma, khoaGio }); chamVc(ma, tich); };
-  const choChon = hoi && !bg && vuaChon && vuaChon.khoaGio === khoaGio ? vuaChon.ma : '';
+  const bgVc = bg || (hoi && !loi ? bgCu.current : null); // ô voucher: báo giá POS; ĐANG chờ báo giá mới → báo giá cuối; lỗi / không hỏi → không tích
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
   return (
     <Man id="cart">
@@ -139,7 +135,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
       ) : (
         <>
           {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
-          {dangNhap && <VoucherGio vi={vi} bg={bg} bgCu={bgCu.current} boTay={boTay} vuaChon={choChon} cham={cham} />}
+          {dangNhap && <VoucherGio vi={vi} bg={bgVc} boTay={boTay} cham={chamVc} />}
           <div className="sec-head vc-dau-ma"><Chu k="gio.ma.tieuDe" as="h2" /><Chu k="gio.ma.mot" className="vc-dau-phai" /></div>
           <div className="promo-box">
             <input placeholder={nd('gio.ma.goiYKm')} aria-label={nd('gio.ma.aria')} {...ndDau('gio.ma.goiYKm')} maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
