@@ -171,19 +171,20 @@ async function trinhDuyet(pw) {
   const URL0 = 'http://kh.test';
   const anhDir = process.env.LUU_ANH_DIR || '';
   const ndThieu = new Set();
+  const chu0 = (await nap('src/luuMay.js')).dauVet('0909123456'); // máy đã của đúng khách này (không xoá giỏ / bản ghi lần gửi khi /toi về)
 
   async function may(ten, S0, chay) {
     const ctx = await trinh.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     await ctx.clock.install({ time: new Date('2026-11-16T20:30:00+07:00') }); await ctx.clock.resume();
     const S = { goiNap: GOI, vi: 180600, viTrang: { 1: { data: VI_1, con_nua: true }, 2: { data: VI_2, con_nua: false } }, viLoi: false, dong: false, kich: [], goi: [], bg: [], datDon: [], don: new Map(), soDon: 6, loiTrang: [], gio: [LY], luu: {}, ...S0 };
-    await ctx.addInitScript(({ gio, luu }) => {
+    await ctx.addInitScript(({ gio, luu, chu0 }) => {
       if (sessionStorage.getItem('da_gieo')) return;
       sessionStorage.setItem('da_gieo', '1');
       localStorage.setItem('kh_ngay_man_dau', '2026-11-16');
-      localStorage.setItem('kh_token', 'tok-A');
+      localStorage.setItem('kh_token', 'tok-A'); localStorage.setItem('kh_chu', chu0);
       localStorage.setItem('kh_gio', JSON.stringify(gio));
       for (const [kh, v] of Object.entries(luu)) localStorage.setItem(kh, v);
-    }, { gio: S.gio, luu: S.luu });
+    }, { gio: S.gio, luu: S.luu, chu0 });
     const goiCua = (ma) => S.goiNap.find((g) => g.ma === ma);
     const monDon = (d) => (d.nap ? [{ ma: null, loai: 'nap', ten: TEN_NAP, so_luong: 1, don_gia: d.tong, thanh_tien: d.tong, ghi_chu: null }] : d.mon || [{ ma: 'TLB', ten: 'Trà Lục Bảo', so_luong: 2, don_gia: 30000, thanh_tien: 60000, ghi_chu: '' }]);
     const dongDon = (d) => ({ ma: d.ma, so_hd: d.soHd || null, ngay: BAY('20:31:00'), tong: d.tong, da_tra: d.tt === 'cho_tra' ? 0 : d.tong, trang_thai: null, thanh_toan: null, tien_trinh: d.tt, qr: d.tt === 'cho_tra' ? d.qr : null, tien_ve_cho_doi_soat: false, tien_ve_da_cong_vi: d.tienVe || null, thong_bao_tien_ve: d.thongBao || null, cach_tra: 'qr', giu_vi: 0, con_lai: d.tong, so_mon: 1, mon_dau: null });
