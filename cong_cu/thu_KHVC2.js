@@ -110,7 +110,7 @@ if (require.main === module) (async () => {
     const md = docMau(demo);
     const la = [...docMau(css)].filter((x) => !md.has(x));
     k('B6 src/giaoDien/voucher.css có, 0 màu ngoài demo', css.length > 200 && la.length === 0, la.join(' · '));
-    const lop = [...new Set([...css.replace(/url\([^)]*\)/g, '').replace(/\{[^}]*\}/g, '{}').matchAll(/\.([A-Za-z][\w-]*)/g)].map((m) => m[1]))];
+    const lop = [...new Set([...css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/url\([^)]*\)/g, '').replace(/\{[^}]*\}/g, '{}').matchAll(/\.([A-Za-z][\w-]*)/g)].map((m) => m[1]))];
     const DEMO_LOP = ['voucher', 'strip', 'body', 't', 's', 'use'];
     const sai = lop.filter((x) => !x.startsWith('vc-') && !DEMO_LOP.includes(x));
     k('B6 mọi lớp mới tiền tố `vc-` (lớp demo giữ: .voucher .strip .body .t .s .use)', lop.some((x) => x.startsWith('vc-')) && sai.length === 0, sai.join(','));
@@ -268,7 +268,7 @@ async function trinhDuyet(pw) {
     k('B1 voucher không mo_ta (trước v15) → cách cũ: tên reward_name, dòng mã', /Giảm 20\.000đ/.test(await chu(t, '#rewards .voucher:has-text("VCCU") .t')) && /VCCU/.test(await chu(t, '#rewards .voucher:has-text("VCCU") .s')));
     k('B1 thẻ giữ lớp demo .voucher .strip .body .t; nút dùng lớp .use', (await v7.locator('.strip').count()) === 1 && (await v7.locator('.body .t').count()) === 1 && (await v7.locator('button.use').count()) === 1);
     k('B1 ma_khach_moi hiện như cũ (Ưu đãi khách mới) + "Dùng ngay"', /Ưu đãi khách mới/.test(await the(t, 'BILL123').innerText().catch(() => '')) && (await the(t, 'BILL123').locator('button', { hasText: 'Dùng ngay' }).count()) === 1);
-    k('B1 thẻ có mo_ta KHÔNG tự ghép câu giảm (không "hạn dùng đến" / "đơn từ")', !/hạn dùng đến|đơn từ/.test(await v7.innerText()));
+    k('B1 thẻ có mo_ta KHÔNG tự ghép câu giảm (không dòng "· giảm …" / "hạn dùng đến")', !/hạn dùng đến| · giảm/.test(await v7.innerText()), await v7.innerText());
     await chup(t, 'uudai-vi-voucher-390');
     S.tatCa = [{ ...VC7 }, V('OLD1', 'tien', 1, 0, '2026-10-01T00:00:00', 'doi_diem', 'Giảm 10.000đ · đã dùng', { status: 'used' }), V('OLD2', 'tien', 1, 0, '2026-10-01T00:00:00', 'doi_diem', 'Giảm 15.000đ · hết hạn', { status: 'expired' }), V('OLD3', 'tien', 1, 0, '2026-12-01T00:00:00', 'khach_moi', 'Giảm 30.000đ · đơn gốc đã huỷ', { status: 'disabled' })];
     await t.locator('#rewards .more-l span', { hasText: 'Xem tất cả' }).click();
