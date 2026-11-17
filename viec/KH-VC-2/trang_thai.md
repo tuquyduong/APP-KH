@@ -120,3 +120,53 @@ BÀI HỌC:
 ## Câu hỏi (gửi POS — KHÔNG chặn việc này)
 - Khách gõ vào ô mã khuyến mãi đúng mã một voucher đang có trong ví (vd VC7) trong khi App cũng gửi VC7 trong `vouchers`: POS xử lý thế nào — bỏ một bên, báo `voucher_loi` / `ma_giam_loi`, hay
   có thể trừ hai lần? Hợp đồng v15 chỉ ghi "App cũ gửi mã voucher ở `ma_giam` vẫn chạy như trước". Nếu POS không tự chống trùng, App sẽ loại mã đang ở ô mã khỏi `vouchers` (1 dòng ở App.jsx).
+
+## Kiểm sau vòng sửa 1
+- `npm test -- --day-du` ở c24c9fe: **66 đạt · 0 hỏng** (thu_KHVC2 96 · 0; K9, K10, vite build ✓).
+- `node viec/KH-VC-2/dot_bien_tay.js --trinh-duyet`: 20 / 20 BỊ BẮT.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở 4a50bc2, cây sạch: `✓ CỔNG CHẠY ĐẠT` (+ cảnh báo A16 như trên — bài dừng sớm trên gốc).
+
+## Bài học
+| Sự cố | Ngăn | Lý do / đề xuất |
+|---|---|---|
+| 6 bài cũ đỏ sau khi code đúng (KHBAO1, KHMUA1, KHND3c, KHND3e, KHNHANH1, KHUI3d) — kế hoạch + agent soát kế hoạch chỉ thấy 3 | NGUYÊN TẮC | Bài cũ kiểm bằng regex ĐÚNG dòng mã (`lamMoi([cuaDon])`, `<VoucherTatCa />`, tiền tố khoá của donHang.js). Đề xuất `KHUON_LOI.md` (ngoài Phạm vi — chat soát gom): mục mới "Bài cũ ghim dòng mã — Đã gây: KH-VC-2 6 bài đỏ ngoài kế hoạch · Dấu hiệu: sửa một dòng có tên hàm / prop / khoá mà bài thử regex trên dòng đó · Chặn: lúc lập kế hoạch `grep -n` trong `cong_cu/thu_*.js` mọi tên hàm, biến, prop, tiền tố khoá sắp đổi; ghi danh sách bài cũ phải sửa vào ke_hoach.md". |
+| `/ra-soat` bắt data-nd sai (ThanhToan: chữ sửa được gắn khoá 🔒 pos) — bài chung chỉ đếm khoá được dùng | KHOÁ | Đề xuất bài chung (ngoài Phạm vi — `cong_cu/thu_KHND3*.js` hoặc bài mới): trong App thật, mỗi phần tử `[data-nd-khoa]` không được chứa chữ của mục sửa được; mỗi khoá chu/nut đang hiện có ≥ 1 `[data-nd=<khoá>]`. Ca đỏ: bản gốc của a8f4ad6 (ThanhToan.jsx dòng "Voucher chưa dùng được"). Ca riêng của việc này đã có trong thu_KHVC2 (B6/§11). |
+| `/ra-soat`: ý làm mới ví / xoá lựa chọn chỉ có regex "có chữ trên dòng" (marker suông qua được) | KHOÁ (đã làm, trong Phạm vi) | Regex đòi `cuaVoucher` trong mảng `lamMoi`, ca trình duyệt huỷ đơn, 4 đột biến BV- mới (đều đỏ). |
+| `bang_chung_do.txt` ghi số ca cũ sau khi thêm ca 360 / 430 | NGUYÊN TẮC | Gộp vào K1 của `KHUON_LOI.md` (ngoài Phạm vi — đề xuất): "đổi bài thử → chạy lại và ghi lại số ở bang_chung_do.txt + trang_thai.md trong CÙNG commit". |
+| Kết quả so ảnh C5 chỉ ghi tóm tắt, không lưu dòng in | BỎ | Đã lưu `c5_ket_qua.txt`; một lần. |
+| Người gác chặn 15 lệnh (B-PHANTICH 5: heredoc + chạy script chung một lệnh, `$(( ))`; B-BIMAT-CHU 3: tệp có `KH_TOKEN_SAI` / `process.env` chưa commit; B-CHUONGTRINH 3: `until` / `while` / `pgrep`; MKDIR-DICH 1: gõ sai tên thư mục nháp; GIT-LENH 1: `worktree`; GIT-ADD 1: thêm cả thư mục; SED-I 1) | BỎ | Luật đã ghi trong skill; làm theo hướng dẫn (commit trước khi chạy, tách lệnh, `tail --pid` để chờ, `git archive | tar` thay worktree). |
+| 2 ca tự sai trong bài mới (bắt `.js` trong chú thích CSS; câu mẫu có sẵn "đơn từ") | BỎ | Sửa ngay; một lần. |
+| Dòng giảm `loai: 'voucher'` thiếu `ma` (POS giả cũ) hiện "Voucher " trống — bắt nhờ thu_KHMUA1 | BỎ | Sửa ở `tenGiam` (thiếu mã → "Giảm giá") + ca thử; một lần. |
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-VC-2 — voucher theo hợp đồng v15: Ví voucher hiện câu POS + nguồn + "Dùng ngay"; Giỏ tự chọn sẵn mọi voucher, chạm để bỏ / chọn (mới chạm đứng đầu), câu POS đỏ cho
+  cái chưa dùng được; ô mã chỉ cho một mã chung; bảng tiền "Voucher <MÃ>"; Thanh toán gửi đúng mảng của Giỏ.
+- **ĐÃ SỬA:** `src/voucherGio.js` (mới), `src/datDon.js` (3 hàm), `src/giaoDien/voucher.css` (mới), `src/pages/GioHang.jsx`, `src/pages/UuDai.jsx`, `src/components/NhanMa.jsx`,
+  `src/pages/ThanhToan.jsx`, `src/App.jsx`, `src/noiDung/nd/donHang.js`, `src/noiDung/nd/taiKhoan.js`; ~230 dòng app (ngân sách 220, trong 1,5 lần). Bài: `cong_cu/thu_KHVC2.js` (mới, ~470 dòng) + 6 bài cũ sửa đúng ca.
+- **BÀI THỬ:** thu_KHVC2 đỏ trên gốc (23 · 37), xanh nhánh 96 · 0 / 28 · 0 (`KHONG_TRINH_DUYET=1`); 6 bài cũ đỏ trên gốc một ca, xanh nhánh; 20 / 20 đột biến bị bắt; `npm test -- --day-du` 66 · 0;
+  cổng `chay` ĐẠT. Nghiệm thu từng mục:
+  - A1 — thu_KHVC2 Phần 1 "A1 …" (laShip, dsGui 9 ca, trangThaiVoucher, chamVoucher) + đột biến BV-GUI-VOUCHER-SHIP, BV-KHONG-BO-MA-BO-TAY, VS-HAN-MUON-TRUOC, VS-CHON-TAY-DUNG-CUOI.
+  - A2 — "A2 thanBaoGia … y hệt bản gốc", thanDatDon, KHONG_MA, docBaoGia, tenGiam; ca trình duyệt 'khong-voucher' (thân báo giá + POST /don không `vouchers`); VS-GUI-VOUCHERS-RONG.
+  - B1 — ca 'uudai', 'dung-ngay', 'dung-ngay-ma-chung', 'dung-ngay-gio-trong', 'co-360/430'; VS-APP-TU-GHEP-CAU.
+  - B2 — ca 'nhan-ma' (mo_ta, 3 mã lỗi, làm mới ví); VS-NHAN-MA-CAU-CU.
+  - B3 — ca 'gio' (tự tích, câu đỏ, ship, tiêu đề, chờ báo giá, tự tích lại, chọn tay thứ 4, bỏ tay), 'vi-dang-tai', 'chua-dang-nhap'; BV-GIO-KHONG-HIEN-CAU-POS, VS-SHIP-CHAM-DUOC, BV-CHO-BAO-GIA-NHAP-NHAY, VS-TU-TICH-LAI-CAI-DA-BO.
+  - B4 — "B4 App tính MỘT mảng …", regex `lamMoi([…cuaVoucher…])`, `datChonVc(CHON_RONG)`; ca 'gio' (Thanh toán = mảng Giỏ, đặt xong làm mới ví), 'huy-don'; VS-THANH-TOAN-MANG-KHAC + 5 đột biến BV- làm mới / xoá lựa chọn.
+  - B5 — ca 'thanh-toan-loi' (khối "Voucher chưa dùng được", VOUCHER_DANG_GIU lời POS, nút không khoá), 'gio' (thân POST /don); BV-THANH-TOAN-KHONG-KHOI-LOI.
+  - B6 — Phần 1 "B6 …" (css màu demo, lớp vc-, nạp css, khoá danh mục, macDinh, khoá pos), ca "B6/§11 dòng … gắn khoá"; K9 / K10 / kiemDanhMuc xanh; VS-CSS-MAU-NGOAI-DEMO, VS-THANH-TOAN-DONG-GAN-KHOA-POS.
+  - C1 — bang_chung_do.txt (đỏ gốc / xanh nhánh, `SỐ CA cong_cu/thu_KHVC2.js: 28`).
+  - C2 — bang_chung_do.txt: 6 bài cũ, mỗi bài một dòng ✗ trên gốc + `SỐ CA`.
+  - C3 — dot_bien_tay.js 20 / 20 (đủ 7 loại phiếu đòi).
+  - C4 — so_anh/{truoc,sau,lech}, de_xuat-man6/7, doi_chieu_demo.md.
+  - C5 — c5_ket_qua.txt + so_anh/c5/.
+  - C6 — npm test / --day-du 66 · 0, cổng tinh + chay ĐẠT, K10 không tăng, HEAD ĐÃ KIỂM bên dưới.
+  - C7 — thử tay của chủ quán sau gộp (chưa làm được ở đây).
+- **ĐÃ RÀ K4:** mọi chỗ gọi `tenGiam` (chỉ BangTien — dùng chung Giỏ + Thanh toán), `thanBaoGia` / `dungBaoGia` (Giỏ, Thanh toán đồ uống, Thanh toán thẻ qua `KHONG_MA`), `docBaoGia`
+  (dungDatDon + GIA_DA_DOI ở Thanh toán — cũng có voucherLoi), `cuaVoucher` (UuDai, TaiKhoan đếm số voucher — không đổi, App), `TheVoucher` (chỉ UuDai); gửi lại đơn chưa rõ dùng `cu.than` đã ghi
+  (đã chứa `vouchers`); đổi khách / đăng xuất qua `docLaiGio` / `donPhien`.
+- **CHƯA KIỂM:** POS thật (cổng `/api/kh` v15) — chỉ POS giả theo hợp đồng; POS xử lý mã trùng ở `ma_giam` + `vouchers` (## Câu hỏi); đổi khách / đăng xuất / tiền QR về chỉ kiểm bằng nguồn + đột biến
+  (không ca trình duyệt); máy thật điện thoại / trình duyệt Zalo / chữ to; Chế độ sửa /admin với khoá mới (chỉ kiểm data-nd + danh mục); gộp với KH-NAP-1 (dòng `tuy` — đơn nạp phải đi
+  `KHONG_MA`, không `vouchers`); thử tay C7: (1) tạo 2 voucher cho SĐT thử ở POS (một có đơn tối thiểu cao) → Ưu đãi thấy câu POS → "Dùng ngay"; (2) Giỏ: một ô tích, một ô câu đỏ → thêm món → tự tích;
+  (3) đặt đơn QR → hoá đơn có "Voucher <MÃ>".
+- **GIT:** nhánh `viec/KH-VC-2`, đã push; không merge, không PR.
+- **BÀI HỌC:** xem mục Bài học ở trên (2 đề xuất ngoài Phạm vi: KHUON_LOI "Bài cũ ghim dòng mã" + K1 số ca; 1 KHOÁ đề xuất: bài chung soát data-nd / data-nd-khoa trong App thật).
+HEAD ĐÃ KIỂM: 4a50bc2
