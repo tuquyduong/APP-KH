@@ -58,3 +58,25 @@ KHONG_TRINH_DUYET=1 → 41 đạt · 0 hỏng
 có Chromium        → 122 đạt · 0 hỏng
 
 SỐ CA thu_KHNAP1: 41
+
+# Bài CŨ đổi có chủ đích (phiếu C2) — đỏ trên gốc (bản sao b62c23d + bài đã sửa), xanh trên nhánh
+## thu_KHUI3d.js (B4: Ưu đãi đọc kho gói nạp; gọi /goi-nap đúng MỘT lần)
+gốc KHONG_TRINH_DUYET=1: ✗ B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher + kho gói nạp (KH-NAP-1: nút "+ Nạp tiền" đọc dungCua(cuaGoiNap)) → 35 đạt · 1 hỏng
+gốc có Chromium: 169 đạt · 7 hỏng (6 ca B4 [cỡ/chữ] thiếu /goi-nap)
+nhánh: KHONG_TRINH_DUYET=1 36 đạt · 0 hỏng · có Chromium 176 đạt · 0 hỏng
+SỐ CA thu_KHUI3d: 36
+
+## thu_KHKHOP1.js (A2 tĩnh: /kiemkhop gọi GET /goi-nap, GET /vi; B3/B4: /goi-nap trong cửa công khai)
+gốc KHONG_TRINH_DUYET=1: ✗ A2 KH-NAP-1: /kiemkhop có hàm gọi 'GET /goi-nap' (layGoiNap) và 'GET /vi' (layVi(1)) — ca TĨNH → 50 đạt · 1 hỏng
+gốc có Chromium: 82 đạt · 6 hỏng (A2 + B4 ×4 + B3 đăng nhập — thiếu /goi-nap)
+nhánh: KHONG_TRINH_DUYET=1 51 đạt · 0 hỏng · có Chromium 87 đạt · 0 hỏng
+SỐ CA thu_KHKHOP1: 51
+
+## thu_KHTHE2.js (D1: các bước ẩn cả khi đơn nạp xong — {!theXong && !napXong && …})
+gốc KHONG_TRINH_DUYET=1: ✗ D1 tắt khối hien.the.cm chỉ ẩn màn chúc mừng … → 45 đạt · 1 hỏng
+gốc có Chromium: 154 đạt · 1 hỏng
+nhánh: KHONG_TRINH_DUYET=1 46 đạt · 0 hỏng · có Chromium 155 đạt · 0 hỏng
+SỐ CA thu_KHTHE2: 46
+
+## thu_KHBAO1.js, thu_KHNHANH1.js — KHÔNG đổi bài: code nhánh vi phạm luật "Thanh toán / Theo dõi đơn không đọc kho chung" → sửa CODE
+(ThanhToan gọi GET /goi-nap mới; DaNap gọi GET /toi mới). Nhánh: thu_KHBAO1 106 đạt · 0 hỏng · thu_KHNHANH1 230 đạt · 0 hỏng.
