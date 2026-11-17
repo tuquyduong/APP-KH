@@ -118,3 +118,44 @@ NGHI NGỜ giữ (Phát hiện): `hien.nap.dn` tắt thì không câu "đã xong
 mở THẲNG địa chỉ theo dõi của đơn nạp đã xong từ lâu → ô "Số dư mới" hiện số dư hiện tại (Lịch sử đơn / Ví đưa đơn xong sang Chi tiết đơn nên chỉ khi tự gõ địa chỉ);
 "Tạo mã mới" của đơn nạp đặt từ MÁY KHÁC (không có `kh_don_gui`) → về Thanh toán giỏ, vì `GET /don/:ma` không trả `ma_goi` (thẻ cùng giới hạn) — đề xuất POS
 trả `ma_goi` ở dòng nạp của `GET /don/:ma`.
+
+## Kiểm lại sau vòng 2 (17.11) — ở HEAD 66a0710
+- `npm test -- --day-du`: 66 đạt · 0 hỏng (thu_KHNAP1 127 · 0).
+- `node viec/KH-NAP-1/dot_bien_tay.js --trinh-duyet`: 13/13 BẮT ĐƯỢC · "TẤT CẢ ĐỘT BIẾN BỊ BẮT".
+- Cổng `chay`: kết quả ghi ở cuối file (chạy sau commit này, cây sạch).
+
+## Bài học
+Sự cố của việc: người gác chặn 23 lần (B-PHANTICH 5 · B-CHUONGTRINH 5 · chặn cụm bí mật 5 · B-CD-VITRI 4 · GIT-LENH 2 · SED-I 1 · GIT-ADD 1 —
+`.tu_chay_nhat_ky.jsonl`); 5 bài cũ đỏ bất ngờ ở `npm test` lần 1 (KHBAO1, KHNHANH1, KHUI3d, KHKHOP1, KHTHE2) + K2b; rà soát 2 vòng KHÔNG ĐẠT
+(vòng 1: SỐ CA sai dạng + giấy tờ C4–C6; vòng 2: ảnh C4 màn CŨ); vượt ngân sách ~1,3 lần (giải thích ở mục Ngân sách).
+1. **NGUYÊN TẮC** (đề xuất `KHUON_LOI.md`, ngoài Phạm vi — máy không sửa): "Màn CŨ bị đổi phải có cặp ảnh trước/sau + ảnh lệch ở 360/390/430".
+   Đã gây: KH-NAP-1 vòng 2 — Tài khoản, Theo dõi đơn nạp chỉ có ảnh "sau". Dấu hiệu: `so_anh/` chỉ có ảnh màn mới. Chặn: lập danh sách "màn cũ bị đổi" từ
+   `git diff --name-only -- src/pages` ngay ở kế hoạch, chụp bằng MỘT công cụ cùng POS giả cho cả hai cây (cây gốc kèm `public/`).
+   Lý do chưa KHOÁ: phép kiểm cần biết "màn nào cũ" — đề xuất KHOÁ sau ở cổng: việc đổi `src/pages/<X>.jsx` có sẵn trước mốc ⇒ `viec/<MÃ>/so_anh/`
+   phải có tệp mang tên màn kèm `truoc` và `lech`.
+2. **KHOÁ** (đề xuất, ngoài Phạm vi: `tu_chay/cong.js` đóng băng / `kiem_tra_truoc_khi_giao.js` thuộc Cấm): cổng `tinh` (không chỉ `chay`) bắt dòng
+   `SỐ CA <x>: N` mà `<x>` không phải `cong_cu/thu_*.js` có thật. Ca đỏ: bang_chung_do.txt có "SỐ CA thu_KHNAP1: 41" → ✗. Đã gây: vòng 1 việc này (A16 đỏ 4 lý do).
+3. **KHOÁ** (đề xuất, `kiem_tra_truoc_khi_giao.js` — Cấm): phép kiểm tĩnh "không `<button` bên trong phần tử dùng `bam(`" (lồng nút sai trợ năng).
+   Ca đỏ: UuDai.jsx bản trước vòng 2. Trong Phạm vi đã KHOÁ bằng ca trình duyệt thu_KHNAP1 "B1 không nút lồng trong phần tử bấm được".
+4. **NGUYÊN TẮC** (đề xuất `KHUON_LOI.md`): "Thanh toán / Theo dõi đơn KHÔNG đọc kho chung (duLieuKhach.js) — luôn gọi mới". Đã gây: KH-NAP-1 dùng
+   `cuaGoiNap` / `cuaToi` ở hai màn đó, thu_KHBAO1 A3 + thu_KHNHANH1 E4/F1/F2 đỏ. Đã có bài thử khoá; bài học là ĐỌC ràng buộc cũ lúc lập kế hoạch —
+   đề xuất thêm vào bước 3 của skill: "grep cong_cu/thu_*.js tìm bài nhắc tới tệp sắp sửa".
+5. **BỎ** — K2b trùng tên `goiKho` (một lần, bộ kiểm đã bắt). Người gác chặn cụm bí mật / `process.env` trong tệp chưa commit (luật đã ghi trong skill; làm
+   đúng: commit trước, hoặc đổi cách — `LUU_ANH_DIR=.` + thư mục làm việc riêng). Bản sao gốc thiếu `public/` (công cụ nháp, đã sửa).
+6. Dọn: việc này không tạo phép kiểm nào thay được lời dặn đang có trong KHUON_LOI.md / CLAUDE.md.
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-NAP-1 — khách tự nạp tiền vào ví trên App (v17): màn Ví (số dư + lịch sử), bảng chọn gói, Thanh toán nạp chỉ QR, màn "Đã nạp".
+- **ĐÃ SỬA:** api.js (layGoiNap công khai, layVi) · duLieuKhach.js (cuaGoiNap) · canTuPos.js + KiemKhop.jsx (/goi-nap, /vi) · gio.js (laNap,
+  dongNapTuDuongDan, coDoUong, trangThaiDong/duocThanhToan + dsGoi) · datDon.js (dongGui, dungViCho, MA_NAP/laLoiNap, laDonChiNap, buocTienTrinh chiNap,
+  thamTaoMaMoi, monDatLai) · viTien.js (mới) · nd/viTien.js (mới) + nd/index.js · duongDan.js (/uudai/vi, /uudai/vi/nap) · BieuTuong.jsx (ví) ·
+  vi_tien.css (mới) · ViTien.jsx (mới) · UuDai.jsx · TaiKhoan.jsx · ThanhToan.jsx (KhoiNap) · TheoDoiDon.jsx (2 bước + DaNap) · Don.jsx · App.jsx.
+- **BÀI THỬ:** thu_KHNAP1 mới — 127 ca có Chromium / 41 ca KHONG_TRINH_DUYET=1, đỏ trên gốc (6·31 / 26·65). Bài cũ đổi có chủ đích: thu_KHUI3d, thu_KHKHOP1,
+  thu_KHTHE2 (đỏ trên gốc, SỐ CA trong bang_chung_do.txt). 13 đột biến tay đều bắt. `npm test -- --day-du` 66 · 0.
+- **ĐÃ RÀ K4:** mọi chỗ cùng khuôn dòng thẻ (laThe / cheDoThe / trangThaiDong / buocTienTrinh / thamTaoMaMoi / monDatLai / boDongDaGui / tenGui khối "chưa rõ")
+  đã có nhánh nạp; BaoDonXong, HoaDonKhach, maDonDaTra không cần nhánh riêng (2 người soát xác nhận).
+- **CHƯA KIỂM:** chuyển khoản QR thật và tiền về muộn trên POS thật (C7 — chủ quán thử tay, 3 thao tác ở trên); trình duyệt Zalo, chữ phóng to máy thật
+  ở màn Ví / bảng gói; `ma_don` mã bill quầy mở được bằng GET /don/:ma (chỉ đọc hợp đồng); ảnh màn MỚI ở 360/430 (chỉ có 390; màn cũ đủ 3 cỡ); ẩn nút
+  "Đặt lại" ở danh sách đơn nạp (cần POS thêm trường — Câu 2). Rà soát vòng 3 KHÔNG chạy (vòng 2: code không lỗi chặn gộp; lỗi giấy tờ đã sửa) — chat soát cuối.
+- **GIT:** nhánh viec/KH-NAP-1, mốc d6f0f88^, mỗi tệp một commit có mã việc, đã push. Không merge, không PR.
+- **BÀI HỌC:** mục "Bài học" ở trên — 2 NGUYÊN TẮC, 2 KHOÁ đề xuất (ngoài Phạm vi), 1 KHOÁ đã làm (ca trình duyệt nút lồng).
