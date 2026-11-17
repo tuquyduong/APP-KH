@@ -10,6 +10,7 @@ import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import HoaDonKhach from '../components/HoaDonKhach.jsx';
 import { cauTienVe, docHoaDon, soDon } from '../hoaDon.js';
+import { tachBieuTuong } from '../quangCao.js';
 
 // Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
 // `datLai` — cùng cờ DAT_ONLINE) để App đọc chi tiết đơn rồi bỏ món vào giỏ theo `ma`;
@@ -38,7 +39,7 @@ export function ChiTietDon({ ma, lui }) {
             {docHoaDon(don).length > 0 ? <HoaDonKhach don={don} /> : <>
               {don.mon.map((m, i) => (
                 <div className="summary-row" key={i} {...ndDau('dh.tien')}>
-                  <span>{m.so_luong} × {m.ten}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
+                  <span>{m.loai === 'nap' ? tachBieuTuong(m.ten).chu : <>{m.so_luong} × {m.ten}</>}{m.ghi_chu && <div className="date">{m.ghi_chu}</div>}</span>
                   <span>{dinhDangGia(m.thanh_tien)}</span>
                 </div>
               ))}
