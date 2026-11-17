@@ -24,7 +24,7 @@ function DongMenu({ bieuTuong, ten, phu, chon }) {
   );
 }
 
-export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moTracNghiem, moUuDai, dangXuat }) {
+export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moTracNghiem, moUuDai, moVi, dangXuat }) {
   const tai = dungCua(cuaToi);
   const diem = dungCua(cuaDiem);
   const voucher = dungCua(cuaVoucher);
@@ -44,7 +44,7 @@ export default function TaiKhoan({ luu, klLuu, moDon, moQR, moHoSo, moHoTro, moT
               </div>
               {(typeof khach.so_du_vi === 'number' || diem.dl || soVoucher !== null) && (
                 <div className="acc-q" onClick={(e) => e.stopPropagation()}>
-                  {typeof khach.so_du_vi === 'number' && <div {...ndDau('tk.khach')}><b>{dinhDangGia(khach.so_du_vi)}</b><Chu k="tk.vi" as="small" /></div>}
+                  {typeof khach.so_du_vi === 'number' && <div {...bam(moVi)} {...ndDau('tk.khach')}><b>{dinhDangGia(khach.so_du_vi)}</b><Chu k="tk.vi" as="small" /></div>}
                   {diem.dl && <div {...bam(moUuDai)} {...ndDau('tk.khach')}><b>{dinhDangSo(diem.dl.points)}</b><Chu k="tk.diem" as="small" /></div>}
                   {soVoucher !== null && <div {...bam(moUuDai)} {...ndDau('tk.khach')}><b>{soVoucher}</b><Chu k="tk.voucher" as="small" /></div>}
                 </div>
