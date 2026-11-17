@@ -279,13 +279,14 @@ async function trinhDuyet(pw) {
     await doiChu(t, '#wallet', /Lịch sử ví/);
     k('B2 /goi-nap rỗng → màn Ví KHÔNG có nút "Nạp tiền", vẫn số dư + lịch sử', !(await co(t, '#wallet .vt-hero-nut')) && /180\.600đ/.test(await chu(t, '#wallet .vt-hero')) && (await t.locator('#wallet .tx-item').count()) === 5);
     await t.goBack(); await doiChu(t, '#rewards .wallet-row', /180\.600đ/);
-    await t.locator('#rewards .wallet-box').nth(1).focus(); await t.keyboard.press('Enter');
-    k('B1 Enter trên ô "Số dư ví" → /uudai/vi', await doiUrl(t, /^\/uudai\/vi$/), duongDan(t));
+    await t.locator('#rewards .wallet-box').nth(1).locator('button').first().focus(); await t.keyboard.press('Enter');
+    k('B1 Enter (bàn phím) trên ô "Số dư ví" → /uudai/vi', await doiUrl(t, /^\/uudai\/vi$/), duongDan(t));
   });
 
   them('B1 Ưu đãi — có gói, Tài khoản', {}, async (t) => {
     await mo(t, '/uudai'); await t.waitForSelector('#rewards .vt-nap');
     k('B1 có gói → nút nhỏ "+ Nạp tiền" dưới số dư', /Nạp tiền/.test(await chu(t, '#rewards .vt-nap')));
+    k('B1 không nút lồng trong phần tử bấm được (trợ năng — rà soát vòng 2)', (await t.evaluate(() => document.querySelectorAll('#rewards [role="button"] button, #rewards button button').length)) === 0);
     await chup(t, 'uu_dai');
     await gomNd(t);
     await t.locator('#rewards .vt-nap').click();
@@ -403,6 +404,8 @@ async function trinhDuyet(pw) {
     k('B4 ?goi= lạ → KHÔNG gọi bao-gia, không nút đặt', S.bg.length === 0 && !(await co(t, '#checkout .nut-dat')));
     await t.locator('#checkout button', { hasText: 'Về Ví' }).click();
     k('B4 "Về Ví" → /uudai/vi', await doiUrl(t, /^\/uudai\/vi$/), duongDan(t));
+    await t.goBack().catch(() => {}); await t.waitForTimeout(300);
+    k('B4 "Về Ví" THAY trang (Back không quay lại Thanh toán nạp lỗi — rà soát vòng 2)', !/\/uudai\/vi\/nap/.test(t.url()), t.url());
   });
 
   them('B4 /goi-nap lỗi', { goiLoi: true }, async (t, S) => {
