@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { layVi } from '../api.js';
+import { layToi, layVi } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dungCua, cuaToi } from '../duLieuKhach.js';
 import { dongNapCuaDon } from '../viTien.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { nd, ndAnh, ndDau, ndHien, ndPhan } from '../noiDung/nd.js';
@@ -88,12 +87,9 @@ const layViDau = () => layVi(1);
 const viNap = (dl) => (dl && dl.khach ? dl.khach.so_du_vi : null);
 
 // Đơn CHỈ nạp đã trả (v17: tiền về đủ → `xong` ngay) → màn "Đã nạp" (bản thiết kế 16.11 Màn 5, khuôn Chào mừng). Số đã nạp + thưởng = dòng `nap` của ĐÚNG đơn này trong
-// GET /vi (đọc khi mở màn); không thấy → tiêu đề chung, không số. Số dư mới = `so_du_vi` của /toi đọc LẠI khi màn mở (bản trước lúc mở không dùng — có thể là số cũ).
+// GET /vi (đọc khi mở màn); không thấy → tiêu đề chung, không số. Số dư mới = `so_du_vi` của GET /toi gọi MỚI khi màn mở (không đọc kho chung — có thể là số cũ).
 function DaNap({ don, moMenu, moVi }) {
-  const toi = dungCua(cuaToi);
-  const [lucMo] = useState(Date.now);
-  useEffect(() => { cuaToi.lay(); }, []);
-  const toiMoi = cuaToi.kho.lay().luc >= lucMo ? viNap(toi.dl) : null;
+  const toiMoi = viNap(dungTai(layToi).dl);
   const dong = dongNapCuaDon(dungTai(layViDau).dl, don.ma);
   const pos = ndDau('nap.dn.pos');
   const so = dong && dinhDangGia(dong.soTien);
