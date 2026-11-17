@@ -116,12 +116,15 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: tenDong(d) }); doi(xoaDong(gio, i)); };
   const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
   const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
-  const { bg, loi } = dungBaoGia(gio, { maGiam, vouchers }, dangNhap && coMenu && coThe);
+  const hoi = dangNhap && coMenu && coThe; // có hỏi POS báo giá không
+  const { bg, loi } = dungBaoGia(gio, { maGiam, vouchers }, hoi);
   const bgCu = useRef(null);
   if (bg) bgCu.current = bg;
-  const [vuaChon, datVuaChon] = useState('');
-  const cham = (ma, tich) => { datVuaChon(tich ? '' : ma); chamVc(ma, tich); };
-  useEffect(() => { if (bg) datVuaChon(''); }, [bg]); // báo giá mới đã nói ô vừa chọn có được tính không
+  // Ô khách vừa chạm chọn: tích tạm CHỈ khi đang thật sự chờ báo giá cho đúng giỏ lúc chạm (không hỏi POS / giỏ đã đổi / báo giá đã về → theo POS).
+  const khoaGio = JSON.stringify(gio);
+  const [vuaChon, datVuaChon] = useState(null); // { ma, khoaGio }
+  const cham = (ma, tich) => { datVuaChon(tich ? null : { ma, khoaGio }); chamVc(ma, tich); };
+  const choChon = hoi && !bg && vuaChon && vuaChon.khoaGio === khoaGio ? vuaChon.ma : '';
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
   return (
     <Man id="cart">
@@ -136,7 +139,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
       ) : (
         <>
           {gio.map((d, i) => <DongGio key={`${d.ma}|${d.ghi_chu}`} dong={d} i={i} gio={gio} ds={ds} doi={doi} loiPos={monLoi && monLoi.ma === d.ma ? monLoi.chu : ''} xoa={xoaMon} />)}
-          {dangNhap && <VoucherGio vi={vi} bg={bg} bgCu={bgCu.current} boTay={boTay} vuaChon={vuaChon} cham={cham} />}
+          {dangNhap && <VoucherGio vi={vi} bg={bg} bgCu={bgCu.current} boTay={boTay} vuaChon={choChon} cham={cham} />}
           <div className="sec-head vc-dau-ma"><Chu k="gio.ma.tieuDe" as="h2" /><Chu k="gio.ma.mot" className="vc-dau-phai" /></div>
           <div className="promo-box">
             <input placeholder={nd('gio.ma.goiYKm')} aria-label={nd('gio.ma.aria')} {...ndDau('gio.ma.goiYKm')} maxLength={30} value={o} onChange={(e) => datO(e.target.value)} />
