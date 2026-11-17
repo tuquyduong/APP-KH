@@ -21,8 +21,9 @@ const nap = async (f) => { try { return await import(pathToFileURL(path.join(GOC
 
 // Tệp A1 của phiếu: chữ khách đọc đã chuyển hết vào danh mục.
 const A1 = ['src/pages/ThanhToan.jsx', 'src/pages/TheoDoiDon.jsx', 'src/pages/Don.jsx', 'src/components/PinSheet.jsx', 'src/components/TheQR.jsx', 'src/components/BaoDonXong.jsx',
-  'src/components/HoaDonKhach.jsx', 'src/components/TrangTai.jsx', 'src/baoDonXong.js', 'src/datDon.js'];
-const NHOM = /^(tt|td|dh|hd|pin|qr|bao|khung|giam|loi)\.[\w.]+$/;
+  'src/components/HoaDonKhach.jsx', 'src/components/TrangTai.jsx', 'src/baoDonXong.js', 'src/datDon.js', 'src/pages/GioHang.jsx'];
+// KH-VC-2: nhóm gio.vc.* / gio.ma.* (mục voucher + tiêu đề ô mã ở Giỏ hàng, man "Giỏ hàng") khai ở donHang.js theo phiếu B6 — các gio.* khác vẫn ở menu.js.
+const NHOM = /^(tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio\.vc|gio\.ma)\.[\w.]+$/;
 // Chữ mặc định phải y hệt chữ đang chạy trước việc này (chép từ bản gốc fe752c3).
 const GOC_CHU = {
   'tt.tieuDe': 'Thanh toán', 'tt.phu': 'Chọn cách nhận hàng & trả tiền', 'tt.nhan.giao.phu': 'Giao qua Ahamove · Sắp có', 'tt.vi.nhan': 'Trừ từ số dư ví',
@@ -45,13 +46,14 @@ const GOC_CHU = {
   const loi = typeof ND.kiemDanhMuc === 'function' ? ND.kiemDanhMuc(DM) : ['thiếu kiemDanhMuc'];
   k('A1 kiemDanhMuc(toàn bộ danh mục) = 0 lỗi', loi.length === 0 && DH.length > 0, loi.slice(0, 3).join(' | '));
   const man = new Set(DH.map((m) => m.man));
-  k('A1 `man` chỉ gồm Thanh toán · Theo dõi đơn · Đơn hàng · Bảng PIN · Khung chung', DH.length > 0 && [...man].every((x) => ['Thanh toán', 'Theo dõi đơn', 'Đơn hàng', 'Bảng PIN', 'Khung chung'].includes(x)), [...man].join(','));
+  k('A1 `man` chỉ gồm Thanh toán · Theo dõi đơn · Đơn hàng · Bảng PIN · Khung chung · Giỏ hàng (KH-VC-2: CHỈ gio.vc.* / gio.ma.*)', DH.length > 0 && [...man].every((x) => ['Thanh toán', 'Theo dõi đơn', 'Đơn hàng', 'Bảng PIN', 'Khung chung', 'Giỏ hàng'].includes(x))
+    && DH.filter((m) => m.man === 'Giỏ hàng').every((m) => /^gio\.(vc|ma)\./.test(m.khoa)), [...man].join(','));
   k('A1 mọi khoá của nhóm này đúng dạng tiền tố, không trùng khoá của nhóm khác', DH.length > 0 && DH.every((m) => NHOM.test(m.khoa)) && DM.filter((m) => NHOM.test(m.khoa)).length >= DH.length);
   const H = require(path.join(GOC, 'cong_cu/ha_no_chu.js'));
   const du = A1.filter((f) => H.demChuCung(docTho(f)) > 0);
   k('A1 tệp A1 hết chữ tiếng Việt viết thẳng (đếm chữ cứng = 0, không ngoại lệ)', du.length === 0, du.map((f) => `${f}=${H.demChuCung(docTho(f))}`).join(', '));
   const khoaDung = new Set(), khoaLa = [];
-  for (const f of A1) for (const m of doc(f).matchAll(/['"]((?:tt|td|dh|hd|pin|qr|bao|khung|giam|loi)\.[\w.]+)['"]/g)) { khoaDung.add(m[1]); if (!theo.has(m[1])) khoaLa.push(`${f}:${m[1]}`); }
+  for (const f of A1) for (const m of doc(f).matchAll(/['"]((?:tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio)\.[\w.]+)['"]/g)) { khoaDung.add(m[1]); if (!theo.has(m[1])) khoaLa.push(`${f}:${m[1]}`); }
   k('A1 mọi khoá dùng trong tệp A1 có trong danh mục', khoaDung.size >= 60 && khoaLa.length === 0, `${khoaDung.size} khoá · lạ: ${khoaLa.join(', ')}`);
   const thua = DH.map((m) => m.khoa).filter((x) => !khoaDung.has(x));
   k('A1 không khoá thừa: mỗi khoá khai đều có chỗ dùng', DH.length > 0 && thua.length === 0, thua.join(', '));
