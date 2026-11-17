@@ -91,3 +91,11 @@ NGHIỆM THU người soát đếm: 12/16 có bằng chứng; thiếu C4, C5, C6
 1. Ưu đãi → bấm ô "Số dư ví" → màn Ví: số dư + Lịch sử ví đúng. Bấm "Nạp tiền" → chọn gói nhỏ nhất → "Tiếp tục" → "Quét QR".
 2. Chuyển khoản thật → màn tự sang "Đã nạp …": số dư mới, số vừa vào; về Ví thấy dòng "Nạp tiền" mới đứng đầu.
 3. Nạp thêm một lần, ở màn QR bấm "Huỷ đơn" → đơn huỷ, số dư không đổi.
+
+## Kiểm cuối (C6, 17.11) — ở HEAD 4020ef4, cây sạch
+- `npm test -- --day-du` (bộ kiểm tĩnh + dựng app + mọi cong_cu/thu_*.js, CÓ Chromium): 66 đạt · 0 hỏng (thu_KHNAP1 125 · 0; K10 không tăng — tệp mới 0 chữ cứng).
+- `node tu_chay/cong.js tinh . d6f0f88^ HEAD viec/KH-NAP-1`: chỉ ✗ [A19] (chưa có dòng HEAD ĐÃ KIỂM lúc chạy — bình thường).
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d6f0f88^ HEAD viec/KH-NAP-1`: ✓ CỔNG CHẠY ĐẠT
+  (cảnh báo A16: thu_KHNAP1 trên gốc in 37 ca ≠ 41 — bài DỪNG SỚM trên gốc ở ca A3 vì src/viTien.js chưa có; cổng ghi "bỏ qua").
+- Đột biến tay: 13/13 bắt được (`node viec/KH-NAP-1/dot_bien_tay.js --trinh-duyet`).
+HEAD ĐÃ KIỂM: 4020ef4
