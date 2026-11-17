@@ -6,15 +6,15 @@ import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
 import { cauTienVe } from './hoaDon.js';
 import { nd } from './noiDung/nd.js';
-import { laThe, coDoUong } from './gio.js';
+import { laThe, laNap, coDoUong } from './gio.js';
 
 const canMo = (f) => (...a) => (DAT_ONLINE ? f(...a) : Promise.reject(Object.assign(new Error(nd('loi.CHUA_MO')), { code: 'CHUA_MO' })));
 
 const so = (n) => typeof n === 'number' && Number.isFinite(n);
 const chu = (s) => String(s || '').trim();
 
-/** Một dòng giỏ → dòng thân: thẻ ĐÚNG { loai, hang_id, so_thang } (v13 — không ma / ghi chú / giá / số lượng); món { ma, so_luong, ghi_chu? } KHÔNG có `loai`. */
-const dongGui = (d) => (laThe(d) ? { loai: 'the', hang_id: d.hang_id, so_thang: d.so_thang } : chu(d.ghi_chu) ? { ma: d.ma, so_luong: d.so_luong, ghi_chu: d.ghi_chu } : { ma: d.ma, so_luong: d.so_luong });
+/** Một dòng giỏ → dòng thân: nạp ĐÚNG { loai, ma_goi } (v17); thẻ ĐÚNG { loai, hang_id, so_thang } (v13 — không ma / ghi chú / giá / số lượng); món { ma, so_luong, ghi_chu? } KHÔNG có `loai`. */
+const dongGui = (d) => (laNap(d) ? { loai: 'nap', ma_goi: d.ma_goi } : laThe(d) ? { loai: 'the', hang_id: d.hang_id, so_thang: d.so_thang } : chu(d.ghi_chu) ? { ma: d.ma, so_luong: d.so_luong, ghi_chu: d.ghi_chu } : { ma: d.ma, so_luong: d.so_luong });
 
 /** Thân `POST /gio/bao-gia`: mon[] (dongGui, giữ thứ tự giỏ), ma_giam (khi có), cach_nhan "tai_quan" (giao tận nơi: KH-MUA-2). Không gửi giá. */
 export function thanBaoGia(gio, { maGiam } = {}) {
@@ -106,6 +106,9 @@ const MA_DUNG = ['KHOA_GUI_DA_DUNG'];
 // Mã chặn mua thẻ (v13, 400 — trả TRƯỚC khi tạo đơn → loaiLoi 'chua_tao'): Thanh toán thẻ hiện nguyên lời POS, khoá nút, mời về Hạng thành viên.
 export const MA_THE = ['NHIEU_THE', 'HANG_CHI_CAP', 'GOI_HANG_KHONG_BAN', 'DA_CO_HANG_CAO_HON'];
 export const laLoiThe = (e) => !!e && MA_THE.includes(e.code);
+// Mã chặn nạp ví (v17, 400 — chưa tạo đơn): Thanh toán nạp hiện nguyên lời POS, khoá nút, mời về Ví.
+export const MA_NAP = ['GOI_NAP_KHONG_CO', 'NAP_KHONG_GOP', 'NAP_CHI_TIEN_MAT_QR'];
+export const laLoiNap = (e) => !!e && MA_NAP.includes(e.code);
 
 export function loaiLoi(e) {
   if (e && e.code === 'CHUA_MO') return 'chua_tao';
@@ -140,10 +143,10 @@ export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat
 }
 
 /**
- * Đơn sắp gửi có được dùng ví không — MỘT luật (chủ quán 14.11: thẻ hạng không trả bằng số dư — tiền nạp có thưởng): đơn có dòng thẻ → KHÔNG BAO GIỜ
- * (kể cả công tắc nhớ `kh_dung_vi` đang bật) → cách trả 'qr'; đơn đồ uống → theo công tắc (`congTac`) như cũ.
+ * Đơn sắp gửi có được dùng ví không — MỘT luật (chủ quán 14.11: thẻ hạng không trả bằng số dư — tiền nạp có thưởng): đơn có dòng thẻ hoặc dòng nạp (v17
+ * `NAP_CHI_TIEN_MAT_QR`) → KHÔNG BAO GIỜ (kể cả công tắc nhớ `kh_dung_vi` đang bật) → cách trả 'qr'; đơn đồ uống → theo công tắc (`congTac`) như cũ.
  */
-export const dungViCho = (gio, congTac) => !!congTac && !gio.some(laThe);
+export const dungViCho = (gio, congTac) => !!congTac && !gio.some((d) => laThe(d) || laNap(d));
 
 /** Cách trả được chọn theo số dư /toi mới và tổng báo giá: ví đủ → vi; 0 < dư < tổng → vi_qr. Số thật (giu_vi, con_lai) do POS trả. */
 export function cachTraDuoc(tong, soDu) {
@@ -225,12 +228,16 @@ export function hangCuaDon(g, dsHang) {
   const the = theCuaBanGhi(g);
   return (the && Array.isArray(dsHang) ? dsHang.find((x) => x && x.id === the.hang_id) : null) || null;
 }
-/** "Tạo mã mới": đơn CHỈ thẻ → Thanh toán thẻ đúng hạng + gói của đơn đó; đơn khác / không bản ghi → Thanh toán giỏ. */
+/** "Tạo mã mới": đơn CHỈ nạp → Thanh toán nạp đúng gói; đơn CHỈ thẻ → Thanh toán thẻ đúng hạng + gói của đơn đó; đơn khác / không bản ghi → Thanh toán giỏ. */
 export function thamTaoMaMoi(g) {
+  const nap = g && g.than && laDonChiNap(g.than) ? g.than.mon[0] : null;
+  if (nap) return { trang: 'napvi', tham: { goi: nap.ma_goi } };
   const the = g && g.than && laDonChiThe(g.than) ? theCuaBanGhi(g) : null;
   return the ? { trang: 'thanhtoanthe', tham: { h: the.hang_id, thang: the.so_thang } } : { trang: 'thanhtoan', tham: {} };
 }
 /** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
+/** Đơn CHỈ có dòng nạp (v17: đơn nạp có đúng một dòng). */
+export const laDonChiNap = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every(laNap);
 export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
 export const hanMoiThe = (don) => chu(((don && Array.isArray(don.hoa_don) ? don.hoa_don : []).find((d) => d && d.loai === 'the') || {}).ghi_chu);
@@ -270,8 +277,10 @@ const BUOC = {
   da_giao: { t: 'td.buoc.da_giao', ic: 'flag' },
   da_huy: { t: 'td.buoc.da_huy', ic: 'close' },
   the_kich_hoat: { t: 'the.td.kichHoat', ic: 'bolt' }, // đơn CHỈ thẻ: bước 2 (KH-THE-3); dòng phụ theo có biết mức giảm hay không
+  nap_vao_vi: { t: 'nap.td.vaoVi', s: 'nap.td.vaoVi.s', ic: 'wallet' }, // đơn CHỈ nạp: bước 2 (KH-NAP-1)
 };
 const THE_CHI = ['cho_tra', 'the_kich_hoat'];
+const NAP_CHI = ['cho_tra', 'nap_vao_vi'];
 const TAI_QUAN = ['cho_tra', 'da_tra', 'dang_lam', 'xong'];
 const GIAO = ['cho_tra', 'da_tra', 'dang_lam', 'dang_giao', 'da_giao'];
 const KET_THUC = ['xong', 'da_giao', 'da_huy'];
@@ -280,9 +289,13 @@ const DA_XONG = ['da_tra', 'xong', 'da_giao']; // trạng thái là "đã làm x
 /**
  * { ds[] { ma, t, s, ic, kt, ks }, hien, xongBuocHien } — t / s = chữ hiện, kt / ks = khoá nội dung của chúng; `hien` = chỉ số bước đang ở; `xongBuocHien` = bước đó đã xong.
  * Đơn CHỈ thẻ (`chiThe`, KH-THE-3): hai bước "Chờ thanh toán" → "Thẻ kích hoạt" (POS đi thẳng chờ trả → xong, không pha chế / ra quầy); `phanTram` (mức giảm của hạng) có thì
- * dòng phụ nói thêm "đơn đồ uống tiếp theo được giảm …%". Đơn đồ uống không đổi.
+ * dòng phụ nói thêm "đơn đồ uống tiếp theo được giảm …%". Đơn CHỈ nạp (`chiNap`, KH-NAP-1): "Chờ thanh toán" → "Đã vào ví". Đơn đồ uống không đổi.
  */
-export function buocTienTrinh(tt, { chiThe = false, phanTram = null } = {}) {
+export function buocTienTrinh(tt, { chiThe = false, chiNap = false, phanTram = null } = {}) {
+  if (chiNap && tt !== 'da_huy') {
+    const ds = NAP_CHI.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(BUOC[m].s ? { s: nd(BUOC[m].s), ks: BUOC[m].s } : {}) }));
+    return { ds, hien: tt === 'cho_tra' || !tt ? 0 : 1, xongBuocHien: tt === 'xong' }; // chỉ tích "Đã vào ví" khi POS báo xong
+  }
   if (chiThe && tt !== 'da_huy') {
     const ks = so(phanTram) ? 'the.td.kichHoat.sPhanTram' : 'the.td.kichHoat.s';
     const ds = THE_CHI.map((m) => ({ ma: m, t: nd(BUOC[m].t), ic: BUOC[m].ic, kt: BUOC[m].t, ...(m === 'the_kich_hoat' ? { s: nd(ks, { phanTram }), ks } : {}) }));
@@ -293,13 +306,13 @@ export function buocTienTrinh(tt, { chiThe = false, phanTram = null } = {}) {
 }
 export const xongChua = (tt) => KET_THUC.includes(tt);
 
-/** "Đặt lại" một đơn cũ: món có `ma` còn trong menu → dòng giỏ; món còn lại đếm `boQua`. Dòng thẻ hạng (v13) không đặt lại, không đếm là "không còn bán". */
+/** "Đặt lại" một đơn cũ: món có `ma` còn trong menu → dòng giỏ; món còn lại đếm `boQua`. Dòng thẻ hạng (v13) / dòng nạp (v17) không đặt lại, không đếm là "không còn bán". */
 export function monDatLai(don, ds) {
   const them = [];
   let boQua = 0;
   ((don && don.mon) || []).forEach((m) => {
     if (m.ma && (ds || []).some((x) => x.ma === m.ma) && Number.isInteger(m.so_luong) && m.so_luong > 0) them.push({ ma: m.ma, so_luong: m.so_luong, ghi_chu: chu(m.ghi_chu) });
-    else if (m.loai !== 'the') boQua++;
+    else if (m.loai !== 'the' && m.loai !== 'nap') boQua++;
   });
   return { them, boQua };
 }
