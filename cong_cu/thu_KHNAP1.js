@@ -405,6 +405,14 @@ async function trinhDuyet(pw) {
     k('B4 "Về Ví" → /uudai/vi', await doiUrl(t, /^\/uudai\/vi$/), duongDan(t));
   });
 
+  them('B4 /goi-nap lỗi', { goiLoi: true }, async (t, S) => {
+    await mo(t, '/uudai/vi/nap?goi=1');
+    k('B4 /goi-nap lỗi → câu lỗi + "Thử lại" + lối ra "Về Ví", không báo giá', (await doiChu(t, '#checkout', /Thử lại/)) && /Về Ví/.test(await chu(t, '#checkout')) && S.bg.length === 0);
+    S.goiLoi = false;
+    await t.locator('#checkout button', { hasText: 'Thử lại' }).click();
+    k('B4 "Thử lại" → có gói, báo giá, nút "Quét QR · 100.000đ"', await doiChu(t, '#checkout .nut-dat', /Quét QR · 100\.000đ/), await chu(t, '#checkout .nut-dat'));
+  });
+
   for (const code of ['GOI_NAP_KHONG_CO', 'NAP_KHONG_GOP', 'NAP_CHI_TIEN_MAT_QR']) {
     them(`B4 lỗi ${code}`, { kich: [{ st: 400, o: { error: `Lời POS giả: ${code}`, code } }] }, async (t, S) => {
       await mo(t, '/uudai/vi/nap?goi=1');
