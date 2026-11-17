@@ -4,6 +4,11 @@ const bien = (lop, ten) => `#${lop}-${ten}`;
 
 // Biểu tượng nét đơn của demo chưa có trong bộ <symbol> của index.html (chép nguyên <symbol> của demo), dùng qua IcoVe.
 const ICO_NHUNG = {
+  wallet: (
+    <>
+      <path className="tq-d" d="M4 8.6A2.6 2.6 0 016.6 6H18a2 2 0 012 2v9.2a2.6 2.6 0 01-2.6 2.6H6.6A2.6 2.6 0 014 17.2z" /><path className="tq-s" d="M4 8.6A2.6 2.6 0 016.6 6H18a2 2 0 012 2v9.2a2.6 2.6 0 01-2.6 2.6H6.6A2.6 2.6 0 014 17.2z" /><path className="tq-s" d="M4 9.4h13.4" /><rect className="tq-s" x="14.4" y="12.6" width="5.6" height="3.6" rx="1.3" /><circle className="tq-f" cx="16.5" cy="14.4" r="0.7" />
+    </>
+  ),
   bolt: (
     <>
       <path className="tq-d" d="M13.2 3.4 5.4 13.2h5.6l-1 7.4 8.6-10.4h-5.6z" /><path className="tq-s" d="M13.2 3.4 5.4 13.2h5.6l-1 7.4 8.6-10.4h-5.6z" />
