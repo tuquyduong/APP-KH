@@ -236,9 +236,9 @@ export function thamTaoMaMoi(g) {
   return the ? { trang: 'thanhtoanthe', tham: { h: the.hang_id, thang: the.so_thang } } : { trang: 'thanhtoan', tham: {} };
 }
 /** Đơn CHỈ có thẻ hạng (mọi dòng `mon[]` loai "the"). */
+export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Đơn CHỈ có dòng nạp (v17: đơn nạp có đúng một dòng). */
 export const laDonChiNap = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every(laNap);
-export const laDonChiThe = (don) => !!don && Array.isArray(don.mon) && don.mon.length > 0 && don.mon.every((m) => m && m.loai === 'the');
 /** Chữ hạn mới của thẻ — NGUYÊN `ghi_chu` POS ở dòng `hoa_don[]` loai "the"; không có → ''. */
 export const hanMoiThe = (don) => chu(((don && Array.isArray(don.hoa_don) ? don.hoa_don : []).find((d) => d && d.loai === 'the') || {}).ghi_chu);
 
