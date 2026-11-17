@@ -268,5 +268,53 @@ BÀI HỌC:
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở 4a43f51, cây sạch: `✓ CỔNG CHẠY ĐẠT` (+ cảnh báo A16 — bài dừng sớm trên gốc).
 - Bài học thêm (vòng 3): NGUYÊN TẮC — trạng thái tạm trên màn gắn với MỘT yêu cầu đang bay, kết thúc (kết quả / lỗi / bị thay) thì bỏ; cách chắc nhất là KHÔNG có trạng thái tạm
   khi kế hoạch không đòi (việc này: tôi tự thêm "tích tạm" ngoài kế hoạch → hai vòng lỗi). Đề xuất `KHUON_LOI.md` K3 (ngoài Phạm vi). KHOÁ đã làm: ca không hỏi / hỏi lỗi / hỏi lại vì lý do khác
-  + một đột biến cho mỗi điều kiện con.
+  + đột biến (dòng này đã sửa sau soát xác nhận — xem dưới: KHÔNG phải mọi điều kiện con đều có đột biến).
 HEAD ĐÃ KIỂM: 4a43f51
+
+## Soát độc lập — xác nhận sau vòng sửa cuối (agent mới, `/ra-soat`, 17.11) — chép nguyên
+```
+ĐẠT. Hành vi App đúng phiếu. Còn một lỗi nhẹ, chỉ ở bài thử và một câu trong trang_thai, code src/ không sai. Vá lỗi này không cần vòng sửa code thứ 4: chỉ thêm một ca thử và sửa một câu trong trang_thai. Nếu muốn giữ đúng chữ K1 / C3 thì vá trước khi gộp.
+
+LỖI TÌM ĐƯỢC:
+  viec/KH-VC-2/trang_thai.md:269–271 (cùng src/pages/GioHang.jsx:123, viec/KH-VC-2/dot_bien_tay.js:37–40) — Câu "KHOÁ đã làm: … một đột biến cho mỗi điều kiện con" không đúng. Điều kiện con `hoi` trong `bgVc = bg || (hoi && !loi ? bgCu.current : null)` không có đột biến riêng, và không ca nào bắt được nó.
+  - Đã thử ở bản chép nháp scratchpad/m1: đổi thành `bg || (!loi ? bgCu.current : null)` thì `node cong_cu/thu_KHVC2.js` vẫn 102 đạt · 0 hỏng (đột biến này sống).
+  - Lý do: ca "chua-co-menu" (thu_KHVC2.js:415) không hỏi báo giá ngay từ đầu, nên `bgCu` chưa bao giờ có giá trị.
+  - Ca còn thiếu: đã có báo giá (VC7 tích), sau đó `hoi` thành false (món hết làm `coThe` false, hoặc menu lỗi). Khi đó đột biến giữ tích VC7 mãi mà POS không xác nhận. Đây đúng là loại lỗi của vòng 2.
+  - Khuôn: K1 (khẳng định không căn cứ) và K3 (bài thử chưa khoá một nhánh của đường hiển thị). Cách vá: thêm ca "đã báo giá → hết hỏi → không ô nào tích" và đột biến `VS-GIU-BAO-GIA-CU-KHI-KHONG-HOI` (gỡ `hoi &&`).
+
+NGHI NGỜ:
+  - GioHang.jsx:121–123: `bgCu` không bị xoá khi báo giá lỗi. Ví dụ: báo giá lỗi (không ô nào tích), rồi khách đổi giỏ. Trong lúc chờ báo giá mới, ô lại hiện tích / câu đỏ của báo giá TRƯỚC lần lỗi. Sau đó báo giá mới về và màn đúng lại. Đây là nhấp nháy ngắn, không đụng tiền: BangTien vẫn hiện "chờ", nút đặt ở Thanh toán theo `bg` riêng. Khớp chữ "giữ báo giá cuối" nhưng không khớp ý "lỗi → không tích". Có thể xoá `bgCu.current` khi có `loi`. Chưa thử trong Chromium.
+  - Đánh đổi của vòng 3: chạm một ô chưa tích thì khoảng 0,6–1 giây không có phản hồi gì. Nếu POS vẫn từ chối thì không có gì đổi. trang_thai:255 đã ghi rõ. Lý do hợp lý, đúng kế hoạch đã duyệt ("tích CHỈ khi dung").
+  - Đã đọc và thấy KHÔNG phải lỗi: `bgCu` không mang sang khách khác (taiTab chỉ gắn khi trang === t, App.jsx:227; donPhien về /trangchu nên GioHang tháo ra); `CHUA_MO` chỉ do cờ DAT_ONLINE (datDon.js:11; caiDat.js:4 = true); chạm hai lần lúc đang chờ không đảo trạng thái.
+  - Ví đang tải hoặc lỗi thì `vouchers` = [] và đơn đi không có voucher (App.jsx:148–149). Không sai tiền (`tong_da_xem` = báo giá đang hiện). Đã chấp nhận ở vòng trước, lý do hợp lý.
+
+NGHIỆM THU:    14/15 mục có bằng chứng · mục thiếu: C7 (chủ quán thử tay sau gộp, đúng như phiếu).
+  A1 ✓ · A2 ✓ · B1 ✓ · B2 ✓ · B3 ✓ (hai ca vòng 3 đỏ trên code vòng 2: 100 · 2) · B4 ✓ · B5 ✓ · B6 ✓ · C1 ✓ (102 · 0; KHONG_TRINH_DUYET=1 28 · 0 = SỐ CA) · C2 ✓ · C3 ~ (22 đột biến đủ 7 loại phiếu đòi, thiếu đột biến cho `hoi`) · C4 ✓ · C5 ✓ · C6 ✓ (npm test 63 · 0) · C7 —
+  Soát thêm đều đạt: K4, K5, không dist/, đủ trong Phạm vi, không đụng tệp Cấm, §6, §11, React.
+
+CHƯA SOÁT ĐƯỢC: không chạy --day-du, cổng chay, dot_bien_tay.js --trinh-duyet toàn bộ (chỉ thử một đột biến tự viết); không thử POS thật (mã trùng ma_giam / vouchers, dạng expires_at — đã ghi ## Câu hỏi); không thử điện thoại thật, Zalo, /admin; chưa kiểm lúc gộp với KH-NAP-1 (đơn nạp phải đi KHONG_MA); ca "báo giá lỗi rồi đổi giỏ" chưa dựng trong Chromium.
+
+BÀI HỌC:
+  - KHOÁ: biểu thức hiển thị có nhiều điều kiện con thì mỗi điều kiện con cần một đột biến được kiểm là BỊ BẮT. Ca "không hỏi" phải dựng từ trạng thái ĐÃ có kết quả trước (ở đây `bgCu` có giá trị), nếu không nhánh đó trống rỗng.
+  - NGUYÊN TẮC (K1): trước khi viết "mỗi điều kiện con đều có đột biến" vào trang_thai, liệt kê từng điều kiện con kèm tên đột biến bắt nó.
+```
+
+### Sau soát xác nhận — không sửa code (đã hết 3 vòng sửa)
+- Sửa câu K1 ở trên. Bảng điều kiện con của `bgVc = bg || (hoi && !loi ? bgCu.current : null)` (GioHang.jsx) và `tich = !ship && !bo && tt === 'dung'`:
+  | Điều kiện con | Đột biến / ca bắt |
+  |---|---|
+  | `bg ||` (giữ báo giá cuối lúc chờ) | BV-CHO-BAO-GIA-NHAP-NHAY — ca 'gio' "đang chờ báo giá mới" |
+  | `!loi` | VS-GIU-BAO-GIA-CU-KHI-LOI — ca 'bao-gia-loi' |
+  | `hoi` | **CHƯA CÓ** — đột biến gỡ `hoi &&` SỐNG (người soát thử: 102 · 0). Cần ca "đã báo giá → hết hỏi (món hết / menu lỗi) → không ô nào tích" |
+  | `tt === 'dung'` (không tích khi 'cho') | VS-TICH-TRUOC-KHI-POS-TRA-LOI — ca 'chua-co-menu' |
+  | `!bo` | VS-TU-TICH-LAI-CAI-DA-BO / BV-KHONG-BO-MA-BO-TAY — ca 'gio' bỏ tay |
+  | `!ship` | VS-SHIP-CHAM-DUOC / BV-GUI-VOUCHER-SHIP — ca 'gio' ship |
+- Không làm thêm trong việc này (đã hết vòng sửa; người soát kết luận ĐẠT, code src/ không sai): ca + đột biến cho `hoi`, và nghi ngờ "báo giá lỗi rồi đổi giỏ → lúc chờ hiện lại báo giá trước lần lỗi"
+  (sửa 1 dòng: xoá `bgCu.current` khi có `loi`). → Đề xuất việc sau (chat soát gom), ghi ## Câu hỏi bên dưới.
+
+## Câu hỏi (cho chủ quán / chat soát — KHÔNG chặn gộp)
+- Đã hết 3 vòng sửa. Còn hai điểm nhỏ (không đụng tiền, POS vẫn quyết): (1) thêm ca thử + đột biến cho nhánh `hoi` của `bgVc` (chỉ bài thử); (2) xoá báo giá cũ khi báo giá lỗi để
+  lúc chờ báo giá kế tiếp không hiện lại tích của báo giá trước lần lỗi (1 dòng ở GioHang.jsx). Chủ quán cho làm tiếp trong việc này, hay gom vào việc sau?
+
+Kết luận: soát xác nhận ĐẠT; mọi commit đổi src/ / cong_cu/ (cuối: e714b19) nằm trước SHA dưới đây; sau đó chỉ đổi viec/KH-VC-2/trang_thai.md. Cổng chay ĐẠT ở 4a43f51.
+HEAD ĐÃ KIỂM: b43e0ca
