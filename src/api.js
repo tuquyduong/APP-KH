@@ -31,7 +31,7 @@ function loiApi(status, code, error, duLieu = null) {
 }
 
 // Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
-const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh', '/quang-cao'];
+const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh', '/quang-cao', '/goi-nap'];
 
 // Chế độ sửa (/admin, KH-ADMIN-1 D7): MỌI lệnh GHI /api/kh bị chặn ở đây (không gửi), trừ báo giá + đăng nhập khách (để xem các màn). Lỗi chặn là 4xx có `code`
 // → datDon.loaiLoi coi là "chưa tạo" (không tự gửi lại, không kẹt bản ghi "chưa rõ").
@@ -89,6 +89,8 @@ export const layGioVang = () => goi('GET', '/gio-vang');
 export const layChuongTrinh = () => goi('GET', '/chuong-trinh'); // v9 CT-1a — không token (CUA_CONG_KHAI); dùng ở UuDai
 export const layQuangCao = () => goi('GET', '/quang-cao'); // v16 QC-APP-1 — không token (CUA_CONG_KHAI); chữ dải + banner Trang chủ do chủ quán đặt ở POS
 export const layGioHoatDong = () => goi('GET', '/gio-hoat-dong');
+export const layGoiNap = () => goi('GET', '/goi-nap'); // v17 KH-NAP-1 — không token (CUA_CONG_KHAI): gói nạp đang bật, thứ tự quầy
+export const layVi = (trang) => goi('GET', `/vi?trang=${trang}`); // v17 KH-NAP-1 — lịch sử tài khoản của chính khách (20 dòng / trang)
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
 export const suaHoSo = (truong) => goi('PUT', '/toi', truong);
