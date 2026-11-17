@@ -18,40 +18,41 @@ Gốc, KHONG_TRINH_DUYET=1:     2 đạt · 17 hỏng
   … (đủ 37 dòng ✗ khi chạy có Chromium)
 Đã vá, có Chromium:          87 đạt · 0 hỏng
 Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng
-SỐ CA thu_KHVC2.js: 28
+SỐ CA cong_cu/thu_KHVC2.js: 28
+(trên gốc bài dừng sớm — A1 "dừng giữa chừng" gộp 12 ca thành 1 — nên gốc in 19 ca, nhánh 28)
 
 == cong_cu/thu_KHMUA1b.js (bài cũ đổi có chủ đích: "Giảm giá (voucher)" → "Mã khuyến mãi", tenGiam nhận dòng giảm) ==
 Gốc, KHONG_TRINH_DUYET=1:    50 đạt · 1 hỏng
   ✗ C6 tên dòng giảm: mã chung "Mã khuyến mãi" (KH-VC-2) / hạng / Giờ vàng / loại lạ
 Đã vá, KHONG_TRINH_DUYET=1:  51 đạt · 0 hỏng
-SỐ CA thu_KHMUA1b.js: 51
+SỐ CA cong_cu/thu_KHMUA1b.js: 51
 
 == cong_cu/thu_KHND3e.js (bài cũ đổi có chủ đích: tenGiam) ==
 Gốc, KHONG_TRINH_DUYET=1:    21 đạt · 1 hỏng
   ✗ B1 tenGiam (nhận dòng giảm — KH-VC-2): mã chung "Mã khuyến mãi" / hạng có tên / hạng trống / Giờ vàng / loại lạ
 Đã vá, KHONG_TRINH_DUYET=1:  22 đạt · 0 hỏng
-SỐ CA thu_KHND3e.js: 22
+SỐ CA cong_cu/thu_KHND3e.js: 22
 
 == cong_cu/thu_KHND3b.js (bài cũ đổi có chủ đích: gợi ý ô mã khoá mới gio.ma.goiYKm) ==
 Gốc, KHONG_TRINH_DUYET=1:    20 đạt · 1 hỏng
   ✗ A1 (KH-VC-2) ô mã Giỏ hàng đọc gợi ý khoá mới gio.ma.goiYKm ("Nhập mã khuyến mãi (nếu có)"), không còn gio.ma.goiY
 Đã vá, KHONG_TRINH_DUYET=1:  21 đạt · 0 hỏng
-SỐ CA thu_KHND3b.js: 21
+SỐ CA cong_cu/thu_KHND3b.js: 21
 
 == cong_cu/thu_KHBAO1.js (bài cũ đổi có chủ đích: daTra làm mới thêm cuaVoucher) ==
 Gốc, KHONG_TRINH_DUYET=1:    33 đạt · 1 hỏng
   ✗ A3 daTra làm mới cuaDon (đơn QR vừa trả sang da_tra thì dải bắt đầu hỏi) + cuaVoucher (KH-VC-2: voucher đã dùng rời ví)
 Đã vá, KHONG_TRINH_DUYET=1:  34 đạt · 0 hỏng
-SỐ CA thu_KHBAO1.js: 34
+SỐ CA cong_cu/thu_KHBAO1.js: 34
 
 == cong_cu/thu_KHNHANH1.js (bài cũ đổi có chủ đích: xongDatDon làm mới thêm cuaVoucher — chủ quán duyệt điểm 1) ==
 Gốc, KHONG_TRINH_DUYET=1:    85 đạt · 1 hỏng
   ✗ D3 đặt đơn → lấy lại /toi, /don, /diem, /voucher (KH-VC-2: đơn QR chờ trả giữ voucher)
 Đã vá, KHONG_TRINH_DUYET=1:  86 đạt · 0 hỏng
-SỐ CA thu_KHNHANH1.js: 86
+SỐ CA cong_cu/thu_KHNHANH1.js: 86
 
 == cong_cu/thu_KHUI3d.js (bài cũ đổi có chủ đích: danh sách voucher nhận prop dungVoucher) ==
 Gốc, KHONG_TRINH_DUYET=1:    35 đạt · 1 hỏng
   ✗ B2 phần riêng khách (nhập mã, voucher + "Dùng ngay" — KH-VC-2, lịch sử) chỉ nằm trong UuDaiToi
 Đã vá, KHONG_TRINH_DUYET=1:  36 đạt · 0 hỏng
-SỐ CA thu_KHUI3d.js: 36
+SỐ CA cong_cu/thu_KHUI3d.js: 36
