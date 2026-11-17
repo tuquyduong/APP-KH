@@ -56,3 +56,8 @@ Gốc, KHONG_TRINH_DUYET=1:    35 đạt · 1 hỏng
   ✗ B2 phần riêng khách (nhập mã, voucher + "Dùng ngay" — KH-VC-2, lịch sử) chỉ nằm trong UuDaiToi
 Đã vá, KHONG_TRINH_DUYET=1:  36 đạt · 0 hỏng
 SỐ CA cong_cu/thu_KHUI3d.js: 36
+
+== Vòng sửa 1 (sau /ra-soat, commit c24c9fe) — thu_KHVC2.js chạy lại ==
+Đã vá, có Chromium:          96 đạt · 0 hỏng (thêm ca huỷ đơn làm mới ví + ca data-nd dòng "Voucher chưa dùng được")
+Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng (số ca không đổi — SỐ CA ở trên vẫn đúng; regex B4 chặt hơn: cuaVoucher phải nằm TRONG mảng lamMoi)
+Gốc (nháp), KHONG_TRINH_DUYET=1: vẫn đỏ (A1 dừng giữa chừng, A2 / B4 / B5 / B6 ✗)

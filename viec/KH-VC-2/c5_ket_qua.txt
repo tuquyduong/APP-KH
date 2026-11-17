@@ -1,0 +1,54 @@
+KH-VC-2 — C5 kết quả so ảnh (lưu theo bản soát vòng 1). Chép nguyên dòng in của:
+  node viec/KH-VC-2/chup_tat_ca.js <cây> <ra>   (gốc = b6f66e6 + cong_cu c31d418 ở nháp; nhánh = /home/user/APP-KH ở 441d677)
+  node viec/KH-VC-2/so_anh_c5.js <ảnh gốc> <ảnh nhánh>   (ngưỡng: tổng lệch RGB > 30 mới tính một điểm ảnh)
+Cặp ảnh đại diện + ảnh tô lệch: viec/KH-VC-2/so_anh/c5/{truoc,sau,lech}/.
+
+== KHÁC (ngoài thu_KHVC2 / thu_KHSOHD1) ==
+KHÁC 5526 thu_KHBAO1/bao-trangchu-360.png            — Trang chủ: ánh lướt banner "Hôm nay" (mở cặp ảnh: nội dung y hệt)
+KHÁC 2958 thu_KHBAO1/bao-trangchu_360.png            — như trên
+KHÁC 4110 thu_KHBAO1/bao-trangchu_390.png            — như trên
+KHÁC 5287 thu_KHBAO1/bao-trangchu_430.png            — như trên
+KHÁC 722 thu_KHBAO1/thanhtoan-nho-cong-tac_390.png   — công tắc ví đang chạy hiệu ứng lúc chụp
+KHÁC 108 thu_KHBAO1/thanhtoan-nho-cong-tac_430.png   — như trên
+KHÁC 35323 thu_KHMUA1/app_giohang_360.png             — Giỏ (TRONG phạm vi): tiêu đề "Mã khuyến mãi" + gợi ý mới
+KHÁC 37765 thu_KHMUA1/app_giohang_390.png             — như trên (ảnh tô lệch: so_anh/c5/lech/app_giohang_390-lech.png)
+KHÁC 40974 thu_KHMUA1/app_giohang_430.png             — như trên
+KHÁC 45793 thu_KHMUA1b/giohang-giam-390.png           — Giỏ (TRONG phạm vi): + dòng "Mã khuyến mãi"
+KHÁC 86 thu_KHMUA1b/thanhtoan-pin-390.png             — công tắc ví đang chạy hiệu ứng
+KHÁC 783 thu_KHMUA1b/thanhtoan-vi-du-390.png          — như trên (đã mở cặp ảnh: công tắc nửa đường)
+KHÁC 777 thu_KHMUA1b/thanhtoan-vi-qr-360.png          — như trên
+KHÁC 85 thu_KHMUA1c/pin-tra-vi-360.png                — như trên
+KHÁC 552 thu_KHMUA1c/pin-tra-vi-390.png               — như trên
+KHÁC 201 thu_KHMUA1c/pin-tra-vi-430.png               — như trên
+KHÁC 29846 thu_KHSINH1/gio_hoan-tac_360.png           — Giỏ (TRONG phạm vi)
+KHÁC 31889 thu_KHSINH1/gio_hoan-tac_390.png           — Giỏ
+KHÁC 34608 thu_KHSINH1/gio_hoan-tac_430.png           — Giỏ
+KHÁC 46335 thu_KHSINH1/gio_nut-xoa_360.png            — Giỏ
+KHÁC 50147 thu_KHSINH1/gio_nut-xoa_390.png            — Giỏ
+KHÁC 55226 thu_KHSINH1/gio_nut-xoa_430.png            — Giỏ
+KHÁC 11777 thu_KHSINH1/trangchu_linh-p_390.png        — Trang chủ: ánh lướt banner
+KHÁC 11029 thu_KHSINH1/trangchu_ten-dai_360.png       — như trên
+KHÁC 12173 thu_KHSINH1/trangchu_ten-dai_390.png       — như trên (ảnh tô lệch: so_anh/c5/lech/trangchu_ten-dai_390-lech.png — chỉ vệt sáng banner)
+KHÁC 13141 thu_KHSINH1/trangchu_ten-dai_430.png       — như trên
+KHÁC 201 thu_KHTHE1/trangchu_nhac.png                 — như trên
+KHÁC 108 thu_KHTT1/thanhtoan-vi-du-390.png            — công tắc ví
+KHÁC 600 thu_KHTT1/thanhtoan-vi-thieu-360.png         — công tắc ví
+KHÁC 12 thu_KHUI3b/ung-dung_menu-khach_390.png        — 12 điểm ảnh (khử răng cưa)
+KHÁC 5397 thu_KHUI3b/ung-dung_trang-chu-dau_360.png   — Trang chủ: ánh lướt banner
+KHÁC 15785 thu_KHUI3c/app_chua_dn_360_chu100.png      — banner (đã mở ảnh nhánh: vệt sáng banner)
+KHÁC 15654 thu_KHUI3c/app_chua_dn_360_chu130.png      — như trên
+KHÁC 14395 thu_KHUI3c/app_chua_dn_390_chu100.png      — như trên
+KHÁC 20884 thu_KHUI3c/app_chua_dn_390_chu130.png      — như trên
+KHÁC 14680 thu_KHUI3c/app_chua_dn_430_chu130.png      — như trên
+KHÁC 7472 thu_KHUI3d/ung-dung_trang-chu-dau_360.png   — Trang chủ: ánh lướt banner
+KHÁC 4677 thu_KHUI3d/ung-dung_uudai-dangnhap_390.png  — Ưu đãi (TRONG phạm vi) (ảnh tô lệch: so_anh/c5/lech/ung-dung_uudai-dangnhap_390-lech.png)
+
+== thu_KHVC2 (bài mới — ảnh gốc chỉ có ở 8 ảnh Ưu đãi / Thanh toán; còn lại CHỈ MỘT BÊN nhánh) ==
+KHÁC thu_KHVC2/thanhtoan-voucher-390(-duoi).png, uudai-nhan-khach-moi-390(-duoi).png, uudai-vi-voucher-390(-duoi).png, uudai-xem-tat-ca-390(-duoi).png — TRONG phạm vi
+
+== CHỈ MỘT BÊN: 27 ảnh ==
+12 ảnh thu_KHVC2 (gio-voucher-*, uudai-vi-voucher-360/430*) — bài dừng sớm trên gốc.
+15 ảnh thu_KHSOHD1 (lich-su_*, the-qr*_*, theodoi-da-tra_*, tien-ve-muon_*) — gốc ở nháp không có .git, bài dừng trước khi chụp (0 đạt · 1 hỏng); không phải khác màn.
+
+== GIỐNG 140 ==
+(mọi ảnh còn lại: Menu, Thanh toán thẻ, Theo dõi đơn, Chào mừng, thẻ QR, Tài khoản, Hạng…)

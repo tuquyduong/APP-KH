@@ -73,3 +73,50 @@
 - `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở 61da624, cây sạch: `✓ CỔNG CHẠY ĐẠT`
   (kèm `· CẢNH BÁO A16: cong_cu/thu_KHVC2.js chạy trên gốc in 19 ca ≠ 28 ca ở head` — bài dừng sớm trên gốc, đã ghi trong bang_chung_do.txt).
 HEAD ĐÃ KIỂM: 61da624
+
+## Soát độc lập — vòng 1 (agent riêng, `/ra-soat`, 17.11) — chép nguyên
+```
+KHÔNG ĐẠT
+LỖI TÌM ĐƯỢC:
+  src/pages/ThanhToan.jsx:250 — Mỗi dòng của khối "Voucher chưa dùng được" lấy chữ từ mục SỬA ĐƯỢC `tt.vc.dong` ("{ma}: {loi}"), nhưng thẻ lại gắn `ndDau('gio.vc.loi')`. `gio.vc.loi` là mục khoá `pos` (donHang.js), nên ndDau (src/noiDung/nd.js:131-134) gắn data-nd="gio.vc.loi" + data-nd-khoa="pos". Kết quả: ở Chế độ sửa dòng này hiện 🔒, `tt.vc.dong` không có data-nd ở đâu cả (grep: chỉ dòng 250 dùng nó), không bấm ✎ được. Sửa: thẻ ngoài `ndDau('tt.vc.dong')`, câu POS bọc span riêng `ndDau('gio.vc.loi')`. — CLAUDE.md §11 (mọi thứ mới có khoá + data-nd đúng). Bài thử không bắt: KHND3e chỉ đếm khoá có được dùng, không soát data-nd.
+  src/pages/GioHang.jsx:99 — Khi thiếu `mo_ta` và `reward_name`, ô hiện chữ sửa được `nd('ud.voucher.tenChung')` nhưng vẫn gắn khoá pos `gio.vc.moTa` (phải là 🔒 "câu POS"). UuDai.jsx:47 làm đúng: chọn khoá theo nguồn chữ. — §11, nhẹ.
+  viec/KH-VC-2/bang_chung_do.txt:26 — Ghi "Đã vá, có Chromium: 87 đạt · 0 hỏng", trong khi trang_thai.md:16 và lần tôi chạy lại đều 93 · 0 (102c9f8 thêm 6 ca 360/430, bang_chung_do không sửa theo). — K1 (hai sổ lệch nhau).
+  cong_cu/thu_KHVC2.js:118-125 — Nhiều ý chỉ có ca đọc nguồn bằng regex "có chữ cuaVoucher / datChonVc(CHON_RONG) trên dòng": daHuy, daTra làm mới ví; docLaiGio, donPhien xoá lựa chọn; tuy của đơn thẻ. Không ca trình duyệt nào chạy huỷ đơn, trả đơn, đổi khách, đăng xuất, cũng không mở /thanhtoanthe để soi thân gửi. Marker suông vẫn xanh được: một phép gán thừa `cuaVoucher` trên cùng dòng daHuy mà không truyền vào lamMoi vẫn qua. dot_bien_tay.js không có đột biến cho daHuy, daTra, docLaiGio, donPhien. — K3 (một phần chỉ kiểm sự có mặt của mẫu).
+  src/pages/GioHang.jsx:95 — `key={v.code}` trong khi UuDai dùng `v.id`; chính dsGui đã phòng trường hợp ví có mã trùng (hoa/thường), nên nếu ví thật trùng mã thì React báo trùng key và ô vẽ sai. — lỗi React, nhẹ.
+NGHI NGỜ:
+  - Khách gõ đúng mã voucher trong ví vào ô mã chung: mã đi CẢ ở `ma_giam` lẫn `vouchers` (dsGui không loại maGiam, voucherGio.js:20-26). Hợp đồng v15 có luật "tương thích ma_giam" nhưng không nói gửi trùng hai chỗ thì POS xử lý sao (có trừ hai lần không) → nên ghi ## Câu hỏi gửi POS.
+  - Giỏ không hỏi báo giá (`bat` false: món hết, chưa có menu): mục voucher vẫn hiện theo bgCu cũ, hoặc không ô nào tích mà vẫn ghi "Tự chọn sẵn". Chưa thử.
+  - `bgCu.current = bg` gán ref ngay trong lúc vẽ (GioHang.jsx:120): chạy được, nhưng không đúng nếp React.
+  - trang_thai.md C5 ("140 ảnh giống hệt"; Trang chủ / Thanh toán ví lệch "do hiệu ứng") không lưu kết quả chạy so_anh_c5.js. Kho chỉ có 3 cặp ảnh ở so_anh/c5/, nên tôi không kiểm lại được con số 140 và lời giải thích → K1, chưa đủ căn cứ.
+  - Ngoài khung Cấm: UuDai.jsx:26-34 (import, bảng TRANG_THAI_VOUCHER, khoaNguonVoucher ngoài TheVoucher / DanhSachVoucher) và ThanhToan.jsx:26 (dòng import css) — cần thiết, nhỏ, nhưng nằm ngoài "CHỈ tuy + chỗ dưới BangTien". canTuPos.js chưa thêm trường v15 (mo_ta, nguon, kieu, voucher_loi), không bắt buộc.
+NGHIỆM THU:    13/15 mục có bằng chứng · mục thiếu: C3 chưa chạy lại được (lệnh bị chặn quyền) · C7 không kiểm được từ đây
+  (bảng chi tiết A1…C7 của người soát: A1 ✓ · A2 ✓ · B1 ✓ · B2 ✓ · B3 ✓ · B4 ~ (daTra, daHuy, docLaiGio, donPhien chỉ regex) · B5 ✓ · B6 ✓ (trừ data-nd ThanhToan.jsx:250) ·
+   C1 ✓ (nhánh 93·0 / 28·0, gốc 23·37) · C2 ✓ · C3 ? · C4 ✓ · C5 ~ (kết quả không lưu) · C6 ✓ (KHONG_TRINH_DUYET=1 npm test 63·0) · C7 —)
+CHƯA SOÁT ĐƯỢC:
+  - Không chạy lại dot_bien_tay.js (bị chặn quyền), `--day-du` và tu_chay/cong.js.
+  - Không chạy lại so ảnh C5.
+  - Không xem bằng mắt ảnh trong so_anh/.
+  - POS thật xử lý mã trùng ma_giam + vouchers ra sao.
+  - Lúc gộp, KH-NAP-1 cũng sửa dòng `tuy` (cheDoNap): phải bảo đảm đơn nạp dùng KHONG_MA — lúc này chưa kiểm được.
+BÀI HỌC:
+  - KHOÁ (bài thử chung): trong Chế độ sửa, mỗi mục danh mục loại chu/nut đang hiện trên màn phải có ít nhất một phần tử data-nd đúng khoá. Và thẻ mang data-nd-khoa="pos" không được chứa chữ lấy từ mục sửa được. Đây chính là chỗ lỗi ThanhToan.jsx:250 lọt qua kiemDanhMuc / KHND3e.
+  - KHOÁ: ca "làm mới kho khi huỷ / trả / đổi khách / đăng xuất" phải là ca trình duyệt đếm lời gọi GET (như ca xongDatDon đã làm), không chỉ regex dòng mã. Kèm đột biến BV- cho mỗi chỗ.
+  - NGUYÊN TẮC (KHUON_LOI.md): số ca trong bang_chung_do.txt phải ghi lại sau mỗi commit đổi bài thử (hoặc script tự ghi). Kết quả so ảnh C5 phải lưu kết quả chạy vào viec/<MÃ>/ thì mới được trích con số trong trang_thai.
+```
+
+### Sửa vòng 1 (commit a8f4ad6 code, c24c9fe bài thử + đột biến)
+- ThanhToan.jsx: dòng "{ma}: {loi}" gắn `ndDau('tt.vc.dong')` (sửa được), câu POS bọc `<span {...ndDau('gio.vc.loi')}>` (🔒) qua `ndPhan`. Ca mới thu_KHVC2 "B6/§11 dòng … gắn khoá SỬA ĐƯỢC" + đột biến VS-THANH-TOAN-DONG-GAN-KHOA-POS.
+- GioHang.jsx: tên ô khi thiếu `mo_ta` + `reward_name` gắn `ud.voucher.tenChung` (sửa được); `key={v.id ?? v.code}`.
+- bang_chung_do.txt: số ca Chromium cập nhật (93 → 96 sau vòng 1), ghi rõ lịch sử số.
+- K3: regex B4 đòi `cuaVoucher` NẰM TRONG mảng `lamMoi([...])` (marker suông "void cuaVoucher" giờ đỏ — đột biến BV-HUY-KHONG-LAM-MOI-VI); ca trình duyệt MỚI "huỷ đơn chờ trả → GET /voucher thêm một lần";
+  đột biến mới BV-TRA-KHONG-LAM-MOI-VI, BV-DOI-KHACH-GIU-LUA-CHON, BV-DANG-XUAT-GIU-LUA-CHON. `dot_bien_tay.js --trinh-duyet`: **20 / 20 BỊ BẮT**.
+  Đổi khách / đăng xuất / trả đơn vẫn kiểm bằng nguồn + đột biến (không ca trình duyệt: cần đăng nhập lại qua mã Zalo / tiền về QR — POS giả chưa có) → ghi ở CHƯA KIỂM.
+- C5: kết quả so ảnh lưu `viec/KH-VC-2/c5_ket_qua.txt` (từng dòng KHÁC + lý do, 27 CHỈ MỘT BÊN, GIỐNG 140). Ảnh C5 chụp ở 441d677 (trước vòng 1); vòng 1 chỉ đổi markup dòng lỗi ở Thanh toán
+  voucher + data-nd / key ở Giỏ (không đổi điểm ảnh ngoài màn của bài thu_KHVC2).
+- Không đổi (lý do): mã gõ ở ô mã trùng voucher trong ví → hỏi POS (## Câu hỏi bên dưới), App không đoán luật. Giỏ khi không hỏi báo giá (`bat` false — món hết / chưa menu): mục voucher
+  vẫn hiện các ô (không tích, theo báo giá cuối nếu có) — nút Tiếp tục đã khoá theo luật cũ; chấp nhận. `bgCu.current = bg` trong lúc vẽ: chỉ nhớ giá trị đã vẽ, không gây vẽ lại — giữ cho gọn.
+  import / hằng ở đầu UuDai.jsx / ThanhToan.jsx: cần cho các khối được phép sửa (không đụng dòng của KH-NAP-1). `canTuPos.js` không thêm (không bắt buộc, kế hoạch đã bỏ).
+
+## Câu hỏi (gửi POS — KHÔNG chặn việc này)
+- Khách gõ vào ô mã khuyến mãi đúng mã một voucher đang có trong ví (vd VC7) trong khi App cũng gửi VC7 trong `vouchers`: POS xử lý thế nào — bỏ một bên, báo `voucher_loi` / `ma_giam_loi`, hay
+  có thể trừ hai lần? Hợp đồng v15 chỉ ghi "App cũ gửi mã voucher ở `ma_giam` vẫn chạy như trước". Nếu POS không tự chống trùng, App sẽ loại mã đang ở ô mã khỏi `vouchers` (1 dòng ở App.jsx).
