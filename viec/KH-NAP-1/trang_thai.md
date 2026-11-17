@@ -163,3 +163,13 @@ Sự cố của việc: người gác chặn 23 lần (B-PHANTICH 5 · B-CHUONGT
 ## Cổng cuối (17.11, cây sạch ở 91003d2)
 `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d6f0f88^ HEAD viec/KH-NAP-1` → ✓ CỔNG CHẠY ĐẠT (cảnh báo A16: thu_KHNAP1 dừng sớm trên gốc ở ca A3 — cổng ghi "bỏ qua").
 HEAD ĐÃ KIỂM: 91003d2
+
+## Gộp main có KH-VC-2 (chat soát cuối 17.11)
+Chat soát cuối 17.11 ĐẠT cả hai nhánh: cổng tinh + chay (base e7c4f0e) ĐẠT cho KH-NAP-1 (950cc50) và KH-VC-2 (2f9ea0d). KH-VC-2 Merge trước; script chat gộp main 142797e
+vào nhánh này. Ba tệp đụng nhau giải GIỮ CẢ HAI phía: App.jsx (daHuy làm mới cả cuaVoucher; moVi / moNapVi + dungVoucher; Giỏ / Thanh toán nhận `vouchers`;
+Ưu đãi nhận moVi / moNap / dungVoucher) · ThanhToan.jsx (import vi_tien.css + voucher.css; `tuy = cheDoThe || cheDoNap ? KHONG_MA : { maGiam, vouchers }` —
+đơn nạp KHÔNG mã giảm, KHÔNG voucher; khối "Voucher chưa dùng được" ẩn ở thẻ và nạp) · UuDai.jsx (cả hai import + chữ ký). Bài thử chỉnh theo cây gộp:
+thu_KHNAP1 ca A2 thôi ghim nguyên văn thanBaoGia / docBaoGia / tenGiam (KH-VC-2 đã sửa đúng 3 hàm này) — giữ ý "dòng nạp không đi nhánh riêng trong 3 hàm";
+thu_KHVC2 ca B5 đòi nạp cũng đi KHONG_MA (đỏ trên main có KH-VC-2: 27 · 1; SỐ CA 28 ghi ở bang_chung_do.txt — cổng A16). Cây gộp: KHONG_TRINH_DUYET=1 64 · 0;
+`--day-du` Chromium 67 đạt · 0 hỏng (thu_KHNAP1 127 · 0, thu_KHVC2 102 · 0). Cổng tinh + chay chat thử trên GitHub giả (main = e7c4f0e + Merge KH-VC-2) ĐẠT. Không đổi code ngoài 3 tệp trên.
+HEAD ĐÃ KIỂM: dd0e830
