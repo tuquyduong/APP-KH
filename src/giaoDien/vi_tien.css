@@ -12,8 +12,12 @@
 .vt-ds .tx-item:last-child{ border-bottom:none; }
 .tx-item.vt-mo{ cursor:pointer; }
 .tx-item .info{ min-width:0; }
-.tx-item .ic.vt-ic .ico{ color:var(--mint-dark); }
-.tx-item .ic.vt-ic.ra .ico{ color:var(--pink-deep); }
+/* Ô biểu tượng tô nền như bản thiết kế (demo_1.css đặt nền .tx-item .ic = none !important → cần !important); máy cũ không có color-mix → nền kem của demo. */
+.tx-item .ic.vt-ic{ width:40px; height:40px; border-radius:12px; background:var(--cream) !important; background:color-mix(in srgb, var(--mint) 35%, var(--white)) !important; }
+.tx-item .ic.vt-ic.ra{ background:var(--line) !important; }
+.tx-item .ic.vt-ic.dc{ background:var(--cream) !important; }
+.tx-item .ic.vt-ic .ico{ width:18px; height:18px; color:var(--mint-dark); }
+.tx-item .ic.vt-ic.ra .ico{ color:var(--pink-dark); }
 .tx-item .ic.vt-ic.dc .ico{ color:var(--muted); }
 .vt-thuong{ font-size:10.5px; color:var(--mint-dark); font-weight:600; margin-top:2px; }
 .tx-item .amt.vt-cong{ color:var(--mint-dark); white-space:nowrap; }
@@ -30,7 +34,7 @@
 .vt-goi-ten{ font-size:14px; font-weight:700; color:var(--ink); }
 .vt-goi-so{ font-size:12.5px; color:var(--muted); margin-top:3px; }
 .vt-goi-so b{ color:var(--mint-dark); font-weight:700; }
-.vt-goi-thuong{ font-size:12px; font-weight:700; color:var(--mint-dark); background:var(--mint); padding:5px 9px; border-radius:999px; white-space:nowrap; }
+.vt-goi-thuong{ font-size:12px; font-weight:700; color:var(--mint-dark); background:var(--mint); background:color-mix(in srgb, var(--mint) 45%, var(--white)); padding:5px 9px; border-radius:999px; white-space:nowrap; }
 .vt-tiep{ margin-top:6px; }
 .vt-goi-nho{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:12px; line-height:1.5; }
 /* Ưu đãi: hai ô điểm / ví cân chiều cao, ô ví bấm được, nút nhỏ Nạp tiền */
