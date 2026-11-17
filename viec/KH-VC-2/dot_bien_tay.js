@@ -36,8 +36,10 @@ const TRINH_DUYET = [
   ['VS-SHIP-CHAM-DUOC', [[G, 'disabled={ship}', 'disabled={false}']]],
   ['BV-THANH-TOAN-KHONG-KHOI-LOI', [[T, 'bg.voucherLoi.length > 0 &&', 'bg.voucherLoi.length > 99 &&']]],
   ['VS-NHAN-MA-CAU-CU', [[N, "r.data && String(r.data.mo_ta || '').trim() ?", 'false ?']]],
-  ['BV-CHO-BAO-GIA-NHAP-NHAY', [[G, 'tt = trangThaiVoucher(v.code, bg || bgCu)', 'tt = trangThaiVoucher(v.code, bg)']]],
-  ['VS-TICH-TAM-KHI-KHONG-HOI-POS', [[G, 'const choChon = hoi && !bg && vuaChon && vuaChon.khoaGio === khoaGio', 'const choChon = !bg && vuaChon']]], // vòng sửa 2
+  ['BV-CHO-BAO-GIA-NHAP-NHAY', [[G, 'const bgVc = bg || (hoi && !loi ? bgCu.current : null);', 'const bgVc = bg;']]],
+  // vòng sửa 3: tích CHỈ theo POS — báo giá lỗi / không hỏi thì không giữ báo giá cũ, không tích trước khi POS trả lời.
+  ['VS-GIU-BAO-GIA-CU-KHI-LOI', [[G, 'const bgVc = bg || (hoi && !loi ? bgCu.current : null);', 'const bgVc = bg || bgCu.current;']]],
+  ['VS-TICH-TRUOC-KHI-POS-TRA-LOI', [[G, "const tich = !ship && !bo && tt === 'dung';", "const tich = !ship && !bo && (tt === 'dung' || tt === 'cho');"]]],
   ['VS-THANH-TOAN-DONG-GAN-KHOA-POS', [[T, "className=\"vc-loi\" {...ndDau('tt.vc.dong')}", "className=\"vc-loi\" {...ndDau('gio.vc.loi')}"]]],
 ];
 

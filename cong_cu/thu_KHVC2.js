@@ -222,6 +222,7 @@ async function trinhDuyet(pw) {
       if (duong === '/gio/bao-gia') {
         S.bgGui.push(than);
         if (S.treBg) await new Promise((x) => setTimeout(x, S.treBg));
+        if (S.bgLoi) return json(500, { error: 'Máy chủ lỗi', code: 'LOI_MAY_CHU' });
         return json(200, baoGia(than));
       }
       if (duong === '/don' && pt === 'POST') {
@@ -417,6 +418,28 @@ async function trinhDuyet(pw) {
     await o(t, 'VC7').click();
     await t.waitForTimeout(900);
     k('B3 Giỏ không hỏi báo giá (chưa có menu) → chạm voucher KHÔNG tích (không có POS xác nhận)', S.bgGui.length === 0 && !(await tich(t, 'VC7')), `${S.bgGui.length} báo giá`);
+  });
+
+  them('bao-gia-loi', { S0: { vi: VI_GIO } }, async ({ t, S }) => {
+    await mo(t, '/giohang');
+    await doi(t, async () => (await tich(t, 'VC7')) && (await o(t, 'VC9').locator('.vc-loi').count()) === 1);
+    S.bgLoi = true;
+    await o(t, 'VC9').click();
+    await t.waitForTimeout(1800);
+    const dangTich = await t.evaluate(() => [...document.querySelectorAll('#cart .vc-chon[aria-pressed="true"]')].length);
+    k('B3 báo giá lỗi sau khi chạm → KHÔNG ô nào tích (POS chưa xác nhận gì)', dangTich === 0 && !(await tich(t, 'VC9')), `${dangTich} ô tích`);
+  });
+
+  them('ap-ma-cho', { S0: { vi: VI_GIO } }, async ({ t, S }) => {
+    await mo(t, '/giohang');
+    await doi(t, async () => (await o(t, 'VC9').locator('.vc-loi').count()) === 1);
+    await o(t, 'VC9').click();
+    await yen(t);
+    await doi(t, async () => !(await tich(t, 'VC9')) && (await o(t, 'VC9').locator('.vc-loi').count()) === 1);
+    S.treBg = 2500;
+    await t.fill('#cart .promo-box input', 'XYZ'); await t.locator('#cart .promo-box button').click();
+    await t.waitForTimeout(1200);
+    k('B3 hỏi lại báo giá vì áp mã (giỏ không đổi): ô POS chưa tính KHÔNG tích tạm, giữ câu đỏ', !(await tich(t, 'VC9')) && (await o(t, 'VC9').locator('.vc-loi').count()) === 1 && (await tich(t, 'VC7')));
   });
 
   them('chua-dang-nhap', { dn: false }, async ({ t }) => {
