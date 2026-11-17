@@ -101,7 +101,7 @@ if (require.main === module) (async () => {
     k('A2 docBaoGia giữ `ma` của dòng giảm, đọc voucherLoi[] { ma, code, error }', !!b && b.giam[0].ma === 'VC7' && !('ma' in b.giam[1]) && bang(b.voucherLoi, [{ ma: 'VC9', code: 'VOUCHER_CHUA_DU_DON', error: 'Chưa đủ' }]), JSON.stringify(b));
     k('A2 docBaoGia: POS cũ không voucher_loi → voucherLoi []', bang(D.docBaoGia({ tong: 1 }).voucherLoi, []));
     k('A2 tenGiam: "Voucher VC7", "Giảm phí giao", "Mã khuyến mãi"; hạng / Giờ vàng như cũ', D.tenGiam({ loai: 'voucher', ma: 'VC7' }) === 'Voucher VC7' && D.tenGiam({ loai: 'voucher_ship', ma: 'GT3' }) === 'Giảm phí giao'
-      && D.tenGiam({ loai: 'ma_giam' }) === 'Mã khuyến mãi' && D.tenGiam({ loai: 'hang' }, 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam({ loai: 'gio_vang' }) === 'Giờ vàng' && D.tenGiam({ loai: 'la' }) === 'Giảm giá');
+      && D.tenGiam({ loai: 'ma_giam' }) === 'Mã khuyến mãi' && D.tenGiam({ loai: 'hang' }, 'Vàng') === 'Ưu đãi hạng Vàng' && D.tenGiam({ loai: 'gio_vang' }) === 'Giờ vàng' && D.tenGiam({ loai: 'la' }) === 'Giảm giá' && D.tenGiam({ loai: 'voucher' }) === 'Giảm giá');
   });
 
   await thu('B', async () => {

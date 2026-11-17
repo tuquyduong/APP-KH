@@ -119,7 +119,7 @@ const KHACH_A = { sdt: '0909123456', ten: 'Nguyễn Linh', ngay_tao: '2026-01-01
     const uu = doc('src/pages/UuDai.jsx');
     k('D3 nhận mã hoá đơn → lấy lại /diem, /voucher, /toi', /khiXong=\{\(\) => lamMoi\(\[cuaDiem, cuaVoucher, cuaToi\]\)\}/.test(uu));
     k('D3 lưu hồ sơ (HoSo) gộp kết quả vào cuaToi', /gopToi\(cuaToi/.test(doc('src/pages/HoSo.jsx')));
-    k('D3 đặt đơn → lấy lại /toi, /don, /diem', /const xongDatDon = \(don\) => \{[^\n]*lamMoi\(\[cuaToi, cuaDon, cuaDiem\]\)/.test(ap));
+    k('D3 đặt đơn → lấy lại /toi, /don, /diem, /voucher (KH-VC-2: đơn QR chờ trả giữ voucher)', /const xongDatDon = \(don\) => \{[^\n]*lamMoi\(\[cuaToi, cuaDon, cuaDiem, cuaVoucher\]\)/.test(ap));
     k('D1/D2 App bật làm mới ngầm (dungLamMoiNgam) theo phiên', /dungLamMoiNgam\(dangNhap\)/.test(ap) && /visibilitychange/.test(doc('src/duLieuKhach.js')) && /setInterval\([^\n]*PHUT_CON_MOI \* 60000/.test(doc('src/duLieuKhach.js')));
     k('B1 App mở có phiên → tải trước cả bốn cửa (lamMoi(CUA_KHACH))', /lamMoi\(CUA_KHACH\)/.test(ap));
     k('B2 đăng nhập xong: DangNhap trả hồ sơ, App doiKhach(sdt) TRƯỚC khi bật phiên', /khiXong\(r\.khach\)/.test(doc('src/pages/DangNhap.jsx')) && /khiXong=\{\(k\) => \{[^}]*doiKhach\(k\.sdt\)[^}]*datDangNhap\(true\)/.test(ap));
