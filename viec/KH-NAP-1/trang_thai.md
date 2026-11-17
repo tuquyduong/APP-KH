@@ -159,3 +159,7 @@ Sự cố của việc: người gác chặn 23 lần (B-PHANTICH 5 · B-CHUONGT
   "Đặt lại" ở danh sách đơn nạp (cần POS thêm trường — Câu 2). Rà soát vòng 3 KHÔNG chạy (vòng 2: code không lỗi chặn gộp; lỗi giấy tờ đã sửa) — chat soát cuối.
 - **GIT:** nhánh viec/KH-NAP-1, mốc d6f0f88^, mỗi tệp một commit có mã việc, đã push. Không merge, không PR.
 - **BÀI HỌC:** mục "Bài học" ở trên — 2 NGUYÊN TẮC, 2 KHOÁ đề xuất (ngoài Phạm vi), 1 KHOÁ đã làm (ca trình duyệt nút lồng).
+
+## Cổng cuối (17.11, cây sạch ở 91003d2)
+`KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . d6f0f88^ HEAD viec/KH-NAP-1` → ✓ CỔNG CHẠY ĐẠT (cảnh báo A16: thu_KHNAP1 dừng sớm trên gốc ở ca A3 — cổng ghi "bỏ qua").
+HEAD ĐÃ KIỂM: 91003d2
