@@ -68,3 +68,11 @@ Gốc (nháp), KHONG_TRINH_DUYET=1:                      2 đạt · 17 hỏng
 Nhánh, có Chromium:                                  98 đạt · 0 hỏng (thêm ca "chưa có menu → chạm voucher không tích")
 Nhánh, KHONG_TRINH_DUYET=1:                          28 đạt · 0 hỏng — SỐ CA cong_cu/thu_KHVC2.js: 28 (không đổi)
 (Các dòng "23 · 37", "87 / 93 / 96" ở trên là số của các lần trước, giữ để thấy lịch sử.)
+
+== Vòng sửa 3 (sau /ra-soat vòng 3, code 77a773b, bài e714b19) — bài HIỆN TẠI ==
+Gốc (nháp, b6f66e6 + cong_cu e714b19), có Chromium:   31 đạt · 44 hỏng
+Code vòng 2 (1d2525f) + bài e714b19, có Chromium:      100 đạt · 2 hỏng — đúng hai ca mới đỏ:
+  ✗ B3 báo giá lỗi sau khi chạm → KHÔNG ô nào tích (POS chưa xác nhận gì)  — 4 ô tích
+  ✗ B3 hỏi lại báo giá vì áp mã (giỏ không đổi): ô POS chưa tính KHÔNG tích tạm, giữ câu đỏ
+Nhánh (77a773b), có Chromium:                          102 đạt · 0 hỏng
+KHONG_TRINH_DUYET=1: gốc 2 · 17, nhánh 28 · 0 — SỐ CA cong_cu/thu_KHVC2.js: 28 (không đổi; ca mới đều chạy trong trình duyệt)

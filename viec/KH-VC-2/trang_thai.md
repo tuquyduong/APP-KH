@@ -219,3 +219,45 @@ BÀI HỌC:
 | Lý do "chấp nhận" chỉ đúng một nhánh điều kiện (`coMenu` vs `coThe`) | NGUYÊN TẮC | Gộp vào K1 đề xuất ở trên: lý do chấp nhận phải kiểm từng nhánh điều kiện. |
 | Ca trình duyệt đăng xuất / đổi khách (người soát hai vòng cùng đề xuất) | KHOÁ (đề xuất) | Bài thu_KHVC2 thêm ca: chọn bỏ tay → 401 / đăng xuất → đăng nhập lại (chặn đường `/dang-nhap/*` như thu_KHUI3d) → lần báo giá đầu gửi lại đủ mảng. Chưa làm — đưa vào việc sau. |
 HEAD ĐÃ KIỂM: c351108
+
+## Soát độc lập — vòng 3 (agent mới, `/ra-soat`, 17.11) — chép nguyên
+```
+KHÔNG ĐẠT (vòng 3). Sửa của vòng 2 mới chặn được một trường hợp. Ô "tích tạm" vẫn hiện tích khi POS không xác nhận, và tôi đã thấy tận mắt trong Chromium. Các phần khác đều đạt.
+
+LỖI TÌM ĐƯỢC:
+  src/pages/GioHang.jsx:127 (cùng :93) — Ô "tích tạm" vẫn tích mãi khi báo giá lỗi. Điều kiện hiện tại là `choChon = hoi && !bg && vuaChon && vuaChon.khoaGio === khoaGio`. Khi `POST /gio/bao-gia` lỗi, src/dungDatDon.js:25 đặt `{ bg: null, loi }`, nên `!bg` vẫn đúng và ô vừa chạm cứ tích. Mã `CHUA_MO` cũng vậy (`loi` rỗng, `bg` null). Thử bằng bản chép thu_KHVC2 trong nháp (POS giả trả 500 sau lần báo giá đầu). Chạm VC9: VC9 đòi đơn từ 150.000đ, giỏ chưa đủ, đang hiện câu đỏ. Kết quả: VC9 `aria-pressed=true` còn nguyên sau 2,5 giây, trong khi màn đang hiện "Máy chủ lỗi". Như vậy ô tích mà POS chưa hề tính, trái B3 ("tích CHỈ khi POS tính") và trái chính chú thích ở dòng 123–124 ("báo giá đã về → theo POS"). — K3, cùng loại với lỗi vòng 2. Thêm K1: trang_thai ghi vòng 2 "sửa cả lỗi lẫn nghi ngờ nhấp nháy", điều này chưa đúng.
+  src/pages/GioHang.jsx:125–127 — `vuaChon` không được xoá khi báo giá về, mà chỉ so `khoaGio`. Vì vậy mỗi lần báo giá phải hỏi lại mà giỏ không đổi (khách áp mã khuyến mãi), ô đã chạm trước đó lại tích tạm. Đã thử: chạm VC9 → báo giá về, VC9 đỏ (`tich=false`) → áp mã XYZ, báo giá chậm 2,5 giây → trong lúc chờ VC9 `tich=true` → báo giá về thì `false`. Ô nhảy đỏ → tích → đỏ dù khách không chạm lại. — K3 (nhẹ).
+  Cách sửa gợi ý cho cả hai: chỉ tích tạm khi `!loi` và khi khoá lúc chạm trùng khoá báo giá đang chờ (giỏ + `maGiam`), hoặc xoá `vuaChon` ngay khi `bg` hay `loi` về. Kèm một ca "báo giá lỗi sau khi chạm → không tích" và một đột biến cho phần `khoaGio` / `loi` (đột biến VS-TICH-TAM-KHI-KHONG-HOI-POS hiện chỉ gỡ `hoi`).
+
+NGHI NGỜ:
+  - src/voucherGio.js:16: `han()` so chuỗi. Nếu POS trả lẫn dạng có dấu cách (`YYYY-MM-DD HH:mm:ss`, dạng giờ cũ §6) với dạng `T`, hai voucher cùng ngày có thể xếp sai thứ tự hạn. Hợp đồng v15 không nói dạng của `expires_at`.
+  - Ví đang tải hoặc lỗi thì `vouchers = []`, đơn đặt đi không có voucher và không báo gì (App.jsx:148–149). trang_thai đã ghi là chấp nhận theo K5; lý do hợp lý, giữ ở CHƯA KIỂM.
+  - Đổi khách, đăng xuất, đơn đã trả: vẫn chỉ kiểm bằng regex trên dòng mã cộng đột biến, chưa có ca trình duyệt. trang_thai đã ghi là việc sau; lý do chấp nhận được.
+
+NGHIỆM THU:    14/15 mục có bằng chứng · mục thiếu: C7 (chủ quán thử tay sau khi gộp, đúng như phiếu).
+  A1 ✓ · A2 ✓ · B1 ✓ · B2 ✓ · B3 ✗ (hai lỗi tích tạm ở trên; phần còn lại đúng) · B4 ✓ · B5 ✓ · B6 ✓ · C1 ✓ (nhánh 98·0, KHONG_TRINH_DUYET=1 28·0, gốc 29·42) · C2 ✓ · C3 ✓ (theo trang_thai 21/21) · C4 ✓ · C5 ✓ · C6 ✓ (npm test 63·0) · C7 —
+  (Soát thêm đều đạt: K4, K5, không dist/, không tệp Cấm, no_chu_cung không đổi, K9, §11 data-nd, §6, React key / sort.)
+
+CHƯA SOÁT ĐƯỢC: chưa chạy `--day-du`, cổng `tu_chay/cong.js chay`, `dot_bien_tay.js` và so ảnh C5. Chưa thử với POS thật (mã trùng giữa `ma_giam` và `vouchers` đã ghi ## Câu hỏi). Chưa thử điện thoại thật, trình duyệt Zalo, /admin. Chưa kiểm lúc gộp với KH-NAP-1 (dòng `tuy`: đơn nạp phải đi `KHONG_MA`).
+
+BÀI HỌC:
+  - NGUYÊN TẮC (đề xuất đưa vào KHUON_LOI K3): trạng thái lạc quan trên màn phải gắn với MỘT yêu cầu cụ thể đang bay. Yêu cầu đó kết thúc (có kết quả, lỗi, hay bị thay bằng yêu cầu khác) thì xoá trạng thái tạm. Không suy từ "chưa có kết quả" (`!bg`), vì lỗi cũng là "chưa có kết quả". Vòng 2 vá theo nhánh `hoi` nên sót nhánh `loi` và nhánh đổi `maGiam`.
+  - KHOÁ: bài thử có trạng thái tạm phải có đủ ba ca: không hỏi, hỏi lỗi, hỏi lại vì lý do khác. Mỗi điều kiện con của biểu thức phải có một đột biến riêng.
+  - Bản chép bài thử để dò lỗi nằm ở nháp (thu_soat3.js, hai ca SOAT3-bao-gia-loi và SOAT3-ma-giam-nhap-nhay). Có thể chép hai ca này vào thu_KHVC2 làm ca đỏ.
+  - Đây là vòng 3, vòng cuối theo LUAT_XAY_APP §6.5: nếu cần sửa nữa thì dừng và hỏi chủ quán.
+```
+
+### Sửa vòng 3 — vòng sửa CUỐI (`so_vong_sua_toi_da` = 3) (commit 77a773b code, e714b19 bài thử + đột biến)
+- Bỏ HẲN "tích tạm" (đúng kế hoạch đã duyệt: "ô tích CHỈ khi `trangThaiVoucher === 'dung'`"; tích tạm là phần tôi tự thêm ở bước 5 và là gốc của lỗi vòng 2 + 3). `GioHang.jsx`: ô tích
+  CHỈ theo báo giá POS; ĐANG chờ báo giá mới (`hoi && !loi`, `bg` null) → giữ báo giá cuối để không nhấp nháy; báo giá lỗi / không hỏi → không ô nào tích. Bỏ `vuaChon` / `khoaGio`.
+  Đánh đổi: khách chạm một ô chưa tích → ô tích sau khi POS trả lời (~0,6–1 giây, gộp báo giá 600 ms) thay vì tích ngay.
+- Ca mới (chép ý từ hai ca dò lỗi của người soát): "báo giá lỗi sau khi chạm → KHÔNG ô nào tích", "hỏi lại báo giá vì áp mã (giỏ không đổi) → ô POS chưa tính không tích tạm, giữ câu đỏ".
+  Cả hai ĐỎ trên code vòng 2 (1d2525f: 100 · 2), xanh sau sửa (102 · 0) — bang_chung_do.txt.
+- Đột biến: BV-CHO-BAO-GIA-NHAP-NHAY (viết lại theo dòng mới), VS-GIU-BAO-GIA-CU-KHI-LOI, VS-TICH-TRUOC-KHI-POS-TRA-LOI (thay VS-TICH-TAM-KHI-KHONG-HOI-POS — dòng đó đã bỏ).
+  `dot_bien_tay.js --trinh-duyet`: 22 / 22 BỊ BẮT.
+- Không đổi: `han()` so chuỗi — hợp đồng v15 không nói dạng `expires_at`; CLAUDE.md §6 nói giờ POS là `YYYY-MM-DDTHH:mm:ss` (dạng dấu cách là giờ CŨ) → ghi ## Câu hỏi gửi POS bên dưới.
+  Ví lỗi / đổi khách / đăng xuất: như vòng 2 (người soát vòng 3 chấp nhận lý do).
+
+## Câu hỏi (gửi POS — bổ sung sau vòng 3, KHÔNG chặn việc này)
+- `GET /voucher` `data[].expires_at` luôn dạng `YYYY-MM-DDTHH:mm:ss` (giờ VN) chứ? App xếp "sắp hết hạn trước" bằng so chuỗi; nếu có voucher cũ dạng `YYYY-MM-DD HH:mm:ss` (dấu cách) lẫn vào,
+  hai voucher CÙNG NGÀY có thể xếp sai giờ (khác ngày vẫn đúng). Xin POS ghi rõ dạng trong hợp đồng.
