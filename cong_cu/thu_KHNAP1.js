@@ -178,7 +178,7 @@ async function trinhDuyet(pw) {
     await ctx.clock.install({ time: new Date('2026-11-16T20:30:00+07:00') }); await ctx.clock.resume();
     const S = { goiNap: GOI, vi: 180600, viTrang: { 1: { data: VI_1, con_nua: true }, 2: { data: VI_2, con_nua: false } }, viLoi: false, dong: false, kich: [], goi: [], bg: [], datDon: [], don: new Map(), soDon: 6, loiTrang: [], gio: [LY], luu: {}, ...S0 };
     await ctx.addInitScript(({ gio, luu, chu0 }) => {
-      if (sessionStorage.getItem('da_gieo')) return;
+      if (location.protocol !== 'http:' || sessionStorage.getItem('da_gieo')) return; // about:blank (sau Back) không có kho
       sessionStorage.setItem('da_gieo', '1');
       localStorage.setItem('kh_ngay_man_dau', '2026-11-16');
       localStorage.setItem('kh_token', 'tok-A'); localStorage.setItem('kh_chu', chu0);
