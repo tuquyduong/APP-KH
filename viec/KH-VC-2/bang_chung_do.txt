@@ -16,7 +16,7 @@ Gốc, KHONG_TRINH_DUYET=1:     2 đạt · 17 hỏng
   ✗ B3 tự tích mọi voucher POS tính (VC7, KM8, VC5)
   ✗ B2 nhận ưu đãi khách mới → "Đã thêm vào ví voucher: {mo_ta}" — Đã nhận ưu đãi khách mới: mã KM8 giảm 10%
   … (đủ 37 dòng ✗ khi chạy có Chromium)
-Đã vá, có Chromium:          87 đạt · 0 hỏng
+Đã vá, có Chromium:          93 đạt · 0 hỏng (từ 102c9f8 thêm 6 ca 360 / 430; vòng sửa 1 thêm ca huỷ đơn — số mới ghi ở cuối tệp)
 Đã vá, KHONG_TRINH_DUYET=1:  28 đạt · 0 hỏng
 SỐ CA cong_cu/thu_KHVC2.js: 28
 (trên gốc bài dừng sớm — A1 "dừng giữa chừng" gộp 12 ca thành 1 — nên gốc in 19 ca, nhánh 28)

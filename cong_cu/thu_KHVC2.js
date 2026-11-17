@@ -126,7 +126,7 @@ if (require.main === module) (async () => {
     k('B4 App tính MỘT mảng vouchers (dsGui) và đưa CÙNG biến cho Giỏ hàng và Thanh toán đồ uống', /dsGui\(/.test(app) && /<GioHang [^\n]*vouchers=\{vouchers\}/.test(app) && /<ThanhToan daTra=[^\n]*vouchers=\{vouchers\}/.test(app));
     const ham = (ten) => (new RegExp(`const ${ten} = [^\\n]*`).exec(app) || [''])[0];
     k('B4 đổi khách (docLaiGio) / đăng xuất (donPhien) xoá lựa chọn voucher cùng mã giảm', /datChonVc\(CHON_RONG\)/.test(ham('docLaiGio')) && /datChonVc\(CHON_RONG\)/.test(ham('donPhien')));
-    k('B4 đơn trả (daTra) / huỷ (daHuy) / vừa đặt (xongDatDon) làm mới cuaVoucher', ['daTra', 'daHuy', 'xongDatDon'].every((x) => /cuaVoucher/.test(ham(x))), ['daTra', 'daHuy', 'xongDatDon'].map(ham).join(' | '));
+    k('B4 đơn trả (daTra) / huỷ (daHuy) / vừa đặt (xongDatDon) làm mới cuaVoucher (nằm TRONG mảng lamMoi)', ['daTra', 'daHuy', 'xongDatDon'].every((x) => /lamMoi\(\[[^\]]*\bcuaVoucher\b[^\]]*\]\)/.test(ham(x))), ['daTra', 'daHuy', 'xongDatDon'].map(ham).join(' | '));
     const tt = doc('src/pages/ThanhToan.jsx');
     k('B5 Thanh toán đồ uống: tuy = { maGiam, vouchers }', /tuy = cheDoThe \? KHONG_MA : \{ maGiam, vouchers \}/.test(tt), (/const tuy = [^\n]*/.exec(tt) || [''])[0]);
   });
@@ -230,8 +230,9 @@ async function trinhDuyet(pw) {
         const bg = baoGia(than);
         return json(200, { success: true, ma_don: 'TQD42', tong: bg.tong, giu_vi: 0, con_lai: bg.tong, tien_trinh: 'cho_tra', qr: { chuoi: '00020101021238570010A000000727TQD42', het_han: BAY('15:40:00') }, trung: false });
       }
+      if (duong === '/don/TQD42/huy' && pt === 'POST') { S.daHuy = true; return json(200, { success: true, ma_don: 'TQD42', tien_trinh: 'da_huy' }); }
       if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [] });
-      if (duong.startsWith('/don/') && pt === 'GET') return json(200, { success: true, don: { ma: 'TQD42', ngay: BAY('15:31:00'), tong: 69000, da_tra: 0, tien_trinh: 'cho_tra', qr: { chuoi: '00020101021238570010A000000727TQD42', het_han: BAY('15:40:00') }, mon: [] } });
+      if (duong.startsWith('/don/') && pt === 'GET') return json(200, { success: true, don: { ma: 'TQD42', ngay: BAY('15:31:00'), tong: 69000, da_tra: 0, tien_trinh: S.daHuy ? 'da_huy' : 'cho_tra', qr: { chuoi: '00020101021238570010A000000727TQD42', het_han: BAY('15:40:00') }, mon: [] } });
       return json(500, { error: 'chưa giả', code: 'LOI_MAY_CHU' });
     });
     const t = await ctx.newPage(); t.on('pageerror', (e) => loiTrang.push(e.message)); t.setDefaultTimeout(6000);
@@ -371,12 +372,25 @@ async function trinhDuyet(pw) {
     await doi(t, async () => (await t.locator('#checkout .vc-chua').count()) > 0);
     const kh = await chu(t, '#checkout .vc-chua');
     k('B5 Thanh toán: khối "Voucher chưa dùng được" liệt kê câu POS', /Voucher chưa dùng được/.test(kh) && /VC9/.test(kh) && /Đơn chưa đủ tối thiểu 150\.000đ/.test(kh), kh);
+    const gan = await t.evaluate(() => { const d = document.querySelector('#checkout .vc-chua .vc-loi'); const s = d && d.querySelector('[data-nd="gio.vc.loi"]'); return d && { dong: d.getAttribute('data-nd'), khoaDong: d.getAttribute('data-nd-khoa'), loi: s && s.getAttribute('data-nd-khoa'), chuLoi: s && s.textContent }; });
+    k('B6/§11 dòng "{ma}: {loi}" gắn khoá SỬA ĐƯỢC tt.vc.dong (không 🔒); câu POS bọc riêng 🔒 gio.vc.loi', !!gan && gan.dong === 'tt.vc.dong' && !gan.khoaDong && gan.loi === 'pos' && /Đơn chưa đủ/.test(gan.chuLoi || ''), JSON.stringify(gan));
     k('B5 Thanh toán: bảng tiền "Voucher VC7"', /Voucher VC7\s*−20\.000đ/.test(await chu(t, '#checkout .bang-tien')));
     k('B5/K5 voucher POS không tính KHÔNG khoá nút đặt', await doi(t, async () => (await t.locator('#checkout .nut-dat').getAttribute('aria-disabled')) !== 'true'));
     await chup(t, 'thanhtoan-voucher-390');
     S.kichDon = 'VOUCHER_DANG_GIU';
     await t.locator('#checkout .nut-dat').click();
     k('B5 lỗi đặt đơn VOUCHER_DANG_GIU → lời POS nguyên văn', await doi(t, async () => /Lời POS: VOUCHER_DANG_GIU/.test(await chu(t, '#checkout'))));
+  });
+
+  them('huy-don', { S0: { vi: [VC7] } }, async ({ t, S }) => {
+    await mo(t, '/thanhtoan');
+    await doi(t, async () => (await t.locator('#checkout .nut-dat').getAttribute('aria-disabled').catch(() => 'true')) !== 'true');
+    await t.locator('#checkout .nut-dat').click();
+    await doi(t, async () => /\/don\/TQD42$/.test(t.url()) && (await t.locator('.nut-huy').count()) > 0);
+    await t.waitForTimeout(500);
+    const truoc = S.goi.filter((x) => x === 'GET /voucher').length;
+    await t.locator('.nut-huy').click();
+    k('B4 huỷ đơn chờ trả (voucher được nhả) → làm mới ví voucher', await doi(t, async () => S.daHuy && S.goi.filter((x) => x === 'GET /voucher').length > truoc), `${truoc} → ${S.goi.filter((x) => x === 'GET /voucher').length}`);
   });
 
   them('khong-voucher', { S0: { vi: [] } }, async ({ t, S }) => {

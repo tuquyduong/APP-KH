@@ -23,6 +23,11 @@ const DS = [
   ['VS-THANH-TOAN-MANG-KHAC', [[A, 'maGiam={maGiam} vouchers={vouchers} lui={luiVe}', 'maGiam={maGiam} vouchers={dsGui(viVc, CHON_RONG)} lui={luiVe}']]],
   ['BV-DAT-XONG-KHONG-LAM-MOI-VI', [[A, 'lamMoi([cuaToi, cuaDon, cuaDiem, cuaVoucher]);', 'lamMoi([cuaToi, cuaDon, cuaDiem]);']]],
   ['VS-CSS-MAU-NGOAI-DEMO', [[CSS, 'color:#C62828', 'color:#D32F2F']]],
+  // vòng sửa 1 (/ra-soat): mỗi chỗ làm mới / xoá lựa chọn có đột biến riêng; "marker suông" (cuaVoucher đứng ngoài mảng lamMoi) cũng phải đỏ.
+  ['BV-HUY-KHONG-LAM-MOI-VI', [[A, 'lamMoi([cuaDon, cuaToi, cuaVoucher]);', 'lamMoi([cuaDon, cuaToi]); void cuaVoucher;']]],
+  ['BV-TRA-KHONG-LAM-MOI-VI', [[A, 'lamMoi([cuaDon, cuaVoucher])', 'lamMoi([cuaDon])']]],
+  ['BV-DOI-KHACH-GIU-LUA-CHON', [[A, "datMaGiam(''); datChonVc(CHON_RONG); quenKeHoach(); };", "datMaGiam(''); quenKeHoach(); };"]]],
+  ['BV-DANG-XUAT-GIU-LUA-CHON', [[A, "thay('/trangchu'); datMaGiam(''); datChonVc(CHON_RONG);", "thay('/trangchu'); datMaGiam('');"]]],
 ];
 const TRINH_DUYET = [
   ['VS-APP-TU-GHEP-CAU', [[U, "<div className=\"t\" {...ndDau('ud.vc.moTa')}>{moTa}</div>", "<div className=\"t\" {...ndDau('ud.vc.moTa')}>{moTaGiam(loai, giaTri)}</div>"]]],
@@ -32,6 +37,7 @@ const TRINH_DUYET = [
   ['BV-THANH-TOAN-KHONG-KHOI-LOI', [[T, 'bg.voucherLoi.length > 0 &&', 'bg.voucherLoi.length > 99 &&']]],
   ['VS-NHAN-MA-CAU-CU', [[N, "r.data && String(r.data.mo_ta || '').trim() ?", 'false ?']]],
   ['BV-CHO-BAO-GIA-NHAP-NHAY', [[G, 'tt = trangThaiVoucher(v.code, bg || bgCu)', 'tt = trangThaiVoucher(v.code, bg)']]],
+  ['VS-THANH-TOAN-DONG-GAN-KHOA-POS', [[T, "className=\"vc-loi\" {...ndDau('tt.vc.dong')}", "className=\"vc-loi\" {...ndDau('gio.vc.loi')}"]]],
 ];
 
 function chay(ten, sua, trinhDuyet) {
