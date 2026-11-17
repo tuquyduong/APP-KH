@@ -62,7 +62,7 @@ Vượt ~1,3 lần ở phần code (dưới 1,5): khối "chưa rõ" của Thanh
 ## C4 — ảnh 390 (viec/KH-NAP-1/so_anh/)
 `sau/` 7 màn (uu_dai, tai_khoan, vi, bang_goi, thanh_toan_nap, theo_doi_nap, da_nap) · `de_xuat_man1..5_1.webp` (ảnh đề xuất tách từ ban_thiet_ke.html) ·
 `truoc_uudai_vang.png` / `sau_uudai_vang_khong_goi.png` (Ưu đãi trước / sau, khách có hạng, quán không bật gói nạp). Màn Ví, bảng gói, Thanh toán nạp, Đã nạp
-KHÔNG có ảnh "trước" (màn mới). So với đề xuất: bố cục, chữ, thứ tự khối khớp; khác ở màu (thay màu ngoài demo bằng biến demo) và biểu tượng (Ico plus / minus /
+KHÔNG có ảnh "trước" (màn mới). [Vòng 2 sửa: câu cũ bỏ sót hai màn CŨ bị đổi — Tài khoản, Theo dõi đơn nạp — nay có ở `so_anh/cap/`.] So với đề xuất: bố cục, chữ, thứ tự khối khớp; khác ở màu (thay màu ngoài demo bằng biến demo) và biểu tượng (Ico plus / minus /
 ví của demo thay ô chữ "+ − ±") — chi tiết từng khối: `doi_chieu_demo.md`.
 
 ## C5 — so ảnh mọi bài thử có LUU_ANH_DIR, gốc (b62c23d, bản sao trong nháp) ↔ nhánh (công cụ nháp so điểm ảnh bằng Chromium)
@@ -80,7 +80,7 @@ C5 chưa ghi, C4 thiếu ảnh "trước" → ghi ở trên + ảnh Ưu đãi tr
 NGHI NGỜ đã xử lý: Thanh toán nạp khi /goi-nap lỗi không có lối ra → thêm "Về Ví" (+ ca thử, đỏ trên gốc). Nghi ngờ GIỮ (ghi Phát hiện): bỏ trùng /vi theo nội dung;
 `hien.nap.dn` tắt thì không câu "đã xong" (giống `hien.the.cm` của thẻ); nút "+ Nạp tiền" nằm trong ô `role="button"` (chặn nổi bọt, chạy đúng; theo thiết kế N1/N4);
 UuDai.jsx thêm import + dòng `coNap` trong thân `UuDaiToi` (cần để chạy — chủ quán cho phép chữ ký + import ở câu 4).
-NGHIỆM THU người soát đếm: 12/16 có bằng chứng; thiếu C4, C5, C6, C7 → nay đủ (C4, C5 ở trên; C6 ở mục Kiểm cuối; C7 ở mục Thử tay).
+NGHIỆM THU người soát đếm: 12/16 có bằng chứng; thiếu C4, C5, C6, C7 → C5, C6, C7 đủ; C4 vòng 1 mới đủ MỘT PHẦN (người soát vòng 2 bắt — xem mục vòng 2).
 
 ## Phát hiện (thêm)
 - `GET /vi` không có mã dòng → "Xem thêm" bỏ trùng theo nội dung [ngày, loại, số, mã đơn, ghi chú]; hai dòng sổ ví giống hệt nhau cùng giây sẽ thành một.
@@ -99,3 +99,22 @@ NGHIỆM THU người soát đếm: 12/16 có bằng chứng; thiếu C4, C5, C6
   (cảnh báo A16: thu_KHNAP1 trên gốc in 37 ca ≠ 41 — bài DỪNG SỚM trên gốc ở ca A3 vì src/viTien.js chưa có; cổng ghi "bỏ qua").
 - Đột biến tay: 13/13 bắt được (`node viec/KH-NAP-1/dot_bien_tay.js --trinh-duyet`).
 HEAD ĐÃ KIỂM: 4020ef4
+
+## Rà soát vòng 2 (agent độc lập mới, 17.11) — KHÔNG ĐẠT (code không lỗi chặn gộp; lỗi giấy tờ C4) → đã sửa
+Người soát tự chạy (không Chromium): thu_KHNAP1 41 · 0, thu_KHUI3d 36 · 0, thu_KHKHOP1 51 · 0, thu_KHTHE2 46 · 0, kiem_tra 63 · 0, cổng tĩnh ĐẠT, build OK.
+NGHIỆM THU người soát đếm: 15/16 — thiếu C4.
+LỖI và cách sửa:
+1. C4 / CLAUDE.md §5: thiếu ảnh trước của Tài khoản và Theo dõi đơn nạp chờ trả (màn CŨ), thiếu 360/430, thiếu ảnh tô chỗ lệch; trang_thai ghi "nay đủ" sai →
+   công cụ nháp chụp cùng POS giả, cùng đồng hồ, cây gốc (bản sao b62c23d + public/) ↔ nhánh: `so_anh/cap/<màn>_<rộng>_{truoc,sau,lech}.png`
+   cho uu_dai, tai_khoan, theo_doi_nap_cho_tra × 360/390/430 (27 ảnh). Điểm ảnh lệch: Ưu đãi ~23k (ô ví viền + nút "+ Nạp tiền" đẩy khối dưới xuống);
+   Tài khoản 0 (chỉ thêm khả năng bấm ô Ví); Theo dõi đơn nạp ~10k (4 bước pha chế → 2 bước, dòng chi tiết bỏ "💳 … ×1"). Đã xem tận mắt ảnh lệch 390.
+   Sửa câu "nay đủ" ở mục vòng 1 và mục C4.
+2. App.jsx: SỬA dòng import cũ (`dongNapTuDuongDan` vào import gio.js) — ngoài chữ "chỉ THÊM dòng" của mục Cấm; cần để chạy, ghi lại cho chat lúc gộp.
+3. UuDai.jsx: import + dòng `coNap` ngoài khối wallet-row — đã ghi ở vòng 1; ghi lại cho chat lúc gộp với KH-VC-2.
+NGHI NGỜ đã xử lý (có ca thử, đỏ trước vá — bang_chung_do.txt):
+- Nút lồng trong `role="button"` (trợ năng) → ô ví thành 2 nút anh em: `.vt-vi-nut` (số dư + nhãn → Ví) và `.vt-nap`; khung ô vẫn bấm bằng chuột.
+- "Về Ví" thêm trang → Back quay lại Thanh toán nạp lỗi → nay THAY trang (`thay`).
+NGHI NGỜ giữ (Phát hiện): `hien.nap.dn` tắt thì không câu "đã xong" (cùng khuôn `hien.the.cm`); bỏ trùng /vi theo nội dung (cần `data[].id`);
+mở THẲNG địa chỉ theo dõi của đơn nạp đã xong từ lâu → ô "Số dư mới" hiện số dư hiện tại (Lịch sử đơn / Ví đưa đơn xong sang Chi tiết đơn nên chỉ khi tự gõ địa chỉ);
+"Tạo mã mới" của đơn nạp đặt từ MÁY KHÁC (không có `kh_don_gui`) → về Thanh toán giỏ, vì `GET /don/:ma` không trả `ma_goi` (thẻ cùng giới hạn) — đề xuất POS
+trả `ma_goi` ở dòng nạp của `GET /don/:ma`.
