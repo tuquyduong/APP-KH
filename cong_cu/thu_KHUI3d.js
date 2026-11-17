@@ -87,7 +87,7 @@ const VOUCHER = { success: true, data: [{ id: 7, reward_name: 'Giảm 20.000đ',
     k('B2 đầu trang: "Ưu đãi của tôi" chỉ khi đã đăng nhập, vãng lai "Ưu đãi"', /dangNhap \? 'ud\.tieuDeToi' : 'ud\.tieuDe'/.test(uu) && /'ud\.tieuDeToi', '[^']*', 'Ưu đãi của tôi'/.test(fs.readFileSync(path.join(GOC, 'src/noiDung/nd/taiKhoan.js'), 'utf8')));
     k('B2 không chữ / số mẫu của demo ("Ưu đãi tháng này", "đến 50%")', !/tháng này|đến 50%|Quyền lợi/.test(uu));
     // KH-NHANH-1: /toi, /diem, /voucher đọc kho chung (cuaToi / cuaDiem / cuaVoucher); "Xem tất cả" vẫn gọi layVoucher(true).
-    k('B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher', !/goi\(/.test(uu) && !/fetch\(/.test(uu) && [...uu.matchAll(/\blay[A-Z][A-Za-z]*/g)].every((m) => ['layVoucher', 'layTatCa', 'layChuongTrinh'].includes(m[0])) && [...uu.matchAll(/\bcua[A-Z][A-Za-z]*/g)].every((m) => ['cuaToi', 'cuaDiem', 'cuaVoucher'].includes(m[0])) && /dungCua\(cuaDiem\)/.test(uu));
+    k('B4 không gọi thêm cửa mới: chỉ kho /toi, /diem, /voucher + layVoucher + kho gói nạp (KH-NAP-1: nút "+ Nạp tiền" đọc dungCua(cuaGoiNap))', !/goi\(/.test(uu) && !/fetch\(/.test(uu) && [...uu.matchAll(/\blay[A-Z][A-Za-z]*/g)].every((m) => ['layVoucher', 'layTatCa', 'layChuongTrinh'].includes(m[0])) && [...uu.matchAll(/\bcua[A-Z][A-Za-z]*/g)].every((m) => ['cuaToi', 'cuaDiem', 'cuaVoucher', 'cuaGoiNap'].includes(m[0])) && /dungCua\(cuaDiem\)/.test(uu) && /dungCua\(cuaGoiNap\)/.test(uu));
     k('B4 KH-CT-1: Ưu đãi gọi GET /chuong-trinh qua layChuongTrinh (cửa công khai)', /layChuongTrinh/.test(uu));
     // KH-QC-1 (chủ quán 15.11): cửa /quang-cao do App gọi (dải + banner), công khai — ca TĨNH, đỏ trên gốc kể cả KHONG_TRINH_DUYET=1
     const apiQc = fs.readFileSync(path.join(GOC, 'src/api.js'), 'utf8');
@@ -232,7 +232,7 @@ async function trinhDuyet(pw) {
         const vi = await chu(t, '#rewards .wallet-row');
         k(`B2 [${nhan}] điểm 1.250 và số dư ví 85.000đ`, /1\.250/.test(vi) && /85\.000đ/.test(vi) && (await t.locator('#rewards .wallet-box').count()) === 2, vi);
         k(`B2 [${nhan}] có voucher, ô nhập mã, lịch sử điểm; không khối khoá`, (await co(t, '#rewards .voucher')) && (await co(t, '#ma-bill')) && /Lịch sử điểm/.test(await chu(t, '#rewards')) && !(await co(t, '#rewards .the-moi')));
-        k(`B4 [${nhan}] gọi /toi, /diem, /voucher (+ /don tải trước, KH-NHANH-1) mỗi cửa một lần, không cửa nào lạ`, S.goi.every((g) => ['/toi', '/diem', '/voucher', '/don', '/gio-vang', '/hang', '/gio-hoat-dong', '/menu', '/gia-han', '/chuong-trinh', '/quang-cao'].includes(g.duong)) && them(S, '/diem').length === 1 && them(S, '/voucher').length === 1, JSON.stringify(S.goi.map((g) => g.duong)));
+        k(`B4 [${nhan}] gọi /toi, /diem, /voucher (+ /don tải trước, KH-NHANH-1; + /goi-nap của nút Nạp tiền, KH-NAP-1) mỗi cửa một lần, không cửa nào lạ`, S.goi.every((g) => ['/toi', '/diem', '/voucher', '/don', '/gio-vang', '/hang', '/gio-hoat-dong', '/menu', '/gia-han', '/chuong-trinh', '/quang-cao', '/goi-nap'].includes(g.duong)) && them(S, '/diem').length === 1 && them(S, '/voucher').length === 1 && them(S, '/goi-nap').length === 1, JSON.stringify(S.goi.map((g) => g.duong)));
         k(`B6 [${nhan}] không tràn ngang`, await khongTran(t));
         if (rong === 390 && cs === '100%') await chup(t, 'ung-dung_uudai-dangnhap_390');
       });

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { layVoucher, layChuongTrinh } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dungCua, cuaDiem, cuaToi, cuaVoucher, lamMoi } from '../duLieuKhach.js';
+import { dungCua, cuaDiem, cuaToi, cuaVoucher, cuaGoiNap, lamMoi } from '../duLieuKhach.js';
+import { goiNapDs } from '../viTien.js';
 import { dungGia } from '../heThong.js';
 import { dungKho } from '../kho.js';
 import { khoGioHoatDong } from '../gioHoatDong.js';
@@ -23,6 +24,7 @@ import { bayGio } from '../bayGio.js';
 import '../giaoDien/chuong_trinh.css';
 import '../giaoDien/hang.css';
 import '../giaoDien/the_hang.css';
+import '../giaoDien/vi_tien.css';
 import '../giaoDien/voucher.css';
 import { laShip } from '../voucherGio.js';
 
@@ -209,18 +211,25 @@ function TheHangToi({ moHang }) {
 }
 
 // Phần riêng của khách đã đăng nhập: điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
-function UuDaiToi({ maSan, khiNhanXong, dungVoucher }) {
+function UuDaiToi({ maSan, khiNhanXong, moVi, moNap, dungVoucher }) {
   const tai = dungCua(cuaDiem);
   const toi = dungCua(cuaToi);
   const [tatCa, datTatCa] = useState(false);
   const khach = toi.dl && toi.dl.khach;
+  const coNap = goiNapDs(dungCua(cuaGoiNap).dl).length > 0 && ndHien('hien.vt.nap');
   return (
     <>
       <TrangTai tai={tai}>
         {(dl) => (
           <div className="wallet-row">
-            <div className="wallet-box"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>
-            {khach && dinhDangGia(khach.so_du_vi) && <div className="wallet-box"><div className="n" {...ndDau('ud.khach')}>{dinhDangGia(khach.so_du_vi)}</div><Chu k="ud.vi" as="div" className="l" /></div>}
+            <div className="wallet-box vt-o"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>
+            {/* KH-NAP-1 (N1 a): số dư + nhãn là MỘT nút → màn Ví; nút nhỏ "+ Nạp tiền" (nút anh em, không lồng) chỉ khi quán có ≥ 1 gói (N4 a) → Ví + bảng chọn gói. */}
+            {khach && dinhDangGia(khach.so_du_vi) && (
+              <div className="wallet-box vt-o vt-vi-mo" onClick={moVi}>
+                <button type="button" className="vt-vi-nut" onClick={(e) => { e.stopPropagation(); moVi(); }}><div className="n" {...ndDau('ud.khach')}>{dinhDangGia(khach.so_du_vi)}</div><Chu k="ud.vi" as="div" className="l" /></button>
+                {coNap && <button type="button" className="vt-nap" onClick={(e) => { e.stopPropagation(); moNap(); }} {...ndDau('vt.ud.nap')}>{nd('vt.ud.nap')}</button>}
+              </div>
+            )}
           </div>
         )}
       </TrangTai>
@@ -247,7 +256,7 @@ function UuDaiToi({ maSan, khiNhanXong, dungVoucher }) {
 }
 
 // Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
-export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang, dungVoucher }) {
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang, moVi, moNap, dungVoucher }) {
   return (
     <Man id="rewards">
       <div className="topbar"><div><Chu k={dangNhap ? 'ud.tieuDeToi' : 'ud.tieuDe'} as="h1" /></div><NutQR moQR={moQR} /></div>
@@ -255,7 +264,7 @@ export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, m
       <BannerGioVang mo={moGioVang} />
       <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
-        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} dungVoucher={dungVoucher} />
+        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} moVi={moVi} moNap={moNap} dungVoucher={dungVoucher} />
         : <><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );

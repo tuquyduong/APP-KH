@@ -113,7 +113,7 @@ const TOI = (het_han, id = 2) => ({ id, ten: HANG.find((h) => h.id === id).ten, 
     k('D1 thamTaoMaMoi đơn chỉ thẻ → thanhtoanthe { h, thang }', bang(D.thamTaoMaMoi(gThe), { trang: 'thanhtoanthe', tham: { h: 2, thang: 3 } }), JSON.stringify(D.thamTaoMaMoi(gThe)));
     k('D1 thamTaoMaMoi đơn đồ uống / không bản ghi → thanhtoan {}', bang(D.thamTaoMaMoi(gLy), { trang: 'thanhtoan', tham: {} }) && bang(D.thamTaoMaMoi(null), { trang: 'thanhtoan', tham: {} }));
     const td = doc('src/pages/TheoDoiDon.jsx');
-    k('D1 tắt khối hien.the.cm chỉ ẩn màn chúc mừng: đơn chỉ thẻ vẫn không số đơn ra quầy / các bước / "mời ra quầy" (theXong không phụ thuộc ndHien)', /const theXong = !!don && tt === 'xong' && laDonChiThe\(don\);/.test(td) && /const chaoMung = theXong && ndHien\('hien\.the\.cm'\)/.test(td) && /\{!theXong && <div className="card the-buoc">/.test(td));
+    k('D1 tắt khối hien.the.cm chỉ ẩn màn chúc mừng: đơn chỉ thẻ vẫn không số đơn ra quầy / các bước / "mời ra quầy" (theXong không phụ thuộc ndHien)', /const theXong = !!don && tt === 'xong' && laDonChiThe\(don\);/.test(td) && /const chaoMung = theXong && ndHien\('hien\.the\.cm'\)/.test(td) && /\{!theXong && !napXong && <div className="card the-buoc">/.test(td)); // KH-NAP-1: đơn chỉ nạp đã trả (napXong) cũng bỏ các bước
     k('D1 hangCuaDon trả bản ghi hạng (tên + %)', D.hangCuaDon(gThe, HANG) && D.hangCuaDon(gThe, HANG).ten === 'Vàng' && D.hangCuaDon(gThe, HANG).phan_tram === 3 && D.hangCuaDon(null, HANG) === null);
   });
 

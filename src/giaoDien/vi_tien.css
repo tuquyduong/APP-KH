@@ -1,0 +1,50 @@
+/* Ví của tôi, bảng chọn gói, Thanh toán nạp, Đã nạp (KH-NAP-1 — bản thiết kế chủ quán duyệt 16.11). Lớp mới tiền tố vt-; màu CHỈ từ bảng màu demo (K9):
+   ô số dư = .wallet-hero của demo, chuyển sắc --pink-deep → --forest (phiếu B6); "xanh" (tiền vào, thưởng) = --mint-dark trên nền --mint; số ra = --ink. */
+.vt-hero{ position:relative; overflow:hidden; border-radius:18px; padding:20px; color:var(--white); background:linear-gradient(135deg, var(--pink-deep), var(--forest)); }
+.vt-hero::before{ content:""; position:absolute; top:-40px; right:-40px; width:140px; height:140px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.18), transparent 70%); }
+.vt-hero > *{ position:relative; z-index:1; }
+.vt-hero .lbl{ font-size:11.5px; opacity:.85; }
+.vt-hero .amt{ font-size:30px; font-weight:700; margin-top:6px; line-height:1.15; overflow-wrap:anywhere; }
+.vt-hero-nut{ margin-top:16px; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; min-height:44px; border:none; border-radius:12px; background:var(--white); color:var(--pink-deep); font:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+.vt-cong-nhan{ display:inline-block; margin-top:10px; font-size:12.5px; font-weight:700; background:rgba(255,255,255,.2); padding:5px 11px; border-radius:999px; }
+.vt-luat{ font-size:12px; color:var(--muted); margin:10px 4px 0; line-height:1.5; }
+.vt-ds{ padding:2px 14px; }
+.vt-ds .tx-item:last-child{ border-bottom:none; }
+.tx-item.vt-mo{ cursor:pointer; }
+.tx-item .info{ min-width:0; }
+/* Ô biểu tượng tô nền như bản thiết kế (demo_1.css đặt nền .tx-item .ic = none !important → cần !important); máy cũ không có color-mix → nền kem của demo. */
+.tx-item .ic.vt-ic{ width:40px; height:40px; border-radius:12px; background:var(--cream) !important; background:color-mix(in srgb, var(--mint) 35%, var(--white)) !important; }
+.tx-item .ic.vt-ic.ra{ background:var(--line) !important; }
+.tx-item .ic.vt-ic.dc{ background:var(--cream) !important; }
+.tx-item .ic.vt-ic .ico{ width:18px; height:18px; color:var(--mint-dark); }
+.tx-item .ic.vt-ic.ra .ico{ color:var(--pink-dark); }
+.tx-item .ic.vt-ic.dc .ico{ color:var(--muted); }
+.vt-thuong{ font-size:10.5px; color:var(--mint-dark); font-weight:600; margin-top:2px; }
+.tx-item .amt.vt-cong{ color:var(--mint-dark); white-space:nowrap; }
+.tx-item .amt.vt-tru{ color:var(--ink); white-space:nowrap; }
+.vt-chev{ color:var(--muted); font-size:18px; margin-left:-6px; }
+.vt-them{ display:flex; justify-content:center; width:100%; margin-top:12px; }
+/* Bảng chọn gói */
+.vt-goi-ds{ margin-top:4px; }
+.vt-goi{ display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:16px; background:var(--white); box-shadow:0 0 0 1.5px var(--line); margin-bottom:10px; cursor:pointer; }
+.vt-goi.chon{ box-shadow:0 0 0 2px var(--pink-dark); }
+.vt-goi-o{ width:22px; height:22px; border-radius:50%; border:2px solid var(--line); flex:none; display:flex; align-items:center; justify-content:center; color:var(--white); }
+.vt-goi.chon .vt-goi-o{ border-color:var(--pink-dark); background:var(--pink-dark); }
+.vt-goi-chu{ flex:1; min-width:0; }
+.vt-goi-ten{ font-size:14px; font-weight:700; color:var(--ink); }
+.vt-goi-so{ font-size:12.5px; color:var(--muted); margin-top:3px; }
+.vt-goi-so b{ color:var(--mint-dark); font-weight:700; }
+.vt-goi-thuong{ font-size:12px; font-weight:700; color:var(--mint-dark); background:var(--mint); background:color-mix(in srgb, var(--mint) 45%, var(--white)); padding:5px 9px; border-radius:999px; white-space:nowrap; }
+.vt-tiep{ margin-top:6px; }
+.vt-goi-nho{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:12px; line-height:1.5; }
+/* Ưu đãi: hai ô điểm / ví cân chiều cao, ô ví bấm được, nút nhỏ Nạp tiền */
+.wallet-box.vt-o{ display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.wallet-box.vt-vi-mo{ cursor:pointer; box-shadow:0 0 0 1.5px var(--line), 0 1px 4px rgba(26,54,93,.08); }
+.vt-vi-nut{ display:block; width:100%; padding:0; border:none; background:none; font:inherit; color:inherit; text-align:center; cursor:pointer; }
+.vt-nap{ margin-top:8px; font:inherit; font-size:11.5px; font-weight:700; color:var(--white); background:var(--pink-dark); border:none; padding:5px 12px; border-radius:999px; cursor:pointer; }
+/* Thanh toán nạp */
+.vt-nap-ic{ width:46px; height:46px; border-radius:14px; background:linear-gradient(135deg, var(--pink-deep), var(--forest)); color:var(--white); display:flex; align-items:center; justify-content:center; flex:none; }
+.summary-row.vt-vao-vi{ color:var(--mint-dark); font-weight:600; }
+/* Đã nạp */
+.cm-dau .vt-hero.vt-moi{ width:100%; text-align:left; margin-bottom:6px; }
+.cart-thumb.vt-thumb .ico{ color:var(--pink-deep); }

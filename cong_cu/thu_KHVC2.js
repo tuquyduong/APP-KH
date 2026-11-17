@@ -128,7 +128,8 @@ if (require.main === module) (async () => {
     k('B4 đổi khách (docLaiGio) / đăng xuất (donPhien) xoá lựa chọn voucher cùng mã giảm', /datChonVc\(CHON_RONG\)/.test(ham('docLaiGio')) && /datChonVc\(CHON_RONG\)/.test(ham('donPhien')));
     k('B4 đơn trả (daTra) / huỷ (daHuy) / vừa đặt (xongDatDon) làm mới cuaVoucher (nằm TRONG mảng lamMoi)', ['daTra', 'daHuy', 'xongDatDon'].every((x) => /lamMoi\(\[[^\]]*\bcuaVoucher\b[^\]]*\]\)/.test(ham(x))), ['daTra', 'daHuy', 'xongDatDon'].map(ham).join(' | '));
     const tt = doc('src/pages/ThanhToan.jsx');
-    k('B5 Thanh toán đồ uống: tuy = { maGiam, vouchers }', /tuy = cheDoThe \? KHONG_MA : \{ maGiam, vouchers \}/.test(tt), (/const tuy = [^\n]*/.exec(tt) || [''])[0]);
+    // Chat gộp NAP-1 + VC-2 (17.11): Thanh toán nạp (KH-NAP-1) cũng đi KHONG_MA như thẻ — không mã giảm, không voucher.
+    k('B5 Thanh toán đồ uống: tuy = { maGiam, vouchers }; thẻ / nạp: KHONG_MA', /tuy = cheDoThe \|\| cheDoNap \? KHONG_MA : \{ maGiam, vouchers \}/.test(tt), (/const tuy = [^\n]*/.exec(tt) || [''])[0]);
   });
 
   console.log('Phần 2 — App thật trong Chromium');

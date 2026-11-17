@@ -24,6 +24,8 @@ const BANG = [
   { trang: 'uudai', mau: '/uudai', tab: 'uudai', tieuDe: 'tieuDe.uudai' },
   { trang: 'hang', mau: '/uudai/hang', tab: 'uudai', tieuDe: 'tieuDe.hang', cha: '/uudai', tv: { h: null } },
   { trang: 'thanhtoanthe', mau: '/uudai/hang/thanhtoan', tab: 'uudai', canDN: true, tieuDe: 'tieuDe.thanhtoan', cha: '/uudai/hang', tv: { h: null, thang: null }, chaTv: ['h'] }, // KH-THE-2: Thanh toán thẻ (chỉ QR)
+  { trang: 'vi', mau: '/uudai/vi', tab: 'uudai', canDN: true, tieuDe: 'tieuDe.vi', cha: '/uudai', tv: { nap: ['1'] } }, // KH-NAP-1: Ví (?nap=1 = bảng chọn gói đang mở)
+  { trang: 'napvi', mau: '/uudai/vi/nap', tab: 'uudai', canDN: true, tieuDe: 'tieuDe.napvi', cha: '/uudai/vi', tv: { goi: null } }, // KH-NAP-1: Thanh toán nạp (chỉ QR)
   { trang: 'taikhoan', mau: '/taikhoan', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.taikhoan' },
   { trang: 'thongtin', mau: '/taikhoan/thongtin', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.thongtin', cha: '/taikhoan' },
   { trang: 'donhang', mau: '/taikhoan/donhang', tab: 'taikhoan', canDN: true, tieuDe: 'tieuDe.donhang', cha: '/taikhoan' },
