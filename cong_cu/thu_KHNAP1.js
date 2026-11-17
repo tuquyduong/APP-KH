@@ -112,7 +112,7 @@ const LY = { ma: 'TLB', so_luong: 2, ghi_chu: '' };
     const demoMau = docMau(demo), la = [...docMau(css)].filter((c) => !demoMau.has(c));
     k('C1 vi_tien.css có, 0 màu ngoài demo (thuật toán K9)', css.length > 300 && la.length === 0, la.join(' · '));
     const lop = [...boChuThich(css).matchAll(/(?<![\w-])\.([a-z][\w-]*)/g)].map((m) => m[1]);
-    const KHUON = /^(vt-|wallet-|tx-item|ic$|info$|amt$|plus$|minus$|lbl$|chon$|card$|panel$|sheet$|cm-|vao$|ra$|dc$|t$|d$)/;
+    const KHUON = /^(vt-|wallet-|tx-item|ic$|ico$|info$|amt$|lbl$|chon$|cm-|ra$|dc$|summary-row$|cart-thumb$)/;
     k('C1 lớp MỚI trong vi_tien.css đều tiền tố vt- (lớp demo chỉ dùng làm ngữ cảnh)', lop.length > 5 && lop.some((x) => x.startsWith('vt-')) && lop.every((x) => KHUON.test(x)), [...new Set(lop.filter((x) => !KHUON.test(x)))].join(', '));
     const ND = await nap('src/noiDung/nd.js'), IDX = await nap('src/noiDung/nd/index.js');
     let VT = null; try { VT = (await nap('src/noiDung/nd/viTien.js')).VI_TIEN; } catch { /* chưa có */ }
