@@ -2,7 +2,7 @@
 // Có dữ liệu thì hiện ngay; lấy mới NGẦM khi: màn mở mà bản quá 5 phút, khách quay lại app sau 60 giây, mỗi 5 phút, ngay sau thao tác đổi dữ liệu.
 // Đổi phiên → xoá sạch kho (kết quả của lệnh bay từ phiên cũ bị bỏ). Thanh toán, Theo dõi đơn, Chi tiết đơn KHÔNG đọc kho (luôn lấy mới).
 import { useEffect } from 'react';
-import { layToi, layDiem, layVoucher, layDon } from './api.js';
+import { layToi, layDiem, layVoucher, layDon, layGoiNap } from './api.js';
 import { taoKho, dungKho } from './kho.js';
 import { dauVet, docChu, cungKhach } from './luuMay.js';
 import { rutTomTat, ghiTomTat, docTomTat, tomTatCuaKhach } from './tomTatLuu.js';
@@ -47,6 +47,8 @@ export const cuaDiem = taoCua(layDiem);
 export const cuaVoucher = taoCua(() => layVoucher(false));
 export const cuaDon = taoCua(() => layDon(1));
 export const CUA_KHACH = [cuaToi, cuaDiem, cuaVoucher, cuaDon];
+// Gói nạp (GET /goi-nap, KH-NAP-1): thông tin CÔNG KHAI của quán — không thuộc CUA_KHACH (không xoá khi đăng xuất); Ưu đãi, Ví, Thanh toán nạp cùng đọc.
+export const cuaGoiNap = taoCua(layGoiNap);
 
 export const lamMoi = (ds) => ds.forEach((c) => c.lay());
 export const xoaKhoKhach = () => CUA_KHACH.forEach((c) => c.xoa());
