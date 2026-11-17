@@ -101,6 +101,7 @@ dùng lại ĐÚNG đường Thanh toán / Theo dõi đơn đang có (khoá gử
 - src/pages/TaiKhoan.jsx
 - src/duLieuKhach.js
 - src/kiemKhop/canTuPos.js
+- src/pages/KiemKhop.jsx
 - src/components/BieuTuong.jsx
 - cong_cu/thu_KHNAP1.js
 - cong_cu/thu_*.js
@@ -118,11 +119,23 @@ không
 
 ## Cấm
 - **Song song với KH-VC-2 (voucher):** KHÔNG sửa `src/pages/GioHang.jsx` (cả `BangTien`), `src/components/NhanMa.jsx`, `src/dungDatDon.js`, `src/noiDung/nd/taiKhoan.js`,
-  `src/noiDung/nd/donHang.js`, tệp mới của VC-2 (`src/voucherGio.js`, `src/giaoDien/voucher.css`). Trong `UuDai.jsx` CHỈ khối `wallet-row`; trong `datDon.js` KHÔNG đụng
-  `thanBaoGia` / `docBaoGia` / `tenGiam`; trong `ThanhToan.jsx` KHÔNG đụng biến `tuy` của đơn đồ uống và chỗ dưới `BangTien` của đơn đồ uống; trong `App.jsx` chỉ THÊM dòng (trang
-  mới, nút mở Ví, `daTra`), không sửa dòng `GioHang` / `ThanhToan` đồ uống. `canTuPos.js`, `no_chu_cung.txt`: chỉ THÊM dòng của mình. Đụng nhau lúc gộp: chat xử lý.
+  `src/noiDung/nd/donHang.js`, tệp mới của VC-2 (`src/voucherGio.js`, `src/giaoDien/voucher.css`). Trong `UuDai.jsx` CHỈ khối `wallet-row` + chữ ký `UuDai` / `UuDaiToi` để nhận `moVi` / `moNap` (duyệt 16.11); trong `datDon.js` KHÔNG đụng
+  `thanBaoGia` / `docBaoGia` / `tenGiam`; trong `ThanhToan.jsx` KHÔNG đổi GIÁ TRỊ `tuy` của đơn đồ uống (được đổi điều kiện thành `cheDoThe || cheDoNap` — duyệt 16.11) và chỗ dưới `BangTien` của đơn đồ uống; trong `App.jsx` chỉ THÊM dòng (trang
+  mới, nút mở Ví, `daTra`) + THÊM prop `moVi` / `moNap` vào các dòng `<UuDai>`, `<TaiKhoan>`, `<TheoDoiDon>` (không đổi prop cũ — duyệt 16.11), không sửa dòng
+  `GioHang` / `ThanhToan` đồ uống. `canTuPos.js`, `no_chu_cung.txt`: chỉ THÊM dòng của mình. Đụng nhau lúc gộp: chat xử lý.
 - KHÔNG sửa `src/components/TheQR.jsx`, `src/giaoDien/the_qr.css`, `src/qrThuongHieu.js`, `src/quangCao.js`, `src/giaoDien/demo*.css`, `src/theHoiVien.js`, `src/components/TheHoiVien.jsx`,
   `thiet_ke/**`, `tu_chay/`, `.claude/`, `.github/`, `kiem_tra_truoc_khi_giao.js`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`.
 - KHÔNG tự tính tiền: giá, thưởng, số dư mới, số đã vào ví đều từ POS (`/goi-nap`, báo giá, `/toi`, `/vi`) — ngoại lệ duy nhất là nhãn thưởng `vao − tra` (N3). KHÔNG đổi luật đơn
   đồ uống / thẻ. KHÔNG thêm màu ngoài bảng demo (K9).
 - Chỉ push `git push -u origin viec/KH-NAP-1`. Không đụng `main`, không merge, không tạo PR.
+
+## Chủ quán duyệt kế hoạch (16.11 tối)
+Duyệt `viec/KH-NAP-1/ke_hoach.md` (109bf4d) NGUYÊN — các phương án ★ P1–P7. Trả lời 4 câu:
+1. **Có** — thêm `src/pages/KiemKhop.jsx` vào Phạm vi (đã thêm ở trên): CHỈ 2 khoá `'GET /goi-nap'`, `'GET /vi'` trong bảng `GOI` + import; A1 khai `canTuPos.js` như phiếu.
+2. **Giữ nút "Đặt lại"** ở danh sách Lịch sử đơn; bấm vào đơn chỉ nạp → câu sẵn có `app.donRong`. Ghi vào mục Phát hiện trong `trang_thai.md`; KHÔNG soạn thư POS
+   (chat gom sau nếu cần trường `chi_nap`).
+3. **Được** — đổi điều kiện dòng `tuy` thành `cheDoThe || cheDoNap`; giá trị của đơn đồ uống giữ nguyên. Máy KH-VC-2 cũng sửa ĐÚNG dòng này (thêm `vouchers` cho đơn đồ
+   uống) — đụng nhau lúc gộp là dự kiến, chat xử lý.
+4. **Được** — thêm prop `moVi` / `moNap` vào các dòng `<UuDai>`, `<TaiKhoan>`, `<TheoDoiDon>` của `App.jsx` và chữ ký `UuDai` / `UuDaiToi` (+ import), không đổi prop cũ.
+   Máy KH-VC-2 cũng thêm prop `dungVoucher` vào dòng `<UuDai>` và chữ ký `UuDai` / `UuDaiToi` — đụng nhau lúc gộp là dự kiến, chat xử lý.
+Chạy thẳng từ bước 4 tới hết, không dừng.
