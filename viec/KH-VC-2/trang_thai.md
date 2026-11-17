@@ -206,3 +206,16 @@ BÀI HỌC:
 - bang_chung_do.txt: số gốc / nhánh của bài HIỆN TẠI ghi lại (gốc 29 · 42, nhánh 98 · 0, `KHONG_TRINH_DUYET=1` 2 · 17 / 28 · 0).
 - Không đổi: ví đang tải / lỗi → đặt đơn không voucher, không báo (đúng K5 — ví lỗi không chặn đặt; ghi CHƯA KIỂM). Đổi khách / đăng xuất / trả đơn vẫn nguồn + đột biến — ca trình duyệt
   đăng nhập lại là đề xuất KHOÁ (Bài học), chưa làm trong việc này. `x.ma` trong dòng sửa được `tt.vc.dong`: nếp `{bien}` có sẵn (người soát cũng không xếp lỗi).
+
+## Kiểm sau vòng sửa 2
+- `npm test -- --day-du` ở c351108: **66 đạt · 0 hỏng** (thu_KHVC2 98 · 0; K9, K10, vite build ✓).
+- `node viec/KH-VC-2/dot_bien_tay.js --trinh-duyet`: 21 / 21 BỊ BẮT.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . b6f66e6^ HEAD viec/KH-VC-2` ở c351108, cây sạch: `✓ CỔNG CHẠY ĐẠT` (+ cảnh báo A16 — bài dừng sớm trên gốc).
+
+## Bài học — bổ sung sau vòng 2
+| Sự cố | Ngăn | Lý do / đề xuất |
+|---|---|---|
+| Ô "tích tạm" treo khi Giỏ không hỏi báo giá (chưa có menu) | KHOÁ (đã làm) + NGUYÊN TẮC | Ca "chua-co-menu" + VS-TICH-TAM-KHI-KHONG-HOI-POS. Đề xuất `KHUON_LOI.md` K3 (ngoài Phạm vi): "trạng thái tạm trên màn (tích trước khi POS trả lời) chỉ khi ĐANG có yêu cầu cho đúng dữ liệu lúc chạm". |
+| Lý do "chấp nhận" chỉ đúng một nhánh điều kiện (`coMenu` vs `coThe`) | NGUYÊN TẮC | Gộp vào K1 đề xuất ở trên: lý do chấp nhận phải kiểm từng nhánh điều kiện. |
+| Ca trình duyệt đăng xuất / đổi khách (người soát hai vòng cùng đề xuất) | KHOÁ (đề xuất) | Bài thu_KHVC2 thêm ca: chọn bỏ tay → 401 / đăng xuất → đăng nhập lại (chặn đường `/dang-nhap/*` như thu_KHUI3d) → lần báo giá đầu gửi lại đủ mảng. Chưa làm — đưa vào việc sau. |
+HEAD ĐÃ KIỂM: c351108
