@@ -84,3 +84,10 @@ SỐ CA cong_cu/thu_KHTHE2.js: 46
 ## Rà soát vòng 1 (17.11): thu_KHNAP1 thêm ca trình duyệt "B4 /goi-nap lỗi → Thử lại + Về Ví" (chỉ phần Chromium — số ca KHONG_TRINH_DUYET=1 không đổi)
 gốc (bản sao b62c23d + bài mới), có Chromium: 26 đạt · 65 hỏng  (✗ B4 /goi-nap lỗi → câu lỗi + "Thử lại" + lối ra "Về Ví", không báo giá)
 nhánh, có Chromium: 125 đạt · 0 hỏng · KHONG_TRINH_DUYET=1: 41 đạt · 0 hỏng (SỐ CA cong_cu/thu_KHNAP1.js: 41 — giữ)
+
+## Rà soát vòng 2 (17.11): thu_KHNAP1 thêm 2 ca trình duyệt (không nút lồng trong ô ví; "Về Ví" thay trang) — số ca KHONG_TRINH_DUYET=1 không đổi
+trên code TRƯỚC vá vòng 2 (HEAD 4020ef4 + bài mới), có Chromium: 124 đạt · 3 hỏng
+  ✗ B1 không nút lồng trong phần tử bấm được (trợ năng — rà soát vòng 2)
+  ✗ ca B1 Ưu đãi — không gói dừng giữa chừng  — locator.focus: Timeout 6000ms exceeded.   (ô ví chưa có nút bên trong để Tab tới)
+  ✗ B4 "Về Ví" THAY trang (Back không quay lại Thanh toán nạp lỗi — rà soát vòng 2)  — http://kh.test/uudai/vi/nap?goi=99
+sau vá: có Chromium 127 đạt · 0 hỏng · KHONG_TRINH_DUYET=1 41 đạt · 0 hỏng (SỐ CA cong_cu/thu_KHNAP1.js: 41 — giữ)
