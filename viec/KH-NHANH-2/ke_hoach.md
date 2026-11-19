@@ -28,6 +28,16 @@
 | /menu, /chuong-trinh, /quang-cao lần đầu, /voucher?all, /vi, /don?trang, /don/:ma (Don, Chi tiết, Đặt lại), /goi-nap (Thanh toán) | chờ | khách đang đợi |
 | báo giá, đặt đơn, huỷ đơn, đăng nhập, PIN, sửa hồ sơ | chờ | |
 
+### Sửa kế hoạch sau khi agent phụ soát (4 câu)
+- `src/heThong.js`, `src/giaHan.js`, `src/dungMenu.js` NGOÀI Phạm vi → không bọc ở đó. Thay bằng: `api.js` coi ba cửa App tự nạp nền (`/hang`, `/gio-vang`,
+  `/gio-hoat-dong` — heThong mỗi phút, quay lại tab, GvDem) là ngầm (`CUA_NGAM`); `giaHan` trong api.js bọc `ngam(...)`. Mất mát: mở thẳng `/uudai/hang` mà CHỈ `/hang` chậm
+  → không vòng (các lượt khác lúc mở App vẫn có vòng).
+- `dungTheoDoi`: lượt POS chạy trong effect sau lần vẽ → đánh dấu bằng ref `dongHo` (đồng hồ đặt, effect đọc rồi xoá), không bọc ở `setInterval`.
+- `daTra` (App.jsx) gọi `menu.taiLai(true)` sau một lượt ngầm → bọc `ngam`. Menu.jsx: bấm tab Menu khi đã có menu → `ngam(tai.taiLai)`.
+- Kho chỉ có bản tóm tắt trên máy (`tuMay`) → coi như CHƯA có (Hồ sơ / Mã thành viên vẫn khung chờ).
+- BaoDonXong: KHÔNG sửa (đã thử, làm đỏ 2 bài cũ đọc nguồn) — `cuaDon.lay()` ở đó luôn chạy khi kho đã có đơn (dangChay) → luật `taoCua` đã cho ngầm.
+- Ngoài bảng, giữ "chờ": dungMenu gọi lại sau 401, Thanh toán /toi mới, Đã nạp /toi + /vi, NhanMa, KiemKhop (khách / quản trị đang đợi).
+
 ## B. Tổng tiền không trống
 - **PA-A (chọn):** `dungBaoGia` (dungDatDon.js) giữ báo giá cuối (`bgCu`) và trạng thái `dangTinh` (đang có lượt hỏi cho đúng giỏ + mã hiện tại, chưa có kết quả).
   Giỏ BỎ ref `bgCu` riêng (KH-VC-2) → dùng `bgCu` của hook (MỘT bản nhớ). `BangTien({ bg, loi, bgCu, dangTinh })`: đang tính + có cũ → dòng cũ mờ (`cho-mo`) + vòng nhỏ
