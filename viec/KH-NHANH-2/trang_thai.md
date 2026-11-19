@@ -65,7 +65,7 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (11/11, `node viec/KH-NHANH-
 | A1 đếm lượt chờ, ngầm không tính, MỘT chỗ, không đổi fetch | thu_KHNHANH2 khối A1 (9 ca Node) + 8 ca đọc nguồn chỗ ngầm + ca "goi bọc goiThat, 2 fetch(" + K1b; đột biến VS-DEM-CA-LUOT-NGAM, BV-KHO-DA-CO-VAN-DEM |
 | A2 VongCho > 300 ms, giữa .phone, không nền / phủ, pointer-events none, 36 px, role, nhãn danh mục, reduced-motion | Chromium "mở App POS 1,5 s" (4 ca) + ca bấm được nút + ca ẩn khi xong + đọc nguồn reduced-motion; BV-BO-TRE-300, VS-VONG-CO-NEN, VS-LOP-PHU-CA-MAN |
 | A3 cho.css tiền tố cho-, màu demo, khung-tai giữ | ca "mọi lớp cho-" + K9 (npm test); không sửa khung-tai (`git diff` không đụng) |
-| B1 số cũ mờ / "Đang tính tiền…" / câu cũ khi không hỏi / lỗi như cũ | Chromium ca gio (3 ca B1) + gio-chua-dn + thanh-toan "Đang tính tiền…" |
+| B1 số cũ mờ / "Đang tính tiền…" / câu cũ khi không hỏi / lỗi như cũ | Chromium ca gio (3 ca B1) + gio-chua-dn + thanh-toan "Đang tính tiền…" + (vòng sửa 1) gio-loi: lỗi → không số cũ, CHUA_MO → câu cũ, nút mở |
 | B2 nút khoá khi tính lại, không số cũ, một bản nhớ bgCu | Chromium B2 (Giỏ 2 ca, Thanh toán 1 ca) + đọc nguồn "Giỏ không còn ref"; VS-NUT-DI-TIEP-MO-KHI-TINH-LAI, VS-NUT-MANG-SO-CU |
 | B3 vòng nhỏ trên nút Đặt đơn / PIN | Chromium "Đặt đơn đang gửi → vòng trắng", "lỗi → hết vòng" + đọc nguồn PIN |
 | C1 preconnect gốc, không /api, biến trống không dòng | 4 ca (chạy script với document giả, 3 biến; vite build thật với VITE_POS_API); K2 / K2d xanh; VS-PRECONNECT-CO-API |
@@ -74,7 +74,7 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (11/11, `node viec/KH-NHANH-
 | D1 bài mới, POS giả trễ, đỏ gốc | bang_chung_do.txt |
 | D1 Theo dõi đơn 3 s / quay lại App 60 s không vòng | Chromium 2 ca; BV-THEO-DOI-DONG-HO-DEM |
 | D2 bài cũ đổi có chủ đích, đỏ gốc cả KHONG_TRINH_DUYET | thu_KHMUA1 B5 (gốc KHONG_TRINH_DUYET=1: 56/1) |
-| D3 ≥ 6 đột biến tay đỏ | 11/11 |
+| D3 ≥ 6 đột biến tay đỏ | 13/13 (sau vòng sửa 1) |
 | D4 ảnh 390 trước / sau | so_anh/ (3 cặp); màn ngoài phạm vi: CHƯA KIỂM (chat soát) |
 | D5 npm test, --day-du, tinh + chay, K10 | mục Kiểm |
 | D6 thử tay | CHƯA KIỂM (chủ quán) |
@@ -94,5 +94,66 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (11/11, `node viec/KH-NHANH-
 - Bài đọc nguồn cũ của BaoDonXong (thu_KHBAO1 A2, thu_KHNHANH1 KH-BAO-1 D1) khoá nguyên văn `const hoiNgay = …` → không bọc được `ngam` ở đó; luật kho
   (`taoCua`: đã có dữ liệu → ngầm) đã phủ trường hợp có đơn đang chạy. Còn sót: quay lại tab khi kho /don CHƯA có dữ liệu (vd lần đầu lỗi) → một lượt "chờ".
 - `src/heThong.js` / `src/giaHan.js` ngoài Phạm vi → ba cửa nền đánh dấu theo đường ở api.js (`CUA_NGAM`). Mở thẳng `/uudai/hang` mà CHỈ /hang chậm → không vòng.
+- Báo giá (`baoGiaGio`) không có giờ chờ tối đa (`choMs`): lượt treo trên 4G → nút "Tiếp tục" Giỏ khoá + vòng giữa màn tới khi trình duyệt bỏ lượt.
+  Đổi giờ chờ báo giá là ngoài phiếu (hợp đồng gửi / gửi lại) — đề xuất việc sau.
+- `CUA_NGAM` (api.js) là cách lách vì heThong.js ngoài Phạm vi — đề xuất việc sau chuyển `ngam(...)` về heThong.js (cùng GvDem, giaHan.js) và bỏ danh sách đường.
+- Lúc bấm + ở Giỏ (báo giá > 300 ms) / Đặt đơn: CÙNG LÚC vòng giữa màn + vòng nhỏ ở bảng tiền / nút. Phiếu đòi cả hai; chủ quán xem ở D6 có muốn tắt vòng giữa
+  màn khi đã có vòng tại chỗ không.
+- §11 "khối mới có `hien.<khối>`": vòng xoay / dòng "Đang tính tiền…" coi là hình chỉ báo trạng thái, không phải khối nội dung → chỉ có khoá chữ
+  (`khung.dangCho`, `gio.dangTinh`), không có `hien.*`. Chủ quán muốn tắt vòng ở /admin thì cần mục `hien.vongCho` (việc sau).
 
 HEAD ĐÃ KIỂM: b02b85a
+
+## Soát độc lập — vòng 1 (báo cáo nguyên văn của agent soát)
+```
+KHÔNG ĐẠT
+
+Tóm tắt: code của việc làm đúng (đường tiền vẫn an toàn, bài thử chạy xanh, không có dist/). Hai lý do không đạt: mục nghiệm thu B1 có một phần không có bài thử nào kiểm, và trang_thai.md ghi đã kiểm phần đó. Các lối hợp lệ của K5 (CHUA_MO, lỗi báo giá) cũng chưa có ca thử.
+
+Tôi đã tự chạy lại `KHONG_TRINH_DUYET=1 node cong_cu/thu_KHNHANH2.js` được 37 đạt · 0 hỏng, và bản có Chromium được 62 đạt · 0 hỏng, khớp với bang_chung_do.txt.
+
+LỖI TÌM ĐƯỢC:
+- viec/KH-NHANH-2/trang_thai.md:68 — Dòng B1 ghi "lỗi như cũ" đã có bằng chứng, nhưng không có ca nào kiểm. POS giả luôn trả báo giá thành công (cong_cu/thu_KHNHANH2.js:247), không có ca báo giá lỗi hay CHUA_MO. Vì vậy chưa kiểm được ba điều phiếu đòi ở B1: "Có lỗi báo giá → không hiện số cũ" (src/pages/GioHang.jsx:29 `cu = dangTinh && !bg && !loi ? bgCu : null`); "CHUA_MO → câu cũ"; nút Tiếp tục không bị khoá vĩnh viễn (src/dungDatDon.js:27 đặt `xong:true` cho mọi lỗi). Kế hoạch tự nêu chỗ này phải canh (viec/KH-NHANH-2/ke_hoach.md:78) nhưng không có ca thử. Thuộc K1 + K5 + K3.
+- viec/KH-NHANH-2/ke_hoach.md:17,18,22 — Bảng "chờ / ngầm" sai so với code, và trang_thai.md:63 trỏ về bảng này.
+  - Dòng 17 ghi heThong lúc mở App là "chờ". Thật ra src/api.js:47 (`CUA_NGAM`) và :61 luôn coi `/hang`, `/gio-vang`, `/gio-hoat-dong` là ngầm, kể cả lần đầu mở App.
+  - Dòng 18 ghi `ngam(nap)`, nhưng src/heThong.js không đổi.
+  - Dòng 22 ghi "`ngam` ở `hoiNgay`", nhưng src/components/BaoDonXong.jsx:12 không đổi.
+  - Mục "Sửa kế hoạch" (dòng 32–38) có nói lại, nhưng bảng vẫn để như cũ.
+  - Thuộc K1.
+- viec/KH-NHANH-2/ke_hoach.md:63 — Bảng ca thử ghi "huỷ (choMs) → về 0" là ca Node. Khối A1 (cong_cu/thu_KHNHANH2.js:61-131) chỉ thử lỗi mạng và 401, không thử huỷ do quá giờ (AbortController). Thuộc K1 (nhẹ).
+- viec/KH-NHANH-2/ke_hoach.md:12 — Ghi màu `rgba(255,255,255,.45)`, còn code dùng `.35` (src/giaoDien/cho.css:4). Thuộc K1 (nhẹ).
+
+NGHI NGỜ:
+- src/pages/GioHang.jsx:127 — Nút "Tiếp tục" của Giỏ nay khoá theo `dangTinh`. Trước đây nút này không phụ thuộc báo giá. `baoGiaGio` không có giờ chờ tối đa (src/api.js:142), nên nếu lượt báo giá treo thì nút khoá và vòng giữa màn hiện cho tới khi trình duyệt tự bỏ lượt. Phiếu B2 có đòi khoá, nhưng đây là đường mới có thể khoá oan khi mạng 4G treo.
+- `CUA_NGAM` theo đường dẫn (src/api.js:47,61) là luật ẩn: sau này màn nào khách thật sự chờ `/hang` (vd mở thẳng /uudai/hang) cũng không có vòng. Đã ghi trong Phát hiện.
+- Mỗi lần bấm + trong Giỏ (báo giá khoảng 0,7 s, quá 300 ms) và lúc Đặt đơn sẽ có HAI vòng cùng lúc: vòng giữa màn và vòng nhỏ ở bảng tiền / nút. Chưa rõ bản thử chủ quán chọn có như vậy không. Cần chủ quán xem ở D6.
+- §11 CLAUDE.md: "khối mới có mục `hien.<khối>`". Vòng giữa màn và dòng "Đang tính tiền…" không có khoá `hien.*` để ẩn / hiện ở /admin. Chỉ có `khung.dangCho` và `gio.dangTinh` (src/noiDung/nd/menu.js:80,91). Có thể chấp nhận nếu coi vòng xoay là hình chỉ báo, không phải khối, nhưng chưa được nói rõ.
+- src/dungDatDon.js:46-56 (ref `dongHo`): nếu khách bấm "Thử lại" trùng nhịp đồng hồ thì lượt đó thành ngầm. Lượt `/menu` tự gọi lại sau 401 (src/dungMenu.js:33) không còn ngầm. Ảnh hưởng nhỏ.
+- Khi đơn QR vừa trả, `daTra` gọi `lamMoi([cuaDon, cuaVoucher])` (src/App.jsx:245). Nếu kho voucher chưa có dữ liệu thì lượt đó tính là chờ, vòng có thể loé lên lúc phát hiện đơn đã trả.
+
+(Kết quả từng mục 1–8: K3 bài có giá trị, vài ca đọc nguồn là marker suông (Menu, daTra, PinSheet, "Giỏ không còn ref"); K4 mọi chỗ ngam gọi api đồng bộ, đủ;
+ K5 luồng hợp lệ đúng theo code nhưng thiếu ca; đường tiền an toàn (khoa Thanh toán có !bg, số nút Giỏ chỉ bg, bgCu chỉ hiển thị + ô voucher); không dist/;
+ Đơn giản: cho.css nạp ngầm qua VongCho → nên ở main.jsx; dấu cách thừa PinSheet:72; chú thích index.html có %VITE_POS_API%; CUA_NGAM gần trùng CUA_CONG_KHAI.)
+
+NGHIỆM THU: 14/16 mục có bằng chứng · mục thiếu: B1 (phần "lỗi báo giá → không số cũ", "CHUA_MO → câu cũ" không có ca thử) · D4 (thiếu phần so ảnh màn ngoài phạm vi, trang_thai ghi "để chat soát").
+
+CHƯA SOÁT ĐƯỢC: không tự chạy được dot_bien_tay.js; npm test / --day-du quá 500 s (đã dừng); chưa chạy cổng, thu_KHMUA1, thu_KHNHANH1; không điện thoại
+thật / 4G / Zalo; chưa so ảnh LUU_ANH_DIR màn ngoài phạm vi; chưa xem Artifact bản thử.
+
+BÀI HỌC:
+- KHOÁ: mỗi phiếu đổi hiển thị tiền phải có ca POS giả trả lỗi báo giá và trả CHUA_MO, kiểm "không số cũ" và "nút không khoá vĩnh viễn".
+- KHOÁ: bài đọc nguồn kiểu "có bọc ngam" nên có ca hành vi đi kèm (POS giả trễ, bấm tab Menu khi đã có menu → không vòng).
+- NGUYÊN TẮC (KHUON_LOI.md): khi kế hoạch đổi hướng sau khi soát, sửa luôn bảng gốc, không chỉ thêm mục "Sửa kế hoạch" bên dưới.
+- NGUYÊN TẮC: lượt POS khách đang chờ mà có thể treo (báo giá) nên có giờ chờ tối đa (choMs) — ngoài phiếu, ghi Phát hiện.
+```
+
+### Vòng sửa 1
+- Ca mới (Chromium) `gio-loi`: báo giá lỗi → lời POS, KHÔNG số cũ, không mờ / vòng, nút đi tiếp MỞ; POS trả CHUA_MO → "Tổng tiền sẽ hiện…", nút MỞ.
+- Ca mới `menu-ngam`: bấm tab Menu khi đã có menu (quá 5 phút) → /menu hỏi lại ngầm, không vòng (ca hành vi cho chỗ trước chỉ đọc nguồn).
+- Đột biến thêm: VS-LOI-KET-DANG-TINH (lỗi giữ "đang tính" → nút kẹt), BV-TAB-MENU-DEM → 13/13 BẮT ĐƯỢC.
+- `ke_hoach.md`: bảng chờ / ngầm sửa khớp code (heThong lần đầu = ngầm qua `CUA_NGAM`, BaoDonXong = luật taoCua, giaHan bọc trong api.js), bỏ "huỷ choMs"
+  khỏi ca Node, màu .35.
+- Gọn: `cho.css` nạp ở `main.jsx` (bỏ khỏi VongCho); bỏ dấu cách thừa PinSheet; chú thích index.html không còn `%VITE_POS_API%`.
+- Nghi ngờ còn lại (không sửa, ghi Phát hiện): giờ chờ báo giá, CUA_NGAM, hai vòng cùng lúc, `hien.*`. "Thử lại" trùng nhịp đồng hồ / daTra voucher trống: nhỏ, bỏ.
+- D4 phần so ảnh màn ngoài phạm vi: việc của chat soát cuối (phiếu D4 "soát cuối so ảnh") — vẫn ghi CHƯA KIỂM.
+- thu_KHNHANH2 có Chromium 68 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 37 (SỐ CA không đổi).
