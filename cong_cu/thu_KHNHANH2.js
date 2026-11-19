@@ -271,7 +271,7 @@ async function trinhDuyet(pw) {
       const v = document.querySelector(sel); if (!v) return null;
       const cs = getComputedStyle(v), r = v.getBoundingClientRect(), ph = document.querySelector('.phone').getBoundingClientRect();
       const to = [...document.querySelectorAll('[class*="cho-"]')].filter((x) => { const b = x.getBoundingClientRect(); return b.width > 100 || b.height > 100; }).length;
-      return { nen: cs.backgroundColor, pe: cs.pointerEvents, w: Math.round(r.width), lechX: Math.abs((r.left + r.width / 2) - (ph.left + ph.width / 2)), lechY: Math.abs((r.top + r.height / 2) - (ph.top + ph.height / 2)), to, role: v.getAttribute('role'), nhan: v.getAttribute('aria-label'), dnd: v.getAttribute('data-nd') };
+      return { nen: cs.backgroundColor, pe: cs.pointerEvents, w: v.offsetWidth /* không xoay (getBoundingClientRect đo hộp đã xoay: 36 → 51 px ở 45°) */, lechX: Math.abs((r.left + r.width / 2) - (ph.left + ph.width / 2)), lechY: Math.abs((r.top + r.height / 2) - (ph.top + ph.height / 2)), to, role: v.getAttribute('role'), nhan: v.getAttribute('aria-label'), dnd: v.getAttribute('data-nd') };
     }, VONG);
     k('A2 vòng: nền trong suốt, pointer-events none, ~36 px, giữa khung .phone, không phần tử phủ', !!st && st.nen === 'rgba(0, 0, 0, 0)' && st.pe === 'none' && st.w === 36 && st.lechX < 3 && st.lechY < 3 && st.to === 0, JSON.stringify(st));
     k('A2 role=progressbar, nhãn đọc màn hình từ danh mục (data-nd khung.dangCho)', !!st && st.role === 'progressbar' && st.nhan === 'Đang tải' && st.dnd === 'khung.dangCho', JSON.stringify(st));
