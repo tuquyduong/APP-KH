@@ -3,7 +3,8 @@ Gốc = bản chép cây làm việc trong thư mục nháp, 11 tệp src/ + ind
 cong_cu/ là bản ĐÃ SỬA của nhánh (bài mới / bài cũ đổi). Lần đỏ đầu (bài bản b04f2df) chép ở do_goc_thu_KHNHANH2.txt.
 
 == cong_cu/thu_KHNHANH2.js (MỚI) ==
-Gốc, có Chromium:            16 đạt · 35 hỏng
+Gốc, có Chromium:            22 đạt · 35 hỏng (vòng soát 1 thêm 6 ca trình duyệt: báo giá lỗi, CHUA_MO, tab Menu ngầm — XANH trên gốc vì là ca
+                             không-chặn-oan / không-vòng; giá trị của chúng chứng bằng đột biến VS-LOI-KET-DANG-TINH, BV-TAB-MENU-DEM)
 Gốc, KHONG_TRINH_DUYET=1:     1 đạt · 25 hỏng
   ✗ C2 lần đổi đầu (đang yên) → gửi NGAY, không chờ — 0
   ✗ C2 5 lần đổi liền tay → đúng 2 lượt (đầu ngay + cuối sau khi yên), lượt cuối mang giỏ cuối —  | g5
@@ -12,7 +13,7 @@ Gốc, KHONG_TRINH_DUYET=1:     1 đạt · 25 hỏng
   ✗ A2 VongCho … · A3 cho.css … · B2 Giỏ bgCu … · B3 nút có vòng … · C1 preconnect (4 ca, kể cả vite build)
   (Chromium thêm: ✗ A2 có vòng xoay giữa màn · ✗ B1 "Đang tính tiền…" · ✗ B1 tổng cũ mờ · ✗ B2 nút khoá khi tính lại ·
    ✗ C2 Giỏ gửi báo giá ngay (642 ms trên gốc) · ✗ B3 nút Đặt đơn có vòng trắng · …)
-Đã vá, có Chromium:          62 đạt · 0 hỏng
+Đã vá, có Chromium:          68 đạt · 0 hỏng
 Đã vá, KHONG_TRINH_DUYET=1:  37 đạt · 0 hỏng
 SỐ CA cong_cu/thu_KHNHANH2.js: 37
 (gốc thiếu api.theoDoiDangCho nên khối A1 dừng sớm — gốc in 26 ca, nhánh 37)
