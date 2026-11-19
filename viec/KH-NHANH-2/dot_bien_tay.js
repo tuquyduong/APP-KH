@@ -30,6 +30,8 @@ const TRINH_DUYET = [
   ['BV-THEO-DOI-DONG-HO-DEM', [[DD, '(dongHo.current ? ngam(xem) : xem())', 'xem()']]],
   // vòng sửa 1 (/ra-soat): lỗi / CHUA_MO không được kẹt "đang tính" (nút khoá vĩnh viễn); tab Menu khi đã có menu phải ngầm (ca hành vi, không chỉ đọc nguồn).
   ['VS-LOI-KET-DANG-TINH', [[DD, "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: true", "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: false"]]],
+  // sau soát vòng 2: bài Chromium nạp CSS như App (theo import thật) → bỏ dòng import cho.css thì vòng mất kiểu và bài phải đỏ.
+  ['BV-BO-NAP-CHO-CSS', [['src/main.jsx', "import './giaoDien/cho.css'\n", '']]],
   ['BV-TAB-MENU-DEM', [['src/pages/Menu.jsx', '(tai.dl ? ngam(tai.taiLai) : tai.taiLai())', '(tai.dl ? (ngam(() => 0), tai.taiLai()) : tai.taiLai())']]],
 ];
 

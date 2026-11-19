@@ -196,7 +196,9 @@ async function trinhDuyet(pw) {
   })).outputFiles[0].text;
   const cssTron = (f) => doc(f).replace(/@import\s+'\.\/([^']+)';/g, (_, t) => cssTron(path.posix.join(path.posix.dirname(f), t)));
   const tepCss = new Set([...doc('src/main.jsx').matchAll(/import '\.\/(giaoDien\/[^']+\.css)'/g)].map((m) => 'src/' + m[1]));
-  for (const f of fs.readdirSync(path.join(GOC, 'src/giaoDien'))) if (f.endsWith('.css')) tepCss.add('src/giaoDien/' + f); // css nạp ở màn / thành phần (cho.css, voucher.css…)
+  // css nạp ở màn / thành phần (voucher.css…): CHỈ tệp có dòng import thật trong src/ — bỏ `import './giaoDien/cho.css'` ở main.jsx thì vòng mất kiểu và bài đỏ.
+  const quetSrc = (d) => fs.readdirSync(path.join(GOC, d), { withFileTypes: true }).flatMap((x) => (x.isDirectory() ? quetSrc(path.posix.join(d, x.name)) : /\.jsx?$/.test(x.name) ? [path.posix.join(d, x.name)] : []));
+  for (const f of quetSrc('src')) for (const m of doc(f).matchAll(/import '(\.{1,2}\/(?:[\w-]+\/)*giaoDien\/[\w-]+\.css)'/g)) tepCss.add(path.posix.normalize(path.posix.join(path.posix.dirname(f), m[1])));
   const css = [...tepCss].map(cssTron).join('\n');
   const trinh = await pw.chromium.launch({ args: ['--no-sandbox'] });
   const URL0 = 'http://kh.test';
