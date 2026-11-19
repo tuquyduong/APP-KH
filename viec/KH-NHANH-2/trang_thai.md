@@ -28,8 +28,8 @@
 | dungDatDon.js lượt đồng hồ ngầm | BV-THEO-DOI-DONG-HO-DEM | BẮT ĐƯỢC (Chromium) |
 | dungDatDon.js lỗi / CHUA_MO → xong (không kẹt đang tính) | VS-LOI-KET-DANG-TINH | BẮT ĐƯỢC (Chromium, vòng sửa 1) |
 | Menu.jsx tab Menu khi đã có menu → ngầm | BV-TAB-MENU-DEM | BẮT ĐƯỢC (Chromium, vòng sửa 1) |
-| main.jsx nạp cho.css | BV-BO-NAP-CHO-CSS | (sau soát vòng 2 — kết quả ở mục Soát vòng 2) |
-Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (13/13 sau vòng sửa 1; `node viec/KH-NHANH-2/dot_bien_tay.js --trinh-duyet`).
+| main.jsx nạp cho.css | BV-BO-NAP-CHO-CSS | BẮT ĐƯỢC (Chromium, sau soát vòng 2) |
+Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (14/14 sau soát vòng 2; `node viec/KH-NHANH-2/dot_bien_tay.js --trinh-duyet`).
 
 ## Phần trình duyệt (chạy thật ở máy — §9)
 - `node cong_cu/thu_KHNHANH2.js` (Chromium 390, POS giả trễ): 68 đạt · 0 hỏng (sau vòng sửa 1). `KHONG_TRINH_DUYET=1`: 37 đạt · 0 hỏng (= SỐ CA).
@@ -77,7 +77,7 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (13/13 sau vòng sửa 1; `n
 | D1 bài mới, POS giả trễ, đỏ gốc | bang_chung_do.txt |
 | D1 Theo dõi đơn 3 s / quay lại App 60 s không vòng | Chromium 2 ca; BV-THEO-DOI-DONG-HO-DEM |
 | D2 bài cũ đổi có chủ đích, đỏ gốc cả KHONG_TRINH_DUYET | thu_KHMUA1 B5 (gốc KHONG_TRINH_DUYET=1: 56/1) |
-| D3 ≥ 6 đột biến tay đỏ | 13/13 (sau vòng sửa 1) |
+| D3 ≥ 6 đột biến tay đỏ | 14/14 (sau soát vòng 2) |
 | D4 ảnh 390 trước / sau | so_anh/ (3 cặp); màn ngoài phạm vi: CHƯA KIỂM (chat soát) |
 | D5 npm test, --day-du, tinh + chay, K10 | mục Kiểm |
 | D6 thử tay | CHƯA KIỂM (chủ quán) |
@@ -163,3 +163,51 @@ BÀI HỌC:
 - Kiểm lại sau vòng sửa 1: npm test --day-du 68 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 cổng chay: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 26 ≠ 37 ca — bài dừng sớm trên gốc, xem bang_chung_do.txt).
 
 HEAD ĐÃ KIỂM: b84bf8f
+
+## Soát độc lập — vòng 2 (báo cáo của agent soát, chép gọn các dòng kết luận; nguyên văn mục LỖI / NGHI NGỜ / NGHIỆM THU / BÀI HỌC)
+```
+ĐẠT
+
+Kết luận: các lỗi của vòng 1 đã được sửa thật, đường tiền vẫn an toàn và tôi chạy lại bài thử thấy xanh. Những gì còn lại là lỗi nhẹ ở hồ sơ và bài thử, cùng vài chỗ nên hỏi chủ quán; không có lỗi nào làm khách thấy sai hay trả sai tiền.
+(Tự chạy: KHONG_TRINH_DUYET=1 thu_KHNHANH2 → 37 đạt · 0 hỏng; có Chromium → 68 đạt · 0 hỏng. Lỗi vòng 1: báo giá lỗi / CHUA_MO, bảng chờ/ngầm, choMs, màu .35, tab Menu → ĐÃ SỬA.)
+
+LỖI TÌM ĐƯỢC:
+- cong_cu/thu_KHNHANH2.js:199 — Ca Chromium tự nạp MỌI tệp src/giaoDien/*.css, kể cả tệp không ai import. Nếu sau này dòng import cho.css ở main.jsx bị bỏ, vòng xoay mất hết kiểu mà cả 68 ca vẫn xanh — K3 (bài thử xanh oan), nhẹ.
+- viec/KH-NHANH-2/trang_thai.md — chỉ ghi thêm mục mới, không sửa chỗ gốc: dòng 29 và 53 "11/11", bảng đột biến thiếu 2 đột biến mới; dòng 32 và 52 "62 đạt" (nay 68); dòng 65 "9 ca Node + 8 ca đọc nguồn" (thật: 12 ca A1, mảng NGAM 7 mục) — K1 nhẹ.
+- viec/KH-NHANH-2/ke_hoach.md — dòng 62 còn ghi đọc nguồn "heThong, GvDem, BaoDonXong"; dòng 70 ghi VITE_POS_API=https://pos.vi-du.test/ (bài dùng https://www.pos-vi-du.test) — K1 nhẹ.
+- viec/KH-NHANH-2/so_anh/ — CLAUDE.md §5(2) đòi ảnh tô chỗ lệch và cỡ 360 / 430; chỉ có 3 cặp ảnh 390 — nhẹ.
+
+NGHI NGỜ:
+- Vòng xoay đè lên màn mở: z-index 9000 (cho.css:6) > .splash-screen 100 (demo_1.css:108), màn mở ~5,9 s mỗi ngày đầu (ManDau.jsx:12); lượt /menu, /toi… trên 4G > 300 ms → vòng hồng có thể hiện giữa màn mở, chồng chữ / khẩu hiệu B2.3. Bài thử né (đặt sẵn kh_ngay_man_dau). Nên đưa vào D6 hoặc ## Câu hỏi.
+- §11 khối mới cần hien.<khối>: vòng và "Đang tính tiền…" không có hien.* — đã tự quyết "việc sau" trong khi §11 viết "không để việc sau"; nên ghi ## Câu hỏi.
+- Ba chỗ ngầm chỉ có bài đọc nguồn: ngam(hoiQuangCao) (App.jsx:136), ngam(() => menu.taiLai(true)) (App.jsx:245), vòng nút PIN (thu_KHNHANH2.js:158).
+- Báo giá treo làm kẹt Giỏ (không choMs, api.js:131; GioHang.jsx:127) — đã ghi Phát hiện; phiếu B2 đòi khoá.
+- Vòng loé khi bat chuyển false trong 600 ms (hẹn giờ gom đuôi không huỷ; lượt cũ vẫn gửi như code gốc, chỉ vòng loé là mới) — dungDatDon.js:19-28.
+- Kho chưa có dữ liệu → mỗi 5 phút lamMoi một lượt "chờ" (duLieuKhach.js:105) — đúng chữ phiếu nhưng có thể nhấp nháy.
+
+NGHIỆM THU: 16/16 mục có bằng chứng · không mục nào thiếu hẳn (D4 phần so ảnh màn ngoài phạm vi và D6 đã ghi CHƯA KIỂM; D3, D5 chỉ có lời ghi, chưa chạy lại).
+
+CHƯA SOÁT ĐƯỢC: không chạy được dot_bien_tay.js --trinh-duyet (bị chặn); không chạy npm test / --day-du / cổng; không điện thoại / 4G / Zalo; chưa thấy cảnh vòng chồng màn mở; chưa xem Artifact bản thử, chưa so ảnh màn ngoài phạm vi.
+
+BÀI HỌC:
+- KHOÁ: bài Chromium phải nạp CSS đúng như App nạp (theo import thật), không nạp cả thư mục.
+- KHOÁ: phần tử nổi mới (z-index cao) phải có ca / ảnh ở màn mở, bảng trượt, PIN.
+- NGUYÊN TẮC: sửa số và bảng ngay tại chỗ trong trang_thai.md, không chỉ ghi thêm mục "Vòng sửa".
+- NGUYÊN TẮC: lệch luật CLAUDE.md (vd §11 hien.*) thì ghi ## Câu hỏi, không tự quyết "việc sau".
+```
+
+### Sửa sau soát vòng 2 (không bắt buộc — vòng 2 ĐẠT)
+- KHOÁ làm luôn: `thu_KHNHANH2` nạp CSS theo dòng `import '…giaoDien/….css'` thật trong `src/` (không cả thư mục) + đột biến BV-BO-NAP-CHO-CSS (bỏ import ở main.jsx)
+  → BẮT ĐƯỢC; tổng 14/14. Bài vẫn 68 / 0 có Chromium, 37 / 0 KHONG_TRINH_DUYET (SỐ CA không đổi — phần đổi chỉ chạy trong trình duyệt).
+- Số liệu sửa TẠI CHỖ: bảng đột biến, 68 đạt, 12 ca A1 / 7 mục NGAM, D3 14/14; ke_hoach.md dòng 62 (mảng NGAM), 70 (địa chỉ thử).
+- §11 `hien.*` và vòng chồng màn mở → `## Câu hỏi` (dưới). Ảnh 360 / 430 + ảnh tô chỗ lệch: CHƯA KIỂM (vòng là phần tử 36 px tâm khung, không đổi theo bề rộng).
+- Không sửa (nhỏ, ghi nhận): vòng loé khi xoá món cuối trong 600 ms; kho lỗi lúc mở → lượt "chờ" mỗi 5 phút; ba chỗ ngầm chỉ đọc nguồn (App quảng cáo, daTra, PIN).
+
+## Câu hỏi
+1. **§11 `hien.<khối>`:** vòng xoay giữa màn và dòng "Đang tính tiền…" là hình chỉ báo trạng thái (không phải khối nội dung). Máy chỉ khai khoá chữ `khung.dangCho`
+   (nhãn đọc màn hình) và `gio.dangTinh`, KHÔNG thêm `hien.vongCho`. Chủ quán có cần nút ẩn / hiện vòng xoay ở /admin không? Cần → thêm một mục `battat` (~3 dòng) ở
+   việc sau / vòng sửa.
+2. **Vòng xoay trên màn mở (splash):** vòng (z-index 9000, như bản thử) có thể hiện giữa màn mở chào ngày đầu (~6 s) khi mạng chậm, chồng lên chữ "Tứ Quý Đường" /
+   khẩu hiệu. Chủ quán muốn: (a) giữ như vậy, hay (b) ẩn vòng trong lúc màn mở đang hiện? Xem khi thử tay D6.
+
+- Kiểm lần cuối sau soát vòng 2: xem dòng dưới.
