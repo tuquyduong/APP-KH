@@ -59,7 +59,7 @@
 ## Ca thử ↔ Nghiệm thu (`cong_cu/thu_KHNHANH2.js`)
 | Nghiệm thu | Ca |
 |---|---|
-| A1 | Node: lượt chờ đếm +1/−1; `ngam` không đếm; lỗi mạng / 401 → về 0 (huỷ do `choMs` đi cùng nhánh `finally`, không có ca riêng); theo dõi > 300 ms báo true, < 300 ms không báo; đọc nguồn: bảng chỗ ngầm (heThong, GvDem, taoCua, BaoDonXong, dungTheoDoi, giaHan, quảng cáo) |
+| A1 | Node: lượt chờ đếm +1/−1; `ngam` không đếm; lỗi mạng / 401 → về 0 (huỷ do `choMs` đi cùng nhánh `finally`, không có ca riêng); theo dõi > 300 ms báo true, < 300 ms không báo; đọc nguồn: mảng NGAM (CUA_NGAM ở api.js — phủ heThong / GvDem; giaHan; taoCua; dungTheoDoi; App quảng cáo + daTra; Menu) |
 | A1 K1b | `kiem_tra_truoc_khi_giao.js` (npm test) vẫn 2 lối fetch |
 | A2 | Chromium 390: POS chậm 1,5 s → `.cho-giua` hiện, nằm giữa `.phone`, nền trong suốt, `pointer-events:none`, không phần tử phủ; bấm nút tab trong lúc vòng hiện → chuyển màn; hết lượt → ẩn; nhãn có `data-nd` |
 | A2 ngầm | Theo dõi đơn hỏi lại 3 s → không vòng; quay lại App > 60 s → không vòng |
@@ -67,7 +67,7 @@
 | B1 | Giỏ bấm + → dòng cũ mờ (`cho-mo`), vòng nhỏ trước tổng, báo giá về → hết mờ, số mới; Giỏ lần đầu → "Đang tính tiền…"; chưa đăng nhập → câu cũ |
 | B2 | Giỏ đang tính → nút khoá, số trên nút không phải số cũ; Thanh toán đang tính → nút Đặt khoá |
 | B3 | Thanh toán đặt đơn (POS giả chậm + lỗi) → nút có `.cho-xoay.trang` lúc gửi |
-| C1 | dựng `vite build` với `VITE_POS_API=https://pos.vi-du.test/` → chạy script trong index.html → `link[rel=preconnect]` href = gốc, không `/api`; dựng không biến → không link |
+| C1 | dựng `vite build` với `VITE_POS_API=https://www.pos-vi-du.test` → chạy script trong index.html → `link[rel=preconnect]` href = gốc, không `/api`; dựng không biến → không link |
 | C2 | Node: 1 lần → gọi ngay; 5 lần trong 600 ms → 2 lượt, lượt cuối mang giỏ cuối; yên > ms rồi đổi → ngay; Chromium: lượt cũ về muộn không ghi đè giỏ mới |
 | C3 | Chromium: mở App đếm lượt /toi /diem /voucher /don /menu = 1 (như KH-NHANH-1) |
 | D2 | `thu_KHMUA1` B5 (gom đuôi) sửa thành đầu + đuôi |
