@@ -3,6 +3,13 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 18.11.2026
+- **App hơi lag → biểu tượng chờ** (chủ quán 18.11, xem trên bản thử https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk): chọn **kiểu B sửa** — CHỈ vòng tròn xoay giữa màn, KHÔNG nền trắng ("không ăn nhập"),
+  KHÔNG làm mờ màn, không chặn bấm; hiện khi khách chờ POS > 0,3 giây (lượt chạy ngầm không hiện). Giỏ / Thanh toán giữ tổng cũ MỜ trong lúc tính lại, nút trả tiền vẫn
+  khoá tới khi có số mới. App mở kết nối tới POS sớm và gửi báo giá NGAY ở lần đổi đầu. → việc **KH-NHANH-2** (Opus).
+- **Máy chủ POS:** KHÔNG cài `danhThucPOS` — sau này dùng gói Render TRẢ PHÍ (máy chủ không ngủ). Đo 18.11 17:40 (POS đã chạy kho Virginia): báo giá ~0,7 s, mở App ~0,8 s
+  (sáng 18.11 máy chủ vẫn dùng kho Tokyo: 1,6–1,9 s / 3,5 s). Thư POS 18.11: số đo + xin xét vùng gần Việt Nam khi lên gói trả phí.
+
 ## 17.11.2026
 - **Đổi điểm** (chủ quán 17.11 "theo POS"): KH-DOI-1 làm theo hợp đồng POS ĐÃ HẸN (thư `TRA_LOI_POS_16112026_DOIDIEM.md`: `GET /kho-qua`, `POST /doi-diem`
   `{ ma_qua, khoa_gui, pin }`, `GET /qua-cua-toi`, dòng `redeem` / `hoan_qua` ở `GET /diem`) — CÓ hỏi PIN 4 số của khách khi đổi (mã lỗi, luật khoá như trả bằng ví).

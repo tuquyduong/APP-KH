@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 64,
-  "cap_nhat": "2026-11-17",
+  "phien_ban_so": 65,
+  "cap_nhat": "2026-11-18",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -883,6 +883,20 @@
       ],
       "ten": "Khach quet QR don o man khach quay -> App (da dang nhap) hoi \"Gan vao don nay?\" -> chon voucher / phieu qua ap vao don",
       "ghi_chu": "11.11 chu quan: \"van lam nhu POS xep\". Luu y khi lam: camera iPhone mo Safari, KHONG mo App tren man hinh chinh (kho dang nhap rieng) — xem lai cach mo khi POS gui hop dong"
+    },
+    {
+      "ma": "KH-NHANH-2",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "dang_mo",
+      "ngay": "2026-11-18",
+      "han": "2026-11-20",
+      "phu_thuoc": [
+        "KH-NHANH-1",
+        "KH-VC-2"
+      ],
+      "ten": "Vong xoay cho POS kieu B chu quan chon 18.11 (CHI vong tron xoay giua man, khong nen, khong mo, khong chan bam; hien khi khach cho > 0,3 s; luot ngam khong tinh) + Gio / Thanh toan giu tong cu MO + vong nho luc tinh lai (nut tra tien van khoa) + nut gui co vong trang + preconnect toi goc POS trong index.html + bao gia gom DAU + DUOI (lan doi dau gui ngay)",
+      "ghi_chu": "18.11 chu quan bao App hoi lag -> chat do that (sang: bao gia 1,6-1,9 s vi may chu POS van dung kho Tokyo; 17:40 sau trien khai kho Virginia: bao gia 0,63-0,75 s, mo App 11 luot ~0,8 s) + dung ban thu https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk (App that + POS gia co do tre) -> chu quan chon kieu B, bo lop mo, bo nen trang; MO (Opus, khong cho duyet ke hoach); phieu + mau ban thu o viec/KH-NHANH-2/"
     }
   ]
 }

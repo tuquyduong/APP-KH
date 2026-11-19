@@ -1,4 +1,4 @@
-# Bàn giao chat App KH (cập nhật 17.11.2026 tối — ĐÃ GỘP #43 VC-2 + #44 NAP-1, sổ v64, thư POS 17.11)
+# Bàn giao chat App KH (cập nhật 18.11.2026 tối — mở KH-NHANH-2 vòng xoay chờ, sổ v65, thư POS 17.11 + 18.11)
 
 <!-- Bản MỚI NHẤT nằm ở Project (claude/BAN_GIAO_CHAT_APPKH.md). Bản trong kho APP-KH (thiet_ke/BAN_GIAO_CHAT_APPKH.md) do script ghi-xong chép — có thể cũ hơn Project. -->
 
@@ -78,8 +78,20 @@
    GitHub giả: thường / chạy lại / chưa Merge VC-2 / squash / push hỏng rồi chạy lại / main đi tiếp / máy đẩy thêm / cây lệch → trả về như cũ) → (c) PR + Merge **viec/KH-NAP-1**
    → (d) báo chat "đã gộp NAP-1" → chat viết script ghi sổ (VC-2 + NAP-1 xong, KH-SUA-2 thêm mục, quyết định 17.11, thư 17.11, bàn giao) → (e) thử tay C7.
    **Thử tay C7** (điện thoại, sau khi Cloudflare dựng main): NAP — Ưu đãi › ô Số dư → Ví → Nạp tiền → gói nhỏ nhất → QR → chuyển khoản thật → "Đã nạp" + dòng mới đầu Lịch sử ví;
-   nạp lần 2 bấm "Huỷ đơn" → số dư không đổi. VC — POS tạo 2 voucher cho SĐT thử (một có đơn tối thiểu cao) → Ưu đãi thấy câu POS + "Dùng ngay" → Giỏ: một ô tích, một ô câu đỏ →
-   thêm món → tự tích → đặt đơn QR → hoá đơn có "Voucher <MÃ>".
+   nạp lần 2 bấm "Huỷ đơn" → số dư không đổi. VC (sửa 18.11 — Kho quà POS KHÔNG có "đơn tối thiểu": `mauTuQua` đặt don_toi_thieu 0; voucher vào ví CHỈ qua Đổi quà ở quầy hoặc ưu đãi khách mới) —
+   Quản lý › Cài đặt › nhóm Khách hàng › 🎫 Kho quà: 3 quà thử 1 điểm, hạn 1 ngày (giảm 5.000đ · giảm 10% trần 10.000đ · giảm 5%) → Quản lý › Khách hàng và số dư ›
+   SĐT thử (cần ≥ 3 điểm) › 🎫 Đổi quà › Đổi cả 3 → App Ưu đãi thấy câu POS + "Dùng ngay" → Giỏ: tự tích 5.000đ + một voucher %, voucher % thứ hai câu đỏ
+   "Mỗi đơn chỉ dùng một voucher giảm %" (VOUCHER_PHAN_TRAM_HAI) → đặt đơn (trả bằng số dư vừa nạp) → hoá đơn "Voucher <MÃ>" → xong thì TẮT 3 quà thử ở Kho quà.
+   Chủ quán 18.11: đã chạy `xong_VC2_NAP1.py`; thử Nạp tiền OK; thử Voucher OK hết.
+0b. **App hơi lag (18.11) — chat đo trên trình duyệt chủ quán:** đường VN ↔ POS (Mỹ) ~0,3 s/lượt; POS xử lý: /goi-nap 0,1 s, /toi /diem /vi /voucher 0,7–1,2 s,
+   **báo giá 1,3–1,6 s** (bấm +/− chờ 1,6–1,9 s + 0,6 s App gom); mở App 12 lượt song song xong ~3,5 s. App: chưa `preconnect` tới POS; `MS_GOP` 600 (gom đuôi).
+   **Chủ quán chọn kiểu chờ B SỬA (18.11):** CHỈ vòng xoay giữa màn, KHÔNG nền trắng (chủ quán: nền trắng không ăn nhập), KHÔNG làm mờ màn, KHÔNG chặn bấm; hiện khi chờ POS > 0,3 s. Bản thử Artifact
+   https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk (App thật main 706ed73 + POS giả có độ trễ đo thật, bộ định tuyến trong bộ nhớ vì khung kín; chọn kiểu ở #b-cham…).
+   **18.11 17:36 chủ quán: "đồng ý" → script `claude/mo_KHNHANH2.py`** (sổ v64 → v65, mở **KH-NHANH-2** Opus không chờ duyệt kế hoạch, hạn 20.11; nhánh có phiếu +
+   mẫu bản thử; quyết định 18.11; thư POS `claude/YEU_CAU_APPKH_GUI_POS_18112026.md`; bàn giao). Chủ quán KHÔNG cài `danhThucPOS` — sau này lên gói Render TRẢ PHÍ.
+   **Đo lại 18.11 17:40** (POS đã chạy kho Virginia từ 16:24 — sáng nay máy chủ VẪN dùng kho Tokyo, chat POS bàn 40 phát hiện): báo giá 0,63–0,75 s, cửa có token ~0,5 s,
+   công khai 0,25–0,36 s, mở App 11 lượt ~0,8 s → phần lớn "lag" sáng nay là do kho Tokyo. Còn ~0,25 s / lượt đường VN ↔ Mỹ; Singapore khi lên gói trả phí (thư 18.11).
+   Sau khi máy làm xong: chat soát cuối (khuôn ở trên) → chủ quán Merge → script ghi sổ.
    **Câu hỏi máy VC-2 (chủ quán chưa trả lời — chat đề xuất gom KH-SUA-2):** (1) thiếu ca thử "đã báo giá → thôi hỏi POS → không ô nào tích" + đột biến cho điều kiện `hoi`
    (code ĐÚNG, chỉ thiếu ca); (2) `GioHang.jsx` `bgCu` không xoá khi báo giá lỗi → lúc chờ báo giá mới thoáng hiện tích / câu đỏ cũ (không đụng tiền). Máy đã hết 3 vòng sửa.
 2. Sao lưu Drive: **ĐÃ XONG** — 16.11 tối `thuNgay` thành công; 17.11 chủ quán báo "Đã làm" `KHOA_POS` (khoá `posk_` dán vào Apps Script). Còn `KHOA_GITHUB` (hỏi khi tiện).
@@ -180,7 +192,8 @@
 - Google: hồ sơ CHƯA xác minh → xác minh bằng video trước khai trương (`claude/HUONG_DAN_XAC_MINH_GOOGLE.md`).
 
 ## Chủ quán đang nợ / cần làm
-- (17.11 tối) Chạy `xong_VC2_NAP1.py` (ghi sổ v64) → thử tay C7 (mục "Chủ quán đang ở đâu" 1) → gửi thư POS 17.11.
+- (18.11 tối) Chạy `mo_KHNHANH2.py` → mở phiên Claude Code OPUS nhánh `viec/KH-NHANH-2`, gõ `/lam-viec KH-NHANH-2` → gửi thư POS 18.11 (và 17.11 nếu chưa gửi).
+- (đã làm 18.11) `xong_VC2_NAP1.py` (sổ v64); thử tay Nạp tiền + Voucher OK.
 - (đã làm 17.11) Merge VC-2 → `gop_VC2_vao_NAP1.py` → Merge NAP-1.
 - (cũ, đã làm) Trả lời 8 câu trang Nạp tiền & Voucher → chạy script mở việc → thử tay SUA-1 / ADMIN-1 / THE-3 (mục "Chủ quán đang ở đâu").
 - Sao lưu: `KHOA_POS` ĐÃ dán (17.11); còn tạo `KHOA_GITHUB` (khi nhật ký báo tải mã nguồn thiếu).
