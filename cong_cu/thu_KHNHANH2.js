@@ -126,9 +126,9 @@ function chayPreconnect(html) {
 
   // A1 — bảng chỗ gọi ngầm (ke_hoach.md): mỗi chỗ chạy nền bọc ngam(…)
   const NGAM = [
-    ['src/api.js', /CUA_NGAM = \['\/hang', '\/gio-vang', '\/gio-hoat-dong', '\/gia-han'\]/, 'cửa App tự nạp nền (heThong mỗi phút, GvDem, gia hạn)'],
+    ['src/api.js', /CUA_NGAM = \['\/hang', '\/gio-vang', '\/gio-hoat-dong'\]/, 'cửa App tự nạp nền (heThong mỗi phút, GvDem)'],
+    ['src/api.js', /giaHan = \(\) => ngam\(\(\) => goi\('POST', '\/gia-han'\)\)/, 'gia hạn đăng nhập'],
     ['src/duLieuKhach.js', /coDl \? ngam\(ham\) : ham\(\)/, 'kho dữ liệu khách đã có dữ liệu thật'],
-    ['src/components/BaoDonXong.jsx', /ngam\(\(\) => cuaDon\.lay\(\)\)/, 'dải báo đơn xong 15 s / quay lại tab'],
     ['src/dungDatDon.js', /dongHo\.current \? ngam\(/, 'Theo dõi đơn hỏi lại 3 s / 10 s (lượt do đồng hồ)'],
     ['src/App.jsx', /ngam\(hoiQuangCao\)/, 'quảng cáo khi quay lại App'],
     ['src/App.jsx', /ngam\(\(\) => menu\.taiLai\(true\)\)/, 'đơn vừa trả (sau lượt ngầm) → lấy lại menu'],

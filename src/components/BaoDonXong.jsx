@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { cuaDon } from '../duLieuKhach.js';
-import { ngam } from '../api.js';
 import { dungKho } from '../kho.js';
 import { MS_HOI, daBao, docNho, ghiNho, tieuDeXong, xemDanhSach, xoaNho } from '../baoDonXong.js';
 import { Ico } from './BieuTuong.jsx';
@@ -10,7 +9,7 @@ import '../giaoDien/bao_don.css';
 
 // Dải "Đơn <số đơn> đã sẵn sàng — mời bạn ra quầy" trên cùng MỌI màn (KH-BAO-1). Hỏi qua kho `cuaDon` (GET /don trang 1, dùng chung lệnh đang chờ):
 // mỗi 15 giây khi có đơn đang chạy và tab hiện; quay lại tab → hỏi ngay; không đơn chạy → không hỏi lặp. Luật chọn đơn ở baoDonXong.js.
-const hoiNgay = () => { if (!document.hidden) ngam(() => cuaDon.lay()); }; // hỏi nền: không hiện vòng chờ (KH-NHANH-2)
+const hoiNgay = () => { if (!document.hidden) cuaDon.lay(); };
 
 export default function BaoDonXong({ moDon, datTieuDe }) {
   const s = dungKho(cuaDon.kho);

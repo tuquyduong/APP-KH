@@ -41,9 +41,9 @@ export const datCheDoSua = (b) => { dangSua = !!b; };
 export const dangCheDoSua = () => dangSua;
 
 // Vòng xoay chờ (KH-NHANH-2): đếm lượt POS KHÁCH ĐANG CHỜ ở MỘT chỗ này. Lượt ngầm không đếm: (1) chạy trong `ngam(f)` — cờ đọc ở phần ĐỒNG BỘ đầu `goi`, nên
-// `f` phải gọi hàm api ngay (không sau await / then); (2) cửa App tự nạp nền, khách không đợi (hạng, Giờ vàng, giờ hoạt động — heThong hỏi lại mỗi phút; gia hạn).
+// `f` phải gọi hàm api ngay (không sau await / then); (2) cửa App tự nạp nền, khách không đợi (hạng, Giờ vàng, giờ hoạt động — heThong hỏi lại mỗi phút, GvDem); gia hạn bọc ngam ở giaHan.
 export const MS_TRE_CHO = 300; // lượt chờ kéo dài quá ngần này mới hiện vòng (lượt nhanh không nhấp nháy)
-const CUA_NGAM = ['/hang', '/gio-vang', '/gio-hoat-dong', '/gia-han'];
+const CUA_NGAM = ['/hang', '/gio-vang', '/gio-hoat-dong'];
 let soNgam = 0, soCho = 0, henCho = null, dangHien = false;
 const ngheCho = new Set();
 const baoCho = (b) => { if (b !== dangHien) { dangHien = b; ngheCho.forEach((f) => f(b)); } };
@@ -117,7 +117,7 @@ export const layVi = (trang) => goi('GET', `/vi?trang=${trang}`); // v17 KH-NAP-
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
 export const suaHoSo = (truong) => goi('PUT', '/toi', truong);
-export const giaHan = () => goi('POST', '/gia-han');
+export const giaHan = () => ngam(() => goi('POST', '/gia-han')); // tự gia hạn lúc mở App: ngầm
 export const layMenu = () => goi('GET', '/menu');
 export const layDiem = () => goi('GET', '/diem');
 export const layVoucher = (tatCa) => (tatCa ? goi('GET', '/voucher?all=1') : goi('GET', '/voucher'));
