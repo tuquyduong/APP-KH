@@ -1,0 +1,27 @@
+KH-NHANH-2 — bằng chứng bài thử ĐỎ trên code gốc (2ba09a5), XANH trên code đã vá.
+Gốc = bản chép cây làm việc trong thư mục nháp, 11 tệp src/ + index.html lấy lại bằng `git show 2ba09a5:<tệp>`, bỏ VongCho.jsx + cho.css (tệp mới);
+cong_cu/ là bản ĐÃ SỬA của nhánh (bài mới / bài cũ đổi). Lần đỏ đầu (bài bản b04f2df) chép ở do_goc_thu_KHNHANH2.txt.
+
+== cong_cu/thu_KHNHANH2.js (MỚI) ==
+Gốc, có Chromium:            16 đạt · 35 hỏng
+Gốc, KHONG_TRINH_DUYET=1:     1 đạt · 25 hỏng
+  ✗ C2 lần đổi đầu (đang yên) → gửi NGAY, không chờ — 0
+  ✗ C2 5 lần đổi liền tay → đúng 2 lượt (đầu ngay + cuối sau khi yên), lượt cuối mang giỏ cuối —  | g5
+  ✗ A1 api.js có theoDoiDangCho + ngam
+  ✗ A1 ngầm: … (7 chỗ ngầm, mỗi chỗ một dòng ✗)
+  ✗ A2 VongCho … · A3 cho.css … · B2 Giỏ bgCu … · B3 nút có vòng … · C1 preconnect (4 ca, kể cả vite build)
+  (Chromium thêm: ✗ A2 có vòng xoay giữa màn · ✗ B1 "Đang tính tiền…" · ✗ B1 tổng cũ mờ · ✗ B2 nút khoá khi tính lại ·
+   ✗ C2 Giỏ gửi báo giá ngay (642 ms trên gốc) · ✗ B3 nút Đặt đơn có vòng trắng · …)
+Đã vá, có Chromium:          62 đạt · 0 hỏng
+Đã vá, KHONG_TRINH_DUYET=1:  37 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHNHANH2.js: 37
+(gốc thiếu api.theoDoiDangCho nên khối A1 dừng sớm — gốc in 26 ca, nhánh 37)
+
+== cong_cu/thu_KHMUA1.js (bài cũ đổi có chủ đích D2: B5 gom ĐUÔI → gom ĐẦU + ĐUÔI) ==
+Gốc, có Chromium:            128 đạt · 2 hỏng
+  ✗ B5 gộp đầu + đuôi (KH-NHANH-2 C2): 3 lần đổi liền → lần đầu gửi NGAY + đúng 1 lần cuối sau khi yên — 0/1
+  ✗ B5 (KH-NHANH-2 C2) đổi số lượng 3 lần liền → đúng 2 lần hỏi thêm (lần đầu ngay + lần cuối), lần cuối mang số lượng cuối — 1 · 5/2
+Gốc, KHONG_TRINH_DUYET=1:    56 đạt · 1 hỏng (ca B5 hàm thuần)
+Đã vá, có Chromium:          130 đạt · 0 hỏng
+Đã vá, KHONG_TRINH_DUYET=1:  57 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHMUA1.js: 57
