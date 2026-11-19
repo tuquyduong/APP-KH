@@ -244,7 +244,7 @@ async function trinhDuyet(pw) {
       if (duong === '/voucher') return json(200, { success: true, data: [], ma_khach_moi: [] });
       if (duong === '/don' && pt === 'GET') return json(200, { success: true, trang: 1, con_nua: false, data: [] });
       if (duong === '/don/TQD42' && pt === 'GET') return json(200, { success: true, don: DON });
-      if (duong === '/gio/bao-gia') return json(200, bgCua(than));
+      if (duong === '/gio/bao-gia') return S.loiBg ? json(400, S.loiBg) : json(200, bgCua(than));
       if (duong === '/don' && pt === 'POST') return json(400, { error: 'Quán đang bận, bạn thử lại sau', code: 'QUAN_BAN_THU' });
       return json(500, { error: 'chưa giả', code: 'LOI_GIA' });
     };
@@ -323,6 +323,38 @@ async function trinhDuyet(pw) {
     await doi(t, async () => /120\.000đ/.test(await chu(t, '#cart .summary-row.total')), 2000);
     await t.waitForTimeout(1200); // lượt "3" về muộn
     k('C2 lượt cũ về muộn (giỏ 3 ly) KHÔNG ghi đè báo giá giỏ mới (4 ly = 120.000đ)', /120\.000đ/.test(await chu(t, '#cart .summary-row.total')), await chu(t, '#cart .summary-row.total'));
+  });
+
+  // B1 / K5: báo giá lỗi → không số cũ, nút không khoá vĩnh viễn; CHUA_MO → câu cũ "Tổng tiền sẽ hiện…", nút mở.
+  await may('gio-loi', { gio: [{ ma: 'TLB', so_luong: 1, ghi_chu: '' }], tre: 50 }, async ({ t, S }) => {
+    S.tre = (d) => (d === '/gio/bao-gia' ? 400 : null);
+    await t.goto(URL0 + '/giohang'); await t.waitForSelector('#cart');
+    await doi(t, async () => /30\.000đ/.test(await chu(t, '#cart .summary-row.total')), 3000);
+    S.loiBg = { error: 'Quán chưa tính được giá, bạn thử lại', code: 'LOI_BAO_GIA' };
+    await t.locator('#cart .qty-ctrl button').nth(1).click();
+    const coLoi = await doi(t, async () => /Quán chưa tính được giá/.test(await chu(t, '#cart .bang-tien')), 3000);
+    const bang = await chu(t, '#cart .bang-tien');
+    k('B1 báo giá lỗi → hiện lời POS, KHÔNG hiện số cũ (30.000đ), không mờ, không vòng nhỏ', coLoi && !/\d\.000đ/.test(bang) && (await so(t, '#cart .bang-tien.cho-mo')) === 0 && (await so(t, '#cart .bang-tien .cho-xoay')) === 0, bang);
+    k('K5 báo giá lỗi → nút đi tiếp KHÔNG khoá (không kẹt "đang tính")', (await t.locator('#cart .checkout-btn').getAttribute('aria-disabled')) !== 'true');
+    S.loiBg = { error: 'Đặt online sắp mở', code: 'CHUA_MO' };
+    await t.locator('#cart .qty-ctrl button').nth(1).click();
+    const cau = await doi(t, async () => /Tổng tiền sẽ hiện khi quán xác nhận/.test(await chu(t, '#cart .bang-tien')), 3000);
+    k('B1/K5 POS trả CHUA_MO → câu "Tổng tiền sẽ hiện…", không số, không vòng, nút đi tiếp MỞ', cau && !/\d\.000đ/.test(await chu(t, '#cart .bang-tien')) && (await so(t, '#cart .bang-tien .cho-xoay')) === 0
+      && (await t.locator('#cart .checkout-btn').getAttribute('aria-disabled')) !== 'true');
+  });
+
+  // A1 hành vi: bấm tab Menu khi đã có menu (quá 5 phút → hỏi lại /menu) → lượt ngầm, KHÔNG vòng.
+  await may('menu-ngam', { tre: 1000 }, async ({ t, S }) => {
+    await t.goto(URL0 + '/menu'); await t.waitForSelector('.phone');
+    await doi(t, async () => /Trà Lục Bảo/.test(await chu(t, '#catalog')), 5000);
+    await yen(t, S);
+    await t.locator('.tabbar .tab').nth(0).click(); await yen(t, S);
+    await t.clock.fastForward('06:00'); await yen(t, S);
+    const n0 = S.goi.filter((g) => g.duong === '/menu').length;
+    await t.locator('.tabbar .tab').nth(1).click();
+    const co = await coLucHien(t, 1600);
+    const n1 = S.goi.filter((g) => g.duong === '/menu').length;
+    k('A1 bấm tab Menu khi đã có menu (quá 5 phút) → hỏi lại /menu NGẦM, không vòng giữa màn', n1 > n0 && !co, `${n1 - n0} lượt /menu, vòng ${co}`);
   });
 
   await may('gio-chua-dn', { token: '', gio: [{ ma: 'TLB', so_luong: 1, ghi_chu: '' }] }, async ({ t, S }) => {

@@ -9,20 +9,19 @@
 - `src/components/VongCho.jsx` (mới, ~15 dòng) gắn MỘT lần trong `.phone` (App.jsx): `<span class="cho-xoay to cho-giua" role="progressbar" aria-label=nd('khung.dangCho')>`.
   Chính vòng là phần tử duy nhất (không bọc lớp phủ): `position:absolute` giữa `.phone`, `pointer-events:none`, không nền.
 - `src/giaoDien/cho.css` (mới, ~12 dòng, chép ý mẫu kiểu b): `.cho-xoay`, `.cho-xoay.to`, `.cho-xoay.trang`, `.cho-giua`, `.bang-tien.cho-mo`, `.cho-tinh`,
-  `@keyframes cho-quay`, `prefers-reduced-motion` → 2,4 s/vòng. Màu: `--pink`, `--pink-dark`, `--muted`, `#fff`, `rgba(255,255,255,.45)` (K9 kiểm).
+  `@keyframes cho-quay`, `prefers-reduced-motion` → 2,4 s/vòng. Màu: `--pink`, `--pink-dark`, `--muted`, `#fff`, `rgba(255,255,255,.35) (bản thử dùng .45 — không có trong demo, K9 chặn)` (K9 kiểm).
 
 ### Bảng lượt gọi POS (A1) — mỗi chỗ "chờ" hay "ngầm"
 | Chỗ gọi | Lượt | Ghi |
 |---|---|---|
-| `heThong.dungHeThong` nạp lúc mở App (/hang, /gio-vang, /gio-hoat-dong) | chờ | mở App |
-| `heThong` hỏi lại mỗi phút + quay lại tab | **ngầm** | `ngam(nap)` |
-| `GvDem` → `napGioVang` (tới giờ mà POS chưa báo) | **ngầm** | |
+| `heThong.dungHeThong` nạp lúc mở App (/hang, /gio-vang, /gio-hoat-dong) | **ngầm** (từ khi soát: `CUA_NGAM` ở api.js — heThong.js ngoài Phạm vi) | lúc mở App vòng vẫn hiện nhờ /menu, /toi… |
+| `heThong` hỏi lại mỗi phút + quay lại tab, `GvDem` → `napGioVang` | **ngầm** | cùng luật `CUA_NGAM` (đường), không sửa heThong.js |
 | `duLieuKhach.taoCua.lay` khi kho CHƯA có dữ liệu (mở App, Thử lại) | chờ | |
 | `taoCua.lay` khi kho ĐÃ có dữ liệu (5 phút, quay lại > 60 s, sau thao tác, `napNeuCu`) | **ngầm** | một luật trong `lay()` |
-| `BaoDonXong` 15 s + quay lại tab (`cuaDon.lay`) | **ngầm** | `ngam` ở `hoiNgay` |
+| `BaoDonXong` 15 s + quay lại tab (`cuaDon.lay`) | **ngầm** khi kho /don đã có dữ liệu | luật `taoCua` (BaoDonXong không sửa — xem dưới) |
 | `dungTheoDoi` lần đầu mở màn / bấm Thử lại | chờ | |
 | `dungTheoDoi` hỏi lại 3 s (chờ QR) / 10 s | **ngầm** | lượt do đồng hồ |
-| `giaHan` (`/gia-han`) | **ngầm** | |
+| `giaHan` (`/gia-han`) | **ngầm** | bọc `ngam` ngay trong `api.js` (giaHan.js ngoài Phạm vi) |
 | `App` /quang-cao khi quay lại App sau ≥ PHUT_KIEM | **ngầm** | lần đầu (/trangchu) chờ |
 | `goiKho` (`/api/nd`, kho nội dung) | **ngầm** | không đi qua `goi` → không đếm |
 | /menu, /chuong-trinh, /quang-cao lần đầu, /voucher?all, /vi, /don?trang, /don/:ma (Don, Chi tiết, Đặt lại), /goi-nap (Thanh toán) | chờ | khách đang đợi |
@@ -60,7 +59,7 @@
 ## Ca thử ↔ Nghiệm thu (`cong_cu/thu_KHNHANH2.js`)
 | Nghiệm thu | Ca |
 |---|---|
-| A1 | Node: lượt chờ đếm +1/−1; `ngam` không đếm; lỗi mạng / 401 / huỷ (choMs) → về 0; theo dõi > 300 ms báo true, < 300 ms không báo; đọc nguồn: bảng chỗ ngầm (heThong, GvDem, taoCua, BaoDonXong, dungTheoDoi, giaHan, quảng cáo) |
+| A1 | Node: lượt chờ đếm +1/−1; `ngam` không đếm; lỗi mạng / 401 → về 0 (huỷ do `choMs` đi cùng nhánh `finally`, không có ca riêng); theo dõi > 300 ms báo true, < 300 ms không báo; đọc nguồn: bảng chỗ ngầm (heThong, GvDem, taoCua, BaoDonXong, dungTheoDoi, giaHan, quảng cáo) |
 | A1 K1b | `kiem_tra_truoc_khi_giao.js` (npm test) vẫn 2 lối fetch |
 | A2 | Chromium 390: POS chậm 1,5 s → `.cho-giua` hiện, nằm giữa `.phone`, nền trong suốt, `pointer-events:none`, không phần tử phủ; bấm nút tab trong lúc vòng hiện → chuyển màn; hết lượt → ẩn; nhãn có `data-nd` |
 | A2 ngầm | Theo dõi đơn hỏi lại 3 s → không vòng; quay lại App > 60 s → không vòng |
