@@ -28,6 +28,9 @@ const TRINH_DUYET = [
   ['VS-NUT-MANG-SO-CU', [[G, "<span>{bg ? `${dinhDangGia(bg.tong)} →` : '→'}</span>", "<span>{bg || bgCu ? `${dinhDangGia((bg || bgCu).tong)} →` : '→'}</span>"], [G, 'const coThe = coMo && !dangTinh;', 'const coThe = coMo;']]],
   ['BV-LUOT-CU-GHI-DE-GIO-MOI', [[DD, '(bg) => { if (!huy) datTt({ bg, loi:', '(bg) => { if (true) datTt({ bg, loi:']]],
   ['BV-THEO-DOI-DONG-HO-DEM', [[DD, '(dongHo.current ? ngam(xem) : xem())', 'xem()']]],
+  // vòng sửa 1 (/ra-soat): lỗi / CHUA_MO không được kẹt "đang tính" (nút khoá vĩnh viễn); tab Menu khi đã có menu phải ngầm (ca hành vi, không chỉ đọc nguồn).
+  ['VS-LOI-KET-DANG-TINH', [[DD, "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: true", "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: false"]]],
+  ['BV-TAB-MENU-DEM', [['src/pages/Menu.jsx', '(tai.dl ? ngam(tai.taiLai) : tai.taiLai())', '(tai.dl ? (ngam(() => 0), tai.taiLai()) : tai.taiLai())']]],
 ];
 
 function chay(ten, sua, trinhDuyet) {
