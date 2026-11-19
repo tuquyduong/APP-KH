@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh, layQuangCao } from './api.js';
+import { docToken, xoaToken, datKhiHetPhien, layChiTietDon, layChuongTrinh, layQuangCao, ngam } from './api.js';
 import { PHUT_KIEM } from './dangKySW.js';
 import { cuaToi, cuaDiem, cuaDon, cuaVoucher, CUA_KHACH, lamMoi, xoaKhoKhach, napTomTat, luuTomTat, dungLamMoiNgam } from './duLieuKhach.js';
 import { dsGui, chamVoucher, CHON_RONG } from './voucherGio.js';
@@ -25,6 +25,7 @@ import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { SPRITE_MUA } from './noiDung/bieuTuongMua.js';
 import { nd, ngheNoiDung, phienNoiDung } from './noiDung/nd.js';
 import Thongbao from './components/Thongbao.jsx';
+import VongCho from './components/VongCho.jsx';
 import BaoDonXong from './components/BaoDonXong.jsx';
 import DaiNhacViec from './components/DaiNhacViec.jsx';
 import DaiQuangCao from './components/DaiQuangCao.jsx';
@@ -132,7 +133,7 @@ export default function App() {
     let luc = 0;
     const khiDoi = () => {
       if (document.visibilityState === 'hidden') luc = Date.now();
-      else if (luc && daHoiQc.current && Date.now() - luc >= PHUT_KIEM * 60000) { luc = 0; hoiQuangCao(); }
+      else if (luc && daHoiQc.current && Date.now() - luc >= PHUT_KIEM * 60000) { luc = 0; ngam(hoiQuangCao); }
     };
     document.addEventListener('visibilitychange', khiDoi);
     return () => document.removeEventListener('visibilitychange', khiDoi);
@@ -241,7 +242,7 @@ export default function App() {
   // Đơn vừa đặt từ máy này (bản ghi kh_don_gui, còn sau khi tải lại) đã trả → dọn giỏ + mã giảm MỘT lần (đánh dấu `xong`). Bản ghi GIỮ (không xoá) để tab
   // Thanh toán đang mở ở cửa sổ khác vẫn thấy "Bạn vừa đặt đơn …" (ra-soát vòng 1); đơn mới ghi đè, đăng xuất / đổi khách xoá. Huỷ → làm mới /don, /toi (ví nhả).
   // KH-THE-1/2: dọn ĐÚNG các dòng đã gửi (đơn thẻ không động giỏ đồ uống, không bỏ mã giảm — mã chỉ bỏ khi đơn có gửi mã); làm mới /toi + menu (hạng mới, giá mới).
-  const daTra = (ma) => { lamMoi([cuaDon, cuaVoucher]) /* đơn QR vừa trả: dải báo đơn xong bắt đầu hỏi; voucher đã dùng rời ví */; const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio(boDongDaGui(gio, g.than.mon)); if (g.than.ma_giam) datMaGiam(''); lamMoi([cuaToi]); menu.taiLai(true); } };
+  const daTra = (ma) => { lamMoi([cuaDon, cuaVoucher]) /* đơn QR vừa trả: dải báo đơn xong bắt đầu hỏi; voucher đã dùng rời ví */; const g = banGhiCuaDon(ma); if (g && !g.xong) { ghiGuiDo({ ...g, xong: true }); doiGio(boDongDaGui(gio, g.than.mon)); if (g.than.ma_giam) datMaGiam(''); lamMoi([cuaToi]); ngam(() => menu.taiLai(true)); } }; // sau lượt hỏi ngầm: lấy lại menu cũng ngầm
   // C7: đơn của bản ghi đã trả mà Theo dõi đơn không mở — kho /don (mở App, làm mới ngầm, dải báo đơn, Lịch sử đơn) thấy thì dọn giỏ, đúng MỘT lần (cờ xong).
   const khoDon = dungKho(cuaDon.kho);
   const maDaTra = dangNhap ? maDonDaTra(docGuiDo(), khoDon.dl && khoDon.dl.data) : '';
@@ -288,6 +289,7 @@ export default function App() {
         {(trang === 'khongthay' || r.giuCho) && <KhongTimThay chon={() => vaoTab('trangchu')} />}
       </div>
       <ThanhTab tab={r.tab || tabCuoi.current} chon={chonTab} soMon={demMon(gio)} />
+      <VongCho />
       <Thongbao chu={thongBao} het={() => datThongBao('')} />
       {dangNhap && <BaoDonXong moDon={(ma) => di(taoDuongDan('theodoi', { ma }))} datTieuDe={datTieuXong} />}
       {dangNhap && <DaiNhacViec san={daBiet} moNgay={() => di(taoDuongDan('kehoach'))} />}

@@ -325,11 +325,17 @@ export function monDatLai(don, ds) {
   return { them, boQua };
 }
 
-/** Gộp: nhiều lần gọi liền trong `ms` → chỉ chạy lần cuối (hỏi báo giá ≤ 1 lần / 600 ms). */
+/** Gộp đầu + đuôi (KH-NHANH-2 C2): lần gọi sau ≥ `ms` yên → chạy ngay; gọi liền tay → thêm đúng MỘT lần chạy (lần cuối) sau khi yên `ms`. */
 export function taoGop(ms) {
-  let h = null;
-  const gop = (f) => { clearTimeout(h); h = setTimeout(f, ms); };
-  gop.huy = () => clearTimeout(h);
+  let h = null, cuoi = -Infinity; // cuoi = lúc đổi gần nhất
+  const gop = (f) => {
+    const bay = Date.now(), yen = !h && bay - cuoi >= ms;
+    cuoi = bay;
+    clearTimeout(h); h = null;
+    if (yen) f(); // gom ĐẦU: đang yên → gửi ngay
+    else h = setTimeout(() => { h = null; f(); }, ms); // gom ĐUÔI: đổi liền tay → chỉ lần cuối, sau khi yên ms
+  };
+  gop.huy = () => { clearTimeout(h); h = null; };
   return gop;
 }
 

@@ -101,7 +101,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers, 
   const coThe = duocThanhToan(gio, ds, dsHang, dsGoi);
   // tham số sai / hạng hoặc gói (thẻ, nạp) không còn bán: không báo giá, không đặt
   const khongBan = cheDoThe ? (!the || (Array.isArray(dsHang) && !coThe)) : cheDoNap && (!nap || (!!dsGoi && !coThe));
-  const { bg, loi, datBg } = dungBaoGia(gio, tuy, coThe);
+  const { bg, bgCu, dangTinh, loi, datBg } = dungBaoGia(gio, tuy, coThe);
   const soDu = toi.dl && toi.dl.khach ? toi.dl.khach.so_du_vi : null;
   const duoc = cachTraDuoc(bg && bg.tong, soDu);
   const thieu = viThieu(bg && bg.tong, soDu);
@@ -261,7 +261,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers, 
         </>
       )}
 
-      {!khongBan && !cheDoNap && <BangTien bg={bg} loi={loi} />}
+      {!khongBan && !cheDoNap && <BangTien bg={bg} loi={loi} bgCu={bgCu} dangTinh={dangTinh} />}
       {!cheDoThe && !cheDoNap && bg && bg.voucherLoi.length > 0 && (
         <div className="vc-chua"><Chu k="tt.vc.chua" as="div" className="vc-chua-t" />{bg.voucherLoi.map((x) => <div key={x.ma} className="vc-loi" {...ndDau('tt.vc.dong')}>{ndPhan('tt.vc.dong', { ma: x.ma, loi: <span key="loi" {...ndDau('gio.vc.loi')}>{x.error}</span> })}</div>)}</div>
       )}
@@ -270,7 +270,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers, 
       {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}
       {!khongBan && (
         <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
-          <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
+          <span>{dang && <span className="cho-xoay trang" aria-hidden="true" />}<span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span></span><span>→</span>
         </button>
       )}
       {cheDoNap ? (monLoi || khongBan || !!loi || !!khoGoi.loi) && <Chu k="nap.tt.veVi" as="button" type="button" className="ghost-btn" onClick={veVi} />

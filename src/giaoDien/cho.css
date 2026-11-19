@@ -1,0 +1,11 @@
+/* Vòng xoay chờ quán (KH-NHANH-2, kiểu B của bản thử 18.11). Màu bảng demo: --pink (vòng nhạt), --pink-dark (cung đậm), --muted. KHÔNG nền, KHÔNG phủ, không chặn bấm. */
+.cho-xoay{ display:inline-block; width:14px; height:14px; border-radius:50%; border:2px solid var(--pink); border-top-color:var(--pink-dark); animation:cho-quay .8s linear infinite; vertical-align:-2px; margin-right:6px; box-sizing:border-box; flex-shrink:0; }
+.cho-xoay.to{ width:36px; height:36px; border-width:4px; margin:0; }
+.cho-xoay.trang{ border-color:rgba(255,255,255,.45); border-top-color:#fff; }
+/* Chính vòng là phần tử duy nhất, nằm giữa khung điện thoại (position:relative). Căn bằng margin — transform đã dành cho xoay. */
+.cho-xoay.cho-giua{ position:absolute; top:50%; left:50%; margin:-18px 0 0 -18px; z-index:9000; pointer-events:none; }
+@keyframes cho-quay{ to{ transform:rotate(360deg); } }
+.bang-tien.cho-mo .summary-row{ opacity:.45; transition:opacity .2s; }
+.bang-tien.cho-mo .summary-row.total{ opacity:.8; }
+.cho-tinh{ color:var(--muted); font-size:13px; display:inline-flex; align-items:center; }
+@media (prefers-reduced-motion: reduce){ .cho-xoay{ animation-duration:2.4s; } }

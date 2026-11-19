@@ -2,7 +2,7 @@
 // Có dữ liệu thì hiện ngay; lấy mới NGẦM khi: màn mở mà bản quá 5 phút, khách quay lại app sau 60 giây, mỗi 5 phút, ngay sau thao tác đổi dữ liệu.
 // Đổi phiên → xoá sạch kho (kết quả của lệnh bay từ phiên cũ bị bỏ). Thanh toán, Theo dõi đơn, Chi tiết đơn KHÔNG đọc kho (luôn lấy mới).
 import { useEffect } from 'react';
-import { layToi, layDiem, layVoucher, layDon, layGoiNap } from './api.js';
+import { layToi, layDiem, layVoucher, layDon, layGoiNap, ngam } from './api.js';
 import { taoKho, dungKho } from './kho.js';
 import { dauVet, docChu, cungKhach } from './luuMay.js';
 import { rutTomTat, ghiTomTat, docTomTat, tomTatCuaKhach } from './tomTatLuu.js';
@@ -29,7 +29,8 @@ export function taoCua(ham) {
     const p = phien;
     if (kho.lay().loi) kho.dat({ ...kho.lay(), loi: '' });
     const xong = () => { if (p === phien) cho = null; };
-    cho = ham().then(
+    const coDl = kho.lay().dl && !kho.lay().dl.tuMay; // đã có dữ liệu THẬT trên màn → lấy mới ngầm (không vòng chờ); chỉ bản tóm tắt trên máy → như chưa có
+    cho = (coDl ? ngam(ham) : ham()).then(
       (dl) => { xong(); if (p !== phien) return null; kho.dat({ dl, luc: Date.now(), loi: '' }); return dl; },
       (e) => { xong(); if (p === phien) kho.dat({ ...kho.lay(), loi: e.message }); return null; },
     );

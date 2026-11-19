@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import '../giaoDien/gio_xoa.css';
 import '../giaoDien/voucher.css';
@@ -20,20 +20,26 @@ import { Ico, En } from '../components/BieuTuong.jsx';
 // App KHÔNG tính tiền: giá trên dòng = giá một ly (như Menu) × số lượng, chỉ để hình dung; tạm tính / giảm / phí / tổng CHỈ từ báo giá POS.
 // Voucher (KH-VC-2, Màn 7): App gửi MỘT mảng `vouchers` (App.jsx tính bằng dsGui) — ô tích CHỈ khi POS tính; POS không tính → câu POS màu đỏ; khách bỏ tay → không tích.
 
-/** Bảng tiền (demo cartSum / bảng ở checkout): mọi số lấy nguyên từ báo giá POS; chưa có báo giá → một dòng chờ, không số. */
-export function BangTien({ bg, loi }) {
+/**
+ * Bảng tiền (demo cartSum / bảng ở checkout): mọi số lấy nguyên từ báo giá POS; không hỏi được → một dòng chờ, không số. Đang tính lại (KH-NHANH-2 B1): còn
+ * báo giá cũ của màn → hiện số cũ MỜ + vòng nhỏ trước Tổng (nút trả tiền vẫn theo báo giá mới); chưa từng có → "Đang tính tiền…". Lỗi → không số cũ.
+ */
+export function BangTien({ bg, loi, bgCu, dangTinh }) {
   const { hangToi } = dungGia();
+  const cu = dangTinh && !bg && !loi ? bgCu : null;
+  if (cu) bg = cu;
   return (
-    <div className="card bang-tien">
+    <div className={`card bang-tien${cu ? ' cho-mo' : ''}`} aria-busy={dangTinh || undefined}>
       {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>}
       {bg ? (
         <>
           {bg.tamTinh !== null && <div className="summary-row"><Chu k="gio.tienHang" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tamTinh)}</span></div>}
           {bg.giam.map((g, i) => <div className="summary-row discount" key={i}><span>{tenGiam(g, hangToi && hangToi.ten)}</span><span>−{dinhDangGia(g.soTien)}</span></div>)}
           {bg.phiGiao > 0 && <div className="summary-row"><Chu k="gio.phiGiao" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.phiGiao)}</span></div>}
-          <div className="summary-row total"><Chu k="gio.tong" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tong)}</span></div>
+          <div className="summary-row total"><Chu k="gio.tong" /><span>{cu && <span className="cho-xoay" aria-hidden="true" />}<span {...ndDau('gio.tien')}>{dinhDangGia(bg.tong)}</span></span></div>
         </>
-      ) : <div className="summary-row"><Chu k="gio.chuaTong" /></div>}
+      ) : dangTinh ? <div className="summary-row"><span className="cho-tinh"><span className="cho-xoay" aria-hidden="true" /><Chu k="gio.dangTinh" /></span></div>
+        : <div className="summary-row"><Chu k="gio.chuaTong" /></div>}
     </div>
   );
 }
@@ -115,12 +121,11 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
   const tenDong = (d) => trangThaiDong(d, ds).mon?.ten || nd('gio.monChung');
   const xoaMon = (i) => { const d = gio[i]; datDaXoa({ dong: d, vitri: i, ten: tenDong(d) }); doi(xoaDong(gio, i)); };
   const hoanTac = () => { doi(chenDong(gio, daXoa.dong, daXoa.vitri)); datDaXoa(null); };
-  const coThe = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
-  const hoi = dangNhap && coMenu && coThe; // có hỏi POS báo giá không
-  const { bg, loi } = dungBaoGia(gio, { maGiam, vouchers }, hoi);
-  const bgCu = useRef(null);
-  if (bg) bgCu.current = bg;
-  const bgVc = bg || (hoi && !loi ? bgCu.current : null); // ô voucher: báo giá POS; ĐANG chờ báo giá mới → báo giá cuối; lỗi / không hỏi → không tích
+  const coMo = coMenu ? duocThanhToan(gio, ds) : gio.length > 0; // chưa có menu: vẫn cho đi tiếp (đăng nhập), Thanh toán kiểm lại khi có menu
+  const hoi = dangNhap && coMenu && coMo; // có hỏi POS báo giá không
+  const { bg, bgCu, dangTinh, loi } = dungBaoGia(gio, { maGiam, vouchers }, hoi);
+  const coThe = coMo && !dangTinh; // đang tính lại: nút đi tiếp KHOÁ, số trên nút chỉ theo báo giá mới (KH-NHANH-2 B2)
+  const bgVc = bg || (hoi && !loi ? bgCu : null); // ô voucher: báo giá POS; ĐANG chờ báo giá mới → báo giá cuối; lỗi / không hỏi → không tích
   const daApMa = !!maGiam && o.trim() === maGiam && !!bg && bg.giam.some((g) => g.loai === 'ma_giam');
   return (
     <Man id="cart">
@@ -142,7 +147,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
             <button type="button" onClick={() => datMaGiam(o.trim())} {...ndDau(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}>{nd(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}</button>
           </div>
           {bg && bg.maGiamLoi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('gio.maLoi')}>{bg.maGiamLoi.error}</div></div>}
-          <BangTien bg={bg} loi={loi} />
+          <BangTien bg={bg} loi={loi} bgCu={bgCu} dangTinh={dangTinh} />
           <button type="button" className={`checkout-btn${coThe ? '' : ' btn-disabled'}`} aria-disabled={!coThe} onClick={coThe ? tiepTuc : undefined}>
             <span {...ndDau('gio.tiepTuc')}>{nd('gio.tiepTuc')}</span><span>{bg ? `${dinhDangGia(bg.tong)} →` : '→'}</span>
           </button>

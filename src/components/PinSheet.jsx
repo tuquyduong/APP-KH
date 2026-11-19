@@ -69,7 +69,7 @@ export default function PinSheet({ dong, gui }) {
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <button type="button" key={k} onClick={() => nhan(String(k))}>{k}</button>)}
               <Chu k="pin.xoa" as="button" type="button" className="lk" onClick={xoa} />
               <button type="button" onClick={() => nhan('0')}>0</button>
-              <button type="button" className="lk pin-ok" disabled={dang || so.length < DO_DAI} onClick={xacNhan} {...ndDau(dang ? 'pin.dangGui' : 'pin.xacNhan')}>{nd(dang ? 'pin.dangGui' : 'pin.xacNhan')}</button>
+              <button type="button" className="lk pin-ok" disabled={dang || so.length < DO_DAI} onClick={xacNhan} >{dang && <span className="cho-xoay" aria-hidden="true" />}<span {...ndDau(dang ? 'pin.dangGui' : 'pin.xacNhan')}>{nd(dang ? 'pin.dangGui' : 'pin.xacNhan')}</span></button>
             </div>
           </>
         )}
