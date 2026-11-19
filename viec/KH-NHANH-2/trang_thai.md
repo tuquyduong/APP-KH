@@ -157,3 +157,7 @@ BÀI HỌC:
 - Nghi ngờ còn lại (không sửa, ghi Phát hiện): giờ chờ báo giá, CUA_NGAM, hai vòng cùng lúc, `hien.*`. "Thử lại" trùng nhịp đồng hồ / daTra voucher trống: nhỏ, bỏ.
 - D4 phần so ảnh màn ngoài phạm vi: việc của chat soát cuối (phiếu D4 "soát cuối so ảnh") — vẫn ghi CHƯA KIỂM.
 - thu_KHNHANH2 có Chromium 68 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 37 (SỐ CA không đổi).
+
+- Kiểm lại sau vòng sửa 1: npm test --day-du 68 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 cổng chay: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 26 ≠ 37 ca — bài dừng sớm trên gốc, xem bang_chung_do.txt).
+
+HEAD ĐÃ KIỂM: b84bf8f
