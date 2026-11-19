@@ -211,3 +211,6 @@ BÀI HỌC:
    khẩu hiệu. Chủ quán muốn: (a) giữ như vậy, hay (b) ẩn vòng trong lúc màn mở đang hiện? Xem khi thử tay D6.
 
 - Kiểm lần cuối sau soát vòng 2: xem dòng dưới.
+- Sau soát vòng 2 (7dab641): thu_KHNHANH2 Chromium 68 đạt · 0 hỏng; đột biến 14/14; KHONG_TRINH_DUYET=1 cổng chay: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 như trên). Từ b84bf8f chỉ đổi bài thử + hồ sơ, không đổi src/.
+
+HEAD ĐÃ KIỂM: 7dab641
