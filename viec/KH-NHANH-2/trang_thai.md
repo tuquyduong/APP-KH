@@ -219,3 +219,14 @@ BÀI HỌC:
 - Sau soát vòng 2 (7dab641): thu_KHNHANH2 Chromium 68 đạt · 0 hỏng; đột biến 14/14; KHONG_TRINH_DUYET=1 cổng chay: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 như trên). Từ b84bf8f chỉ đổi bài thử + hồ sơ, không đổi src/.
 
 HEAD ĐÃ KIỂM: 7dab641
+
+### Sau trả lời chủ quán 19.11 (câu 1: không cần · câu 2: chọn b — đã làm, xem ## Câu hỏi)
+- Đổi src/: `VongCho.jsx` (+`baoManDau`, ẩn khi màn mở hiện) · `ManDau.jsx` (+1 import, +1 useEffect báo trạng thái). api.js không đổi.
+- `node cong_cu/thu_KHNHANH2.js` Chromium 390: 72 đạt · 0 hỏng · `KHONG_TRINH_DUYET=1`: 37 đạt · 0 hỏng (SỐ CA 37 không đổi — 2 ca mới chỉ chạy trong trình duyệt).
+- `node viec/KH-NHANH-2/dot_bien_tay.js --trinh-duyet`: 15/15 BẮT ĐƯỢC, `TẤT CẢ ĐỘT BIẾN BỊ BẮT`.
+- `npm test`: lần đầu 64 đạt · 1 hỏng — `thu_KHND3e` (kho nông, không thấy commit cũ, như bước 1) → `git fetch -q --unshallow origin viec/KH-NHANH-2` →
+  `thu_KHND3e` 41 đạt · 0 hỏng. `node kiem_tra_truoc_khi_giao.js --day-du`: 68 đạt · 0 hỏng.
+- `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . 2ba09a5^ HEAD viec/KH-NHANH-2` tại 1853593: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 26 ≠ 37 như trên).
+- Thử tay D6 thêm: mở App lần đầu trong ngày trên 4G → trong lúc màn mở không có vòng hồng; bấm "Bỏ qua" khi trang còn tải → vòng hiện giữa màn rồi tắt.
+
+HEAD ĐÃ KIỂM: 1853593
