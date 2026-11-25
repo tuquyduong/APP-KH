@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { nd, ndAnh, ndDau } from '../noiDung/nd.js';
 import Chu from './Chu.jsx';
 import { canHienManDau, docNgayDaXem, ghiNgayDaXem, homNayMay } from '../ngayManDau.js';
+import { baoManDau } from './VongCho.jsx';
 
 // Màn mở "Mái đình" (demo patch18–23): hiện ở lần mở đầu tiên MỖI NGÀY (ngayManDau.js; đã xem trong phiên này thì cũng thôi), chạm hoặc "Bỏ qua" để vào app.
 // Âm thanh của demo: nút "Bật âm thanh", MẶC ĐỊNH TẮT, nhớ lựa chọn trong phiên. prefers-reduced-motion → bỏ chuyển động.
@@ -55,6 +56,8 @@ export default function ManDau() {
     if (!tat) phatAm();
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [hien]);
+
+  useEffect(() => { baoManDau(hien && !an); return () => baoManDau(false); }, [hien, an]);
 
   useEffect(() => {
     if (!an) return undefined;

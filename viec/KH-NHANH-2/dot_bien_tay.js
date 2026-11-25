@@ -32,6 +32,8 @@ const TRINH_DUYET = [
   ['VS-LOI-KET-DANG-TINH', [[DD, "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: true", "loi: e.code === 'CHUA_MO' ? '' : e.message, khoa, xong: false"]]],
   // sau soát vòng 2: bài Chromium nạp CSS như App (theo import thật) → bỏ dòng import cho.css thì vòng mất kiểu và bài phải đỏ.
   ['BV-BO-NAP-CHO-CSS', [['src/main.jsx', "import './giaoDien/cho.css'\n", '']]],
+  // chủ quán chọn b (19.11): bỏ điều kiện ẩn khi màn mở → vòng hiện cả lúc màn mở đang che → ca "màn mở đang hiện … KHÔNG có vòng" phải đỏ.
+  ['VS-VONG-HIEN-TREN-MAN-DAU', [['src/components/VongCho.jsx', 'if (!hien || manDau) return null;', 'if (!hien) return null;']]],
   ['BV-TAB-MENU-DEM', [['src/pages/Menu.jsx', '(tai.dl ? ngam(tai.taiLai) : tai.taiLai())', '(tai.dl ? (ngam(() => 0), tai.taiLai()) : tai.taiLai())']]],
 ];
 

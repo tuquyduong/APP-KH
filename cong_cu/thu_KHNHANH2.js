@@ -212,16 +212,16 @@ async function trinhDuyet(pw) {
   const chup = async (t, ten) => { if (anh) await t.screenshot({ path: path.join(anh, ten + '.png') }); };
 
   /** Một máy: `tre(duong, pt, than, lan)` → ms trễ của từng lượt (mặc định `treMacDinh`). */
-  async function may(ten, { token = 'tok-A', gio = null, tre: treMacDinh = 100 } = {}, chay) {
+  async function may(ten, { token = 'tok-A', gio = null, tre: treMacDinh = 100, manDau = false } = {}, chay) {
     const ctx = await trinh.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     await ctx.clock.install({ time: new Date('2026-10-30T20:30:00+07:00') }); await ctx.clock.resume();
-    await ctx.addInitScript(({ token, gio }) => {
+    await ctx.addInitScript(({ token, gio, manDau }) => {
       if (localStorage.getItem('da_gieo')) return;
       localStorage.setItem('da_gieo', '1');
       if (token) localStorage.setItem('kh_token', token);
-      localStorage.setItem('kh_ngay_man_dau', new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10));
+      if (!manDau) localStorage.setItem('kh_ngay_man_dau', new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10));
       if (gio) localStorage.setItem('kh_gio', JSON.stringify(gio));
-    }, { token, gio });
+    }, { token, gio, manDau });
     const S = { goi: [], tre: null, dangGoi: 0, tongGoi: 0 };
     const loi = [];
     const xuLy = async (r) => {
@@ -290,6 +290,22 @@ async function trinhDuyet(pw) {
     await anHien(t, true); await t.clock.fastForward('01:05'); await anHien(t, false);
     const co = await coLucHien(t, 1800);
     k('A1/D1 quay lại App sau 65 giây: có hỏi lại POS (ngầm) mà KHÔNG có vòng giữa màn', S.goi.length > truoc && !co, `${S.goi.length - truoc} lượt, vòng ${co}`);
+  });
+
+  // Chủ quán chọn b (19.11): màn mở đang hiện → không vòng giữa màn; tắt màn mở (Bỏ qua) khi lượt còn chờ → vòng hiện lại.
+  await may('man-dau-cho', { tre: 1500, manDau: true }, async ({ t, S }) => {
+    await t.goto(URL0 + '/trangchu'); await t.waitForSelector('#splashOverlay');
+    const co = await coLucHien(t, 1400);
+    const conManDau = (await so(t, '#splashOverlay')) === 1;
+    k('A2 màn mở đang hiện + POS chậm 1,5 s → KHÔNG có vòng giữa màn', conManDau && !co, `màn mở ${conManDau}, vòng ${co}`);
+    await yen(t, S);
+  });
+  await may('man-dau-bo-qua', { tre: 3000, manDau: true }, async ({ t }) => {
+    await t.goto(URL0 + '/trangchu'); await t.waitForSelector('#splashOverlay');
+    const truoc = await coLucHien(t, 800);
+    await t.locator('#skipBtn').click({ timeout: 1000 });
+    const sau = await doi(t, async () => (await so(t, VONG)) === 1, 1500);
+    k('A2 bấm "Bỏ qua" khi lượt vẫn chờ → vòng giữa màn hiện', !truoc && sau, `trước ${truoc}, sau ${sau}`);
   });
 
   await may('gio', { gio: [{ ma: 'TLB', so_luong: 1, ghi_chu: '' }], tre: 50 }, async ({ t, S }) => {
