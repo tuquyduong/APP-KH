@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { dinhDangNgay } from '../dinhDang.js';
+import { ngam } from '../api.js';
 import { slug } from '../duongDan.js';
 import { timMon, locTheoNhuCau, nhomTheoTen, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
@@ -30,7 +31,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
   // Menu được giữ trong cây nên hỏi lại menu mỗi lần khách BẤM tab Menu (lanVao tăng; menu lấy chưa quá 5 phút thì dungMenu bỏ qua); quay lại từ màn con thì giữ nguyên.
   const lanTruoc = useRef(lanVao);
   useEffect(() => {
-    if (lanTruoc.current !== lanVao) { lanTruoc.current = lanVao; tai.taiLai(); }
+    if (lanTruoc.current !== lanVao) { lanTruoc.current = lanVao; (tai.dl ? ngam(tai.taiLai) : tai.taiLai()); } // đã có menu: lấy mới ngầm (KH-NHANH-2)
   }, [lanVao, tai.taiLai]);
   const [tu, datTu] = useState('');
   const [mini, datMini] = useState(false);

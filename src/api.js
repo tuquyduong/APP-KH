@@ -40,8 +40,31 @@ const DUOC_GHI_KHI_SUA = /^\/(gio\/bao-gia|dang-nhap\/xin-ma|dang-nhap\/xac-minh
 export const datCheDoSua = (b) => { dangSua = !!b; };
 export const dangCheDoSua = () => dangSua;
 
+// Vòng xoay chờ (KH-NHANH-2): đếm lượt POS KHÁCH ĐANG CHỜ ở MỘT chỗ này. Lượt ngầm không đếm: (1) chạy trong `ngam(f)` — cờ đọc ở phần ĐỒNG BỘ đầu `goi`, nên
+// `f` phải gọi hàm api ngay (không sau await / then); (2) cửa App tự nạp nền, khách không đợi (hạng, Giờ vàng, giờ hoạt động — heThong hỏi lại mỗi phút, GvDem); gia hạn bọc ngam ở giaHan.
+export const MS_TRE_CHO = 300; // lượt chờ kéo dài quá ngần này mới hiện vòng (lượt nhanh không nhấp nháy)
+const CUA_NGAM = ['/hang', '/gio-vang', '/gio-hoat-dong'];
+let soNgam = 0, soCho = 0, henCho = null, dangHien = false;
+const ngheCho = new Set();
+const baoCho = (b) => { if (b !== dangHien) { dangHien = b; ngheCho.forEach((f) => f(b)); } };
+function demCho(d) {
+  soCho += d;
+  if (soCho > 0 && !henCho && !dangHien) henCho = setTimeout(() => { henCho = null; baoCho(true); }, MS_TRE_CHO);
+  if (soCho === 0) { clearTimeout(henCho); henCho = null; baoCho(false); }
+}
+/** Đăng ký nghe "có lượt khách đang chờ quá MS_TRE_CHO" (true / false); trả hàm huỷ. */
+export const theoDoiDangCho = (f) => { ngheCho.add(f); f(dangHien); return () => { ngheCho.delete(f); }; };
+/** Chạy `f` (gọi hàm api ngay) như lượt ngầm: không làm hiện vòng chờ. */
+export function ngam(f) { soNgam++; try { return f(); } finally { soNgam--; } }
+
+function goi(phuongThuc, duong, than, choMs) {
+  if (soNgam || CUA_NGAM.includes(duong)) return goiThat(phuongThuc, duong, than, choMs);
+  demCho(1);
+  return goiThat(phuongThuc, duong, than, choMs).finally(() => demCho(-1));
+}
+
 // `choMs` (tuỳ chọn): quá ngần này ms chưa xong → huỷ, ném như mất mạng (status 0) — người gọi coi là "chưa rõ".
-async function goi(phuongThuc, duong, than, choMs) {
+async function goiThat(phuongThuc, duong, than, choMs) {
   if (dangSua && phuongThuc !== 'GET' && !DUOC_GHI_KHI_SUA.test(duong)) throw loiApi(423, 'CHE_DO_SUA', CHAN_KHI_SUA);
   const token = CUA_CONG_KHAI.includes(duong) ? '' : docToken();
   const tieuDe = { 'Content-Type': 'application/json' };
@@ -94,7 +117,7 @@ export const layVi = (trang) => goi('GET', `/vi?trang=${trang}`); // v17 KH-NAP-
 export const layToi = () => goi('GET', '/toi');
 // `truong` = đúng các khoá cần đổi trong { ten, xung_ho, dia_chi } — thân yêu cầu chỉ chứa chúng (hợp đồng v3 "Hồ sơ").
 export const suaHoSo = (truong) => goi('PUT', '/toi', truong);
-export const giaHan = () => goi('POST', '/gia-han');
+export const giaHan = () => ngam(() => goi('POST', '/gia-han')); // tự gia hạn lúc mở App: ngầm
 export const layMenu = () => goi('GET', '/menu');
 export const layDiem = () => goi('GET', '/diem');
 export const layVoucher = (tatCa) => (tatCa ? goi('GET', '/voucher?all=1') : goi('GET', '/voucher'));

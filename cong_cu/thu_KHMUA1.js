@@ -123,9 +123,9 @@ const BG = { success: true, dong: [{ ma: 'TLB', so_luong: 2, don_gia: 27000, tha
     k('B7 QR còn lại theo bay_gio của POS (giờ VN, không new Date chuỗi)', D.conLaiQR('2026-10-30T20:40:00', '2026-10-30 20:30:00') === 600 && D.conLaiQR('2026-10-30T20:29:00', '2026-10-30 20:30:00') === 0 && D.conLaiQR('', '2026-10-30 20:30:00') === null && !/new Date\(/.test(nguon));
     // B5 gộp
     const gop = D.taoGop(40); let n = 0;
-    gop(() => n++); gop(() => n++); gop(() => n++);
+    gop(() => n++); const ngay = n; gop(() => n++); gop(() => n++);
     await new Promise((x) => setTimeout(x, 90));
-    k('B5 gộp: 3 lần đổi liền → 1 lần hỏi báo giá', n === 1, String(n));
+    k('B5 gộp đầu + đuôi (KH-NHANH-2 C2): 3 lần đổi liền → lần đầu gửi NGAY + đúng 1 lần cuối sau khi yên', ngay === 1 && n === 2, `${ngay}/${n}`);
     // B8 bấm đôi
     let lanGui = 0, xong; const cho = new Promise((x) => { xong = x; });
     const gui = D.khoaGui(() => { lanGui++; return cho; });
@@ -343,9 +343,11 @@ async function trinhDuyet(pw) {
     const bg = P.goi.filter((g) => g.duong === '/gio/bao-gia');
     k('B4 nhập mã → báo giá gửi ma_giam, giỏ hiện số POS; bảng tiền có dòng "Giảm giá" của POS', bg.length > 0 && bg[bg.length - 1].than.ma_giam === 'GIAM10' && /87\.654đ/.test(await chu(t, '#cart')) && /Giảm giá/.test(await chu(t, '#cart')));
     const n0 = dem(P, 'POST', '/gio/bao-gia');
+    const sl0 = bg[bg.length - 1].than.mon[0].so_luong;
     const cong = t.locator('.cart-item .qty-ctrl button').nth(1);
     await cong.click(); await cong.click(); await cong.click(); await t.clock.runFor(700); await yen(t); // đồng hồ giả: qua nhịp gộp 600 ms
-    k('B5 đổi số lượng 3 lần liền → ≤ 1 lần hỏi báo giá thêm (gộp 600 ms)', dem(P, 'POST', '/gio/bao-gia') - n0 <= 1 && dem(P, 'POST', '/gio/bao-gia') - n0 >= 1, String(dem(P, 'POST', '/gio/bao-gia') - n0));
+    const bg2 = P.goi.filter((g) => g.duong === '/gio/bao-gia'), them = dem(P, 'POST', '/gio/bao-gia') - n0, slCuoi = bg2[bg2.length - 1].than.mon[0].so_luong;
+    k('B5 (KH-NHANH-2 C2) đổi số lượng 3 lần liền → đúng 2 lần hỏi thêm (lần đầu ngay + lần cuối), lần cuối mang số lượng cuối', them === 2 && slCuoi === sl0 + 3, `${them} · ${slCuoi}/${sl0}`);
     await mo(t, '/thanhtoan');
     await t.locator('#checkout .checkout-btn').dblclick(); await yen(t);
     k('B8 bấm đôi Xác nhận → đúng 1 POST /don', dem(P, 'POST', '/don') === 1, String(dem(P, 'POST', '/don')));

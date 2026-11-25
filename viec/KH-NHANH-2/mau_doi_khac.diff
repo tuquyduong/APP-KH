@@ -1,0 +1,118 @@
+# BẢN THỬ 18.11 (chat) — chỉ để tham khảo ý; mẫu đếm MỌI lượt (phiếu A1: lượt ngầm KHÔNG tính). Kiểu chủ quán chọn: b (vòng xoay không nền, không mờ).
+diff --git a/src/api.js b/src/api.js
+index 4d31064..3146367 100644
+--- a/src/api.js
++++ b/src/api.js
+@@ -41,7 +41,18 @@ export const datCheDoSua = (b) => { dangSua = !!b; };
+ export const dangCheDoSua = () => dangSua;
+ 
+ // `choMs` (tuỳ chọn): quá ngần này ms chưa xong → huỷ, ném như mất mạng (status 0) — người gọi coi là "chưa rõ".
++// BẢN THỬ: đếm lượt đang hỏi POS cho biểu tượng chờ (KH-NHANH-2 sẽ làm chính thức).
++let soDangHoi = 0;
++const ngheHoi = new Set();
++const baoHoi = (d) => { soDangHoi += d; ngheHoi.forEach((f) => f(soDangHoi)); };
++export const theoDoiDangHoi = (f) => { ngheHoi.add(f); f(soDangHoi); return () => ngheHoi.delete(f); };
++
+ async function goi(phuongThuc, duong, than, choMs) {
++  baoHoi(1);
++  try { return await goiThat(phuongThuc, duong, than, choMs); } finally { baoHoi(-1); }
++}
++
++async function goiThat(phuongThuc, duong, than, choMs) {
+   if (dangSua && phuongThuc !== 'GET' && !DUOC_GHI_KHI_SUA.test(duong)) throw loiApi(423, 'CHE_DO_SUA', CHAN_KHI_SUA);
+   const token = CUA_CONG_KHAI.includes(duong) ? '' : docToken();
+   const tieuDe = { 'Content-Type': 'application/json' };
+diff --git a/src/dungDatDon.js b/src/dungDatDon.js
+index 7d334e5..98cffd4 100644
+--- a/src/dungDatDon.js
++++ b/src/dungDatDon.js
+@@ -14,6 +14,8 @@ const GIAY_HOI_DON = 10;     // đơn chưa xong: hỏi lại mỗi ngần này
+ export function dungBaoGia(gio, tuy, bat) {
+   const khoa = JSON.stringify([gio, tuy, bat]);
+   const [tt, datTt] = useState({ bg: null, loi: '', khoa });
++  const cu = useRef(null); // BẢN THỬ: báo giá gần nhất — hiện mờ trong lúc tính lại
++  if (tt.bg) cu.current = tt.bg;
+   const gop = useRef(null);
+   if (!gop.current) gop.current = taoGop(MS_GOP);
+   useEffect(() => {
+@@ -28,7 +30,7 @@ export function dungBaoGia(gio, tuy, bat) {
+   }, [khoa]);
+   useEffect(() => () => gop.current.huy(), []);
+   const dung = tt.khoa === khoa; // kết quả của đúng giỏ + mã hiện tại; khác (vừa đổi, chưa hỏi lại) → coi như đang tải
+-  return { bg: dung ? tt.bg : null, loi: dung ? tt.loi : '', datBg: (bg) => datTt({ bg, loi: '', khoa }) };
++  return { bg: dung ? tt.bg : null, bgCu: bat ? cu.current : null, loi: dung ? tt.loi : '', datBg: (bg) => datTt({ bg, loi: '', khoa }) };
+ }
+ 
+ // GET /don/:ma + tờ hoá đơn POS (`hoa_don[]`, v7) gắn thô vào don — docDon của datDon.js không chuyển trường này; màn vẽ bằng docHoaDon làm sạch.
+diff --git a/src/pages/GioHang.jsx b/src/pages/GioHang.jsx
+index 2d971ce..74bdd0e 100644
+--- a/src/pages/GioHang.jsx
++++ b/src/pages/GioHang.jsx
+@@ -21,19 +21,23 @@ import { Ico, En } from '../components/BieuTuong.jsx';
+ // Voucher (KH-VC-2, Màn 7): App gửi MỘT mảng `vouchers` (App.jsx tính bằng dsGui) — ô tích CHỈ khi POS tính; POS không tính → câu POS màu đỏ; khách bỏ tay → không tích.
+ 
+ /** Bảng tiền (demo cartSum / bảng ở checkout): mọi số lấy nguyên từ báo giá POS; chưa có báo giá → một dòng chờ, không số. */
+-export function BangTien({ bg, loi }) {
++export function BangTien({ bg, loi, bgCu, cho }) {
+   const { hangToi } = dungGia();
++  const moi = window.__KIEU && window.__KIEU !== 'hien-nay';
++  const dangTinh = moi && cho && !bg && !loi;
++  if (dangTinh) bg = bgCu || null;
+   return (
+-    <div className="card bang-tien">
++    <div className={`card bang-tien${dangTinh && bg ? ' cho-mo' : ''}`} aria-busy={dangTinh || undefined}>
+       {loi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div>{loi}</div></div>}
++      {dangTinh && !bg && <div className="summary-row"><span className="cho-tinh"><span className="cho-xoay" aria-hidden="true" />Đang tính tiền…</span></div>}
+       {bg ? (
+         <>
+           {bg.tamTinh !== null && <div className="summary-row"><Chu k="gio.tienHang" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tamTinh)}</span></div>}
+           {bg.giam.map((g, i) => <div className="summary-row discount" key={i}><span>{tenGiam(g, hangToi && hangToi.ten)}</span><span>−{dinhDangGia(g.soTien)}</span></div>)}
+           {bg.phiGiao > 0 && <div className="summary-row"><Chu k="gio.phiGiao" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.phiGiao)}</span></div>}
+-          <div className="summary-row total"><Chu k="gio.tong" /><span {...ndDau('gio.tien')}>{dinhDangGia(bg.tong)}</span></div>
++          <div className="summary-row total"><Chu k="gio.tong" /><span {...ndDau('gio.tien')}>{dangTinh && <span className="cho-xoay" aria-hidden="true" />}{dinhDangGia(bg.tong)}</span></div>
+         </>
+-      ) : <div className="summary-row"><Chu k="gio.chuaTong" /></div>}
++      ) : !dangTinh && <div className="summary-row"><Chu k="gio.chuaTong" /></div>}
+     </div>
+   );
+ }
+@@ -142,7 +146,7 @@ export default function GioHang({ gio, ds, doi, dangNhap, maGiam, datMaGiam, tie
+             <button type="button" onClick={() => datMaGiam(o.trim())} {...ndDau(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}>{nd(daApMa ? 'gio.ma.daAp' : 'gio.ma.ap')}</button>
+           </div>
+           {bg && bg.maGiamLoi && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('gio.maLoi')}>{bg.maGiamLoi.error}</div></div>}
+-          <BangTien bg={bg} loi={loi} />
++          <BangTien bg={bg} loi={loi} bgCu={bgCu.current} cho={hoi} />
+           <button type="button" className={`checkout-btn${coThe ? '' : ' btn-disabled'}`} aria-disabled={!coThe} onClick={coThe ? tiepTuc : undefined}>
+             <span {...ndDau('gio.tiepTuc')}>{nd('gio.tiepTuc')}</span><span>{bg ? `${dinhDangGia(bg.tong)} →` : '→'}</span>
+           </button>
+diff --git a/src/pages/ThanhToan.jsx b/src/pages/ThanhToan.jsx
+index c1dcfea..4fd4875 100644
+--- a/src/pages/ThanhToan.jsx
++++ b/src/pages/ThanhToan.jsx
+@@ -101,7 +101,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers,
+   const coThe = duocThanhToan(gio, ds, dsHang, dsGoi);
+   // tham số sai / hạng hoặc gói (thẻ, nạp) không còn bán: không báo giá, không đặt
+   const khongBan = cheDoThe ? (!the || (Array.isArray(dsHang) && !coThe)) : cheDoNap && (!nap || (!!dsGoi && !coThe));
+-  const { bg, loi, datBg } = dungBaoGia(gio, tuy, coThe);
++  const { bg, bgCu, loi, datBg } = dungBaoGia(gio, tuy, coThe);
+   const soDu = toi.dl && toi.dl.khach ? toi.dl.khach.so_du_vi : null;
+   const duoc = cachTraDuoc(bg && bg.tong, soDu);
+   const thieu = viThieu(bg && bg.tong, soDu);
+@@ -261,7 +261,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers,
+         </>
+       )}
+ 
+-      {!khongBan && !cheDoNap && <BangTien bg={bg} loi={loi} />}
++      {!khongBan && !cheDoNap && <BangTien bg={bg} loi={loi} bgCu={bgCu} cho={coThe} />}
+       {!cheDoThe && !cheDoNap && bg && bg.voucherLoi.length > 0 && (
+         <div className="vc-chua"><Chu k="tt.vc.chua" as="div" className="vc-chua-t" />{bg.voucherLoi.map((x) => <div key={x.ma} className="vc-loi" {...ndDau('tt.vc.dong')}>{ndPhan('tt.vc.dong', { ma: x.ma, loi: <span key="loi" {...ndDau('gio.vc.loi')}>{x.error}</span> })}</div>)}</div>
+       )}
+@@ -270,7 +270,7 @@ export default function ThanhToan({ gio: gioCa, the, nap, ds, maGiam, vouchers,
+       {thongBao && canhBao(thongBao, '', khoaLoi(thongBao))}
+       {!khongBan && (
+         <button type="button" className={`checkout-btn nut-dat${khoa ? ' btn-disabled' : ''}`} aria-disabled={khoa} onClick={xacNhan}>
+-          <span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
++          {dang && (window.__KIEU === 'a' || window.__KIEU === 'c') && <span className="cho-xoay trang" aria-hidden="true" />}<span {...ndDau(kNut)}>{nd(kNut, bienNut)}</span><span>→</span>
+         </button>
+       )}
+       {cheDoNap ? (monLoi || khongBan || !!loi || !!khoGoi.loi) && <Chu k="nap.tt.veVi" as="button" type="button" className="ghost-btn" onClick={veVi} />

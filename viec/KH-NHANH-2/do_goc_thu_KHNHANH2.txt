@@ -1,0 +1,61 @@
+Phần 1 — hàm thuần + đọc nguồn
+  ✗ C2 lần đổi đầu (đang yên) → gửi NGAY, không chờ  — 0
+  ✗ C2 5 lần đổi liền tay → đúng 2 lượt (đầu ngay + cuối sau khi yên), lượt cuối mang giỏ cuối  —  | g5
+  ✗ C2 yên quá ms rồi đổi → gửi ngay
+  ✓ C2 huy() bỏ lượt cuối đang hẹn (rời màn)
+  ✗ A1 api.js có theoDoiDangCho + ngam
+  ✗ A1 ngầm: cửa App tự nạp nền (heThong mỗi phút, GvDem, gia hạn) (src/api.js)
+  ✗ A1 ngầm: kho dữ liệu khách đã có dữ liệu thật (src/duLieuKhach.js)
+  ✗ A1 ngầm: dải báo đơn xong 15 s / quay lại tab (src/components/BaoDonXong.jsx)
+  ✗ A1 ngầm: Theo dõi đơn hỏi lại 3 s / 10 s (lượt do đồng hồ) (src/dungDatDon.js)
+  ✗ A1 ngầm: quảng cáo khi quay lại App (src/App.jsx)
+  ✗ A1 ngầm: đơn vừa trả (sau lượt ngầm) → lấy lại menu (src/App.jsx)
+  ✗ A1 ngầm: bấm tab Menu khi đã có menu (src/pages/Menu.jsx)
+  ✗ A1 MỘT chỗ đếm, đường fetch không đổi: goi bọc goiThat; vẫn đúng 2 chữ fetch( trong api.js
+  ✗ A2 VongCho: dùng theoDoiDangCho, role=progressbar, nhãn từ danh mục (data-nd)
+  ✗ A2 gắn MỘT lần trong khung App
+  ✗ A3 cho.css: mọi lớp mới tiền tố cho-
+  ✗ A3 vòng giữa màn: pointer-events:none, không nền, không phủ (không inset:0)
+  ✗ A3 prefers-reduced-motion → quay chậm (không tắt)
+  ✗ A2/B1 mục danh mục mới: khung.dangCho, gio.dangTinh
+  ✗ B2 Giỏ không còn ref bgCu riêng (dùng bgCu của dungBaoGia)
+  ✗ B3 nút Đặt đơn có vòng trắng khi đang gửi
+  ✗ B3 nút Xác nhận bảng PIN có vòng khi đang gửi
+  ✗ C1 index.html có script preconnect; biến chưa thay (dựng không biến / chạy thử) → KHÔNG thêm link  — {"soScript":0,"link":[]}
+  ✗ C1 có biến → link preconnect = GỐC (không /api, không / cuối), crossorigin  — [[],[],[]]
+  ✗ C1 script preconnect đứng TRƯỚC stylesheet (không chờ CSS)
+  ✗ C1 vite build với VITE_POS_API → index.html dựng có preconnect đúng gốc, không /api  — []
+Phần 2 — Chromium + POS giả có độ trễ
+  ✗ A2 mở App, POS chậm 1,5 s → có vòng xoay giữa màn
+  ✗ A2 vòng: nền trong suốt, pointer-events none, ~36 px, giữa khung .phone, không phần tử phủ  — null
+  ✗ A2 role=progressbar, nhãn đọc màn hình từ danh mục (data-nd khung.dangCho)  — null
+  ✓ A2 bấm được nút trong lúc vòng hiện (không chặn bấm)
+  ✓ A2 hết lượt chờ → vòng ẩn
+  ✓ C3 mở App: /toi /diem /voucher /don /menu mỗi cửa đúng MỘT lượt (như KH-NHANH-1)
+  ✓ A1/D1 quay lại App sau 65 giây: có hỏi lại POS (ngầm) mà KHÔNG có vòng giữa màn
+  ✓ ca mo-app: trang không báo lỗi JS
+  ✗ B1 Giỏ lần đầu (chưa có báo giá) → "Đang tính tiền…" + vòng nhỏ, không câu "Tổng tiền sẽ hiện"  — Tiền hàng
+30.000đ
+Tổng cộng
+30.000đ
+  ✗ B2 Giỏ đang tính lần đầu → nút đi tiếp KHOÁ
+  ✓ B1 báo giá về → số 30.000đ, nút mở
+  ✗ B1 bấm + → tổng CŨ còn (30.000đ), mờ (cho-mo, opacity < 1), có vòng nhỏ trước Tổng  — Tổng cộng
+60.000đ · 1
+  ✗ B2 đang tính lại → nút đi tiếp KHOÁ, KHÔNG mang số cũ  — Tiếp tục · chọn cách nhận hàng
+60.000đ →
+  ✓ B1/B2 báo giá mới về → 60.000đ, hết mờ, hết vòng nhỏ, nút mở với số mới
+  ✗ C2 Giỏ: lần đổi đầu (sau khi yên) gửi báo giá NGAY (< 300 ms, không chờ 600 ms)  — 642 ms
+  ✓ C2 lượt cũ về muộn (giỏ 3 ly) KHÔNG ghi đè báo giá giỏ mới (4 ly = 120.000đ)
+  ✓ ca gio: trang không báo lỗi JS
+  ✓ B1/K5 chưa đăng nhập → câu "Tổng tiền sẽ hiện…", không vòng, nút đi tiếp MỞ
+  ✓ ca gio-chua-dn: trang không báo lỗi JS
+  ✗ B1/B2 Thanh toán chưa có báo giá → "Đang tính tiền…", nút Đặt KHOÁ
+  ✗ B3 Đặt đơn đang gửi → nút có vòng nhỏ trắng trước chữ
+  ✓ B3 POS trả lỗi → hết vòng trên nút
+  ✓ ca thanh-toan: trang không báo lỗi JS
+  ✓ A1 Theo dõi đơn hỏi lại mỗi 3 s (chờ QR) → KHÔNG có vòng giữa màn
+  ✓ ca theo-doi: trang không báo lỗi JS
+  (chạy hết 31 giây — bộ kiểm cắt ở 120 giây)
+
+16 đạt · 35 hỏng
