@@ -29,10 +29,11 @@
 | dungDatDon.js lỗi / CHUA_MO → xong (không kẹt đang tính) | VS-LOI-KET-DANG-TINH | BẮT ĐƯỢC (Chromium, vòng sửa 1) |
 | Menu.jsx tab Menu khi đã có menu → ngầm | BV-TAB-MENU-DEM | BẮT ĐƯỢC (Chromium, vòng sửa 1) |
 | main.jsx nạp cho.css | BV-BO-NAP-CHO-CSS | BẮT ĐƯỢC (Chromium, sau soát vòng 2) |
-Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (14/14 sau soát vòng 2; `node viec/KH-NHANH-2/dot_bien_tay.js --trinh-duyet`).
+| VongCho.jsx ẩn khi màn mở đang hiện (chủ quán chọn b, 19.11) | VS-VONG-HIEN-TREN-MAN-DAU | BẮT ĐƯỢC (Chromium, 70 đạt · 2 hỏng) |
+Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (15/15 sau trả lời 19.11; `node viec/KH-NHANH-2/dot_bien_tay.js --trinh-duyet`).
 
 ## Phần trình duyệt (chạy thật ở máy — §9)
-- `node cong_cu/thu_KHNHANH2.js` (Chromium 390, POS giả trễ): 68 đạt · 0 hỏng (sau vòng sửa 1). `KHONG_TRINH_DUYET=1`: 37 đạt · 0 hỏng (= SỐ CA).
+- `node cong_cu/thu_KHNHANH2.js` (Chromium 390, POS giả trễ): 72 đạt · 0 hỏng (sau trả lời 19.11: +2 ca màn mở — đang hiện + POS chậm 1,5 s → không vòng; "Bỏ qua" khi lượt còn chờ → vòng hiện). `KHONG_TRINH_DUYET=1`: 37 đạt · 0 hỏng (= SỐ CA).
 - `node cong_cu/thu_KHMUA1.js` có Chromium: 130 đạt · 0 hỏng; `KHONG_TRINH_DUYET=1`: 57.
 - Ảnh 390 (`so_anh/`): Trang chủ đang tải, Giỏ đang tính lại, Thanh toán đang gửi — nhánh + `_goc` (gốc cùng thời điểm: không vòng; Giỏ gốc trống tổng).
 
@@ -49,11 +50,11 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (14/14 sau soát vòng 2; `n
 - **ĐÃ SỬA:** `src/api.js` (bộ đếm MỘT chỗ: `goi` bọc `goiThat`, `ngam()`, `CUA_NGAM`, `theoDoiDangCho`, `MS_TRE_CHO`; `giaHan` ngầm) · `src/duLieuKhach.js` (kho đã
   có dữ liệu thật → ngầm) · `src/dungDatDon.js` (`bgCu`, `dangTinh`; Theo dõi đơn lượt đồng hồ ngầm) · `src/datDon.js` (`taoGop` đầu + đuôi) · `src/App.jsx` (gắn
   `<VongCho />`; quảng cáo quay lại App + menu sau đơn trả → ngầm) · `src/pages/Menu.jsx` (bấm tab khi đã có menu → ngầm) · `src/components/VongCho.jsx` (MỚI) ·
-  `src/giaoDien/cho.css` (MỚI) · `src/pages/GioHang.jsx` (`BangTien` số cũ mờ / "Đang tính tiền…"; nút đi tiếp khoá khi tính lại; bỏ ref `bgCu` riêng) ·
+  `src/giaoDien/cho.css` (MỚI) · `src/components/ManDau.jsx` (chỉ báo hiện / tắt cho VongCho qua `baoManDau` — chủ quán chọn b, 19.11) · `src/pages/GioHang.jsx` (`BangTien` số cũ mờ / "Đang tính tiền…"; nút đi tiếp khoá khi tính lại; bỏ ref `bgCu` riêng) ·
   `src/pages/ThanhToan.jsx` (BangTien + vòng trắng trên nút Đặt đơn) · `src/components/PinSheet.jsx` (vòng trên nút Xác nhận) · `src/noiDung/nd/menu.js`
   (khoá mới `khung.dangCho`, `gio.dangTinh`) · `index.html` (script preconnect).
-- **BÀI THỬ:** `cong_cu/thu_KHNHANH2.js` MỚI (đỏ gốc 16/35, xanh 62/0; SỐ CA 37) · `cong_cu/thu_KHMUA1.js` B5 đổi có chủ đích (đỏ gốc 2 ca, xanh 130/0; SỐ CA 57).
-  Đột biến tay 13/13 BẮT ĐƯỢC (sau vòng sửa 1).
+- **BÀI THỬ:** `cong_cu/thu_KHNHANH2.js` MỚI (đỏ gốc 16/35, xanh 72/0 có Chromium; SỐ CA 37) · `cong_cu/thu_KHMUA1.js` B5 đổi có chủ đích (đỏ gốc 2 ca, xanh 130/0; SỐ CA 57).
+  Đột biến tay 15/15 BẮT ĐƯỢC (sau trả lời 19.11).
 - **ĐÃ RÀ K4:** mọi chỗ gọi hàm api.js (grep, bảng chờ / ngầm trong ke_hoach.md); mọi `setInterval` / `visibilitychange` gây gọi mạng; mọi nút có chữ "Đang gửi…"
   (`tt.nut.dangGui`, `tt.nut.guiLai`, `pin.dangGui`); BangTien dùng ở Giỏ + Thanh toán đồ uống (Thanh toán nạp có bảng riêng — phiếu không đòi).
 - **CHƯA KIỂM:** điện thoại thật 4G, trình duyệt Zalo (D6 — chủ quán thử tay: mở App → vòng giữa màn, không mờ; Giỏ bấm + liên tục → tổng cũ mờ + vòng nhỏ;
@@ -77,7 +78,7 @@ Dòng cuối: `TẤT CẢ ĐỘT BIẾN BỊ BẮT` (14/14 sau soát vòng 2; `n
 | D1 bài mới, POS giả trễ, đỏ gốc | bang_chung_do.txt |
 | D1 Theo dõi đơn 3 s / quay lại App 60 s không vòng | Chromium 2 ca; BV-THEO-DOI-DONG-HO-DEM |
 | D2 bài cũ đổi có chủ đích, đỏ gốc cả KHONG_TRINH_DUYET | thu_KHMUA1 B5 (gốc KHONG_TRINH_DUYET=1: 56/1) |
-| D3 ≥ 6 đột biến tay đỏ | 14/14 (sau soát vòng 2) |
+| D3 ≥ 6 đột biến tay đỏ | 15/15 (sau trả lời 19.11) |
 | D4 ảnh 390 trước / sau | so_anh/ (3 cặp); màn ngoài phạm vi: CHƯA KIỂM (chat soát) |
 | D5 npm test, --day-du, tinh + chay, K10 | mục Kiểm |
 | D6 thử tay | CHƯA KIỂM (chủ quán) |
@@ -207,8 +208,12 @@ BÀI HỌC:
 1. **§11 `hien.<khối>`:** vòng xoay giữa màn và dòng "Đang tính tiền…" là hình chỉ báo trạng thái (không phải khối nội dung). Máy chỉ khai khoá chữ `khung.dangCho`
    (nhãn đọc màn hình) và `gio.dangTinh`, KHÔNG thêm `hien.vongCho`. Chủ quán có cần nút ẩn / hiện vòng xoay ở /admin không? Cần → thêm một mục `battat` (~3 dòng) ở
    việc sau / vòng sửa.
+   → **Chủ quán 19.11: không cần.** (vòng chỉ là dấu hiệu chờ, không phải nội dung — không thêm gì.)
 2. **Vòng xoay trên màn mở (splash):** vòng (z-index 9000, như bản thử) có thể hiện giữa màn mở chào ngày đầu (~6 s) khi mạng chậm, chồng lên chữ "Tứ Quý Đường" /
    khẩu hiệu. Chủ quán muốn: (a) giữ như vậy, hay (b) ẩn vòng trong lúc màn mở đang hiện? Xem khi thử tay D6.
+   → **Chủ quán 19.11: chọn b — ĐÃ LÀM.** `VongCho.jsx` thêm `baoManDau(h)` (một biến + bộ nghe nhỏ); `ManDau.jsx` chỉ gọi `baoManDau(hien && !an)` (tắt ngay khi
+   chạm / Bỏ qua / tự vào, không chờ 600 ms mờ dần; gỡ màn → false). Vòng hiện khi `có lượt chờ > 300 ms && !màn mở` — luật đếm ở api.js không đổi.
+   Ca mới (Chromium 390): màn mở + POS chậm 1,5 s → không vòng; Bỏ qua khi lượt còn chờ (POS 3 s) → vòng hiện. Đột biến VS-VONG-HIEN-TREN-MAN-DAU → BẮT ĐƯỢC.
 
 - Kiểm lần cuối sau soát vòng 2: xem dòng dưới.
 - Sau soát vòng 2 (7dab641): thu_KHNHANH2 Chromium 68 đạt · 0 hỏng; đột biến 14/14; KHONG_TRINH_DUYET=1 cổng chay: ✓ CỔNG CHẠY ĐẠT (CẢNH BÁO A16 như trên). Từ b84bf8f chỉ đổi bài thử + hồ sơ, không đổi src/.

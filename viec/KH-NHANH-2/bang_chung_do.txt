@@ -13,7 +13,7 @@ Gốc, KHONG_TRINH_DUYET=1:     1 đạt · 25 hỏng
   ✗ A2 VongCho … · A3 cho.css … · B2 Giỏ bgCu … · B3 nút có vòng … · C1 preconnect (4 ca, kể cả vite build)
   (Chromium thêm: ✗ A2 có vòng xoay giữa màn · ✗ B1 "Đang tính tiền…" · ✗ B1 tổng cũ mờ · ✗ B2 nút khoá khi tính lại ·
    ✗ C2 Giỏ gửi báo giá ngay (642 ms trên gốc) · ✗ B3 nút Đặt đơn có vòng trắng · …)
-Đã vá, có Chromium:          68 đạt · 0 hỏng
+Đã vá, có Chromium:          72 đạt · 0 hỏng (19.11 +2 ca màn mở, trình duyệt — trên bản trước đó ca "màn mở + POS chậm → không vòng" ĐỎ, xem đột biến VS-VONG-HIEN-TREN-MAN-DAU)
 Đã vá, KHONG_TRINH_DUYET=1:  37 đạt · 0 hỏng
 SỐ CA cong_cu/thu_KHNHANH2.js: 37
 (gốc thiếu api.theoDoiDangCho nên khối A1 dừng sớm — gốc in 26 ca, nhánh 37)
