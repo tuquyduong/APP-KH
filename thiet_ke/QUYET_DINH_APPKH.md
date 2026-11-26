@@ -3,6 +3,17 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 26.11.2026
+- **Thử tay KH-NHANH-2 (D6) HOÃN** (chủ quán 26.11): POS đang xây, chưa nhập / chọn hàng được → thử khi POS bán hàng được (chat nhắc).
+
+## 19.11.2026
+- **Vòng xoay chờ — 2 câu máy hỏi** (chủ quán 19.11 "1 không cần, 2 b"): (1) KHÔNG làm công tắc `hien.*` / nút tắt vòng xoay ở /admin (vòng chỉ báo trạng thái,
+  không phải nội dung); (2) **b** — ẨN vòng giữa màn khi màn mở (ManDau) đang hiện. KH-NHANH-2 gộp PR #45 (26.11).
+- **Máy chủ:** không cài `danhThucPOS`; sau này lên gói Render TRẢ PHÍ (máy chủ không ngủ). POS đề xuất Render Starter + Turso Developer; máy chủ và kho PHẢI cùng vùng
+  — Turso không có Singapore nên giữ Virginia. Chủ quán tự bấm khi sẵn sàng.
+- **Thư POS 19.11** (`trao_doi/TRA_LOI_POS_19112026.md`): mã trùng ở `ma_giam` + `vouchers` → POS xét MỘT lần, báo ở dòng `ma_giam`; `expires_at` = `YYYY-MM-DD`
+  (dùng tới hết ngày). 3 đề nghị (`/vi` `id`, `/don/:ma` `ma_goi` / `hang_id` + `so_thang`, `/don` `chi_nap`) + hợp đồng Đổi điểm (CÓ PIN) → việc POS **KH-API-4**.
+
 ## 18.11.2026
 - **App hơi lag → biểu tượng chờ** (chủ quán 18.11, xem trên bản thử https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk): chọn **kiểu B sửa** — CHỈ vòng tròn xoay giữa màn, KHÔNG nền trắng ("không ăn nhập"),
   KHÔNG làm mờ màn, không chặn bấm; hiện khi khách chờ POS > 0,3 giây (lượt chạy ngầm không hiện). Giỏ / Thanh toán giữ tổng cũ MỜ trong lúc tính lại, nút trả tiền vẫn

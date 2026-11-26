@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 65,
-  "cap_nhat": "2026-11-18",
+  "phien_ban_so": 66,
+  "cap_nhat": "2026-11-26",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -361,11 +361,12 @@
         "KH-THE-3",
         "KH-ADMIN-1",
         "KH-VC-2",
-        "KH-NAP-1"
+        "KH-NAP-1",
+        "KH-NHANH-2"
       ],
       "ngay": "2026-11-16",
-      "ten": "Gom loi nho sau ADMIN-1 / THE-3 / QC-1: (1) doi ten le o /admin mat goi y qua (kh.leQua khop TEN) + doi ten 1 trong 3 ngay Tet -> Tet hien 2 lan (holList gop TEN) -> khop theo ma; (2) nut xoa dong gio (GioHang.jsx cart-xoa) gan data-nd; (3) public/sw.js bo /kiemkhop; (4) quangCao.js viet \\uFE0F / \\u200D; (5) Chao mung: the khong ve duoc + han POS khong doc duoc -> chu han hien 2 lan; (6) nhan admin ud.the.chipDb \"(chua co hang)\" sai nghia; (7) chu thich dau KiemKhop.jsx; (8) VC-2: ca thu \"da bao gia -> thoi hoi POS -> khong o nao tich\" + dot bien dieu kien hoi; (9) VC-2: GioHang.jsx xoa bgCu khi bao gia loi (thoang hien tich / cau do cu luc cho); (10) App loai ma dang o o ma khoi vouchers (chong giam 2 lan); (11) NAP-1: tat hien.nap.dn o /admin thi khong cau \"da xong\" (nhu hien.the.cm) — xem lai cung the",
-      "ghi_chu": "16.11 chat gom tu Phat hien ADMIN-1, THE-3, soat cuoi QC-1 / THE-3. Chu quan: tam DUNG doi ten ngay le / Tet o /admin toi khi xong viec nay | 17.11 them (8)-(11) tu soat cuoi KH-VC-2 / KH-NAP-1 (chat de xuat gom vao day; VC-2 da gop)"
+      "ten": "Gom loi nho sau ADMIN-1 / THE-3 / QC-1: (1) doi ten le o /admin mat goi y qua (kh.leQua khop TEN) + doi ten 1 trong 3 ngay Tet -> Tet hien 2 lan (holList gop TEN) -> khop theo ma; (2) nut xoa dong gio (GioHang.jsx cart-xoa) gan data-nd; (3) public/sw.js bo /kiemkhop; (4) quangCao.js viet \\uFE0F / \\u200D; (5) Chao mung: the khong ve duoc + han POS khong doc duoc -> chu han hien 2 lan; (6) nhan admin ud.the.chipDb \"(chua co hang)\" sai nghia; (7) chu thich dau KiemKhop.jsx; (8) VC-2: ca thu \"da bao gia -> thoi hoi POS -> khong o nao tich\" + dot bien dieu kien hoi; (9) VC-2: GioHang.jsx xoa bgCu khi bao gia loi (thoang hien tich / cau do cu luc cho); (10) App loai ma dang o o ma khoi vouchers (chong giam 2 lan); (11) NAP-1: tat hien.nap.dn o /admin thi khong cau \"da xong\" (nhu hien.the.cm) — xem lai cung the; (12) NHANH-2: bao gia chua co choMs (4G treo -> Gio khoa + vong mai) -> dat han cho; (13) NHANH-2: vong loe khi xoa mon cuoi trong 600 ms; (14) NHANH-2: CUA_NGAM / ngam() trong api.js -> chuyen ve heThong.js / giaHan.js; (15) POS 19.11: ma o o ma trung voucher -> POS bao o dong giam loai ma_giam (khong co dong voucher) -> o voucher do phai hien \"dang dung\" (trangThaiVoucher hom nay ra \"cho\") + ca thu; (16) ca thu expires_at dang CHI NGAY YYYY-MM-DD (bai thu VC-2 dung dang co gio)",
+      "ghi_chu": "16.11 chat gom tu Phat hien ADMIN-1, THE-3, soat cuoi QC-1 / THE-3. Chu quan: tam DUNG doi ten ngay le / Tet o /admin toi khi xong viec nay | 17.11 them (8)-(11) tu soat cuoi KH-VC-2 / KH-NAP-1 (chat de xuat gom vao day; VC-2 da gop) | 26.11 them (12)-(14) tu soat KH-NHANH-2 + (15)(16) tu thu POS 19.11 (TRA_LOI_POS_19112026)"
     },
     {
       "ma": "KH-UI-4",
@@ -888,7 +889,7 @@
       "ma": "KH-NHANH-2",
       "loai": "Th",
       "model": "Opus",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "ngay": "2026-11-18",
       "han": "2026-11-20",
       "phu_thuoc": [
@@ -896,7 +897,8 @@
         "KH-VC-2"
       ],
       "ten": "Vong xoay cho POS kieu B chu quan chon 18.11 (CHI vong tron xoay giua man, khong nen, khong mo, khong chan bam; hien khi khach cho > 0,3 s; luot ngam khong tinh) + Gio / Thanh toan giu tong cu MO + vong nho luc tinh lai (nut tra tien van khoa) + nut gui co vong trang + preconnect toi goc POS trong index.html + bao gia gom DAU + DUOI (lan doi dau gui ngay)",
-      "ghi_chu": "18.11 chu quan bao App hoi lag -> chat do that (sang: bao gia 1,6-1,9 s vi may chu POS van dung kho Tokyo; 17:40 sau trien khai kho Virginia: bao gia 0,63-0,75 s, mo App 11 luot ~0,8 s) + dung ban thu https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk (App that + POS gia co do tre) -> chu quan chon kieu B, bo lop mo, bo nen trang; MO (Opus, khong cho duyet ke hoach); phieu + mau ban thu o viec/KH-NHANH-2/"
+      "ghi_chu": "18.11 chu quan bao App hoi lag -> chat do that (sang: bao gia 1,6-1,9 s vi may chu POS van dung kho Tokyo; 17:40 sau trien khai kho Virginia: bao gia 0,63-0,75 s, mo App 11 luot ~0,8 s) + dung ban thu https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk (App that + POS gia co do tre) -> chu quan chon kieu B, bo lop mo, bo nen trang; MO (Opus, khong cho duyet ke hoach); phieu + mau ban thu o viec/KH-NHANH-2/ | 19.11 may xong (HEAD DA KIEM 7dab641, soat doc lap vong 2 DAT); chu quan tra loi 2 cau (1 khong can nut tat o /admin, 2 b an vong khi man mo hien) -> vong sua c410e4a / 1853593, dau 66999ee (HEAD DA KIEM 1853593; thu_KHNHANH2 72/0, dot bien 15/15) | 25.11 chat soat cuoi DAT: cong tinh + chay (base 88af1ef; A16 chi canh bao 26 != 37 ca), --day-du Chromium 68/0 (goc 67/0), so 214 anh: khac chi o cho cho | Gop PR #45 (e96671b) 26.11 | thu tay D6 HOAN (26.11 chu quan: POS dang xay, chua ban hang duoc) -> chat nhac khi POS ban duoc",
+      "commit": "e96671b"
     }
   ]
 }

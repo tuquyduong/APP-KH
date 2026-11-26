@@ -1,4 +1,4 @@
-# Bàn giao chat App KH (cập nhật 18.11.2026 tối — mở KH-NHANH-2 vòng xoay chờ, sổ v65, thư POS 17.11 + 18.11)
+# Bàn giao chat App KH (cập nhật 26.11.2026 — KH-NHANH-2 đã gộp #45, sổ v66, thư POS 19.11 đã chép vào kho)
 
 <!-- Bản MỚI NHẤT nằm ở Project (claude/BAN_GIAO_CHAT_APPKH.md). Bản trong kho APP-KH (thiet_ke/BAN_GIAO_CHAT_APPKH.md) do script ghi-xong chép — có thể cũ hơn Project. -->
 
@@ -7,7 +7,7 @@
 
 ## Bắt đầu chat mới
 1. Đọc hết file này. Rồi `git clone https://github.com/tuquyduong/APP-KH` (đọc được, KHÔNG có quyền GitHub API — `gh` báo 403; chỉ dùng `git fetch`). Đọc: `CLAUDE.md` (nhất là §5, §8–§11),
-   `thiet_ke/QUYET_DINH_APPKH.md` (mục 12.11 → 17.11), `TIEN_DO_APPKH.json` (sổ việc), `thiet_ke/trao_doi/` (thư mới nhất), `CHECKLIST_CODE.md` mục A.
+   `thiet_ke/QUYET_DINH_APPKH.md` (mục 12.11 → 26.11), `TIEN_DO_APPKH.json` (sổ việc), `thiet_ke/trao_doi/` (thư mới nhất), `CHECKLIST_CODE.md` mục A.
 2. `git clone --depth 50 https://github.com/pos-tuquyduong/pos-tuquyduong` (công khai, chỉ đọc): `LICH_KHAI_TRUONG.md`, `TIEN_DO_POS.json`, `HOP_DONG_API_KH.md`
    (POS main = PHIEN_BAN **17** (KH-NAP-1, 16.11) + mục "Đã hẹn" DOI-DIEM-1 khi POS ghi sổ. Bản chép trong kho App = v17 (script 16.11 chép, kèm `viec/KH-NAP-1/hop_dong_v17.md`))
    và `HOP_DONG_API_ND.md` (**v1**, hợp đồng RIÊNG của kho nội dung `/api/nd`). Kho POS nhiều nhánh — chỉ đọc main.
@@ -62,7 +62,20 @@
 - Muốn xem giao diện trước khi làm → dựng trang HTML so sánh (Artifact) "Hiện tại | Đề xuất" từng màn, lật qua lại trên điện thoại; trang đã duyệt → bản gọn vào `viec/<MÃ>/ban_thiet_ke.html`.
   Project gần đầy — chỉ lưu bàn giao, phiếu / script đang dùng, thư. Chị muốn: "hệ thống thông minh, code chuẩn, đơn giản, không lằng nhằng".
 
-## Chủ quán đang ở đâu (17.11 tối)
+## Chủ quán đang ở đâu (26.11)
+0. **KH-NHANH-2 ĐÃ GỘP** (PR **#45**, main **e96671b**, 26.11 sáng; đầu nhánh 66999ee, HEAD ĐÃ KIỂM 1853593). Vòng sửa cuối theo 2 câu chủ quán 19.11: không có nút tắt vòng xoay
+   ở /admin; vòng giữa màn ẨN khi màn mở (ManDau) đang hiện (`baoManDau` trong api.js, VongCho nghe). Chat soát cuối 25.11 ĐẠT: cổng tinh + chay (base 88af1ef) ĐẠT
+   (A16 chỉ cảnh báo 26 ≠ 37 ca — bài mới dừng sớm trên gốc), `--day-du` Chromium nhánh **68 · 0** / gốc 67 · 0, so 214 ảnh: khác chỉ ở chỗ chờ (vòng xoay, "Đang tính tiền…",
+   tổng cũ mờ, "Đang gửi…"), Giỏ sau khi xoá giữ câu lỗi cũ thay vì nháy (POS giả trả lỗi — đúng ý "không nháy"), còn lại vệt sáng.
+   Script `claude/xong_KHNHANH2.py` (26.11): sổ v65 → **v66** (KH-NHANH-2 xong; KH-SUA-2 thêm (12)–(16)), quyết định 19.11 + 26.11, chép thư App 19.11 + thư POS 19.11 vào
+   `thiet_ke/trao_doi/`, bàn giao này.
+1. **Thử tay D6 — HOÃN** (chủ quán 26.11: POS đang xây, chưa nhập / chọn hàng được). Chat NHẮC lại khi POS bán hàng được (sau việc bán theo kho của POS): mở App trên 4G →
+   vòng xoay nhỏ không nền; Giỏ bấm +/− → tổng cũ mờ + vòng nhỏ, nút Tiếp tục khoá tới khi tính xong; Theo dõi đơn không nháy; lần đầu mở App không thấy vòng chồng lên màn chào.
+2. **Việc kế tiếp (chủ quán chọn):** (a) dựng trang thiết kế **KH-DOI-1** Đổi điểm (chat đề xuất — hợp đồng POS đã hẹn, CÓ PIN; POS ghi vào "Đã hẹn" ở KH-API-4);
+   (b) phiếu **KH-HUY-1** (đơn bị quán huỷ, mở được); (c) phiếu **KH-SUA-2** (16 việc nhỏ — gom xong).
+3. Gói Render / Turso trả phí: chủ quán tự bấm khi sẵn sàng (POS đề xuất Render Starter + Turso Developer, giữ Virginia — Turso không có Singapore).
+
+## Chủ quán đang ở đâu (lịch sử 17–19.11)
 0. **ĐÃ GỘP 17.11 chiều:** PR **#43 KH-VC-2** (142797e) → script `gop_VC2_vao_NAP1.py` (gộp dd0e830, HEAD ĐÃ KIỂM 6e9c405) → PR **#44 KH-NAP-1** (main **26cb821**,
    cây 524d4cb). Script `claude/xong_VC2_NAP1.py` (17.11 tối): sổ v63 → **v64** (VC-2 + NAP-1 xong, KH-SUA-2 thêm (8)–(11), KH-DOI-1 theo POS + PIN, KH-HUY-1 mở được),
    quyết định 17.11, chép thư DOIDIEM 16.11 + thư App 17.11 vào `thiet_ke/trao_doi/`, bàn giao. Chủ quán chưa trả lời "gom / làm ngay" 2 việc nhỏ VC-2 → chat ghi vào KH-SUA-2
@@ -92,6 +105,9 @@
    **Đo lại 18.11 17:40** (POS đã chạy kho Virginia từ 16:24 — sáng nay máy chủ VẪN dùng kho Tokyo, chat POS bàn 40 phát hiện): báo giá 0,63–0,75 s, cửa có token ~0,5 s,
    công khai 0,25–0,36 s, mở App 11 lượt ~0,8 s → phần lớn "lag" sáng nay là do kho Tokyo. Còn ~0,25 s / lượt đường VN ↔ Mỹ; Singapore khi lên gói trả phí (thư 18.11).
    Sau khi máy làm xong: chat soát cuối (khuôn ở trên) → chủ quán Merge → script ghi sổ.
+   **19.11:** máy XONG (HEAD ĐÃ KIỂM 7dab641, soát độc lập vòng 2 ĐẠT, thu_KHNHANH2 68/0, đột biến 14/14). Chủ quán trả lời 2 câu: (1) KHÔNG cần `hien.*` / nút tắt vòng
+   xoay ở /admin (chỉ báo trạng thái, không phải nội dung); (2) **b — ẨN vòng giữa màn khi màn mở (ManDau) đang hiện** → chat đưa câu cho máy làm vòng sửa nhỏ, rồi soát cuối.
+   Gom KH-SUA-2: báo giá không có `choMs` (4G treo → Giỏ khoá + vòng mãi); vòng loé khi xoá món cuối trong 600 ms; `CUA_NGAM` (api.js) → chuyển `ngam()` về heThong.js / giaHan.js.
    **Câu hỏi máy VC-2 (chủ quán chưa trả lời — chat đề xuất gom KH-SUA-2):** (1) thiếu ca thử "đã báo giá → thôi hỏi POS → không ô nào tích" + đột biến cho điều kiện `hoi`
    (code ĐÚNG, chỉ thiếu ca); (2) `GioHang.jsx` `bgCu` không xoá khi báo giá lỗi → lúc chờ báo giá mới thoáng hiện tích / câu đỏ cũ (không đụng tiền). Máy đã hết 3 vòng sửa.
 2. Sao lưu Drive: **ĐÃ XONG** — 16.11 tối `thuNgay` thành công; 17.11 chủ quán báo "Đã làm" `KHOA_POS` (khoá `posk_` dán vào Apps Script). Còn `KHOA_GITHUB` (hỏi khi tiện).
@@ -144,6 +160,12 @@
 - **KH-SUA-2 — gom lỗi nhỏ** (Sonnet, chờ; ghi sổ 16.11): (1) đổi tên lễ ở /admin mất gợi ý quà (`kh.leQua` khớp TÊN) + đổi tên 1 trong 3 ngày Tết → Tết hiện 2 lần (`holList` gộp
   TÊN) → khớp theo mã; (2) nút ✕ xoá dòng giỏ (`GioHang.jsx`) gắn `data-nd`; (3) `public/sw.js` bỏ `/kiemkhop`; (4) `quangCao.js` viết `️` / `‍`; (5) Chào mừng hạn POS
   hiện 2 lần (ở trên); (6) nhãn admin `ud.the.chipDb` "(chưa có hạng)" sai nghĩa; (7) chú thích đầu `KiemKhop.jsx`. Chủ quán: tạm ĐỪNG đổi tên ngày lễ / Tết ở /admin.
+  **POS trả lời 19.11 (`thiet_ke/trao_doi/TRA_LOI_POS_19112026.md`, script 26.11 chép):** mã trùng `ma_giam` + `vouchers` → POS ĐÃ chống trùng, giảm MỘT lần,
+  báo ở dòng `giam[] loai "ma_giam"` (KHÔNG có dòng `voucher`) → khi soạn phiếu KH-SUA-2 mục (10): ngoài bỏ mã ô mã khỏi `vouchers`, ô voucher trùng mã ô mã phải hiện
+  "đang dùng" (hôm nay `trangThaiVoucher` → 'cho' vì không có dòng `voucher`) + ca thử. `expires_at` = `YYYY-MM-DD` (chỉ ngày, dùng tới hết ngày) — App xếp / hiện ĐÚNG
+  (`dinhDangNgay` nhận chỉ ngày); bài thử VC-2 dùng dạng có giờ → KH-SUA-2 thêm ca dạng chỉ ngày. 3 đề nghị (`/vi` `id`, `/don/:ma` `ma_goi` / `hang_id` + `so_thang`,
+  `/don` `chi_nap`) + hợp đồng Đổi điểm (PIN chốt) → việc POS **KH-API-4** sau bán theo kho / bịt lỗ tiền; có thư khi gộp. Gói Render: POS ghi giá + vùng (cùng vùng
+  máy chủ + kho, không có cả hai thì giữ Virginia). Kho POS ở lại `pos-tqd` (không chép `pos-tqd2`) → số đo 18.11 17:40 là số cuối.
   **Thêm (chat đề xuất 17.11, script `xong_VC2_NAP1.py` ghi sổ):** (8) VC-2: ca "đã báo giá → thôi hỏi → không ô nào tích" + đột biến `hoi`; (9) VC-2: `GioHang.jsx` xoá `bgCu` khi báo giá
   lỗi; (10) App loại mã đang ở ô mã khỏi `vouchers` (dù POS trả lời thế nào); (11) NAP-1: `hien.nap.dn` tắt thì không câu "đã xong" (như `hien.the.cm`) — xem lại cùng thẻ.
 - **Thứ tự gộp:** THE-3 (xong) → **VC-2 → script gộp main vào NAP-1 → NAP-1** (17.11); HUY-1 sau (đụng `TheoDoiDon.jsx` như NAP-1 — mở sau NAP-1); SUA-2 khi rảnh.
@@ -181,7 +203,10 @@
 ### Khai trương
 - Thực tế khoảng **T6 04.12** (lịch POS 14.11).
 
-## Quyết định 10–17.11 (đủ ở `thiet_ke/QUYET_DINH_APPKH.md` — mục 17.11 do `xong_VC2_NAP1.py` ghi)
+## Quyết định 10–26.11 (đủ ở `thiet_ke/QUYET_DINH_APPKH.md` — mục 19.11 + 26.11 do `xong_KHNHANH2.py` ghi)
+- **26.11:** thử tay D6 hoãn tới khi POS bán hàng được.
+- **19.11:** vòng xoay không có nút tắt ở /admin; ẩn vòng khi màn mở đang hiện; không cài `danhThucPOS` (lên gói trả phí); KH-API-4 của POS gom 3 đề nghị + hợp đồng Đổi điểm (PIN).
+- **18.11:** chờ POS kiểu B — chỉ vòng xoay, không nền, không mờ (KH-NHANH-2).
 - **17.11 (script `xong_VC2_NAP1.py` ghi):** Sao lưu = đã dán `KHOA_POS`; Đổi điểm = theo hợp đồng POS đã hẹn, CÓ hỏi PIN khách; thứ tự gộp VC-2 → NAP-1 (chat gộp main vào NAP-1).
 - **16.11:** bộ kiểm cửa mạng 4 lớp (K2 cũ chỉ soi một kiểu viết nên `${gốc}/api/nd` lọt — máy tự báo); ảnh /admin không cần 3 cỡ; tạm không đổi tên ngày lễ / Tết ở /admin;
   soát cuối chạy bài thử trên cây GỘP.
@@ -192,7 +217,9 @@
 - Google: hồ sơ CHƯA xác minh → xác minh bằng video trước khai trương (`claude/HUONG_DAN_XAC_MINH_GOOGLE.md`).
 
 ## Chủ quán đang nợ / cần làm
-- (18.11 tối) Chạy `mo_KHNHANH2.py` → mở phiên Claude Code OPUS nhánh `viec/KH-NHANH-2`, gõ `/lam-viec KH-NHANH-2` → gửi thư POS 18.11 (và 17.11 nếu chưa gửi).
+- (26.11) Chạy `xong_KHNHANH2.py` (sổ v66). Thử tay D6 KHI POS bán hàng được (chat nhắc). Chọn việc kế: a KH-DOI-1 / b KH-HUY-1 / c KH-SUA-2.
+- (đã làm 26.11) Merge PR #45 KH-NHANH-2.
+- (đã làm 18–19.11) Chạy `mo_KHNHANH2.py` → mở phiên Claude Code OPUS nhánh `viec/KH-NHANH-2`, gõ `/lam-viec KH-NHANH-2` → gửi thư POS 18.11 (và 17.11 nếu chưa gửi).
 - (đã làm 18.11) `xong_VC2_NAP1.py` (sổ v64); thử tay Nạp tiền + Voucher OK.
 - (đã làm 17.11) Merge VC-2 → `gop_VC2_vao_NAP1.py` → Merge NAP-1.
 - (cũ, đã làm) Trả lời 8 câu trang Nạp tiền & Voucher → chạy script mở việc → thử tay SUA-1 / ADMIN-1 / THE-3 (mục "Chủ quán đang ở đâu").
