@@ -15,3 +15,13 @@ có Chromium: 99 đạt · 0 hỏng (17 giây)
 KHONG_TRINH_DUYET=1: 29 đạt · 0 hỏng
 
 SỐ CA cong_cu/thu_KHHUY1.js: 29
+
+## Bài CŨ đổi theo chỗ mới (C2 — mỗi bài thêm 1 ca ĐỎ trên gốc, kể cả KHONG_TRINH_DUYET=1; không dùng `## Bài thử cũ sửa`)
+npm test lần đầu (trước khi sửa hai bài này) đỏ: thu_KHMUA1b 1 ca (hai mục canTuPos v14 còn `moi`) và thu_KHND3e (khoá td.huy.* / hien.don.huy ngoài nhóm A1, DonHuy.jsx chưa trong danh sách tệp A1).
+Sửa: MUA1b thêm 'HUY-1' vào danh sách việc POS được phép `moi` + ca mới "A2 KH-HUY-1: don_huy_v14 / don_ds_huy_v14 khai moi";
+      ND3e thêm DonHuy.jsx vào A1, `hien.don` vào NHOM + dò khoá + ca mới "A1 KH-HUY-1: DonHuy.jsx dùng đủ td.huy.* / hien.don.huy khai ở donHang.js".
+- thu_KHMUA1b.js trên GỐC (KHONG_TRINH_DUYET=1): 51 đạt · 1 hỏng (ca "A2 KH-HUY-1 …" đỏ) → sau vá 52 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHMUA1b.js: 52
+- thu_KHND3e.js trên GỐC (KHONG_TRINH_DUYET=1): ca "A1 KH-HUY-1 …" đỏ (cùng hai ca B1 datDon.js vốn đỏ ở bản sao không có .git) → sau vá 23 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHND3e.js: 23
+(Lưu ý: kho clone nông (50 commit) làm hai ca B1 của ND3e đỏ giả — `git fetch --unshallow` đã sửa, không đổi file.)
