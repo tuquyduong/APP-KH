@@ -56,4 +56,13 @@ Chạy: `node viec/KH-HUY-1/dot_bien_tay.js [--trinh-duyet]` — 12 đột biế
 - BỎ: kho clone nông làm 2 ca B1 của ND3e đỏ giả — `git fetch --unshallow` rồi hết.
 - KHOÁ (đã làm): ca (4b) thêm sau khi đột biến BV-CHI-TIET-HIEN-HOP-KHI-CHUA-HUY sót.
 
+## Báo cáo /ra-soat (agent độc lập, vòng 1) — nguyên văn rút gọn
+ĐẠT (có 3 nghi ngờ nhỏ, không chặn gộp). Chạy lại thu_KHHUY1.js: có Chromium 99 đạt · 0 hỏng; KHONG_TRINH_DUYET=1 29 đạt · 0 hỏng.
+LỖI TÌM ĐƯỢC: không có lỗi chặn. Nit: `src/datDon.js:96` hai biểu thức ba ngôi cùng điều kiện `tien_trinh === 'da_huy'` (gọn hơn: tính một lần); `DonHuy.jsx:16` dùng `Ico check s={18}` còn `NhanMa.jsx:53` dùng s={16} cho cùng lớp `nt-state on`.
+NGHI NGỜ: (1) `Don.jsx:31` `useEffect([hoan])` bỏ lượt làm mới `cuaToi` nếu ChiTietDon không unmount khi `ma` đổi mà hai đơn cùng số hoàn (hiếm; Back về danh sách làm unmount). (2) hoàn > 0 vẫn làm mới `cuaToi` khi `hien.don.huy` tắt — hợp lý, phiếu B6 không nói. (3) dòng HEAD ĐÃ KIỂM = 6033c15 trong khi HEAD sau đó chỉ đổi `trang_thai.md` (đã đối chiếu `git diff`, không ảnh hưởng A19).
+NGHIỆM THU: 18/21 mục có bằng chứng code + bài thử; thiếu bằng chứng do người soát chưa chạy lại (không phải thiếu ở phía làm): C3 (đột biến, máy chính đã chạy 16/16), C4 (ảnh, người soát chưa xem), C5 (npm test / --day-du / cổng chay, máy chính đã chạy); C6 chưa làm đúng như phiếu (chờ POS bán hàng).
+CHƯA SOÁT ĐƯỢC: chưa chạy lại npm test / --day-du / cổng chay / dot_bien_tay; chưa xem ảnh; chưa thử POS thật; chưa đọc hết thân thu_KHHUY1.js dòng 60–246.
+BÀI HỌC: đồng ý đề xuất ND3e / MUA1b đọc danh sách A1 / việc POS `moi` từ một chỗ; thêm ca đổi `ma` cùng số hoàn nếu muốn chặt hơn.
+Xử lý của máy chính: nit và nghi ngờ (1) KHÔNG sửa (ngoài nghiệm thu, tránh vòng sửa mới); ghi vào đây để chat soát cuối quyết.
+
 HEAD ĐÃ KIỂM: 6033c15
