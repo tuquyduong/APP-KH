@@ -1,0 +1,17 @@
+# KH-HUY-1 — bằng chứng ĐỎ trên code gốc (cây 53842bd = PHIEU + bài thử mới, chưa sửa src/) — 26.11.2026
+
+## node cong_cu/thu_KHHUY1.js (có Chromium) — dòng tổng
+46 đạt · 40 hỏng
+(đỏ ở mọi ca B1–B6 trong trình duyệt: không hộp "Quán đã huỷ đơn · …" / "Đã hoàn … vào ví của bạn", không nút "Xem ví", thẻ Lịch sử không có dòng "Đã hoàn",
+ Chi tiết đơn huỷ không làm mới /toi; ca (4)(5) khách tự huỷ / POS cũ xanh trên gốc có chủ đích — đối chứng "không chặn oan")
+
+## KHONG_TRINH_DUYET=1 node cong_cu/thu_KHHUY1.js
+2 đạt · 17 hỏng
+  ✗ nạp DonHuy.jsx (chưa có), docDon.hoanVaoTaiKhoan / lyDoHuy (chưa có), soHoan / lyDoHuy (chưa có), canTuPos don_huy_v14 / don_ds_huy_v14 (chưa có),
+    danh mục td.huy.* / dh.huy.hoan / hien.don.huy (chưa có), nối dây TheoDoiDon / Don.jsx / App.jsx (chưa có)
+
+## Sau vá (cùng bài thử)
+có Chromium: 95 đạt · 0 hỏng (17 giây)
+KHONG_TRINH_DUYET=1: 28 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHHUY1.js: 28
