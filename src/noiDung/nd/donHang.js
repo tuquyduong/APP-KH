@@ -6,6 +6,7 @@ const TT = 'Thanh toán', TD = 'Theo dõi đơn', DH = 'Đơn hàng', PIN = 'B�
 const mk = (man) => (khoa, ten, macDinh, them = {}) => ({ khoa, man, ten, loai: 'chu', macDinh, ...them });
 const bien = (...b) => ({ bien: b });
 const khoa = (man, k, ten, chiDuong) => ({ khoa: k, man, ten, khoaBoi: 'pos', chiDuong });
+const hien = (khoa, ten, man) => ({ khoa, man, ten: `Hiện khối: ${ten}`, loai: 'battat', macDinh: true });
 const tt = mk(TT), td = mk(TD), dh = mk(DH), pin = mk(PIN), kc = mk(KC), gh = mk(GH);
 
 export const DON_HANG = [
@@ -103,6 +104,9 @@ export const DON_HANG = [
   td('td.tong', 'Dòng Tổng cộng', 'Tổng cộng'),
   td('td.huy', 'Nút huỷ đơn', 'Huỷ đơn'),
   td('td.goi', 'Nút gọi quán để huỷ', 'Gọi quán để huỷ'),
+  td('td.huy.lyDo', 'Đơn quán huỷ: câu lý do ({lyDo} = nhãn lý do của POS)', 'Quán đã huỷ đơn · {lyDo}', bien('lyDo')),
+  td('td.huy.hoan', 'Đơn quán huỷ: câu đã hoàn tiền vào ví ({so} = số tiền POS hoàn)', 'Đã hoàn {so} vào ví của bạn', bien('so')),
+  td('td.huy.xemVi', 'Đơn quán huỷ: nút xem ví', 'Xem ví'),
   td('td.buoc.cho_tra', 'Các bước: chờ thanh toán', 'Chờ thanh toán'),
   td('td.buoc.da_tra', 'Các bước: đã thanh toán', 'Đã thanh toán'),
   td('td.buoc.dang_lam', 'Các bước: đang pha chế', 'Quán đang pha chế'),
@@ -114,6 +118,8 @@ export const DON_HANG = [
   khoa(TD, 'td.so', 'Số đơn, mã đơn, giờ đặt', 'POS › Đơn hàng'),
   khoa(TD, 'td.tien', 'Số tiền, món, ghi chú của đơn', 'POS › Đơn hàng'),
   khoa(TD, 'td.cauTienVe', 'Câu POS báo tiền về', 'POS › Đơn hàng · lời POS trả nguyên văn'),
+  khoa(TD, 'td.huy.nhan', 'Nhãn lý do quán huỷ đơn (Pha nhầm món, Hết nguyên liệu…)', 'POS › Đơn hàng · lý do huỷ (nhãn POS)'),
+  hien('hien.don.huy', 'lý do + số tiền đã hoàn của đơn quán huỷ (Theo dõi đơn, Chi tiết đơn)', DH),
   khoa(TD, 'td.loiPos', 'Lời POS khi huỷ đơn không được', 'POS · lời POS trả nguyên văn'),
   td('qr.ten', 'Thẻ QR: tên quán', 'Tứ Quý Đường'),
   td('qr.phu', 'Thẻ QR: dòng dưới tên quán', 'Quét mã để thanh toán'),
@@ -128,6 +134,7 @@ export const DON_HANG = [
   dh('dh.rong', 'Chưa có đơn nào', 'Bạn chưa có đơn nào.'),
   dh('dh.datLai', 'Nút đặt lại đơn cũ', 'Đặt lại'),
   dh('dh.xemThem', 'Nút xem thêm', 'Xem thêm'),
+  dh('dh.huy.hoan', 'Lịch sử đơn: dòng nhỏ đơn quán huỷ đã hoàn ({so} = số tiền)', 'Đã hoàn {so}', bien('so')),
   dh('dh.nhan.huy', 'Nhãn đơn: đã hủy', 'Đã hủy'),
   dh('dh.nhan.cho', 'Nhãn đơn: chờ thanh toán', 'Chờ thanh toán'),
   dh('dh.nhan.tra', 'Nhãn đơn: đã thanh toán', 'Đã thanh toán'),

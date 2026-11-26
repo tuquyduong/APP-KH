@@ -29,6 +29,12 @@ export function cauTienVe(don) {
   return typeof tien === 'number' && tien > 0 ? chu(don.thong_bao_tien_ve).trim() : '';
 }
 
+/** Số tiền POS đã hoàn vào ví khi QUÁN huỷ đơn (v14, `hoan_vao_tai_khoan`): số nguyên ≥ 0 → giữ; thiếu / null / sai kiểu / âm / lẻ → null. App KHÔNG tự tính số này. */
+export const soHoan = (don) => { const v = don && don.hoan_vao_tai_khoan; return Number.isInteger(v) && v >= 0 ? v : null; };
+
+/** Nhãn lý do quán huỷ (v14, `ly_do_huy`): chuỗi đã cắt khoảng trắng; rỗng / thiếu / không phải chuỗi → null. Hiện NGUYÊN chữ POS, App không suy ra. */
+export const lyDoHuy = (don) => { const v = don && typeof don.ly_do_huy === 'string' ? don.ly_do_huy.trim() : ''; return v || null; };
+
 /** `don` (trả về của GET /don/:ma) → các dòng `{ loai, trai, phai, dam, gach, ghiChu }` theo đúng thứ tự POS; không có tờ → []. App KHÔNG BAO GIỜ hiện `ghi_no` → bỏ ở đây (hết dòng = coi như không có tờ). */
 export function docHoaDon(don) {
   const ds = don && Array.isArray(don.hoa_don) ? don.hoa_don : [];

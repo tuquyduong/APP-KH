@@ -22,6 +22,8 @@ export const CAN_TU_POS = [
   { ma: 'don_tien_trinh', ten: 'Tiến trình đơn (đang làm, đang giao…)', cua: 'GET /don/:ma', token: true, truong: ['don.tien_trinh', 'don.qr', 'don.tien_ve_cho_doi_soat'], khi: T, co: true },
   { ma: 'don_v11', ten: 'Số hoá đơn, tiền về muộn của đơn', cua: 'GET /don/:ma', token: true, truong: ['don.so_hd', 'don.tien_ve_da_cong_vi', 'don.thong_bao_tien_ve'], khi: T, co: true, moi: true, viec_pos: 'SOHD-1' },
   { ma: 'don_ds_v11', ten: 'Số hoá đơn, tiền về muộn trong Lịch sử đơn', cua: 'GET /don', token: true, truong: ['data[].so_hd', 'data[].tien_ve_da_cong_vi', 'data[].thong_bao_tien_ve'], khi: T, co: true, moi: true, viec_pos: 'SOHD-1' },
+  { ma: 'don_huy_v14', ten: 'Lý do quán huỷ, số đã hoàn vào ví của đơn', cua: 'GET /don/:ma', token: true, truong: ['don.hoan_vao_tai_khoan', 'don.ly_do_huy'], khi: T, co: true, moi: true, viec_pos: 'HUY-1' },
+  { ma: 'don_ds_huy_v14', ten: 'Số đã hoàn vào ví trong Lịch sử đơn', cua: 'GET /don', token: true, truong: ['data[].hoan_vao_tai_khoan', 'data[].ly_do_huy'], khi: T, co: true, moi: true, viec_pos: 'HUY-1' },
   { ma: 'hang_v10', ten: 'Hạng: chỉ cấp, gói thời hạn, thứ bậc', cua: 'GET /hang', token: false, truong: ['data[].chi_cap', 'data[].goi[].so_thang', 'data[].goi[].gia', 'data[].thu_bac'], khi: T, co: true, moi: true, viec_pos: 'HANG-1' },
   { ma: 'hang_v13', ten: 'Quyền lợi từng hạng', cua: 'GET /hang', token: false, truong: ['data[].quyen_loi'], khi: T, co: true, moi: true, viec_pos: 'KH-THE-1' },
   { ma: 'the_bao_gia', ten: 'Báo giá giỏ có thẻ hạng', cua: 'POST /gio/bao-gia', token: true, truong: [], khi: T, co: true, viec_pos: 'KH-THE-1' },

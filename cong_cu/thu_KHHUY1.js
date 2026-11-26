@@ -204,6 +204,14 @@ async function trinhDuyet(pw) {
     k('B3 (4)(5) Chi tiết: khách tự huỷ / POS cũ → không hộp mới, DOM như nhau', !/Quán đã huỷ đơn|Đã hoàn|Xem ví/.test(c + d) && c === d);
   });
 
+  // (4b) đơn CHƯA huỷ mang hai trường (POS lỗi / lạ): Theo dõi + Chi tiết KHÔNG hiện hộp (App chỉ đọc khi tien_trinh = da_huy — A2)
+  them('chua-huy-mang-truong', { gio: [], S0: { v7: true, don: mapDon(DON('TQD50', 'da_tra', { v7: V7(HUY) })), donCu: [DON('TQD60', 'xong', { soHd: '012', v7: V7(HUY) })] } }, async ({ t }) => {
+    await mo(t, '/don/TQD50'); await doiChu(t, '#tracking', /Số đơn của bạn/); await t.waitForTimeout(300);
+    const a = await chu(t, '#tracking');
+    await mo(t, '/taikhoan/donhang/TQD60'); await doiChu(t, '#orderdetail', /012/); await t.waitForTimeout(300);
+    k('B2 (4b) đơn chưa huỷ mang ly_do_huy / hoan_vao_tai_khoan → Theo dõi + Chi tiết không hộp "Quán đã huỷ đơn" / "Đã hoàn"', !/Quán đã huỷ đơn|Đã hoàn/.test(a + (await chu(t, '#orderdetail'))), a.slice(0, 100));
+  });
+
   // (6) Lịch sử đơn: thẻ huỷ có hoàn có dòng "Đã hoàn 35.000đ"; thẻ khác (huỷ không hoàn, đang chờ, đã trả, tự huỷ) không; không tràn ngang
   for (const rong of RONG) {
     them(`lich-su-${rong}`, { rong, gio: [], S0: { v7: true, don: mapDon(), donCu: [

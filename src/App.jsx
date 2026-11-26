@@ -283,7 +283,7 @@ export default function App() {
         {!dangNhap && trang === 'dangnhap' && <DangNhap khiXong={(k) => { if (k && doiKhach(k.sdt)) docLaiGio(); datDangNhap(true); }} dong={luiVe} coMaHoaDon={!!maCho} />}
         {dangNhap && trang === 'qr' && <ManQR lui={luiVe} />}
         {dangNhap && trang === 'donhang' && <LichSuDon chonDon={(d) => di(taoDuongDan(moTheoDoi(d.tien_trinh) ? 'theodoi' : 'don', { ma: d.ma }))} lui={luiVe} datLai={DAT_ONLINE ? datLai : null} />}
-        {dangNhap && trang === 'don' && <ChiTietDon ma={r.tham.ma} lui={luiVe} />}
+        {dangNhap && trang === 'don' && <ChiTietDon ma={r.tham.ma} lui={luiVe} moVi={moVi} />}
         {dangNhap && trang === 'thongtin' && <HoSo lui={luiVe} />}
         {trang === 'hotro' && <HoTro lui={luiVe} />}
         {(trang === 'khongthay' || r.giuCho) && <KhongTimThay chon={() => vaoTab('trangchu')} />}
