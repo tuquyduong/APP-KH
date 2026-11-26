@@ -48,8 +48,9 @@ if (require.main === module) (async () => {
     const { CAN_TU_POS } = await nap('src/kiemKhop/canTuPos.js');
     const m = (ma) => CAN_TU_POS.find((x) => x.ma === ma) || {};
     k('A2 ba cửa đặt đơn co:true (bao_gia, dat_don, huy_don)', ['bao_gia', 'dat_don', 'huy_don'].every((x) => m(x).co === true));
-    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && !['HD-KH-1', 'SOHD-1'].includes(x.viec_pos)).map((x) => x.ma);
-    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c và v11 SOHD-1 của KH-SOHD-1)', conMoi.length === 0, conMoi.join(','));
+    const conMoi = CAN_TU_POS.filter((x) => x.moi && /^GET \/(don|menu)\b/.test(x.cua) && !['HD-KH-1', 'SOHD-1', 'HUY-1'].includes(x.viec_pos)).map((x) => x.ma);
+    k('A2 mục của /don, /don/:ma, /menu không còn moi (v4, v5 đã có; trừ trường v7 HD-KH-1 của KH-MUA-1c, v11 SOHD-1 của KH-SOHD-1 và v14 HUY-1 của KH-HUY-1)', conMoi.length === 0, conMoi.join(','));
+    k('A2 KH-HUY-1: hai trường v14 (ly_do_huy, hoan_vao_tai_khoan) khai moi ở /don/:ma và /don (viec_pos HUY-1)', ['don_huy_v14', 'don_ds_huy_v14'].every((x) => m(x).moi === true && m(x).viec_pos === 'HUY-1'));
     const api = doc('src/api.js');
     k('A3/B1 api.js có ba cửa đặt đơn viết thẳng qua goi', /goi\('POST', '\/gio\/bao-gia'/.test(api) && /goi\('POST', '\/don'/.test(api) && /goi\('POST', `\/don\/\$\{[^}]+\}\/huy`/.test(api));
   });
