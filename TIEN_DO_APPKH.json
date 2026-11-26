@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 66,
+  "phien_ban_so": 67,
   "cap_nhat": "2026-11-26",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -272,13 +272,16 @@
       "ma": "KH-HUY-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
-        "KH-THE-3 (TheoDoiDon.jsx)",
-        "KH-QC-1 (hop dong v16 trong thiet_ke)"
+        "KH-NAP-1",
+        "KH-NHANH-2",
+        "POS HUY-1 (hop dong v14)"
       ],
       "ten": "Don bi quan huy (hop dong v14 HUY-1): Lich su don + Theo doi don + Chi tiet don hien \"Da hoan <so> vao tai khoan\" (hoan_vao_tai_khoan) va ly do (ly_do_huy); lam moi so du vi",
-      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop | 15.11 lam SAU KH-THE-3 (cung TheoDoiDon.jsx) | 16.11 mo SAU KH-NAP-1 (cung TheoDoiDon.jsx) | 17.11 KH-NAP-1 da gop (PR #44) -> mo duoc"
+      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop | 15.11 lam SAU KH-THE-3 (cung TheoDoiDon.jsx) | 16.11 mo SAU KH-NAP-1 (cung TheoDoiDon.jsx) | 17.11 KH-NAP-1 da gop (PR #44) -> mo duoc | 26.11 chu quan chon lam song song (KH-HUY-1 cho may; chat dung thiet ke KH-DOI-1; KH-SUA-2 mo SAU khi HUY-1 gop) -> MO (Sonnet, khong cho duyet ke hoach): DonHuy.jsx dung o Theo doi don + Chi tiet don, dong \"Da hoan\" o Lich su don; chu POS hien nguyen; phieu o viec/KH-HUY-1/",
+      "ngay": "2026-11-26",
+      "han": "2026-11-28"
     },
     {
       "ma": "KH-THE-1",
