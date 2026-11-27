@@ -3,6 +3,8 @@
 Chuẩn của việc này là bản thiết kế chủ quán duyệt 26.11 (`viec/KH-DOI-1/anh/d1…d6.webp`, CSS + HTML ở `mau_de_xuat.js`) — demo patch39 không có các màn đổi quà.
 Ảnh App: `viec/KH-DOI-1/so_anh/nhanh/*.png` (390×844, Chromium + POS giả dựng từ hợp đồng đã hẹn, `LUU_ANH_DIR` của `cong_cu/thu_KHDOI1.js`; Kho quà chụp cao 1259 như ảnh thiết kế).
 Cỡ 360 / 430: bài thử kiểm không tràn ngang (Kho quà, Phiếu quà, Quà của tôi).
+Ảnh tô chỗ lệch (đỏ = điểm ảnh lệch > 40): `so_anh/lech/*.png` — tỉ lệ lệch: d1 25,2 % (thẻ hội viên không có vì POS giả trả `/hang` rỗng — dữ liệu thử),
+d2 0,6 %, d3 0,4 %, d4 0,3 %, d5 10,0 % (nội dung mã QR mẫu khác), d6 1,0 %.
 Lý do được khác: (a) dữ liệu POS chưa có / App không tự tính · (b) chữ / số mẫu · (c) chưa có giỏ / đặt đơn · (d) màn rộng · (e) khẩu hiệu.
 
 ## d1 — Ưu đãi (ô Điểm)
