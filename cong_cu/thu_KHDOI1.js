@@ -168,7 +168,7 @@ const QUA_TOI = [
     const demoMau = docMau(demo), la = [...docMau(css)].filter((x) => !demoMau.has(x));
     k('B doi_qua.css có, 0 màu ngoài demo (thuật toán K9)', css.length > 300 && la.length === 0, la.join(' · '));
     const lop = [...new Set([...boChuThich(css).matchAll(/(?<![\w-])\.([a-z][\w-]*)/g)].map((x) => x[1]))];
-    const KHUON = /^(dq-|wallet-box|vt-o|cm-dau|ic$|info$|t$|m$|d$|pts$|amt$|lbl$|mo$|tat$|vien$|so$|mui$|ten$|tru$|nhac$|cu$|cho$|med$|ico$|khung-qr|ok$)/;
+    const KHUON = /^(dq-|wallet-box|vt-o|cm-dau|ic$|info$|t$|m$|d$|pts$|amt$|lbl$|mo$|tat$|vien$|so$|mui$|ten$|tru$|nhac$|cu$|cho$|med$|ico$|khung-qr|qr-chu$|ok$)/;
     k('B lớp MỚI trong doi_qua.css đều tiền tố dq- (lớp khác chỉ làm ngữ cảnh)', lop.some((x) => x.startsWith('dq-')) && lop.every((x) => KHUON.test(x)), lop.filter((x) => !KHUON.test(x)).join(', '));
     const ud = doc('src/pages/UuDai.jsx');
     k("B7 Lịch sử điểm không đổi: dòng hiện nguyên reason POS (redeem / hoan_qua)", /\{h\.reason \|\| nd\(LOAI_DIEM\[h\.type\] \|\| 'ud\.loai\.khac'\)\}/.test(ud));
