@@ -50,7 +50,8 @@ function chay(ten, sua, trinhDuyet) {
   for (const [g, v] of goc) fs.writeFileSync(g, v);
   const dong = (r.stdout || '').trim().split('\n').pop() || '';
   const bat = r.status !== 0;
-  console.log(`${bat ? '✓ BẮT ĐƯỢC' : '✗ SÓT    '} ${ten}  (${dong})`);
+  if (!sua.length) console.log(`${bat ? '✗ ĐỎ  ' : '✓ XANH'} ${ten}  (${dong})`);
+  else console.log(`${bat ? '✓ BẮT ĐƯỢC' : '✗ SÓT    '} ${ten}  (${dong})`);
   return bat;
 }
 
