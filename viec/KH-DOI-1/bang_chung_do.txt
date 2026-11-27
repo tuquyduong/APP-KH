@@ -18,10 +18,10 @@ $ node cong_cu/thu_KHDOI1.js      (bản sao gốc, có Chromium)
   ✗ ca B1–B2 BẬT: Ưu đãi + Kho quà dừng giữa chừng — waiting for locator('#rewards .dq-nut')
   ✗ ca A1 B3 B4 đổi voucher … dừng giữa chừng — waiting for locator('#doiqua .dq-the')…
   ✗ ca B3 B5 đổi hiện vật … · ✗ ca B3 lỗi POS … · ✗ B6 … · ✗ A1 /kho-qua 401 …
-17 đạt · 48 hỏng
+18 đạt · 49 hỏng   (bản bài thử cuối, có ca "dải nhắc theo nhac POS")
 
 Trên code đã vá:
 $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHDOI1.js   → 51 đạt · 0 hỏng
-$ node cong_cu/thu_KHDOI1.js (Chromium)              → 131 đạt · 0 hỏng
+$ node cong_cu/thu_KHDOI1.js (Chromium)              → 133 đạt · 0 hỏng
 
 SỐ CA thu_KHDOI1.js: 51
