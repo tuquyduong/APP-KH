@@ -50,6 +50,9 @@ K8 nhận cửa trong `DA_HEN_POS`; thêm K8d (cửa đã hẹn đã có trong h
   `- kiem_tra_truoc_khi_giao.js`
   (và nếu muốn, sửa dòng Cấm "không sửa `kiem_tra_truoc_khi_giao.js`" thành "trừ DA_HEN_POS + K8 + K8d — chủ quán 27.11"). Có dòng đó → máy áp `va_K8.txt`, thêm 2 đột biến
   (VS-K8-NHAN-MOI-CUA, BV-K8D-KHONG-NHAC-GO), chạy `npm test`, `--day-du`, cổng `chay`, `/ra-soat`, báo cáo 7 mục — không còn việc chờ quyết định nào khác.
+- `node kiem_tra_truoc_khi_giao.js --day-du` (27.11, HEAD 25a5fc9…+ khối K8): `68 đạt · 2 hỏng` — đúng 2 chỗ chờ Q2: `✗ K8 … GET /kho-qua, GET /qua-cua-toi, POST /doi-diem`
+  và `✗ thu_KHDOI1.js (133 đạt · 5 hỏng)` (5 ca khối K8). Mọi bài thử khác xanh; `✓ vite build thành công`, `✓ dist/index.html trỏ tới file có thật`,
+  `✓ K2d bản dựng chỉ gọi /api/kh và /api/nd`.
 
 ## Chỗ vá → đột biến (viec/KH-DOI-1/dot_bien_tay.js — việc chỉ đổi src/, không server/ client/src/ → không dot_bien.py, khuôn KH-VC-2 / KH-NAP-1)
 | Chỗ vá | Đột biến |
