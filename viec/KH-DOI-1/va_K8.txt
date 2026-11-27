@@ -1,0 +1,23 @@
+Bản vá K8 / K8d soạn sẵn (chủ quán 27.11 chọn C có sửa) — áp vào kiem_tra_truoc_khi_giao.js khi phiếu có dòng Phạm vi "- kiem_tra_truoc_khi_giao.js".
+Thay ĐÚNG ba dòng cuối khối K8 (sau `if (tong !== n) lech.push(...)`):
+
+CŨ:
+  k('K8 mọi lời gọi src/api.js có trong hợp đồng', n > 0 && lech.length === 0, lech.join(', '));
+}
+
+MỚI:
+  // Cửa ĐÃ HẸN (POS hẹn bằng thư, chưa lên bảng cửa của hợp đồng) — chủ quán 27.11 (KH-DOI-1): viết thẳng ở đây, nguồn thiet_ke/trao_doi/TRA_LOI_POS_16112026_DOIDIEM.md
+  // mục 1 (DOI-DIEM-1). K8 nhận các cửa này; K8d đỏ khi một cửa đã vào hợp đồng → gỡ khỏi danh sách (để K8 lại đòi hợp đồng như mọi cửa).
+  const DA_HEN_POS = ['GET /kho-qua', 'POST /doi-diem', 'GET /qua-cua-toi'];
+  const hen = new Set(DA_HEN_POS.map((c) => { const [pt, d] = c.split(' '); return `${pt} ${chuan(d)}`; }));
+  const conLech = lech.filter((c) => !hen.has(c.replace(/^(\S+) (.*)$/, (_, pt, d) => `${pt} ${chuan(d)}`)));
+  k('K8 mọi lời gọi src/api.js có trong hợp đồng (hoặc DA_HEN_POS)', n > 0 && conLech.length === 0, conLech.join(', '));
+  const daVao = DA_HEN_POS.filter((c) => { const [pt, d] = c.split(' '); return coTrong.has(`${pt} ${chuan(d)}`); });
+  k('K8d cửa trong DA_HEN_POS chưa có trong hợp đồng (đã có → gỡ khỏi DA_HEN_POS)', daVao.length === 0, daVao.length ? `đã vào hợp đồng: ${daVao.join(', ')} — gỡ khỏi DA_HEN_POS` : '');
+}
+
+Đột biến thêm vào viec/KH-DOI-1/dot_bien_tay.js (nhóm DS) khi áp:
+  ['VS-K8-NHAN-MOI-CUA', [['kiem_tra_truoc_khi_giao.js', 'n > 0 && conLech.length === 0', 'n > 0']]]   — cửa lạ trong api.js phải vẫn đỏ K8
+  ['BV-K8D-KHONG-NHAC-GO', [['kiem_tra_truoc_khi_giao.js', 'daVao.length === 0, daVao.length', 'true, daVao.length']]]
+(dot_bien_tay.js cần chép thêm kiem_tra_truoc_khi_giao.js + package-lock.json vào bản sao.)
+Ca thử đã có, đang ĐỎ chờ bản vá: cong_cu/thu_KHDOI1.js khối "K8 đã hẹn" (5 ca).

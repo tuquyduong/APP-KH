@@ -10,7 +10,7 @@ const { spawnSync } = require('child_process');
 
 const GOC = path.join(__dirname, '..', '..');
 const NHAP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'dot-bien-kh-doi-1-'));
-for (const d of ['src', 'cong_cu', 'thiet_ke', 'public', 'package.json', 'index.html', 'viec/KH-DOI-1/sym.txt']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
+for (const d of ['src', 'cong_cu', 'thiet_ke', 'public', 'package.json', 'package-lock.json', 'index.html', 'kiem_tra_truoc_khi_giao.js', 'viec/KH-DOI-1/sym.txt']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
 fs.symlinkSync(path.join(GOC, 'node_modules'), path.join(NHAP, 'node_modules'));
 
 const Q = 'src/doiQua.js', A = 'src/api.js', ND = 'src/noiDung/nd/doiQua.js', DL = 'src/duLieuKhach.js', DQ = 'src/pages/DoiQua.jsx', U = 'src/pages/UuDai.jsx', APP = 'src/App.jsx', PIN = 'src/components/PinSheet.jsx';

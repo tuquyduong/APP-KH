@@ -39,6 +39,18 @@ Ba cách (máy đề xuất **C**):
   đổi `co: true` thì K8 đòi hợp đồng như mọi cửa khác (thu_KHKHOP1 đã canh hai chiều).
 Mọi phần khác của phiếu đã làm xong và xanh; máy dừng ở đây chờ chủ quán chọn.
 
+**Trả lời Q1 (chủ quán 27.11):** chọn C có sửa — KHÔNG đọc canTuPos.js; hằng `DA_HEN_POS` viết thẳng trong `kiem_tra_truoc_khi_giao.js` đúng 3 cửa (nguồn thư POS 16.11);
+K8 nhận cửa trong `DA_HEN_POS`; thêm K8d (cửa đã hẹn đã có trong hợp đồng → đỏ, nhắc gỡ); thêm đột biến "cửa lạ trong api.js vẫn đỏ K8"; được thêm
+`kiem_tra_truoc_khi_giao.js` vào Phạm vi chỉ cho việc này; làm tiếp tới hết.
+- Đã làm: ca thử khối "K8 đã hẹn" trong `cong_cu/thu_KHDOI1.js` (5 ca, chạy BỘ KIỂM THẬT trên bản sao tạm không có `thu_*.js`) — ĐỎ trên bộ kiểm hiện tại
+  (`51 đạt · 5 hỏng`, KHONG_TRINH_DUYET=1); bản vá soạn sẵn ở `viec/KH-DOI-1/va_K8.txt`.
+- **Q2 — người gác chặn sửa bộ kiểm.** `Edit kiem_tra_truoc_khi_giao.js` → `[G-LUAT] file luật chỉ sửa được khi mục Phạm vi ghi ĐÚNG TÊN file (glob chung không tính)`;
+  thêm dòng đó vào phiếu thì `[G1-PHIEU] phiếu và biên bản soát không được sửa`. Máy không lách. Cần chủ quán (hoặc chat soát) thêm vào mục `## Phạm vi` của
+  `viec/KH-DOI-1/phieu.md` đúng dòng:
+  `- kiem_tra_truoc_khi_giao.js`
+  (và nếu muốn, sửa dòng Cấm "không sửa `kiem_tra_truoc_khi_giao.js`" thành "trừ DA_HEN_POS + K8 + K8d — chủ quán 27.11"). Có dòng đó → máy áp `va_K8.txt`, thêm 2 đột biến
+  (VS-K8-NHAN-MOI-CUA, BV-K8D-KHONG-NHAC-GO), chạy `npm test`, `--day-du`, cổng `chay`, `/ra-soat`, báo cáo 7 mục — không còn việc chờ quyết định nào khác.
+
 ## Chỗ vá → đột biến (viec/KH-DOI-1/dot_bien_tay.js — việc chỉ đổi src/, không server/ client/src/ → không dot_bien.py, khuôn KH-VC-2 / KH-NAP-1)
 | Chỗ vá | Đột biến |
 |---|---|
