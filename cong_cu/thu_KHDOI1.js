@@ -274,7 +274,7 @@ async function trinhDuyet(pw) {
       return json(500, { error: 'chưa giả', code: 'LOI_MAY_CHU' });
     });
     const t = await ctx.newPage(); t.on('pageerror', (e) => S.loiTrang.push(e.message)); t.setDefaultTimeout(6000);
-    try { await chay(t, S); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n')[0]); }
+    try { await chay(t, S); } catch (e) { k(`ca ${ten} dừng giữa chừng`, false, String(e && e.message).split('\n').slice(0, 8).join(' / ')); }
     k(`[${ten}] trang không báo lỗi JS`, S.loiTrang.length === 0, S.loiTrang[0]);
     await ctx.close();
   }

@@ -26,11 +26,12 @@ import '../giaoDien/hang.css';
 import '../giaoDien/the_hang.css';
 import '../giaoDien/vi_tien.css';
 import '../giaoDien/voucher.css';
+import '../giaoDien/doi_qua.css';
 import { laShip } from '../voucherGio.js';
 
 // Ưu đãi theo demo (rewards): thẻ hội viên (đầu màn, KH-THE-2), banner Giờ vàng, điểm + ví, ví voucher, ô nhập mã trên hoá đơn, lịch sử điểm. Để trống (VIỆC SAU / chưa có dữ liệu POS):
 // Khối "Chương trình đặc biệt" (KH-CT-1) KHÔNG có trong demo: dữ liệu mới của POS (lý do a), chỉ hiển thị — áp dụng tại quán.
-//   sưu tập Tứ Quý, kho quà đổi điểm, nút nâng hạng, huy hiệu hạng (P3b).
+//   sưu tập Tứ Quý, nút nâng hạng, huy hiệu hạng (P3b). Kho quà đổi điểm: KH-DOI-1 (nút ở ô Điểm, công tắc `hien.dq`).
 const LOAI_DIEM = { earn: 'ud.loai.earn', redeem: 'ud.loai.redeem' }; // loại → khoá nội dung
 const TRANG_THAI_VOUCHER = { used: 'ud.voucher.daDung', expired: 'ud.voucher.hetHan', disabled: 'ud.voucher.chuaDung' };
 const khoaNguonVoucher = { doi_diem: 'ud.vc.nguon.doi_diem', khach_moi: 'ud.vc.nguon.khach_moi', gioi_thieu: 'ud.vc.nguon.gioi_thieu' }; // nguồn lạ → không chip
@@ -211,18 +212,24 @@ function TheHangToi({ moHang }) {
 }
 
 // Phần riêng của khách đã đăng nhập: điểm + ví (/toi, /diem), nhập mã, voucher, lịch sử điểm. `maSan` = mã từ link QR hoá đơn (điền sẵn).
-function UuDaiToi({ maSan, khiNhanXong, moVi, moNap, dungVoucher }) {
+function UuDaiToi({ maSan, khiNhanXong, moVi, moNap, moDoiQua, dungVoucher }) {
   const tai = dungCua(cuaDiem);
   const toi = dungCua(cuaToi);
   const [tatCa, datTatCa] = useState(false);
   const khach = toi.dl && toi.dl.khach;
   const coNap = goiNapDs(dungCua(cuaGoiNap).dl).length > 0 && ndHien('hien.vt.nap');
+  const coDoi = ndHien('hien.dq'); // KH-DOI-1 (câu 1a): tắt → ô Điểm y như cũ (không nút, không bấm được)
   return (
     <>
       <TrangTai tai={tai}>
         {(dl) => (
           <div className="wallet-row">
-            <div className="wallet-box vt-o"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>
+            {coDoi ? (
+              <div className="wallet-box vt-o dq-o" onClick={moDoiQua}>
+                <div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" />
+                <button type="button" className="dq-nut" onClick={(e) => { e.stopPropagation(); moDoiQua(); }} {...ndDau('dq.ud.nut')}>{nd('dq.ud.nut')}</button>
+              </div>
+            ) : <div className="wallet-box vt-o"><div className="n" {...ndDau('ud.khach')}>{dinhDangSo(dl.points)}</div><Chu k="ud.diem" as="div" className="l" /></div>}
             {/* KH-NAP-1 (N1 a): số dư + nhãn là MỘT nút → màn Ví; nút nhỏ "+ Nạp tiền" (nút anh em, không lồng) chỉ khi quán có ≥ 1 gói (N4 a) → Ví + bảng chọn gói. */}
             {khach && dinhDangGia(khach.so_du_vi) && (
               <div className="wallet-box vt-o vt-vi-mo" onClick={moVi}>
@@ -256,7 +263,7 @@ function UuDaiToi({ maSan, khiNhanXong, moVi, moNap, dungVoucher }) {
 }
 
 // Ưu đãi mở cho khách vãng lai (chủ quán chốt 30.10): xem Giờ vàng + các hạng; điểm, ví, voucher, nhập mã chỉ khi đã đăng nhập.
-export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang, moVi, moNap, dungVoucher }) {
+export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, moDangNhap, moHoSo, moHang, moVi, moNap, moDoiQua, dungVoucher }) {
   return (
     <Man id="rewards">
       <div className="topbar"><div><Chu k={dangNhap ? 'ud.tieuDeToi' : 'ud.tieuDe'} as="h1" /></div><NutQR moQR={moQR} /></div>
@@ -264,7 +271,7 @@ export default function UuDai({ dangNhap, maSan, khiNhanXong, moQR, moGioVang, m
       <BannerGioVang mo={moGioVang} />
       <KhoiChuongTrinh dangNhap={dangNhap} moHoSo={moHoSo} />
       {dangNhap
-        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} moVi={moVi} moNap={moNap} dungVoucher={dungVoucher} />
+        ? <UuDaiToi maSan={maSan} khiNhanXong={khiNhanXong} moVi={moVi} moNap={moNap} moDoiQua={moDoiQua} dungVoucher={dungVoucher} />
         : <><div className="top-row mot"><TheMoi chu={{ tieuDe: nd('ud.moi.t'), phu: nd('ud.moi.p'), nut: nd('ud.moi.nut') }} khoa={{ tieuDe: 'ud.moi.t', phu: 'ud.moi.p', nut: 'ud.moi.nut', anh: 'ud.moi.anh' }} anh={ndAnh('ud.moi.anh')} moDangNhap={moDangNhap} /></div></>}
     </Man>
   );

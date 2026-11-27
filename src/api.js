@@ -32,6 +32,9 @@ function loiApi(status, code, error, duLieu = null) {
 
 // Cửa công khai của hợp đồng v2 (token: không): không gửi kèm phiên, nên phiên hết hạn không bị xoá oan vì chúng.
 const CUA_CONG_KHAI = ['/hang', '/gio-vang', '/gio-hoat-dong', '/chuong-trinh', '/quang-cao', '/goi-nap'];
+// Cửa không bắt token nhưng CÓ token thì POS trả thêm phần riêng (KH-DOI-1: /kho-qua) — vẫn gửi token; 401 ở đây KHÔNG thoát phiên (màn tự báo lỗi;
+// phiên hết thật thì /diem gọi cùng lúc ở màn đó đẩy ra đăng nhập theo đường chung).
+const CUA_401_GIU_PHIEN = ['/kho-qua'];
 
 // Chế độ sửa (/admin, KH-ADMIN-1 D7): MỌI lệnh GHI /api/kh bị chặn ở đây (không gửi), trừ báo giá + đăng nhập khách (để xem các màn). Lỗi chặn là 4xx có `code`
 // → datDon.loaiLoi coi là "chưa tạo" (không tự gửi lại, không kẹt bản ghi "chưa rõ").
@@ -81,7 +84,7 @@ async function goiThat(phuongThuc, duong, than, choMs) {
     clearTimeout(hen);
   }
   if (!res.ok || !dl) {
-    if (res.status === 401 && token) { xoaToken(); khiHetPhien(); }
+    if (res.status === 401 && token && !CUA_401_GIU_PHIEN.includes(duong)) { xoaToken(); khiHetPhien(); }
     throw loiApi(res.status, dl && dl.code, dl && dl.error, dl);
   }
   return dl;
@@ -131,3 +134,8 @@ const MS_CHO_DAT_DON = 20000;
 export const baoGiaGio = (than) => goi('POST', '/gio/bao-gia', than);
 export const datDonApp = (than) => goi('POST', '/don', than, MS_CHO_DAT_DON);
 export const huyDonApp = (ma) => goi('POST', `/don/${encodeURIComponent(ma)}/huy`);
+// Đổi điểm lấy quà (KH-DOI-1 — hợp đồng POS ĐÃ HẸN DOI-DIEM-1, chưa chạy trên POS thật; App để tắt bằng `hien.dq`). Thân `POST /doi-diem` dựng ở DoiQua.jsx
+// ({ ma_qua, khoa_gui, pin }), gửi qua datDon.guiDonAnToan (gửi lại CÙNG thân khi chưa rõ) — cùng giờ chờ như POST /don.
+export const layKhoQua = () => goi('GET', '/kho-qua');
+export const layQuaCuaToi = () => goi('GET', '/qua-cua-toi');
+export const doiDiemApp = (than) => goi('POST', '/doi-diem', than, MS_CHO_DAT_DON);

@@ -45,7 +45,10 @@ export const CAN_TU_POS = [
   { ma: 'phi_giao', ten: 'Phí giao Ahamove', cua: 'POST /gio/phi-giao', token: true, truong: [], khi: T, co: false, viec_pos: 'KH-MUA-2' },
   { ma: 'topping', ten: 'Topping theo món', cua: 'chưa chốt — thêm vào GET /menu', token: 'tuy_chon', truong: [], khi: T, co: false, viec_pos: 'TOPPING-1' },
   { ma: 'combo', ten: 'Combo', cua: 'chưa chốt tên cửa', token: 'tuy_chon', truong: [], khi: T, co: false, viec_pos: 'COMBO-1a' },
-  { ma: 'doi_diem', ten: 'Đổi điểm, voucher khi trả', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: T, co: false, viec_pos: 'P3b' },
+  // Đổi điểm (KH-DOI-1): hợp đồng ĐÃ HẸN (thư POS 16.11) — POS ghi vào HOP_DONG khi DOI-DIEM-1 gộp (v18) thì đổi `co` thành true.
+  { ma: 'kho_qua', ten: 'Kho quà đổi điểm', cua: 'GET /kho-qua', token: 'tuy_chon', truong: ['data[].ma', 'data[].ten', 'data[].loai', 'data[].diem_can', 'data[].anh', 'data[].mo_ta', 'data[].con', 'data[].thu_tu'], khi: S, co: false, viec_pos: 'DOI-DIEM-1' },
+  { ma: 'doi_diem', ten: 'Đổi điểm lấy quà (có PIN)', cua: 'POST /doi-diem', token: true, truong: [], khi: S, co: false, viec_pos: 'DOI-DIEM-1' },
+  { ma: 'qua_cua_toi', ten: 'Phiếu quà của khách (QR nhận tại quầy)', cua: 'GET /qua-cua-toi', token: true, truong: ['data[].ma', 'data[].ten', 'data[].qr', 'data[].trang_thai', 'data[].het_han', 'data[].nhac'], khi: S, co: false, viec_pos: 'DOI-DIEM-1' },
   { ma: 'vi_lich_su', ten: 'Sổ ví, nạp ví, đổi quà', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'P3b' },
   { ma: 'ho_so_them', ten: 'Nhiều địa chỉ, email', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'KH-HOSO-1' },
   { ma: 'danh_gia_google', ten: 'Lời mời đánh giá Google', cua: 'chưa chốt tên cửa', token: true, truong: [], khi: S, co: false, viec_pos: 'DG-GOOGLE-1' },

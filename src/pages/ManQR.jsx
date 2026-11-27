@@ -7,10 +7,10 @@ import Chu from '../components/Chu.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 
-const VIEN_QUET = 4; // viền trắng quanh mã ở màn Mã thành viên (≥ 4 ô — POS QUET-1: quầy quét bằng camera trước của máy tính bảng)
+export const VIEN_QUET = 4; // viền trắng quanh mã ở màn Mã thành viên (≥ 4 ô — POS QUET-1: quầy quét bằng camera trước của máy tính bảng)
 
-/** Giữ màn không tắt khi đang mở Mã thành viên (Screen Wake Lock): xin lại khi quay lại tab, thả khi rời màn. Trình duyệt không có / từ chối → thôi, không báo lỗi. */
-function dungGiuManSang() {
+/** Giữ màn không tắt khi đang mở Mã thành viên / Phiếu quà (KH-DOI-1) (Screen Wake Lock): xin lại khi quay lại tab, thả khi rời màn. Trình duyệt không có / từ chối → thôi, không báo lỗi. */
+export function dungGiuManSang() {
   useEffect(() => {
     let khoa = null, het = false;
     const xin = () => {

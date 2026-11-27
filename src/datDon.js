@@ -128,17 +128,17 @@ export function loaiLoi(e) {
 const choThat = (ms) => new Promise((x) => setTimeout(x, ms));
 
 /**
- * Gửi `POST /don` an toàn: MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
+ * Gửi `POST /don` an toàn (đổi quà KH-DOI-1 dùng chung: `gui` = POST /doi-diem, `doc` = docKetQuaDoi — trả null = "chưa rõ"): MỌI lần gửi dùng ĐÚNG đối tượng `than` (cùng khoa_gui, cùng thân, cùng PIN trong bộ nhớ của lần gọi này).
  * Nhận đơn (kể cả trung) → trả đơn; 'chua_tao' ở lần gửi ĐẦU → ném lỗi POS; 'khong_biet' → chờ ~2 giây gửi lại (đếm lượt theo mã);
  * còn lại → ném { code: 'KHONG_BIET', goc: mã POS } (người gọi GIỮ bản ghi): 'dung', hết lượt, và 4xx đến SAU một lần chưa rõ — chuỗi đã có lần
  * POS có thể chạy dở nên 4xx sau đó không chứng minh chưa tạo (chủ quán 05.11).
  */
-export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat, khiGuiLai = () => {} } = {}) {
+export async function guiDonAnToan(than, { gui = canMo(datDonApp), cho = choThat, khiGuiLai = () => {}, doc = docDatDon } = {}) {
   const dem = {};
   for (let lan = 0; ; lan++) {
     let loi;
     try {
-      const don = docDatDon(await gui(than));
+      const don = doc(await gui(than));
       if (don) return don;
       loi = { status: 200 };
     } catch (e) { loi = e; }

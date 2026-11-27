@@ -11,7 +11,8 @@ import { nd, ndDau } from '../noiDung/nd.js';
 const DO_DAI = 4;
 const KHOA_BUOC = { moi: ['pin.moi.t', 'pin.moi.p'], lai: ['pin.lai.t', 'pin.lai.p'], tra: ['pin.tra.t', 'pin.tra.p'] }; // khoá chữ (danh mục nội dung) của tiêu đề + dòng nhỏ từng bước
 
-export default function PinSheet({ dong, gui }) {
+// `khoaTieuDe` + `tren` (tuỳ chọn, KH-DOI-1 đổi quà): khoá chữ tiêu đề thay khoá theo bước; `tren` = khối thay dòng nhỏ (tóm tắt quà). Không truyền → như cũ.
+export default function PinSheet({ dong, gui, khoaTieuDe, tren }) {
   const [buoc, datBuoc] = useState(gui ? 'tra' : 'moi');
   const [dau, datDau] = useState('');
   const [so, datSo] = useState('');
@@ -61,8 +62,8 @@ export default function PinSheet({ dong, gui }) {
           </>
         ) : (
           <>
-            <Chu k={kTieuDe} as="h3" style={{ textAlign: 'center' }} />
-            <Chu k={kPhu} as="div" className="pin-sub" />
+            <Chu k={khoaTieuDe || kTieuDe} as="h3" style={{ textAlign: 'center' }} />
+            {tren || <Chu k={kPhu} as="div" className="pin-sub" />}
             <div className="pin-dots">{Array.from({ length: DO_DAI }, (_, i) => <i key={i} className={i < so.length ? 'on' : ''} />)}</div>
             <div className="pin-msg" role="alert" {...ndDau(thongBao === nd('pin.khongKhop') ? 'pin.khongKhop' : 'pin.loiPos')}>{thongBao}</div>
             <div className="pin-pad">

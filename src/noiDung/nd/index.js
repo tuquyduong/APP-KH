@@ -9,9 +9,10 @@ import { KE_HOACH } from './keHoach.js';
 import { TIEN_ICH } from './tienIch.js';
 import { THE_HANG } from './theHang.js';
 import { VI_TIEN } from './viTien.js';
+import { DOI_QUA } from './doiQua.js';
 
 // Mỗi nhóm một tệp, mỗi việc chỉ điền tệp của mình (chat tạo sẵn 11.11.2026 — các việc chạy song song không sửa chung tệp này).
-export const DANH_MUC = [...KHUNG_CHUNG, ...TRANG_CHU, ...MENU, ...DON_HANG, ...TAI_KHOAN, ...KE_HOACH, ...TIEN_ICH, ...THE_HANG, ...VI_TIEN];
+export const DANH_MUC = [...KHUNG_CHUNG, ...TRANG_CHU, ...MENU, ...DON_HANG, ...TAI_KHOAN, ...KE_HOACH, ...TIEN_ICH, ...THE_HANG, ...VI_TIEN, ...DOI_QUA];
 
 /** Trang đích chung của nút (`loai: 'nut'`, như DESTS demo): [mã, tên cho chủ quán]. Màn có nút phải mở được mọi đích trong bảng này. */
 export const DICH = [

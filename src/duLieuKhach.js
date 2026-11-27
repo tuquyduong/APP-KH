@@ -2,7 +2,7 @@
 // Có dữ liệu thì hiện ngay; lấy mới NGẦM khi: màn mở mà bản quá 5 phút, khách quay lại app sau 60 giây, mỗi 5 phút, ngay sau thao tác đổi dữ liệu.
 // Đổi phiên → xoá sạch kho (kết quả của lệnh bay từ phiên cũ bị bỏ). Thanh toán, Theo dõi đơn, Chi tiết đơn KHÔNG đọc kho (luôn lấy mới).
 import { useEffect } from 'react';
-import { layToi, layDiem, layVoucher, layDon, layGoiNap, ngam } from './api.js';
+import { layToi, layDiem, layVoucher, layDon, layGoiNap, layQuaCuaToi, ngam } from './api.js';
 import { taoKho, dungKho } from './kho.js';
 import { dauVet, docChu, cungKhach } from './luuMay.js';
 import { rutTomTat, ghiTomTat, docTomTat, tomTatCuaKhach } from './tomTatLuu.js';
@@ -50,9 +50,12 @@ export const cuaDon = taoCua(() => layDon(1));
 export const CUA_KHACH = [cuaToi, cuaDiem, cuaVoucher, cuaDon];
 // Gói nạp (GET /goi-nap, KH-NAP-1): thông tin CÔNG KHAI của quán — không thuộc CUA_KHACH (không xoá khi đăng xuất); Ưu đãi, Ví, Thanh toán nạp cùng đọc.
 export const cuaGoiNap = taoCua(layGoiNap);
+// Quà của tôi (GET /qua-cua-toi, KH-DOI-1): KHÔNG thuộc CUA_KHACH — mảng đó làm mới ngầm mỗi 5 phút, sẽ gọi cửa này cả khi công tắc `hien.dq` tắt.
+// Chỉ màn Kho quà / Quà của tôi / Phiếu quà đọc (các màn này chỉ vẽ khi công tắc bật); đăng xuất / đổi khách vẫn xoá (xoaKhoKhach).
+export const cuaQuaToi = taoCua(layQuaCuaToi);
 
 export const lamMoi = (ds) => ds.forEach((c) => c.lay());
-export const xoaKhoKhach = () => CUA_KHACH.forEach((c) => c.xoa());
+export const xoaKhoKhach = () => [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa());
 /** Khách quay lại app: kho đã có mà quá 60 giây → lấy lại. */
 export const lamMoiKhiQuayLai = (ds, bay = Date.now()) => ds.forEach((c) => { if (c.kho.lay().dl) c.napNeuCu(GIAY_QUAY_LAI, bay); });
 
