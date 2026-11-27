@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thiết kế Đổi điểm lấy quà · App Tứ Quý Đường (KH-DOI-1)</title>
+<style>
+  :root{ --pink:#F6A8C0; --pink-dark:#C2306A; --pink-deep:#8E1B4C; --ink:#3A2A33; --muted:#8A7380; --cream:#FBF3EE; --line:#EFE2E8; --white:#fff; --forest:#416A43; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system, "Segoe UI", Inter, Roboto, sans-serif; background:var(--cream); color:var(--ink); line-height:1.55; }
+  main{ max-width:960px; margin:0 auto; padding:28px 18px 60px; }
+  h1{ font-size:24px; color:var(--pink-deep); margin:0 0 6px; }
+  .phu{ color:var(--muted); font-size:14px; margin:0 0 22px; }
+  h2{ font-size:18px; color:var(--pink-deep); margin:34px 0 8px; }
+  p{ margin:6px 0; }
+  .the{ background:var(--white); border-radius:16px; padding:16px 18px; box-shadow:0 2px 10px rgba(142,27,76,.07); margin:12px 0; }
+  .luoi{ display:flex; gap:16px; flex-wrap:wrap; }
+  .o{ flex:1 1 260px; max-width:300px; }
+  .o img{ width:100%; border-radius:18px; box-shadow:0 4px 18px rgba(142,27,76,.14); display:block; background:#fff; }
+  .nhan{ font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin:0 0 6px; }
+  .nhan.cu{ color:var(--muted); } .nhan.moi{ color:var(--pink-dark); }
+  .ghi{ font-size:13px; color:var(--muted); margin-top:8px; }
+  .hoi{ border-left:4px solid var(--pink-dark); background:#FFF7FA; }
+  .hoi h3{ margin:0 0 6px; font-size:15px; }
+  .hoi ol{ margin:6px 0 0; padding-left:20px; }
+  .de{ color:var(--forest); font-weight:700; }
+  table{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  td,th{ text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ color:var(--muted); font-weight:600; }
+  code{ background:var(--cream); padding:1px 5px; border-radius:5px; font-size:12.5px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Đổi điểm lấy quà — thiết kế ✅ ĐÃ DUYỆT 26.11</h1>
+  <div class="the" style="border-left:4px solid var(--forest)"><b>Chủ quán chọn 26.11:</b> câu 1a · 2a · 3a · 4a (theo đề xuất). Làm ngay, để tắt tới khi POS gộp DOI-DIEM-1; quà hiện vật đổi trên App → phiếu QR; thứ tự theo POS; nhắc hạn ở Kho quà + Quà của tôi.</div>
+  <p class="phu">KH-DOI-1 · chat App KH · 26.11.2026 · Ảnh chụp từ App thật (main 80efd3c) với POS giả; màn "Đề xuất" dựng bằng chính kiểu chữ, màu của App.
+  App làm theo hợp đồng POS đã hẹn (thư POS 16.11): kho quà, đổi điểm có PIN, quà của tôi.</p>
+
+  <div class="the">
+    <b>Tóm tắt:</b> Khách bấm <b>"Đổi quà"</b> ở ô điểm (Ưu đãi) → mở <b>Kho quà</b> → chọn quà → <b>nhập PIN 4 số</b> → xong.
+    Voucher vào ngay Ví voucher (App tự chọn sẵn khi đặt món). Quà hiện vật thành <b>phiếu có mã QR</b>, khách đưa mã ở quầy để nhận.
+    Mọi tên quà, mô tả, số điểm lấy từ POS — chị cài kho quà ở POS, App chỉ hiện.
+    <p class="ghi">POS sẽ làm phần đổi điểm (DOI-DIEM-1) sau khai trương. App có thể làm trước theo hợp đồng đã hẹn, rồi bật khi POS gộp; trong lúc chờ, quầy vẫn đổi giúp như hôm nay.</p>
+  </div>
+
+  <div class="the hoi">
+    <h3>❓ Câu 1 · Làm khi nào?</h3>
+    <ol type="a">
+      <li><span class="de">Đề xuất:</span> Giao máy làm ngay sau KH-HUY-1, App để <b>tắt</b> tới khi POS gộp DOI-DIEM-1 (chị bật ở /admin). Không phải chờ.</li>
+      <li>Chờ POS làm xong DOI-DIEM-1 rồi mới làm App.</li>
+    </ol>
+  </div>
+  <h2>1. Lối vào — ô Điểm ở Ưu đãi</h2>
+  <div class="luoi">
+    <div class="o"><div class="nhan cu">Hiện tại</div><img src="anh/h1_uudai.webp" alt="Ưu đãi hiện tại"><p class="ghi">Ô điểm chỉ hiện số, bấm không ra gì.</p></div>
+    <div class="o"><div class="nhan moi">Đề xuất</div><img src="anh/d1_uudai.webp" alt="Ưu đãi đề xuất"><p class="ghi">Thêm nút nhỏ <b>"Đổi quà ›"</b> trong ô điểm (cùng kiểu nút "+ Nạp tiền" ở ô Số dư ví). Bấm cả ô cũng mở Kho quà.</p></div>
+  </div>
+
+  <h2>2. Kho quà</h2>
+  <div class="luoi">
+    <div class="o"><div class="nhan moi">Đề xuất (kiểu a)</div><img src="anh/d2_kho.webp" alt="Kho quà"></div>
+    <div class="o"><div class="nhan moi">Kiểu b — quà hiện vật đổi ở quầy</div><img src="anh/d2b_kho_quay.webp" alt="Kho quà kiểu b"></div>
+  </div>
+  <div class="the">
+    <table>
+      <tr><th>Tình huống</th><th>Nút trên thẻ quà</th></tr>
+      <tr><td>Đủ điểm, còn quà</td><td><b>Đổi ngay</b></td></tr>
+      <tr><td>Thiếu điểm</td><td>"Cần thêm N điểm" (xám)</td></tr>
+      <tr><td>Quà hiện vật hết tồn (POS <code>con: false</code>)</td><td>"Tạm hết" — thẻ mờ</td></tr>
+      <tr><td>Đã dùng hết lượt tháng (POS <code>con_luot_thang: 0</code>)</td><td>"Hết lượt tháng này" — thẻ mờ</td></tr>
+      <tr><td>Quà hiện vật</td><td>Chip "Quà tại quầy"</td></tr>
+    </table>
+    <p class="ghi">Trên cùng: số điểm, ô <b>"Quà của tôi"</b> (đếm phiếu chờ nhận), và dải nhắc khi có phiếu sắp hết hạn (POS báo <code>nhac</code> — còn ≤ 3 ngày).</p>
+  </div>
+
+  <div class="the hoi">
+    <h3>❓ Câu 2 · Quà hiện vật (ly cà phê, túi tote…) đổi ở đâu?</h3>
+    <ol type="a">
+      <li><span class="de">Đề xuất:</span> Đổi ngay trên App (có PIN) → khách có phiếu QR, mang tới quầy nhận. POS đã hẹn sẵn cách này.</li>
+      <li>Giữ như chị chọn 11.11: App chỉ hiện quà, nút "Đổi tại quầy" — khách ra quầy nhập PIN mới đổi (ảnh kiểu b).</li>
+    </ol>
+    <p class="ghi">Lý do em đề xuất a: khách đổi lúc rảnh, tới quầy chỉ đưa mã — quầy nhanh hơn, không phải nhập PIN ở quầy.</p>
+  </div>
+  <div class="the hoi">
+    <h3>❓ Câu 3 · Thứ tự quà trong kho</h3>
+    <ol type="a">
+      <li><span class="de">Đề xuất:</span> Đúng thứ tự chị xếp ở POS.</li>
+      <li>Quà khách đủ điểm lên trước, rồi mới theo thứ tự POS.</li>
+    </ol>
+  </div>
+  <h2>3. Nhập PIN rồi đổi</h2>
+  <div class="luoi">
+    <div class="o"><div class="nhan moi">Đề xuất</div><img src="anh/d3_pin.webp" alt="Nhập PIN"><p class="ghi">Dùng lại bảng PIN đang có (như khi trả bằng ví). Ghi rõ tên quà, số điểm trừ, số còn lại. Sai PIN / khoá PIN → hiện nguyên lời POS.</p></div>
+    <div class="o"><div class="nhan moi">Đổi voucher xong</div><img src="anh/d4_xong_vc.webp" alt="Đổi xong voucher"><p class="ghi">Voucher vào Ví voucher ngay. Nút "Đặt món dùng ngay" mở Menu; ở Giỏ voucher đã được chọn sẵn.</p></div>
+  </div>
+
+  <h2>4. Quà hiện vật — phiếu QR và "Quà của tôi"</h2>
+  <div class="luoi">
+    <div class="o"><div class="nhan moi">Phiếu quà</div><img src="anh/d5_phieu_qr.webp" alt="Phiếu quà QR"><p class="ghi">Dùng khung màn "Mã thành viên" (quyết định 11.11): quầy quét mã hoặc tra SĐT để bấm "Đã trao".</p></div>
+    <div class="o"><div class="nhan moi">Quà của tôi</div><img src="anh/d6_qua_toi.webp" alt="Quà của tôi"><p class="ghi">Chờ nhận (sắp hết hạn thì chữ hồng) · Đã nhận · Hết hạn + "đã hoàn N điểm".</p></div>
+    <div class="o"><div class="nhan cu">Lịch sử điểm (không đổi)</div><img src="anh/h2_lichsu.webp" alt="Lịch sử điểm"><p class="ghi">Dòng "Đổi quà: …" và "Hoàn điểm: …" App đã hiện đúng hôm nay — không cần sửa.</p></div>
+  </div>
+
+  <div class="the hoi">
+    <h3>❓ Câu 4 · Nhắc phiếu sắp hết hạn</h3>
+    <ol type="a">
+      <li><span class="de">Đề xuất:</span> Dải nhắc ở đầu Kho quà + chữ hồng trong "Quà của tôi" (như ảnh).</li>
+      <li>Như a, thêm chấm đỏ trên tab Ưu đãi.</li>
+      <li>Như b, thêm dải nhắc ở Trang chủ.</li>
+    </ol>
+  </div>
+  <h2>Trả lời</h2><p>Mỗi câu hỏi nằm ngay dưới ảnh liên quan. Trả lời ngắn kiểu "1a 2a 3a 4a" là đủ (em đề xuất cả 4 câu chọn a). Chữ nào trên màn cũng sửa được ở /admin.</p>
+</main>
+</body>
+</html>
