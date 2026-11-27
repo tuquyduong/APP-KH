@@ -468,6 +468,12 @@ async function trinhDuyet(pw) {
     k('B6 không phiếu → câu danh mục', await doiChu(t, '#quatoi', /chưa có phiếu quà/));
   });
 
+  them('B2 dải nhắc theo `nhac` POS, không theo thứ tự', { quaToi: [QUA_TOI[1], QUA_TOI[0]] }, async (t) => {
+    await mo(t, '/uudai/doi-qua'); await doiChu(t, '#doiqua .dq-cua', /2 chờ nhận/);
+    const nhac = await chu(t, '#doiqua .dq-nhac');
+    k('B2 phiếu đầu KHÔNG nhắc, phiếu sau nhắc → dải nhắc nói phiếu có nhac (Cà phê Muối), không nói Túi tote', /Tặng 1 ly Cà phê Muối/.test(nhac) && !/Túi tote/.test(nhac), nhac);
+  });
+
   them('A1 /kho-qua 401 không đẩy ra đăng nhập', { kho401: true }, async (t) => {
     await mo(t, '/uudai/doi-qua'); await t.waitForTimeout(1200);
     k('A1 /kho-qua 401 → vẫn ở /uudai/doi-qua, token còn, màn báo lỗi + Thử lại', duongDan(t) === '/uudai/doi-qua' && (await t.evaluate(() => localStorage.getItem('kh_token'))) === 'tok-A' && await co(t, '#doiqua .nt-state'), duongDan(t));

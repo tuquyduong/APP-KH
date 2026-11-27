@@ -60,8 +60,9 @@ const coTD = process.argv.includes('--trinh-duyet');
 if (chay('ĐỐI CHỨNG (không đột biến)', [], coTD)) { console.log('ĐỐI CHỨNG ĐỎ — sửa bài thử / bản sao trước'); process.exit(1); }
 let sot = 0;
 for (const [ten, sua] of DS) if (!chay(ten, sua, false)) sot++;
-if (coTD) for (const [ten, sua] of TRINH_DUYET) if (!chay(ten, sua, true)) sot++;
-else console.log(`(bỏ ${TRINH_DUYET.length} đột biến trình duyệt — chạy kèm --trinh-duyet)`);
+if (coTD) {
+  for (const [ten, sua] of TRINH_DUYET) if (!chay(ten, sua, true)) sot++;
+} else console.log(`(bỏ ${TRINH_DUYET.length} đột biến trình duyệt — chạy kèm --trinh-duyet)`);
 fs.rmSync(NHAP, { recursive: true, force: true });
 console.log(sot ? `SÓT ${sot}` : 'TẤT CẢ ĐỘT BIẾN BỊ BẮT');
 process.exit(sot ? 1 : 0);
