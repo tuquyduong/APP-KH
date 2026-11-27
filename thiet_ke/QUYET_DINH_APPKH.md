@@ -4,6 +4,11 @@
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
 ## 26.11.2026
+- **Đổi điểm lấy quà (KH-DOI-1) — chủ quán DUYỆT thiết kế** (Artifact https://claude.ai/artifact/6Wpx3HESda2GE9uHEm43wf, "đồng ý với các đề xuất" = 1a 2a 3a 4a):
+  làm ngay, công tắc /admin `hien.dq` mặc định TẮT tới khi POS gộp DOI-DIEM-1; quà HIỆN VẬT đổi TRÊN App (có PIN) → phiếu QR nhận ở quầy (THAY quyết định 11.11
+  "Đổi tại quầy"); thứ tự quà = thứ tự POS; nhắc phiếu sắp hết hạn = dải đầu Kho quà + chữ hồng ở Quà của tôi (không chấm đỏ tab, không dải Trang chủ).
+- **Trang hỏi ý chủ quán:** đặt câu hỏi / lựa chọn NGAY DƯỚI ảnh liên quan, không dồn cuối trang (chủ quán dặn 26.11).
+- **KH-HUY-1** (đơn bị quán huỷ: lý do + "Đã hoàn … vào ví của bạn") gộp 27.11; chữ "ví" thay "tài khoản" của hợp đồng cho khớp App (sửa được ở /admin).
 - **Thử tay KH-NHANH-2 (D6) HOÃN** (chủ quán 26.11): POS đang xây, chưa nhập / chọn hàng được → thử khi POS bán hàng được (chat nhắc).
 
 ## 19.11.2026

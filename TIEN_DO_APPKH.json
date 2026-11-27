@@ -1,8 +1,8 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 67,
-  "cap_nhat": "2026-11-26",
+  "phien_ban_so": 68,
+  "cap_nhat": "2026-11-27",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
     {
@@ -272,16 +272,17 @@
       "ma": "KH-HUY-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "dang_mo",
+      "trang_thai": "xong",
       "phu_thuoc": [
         "KH-NAP-1",
         "KH-NHANH-2",
         "POS HUY-1 (hop dong v14)"
       ],
       "ten": "Don bi quan huy (hop dong v14 HUY-1): Lich su don + Theo doi don + Chi tiet don hien \"Da hoan <so> vao tai khoan\" (hoan_vao_tai_khoan) va ly do (ly_do_huy); lam moi so du vi",
-      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop | 15.11 lam SAU KH-THE-3 (cung TheoDoiDon.jsx) | 16.11 mo SAU KH-NAP-1 (cung TheoDoiDon.jsx) | 17.11 KH-NAP-1 da gop (PR #44) -> mo duoc | 26.11 chu quan chon lam song song (KH-HUY-1 cho may; chat dung thiet ke KH-DOI-1; KH-SUA-2 mo SAU khi HUY-1 gop) -> MO (Sonnet, khong cho duyet ke hoach): DonHuy.jsx dung o Theo doi don + Chi tiet don, dong \"Da hoan\" o Lich su don; chu POS hien nguyen; phieu o viec/KH-HUY-1/",
+      "ghi_chu": "14.11 chat phat hien: POS HUY-1 (v14, 05.11) da gop nhung App chua co viec nao doc hai truong nay; mo sau khi THE-2 (sua TheoDoiDon) va QC-1 (chep hop dong v16) gop | 15.11 lam SAU KH-THE-3 (cung TheoDoiDon.jsx) | 16.11 mo SAU KH-NAP-1 (cung TheoDoiDon.jsx) | 17.11 KH-NAP-1 da gop (PR #44) -> mo duoc | 26.11 chu quan chon lam song song (KH-HUY-1 cho may; chat dung thiet ke KH-DOI-1; KH-SUA-2 mo SAU khi HUY-1 gop) -> MO (Sonnet, khong cho duyet ke hoach): DonHuy.jsx dung o Theo doi don + Chi tiet don, dong \"Da hoan\" o Lich su don; chu POS hien nguyen; phieu o viec/KH-HUY-1/ | may xong 26.11 dau 9b55ada (HEAD DA KIEM 6033c15; thu_KHHUY1 99/0, 29 ca khong trinh duyet; dot bien 16/16; /ra-soat DAT) | 27.11 chat soat cuoi DAT: cong tinh + chay (base 6111b5d; A16 chi canh bao 20 != 29 ca), --day-du Chromium 69/0 (goc 67/1 - thu_KHBAO1 chap chon khi may ban, chay rieng 106/0), so anh: khac chi o 9 anh huy moi + dong ho dem nguoc / nut gat / vet sang | Gop PR #46 (9bc3c31) | thu tay C6 cung dot D6 (khi POS ban hang duoc)",
       "ngay": "2026-11-26",
-      "han": "2026-11-28"
+      "han": "2026-11-28",
+      "commit": "9bc3c31"
     },
     {
       "ma": "KH-THE-1",
@@ -368,8 +369,8 @@
         "KH-NHANH-2"
       ],
       "ngay": "2026-11-16",
-      "ten": "Gom loi nho sau ADMIN-1 / THE-3 / QC-1: (1) doi ten le o /admin mat goi y qua (kh.leQua khop TEN) + doi ten 1 trong 3 ngay Tet -> Tet hien 2 lan (holList gop TEN) -> khop theo ma; (2) nut xoa dong gio (GioHang.jsx cart-xoa) gan data-nd; (3) public/sw.js bo /kiemkhop; (4) quangCao.js viet \\uFE0F / \\u200D; (5) Chao mung: the khong ve duoc + han POS khong doc duoc -> chu han hien 2 lan; (6) nhan admin ud.the.chipDb \"(chua co hang)\" sai nghia; (7) chu thich dau KiemKhop.jsx; (8) VC-2: ca thu \"da bao gia -> thoi hoi POS -> khong o nao tich\" + dot bien dieu kien hoi; (9) VC-2: GioHang.jsx xoa bgCu khi bao gia loi (thoang hien tich / cau do cu luc cho); (10) App loai ma dang o o ma khoi vouchers (chong giam 2 lan); (11) NAP-1: tat hien.nap.dn o /admin thi khong cau \"da xong\" (nhu hien.the.cm) — xem lai cung the; (12) NHANH-2: bao gia chua co choMs (4G treo -> Gio khoa + vong mai) -> dat han cho; (13) NHANH-2: vong loe khi xoa mon cuoi trong 600 ms; (14) NHANH-2: CUA_NGAM / ngam() trong api.js -> chuyen ve heThong.js / giaHan.js; (15) POS 19.11: ma o o ma trung voucher -> POS bao o dong giam loai ma_giam (khong co dong voucher) -> o voucher do phai hien \"dang dung\" (trangThaiVoucher hom nay ra \"cho\") + ca thu; (16) ca thu expires_at dang CHI NGAY YYYY-MM-DD (bai thu VC-2 dung dang co gio)",
-      "ghi_chu": "16.11 chat gom tu Phat hien ADMIN-1, THE-3, soat cuoi QC-1 / THE-3. Chu quan: tam DUNG doi ten ngay le / Tet o /admin toi khi xong viec nay | 17.11 them (8)-(11) tu soat cuoi KH-VC-2 / KH-NAP-1 (chat de xuat gom vao day; VC-2 da gop) | 26.11 them (12)-(14) tu soat KH-NHANH-2 + (15)(16) tu thu POS 19.11 (TRA_LOI_POS_19112026)"
+      "ten": "Gom loi nho sau ADMIN-1 / THE-3 / QC-1: (1) doi ten le o /admin mat goi y qua (kh.leQua khop TEN) + doi ten 1 trong 3 ngay Tet -> Tet hien 2 lan (holList gop TEN) -> khop theo ma; (2) nut xoa dong gio (GioHang.jsx cart-xoa) gan data-nd; (3) public/sw.js bo /kiemkhop; (4) quangCao.js viet \\uFE0F / \\u200D; (5) Chao mung: the khong ve duoc + han POS khong doc duoc -> chu han hien 2 lan; (6) nhan admin ud.the.chipDb \"(chua co hang)\" sai nghia; (7) chu thich dau KiemKhop.jsx; (8) VC-2: ca thu \"da bao gia -> thoi hoi POS -> khong o nao tich\" + dot bien dieu kien hoi; (9) VC-2: GioHang.jsx xoa bgCu khi bao gia loi (thoang hien tich / cau do cu luc cho); (10) App loai ma dang o o ma khoi vouchers (chong giam 2 lan); (11) NAP-1: tat hien.nap.dn o /admin thi khong cau \"da xong\" (nhu hien.the.cm) — xem lai cung the; (12) NHANH-2: bao gia chua co choMs (4G treo -> Gio khoa + vong mai) -> dat han cho; (13) NHANH-2: vong loe khi xoa mon cuoi trong 600 ms; (14) NHANH-2: CUA_NGAM / ngam() trong api.js -> chuyen ve heThong.js / giaHan.js; (15) POS 19.11: ma o o ma trung voucher -> POS bao o dong giam loai ma_giam (khong co dong voucher) -> o voucher do phai hien \"dang dung\" (trangThaiVoucher hom nay ra \"cho\") + ca thu; (16) ca thu expires_at dang CHI NGAY YYYY-MM-DD (bai thu VC-2 dung dang co gio); (17) HUY-1: nut \"Xem vi\" o Theo doi don sat the cac buoc ben duoi (thieu khoang cach); (18) HUY-1: bieu tuong DonHuy co 18 (check) vs 16 (warning) - thong nhat; gop 2 bieu thuc ba ngoi lap o datDon.js docDon",
+      "ghi_chu": "16.11 chat gom tu Phat hien ADMIN-1, THE-3, soat cuoi QC-1 / THE-3. Chu quan: tam DUNG doi ten ngay le / Tet o /admin toi khi xong viec nay | 17.11 them (8)-(11) tu soat cuoi KH-VC-2 / KH-NAP-1 (chat de xuat gom vao day; VC-2 da gop) | 26.11 them (12)-(14) tu soat KH-NHANH-2 + (15)(16) tu thu POS 19.11 (TRA_LOI_POS_19112026) | 27.11 them (17)(18) tu soat cuoi KH-HUY-1; mo SAU khi KH-DOI-1 gop (cung dung UuDai / api.js)"
     },
     {
       "ma": "KH-UI-4",
@@ -869,13 +870,17 @@
       "ma": "KH-DOI-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "dang_mo",
       "phu_thuoc": [
-        "POS DOI-DIEM-1 (hop dong DA HEN — thu TRA_LOI_POS_16112026_DOIDIEM; v18 khi POS gop)",
-        "thiet ke chu quan duyet"
+        "KH-NAP-1",
+        "KH-VC-2",
+        "KH-HUY-1",
+        "POS DOI-DIEM-1 (hop dong da hen 16.11, chay that sau khai truong)"
       ],
       "ten": "Doi diem lay qua: Uu dai › Diem -> man \"Doi qua bang diem\" theo demo; KHO QUA tu POS (GET /kho-qua), POST /doi-diem -> phieu qua o POS; \"Qua cua toi\" (GET /qua-cua-toi): voucher dung khi dat mon, qua hien vat co QR de quay quet \"Da trao\"",
-      "ghi_chu": "11.11 chu quan: kho qua lay tu POS, doi qua thi 2 he thong thong nhau (mot phieu qua o POS, quay + App cung doc / ghi); het han chua dung: de nghi hoan diem (chu quan chon trong Cai dat) | 11.11 POS tra loi (DOI-DIEM-1, nang /loyalty/redeem dang co thanh MOT cach doi chung App + quay). Chu quan 11.11: voucher doi o App hoac quay; QUA HIEN VAT doi + nhan o QUAY (khach nhap PIN) -> App VAN HIEN qua hien vat trong kho qua, nut \"Doi tai quay\" (bam -> huong dan \"Den quay, nhap PIN de doi\"), thieu diem van \"Can them N diem\"; het han chua dung -> hoan diem (mac dinh). QR phieu qua dung khung man Ma thanh vien de quet (QUET-1) | 16.11 chu quan hoi \"chua thay doi diem sang voucher hoac qua\" -> chon giu lich POS (DOI-DIEM-1 cuoi danh sach, sau khai truong) + xin POS viet hop dong TRUOC de App lam song song (thu YEU_CAU_APPKH_GUI_POS_16112026 muc 2); co hop dong -> chat dung trang thiet ke -> chu quan duyet -> mo. Hom nay quay doi giup o man Khach hang POS; voucher doi ra hien o Vi voucher App (nguon doi_diem) | 16.11 POS viet hop dong DA HEN: GET /kho-qua, POST /doi-diem { ma_qua, khoa_gui, pin }, GET /qua-cua-toi, /diem dong redeem / hoan_qua | 17.11 chu quan \"theo POS\": lam theo hop dong da hen, CO hoi PIN 4 so cua khach khi doi diem; chat dung trang thiet ke -> chu quan duyet -> mo"
+      "ghi_chu": "11.11 chu quan: kho qua lay tu POS, doi qua thi 2 he thong thong nhau (mot phieu qua o POS, quay + App cung doc / ghi); het han chua dung: de nghi hoan diem (chu quan chon trong Cai dat) | 11.11 POS tra loi (DOI-DIEM-1, nang /loyalty/redeem dang co thanh MOT cach doi chung App + quay). Chu quan 11.11: voucher doi o App hoac quay; QUA HIEN VAT doi + nhan o QUAY (khach nhap PIN) -> App VAN HIEN qua hien vat trong kho qua, nut \"Doi tai quay\" (bam -> huong dan \"Den quay, nhap PIN de doi\"), thieu diem van \"Can them N diem\"; het han chua dung -> hoan diem (mac dinh). QR phieu qua dung khung man Ma thanh vien de quet (QUET-1) | 16.11 chu quan hoi \"chua thay doi diem sang voucher hoac qua\" -> chon giu lich POS (DOI-DIEM-1 cuoi danh sach, sau khai truong) + xin POS viet hop dong TRUOC de App lam song song (thu YEU_CAU_APPKH_GUI_POS_16112026 muc 2); co hop dong -> chat dung trang thiet ke -> chu quan duyet -> mo. Hom nay quay doi giup o man Khach hang POS; voucher doi ra hien o Vi voucher App (nguon doi_diem) | 16.11 POS viet hop dong DA HEN: GET /kho-qua, POST /doi-diem { ma_qua, khoa_gui, pin }, GET /qua-cua-toi, /diem dong redeem / hoan_qua | 17.11 chu quan \"theo POS\": lam theo hop dong da hen, CO hoi PIN 4 so cua khach khi doi diem; chat dung trang thiet ke -> chu quan duyet -> mo | 26.11 chu quan DUYET thiet ke (Artifact 6Wpx3HESda2GE9uHEm43wf): 1a lam ngay de TAT (hien.dq mac dinh tat), 2a qua hien vat doi tren App -> phieu QR (thay 11.11), 3a thu tu POS, 4a nhac han o Kho qua + Qua cua toi | 27.11 MO (Opus, khong cho duyet ke hoach); phieu + ban_thiet_ke.html + mau_de_xuat.js + anh o viec/KH-DOI-1/",
+      "ngay": "2026-11-27",
+      "han": "2026-12-03"
     },
     {
       "ma": "KH-QUET-2",
