@@ -1,0 +1,27 @@
+# KH-HUY-1 — bằng chứng ĐỎ trên code gốc (cây 53842bd = PHIEU, chưa sửa src/, chép bài thử mới vào) — 26.11.2026
+
+## node cong_cu/thu_KHHUY1.js (có Chromium) — dòng tổng
+49 đạt · 41 hỏng
+(đỏ ở mọi ca B1–B6 trong trình duyệt: không hộp "Quán đã huỷ đơn · …" / "Đã hoàn … vào ví của bạn", không nút "Xem ví", thẻ Lịch sử không có dòng "Đã hoàn",
+ Chi tiết đơn huỷ không làm mới /toi. Các ca (4)(4b)(5) — khách tự huỷ / POS cũ / đơn chưa huỷ — xanh trên gốc có chủ đích: đối chứng "không chặn oan", K5)
+
+## KHONG_TRINH_DUYET=1 node cong_cu/thu_KHHUY1.js
+2 đạt · 18 hỏng
+  ✗ nạp DonHuy.jsx (chưa có), docDon.hoanVaoTaiKhoan / lyDoHuy (chưa có), soHoan / lyDoHuy (chưa có), canTuPos don_huy_v14 / don_ds_huy_v14 (chưa có),
+    danh mục td.huy.* / dh.huy.hoan / hien.don.huy (chưa có), nối dây TheoDoiDon / Don.jsx / App.jsx (chưa có)
+
+## Sau vá (cùng bài thử)
+có Chromium: 99 đạt · 0 hỏng (17 giây)
+KHONG_TRINH_DUYET=1: 29 đạt · 0 hỏng
+
+SỐ CA cong_cu/thu_KHHUY1.js: 29
+
+## Bài CŨ đổi theo chỗ mới (C2 — mỗi bài thêm 1 ca ĐỎ trên gốc, kể cả KHONG_TRINH_DUYET=1; không dùng `## Bài thử cũ sửa`)
+npm test lần đầu (trước khi sửa hai bài này) đỏ: thu_KHMUA1b 1 ca (hai mục canTuPos v14 còn `moi`) và thu_KHND3e (khoá td.huy.* / hien.don.huy ngoài nhóm A1, DonHuy.jsx chưa trong danh sách tệp A1).
+Sửa: MUA1b thêm 'HUY-1' vào danh sách việc POS được phép `moi` + ca mới "A2 KH-HUY-1: don_huy_v14 / don_ds_huy_v14 khai moi";
+      ND3e thêm DonHuy.jsx vào A1, `hien.don` vào NHOM + dò khoá + ca mới "A1 KH-HUY-1: DonHuy.jsx dùng đủ td.huy.* / hien.don.huy khai ở donHang.js".
+- thu_KHMUA1b.js trên GỐC (KHONG_TRINH_DUYET=1): 51 đạt · 1 hỏng (ca "A2 KH-HUY-1 …" đỏ) → sau vá 52 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHMUA1b.js: 52
+- thu_KHND3e.js trên GỐC (KHONG_TRINH_DUYET=1): ca "A1 KH-HUY-1 …" đỏ (cùng hai ca B1 datDon.js vốn đỏ ở bản sao không có .git) → sau vá 23 đạt · 0 hỏng
+SỐ CA cong_cu/thu_KHND3e.js: 23
+(Lưu ý: kho clone nông (50 commit) làm hai ca B1 của ND3e đỏ giả — `git fetch --unshallow` đã sửa, không đổi file.)

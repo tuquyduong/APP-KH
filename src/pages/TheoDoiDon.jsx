@@ -5,6 +5,7 @@ import { dongNapCuaDon } from '../viTien.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
 import { nd, ndAnh, ndDau, ndHien, ndPhan } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
+import DonHuy from '../components/DonHuy.jsx';
 import { bayGio } from '../bayGio.js';
 import { banGhiCuaDon, buocTienTrinh, conLaiQR, daThanhToan, hangCuaDon, hanMoiThe, hetHanTuChu, huyDon, laDonChiNap, laDonChiThe, theCuaBanGhi, xongChua } from '../datDon.js';
 import { dungGia } from '../heThong.js';
@@ -166,6 +167,7 @@ export default function TheoDoiDon({ ma, lui, daTra, daHuy, veThanhToan, soMonGi
       {!don && (loi ? <KhungLoi loi={loi} thuLai={taiLai} /> : <div className="khung-tai" aria-busy="true" />)}
       {don && (
         <>
+          {tt === 'da_huy' && <DonHuy lyDo={don.lyDoHuy} hoan={don.hoanVaoTaiKhoan} moVi={moVi} />}
           {choTra && don.qr && <TraQR qr={don.qr} soTra={soTra} soHd={don.soHd} taoMaMoi={taoMoi} dang={dangHuy} />}
           {choTra && viQr && <div className="care-disclaimer qr-chu qr-vi" {...ndDau('td.vi.giu')}>{ndPhan('td.vi.giu', { giu: <b key="giu" {...ndDau('td.tien')}>{dinhDangGia(tra.giu_vi)}</b>, qr: <b key="qr" {...ndDau('td.tien')}>{dinhDangGia(tra.con_lai)}</b> })}</div>}
           {(don.cauTienVe || don.tienVeChoDoiSoat) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau(don.cauTienVe ? 'td.cauTienVe' : 'td.tienVe')}>{don.cauTienVe || nd('td.tienVe')}</div></div>}

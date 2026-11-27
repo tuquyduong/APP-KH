@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { layDon, layChiTietDon } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dungCua, cuaDon } from '../duLieuKhach.js';
+import { dungCua, cuaDon, cuaToi, lamMoi } from '../duLieuKhach.js';
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
-import { nd, ndDau } from '../noiDung/nd.js';
+import { nd, ndDau, ndHien } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
+import DonHuy from '../components/DonHuy.jsx';
 import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai, { KhungLoi } from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import HoaDonKhach from '../components/HoaDonKhach.jsx';
-import { cauTienVe, docHoaDon, soDon } from '../hoaDon.js';
+import { cauTienVe, docHoaDon, lyDoHuy, soDon, soHoan } from '../hoaDon.js';
 import { tachBieuTuong } from '../quangCao.js';
 
 // Lịch sử đơn theo demo (orderhistory). Danh sách `/don` chưa có tên món → không dòng "items"; nút "Đặt lại" (KH-MUA-1, chỉ khi App truyền
@@ -23,8 +24,11 @@ function NhanDon({ don }) {
   return null;
 }
 
-export function ChiTietDon({ ma, lui }) {
+export function ChiTietDon({ ma, lui, moVi }) {
   const tai = dungTai(useCallback(() => layChiTietDon(ma), [ma]));
+  // Đơn quán huỷ đã hoàn vào ví: làm mới số dư ngầm MỘT lần khi biết số hoàn (ô Số dư ở Ưu đãi / Tài khoản đúng ngay)
+  const hoan = tai.dl && tai.dl.don && tai.dl.don.tien_trinh === 'da_huy' ? soHoan(tai.dl.don) : null;
+  useEffect(() => { if (hoan > 0) lamMoi([cuaToi]); }, [hoan]);
   return (
     <Man id="orderdetail">
       <DauManCon tieuDe={tai.dl && tai.dl.don ? nd('dh.ct.tieuDe', { so: soDon(tai.dl.don.so_hd, tai.dl.don.ma || ma) }) : nd('dh.ct.tieuDe.cho')} lui={lui} />
@@ -35,6 +39,7 @@ export function ChiTietDon({ ma, lui }) {
               <div><div className="code" {...ndDau('dh.so')}>{soDon(don.so_hd, don.ma || ma)}</div><div className="date" {...ndDau('dh.so')}>{dinhDangNgay(don.ngay)}</div></div>
               <NhanDon don={don} />
             </div>
+            {don.tien_trinh === 'da_huy' && <DonHuy lyDo={lyDoHuy(don)} hoan={soHoan(don)} moVi={moVi} />}
             {cauTienVe(don) && <div className="nt-state" role="alert"><Ico ten="warning" s={16} /><div {...ndDau('dh.cauTienVe')}>{cauTienVe(don)}</div></div>}
             {docHoaDon(don).length > 0 ? <HoaDonKhach don={don} /> : <>
               {don.mon.map((m, i) => (
@@ -94,6 +99,7 @@ export default function LichSuDon({ chonDon, lui, datLai }) {
             <NhanDon don={d} />
           </div>
           <div className="bottom"><div className="total" {...ndDau('dh.tien')}>{dinhDangGia(d.tong)}</div>{datLai && <Chu k="dh.datLai" as="button" type="button" className="reorder-btn" onClick={(e) => { e.stopPropagation(); datLai(d.ma); }} />}</div>
+          {d.tien_trinh === 'da_huy' && soHoan(d) > 0 && ndHien('hien.don.huy') && <div className="date" {...ndDau('dh.huy.hoan')}>{nd('dh.huy.hoan', { so: dinhDangGia(soHoan(d)) })}</div>}
         </div>
       ))}
       {dang && <div className="khung-tai" aria-busy="true" />}

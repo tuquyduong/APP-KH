@@ -21,9 +21,10 @@ const nap = async (f) => { try { return await import(pathToFileURL(path.join(GOC
 
 // Tệp A1 của phiếu: chữ khách đọc đã chuyển hết vào danh mục.
 const A1 = ['src/pages/ThanhToan.jsx', 'src/pages/TheoDoiDon.jsx', 'src/pages/Don.jsx', 'src/components/PinSheet.jsx', 'src/components/TheQR.jsx', 'src/components/BaoDonXong.jsx',
-  'src/components/HoaDonKhach.jsx', 'src/components/TrangTai.jsx', 'src/baoDonXong.js', 'src/datDon.js', 'src/pages/GioHang.jsx'];
+  'src/components/HoaDonKhach.jsx', 'src/components/TrangTai.jsx', 'src/baoDonXong.js', 'src/datDon.js', 'src/pages/GioHang.jsx',
+  'src/components/DonHuy.jsx']; // KH-HUY-1: khối đơn quán huỷ (td.huy.*, hien.don.huy)
 // KH-VC-2: nhóm gio.vc.* / gio.ma.* (mục voucher + tiêu đề ô mã ở Giỏ hàng, man "Giỏ hàng") khai ở donHang.js theo phiếu B6 — các gio.* khác vẫn ở menu.js.
-const NHOM = /^(tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio\.vc|gio\.ma)\.[\w.]+$/;
+const NHOM = /^(tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio\.vc|gio\.ma|hien\.don)\.[\w.]+$/;
 // Chữ mặc định phải y hệt chữ đang chạy trước việc này (chép từ bản gốc fe752c3).
 const GOC_CHU = {
   'tt.tieuDe': 'Thanh toán', 'tt.phu': 'Chọn cách nhận hàng & trả tiền', 'tt.nhan.giao.phu': 'Giao qua Ahamove · Sắp có', 'tt.vi.nhan': 'Trừ từ số dư ví',
@@ -53,8 +54,9 @@ const GOC_CHU = {
   const du = A1.filter((f) => H.demChuCung(docTho(f)) > 0);
   k('A1 tệp A1 hết chữ tiếng Việt viết thẳng (đếm chữ cứng = 0, không ngoại lệ)', du.length === 0, du.map((f) => `${f}=${H.demChuCung(docTho(f))}`).join(', '));
   const khoaDung = new Set(), khoaLa = [];
-  for (const f of A1) for (const m of doc(f).matchAll(/['"]((?:tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio)\.[\w.]+)['"]/g)) { khoaDung.add(m[1]); if (!theo.has(m[1])) khoaLa.push(`${f}:${m[1]}`); }
+  for (const f of A1) for (const m of doc(f).matchAll(/['"]((?:tt|td|dh|hd|pin|qr|bao|khung|giam|loi|gio|hien\.don)\.[\w.]+)['"]/g)) { khoaDung.add(m[1]); if (!theo.has(m[1])) khoaLa.push(`${f}:${m[1]}`); }
   k('A1 mọi khoá dùng trong tệp A1 có trong danh mục', khoaDung.size >= 60 && khoaLa.length === 0, `${khoaDung.size} khoá · lạ: ${khoaLa.join(', ')}`);
+  k('A1 KH-HUY-1: DonHuy.jsx dùng đủ td.huy.lyDo / hoan / xemVi / nhan + công tắc hien.don.huy, đều khai ở donHang.js', ['td.huy.lyDo', 'td.huy.hoan', 'td.huy.xemVi', 'td.huy.nhan', 'hien.don.huy'].every((x) => DH.some((m) => m.khoa === x) && new RegExp(`['"]${x.replace(/\./g, '\\.')}['"]`).test(doc('src/components/DonHuy.jsx'))));
   const thua = DH.map((m) => m.khoa).filter((x) => !khoaDung.has(x));
   k('A1 không khoá thừa: mỗi khoá khai đều có chỗ dùng', DH.length > 0 && thua.length === 0, thua.join(', '));
   const KHOA = DH.filter((m) => m.khoaBoi);

@@ -4,7 +4,7 @@
 import { DAT_ONLINE } from './noiDung/caiDat.js';
 import { baoGiaGio, datDonApp, huyDonApp, layChiTietDon } from './api.js';
 import { mocTuChuoi } from './bayGio.js';
-import { cauTienVe } from './hoaDon.js';
+import { cauTienVe, soHoan, lyDoHuy } from './hoaDon.js';
 import { nd } from './noiDung/nd.js';
 import { laThe, laNap, coDoUong } from './gio.js';
 
@@ -92,6 +92,8 @@ export function docDon(r) {
     thanhToan: d.thanh_toan == null ? null : d.thanh_toan, tienVeChoDoiSoat: d.tien_ve_cho_doi_soat === true, mon,
     cachTra: d.cach_tra === undefined ? undefined : CACH_TRA.includes(d.cach_tra) ? d.cach_tra : null,
     giuVi: so(d.giu_vi) ? d.giu_vi : null, conLai: so(d.con_lai) ? d.con_lai : null,
+    // v14: chỉ đọc khi quán huỷ (da_huy); đơn khác mang trường lạ → null
+    hoanVaoTaiKhoan: d.tien_trinh === 'da_huy' ? soHoan(d) : null, lyDoHuy: d.tien_trinh === 'da_huy' ? lyDoHuy(d) : null,
   };
 }
 
