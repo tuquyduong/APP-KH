@@ -55,6 +55,8 @@ function chay(ten, sua, trinhDuyet) {
 }
 
 const coTD = process.argv.includes('--trinh-duyet');
+// Đối chứng: bản sao KHÔNG đột biến phải XANH — không thì mọi "bắt được" ở dưới vô nghĩa (lần đầu chạy: bản sao hỏng sẵn 1 ca, mọi đột biến "49 đạt · 2 hỏng").
+if (chay('ĐỐI CHỨNG (không đột biến)', [], coTD)) { console.log('ĐỐI CHỨNG ĐỎ — sửa bài thử / bản sao trước'); process.exit(1); }
 let sot = 0;
 for (const [ten, sua] of DS) if (!chay(ten, sua, false)) sot++;
 if (coTD) for (const [ten, sua] of TRINH_DUYET) if (!chay(ten, sua, true)) sot++;
