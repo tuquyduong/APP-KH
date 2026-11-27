@@ -351,7 +351,7 @@ async function trinhDuyet(pw) {
       k(`C1 Kho quà ${w}px không tràn ngang`, !(await tran(t)));
     }
     await t.setViewportSize({ width: 390, height: 844 });
-    await t.locator('#doiqua .dq-the').nth(4).locator('.dq-doi').click({ force: true });
+    await t.locator('#doiqua .dq-the').nth(4).locator('.dq-doi').evaluate((e) => e.click()); // không bấm theo toạ độ (thẻ có thể nằm dưới thanh tab)
     await t.waitForTimeout(200);
     k('B3 thiếu điểm: bấm nút không mở bảng PIN', !(await co(t, '.pin-sheet')));
     await t.locator('#doiqua .dq-cua').click();
