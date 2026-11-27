@@ -177,6 +177,35 @@ const QUA_TOI = [
     k("B1 App: công tắc tắt mà mở thẳng màn đổi quà → về /uudai", /ndHien\('hien\.dq'\)/.test(app));
   });
 
+  await thu('K8 đã hẹn', async () => {
+    // Chủ quán 27.11 (Q1, chọn C có sửa): bộ kiểm K8 nhận 3 cửa ĐÃ HẸN viết thẳng trong hằng DA_HEN_POS; K8d đỏ khi cửa đã hẹn đã vào hợp đồng (nhắc gỡ).
+    // Chạy BỘ KIỂM THẬT trên bản sao tạm KHÔNG có cong_cu/thu_*.js (chỉ phần tĩnh chạy — không đệ quy), đọc dòng K8 / K8d.
+    const kt = docTho('kiem_tra_truoc_khi_giao.js');
+    const hang = /const DA_HEN_POS = \[([^\]]*)\]/.exec(kt);
+    k("K8 DA_HEN_POS viết thẳng ĐÚNG 3 cửa 'GET /kho-qua', 'POST /doi-diem', 'GET /qua-cua-toi' (không đọc canTuPos.js)",
+      !!hang && bang([...hang[1].matchAll(/'([^']*)'/g)].map((m) => m[1]), ['GET /kho-qua', 'POST /doi-diem', 'GET /qua-cua-toi']) && !/canTuPos/.test(boChuThich(kt)), hang && hang[1]);
+    const { spawnSync } = require('child_process');
+    const os = require('os');
+    const chayKiem = (sua = []) => {
+      const tam = fs.mkdtempSync(path.join(os.tmpdir(), 'k8-kh-doi-1-'));
+      try {
+        for (const d of ['kiem_tra_truoc_khi_giao.js', 'package.json', 'package-lock.json', 'index.html', 'src', 'thiet_ke', 'public', 'cong_cu']) if (fs.existsSync(path.join(GOC, d))) fs.cpSync(path.join(GOC, d), path.join(tam, d), { recursive: true });
+        for (const f of fs.readdirSync(path.join(tam, 'cong_cu'))) if (/^thu_.*\.js$/.test(f)) fs.rmSync(path.join(tam, 'cong_cu', f));
+        fs.symlinkSync(path.join(GOC, 'node_modules'), path.join(tam, 'node_modules'));
+        for (const [tep, tu, den] of sua) { const f = path.join(tam, tep), s = fs.readFileSync(f, 'utf8'); if (!s.includes(tu)) return `KHÔNG thấy chỗ sửa trong ${tep}`; fs.writeFileSync(f, s.replace(tu, den)); }
+        return spawnSync(process.execPath, ['kiem_tra_truoc_khi_giao.js'], { cwd: tam, encoding: 'utf8', timeout: 100000 }).stdout || '';
+      } finally { fs.rmSync(tam, { recursive: true, force: true }); }
+    };
+    const dong = (ra, ma) => ra.split('\n').find((d) => new RegExp(`[✓✗] ${ma} `).test(d)) || '';
+    const r0 = chayKiem();
+    k('K8 cây hiện tại: ✓ K8 (3 cửa đã hẹn được nhận)', /✓ K8 mọi lời gọi/.test(dong(r0, 'K8')), dong(r0, 'K8'));
+    k('K8d cây hiện tại: ✓ K8d (chưa cửa đã hẹn nào vào hợp đồng)', /^\s*✓ K8d /.test(dong(r0, 'K8d')), dong(r0, 'K8d') || 'không có dòng K8d');
+    const r1 = chayKiem([['src/api.js', "export const layKhoQua = () => goi('GET', '/kho-qua');", "export const layKhoQua = () => goi('GET', '/kho-qua');\nexport const layCuaLa = () => goi('GET', '/cua-la');"]]);
+    k('K8 cửa lạ trong api.js (không hợp đồng, không DA_HEN_POS) → vẫn ✗ K8, nêu tên cửa', /✗ K8 mọi lời gọi.*GET \/cua-la/.test(dong(r1, 'K8')) && !/kho-qua|doi-diem|qua-cua-toi/.test(dong(r1, 'K8')), dong(r1, 'K8'));
+    const r2 = chayKiem([['thiet_ke/HOP_DONG_API_KH.md', '"cua": [', '"cua": [\n    { "pt": "GET", "duong": "/kho-qua" },']]);
+    k('K8d cửa đã hẹn đã vào hợp đồng → ✗ K8d nhắc gỡ khỏi DA_HEN_POS', /✗ K8d .*GET \/kho-qua/.test(dong(r2, 'K8d')), dong(r2, 'K8d') || r2.split('\n').find((d) => /KHÔNG thấy/.test(d)) || 'không có dòng K8d');
+  });
+
   console.log('Phần 2 — App thật trong Chromium');
   if (process.env.KHONG_TRINH_DUYET === '1') console.log('  BỎ QUA: KHONG_TRINH_DUYET=1 — các ca trong trình duyệt không chạy ở đây');
   else {
