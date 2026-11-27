@@ -16,6 +16,28 @@
 ## Bước 4 — bài thử đỏ trước
 - `cong_cu/thu_KHDOI1.js` (mới) — chạy trên bản sao sạch (code gốc + bài thử) ở nháp: xem `bang_chung_do.txt`.
 
+## Bước 5–6 — sửa, kiểm (27.11)
+- `thu_KHDOI1.js`: 51 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 131 đạt · 0 hỏng (Chromium 360 / 390 / 430). Đỏ trên gốc: `bang_chung_do.txt`.
+- Đột biến tay nhóm không trình duyệt: đối chứng XANH (51/0), 11/11 BẮT ĐƯỢC.
+- `npm test`: còn ĐỎ đúng MỘT phép — `✗ K8 mọi lời gọi src/api.js có trong hợp đồng — GET /kho-qua, GET /qua-cua-toi, POST /doi-diem` → xem `## Câu hỏi`.
+  (Lượt đó còn hai chỗ đỏ khác đã xử lý: `thu_KHDOI1` ca "lớp mới dq-" — sửa ca thử; `thu_KHND3e` 2 ca — kho NÔNG (phiên mở từ bản chụp) không tìm được commit
+  KH-ND-3e → `git fetch --unshallow`, chạy lại 42 đạt · 0 hỏng; không do việc này.)
+- Cổng `tinh` (beab831^ → HEAD): chỉ `✗ [A19]` (chưa tới bước 11.4).
+
+## Câu hỏi
+**Q1 — K8 đỏ: 3 cửa ĐÃ HẸN chưa có trong khối máy đọc của hợp đồng.** Phiếu bắt App gọi `GET /kho-qua`, `POST /doi-diem`, `GET /qua-cua-toi` qua `goi` trong
+`src/api.js` (mục A1). Bộ kiểm K8 (`kiem_tra_truoc_khi_giao.js:92–109`) đòi MỌI lời gọi `goi('PT', '/đường')` trong api.js có trong khối `HOP_DONG_MAY_DOC` của
+`thiet_ke/HOP_DONG_API_KH.md`. Ba cửa này mới là hợp đồng ĐÃ HẸN (thư POS 16.11 — POS chép vào "Đã hẹn" ở lần ghi sổ tới, lên bảng cửa ở v18 khi DOI-DIEM-1 gộp),
+nên K8 đỏ: `✗ K8 mọi lời gọi src/api.js có trong hợp đồng — GET /kho-qua, GET /qua-cua-toi, POST /doi-diem`.
+Máy KHÔNG tự gỡ được: phiếu cấm sửa `thiet_ke/**` và `kiem_tra_truoc_khi_giao.js`; viết lời gọi "không thẳng" để K8 không thấy là lách bộ kiểm.
+Ba cách (máy đề xuất **C**):
+- **A.** Chủ quán nhờ chat POS chép 3 cửa vào khối máy đọc ngay bây giờ (kèm cờ "đã hẹn") rồi chép bản hợp đồng sang `thiet_ke/` — sớm hơn lịch POS, trộn cửa chưa chạy với cửa đang chạy.
+- **B.** Thêm `thiet_ke/HOP_DONG_API_KH.md` vào Phạm vi để máy thêm 3 dòng — App tự sửa bản chép hợp đồng của POS (trái luật "hợp đồng do POS giữ").
+- **C.** Thêm `kiem_tra_truoc_khi_giao.js` vào Phạm vi: K8 nhận thêm cửa có trong `src/kiemKhop/canTuPos.js` với `co: false` + `viec_pos` (sổ "App cần gì từ POS" — đã ghi
+  3 cửa DOI-DIEM-1), in rõ "đã hẹn: …" thay vì ✗; ca đỏ trước: K8 trên cây hiện tại đỏ, sau sửa xanh; cửa lạ không có ở cả hai nơi vẫn ✗. ~6 dòng. Khi POS gộp DOI-DIEM-1,
+  đổi `co: true` thì K8 đòi hợp đồng như mọi cửa khác (thu_KHKHOP1 đã canh hai chiều).
+Mọi phần khác của phiếu đã làm xong và xanh; máy dừng ở đây chờ chủ quán chọn.
+
 ## Chỗ vá → đột biến (viec/KH-DOI-1/dot_bien_tay.js — việc chỉ đổi src/, không server/ client/src/ → không dot_bien.py, khuôn KH-VC-2 / KH-NAP-1)
 | Chỗ vá | Đột biến |
 |---|---|
