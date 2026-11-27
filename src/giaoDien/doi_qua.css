@@ -25,6 +25,8 @@
 .dq-doi{ font:inherit; font-size:11.5px; font-weight:700; color:var(--white); background:var(--pink-dark); padding:8px 12px; border-radius:10px; border:none; flex-shrink:0; cursor:pointer; }
 .dq-doi.tat{ background:var(--line); color:var(--muted); max-width:96px; line-height:1.3; text-align:center; cursor:default; }
 .dq-ghi{ margin-top:6px; }
+/* Ghi chú cuối Kho quà + câu dưới mã Phiếu quà: cỡ .qr-chu (12.5px) bất kể thứ tự nạp CSS (.care-disclaimer của demo là 10px). */
+#doiqua .dq-ghi, #phieuqua .qr-chu{ font-size:12.5px; }
 .dq-xn{ text-align:center; padding:2px 4px 6px; }
 .dq-xn .ten{ font-size:14px; font-weight:700; color:var(--ink); }
 .dq-xn .tru{ display:flex; justify-content:space-between; gap:8px; font-size:12.5px; color:var(--muted); margin-top:10px; padding:10px 12px; border-radius:12px; background:var(--cream); }

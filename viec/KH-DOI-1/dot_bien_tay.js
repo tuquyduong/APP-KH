@@ -21,7 +21,7 @@ const DS = [
   ['VS-CHO-DOI-KHI-HET-HANG', [[Q, "q.con !== true ? 'het'", "q.con === false ? 'het'"]]],
   ['VS-CON-LAI-AM', [[Q, '&& diem >= diemCan ? diem - diemCan : null', '? diem - diemCan : null']]],
   ['BV-KHO-QUA-401-THOAT-PHIEN', [[A, ' && !CUA_401_GIU_PHIEN.includes(duong)', '']]],
-  ['VS-KHO-QUA-BO-TOKEN', [[A, "'/quang-cao', '/goi-nap'];", "'/quang-cao', '/goi-nap', '/kho-qua'];"]]],
+  ['VS-KHO-QUA-CONG-KHAI', [[A, "'/quang-cao', '/goi-nap'];", "'/quang-cao', '/goi-nap', '/kho-qua'];"]]],
   ['BV-DANG-XUAT-GIU-QUA-TOI', [[DL, '[...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa())', 'CUA_KHACH.forEach((c) => c.xoa())']]],
   ['VS-LUU-PIN', [[DQ, '    const q = chon;\n', "    const q = chon;\n    try { sessionStorage.setItem('kh_pin_cuoi', pin); } catch { /* */ }\n"]]],
   ['VS-UU-DAI-BO-CONG-TAC', [[U, "const coDoi = ndHien('hien.dq');", 'const coDoi = true;']]],
