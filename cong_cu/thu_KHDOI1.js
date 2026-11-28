@@ -601,7 +601,7 @@ async function trinhDuyet(pw) {
   const doiQua = async (t, n) => { await t.locator('#doiqua .dq-the').nth(n).locator('.dq-doi').click(); await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click(); };
   const BAN8 = Array.from({ length: 8 }, () => ({ st: 503, o: { error: 'Máy chủ bận' } }));
   const vet = (S) => JSON.stringify(S.doi.map((x, i) => `${String(S.doiAi[i]).slice(-3)}:${x.khoa_gui.slice(0, 6)}`));
-  them('A1 đường thật: 401 → đăng nhập lại CÙNG khách giữ khoá; Đăng xuất → khách B KHÔNG dùng khoá A', { kich: BAN8 }, async (t, S) => {
+  them('A1 đường thật: 401 → đăng nhập lại CÙNG khách giữ khoá; bấm Đăng xuất → xoá khoá (như kh_don_gui)', { kich: BAN8 }, async (t, S) => {
     await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
     await vaoKho(t); await doiQua(t, 0);
     await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ/, 15000); await t.keyboard.press('Escape');
@@ -614,11 +614,10 @@ async function trinhDuyet(pw) {
     k('A1 (đường thật) 401 rồi đăng nhập lại CÙNG khách → lần bấm sau dùng LẠI khoá A', S.doi.length === 8 && S.doi.slice(4).every((x) => x.khoa_gui === KA), vet(S));
     await diTrong(t, '/taikhoan'); await t.getByText('Đăng xuất').click();
     await doi(t, async () => !(await t.evaluate(() => localStorage.getItem('kh_token'))));
-    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_A); await doiUrl(t, /^\/uudai$/);
     await vaoKho(t); await doiQua(t, 0);
     await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
-    k('A1 (đường thật) Đăng xuất → khách B đổi CÙNG quà → khoá MỚI bằng phiên B; KHÔNG lần nào gửi khoá A bằng phiên B',
-      S.doi.length === 9 && S.doi[8].khoa_gui !== KA && S.doiAi[8] === SDT_B && S.doi.every((x, i) => x.khoa_gui !== KA || S.doiAi[i] === SDT_A), vet(S));
+    k('A1 (đường thật) bấm Đăng xuất rồi đăng nhập lại → khoá MỚI (Đăng xuất xoá bản ghi chưa rõ, như kh_don_gui)', S.doi.length === 9 && S.doi[8].khoa_gui !== KA && S.doiAi[8] === SDT_A, vet(S));
   });
 
   them('A1 đường thật: kho máy chặn ghi chủ máy + hết phiên + khách B đăng nhập → không dùng khoá A', { kich: BAN8.slice(0, 4), chan: true }, async (t, S) => {
