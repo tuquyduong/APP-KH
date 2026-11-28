@@ -65,9 +65,9 @@ export const bieuTuongMon = (m) => bieuTuongNhom(tenNhom(m));
 export function nhomTheoTen(ds) {
   const ban = new Map();
   for (const m of ds) {
-    const ma = maNhom(m);
-    if (!ban.has(ma)) ban.set(ma, { ten: tenNhom(m), thuTu: thuTuNhom(m), khoa: khoaNhom(m), mon: [] });
-    const g = ban.get(ma);
+    const khoa = khoaNhom(m); // mã; món không mã gom theo tên ("Khác" — cùng nhóm với POS cũ đặt tên "Khác")
+    if (!ban.has(khoa)) ban.set(khoa, { ten: tenNhom(m), thuTu: thuTuNhom(m), khoa, mon: [] });
+    const g = ban.get(khoa);
     g.thuTu = Math.min(g.thuTu, thuTuNhom(m)); // món đầu thiếu số mà món sau có → nhóm vẫn theo số của POS
     g.mon.push(m);
   }
