@@ -1,5 +1,5 @@
 import { dinhDangGia, dinhDangNgay } from '../dinhDang.js';
-import { noiDungMon, bieuTuongNhom } from '../menuLoc.js';
+import { noiDungMon, bieuTuongMon } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import { nd, ndPhan, ndDau, ndDs } from '../noiDung/nd.js';
 import { Ico, En } from './BieuTuong.jsx';
@@ -11,7 +11,7 @@ import { BacGia, NhanGioVang } from './GiaMon.jsx';
 export function AnhMon({ mon, s }) {
   const anh = noiDungMon(MON, mon.ma)?.anh;
   if (anh) return <img className="pimg" src={anh} alt="" loading="lazy" style={{ width: s, height: s }} />;
-  return <En ten={bieuTuongNhom(mon.nhom).ic} s={s} />;
+  return <En ten={bieuTuongMon(mon).ic} s={s} />;
 }
 
 /** Nhãn của món (demo prod-tags): nhãn Giờ vàng (nếu món đang trong Giờ vàng) rồi nhãn nhu cầu khi nội dung món khai `nhuCau`. */
@@ -37,7 +37,7 @@ export default function MonO({ mon, chon }) {
   const bac = dangGv ? null : bacThang(dsHang, mon, hangToi); // D5: món đang Giờ vàng không hiện giá hạng
   return (
     <div className="prod-card" role="button" tabIndex={0} onClick={() => chon(mon)} onKeyDown={(e) => { if (e.key === 'Enter') chon(mon); }}>
-      <div className={`prod-img${het ? ' dim' : ''}`} style={{ background: bieuTuongNhom(mon.nhom).bg }}>
+      <div className={`prod-img${het ? ' dim' : ''}`} style={{ background: bieuTuongMon(mon).bg }}>
         <AnhMon mon={mon} s={64} />
         {dangGv && <span className="prod-tag">-{gv.phanTram}%</span>}
         {het && <div className="stock-out" {...ndDau('mon.hetHang')}>{nd('mon.hetHang')}</div>}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { dinhDangGia } from '../dinhDang.js';
-import { noiDungMon, bieuTuongNhom } from '../menuLoc.js';
+import { noiDungMon, bieuTuongMon, tenNhom } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import { nd, ndPhan, ndDau, ndDs } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
@@ -22,7 +22,7 @@ export default function TrangMon({ mon, lui, moQR, them }) {
   const gv = tt && maGv.has(mon.ma) ? tt : null;
   const bac = gv && gv.pha === 'dang' ? null : bacThang(dsHang, mon, hangToi); // D5: đang Giờ vàng → không giá hạng
   const ndMon = noiDungMon(MON, mon.ma);
-  const nhom = bieuTuongNhom(mon.nhom);
+  const nhom = bieuTuongMon(mon);
   const gia = dinhDangGia(mon.gia);
   const het = mon.con_hang === false;
   const giaNut = giaHinhDung(mon, gv && gv.pha === 'dang' ? null : hangToi, so);
@@ -40,7 +40,7 @@ export default function TrangMon({ mon, lui, moQR, them }) {
         {gv && gv.pha === 'dang' && <span className="tag" {...ndDau('mon.gvNhan')}>{ndPhan('mon.gvNhan', { phanTram: gv.phanTram })}</span>}
         {mon.con_hang === false && <div className="stock-out" {...ndDau('mon.hetHang')}>{nd('mon.hetHang')}</div>}
       </div>
-      <div className="detail-cat" {...ndDau('menu.nhom')}><En ten={nhom.ic} s={14} /> {mon.nhom || nd('menu.nhomKhac')}</div>
+      <div className="detail-cat" {...ndDau('menu.nhom')}><En ten={nhom.ic} s={14} /> {tenNhom(mon)}</div>
       <div className="detail-name" {...ndDau('menu.mon')}>{mon.ten}</div>
       {bac ? <BacGiaChiTiet bac={bac} /> : gia && <div className="detail-price-row"><span className="now">{gia}</span></div>}
       {gv && <GhiChuGioVang tt={gv} />}

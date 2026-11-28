@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import '../giaoDien/gio_xoa.css';
 import '../giaoDien/voucher.css';
 import { dinhDangGia } from '../dinhDang.js';
-import { bieuTuongNhom } from '../menuLoc.js';
+import { bieuTuongMon } from '../menuLoc.js';
 import { chenDong, demMon, doiSoLuong, duocThanhToan, giaHinhDung, trangThaiDong, xoaDong } from '../gio.js';
 import { dungBaoGia } from '../dungDatDon.js';
 import { tenGiam } from '../datDon.js';
@@ -70,7 +70,7 @@ function DongGio({ dong, i, gio, ds, doi, loiPos, xoa }) {
   return (
     <div className="cart-item">
       <button type="button" className="cart-xoa" aria-label={nd('gio.xoaAria')} onClick={() => xoa(i)}><Ico ten="close" s={14} /></button>
-      <div className="cart-thumb" style={mon ? { background: bieuTuongNhom(mon.nhom).bg } : undefined}>{mon ? <AnhMon mon={mon} s={40} /> : <Ico ten="package" s={28} />}</div>
+      <div className="cart-thumb" style={mon ? { background: bieuTuongMon(mon).bg } : undefined}>{mon ? <AnhMon mon={mon} s={40} /> : <Ico ten="package" s={28} />}</div>
       <div className="cart-info">
         <div className="cart-name" {...ndDau(mon ? 'gio.mon' : coMenu ? 'gio.ngungBan' : 'gio.mon')}>{mon ? mon.ten : coMenu ? nd('gio.ngungBan') : dong.ma}</div>
         {(canhBao || dong.ghi_chu) && <div className="cart-opt">{canhBao && <b {...(loiPos ? {} : ndDau(mon ? 'gio.hetHang' : 'gio.khongCon'))}>{canhBao}</b>}{canhBao && dong.ghi_chu && ' · '}{dong.ghi_chu && `“${dong.ghi_chu}”`}</div>}

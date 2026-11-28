@@ -36,7 +36,7 @@ export const MENU = [
   cM('menu.gv.khung', 'Menu: đầu khối Giờ vàng, khung giờ và % giảm', 'Hôm nay {batDau}–{ketThuc} · giảm {phanTram}%', { bien: GIO }),
   { khoa: 'menu.gv.luuY', man: 'Menu', ten: 'Menu: lưu ý cuối khối Giờ vàng', loai: 'doan', macDinh: 'Giá Giờ vàng là giá khuyến mãi cuối cùng: không cộng thêm giá hội viên hay voucher. Hết giờ, món trở về giá thường.' },
   kM('menu.mon', 'Tên món, giá, size, topping', 'pos', 'POS › Sản phẩm'),
-  kM('menu.nhom', 'Tên nhóm món', 'pos', 'POS › Sản phẩm › Nhóm món'),
+  kM('menu.nhom', 'Tên nhóm món', 'pos', 'POS › Quản lý › Giá bán & nhóm món (tên + thứ tự)'),
   kM('menu.gv.so', 'Giờ vàng: có chạy không, % giảm, khung giờ, món áp dụng', 'pos', 'POS › Giờ vàng'),
   kM('menu.gv.dem', 'Giờ vàng: đồng hồ đếm ngược', 'tutinh', 'App tự tính theo giờ POS'),
 
