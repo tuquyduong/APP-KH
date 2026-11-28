@@ -141,7 +141,8 @@ Sau sửa:
 - "Chưa rõ" của đổi quà sống qua chuyển màn nhưng MẤT khi tải lại trang (không lưu máy: khoá mới trên máy phải thêm vào danh sách `src/luuMay.js` — ngoài Phạm vi).
   Muốn bền như `kh_don_gui` của POST /don → việc sau (luuMay.js + khoá `kh_doi_gui`, không PIN).
 - Máy mới chưa có bản nội dung (`kh_nd_ban`): lần vẽ đầu `hien.dq` = mặc định tắt → link mở thẳng /uudai/doi-qua bị đưa về /uudai trước khi bản nội dung về (soát vòng 1, chưa thử).
-- Hỏi POS (gửi kèm khi DOI-DIEM-1): thứ tự kiểm của `POST /doi-diem` — tra `khoa_gui` TRƯỚC khi kiểm PIN / điểm / tồn (như `POST /don`)? App đã giữ khoá qua 4xx nên an toàn cả hai cách.
+- Hỏi POS (gửi kèm khi DOI-DIEM-1): thứ tự kiểm của `POST /doi-diem` — tra `khoa_gui` TRƯỚC khi kiểm PIN / điểm / tồn (như `POST /don`)? Khoá có gắn theo khách không?
+  (Câu cũ "App đã giữ khoá qua 4xx nên an toàn cả hai cách" SAI ở vòng 1 — soát vòng 2; sau vòng sửa 2 xem mục dưới.)
 HEAD ĐÃ KIỂM: 74424d1
 
 ## /ra-soat vòng 2 (agent độc lập, 28.11) — báo cáo chép nguyên
@@ -171,3 +172,20 @@ BÀI HỌC: KHOÁ — lệnh trừ điểm / tiền có khoa_gui ghi "đang gử
 Ghi chú: câu "App đã giữ khoá qua 4xx nên an toàn cả hai cách" ở mục Phát hiện là SAI theo vòng 2 (giữ dưới đây, sửa ở vòng sửa 2).
 
 ## Vòng sửa 2 (28.11)
+| Lỗi soát vòng 2 | Sửa | Ca thử / đột biến |
+|---|---|---|
+| Đang gửi mà rời màn → vào lại bấm cùng quà → POST song song khoá mới | khoá chặn gửi song song ở CẤP MÔ-ĐUN (`guiDoi` trong DoiQua.jsx — không còn useRef); bấm khi đang gửi → lời `dq.dangGui`, không POST | ca "A1 rời màn KHI ĐANG GỬI rồi bấm lại: không gửi song song, không khoá mới"; BV-KHONG-CHAN-SONG-SONG |
+| Một ô "chưa rõ" — quà B đè quà A | `src/doiQua.js` bảng `ma_qua → khoa_gui` (`khoaChoRo` / `ghiChoRo` / `xoaChoRo`) | hàm thuần "quà B không đè khoá quà A"; ca "chưa rõ quà A rồi đổi quà B → bấm lại A vẫn khoá cũ"; VS-CHUA-RO-MOT-O |
+| Luật xoá ngược kh_don_gui (401 xoá; khác khách không xoá) | bỏ khỏi `xoaKhoKhach` (donPhien / 401 → GIỮ); `xoaChoRo()` ở `dangXuat` và `docLaiGio` (chỉ gọi khi `luuMay.doiKhach` báo khác khách) | hàm thuần "401 GIỮ", dò nguồn App (dangXuat, docLaiGio, không donPhien, 2 chỗ doiKhach); VS-401-XOA-CHUA-RO, BV-DANG-XUAT-GIU-CHUA-RO, BV-KHAC-KHACH-GIU-CHUA-RO |
+| Kết quả về sau khi rời màn kéo khách sang Phiếu quà | `conMo` (ref đặt lại mỗi lần gắn màn) — không đổi màn khi màn đã gỡ | ca "lần gửi cũ xong SAU khi đã rời màn → không kéo khách sang Phiếu quà"; BV-KEO-SANG-PHIEU-SAU-KHI-ROI |
+| gopPhieu sửa kho từ màn, không cắt khoảng trắng | `gopPhieuQua` dời về `duLieuKhach.js` cạnh `cuaQuaToi`, so mã đã `trim` | BV-KHONG-GOP-PHIEU |
+Ghi khoá trước khi gửi (đề xuất của soát vòng 2): đã làm rồi BỎ — đột biến BV-GHI-KHOA-SAU-KHI-GUI SÓT vì khoá song song cấp mô-đun đã chặn mọi lần bấm lại lúc đang gửi
+→ dòng đó thừa; khoá chỉ ghi khi "chưa rõ" (BV-CHUA-RO-KHONG-GHI-KHOA canh).
+Nghi ngờ vòng 2 không sửa (ghi nhận): A "chưa rõ" mà POS đã trừ, khách bấm lại A → POS trả kết quả CŨ, App hiện "Đã đổi quà!" mã cũ — đúng nghĩa (lần đổi đó đã xảy ra),
+lần bấm tiếp là đổi mới; phiếu POS hỏng (docKetQuaDoi null mãi) → quà kẹt "chưa rõ" tới đăng xuất / tải lại — POS trả đúng hợp đồng thì không xảy ra.
+
+Sau sửa:
+- `thu_KHDOI1.js` 62 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 159 đạt · 0 hỏng (Chromium); gốc 5 · 45 / 22 · 62; `SỐ CA cong_cu/thu_KHDOI1.js: 62`.
+- Đột biến `--trinh-duyet`: đối chứng XANH (159/0), **32/32 BẮT ĐƯỢC** — TẤT CẢ ĐỘT BIẾN BỊ BẮT.
+- `--day-du` **71 đạt · 0 hỏng**. Cổng (HEAD 6f85ce8, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 50 ca ≠ 62 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
+HEAD ĐÃ KIỂM: 6f85ce8
