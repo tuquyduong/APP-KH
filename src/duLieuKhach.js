@@ -56,6 +56,8 @@ export const cuaQuaToi = taoCua(layQuaCuaToi);
 
 export const lamMoi = (ds) => ds.forEach((c) => c.lay());
 export const xoaKhoKhach = () => [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa());
+/** Dấu vết SĐT của khách đang giữ phiên (từ /toi THẬT — bản tóm tắt trên máy không tính); chưa biết → ''. Đổi quà gắn khoá "chưa rõ" + kết quả với khách này. */
+export const khachDangGiu = () => { const t = cuaToi.kho.lay().dl; return t && !t.tuMay && t.khach && t.khach.sdt ? dauVet(t.khach.sdt) || '' : ''; };
 /** Gộp phiếu quà POS vừa trả (POST /doi-diem) vào đầu kho Quà của tôi — Phiếu quà hiện ngay, không chờ GET /qua-cua-toi (lấy mới vẫn chạy). */
 export function gopPhieuQua(tho) {
   const ma = tho && typeof tho.ma === 'string' ? tho.ma.trim() : '';

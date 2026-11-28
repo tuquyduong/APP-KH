@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { layKhoQua, doiDiemApp } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dungCua, cuaDiem, cuaVoucher, cuaQuaToi, lamMoi, gopPhieuQua } from '../duLieuKhach.js';
+import { dungCua, cuaToi, cuaDiem, cuaVoucher, cuaQuaToi, lamMoi, gopPhieuQua, khachDangGiu } from '../duLieuKhach.js';
 import { guiDonAnToan, khoaGui, taoKhoaGui } from '../datDon.js';
 import { docKhoQua, docQuaCuaToi, docKetQuaDoi, conLaiSauDoi, ngayPos, khoaChoRo, ghiChoRo, xoaChoRo } from '../doiQua.js';
 import { dinhDangSo } from '../dinhDang.js';
@@ -22,7 +22,10 @@ import '../giaoDien/doi_qua.css';
 const POS = ndDau('dq.pos');
 const NUT = { het: 'dq.nut.het', luot: 'dq.nut.luot', doi: 'dq.nut.doi' };
 
-const guiDoi = khoaGui((than) => guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi })); // MỘT lần gửi đang chạy cho cả App
+// MỘT lần gửi đang chạy cho cả App. `cung()` = khách đang giữ phiên vẫn là khách lúc bấm: khác (đăng xuất / người khác đăng nhập giữa các lần tự gửi lại) → KHÔNG gửi
+// thân của khách trước bằng phiên mới (lỗi có code → guiDonAnToan dừng; lần đầu = chưa tạo, sau lần chưa rõ = KHONG_BIET).
+const DOI_KHACH = () => Promise.reject(Object.assign(new Error(nd('dq.chuaRo')), { status: 409, code: 'DOI_KHACH' }));
+const guiDoi = khoaGui((than, cung) => guiDonAnToan(than, { gui: (t) => (cung() ? doiDiemApp(t) : DOI_KHACH()), doc: docKetQuaDoi }));
 
 function TheQua({ q, doi }) {
   const [k, bien] = q.nut !== 'thieu' ? [NUT[q.nut]] : q.thieu ? ['dq.nut.thieu', { so: dinhDangSo(q.thieu) }] : ['dq.nut.chuaDu'];
@@ -73,6 +76,7 @@ function DaDoi({ kq, moMenu, veKho }) {
 export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
   const kho = dungTai(layKhoQua);
   const diem = dungCua(cuaDiem);
+  dungCua(cuaToi, { that: true }); // khách đang giữ phiên (khachDangGiu) — khoá đổi quà gắn với khách
   const qt = dungCua(cuaQuaToi);
   useEffect(() => { cuaDiem.lay(); }, []); // điểm MỚI để so / tính "Còn lại"; phiên hết thì /diem đẩy ra đăng nhập (401 của /kho-qua không — api.js)
   const [chon, datChon] = useState(null);
@@ -87,12 +91,15 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
   const nhac = cho.find((p) => p.nhac);
 
   const doi = (pin) => {
-    const q = chon;
-    const cu = khoaChoRo(q.ma);
+    const q = chon, chu = khachDangGiu();
+    if (!chu) return Promise.reject(new Error(nd('dq.choKhach'))); // chưa biết khách (GET /toi chưa về): chưa gửi
+    const cungKhach = () => khachDangGiu() === chu;
+    const cu = khoaChoRo(q.ma, chu);
     const than = { ma_qua: q.ma, khoa_gui: cu || taoKhoaGui(), pin };
-    const p = guiDoi(than);
+    const p = guiDoi(than, cungKhach);
     if (!p) return Promise.reject(new Error(nd('dq.dangGui'))); // một lần đổi khác còn đang gửi (kể cả từ lần mở màn trước): không gửi song song
     return p.then((kq) => {
+      if (!cungKhach()) return; // phiên đã sang người khác / đã đăng xuất: không ghi gì vào kho, bản ghi, màn của phiên mới
       xoaChoRo(q.ma);
       lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);
       if (kq.phieuTho) gopPhieuQua(kq.phieuTho);
@@ -101,8 +108,9 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
       datChon(null);
       if (kq.loai === 'hien_vat') moPhieu(kq.phieu.ma); else datXong({ ...kq, ten: q.ten });
     }, (e) => {
-      if (e.code === 'KHONG_BIET') { // có thể đã trừ: GHI khoá cho lần bấm sau (kể cả sau khi rời màn), lấy lại điểm / kho / phiếu để khách thấy số mới
-        ghiChoRo(q.ma, than.khoa_gui);
+      if (!cungKhach()) throw new Error(nd('dq.chuaRo'));
+      if (e.code === 'KHONG_BIET') { // có thể đã trừ: GHI khoá (gắn khách) cho lần bấm sau (kể cả sau khi rời màn), lấy lại điểm / kho / phiếu để khách thấy số mới
+        ghiChoRo(q.ma, than.khoa_gui, chu);
         lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]); if (conMo.current) kho.taiLai();
         throw new Error(nd('dq.chuaRo'));
       }

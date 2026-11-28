@@ -56,12 +56,12 @@ export function ngayPos(s) {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : '';
 }
 
-// Lần đổi "chưa rõ" của từng quà: ma_qua → khoa_gui (KHÔNG có PIN). Lúc ĐANG gửi đã có khoá chặn song song cấp mô-đun (DoiQua.jsx guiDoi). Giữ ở cấp mô-đun — sống qua rời màn / vào lại
-// (mất khi tải lại trang: khoá mới trên máy phải vào src/luuMay.js — ngoài Phạm vi, xem Phát hiện). Lần bấm sau cho ĐÚNG quà đó dùng lại khoá (POS trả đúng kết quả cũ,
-// không trừ hai lần). Mỗi quà một dòng (quà B không đè quà A). Luật xoá chép kh_don_gui của POST /don: xoá khi đổi xong quà đó, khi lần gửi bằng khoá MỚI bị 4xx chắc chắn,
-// khi đăng xuất, khi khách KHÁC đăng nhập (App.jsx); GIỮ khi 401 / hết phiên và khi 4xx đến sau một lần chưa rõ (không chứng minh lần đầu chưa trừ — chủ quán 05.11).
+// Lần đổi "chưa rõ" của từng quà, GẮN với khách lúc gửi: ma_qua → { khoa_gui, chu } (chu = dấu vết SĐT — luuMay.dauVet; KHÔNG có PIN). Lúc ĐANG gửi đã có khoá chặn
+// song song cấp mô-đun (DoiQua.jsx guiDoi). Giữ ở cấp mô-đun — sống qua rời màn / vào lại / hết phiên (mất khi tải lại trang: khoá mới trên máy phải vào src/luuMay.js —
+// ngoài Phạm vi, xem Phát hiện). Lần bấm sau cho ĐÚNG quà đó và ĐÚNG khách đó dùng lại khoá (POS trả kết quả cũ, không trừ hai lần); khách khác KHÔNG BAO GIỜ đọc được
+// khoá này (dù kho máy bị chặn, dù không qua luuMay.doiKhach). Xoá: đổi xong quà đó, lần gửi bằng khoá MỚI bị 4xx chắc chắn, bấm Đăng xuất (App.jsx).
 const choRo = new Map();
-export const khoaChoRo = (ma) => choRo.get(ma) || null;
-export const ghiChoRo = (ma, khoa) => { if (Number.isInteger(ma) && typeof khoa === 'string' && khoa) choRo.set(ma, khoa); };
-/** Xoá dòng của quà `ma`; không truyền `ma` → xoá hết (đăng xuất / khác khách). */
+export const khoaChoRo = (ma, chu) => { const x = choRo.get(ma); return x && chu && x.chu === chu ? x.khoa : null; };
+export const ghiChoRo = (ma, khoa, chu) => { if (Number.isInteger(ma) && typeof khoa === 'string' && khoa && typeof chu === 'string' && chu) choRo.set(ma, { khoa, chu }); };
+/** Xoá dòng của quà `ma`; không truyền `ma` → xoá hết (Đăng xuất). */
 export const xoaChoRo = (ma) => { if (ma === undefined) choRo.clear(); else choRo.delete(ma); };

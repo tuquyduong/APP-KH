@@ -135,21 +135,18 @@ const QUA_TOI = [
     k('A3 cuaQuaToi có, KHÔNG trong CUA_KHACH (làm mới ngầm sẽ gọi /qua-cua-toi khi công tắc tắt)', !!K.cuaQuaToi && !K.CUA_KHACH.includes(K.cuaQuaToi));
     if (K.cuaQuaToi) { K.cuaQuaToi.kho.dat({ dl: { data: [] }, luc: 1, loi: '' }); K.xoaKhoKhach(); }
     k('A3 xoaKhoKhach (đăng xuất / đổi khách) xoá cả cuaQuaToi', !!K.cuaQuaToi && K.cuaQuaToi.kho.lay().dl === null);
+    // Hàm thuần của bản ghi "chưa rõ" (đường thật — 401 / Đăng xuất / khách khác — ở các ca trình duyệt "A1 đường thật …").
     const ghi = D.ghiChoRo || (() => {}), khoaR = D.khoaChoRo || (() => 'x'), xoaR = D.xoaChoRo || (() => {});
     const KA = 'a'.repeat(36), KB = 'b'.repeat(36);
-    ghi(1, KA); ghi(2, KB);
-    k('A1 "chưa rõ" theo TỪNG quà: quà B không đè khoá quà A', khoaR(1) === KA && khoaR(2) === KB && khoaR(3) === null);
-    K.xoaKhoKhach();
-    k('A1 hết phiên / 401 (donPhien → xoaKhoKhach) GIỮ khoá chưa rõ (luật kh_don_gui)', khoaR(1) === KA);
+    ghi(1, KA, 'chuA'); ghi(2, KB, 'chuA');
+    k('A1 "chưa rõ" theo TỪNG quà: quà B không đè khoá quà A', khoaR(1, 'chuA') === KA && khoaR(2, 'chuA') === KB && khoaR(3, 'chuA') === null);
+    k('A1 khoá GẮN khách: khách khác / chưa biết khách không đọc được khoá', khoaR(1, 'chuB') === null && khoaR(1, '') === null && khoaR(1) === null);
+    ghi(4, KA, '');
+    k('A1 không ghi khoá khi chưa biết khách', khoaR(4, '') === null && khoaR(4, 'chuA') === null);
     xoaR(2);
-    k('A1 xoá đúng một quà (đổi xong / 4xx khoá mới) không đụng quà khác', khoaR(2) === null && khoaR(1) === KA);
+    k('A1 xoá đúng một quà (đổi xong / 4xx khoá mới) không đụng quà khác', khoaR(2, 'chuA') === null && khoaR(1, 'chuA') === KA);
     xoaR();
-    k('A1 xoá hết (đăng xuất / khác khách)', khoaR(1) === null);
-    const app = doc('src/App.jsx');
-    const ham = (ten) => (new RegExp(`const ${ten} = \\(\\) => \\{[^\\n]*`).exec(app) || [''])[0];
-    k('A1 App: đăng xuất + khác khách (docLaiGio — chỉ gọi khi luuMay.doiKhach báo khác khách) xoá khoá; donPhien (401) KHÔNG',
-      /xoaChoRo\(\)/.test(ham('dangXuat')) && /xoaChoRo\(\)/.test(ham('docLaiGio')) && !/xoaChoRo/.test(ham('donPhien')) && (app.match(/doiKhach\([^)]*\)\) docLaiGio\(\)/g) || []).length === 2,
-      [ham('dangXuat'), ham('docLaiGio')].map((x) => x.slice(0, 60)).join(' | '));
+    k('A1 xoá hết (Đăng xuất)', khoaR(1, 'chuA') === null);
     const cds = doc('src/components/CheDoSua.jsx');
     k("B5 Chế độ sửa \"Đi tới màn\" không mở Phiếu quà bằng mã ĐƠN", /e\.trang !== 'phieuqua'/.test(cds));
     const dq = doc('src/pages/DoiQua.jsx');
@@ -237,6 +234,7 @@ const QUA_TOI = [
 
 // ───────────── Phần 2 ─────────────
 const BAT = JSON.stringify({ so_ban: 7, gia_tri: { 'hien.dq': true } });
+const SDT_A = '0909123456', SDT_B = '0909999999';
 
 async function trinhDuyet(pw) {
   const esbuild = require('esbuild');
@@ -261,14 +259,20 @@ async function trinhDuyet(pw) {
   async function may(ten, S0, chay) {
     const ctx = await trinh.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Ho_Chi_Minh' });
     await ctx.clock.install({ time: new Date('2026-11-27T10:30:00+07:00') }); await ctx.clock.resume();
-    const S = { kho: KHO, quaToi: QUA_TOI, diem: 1250, vc: [], kich: [], goi: [], doi: [], khoa: new Map(), loiTrang: [], nd: BAT, ...S0 };
-    await ctx.addInitScript(({ chu0, nd }) => {
+    const AI = { 'tok-A': SDT_A }; // token → SDT (POS giả hiểu nhiều khách; xac-minh thêm token mới)
+    const S = { kho: KHO, quaToi: QUA_TOI, diem: 1250, vc: [], kich: [], goi: [], doi: [], doiAi: [], khoa: new Map(), loiTrang: [], nd: BAT, ...S0 };
+    await ctx.addInitScript(({ chu0, nd, chan }) => {
+      if (chan) { // kho máy chặn ghi chủ máy (cửa sổ riêng tư / trình duyệt nhúng): luuMay.docChu → null → doiKhach 'chuaBiet'
+        const g = Storage.prototype.setItem;
+        Storage.prototype.setItem = function (kh, v) { if (kh === 'kh_chu') throw new Error('chặn'); return g.call(this, kh, v); };
+      }
       if (location.protocol !== 'http:' || sessionStorage.getItem('da_gieo')) return;
       sessionStorage.setItem('da_gieo', '1');
       localStorage.setItem('kh_ngay_man_dau', '2026-11-27');
-      localStorage.setItem('kh_token', 'tok-A'); localStorage.setItem('kh_chu', chu0);
+      localStorage.setItem('kh_token', 'tok-A');
+      if (!chan) localStorage.setItem('kh_chu', chu0);
       if (nd) localStorage.setItem('kh_nd_ban', nd);
-    }, { chu0, nd: S.nd });
+    }, { chu0, nd: S.nd, chan: !!S.chan });
     await ctx.route(`${URL0}/**`, async (r) => {
       const req = r.request(), u = new URL(req.url()), p = u.pathname, pt = req.method();
       const json = (status, o) => r.fulfill({ status, contentType: 'application/json', body: JSON.stringify(o) }).catch(() => {});
@@ -285,20 +289,24 @@ async function trinhDuyet(pw) {
       if (duong === '/goi-nap') return json(200, { success: true, data: [] });
       if (duong === '/kho-qua') {
         if (S.kho401) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
-        const coTok = /tok-A/.test(auth);
+        const coTok = !!AI[auth.replace(/^Bearer /, '')];
         return json(200, { success: true, data: S.kho.map((q) => { if (coTok) return q; const { con_luot_thang, du_diem, ...x } = q; return x; }) });
       }
-      if (!/tok-A/.test(auth)) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
-      if (duong === '/toi') return json(200, { success: true, khach: { sdt: '0909123456', ten: 'Linh', xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: null, so_du_vi: 180600 } });
+      if (duong === '/dang-nhap/xin-ma') return json(200, { success: true });
+      if (duong === '/dang-nhap/xac-minh') { const sdt = than.sdt, tok = sdt === SDT_A ? 'tok-A' : 'tok-' + sdt; AI[tok] = sdt; return json(200, { success: true, token: tok, khach: { sdt, ten: 'Khách', xung_ho: 'chi' } }); }
+      const ai = AI[auth.replace(/^Bearer /, '')];
+      if (S.diem401 && duong === '/diem') { S.diem401 = false; return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' }); }
+      if (!ai) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
+      if (duong === '/toi') return json(200, { success: true, khach: { sdt: ai, ten: 'Linh', xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: null, so_du_vi: 180600 } });
       if (duong === '/diem') return json(200, { success: true, points: S.diem, history: [{ id: 9, type: 'redeem', points: -500, reason: 'Đổi quà: Voucher giảm 20.000đ', created_at: '2026-11-20T09:00:00' }] });
       if (duong === '/voucher') return json(200, { success: true, data: S.vc, ma_khach_moi: [] });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-12-27T08:00:00' });
-      if (duong === '/qua-cua-toi') { if (S.chamQuaToi && S.doi.length) await new Promise((x) => setTimeout(x, S.chamQuaToi)); return json(200, { success: true, data: S.quaToi }); }
+      if (duong === '/qua-cua-toi') { if (S.chamQuaToi && S.doi.length) await new Promise((x) => setTimeout(x, S.chamQuaToi)); if (ai !== SDT_A && S.loiQuaToiB) return json(500, { error: 'Lỗi máy chủ', code: 'LOI_MAY_CHU' }); return json(200, { success: true, data: ai === SDT_A ? S.quaToi : [] }); }
       if (duong === '/doi-diem' && pt === 'POST') {
-        S.doi.push(than);
+        S.doi.push(than); S.doiAi.push(ai);
         const x = S.kich.shift();
         if (x && x.mat) return r.abort('internetdisconnected');
-        if (x && x.cham) await new Promise((v) => setTimeout(v, x.cham));
+        if (x && x.cham) { await new Promise((v) => setTimeout(v, x.cham)); if (x.st) return json(x.st, x.o); } // chậm rồi trả lời theo `st` (không có → xử lý thường)
         else if (x) return json(x.st, x.o);
         const q = S.kho.find((y) => y.ma === than.ma_qua);
         if (S.khoa.has(than.khoa_gui)) return json(200, S.khoa.get(than.khoa_gui));
@@ -545,7 +553,7 @@ async function trinhDuyet(pw) {
     k('A1 đổi xong → lần đổi sau là khoá MỚI', S.doi.length === 7 && S.doi[6].khoa_gui !== S.doi[0].khoa_gui);
   });
 
-  // Vòng sửa 2 (/ra-soat): khoá ghi TRƯỚC khi gửi + chặn gửi song song ở cấp mô-đun — rời màn khi đang gửi rồi bấm lại → không POST khoá mới, không kéo khách sang Phiếu quà.
+  // Vòng sửa 2 (/ra-soat): chặn gửi song song ở cấp mô-đun — rời màn khi đang gửi rồi bấm lại → không POST khoá mới, không kéo khách sang Phiếu quà.
   them('A1 rời màn KHI ĐANG GỬI rồi bấm lại: không gửi song song, không khoá mới', { kich: [{ cham: 6000 }] }, async (t, S) => {
     await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut'); await t.locator('#rewards .dq-nut').click();
     await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6); await doiChu(t, '#doiqua .dq-hero', /1\.250/);
@@ -579,6 +587,82 @@ async function trinhDuyet(pw) {
     await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
     const a = S.doi.filter((x) => x.ma_qua === 1), b = S.doi.filter((x) => x.ma_qua === 2);
     k('A1 quà A (4 lần) và quà B (4 lần) khoá riêng; lần bấm lại A dùng ĐÚNG khoá A', a.length === 5 && b.length === 4 && a.every((x) => x.khoa_gui === a[0].khoa_gui) && a[0].khoa_gui !== b[0].khoa_gui, JSON.stringify(S.doi.map((x) => `${x.ma_qua}:${x.khoa_gui.slice(0, 6)}`)));
+  });
+
+  // Vòng sửa 3 (/ra-soat): luật sống / xoá của khoá "chưa rõ" đi qua ĐƯỜNG THẬT — 401 ở cửa thật (donPhien), đăng nhập lại bằng màn Đăng nhập, nút Đăng xuất ở
+  // Tài khoản, khách KHÁC đăng nhập cùng tab (không tải lại trang: khoá sống ở cấp mô-đun). Điều hướng TRONG App (pushState + popstate), không t.goto.
+  const diTrong = (t, d) => t.evaluate((x) => { history.pushState(null, '', x); dispatchEvent(new PopStateEvent('popstate')); }, d);
+  const dangNhapUi = async (t, sdt) => {
+    await t.waitForSelector('#sdt'); await t.fill('#sdt', sdt); await t.getByRole('button', { name: 'Tiếp tục' }).click();
+    await t.waitForSelector('#ma'); await t.fill('#ma', '123456'); await t.getByRole('button', { name: 'Xác nhận' }).click();
+    await t.waitForFunction(() => !!localStorage.getItem('kh_token'));
+  };
+  const vaoKho = async (t) => { await diTrong(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6, 8000); await doiChu(t, '#doiqua .dq-hero', /điểm/); await t.waitForTimeout(400); /* GET /toi (khách đang giữ phiên) về */ };
+  const doiQua = async (t, n) => { await t.locator('#doiqua .dq-the').nth(n).locator('.dq-doi').click(); await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click(); };
+  const BAN8 = Array.from({ length: 8 }, () => ({ st: 503, o: { error: 'Máy chủ bận' } }));
+  const vet = (S) => JSON.stringify(S.doi.map((x, i) => `${String(S.doiAi[i]).slice(-3)}:${x.khoa_gui.slice(0, 6)}`));
+  them('A1 đường thật: 401 → đăng nhập lại CÙNG khách giữ khoá; Đăng xuất → khách B KHÔNG dùng khoá A', { kich: BAN8 }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ/, 15000); await t.keyboard.press('Escape');
+    const KA = S.doi[0].khoa_gui;
+    S.diem401 = true; await diTrong(t, '/uudai'); await diTrong(t, '/uudai/doi-qua'); // Kho quà gọi MỚI /diem → 401 thật → donPhien
+    k('A1 (đường thật) /diem 401 → mất phiên, về Trang chủ', await doi(t, async () => !(await t.evaluate(() => localStorage.getItem('kh_token'))) && duongDan(t) === '/trangchu', 8000), duongDan(t));
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_A); await doiUrl(t, /^\/uudai$/);
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ/, 15000); await t.keyboard.press('Escape');
+    k('A1 (đường thật) 401 rồi đăng nhập lại CÙNG khách → lần bấm sau dùng LẠI khoá A', S.doi.length === 8 && S.doi.slice(4).every((x) => x.khoa_gui === KA), vet(S));
+    await diTrong(t, '/taikhoan'); await t.getByText('Đăng xuất').click();
+    await doi(t, async () => !(await t.evaluate(() => localStorage.getItem('kh_token'))));
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
+    k('A1 (đường thật) Đăng xuất → khách B đổi CÙNG quà → khoá MỚI bằng phiên B; KHÔNG lần nào gửi khoá A bằng phiên B',
+      S.doi.length === 9 && S.doi[8].khoa_gui !== KA && S.doiAi[8] === SDT_B && S.doi.every((x, i) => x.khoa_gui !== KA || S.doiAi[i] === SDT_A), vet(S));
+  });
+
+  them('A1 đường thật: kho máy chặn ghi chủ máy + hết phiên + khách B đăng nhập → không dùng khoá A', { kich: BAN8.slice(0, 4), chan: true }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ/, 15000); await t.keyboard.press('Escape');
+    const KA = S.doi[0].khoa_gui;
+    S.diem401 = true; await diTrong(t, '/uudai'); await diTrong(t, '/uudai/doi-qua');
+    await doi(t, async () => duongDan(t) === '/trangchu', 8000);
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
+    k('A1 (đường thật, kho máy chặn kh_chu) hết phiên → B đăng nhập → khoá MỚI bằng phiên B', S.doi.length === 5 && S.doi[4].khoa_gui !== KA && S.doiAi[4] === SDT_B, vet(S));
+  });
+
+  // Giữa hai lần TỰ GỬI LẠI (guiDonAnToan đọc phiên mới mỗi lần) A đăng xuất, B đăng nhập → lần gửi lại kế tiếp KHÔNG được đi bằng phiên B.
+  them('A1 đường thật: đổi phiên giữa các lần tự gửi lại → không gửi thân của A bằng phiên B', { kich: [{ st: 503, o: { error: 'Máy chủ bận' } }, { cham: 5000, st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }] }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
+    await vaoKho(t); await doiQua(t, 0);
+    await doi(t, async () => S.doi.length === 2, 6000); // lần 2 (tự gửi lại) đang chờ POS 5 giây
+    await t.goBack(); await doiUrl(t, /^\/uudai$/);
+    await diTrong(t, '/taikhoan'); await t.getByText('Đăng xuất').click();
+    await doi(t, async () => !(await t.evaluate(() => localStorage.getItem('kh_token'))));
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
+    await t.waitForTimeout(9000); // lần 2 trả 503 → chờ 2 giây → lần 3 (nếu App còn gửi) đi bằng phiên B
+    k('A1 không lần gửi nào của A đi bằng phiên B (dừng ở lần 2)', S.doiAi.every((x) => x === SDT_A) && S.doi.length === 2, vet(S));
+  });
+
+  // GET /qua-cua-toi của B hỏng: kho chỉ còn thứ App tự ghi vào → phiếu của A (nếu App gộp nhầm) lộ ra, không bị GET của B che.
+  them('A1 đường thật: Đăng xuất KHI ĐANG GỬI → khách B không thấy phiếu / QR của A', { kich: [{ cham: 5000 }], loiQuaToiB: true }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
+    await vaoKho(t); await doiQua(t, 2);
+    await doi(t, async () => S.doi.length === 1);
+    await t.goBack(); await doiUrl(t, /^\/uudai$/);
+    await diTrong(t, '/taikhoan'); await t.getByText('Đăng xuất').click();
+    await doi(t, async () => !(await t.evaluate(() => localStorage.getItem('kh_token'))));
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
+    await t.waitForTimeout(5500); // lần gửi của A xong (POS giả chậm 5 giây) khi B đang giữ phiên
+    k('A1 lần gửi của A xong khi B giữ phiên → không kéo B sang Phiếu quà', duongDan(t) === '/uudai', duongDan(t));
+    await diTrong(t, '/uudai/qua');
+    await t.waitForTimeout(800);
+    k('A1 B mở Quà của tôi → KHÔNG có phiếu / QR của A (GET của B lỗi → chỉ báo lỗi)', !/Tặng 1 ly|PQNEW1/.test(await chu(t, '#quatoi')) && !(await co(t, '#quatoi .dq-phieu')), await chu(t, '#quatoi'));
+    await diTrong(t, '/uudai/qua/PQNEW1'); await t.waitForTimeout(800);
+    k('A1 B mở thẳng Phiếu quà của A → không QR, không mã của A', !(await co(t, '#phieuqua .khung-qr')) && !/PQNEW1/.test(await chu(t, '#phieuqua .dq-ph-ma')));
   });
 
   them('B2 dải nhắc theo `nhac` POS, không theo thứ tự', { quaToi: [QUA_TOI[1], QUA_TOI[0]] }, async (t) => {

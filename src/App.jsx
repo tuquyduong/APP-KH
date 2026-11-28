@@ -158,7 +158,7 @@ export default function App() {
   const [tieuXong, datTieuXong] = useState(''); // "(Xong) Đơn #…" do BaoDonXong đặt; thắng tiêu đề của trang tới khi khách tắt / xem đơn
   const [monLoi, datMonLoi] = useState(null); // { ma, chu } POS vừa báo HET_HANG / MON_KHONG_BAN — dòng giỏ đánh dấu tới khi giỏ đổi
   const doiGio = (g) => { datGio(g); ghiGio(g); datMonLoi(null); };
-  const docLaiGio = () => { datGio(docGio()); datMaGiam(''); datChonVc(CHON_RONG); quenKeHoach(); xoaChoRo(); }; // luuMay.doiKhach vừa xoá dữ liệu của khách trước (+ khoá đổi quà chưa rõ — KH-DOI-1)
+  const docLaiGio = () => { datGio(docGio()); datMaGiam(''); datChonVc(CHON_RONG); quenKeHoach(); }; // luuMay.doiKhach vừa xoá dữ liệu của khách trước
   const khungCuon = useRef(null);
   const viTriMenu = useRef(0);
   const quayLaiMenu = useRef(false);
@@ -217,7 +217,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; xoaChoRo() /* khoá đổi quà chưa rõ (KH-DOI-1); 401 thì GIỮ */; datGio([]); datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; xoaChoRo() /* khoá đổi quà chưa rõ (KH-DOI-1; khoá gắn khách — 401 thì GIỮ, khách khác không đọc được) */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
   const quangCaoTho = chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio(), quangCao: quangCaoPos }); // MỘT lần: dải các trang + banner Trang chủ cùng đọc (có thể là hai dòng POS khác nhau)
   const quangCao = coDai(trang) && (dangNhap || !r.canDN) && quangCaoTho.chu && !(quangCaoTho.dai.dich === 'uudai' && trang === 'uudai') ? { ...quangCaoTho, ...quangCaoTho.dai } : null; // dải dẫn tới chính trang đang đứng thì thừa

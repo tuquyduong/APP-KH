@@ -189,3 +189,31 @@ Sau sửa:
 - Đột biến `--trinh-duyet`: đối chứng XANH (159/0), **32/32 BẮT ĐƯỢC** — TẤT CẢ ĐỘT BIẾN BỊ BẮT.
 - `--day-du` **71 đạt · 0 hỏng**. Cổng (HEAD 6f85ce8, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 50 ca ≠ 62 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
 HEAD ĐÃ KIỂM: 6f85ce8
+
+## /ra-soat vòng 3 (agent độc lập, 28.11) — báo cáo chép nguyên (rút dòng)
+```
+KHÔNG ĐẠT
+Chạy lại ở HEAD 19c1a9d: KHONG_TRINH_DUYET=1 thu_KHDOI1 62/0 · Chromium 159/0 · npm test 68/0; dist/ không commit; kiem_tra chỉ khối K8 (+8 −1).
+Lỗi vòng 2 đã sửa đúng: chặn song song cấp mô-đun (DoiQua.jsx:25, :93-94), "chưa rõ" theo từng quà (doiQua.js:63-67), 401 giữ khoá (duLieuKhach.js:58),
+  đăng xuất xoá (App.jsx:220), không kéo sang Phiếu quà khi rời màn (DoiQua.jsx:82-83, :99), gopPhieuQua ở duLieuKhach.js:60-66 có trim. "Khách khác" chỉ sửa một phần.
+LỖI TÌM ĐƯỢC:
+1. App.jsx:161 + :185 / :297, luuMay.js:63-69 (K4): xoaChoRo chỉ khi doiKhach trả true (xoa); kho máy bị chặn → 'chuaBiet' + không dữ liệu → xoa false → choRo sống.
+   A quà 1 "chưa rõ", A hết phiên (giữ khoá — đúng), B đăng nhập cùng tab, đổi quà 1 → gửi khoa_gui của A bằng token B; POS so khoá chung → B thấy kết quả / phiếu của A.
+   doiQua.js:61 "xoá khi khách KHÁC đăng nhập" không đúng ca này. Sửa: gắn mỗi dòng choRo với dấu vết SĐT, khoaChoRo chỉ trả khoá khi đúng khách.
+2. DoiQua.jsx:95-98, :104-106, duLieuKhach.js:60-66 (K4, vòng qua chốt `phien` của taoCua): kết quả về sau khi phiên đổi vẫn ghi vào trạng thái phiên mới.
+   A đổi hiện vật → Back → Đăng xuất → xong: gopPhieuQua(phiếu A) ghi vào kho vừa xoá → B đăng nhập thấy phiếu + QR của A. Ra KHONG_BIET: ghiChoRo khoá A SAU dangXuat.
+   Tự gửi lại đọc token mới mỗi lần (api.js:72) → B đăng nhập giữa chừng thì thân A (PIN A) đi bằng token B. Sửa: chụp phiên / khách lúc bấm, khác thì bỏ.
+3. thu_KHDOI1.js:141-152, dot_bien_tay.js:32-34 (K3): ca "401 GIỮ" gọi thẳng xoaKhoKhach; đăng xuất / khác khách chỉ dò chữ nguồn App — không ca đi qua đường thật.
+4. trang_thai.md "Vòng sửa 2" / Phát hiện, doiQua.js:61 (K1): "docLaiGio chỉ gọi khi doiKhach báo khác khách" sai (báo theo xoa); ca hàm thuần "401 GIỮ" không qua donPhien;
+   "xem mục dưới" không có mục; chú thích thu_KHDOI1.js:548 "khoá ghi TRƯỚC khi gửi" đã bỏ.
+NGHI NGỜ: tự gửi lại đọc token mới (chung POST /don, có từ trước); khoá song song cấp mô-đun không gỡ theo phiên (B bị dq.dangGui tới hết vòng gửi lại — có trần, không kẹt
+  mãi); đổi voucher xong sau khi rời màn không báo "Đã đổi quà!", danh sách kho của lần mở mới không tải lại (POS vẫn chặn đúng); máy mới chưa có kh_nd_ban (đã ở Phát hiện).
+Đường điểm: không còn cách đổi hai lần trong cùng phiên trang; tải lại trang mất khoá (đã ở Phát hiện); PIN không lưu; App không tự tính số thật.
+NGHIỆM THU: 17/18 (C6 ghi nhận); B3 chưa ca riêng QUA_HET_LUOT_THANG, PIN_DANG_KHOA (lối hiện nguyên lời POS đã phủ).
+CHƯA SOÁT ĐƯỢC: --day-du, cổng chay, đột biến (không chạy lại); lỗi 1, 2 suy từ code; POS thật; Zalo, chữ phóng to, tỉ lệ lệch ảnh.
+BÀI HỌC: KHOÁ — bản ghi "chưa rõ" / đang gửi của lệnh trừ điểm gắn với khách (dấu vết SĐT) lúc gửi; kết quả về khi phiên đã đổi không ghi vào kho / bản ghi / màn của phiên
+  mới; ca "đăng xuất lúc đang gửi → B đăng nhập → không thấy phiếu, không dùng khoá A". NGUYÊN TẮC — bản ghi chỉ trong bộ nhớ trang chép luật quên của quenBoNho
+  (cung !== true), không chép luật xoá kho máy (xoa); ca thử luật sống / xoá đi qua nút và cửa thật, dò chữ nguồn không tính là bằng chứng.
+```
+
+## Vòng sửa 3 (28.11 — vòng cuối được phép, so_vong_sua_toi_da = 3)
