@@ -56,7 +56,7 @@ export function ngayPos(s) {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : '';
 }
 
-// Lần đổi ĐANG GỬI / "chưa rõ" của từng quà: ma_qua → khoa_gui (KHÔNG có PIN). Ghi TRƯỚC lần gửi đầu (DoiQua.jsx) và giữ ở cấp mô-đun — sống qua rời màn / vào lại
+// Lần đổi "chưa rõ" của từng quà: ma_qua → khoa_gui (KHÔNG có PIN). Lúc ĐANG gửi đã có khoá chặn song song cấp mô-đun (DoiQua.jsx guiDoi). Giữ ở cấp mô-đun — sống qua rời màn / vào lại
 // (mất khi tải lại trang: khoá mới trên máy phải vào src/luuMay.js — ngoài Phạm vi, xem Phát hiện). Lần bấm sau cho ĐÚNG quà đó dùng lại khoá (POS trả đúng kết quả cũ,
 // không trừ hai lần). Mỗi quà một dòng (quà B không đè quà A). Luật xoá chép kh_don_gui của POST /don: xoá khi đổi xong quà đó, khi lần gửi bằng khoá MỚI bị 4xx chắc chắn,
 // khi đăng xuất, khi khách KHÁC đăng nhập (App.jsx); GIỮ khi 401 / hết phiên và khi 4xx đến sau một lần chưa rõ (không chứng minh lần đầu chưa trừ — chủ quán 05.11).

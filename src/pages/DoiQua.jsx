@@ -17,8 +17,8 @@ import '../giaoDien/doi_qua.css';
 
 // Kho quà (/uudai/doi-qua, KH-DOI-1 — thiết kế duyệt 26.11): điểm (/diem — gọi MỚI mỗi lần mở màn), ô Quà của tôi + số phiếu chờ nhận, dải nhắc (`nhac` POS — câu 4a),
 // thẻ quà ĐÚNG thứ tự POS (câu 3a), bảng PIN đổi quà, màn "Đã đổi quà!" (voucher; số điểm còn lại = `diem_con` POS). Hiện vật xong → Phiếu quà (câu 2a).
-// Một lần bấm "Xác nhận" = một khoa_gui, ghi vào doiQua.ghiChoRo TRƯỚC khi gửi; guiDonAnToan tự gửi lại CÙNG thân khi chưa rõ; lần bấm sau cho ĐÚNG quà đó (kể cả sau khi
-// rời màn) dùng LẠI khoá đó (PIN nhập lại, không lưu) tới khi đổi xong. Khoá chặn gửi song song ở CẤP MÔ-ĐUN (rời màn rồi vào lại vẫn chặn).
+// Một lần bấm "Xác nhận" = một khoa_gui. ĐANG GỬI: khoá chặn gửi song song ở CẤP MÔ-ĐUN (guiDoi — rời màn rồi vào lại vẫn chặn). guiDonAnToan tự gửi lại CÙNG thân
+// khi chưa rõ; vẫn chưa rõ → ghi khoá của quà đó (doiQua.ghiChoRo) — lần bấm sau cho ĐÚNG quà đó (kể cả sau khi rời màn) dùng LẠI khoá (PIN nhập lại, không lưu) tới khi xong.
 const POS = ndDau('dq.pos');
 const NUT = { het: 'dq.nut.het', luot: 'dq.nut.luot', doi: 'dq.nut.doi' };
 
@@ -92,7 +92,6 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
     const than = { ma_qua: q.ma, khoa_gui: cu || taoKhoaGui(), pin };
     const p = guiDoi(than);
     if (!p) return Promise.reject(new Error(nd('dq.dangGui'))); // một lần đổi khác còn đang gửi (kể cả từ lần mở màn trước): không gửi song song
-    ghiChoRo(q.ma, than.khoa_gui); // TRƯỚC khi có kết quả: rời màn rồi bấm lại quà này → cùng khoá
     return p.then((kq) => {
       xoaChoRo(q.ma);
       lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);
@@ -102,7 +101,8 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
       datChon(null);
       if (kq.loai === 'hien_vat') moPhieu(kq.phieu.ma); else datXong({ ...kq, ten: q.ten });
     }, (e) => {
-      if (e.code === 'KHONG_BIET') { // có thể đã trừ: GIỮ khoá cho lần bấm sau, lấy lại điểm / kho / phiếu để khách thấy số mới
+      if (e.code === 'KHONG_BIET') { // có thể đã trừ: GHI khoá cho lần bấm sau (kể cả sau khi rời màn), lấy lại điểm / kho / phiếu để khách thấy số mới
+        ghiChoRo(q.ma, than.khoa_gui);
         lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]); if (conMo.current) kho.taiLai();
         throw new Error(nd('dq.chuaRo'));
       }

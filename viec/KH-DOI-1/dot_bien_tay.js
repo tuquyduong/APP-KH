@@ -49,7 +49,8 @@ const TRINH_DUYET = [
   ['BV-KHONG-GOP-PHIEU', [[DQ, 'if (kq.phieuTho) gopPhieuQua(kq.phieuTho);', '']]],
   // Vòng sửa 1: DoiQua có HAI lamMoi (đổi xong · chưa rõ) → dò nguồn không còn phân biệt; ca trình duyệt "đổi xong → lấy lại /diem /voucher /qua-cua-toi" bắt.
   ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, 'lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);\n      if (kq.phieuTho)', 'lamMoi([cuaDiem]);\n      if (kq.phieuTho)']]],
-  ['BV-GHI-KHOA-SAU-KHI-GUI', [[DQ, '    ghiChoRo(q.ma, than.khoa_gui); // TRƯỚC', '    // TRƯỚC'], [DQ, "      if (e.code === 'KHONG_BIET') {", "      if (e.code === 'KHONG_BIET') { ghiChoRo(q.ma, than.khoa_gui);"]]],
+  // (BV-GHI-KHOA-SAU-KHI-GUI bỏ ở vòng sửa 2: SÓT vì dòng ghi trước khi gửi thừa — khoá song song cấp mô-đun đã chặn mọi lần bấm lại lúc đang gửi; đã bỏ dòng đó.)
+  ['BV-CHUA-RO-KHONG-GHI-KHOA', [[DQ, '        ghiChoRo(q.ma, than.khoa_gui);\n', '']]],
   ['BV-KHONG-CHAN-SONG-SONG', [[DQ, 'const p = guiDoi(than);', 'const p = guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi });']]],
   ['BV-KEO-SANG-PHIEU-SAU-KHI-ROI', [[DQ, '      if (!conMo.current) return;\n', '']]],
   ['VS-NHAC-KHONG-THEO-POS', [[DQ, 'const nhac = cho.find((p) => p.nhac);', 'const nhac = cho[0];']]],
