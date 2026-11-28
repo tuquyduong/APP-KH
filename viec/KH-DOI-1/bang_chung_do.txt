@@ -13,17 +13,17 @@ $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHDOI1.js      (bản sao gốc)
   … (A1 api, A3 kho dữ liệu, A4 canTuPos, B danh mục / đường dẫn / css / index.html đều ✗)
   ✗ K8 DA_HEN_POS viết thẳng ĐÚNG 3 cửa … · ✗ K8d cây hiện tại … — không có dòng K8d
   ✗ K8 cửa lạ trong api.js … → vẫn ✗ K8 · ✗ K8d cửa đã hẹn đã vào hợp đồng … — không có dòng K8d
-5 đạt · 45 hỏng   (bản bài thử cuối: khối "K8 đã hẹn" — chủ quán 27.11; ca "chưa rõ" — vòng sửa 1, 2)
+5 đạt · 45 hỏng   (bản bài thử cuối: khối "K8 đã hẹn" — chủ quán 27.11; ca "chưa rõ" / đường thật — vòng sửa 1, 2, 3)
 
 $ node cong_cu/thu_KHDOI1.js      (bản sao gốc, có Chromium)
   ✗ B1 tắt: mở thẳng /uudai/doi-qua → về /uudai  — /uudai/doi-qua
   ✗ ca B1–B2 BẬT: Ưu đãi + Kho quà dừng giữa chừng — waiting for locator('#rewards .dq-nut')
   ✗ ca A1 B3 B4 đổi voucher … dừng giữa chừng — waiting for locator('#doiqua .dq-the')…
   ✗ ca B3 B5 đổi hiện vật … · ✗ ca B3 lỗi POS … · ✗ B6 … · ✗ A1 /kho-qua 401 …
-22 đạt · 62 hỏng   (bản bài thử cuối)
+26 đạt · 66 hỏng   (bản bài thử cuối)
 
 Trên code đã vá:
 $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHDOI1.js   → 62 đạt · 0 hỏng
-$ node cong_cu/thu_KHDOI1.js (Chromium)              → 159 đạt · 0 hỏng
+$ node cong_cu/thu_KHDOI1.js (Chromium)              → 171 đạt · 0 hỏng
 
 SỐ CA cong_cu/thu_KHDOI1.js: 62
