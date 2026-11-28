@@ -43,6 +43,7 @@ const THAT = [M('TLB', 'Trà Lục Bảo', 'tea', 'Trà', 2), M('NEP', 'Nước 
     const ds = [M('A', 'a', 'x', 'X', 9999), M('B', 'b', 'y', 'Y', 5), M('C', 'c', 'z', 'Z', 5), M('D', 'd', '', undefined, undefined)];
     return [ten(ds).join('|') === 'Y|Z|X|Khác', ten(ds).join('|')];
   });
+  await thu('A1 maNhom cắt khoảng trắng ("  " → "" → tên "Khác") · A2 thứ tự nhóm lấy số nhỏ nhất của các món (món đầu thiếu số)', () => [L.maNhom({ nhom: '  ' }) === '' && L.tenNhom({ nhom: '  ' }) === 'Khác' && ten([M('A', 'a', 'x', 'X'), M('B', 'b', 'x', 'X', 1), M('C', 'c', 'y', 'Y', 5)]).join('|') === 'X|Y']);
   await thu('A2 hai mã khác nhau trùng nhom_ten vẫn là HAI nhóm', () => [L.nhomTheoTen([M('A', 'a', 'tra1', 'Trà', 1), M('B', 'b', 'tra2', 'Trà', 2)]).length === 2]);
   await thu('A2 POS cũ (nhom là tên, không nhom_ten / nhom_thu_tu) → như gốc: tên = nhom, thứ tự xuất hiện; món không nhóm → "Khác"', () => {
     const ds = [M('A', 'a', 'Cà phê'), M('B', 'b', 'Trà Đông Y'), M('C', 'c', 'Cà phê'), M('D', 'd', undefined)];
