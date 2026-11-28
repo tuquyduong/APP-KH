@@ -1,11 +1,11 @@
 # KH-NHOM-1 — bằng chứng ĐỎ trên code gốc (cây 16ea448 = PHIEU, chưa sửa src/; chép thu_KHNHOM1.js + thu_KHMUA1b.js đã thêm S.menu vào) — 28.11.2026
 
 ## node cong_cu/thu_KHNHOM1.js (có Chromium) — dòng tổng
-35 đạt · 30 hỏng
+35 đạt · 31 hỏng  (bản bài thử cuối, 28.11; POS giả của thu_KHMUA1b.js KHÔNG sửa — bài tự đè đường /menu)
 (đỏ: ô / tiêu đề nhóm hiện "tea" / "coffee" / "juice", sai thứ tự POS, Trang món hiện "juice", ô giỏ nền mặc định, bấm ô "Nước ép" không có; ca POS cũ B5 và giỏ "Không còn trong menu" xanh trên gốc có chủ đích — đối chứng K5)
 
 ## KHONG_TRINH_DUYET=1 node cong_cu/thu_KHNHOM1.js
-5 đạt · 10 hỏng
+5 đạt · 11 hỏng
   ✗ tenNhom / maNhom / thuTuNhom / khoaNhom / bieuTuongMon (chưa có), nhomTheoTen xếp theo nhom_thu_tu + gom theo mã (chưa), nối dây Menu / TrangMon / MonO / GioHang, danh mục menu.nhom chỉ đường
 
 ## Sau vá (cùng bài thử)

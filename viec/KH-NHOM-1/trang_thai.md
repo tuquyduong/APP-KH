@@ -17,7 +17,7 @@
 - Đột biến "lọc theo `m.nhom` thay `khoaNhom`" là tương đương (khoá = mã khi có mã; chỉ khác ở nhóm không mã) → đã bỏ khỏi `dot_bien_tay.js`.
 
 ## C2 — bài cũ
-- Bài cũ dựa vào `nhom` = tên (POS giả `thu_KHMUA1b.js` và các bài dùng nó): không đỏ vì ca "POS cũ" giữ nguyên hành vi (tên = `nhom`). Chỉ thêm một dòng vào POS giả của `thu_KHMUA1b.js`: `/menu` trả `S.menu || MENU_DS` (không đổi ca nào). Không dùng `## Bài thử cũ sửa`.
+- Bài cũ dựa vào `nhom` = tên (POS giả `thu_KHMUA1b.js` và các bài dùng nó): không đỏ vì ca "POS cũ" giữ nguyên hành vi (tên = `nhom`). Ban đầu có thêm một dòng vào `thu_KHMUA1b.js` (`S.menu`) nhưng cổng A11 bắt (bài cũ sửa mà xanh trên gốc) → ĐÃ HOÀN LẠI nguyên văn (`git diff 16ea448 -- cong_cu/thu_KHMUA1b.js` rỗng); `thu_KHNHOM1.js` tự đè đường `/menu` của POS giả bằng `ctx.route` đăng ký sau (hàm `baMenu`). Không dùng `## Bài thử cũ sửa`.
 
 ## Bảng "chỗ vá → đột biến" (`dot_bien_tay.js`, việc chỉ đổi `src/` nên không có `dot_bien.py`)
 | Chỗ vá | Đột biến |
