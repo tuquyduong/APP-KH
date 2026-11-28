@@ -106,7 +106,14 @@ if (hd && Array.isArray(hd.cua)) {
   }
   const tong = (api.match(/\bgoi\(/g) || []).length - (api.match(/function goi\(/g) || []).length;
   if (tong !== n) lech.push(`${tong - n} lời gọi không viết thẳng`);
-  k('K8 mọi lời gọi src/api.js có trong hợp đồng', n > 0 && lech.length === 0, lech.join(', '));
+  // Cửa ĐÃ HẸN (POS hẹn bằng thư, chưa lên bảng cửa của hợp đồng) — chủ quán 27.11 (KH-DOI-1): viết thẳng ở đây, nguồn thiet_ke/trao_doi/TRA_LOI_POS_16112026_DOIDIEM.md
+  // mục 1 (DOI-DIEM-1). K8 nhận các cửa này; K8d đỏ khi một cửa đã vào hợp đồng → gỡ khỏi danh sách (để K8 lại đòi hợp đồng như mọi cửa).
+  const DA_HEN_POS = ['GET /kho-qua', 'POST /doi-diem', 'GET /qua-cua-toi'];
+  const hen = new Set(DA_HEN_POS.map((c) => { const [pt, d] = c.split(' '); return `${pt} ${chuan(d)}`; }));
+  const conLech = lech.filter((c) => !hen.has(c.replace(/^(\S+) (.*)$/, (_, pt, d) => `${pt} ${chuan(d)}`)));
+  k('K8 mọi lời gọi src/api.js có trong hợp đồng (hoặc DA_HEN_POS)', n > 0 && conLech.length === 0, conLech.join(', '));
+  const daVao = DA_HEN_POS.filter((c) => { const [pt, d] = c.split(' '); return coTrong.has(`${pt} ${chuan(d)}`); });
+  k('K8d cửa trong DA_HEN_POS chưa có trong hợp đồng (đã có → gỡ khỏi DA_HEN_POS)', daVao.length === 0, daVao.length ? `đã vào hợp đồng: ${daVao.join(', ')} — gỡ khỏi DA_HEN_POS` : '');
 }
 // K8b — mọi lời gọi kho trong src/noiDung/khoNoiDung.js viết thẳng ('PT', '/đường') và có trong hợp đồng /api/nd (thiet_ke/HOP_DONG_API_ND.md, khối HOP_DONG_ND_MAY_DOC).
 let hdNd = null;

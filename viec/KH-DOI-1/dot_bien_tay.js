@@ -13,7 +13,7 @@ const NHAP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'dot-bien-kh-doi-1
 for (const d of ['src', 'cong_cu', 'thiet_ke', 'public', 'package.json', 'package-lock.json', 'index.html', 'kiem_tra_truoc_khi_giao.js', 'viec/KH-DOI-1/sym.txt']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
 fs.symlinkSync(path.join(GOC, 'node_modules'), path.join(NHAP, 'node_modules'));
 
-const Q = 'src/doiQua.js', A = 'src/api.js', ND = 'src/noiDung/nd/doiQua.js', DL = 'src/duLieuKhach.js', DQ = 'src/pages/DoiQua.jsx', U = 'src/pages/UuDai.jsx', APP = 'src/App.jsx', PIN = 'src/components/PinSheet.jsx';
+const Q = 'src/doiQua.js', A = 'src/api.js', ND = 'src/noiDung/nd/doiQua.js', DL = 'src/duLieuKhach.js', DQ = 'src/pages/DoiQua.jsx', U = 'src/pages/UuDai.jsx', APP = 'src/App.jsx', PIN = 'src/components/PinSheet.jsx', KT = 'kiem_tra_truoc_khi_giao.js';
 const DS = [
   ['VS-CONG-TAC-MAC-DINH-BAT', [[ND, "loai: 'battat', macDinh: false }", "loai: 'battat', macDinh: true }"]]],
   ['VS-APP-TU-XEP-LAI-QUA', [[Q, 'return ds.filter((q) => q && soNguyen(q.ma)', 'return [...ds].sort((a, b) => (a && b ? a.diem_can - b.diem_can : 0)).filter((q) => q && soNguyen(q.ma)']]],
@@ -26,6 +26,9 @@ const DS = [
   ['VS-LUU-PIN', [[DQ, '    const q = chon;\n', "    const q = chon;\n    try { sessionStorage.setItem('kh_pin_cuoi', pin); } catch { /* */ }\n"]]],
   ['VS-UU-DAI-BO-CONG-TAC', [[U, "const coDoi = ndHien('hien.dq');", 'const coDoi = true;']]],
   ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, 'lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);', 'lamMoi([cuaDiem]);']]],
+  // Bộ kiểm K8 / K8d (chủ quán 27.11): cửa lạ trong api.js vẫn phải đỏ K8; cửa đã hẹn vào hợp đồng phải đỏ K8d.
+  ['VS-K8-NHAN-MOI-CUA', [[KT, 'n > 0 && conLech.length === 0', 'n > 0']]],
+  ['BV-K8D-KHONG-NHAC-GO', [[KT, 'daVao.length === 0, daVao.length', 'true, daVao.length']]],
 ];
 const TRINH_DUYET = [
   ['VS-GOI-KHO-KHI-TAT', [[APP, "if (!coDoiQua && ['doiqua'", "if (false && ['doiqua'"], [APP, "{dangNhap && coDoiQua && trang === 'doiqua'", "{dangNhap && trang === 'doiqua'"]]],
