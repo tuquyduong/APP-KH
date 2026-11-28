@@ -262,7 +262,7 @@ async function dungMay(pw, k) {
       if (duong === '/gio-vang') return json(200, { success: true, dang_chay: false, bat_dau: null, ket_thuc: null, phan_tram: 0, mon: [] });
       if (duong === '/hang') return json(200, { success: true, data: [{ id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, gia_the: 199000, thu_tu: 1 }] });
       if (duong === '/gio-hoat-dong') return json(200, { success: true, bay_gio: BAY('20:30:00'), dang_mo: true, nhan_don: true, hom_nay: { mo: '08:00', dong: '22:00' }, mo_lai_luc: null, thong_bao: '', lich_tuan: [], ngay_nghi: [] });
-      if (duong === '/menu') return json(200, { success: true, data: S.menu || MENU_DS }); // S.menu: KH-NHOM-1 (nhóm POS v19)
+      if (duong === '/menu') return json(200, { success: true, data: MENU_DS });
       if (!/tok-A/.test(req.headers().authorization || '') || (S.chetDon && duong === '/don' && pt === 'POST')) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: S.sdt || '0909123456', ten: 'Linh', ngay_tao: BAY('08:00:00'), xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: { id: 2, ten: 'Vàng', phan_tram: 10, phan_tram_nhom_dac_biet: 5, het_han: '2026-11-15T23:59:59' }, so_du_vi: S.vi } });
       if (duong === '/diem') return json(200, { success: true, points: 0, history: [] });
