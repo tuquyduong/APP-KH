@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { dinhDangNgay } from '../dinhDang.js';
 import { ngam } from '../api.js';
 import { slug } from '../duongDan.js';
-import { timMon, locTheoNhuCau, nhomTheoTen, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
+import { timMon, locTheoNhuCau, nhomTheoTen, khoaNhom, bieuTuongNhom, NHOM_MAC_DINH } from '../menuLoc.js';
 import { MON } from '../noiDung/mon.js';
 import Man, { NutQR } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
@@ -61,16 +61,17 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
   const dsThe = ndHien('hien.menu.the') ? hangBanDuoc(dsHang) : [];
   const coGv = !!tt && (!coMenu || maGv.size > 0); // Giờ vàng tắt / không món ghép được → ẩn mọi chỗ
   const chonGv = coGv && nhomSlug === GV_SLUG;
-  const nhomCo = nhomTheoTen(ds).map(([ten]) => ({ id: ten, ten, ic: bieuTuongNhom(ten).ic }));
+  // Ô nhóm theo MÃ POS; mã có đường dẫn trùng ô riêng của App (hoặc rỗng) không có ô — nhóm vẫn hiện ở "Tất cả".
+  const nhomCo = nhomTheoTen(ds).map(([ten, , id]) => ({ id, ten, ic: bieuTuongNhom(ten).ic })).filter((n) => slug(n.id) && slug(n.id) !== GV_SLUG && slug(n.id) !== THE_SLUG);
   const oThe = dsThe.length ? [{ id: THE_SLUG, ten: nd('menu.the.ten'), ic: 'member', khoa: 'menu.the.ten' }] : [];
   const oChon = [...nhomCo, ...oThe, { ...TAT_CA, ten: nd('menu.tatCa') }];
   const chonThe = oThe.length > 0 && nhomSlug === THE_SLUG;
-  const nhom = chonGv ? GV_SLUG : chonThe ? THE_SLUG : (nhomCo.find((n) => slug(n.ten) === nhomSlug) || TAT_CA).id;
+  const nhom = chonGv ? GV_SLUG : chonThe ? THE_SLUG : (nhomCo.find((n) => slug(n.id) === nhomSlug) || TAT_CA).id;
   const q = tu.trim();
   let loc = nhuCau ? locTheoNhuCau(ds, MON, nhuCau) : ds;
   loc = timMon(loc, tu);
   if (chonGv && !q) loc = loc.filter((m) => maGv.has(m.ma));
-  else if (nhom && !q) loc = loc.filter((m) => (m.nhom || nd('menu.nhomKhac')) === nhom);
+  else if (nhom && !q) loc = loc.filter((m) => khoaNhom(m) === nhom);
   if (chonThe && !q) loc = [];
   const phan = q ? [[null, loc]] : chonGv ? [[GV_SLUG, loc]] : chonThe ? [] : nhomTheoTen(loc);
   const hienThe = !q && !nhuCau && (chonThe || !nhom) && dsThe.length > 0; // nhóm thẻ: khi chọn ô thẻ, và ở cuối "Tất cả"; không khi đang tìm / lọc nhu cầu
@@ -123,8 +124,8 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
             <div id="catGrid" ref={luoi}>
               {ds.length === 0 && <Chu k="menu.rong" as="div" className="empty-note" />}
               {ds.length > 0 && loc.length === 0 && !chonThe && <Chu k="menu.khongKhop" as="div" className="empty-note" />}
-              {phan.map(([ten, mon]) => (
-                <div key={ten || 'tim'}>
+              {phan.map(([ten, mon, khoa]) => (
+                <div key={khoa || ten || 'tim'}>
                   {ten === GV_SLUG && (
                     <div className={`gv-head${tt.pha === 'dang' ? ' live' : ''}`}>
                       <DenLong s={46} />
