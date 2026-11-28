@@ -279,3 +279,22 @@ sửa đúng như người soát gợi ý — nhỏ, đều trong Phạm vi, kh�
 Chủ quán chọn: (a) cho máy làm **vòng sửa 4** đúng 4 việc trên rồi soát lại; hoặc (b) gộp như hiện tại (công tắc `hien.dq` TẮT mặc định — khách chưa gặp lỗi nào cho tới khi
 chủ quán bật sau khi POS gộp DOI-DIEM-1), ghi 3 lỗi thành việc sau (vd KH-DOI-2) làm TRƯỚC khi bật `hien.dq`.
 Máy dừng ở đây (chưa làm bước 11 / báo cáo 7 mục — làm sau khi soát ĐẠT hoặc chủ quán chọn b).
+
+**Trả lời Q3 (chủ quán 28.11):** chọn (a) — cho MỘT vòng sửa 4 (vòng cuối): sửa đúng 3 lỗi Q3 + 2 câu chú thích "401 thì giữ khoá", kèm ca thử + đột biến từng lỗi;
+soát vòng 5 chỉ còn lỗi mức thấp thì KHÔNG sửa nữa → mục "Chuyển KH-DOI-2", bước 11, báo cáo 7 mục, dừng.
+
+## Vòng sửa 4 (28.11 — vòng cuối, chủ quán cho phép)
+| Lỗi soát vòng 4 | Sửa | Ca thử / đột biến |
+|---|---|---|
+| 1. 401 giữa chuỗi tự gửi lại → mất khoá "chưa rõ" | DoiQua.jsx: `KHONG_BIET` → `ghiChoRo(…, chu)` TRƯỚC phép thử `cungKhach()` (khoá gắn chu A — khách khác không đọc; Đăng xuất xoá) | ca "A1 401 GIỮA chuỗi tự gửi lại → A đăng nhập lại → CÙNG khoá" (503 → 401 thật ở POST /doi-diem → donPhien → màn Đăng nhập → 3 POST cùng khoá); BV-401-GIUA-CHUOI-MAT-KHOA, BV-CHUA-RO-KHONG-GHI-KHOA |
+| 2. GET đang bay từ lúc mở màn về muộn đè phiếu vừa đổi | duLieuKhach.js `taoCua` thêm `layMoi()` (tăng `phien`, bỏ lệnh đang bay, lấy mới, không xoá kho); DoiQua `layMoiSauDoi` cho /diem, /voucher, /qua-cua-toi (đổi xong + chưa rõ) | hàm thuần "taoCua.layMoi: lệnh GET cũ về SAU không đè bản mới"; ca "B5 GET /qua-cua-toi lúc MỞ màn về SAU khi đổi xong → không đè" (POS giả chụp dữ liệu lúc NHẬN yêu cầu, trả sau 4 giây); BV-DUNG-LAI-GET-DANG-BAY, BV-KHONG-LAM-MOI-SAU-DOI |
+| 3. /toi lỗi → kẹt "chờ rồi bấm lại" | chưa biết khách → `cuaToi.lay()` rồi báo `dq.choKhach` | ca "B3 hồ sơ (/toi) lỗi → bấm Xác nhận tự tải lại → bấm lại đổi được"; BV-HO-SO-LOI-KHONG-TAI-LAI |
+| 4. Chú thích "401 thì giữ" chưa trọn | `doiQua.js` (ghi khi chưa rõ kể cả 401 giữa chuỗi; khoá theo mã quà — khách khác cùng tab xoá / đè dòng của khách trước, đúng §8); `App.jsx` dangXuat ("CHỈ bấm Đăng xuất mới xoá; 401 — kể cả giữa chuỗi tự gửi lại — giữ") | — |
+Sửa K1 trang_thai: các câu "401 → GIỮ khoá" ở "Vòng sửa 2" / "Vòng sửa 3" chỉ đúng trọn từ vòng sửa 4 (trước đó 401 GIỮA chuỗi tự gửi lại làm mất khoá — soát vòng 4).
+
+Sau sửa:
+- `thu_KHDOI1.js` 63 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 181 đạt · 0 hỏng (Chromium); gốc 5 · 46 / 29 · 70; `SỐ CA cong_cu/thu_KHDOI1.js: 63`.
+- Đột biến `--trinh-duyet`: đối chứng XANH (181/0), **37/37 BẮT ĐƯỢC** — TẤT CẢ ĐỘT BIẾN BỊ BẮT.
+- `--day-du` **71 đạt · 0 hỏng** (thu_KHDOI1 Chromium 103 giây — Phát hiện mức 120 giây).
+- Cổng (HEAD dc2c741, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 51 ca ≠ 63 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
+HEAD ĐÃ KIỂM: dc2c741
