@@ -85,6 +85,7 @@ có mã QR để nhận ở quầy. "Quà của tôi" giữ các phiếu (chờ 
 - cong_cu/thu_KHDOI1.js
 - cong_cu/thu_*.js
 - cong_cu/no_chu_cung.txt
+- kiem_tra_truoc_khi_giao.js
 
 ## Ngân sách
 ~380 dòng app (api + đọc ~60, 3 màn ~200, Ưu đãi ~15, css ~60, danh mục ~45) + ~450 dòng thử. **Phương án đơn giản nhất đã xét:** dùng lại PinSheet, khoá gửi, khuôn
@@ -98,7 +99,7 @@ không
 
 ## Cấm
 - KHÔNG tự tính điểm còn lại / hạn / nhắc làm số thật; KHÔNG lưu PIN; KHÔNG đổi luồng trả tiền, PIN đơn hàng, Ví, voucher Giỏ (KH-VC-2) ngoài việc làm mới kho dữ liệu.
-- KHÔNG thêm lối mạng, không đổi `CHO_API` / `SO_LOI_MANG_API` / `CHO_GIAU`, không sửa `kiem_tra_truoc_khi_giao.js`. Không thêm màu ngoài bảng demo (K9).
+- KHÔNG thêm lối mạng, không đổi `CHO_API` / `SO_LOI_MANG_API` / `CHO_GIAU`, không sửa `kiem_tra_truoc_khi_giao.js` — TRỪ hằng `DA_HEN_POS` (đúng 3 cửa `GET /kho-qua`, `POST /doi-diem`, `GET /qua-cua-toi`, nguồn `thiet_ke/trao_doi/TRA_LOI_POS_16112026_DOIDIEM.md`) + khối K8 nhận cửa đã hẹn + phép K8d (cửa đã vào hợp đồng → đỏ, nhắc gỡ) theo `viec/KH-DOI-1/va_K8.txt` — chủ quán 27.11 (trả lời Q1 / Q2). Ngoài khối K8 không đổi gì khác trong tệp đó. Không thêm màu ngoài bảng demo (K9).
 - KHÔNG sửa `src/components/TheQR.jsx`, `src/giaoDien/the_qr.css`, `src/qrThuongHieu.js`, `src/quangCao.js`, `src/giaoDien/demo*.css`, `thiet_ke/**`, `tu_chay/`, `.claude/`,
   `.github/`, `cong_cu/ha_no_chu.js`, `TIEN_DO_APPKH.json`, `LUAT_XAY_APP.md`, `CLAUDE.md`, `public/sw.js`. KH-SUA-2 KHÔNG làm ở đây.
 - Chỉ push `git push -u origin viec/KH-DOI-1`. Không đụng `main`, không merge, không tạo PR.
