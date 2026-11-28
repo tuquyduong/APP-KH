@@ -135,11 +135,21 @@ const QUA_TOI = [
     k('A3 cuaQuaToi có, KHÔNG trong CUA_KHACH (làm mới ngầm sẽ gọi /qua-cua-toi khi công tắc tắt)', !!K.cuaQuaToi && !K.CUA_KHACH.includes(K.cuaQuaToi));
     if (K.cuaQuaToi) { K.cuaQuaToi.kho.dat({ dl: { data: [] }, luc: 1, loi: '' }); K.xoaKhoKhach(); }
     k('A3 xoaKhoKhach (đăng xuất / đổi khách) xoá cả cuaQuaToi', !!K.cuaQuaToi && K.cuaQuaToi.kho.lay().dl === null);
-    const ghi = D.ghiChoRo || (() => {}), docR = D.docChoRo || (() => 'x');
-    ghi({ ma_qua: 1, khoa_gui: 'k'.repeat(36), pin: '1234' });
-    k('A1 lần đổi chưa rõ giữ { ma_qua, khoa_gui } — KHÔNG giữ PIN', bang(docR(), { ma_qua: 1, khoa_gui: 'k'.repeat(36) }), JSON.stringify(docR()));
+    const ghi = D.ghiChoRo || (() => {}), khoaR = D.khoaChoRo || (() => 'x'), xoaR = D.xoaChoRo || (() => {});
+    const KA = 'a'.repeat(36), KB = 'b'.repeat(36);
+    ghi(1, KA); ghi(2, KB);
+    k('A1 "chưa rõ" theo TỪNG quà: quà B không đè khoá quà A', khoaR(1) === KA && khoaR(2) === KB && khoaR(3) === null);
     K.xoaKhoKhach();
-    k('A1 đăng xuất / đổi khách xoá cả lần đổi chưa rõ (khoá của khách cũ)', docR() === null);
+    k('A1 hết phiên / 401 (donPhien → xoaKhoKhach) GIỮ khoá chưa rõ (luật kh_don_gui)', khoaR(1) === KA);
+    xoaR(2);
+    k('A1 xoá đúng một quà (đổi xong / 4xx khoá mới) không đụng quà khác', khoaR(2) === null && khoaR(1) === KA);
+    xoaR();
+    k('A1 xoá hết (đăng xuất / khác khách)', khoaR(1) === null);
+    const app = doc('src/App.jsx');
+    const ham = (ten) => (new RegExp(`const ${ten} = \\(\\) => \\{[^\\n]*`).exec(app) || [''])[0];
+    k('A1 App: đăng xuất + khác khách (docLaiGio — chỉ gọi khi luuMay.doiKhach báo khác khách) xoá khoá; donPhien (401) KHÔNG',
+      /xoaChoRo\(\)/.test(ham('dangXuat')) && /xoaChoRo\(\)/.test(ham('docLaiGio')) && !/xoaChoRo/.test(ham('donPhien')) && (app.match(/doiKhach\([^)]*\)\) docLaiGio\(\)/g) || []).length === 2,
+      [ham('dangXuat'), ham('docLaiGio')].map((x) => x.slice(0, 60)).join(' | '));
     const cds = doc('src/components/CheDoSua.jsx');
     k("B5 Chế độ sửa \"Đi tới màn\" không mở Phiếu quà bằng mã ĐƠN", /e\.trang !== 'phieuqua'/.test(cds));
     const dq = doc('src/pages/DoiQua.jsx');
@@ -288,7 +298,8 @@ async function trinhDuyet(pw) {
         S.doi.push(than);
         const x = S.kich.shift();
         if (x && x.mat) return r.abort('internetdisconnected');
-        if (x) return json(x.st, x.o);
+        if (x && x.cham) await new Promise((v) => setTimeout(v, x.cham));
+        else if (x) return json(x.st, x.o);
         const q = S.kho.find((y) => y.ma === than.ma_qua);
         if (S.khoa.has(than.khoa_gui)) return json(200, S.khoa.get(than.khoa_gui));
         if (than.pin !== '1234') return json(400, { error: 'Mã PIN không đúng', code: 'PIN_SAI' });
@@ -532,6 +543,42 @@ async function trinhDuyet(pw) {
     await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
     await doiChu(t, '#doiqua', /Đã đổi quà!/);
     k('A1 đổi xong → lần đổi sau là khoá MỚI', S.doi.length === 7 && S.doi[6].khoa_gui !== S.doi[0].khoa_gui);
+  });
+
+  // Vòng sửa 2 (/ra-soat): khoá ghi TRƯỚC khi gửi + chặn gửi song song ở cấp mô-đun — rời màn khi đang gửi rồi bấm lại → không POST khoá mới, không kéo khách sang Phiếu quà.
+  them('A1 rời màn KHI ĐANG GỬI rồi bấm lại: không gửi song song, không khoá mới', { kich: [{ cham: 6000 }] }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut'); await t.locator('#rewards .dq-nut').click();
+    await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6); await doiChu(t, '#doiqua .dq-hero', /1\.250/);
+    await t.locator('#doiqua .dq-the').nth(2).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doi(t, async () => S.doi.length === 1);
+    await t.goBack();
+    k('A1 Back khi đang gửi → về /uudai', await doiUrl(t, /^\/uudai$/), duongDan(t));
+    await t.waitForSelector('#rewards .dq-nut'); await t.locator('#rewards .dq-nut').click();
+    await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6);
+    await t.locator('#doiqua .dq-the').nth(2).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    k('A1 bấm lại khi lần trước còn đang gửi → lời "còn đang gửi", KHÔNG POST thứ hai', (await doiChu(t, '.pin-sheet .pin-msg', /còn đang gửi/)) && S.doi.length === 1, String(S.doi.length));
+    await t.waitForTimeout(6500);
+    k('A1 lần gửi cũ xong SAU khi đã rời màn → không kéo khách sang Phiếu quà', duongDan(t) === '/uudai/doi-qua', duongDan(t));
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doiUrl(t, /^\/uudai\/qua\//);
+    k('A1 lần đổi xong rồi → bấm lại là lần đổi MỚI (khoá mới), tổng 2 POST', S.doi.length === 2 && S.doi[1].khoa_gui !== S.doi[0].khoa_gui, JSON.stringify(S.doi.map((x) => x.khoa_gui.slice(0, 8))));
+  });
+
+  them('A1 chưa rõ quà A rồi đổi quà B → bấm lại A vẫn khoá cũ', { kich: [{ st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }, { st: 503, o: { error: 'Máy chủ bận' } }] }, async (t, S) => {
+    await mo(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6); await doiChu(t, '#doiqua .dq-hero', /1\.250/);
+    for (const n of [0, 1]) {
+      await t.locator('#doiqua .dq-the').nth(n).locator('.dq-doi').click();
+      await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+      await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ/, 15000);
+      await t.keyboard.press('Escape');
+    }
+    await t.locator('#doiqua .dq-the').nth(0).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
+    const a = S.doi.filter((x) => x.ma_qua === 1), b = S.doi.filter((x) => x.ma_qua === 2);
+    k('A1 quà A (4 lần) và quà B (4 lần) khoá riêng; lần bấm lại A dùng ĐÚNG khoá A', a.length === 5 && b.length === 4 && a.every((x) => x.khoa_gui === a[0].khoa_gui) && a[0].khoa_gui !== b[0].khoa_gui, JSON.stringify(S.doi.map((x) => `${x.ma_qua}:${x.khoa_gui.slice(0, 6)}`)));
   });
 
   them('B2 dải nhắc theo `nhac` POS, không theo thứ tự', { quaToi: [QUA_TOI[1], QUA_TOI[0]] }, async (t) => {

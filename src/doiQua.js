@@ -56,9 +56,12 @@ export function ngayPos(s) {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : '';
 }
 
-// Lần đổi "chưa rõ" (guiDonAnToan hết lượt tự gửi lại mà POS chưa trả lời chắc): { ma_qua, khoa_gui } — KHÔNG có PIN. Giữ ở cấp mô-đun (sống qua chuyển màn
-// trong App, mất khi tải lại trang); lần bấm sau cho ĐÚNG quà đó dùng lại khoá (POS trả đúng kết quả cũ, không trừ hai lần). CHỈ xoá khi đổi xong quà đó hoặc đăng xuất —
-// lỗi 4xx đến sau một lần chưa rõ không chứng minh lần đầu chưa trừ (luật guiDonAnToan, chủ quán 05.11) nên không xoá.
-let choRo = null;
-export const docChoRo = () => choRo;
-export const ghiChoRo = (x) => { choRo = x && Number.isInteger(x.ma_qua) && typeof x.khoa_gui === 'string' ? { ma_qua: x.ma_qua, khoa_gui: x.khoa_gui } : null; };
+// Lần đổi ĐANG GỬI / "chưa rõ" của từng quà: ma_qua → khoa_gui (KHÔNG có PIN). Ghi TRƯỚC lần gửi đầu (DoiQua.jsx) và giữ ở cấp mô-đun — sống qua rời màn / vào lại
+// (mất khi tải lại trang: khoá mới trên máy phải vào src/luuMay.js — ngoài Phạm vi, xem Phát hiện). Lần bấm sau cho ĐÚNG quà đó dùng lại khoá (POS trả đúng kết quả cũ,
+// không trừ hai lần). Mỗi quà một dòng (quà B không đè quà A). Luật xoá chép kh_don_gui của POST /don: xoá khi đổi xong quà đó, khi lần gửi bằng khoá MỚI bị 4xx chắc chắn,
+// khi đăng xuất, khi khách KHÁC đăng nhập (App.jsx); GIỮ khi 401 / hết phiên và khi 4xx đến sau một lần chưa rõ (không chứng minh lần đầu chưa trừ — chủ quán 05.11).
+const choRo = new Map();
+export const khoaChoRo = (ma) => choRo.get(ma) || null;
+export const ghiChoRo = (ma, khoa) => { if (Number.isInteger(ma) && typeof khoa === 'string' && khoa) choRo.set(ma, khoa); };
+/** Xoá dòng của quà `ma`; không truyền `ma` → xoá hết (đăng xuất / khác khách). */
+export const xoaChoRo = (ma) => { if (ma === undefined) choRo.clear(); else choRo.delete(ma); };

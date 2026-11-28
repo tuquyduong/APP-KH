@@ -27,8 +27,11 @@ const DS = [
   ['VS-UU-DAI-BO-CONG-TAC', [[U, "const coDoi = ndHien('hien.dq');", 'const coDoi = true;']]],
   // Bộ kiểm K8 / K8d (chủ quán 27.11): cửa lạ trong api.js vẫn phải đỏ K8; cửa đã hẹn vào hợp đồng phải đỏ K8d.
   // Vòng sửa 1 (/ra-soat): "chưa rõ" giữ khoá (không PIN), đăng xuất xoá; Chế độ sửa không mở Phiếu quà bằng mã đơn.
-  ['VS-CHUA-RO-GIU-PIN', [[Q, '{ ma_qua: x.ma_qua, khoa_gui: x.khoa_gui }', '{ ...x }']]],
-  ['BV-DANG-XUAT-GIU-CHUA-RO', [[DL, ' ghiChoRo(null); };', ' };']]],
+  // Vòng sửa 2: bản ghi chưa rõ theo từng quà; luật xoá như kh_don_gui (giữ khi 401; xoá khi đăng xuất / khác khách).
+  ['VS-CHUA-RO-MOT-O', [[Q, 'choRo.set(ma, khoa); };', '{ choRo.clear(); choRo.set(ma, khoa); } };']]],
+  ['BV-DANG-XUAT-GIU-CHUA-RO', [[APP, ' xoaChoRo() /* khoá đổi quà', ' /* khoá đổi quà']]],
+  ['BV-KHAC-KHACH-GIU-CHUA-RO', [[APP, 'quenKeHoach(); xoaChoRo(); };', 'quenKeHoach(); };']]],
+  ['VS-401-XOA-CHUA-RO', [[DL, 'export const xoaKhoKhach = () => [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa());', "import { xoaChoRo } from './doiQua.js';\nexport const xoaKhoKhach = () => { [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa()); xoaChoRo(); };"]]],
   ['BV-CHE-DO-SUA-MA-DON-CHO-PHIEU', [[CDS, "tham.ma = e.trang !== 'phieuqua' && don && don[0]", 'tham.ma = don && don[0]']]],
   ['VS-K8-NHAN-MOI-CUA', [[KT, 'n > 0 && conLech.length === 0', 'n > 0']]],
   ['BV-K8D-KHONG-NHAC-GO', [[KT, 'daVao.length === 0, daVao.length', 'true, daVao.length']]],
@@ -36,16 +39,19 @@ const DS = [
 const TRINH_DUYET = [
   ['VS-GOI-KHO-KHI-TAT', [[APP, "if (!coDoiQua && ['doiqua'", "if (false && ['doiqua'"], [APP, "{dangNhap && coDoiQua && trang === 'doiqua'", "{dangNhap && trang === 'doiqua'"]]],
   ['VS-KHOA-GUI-MOI-KHI-GUI-LAI', [[DQ, 'guiDonAnToan(than, { gui: doiDiemApp,', 'guiDonAnToan(than, { gui: (t) => doiDiemApp({ ...t, khoa_gui: taoKhoaGui() }),']]],
-  ['VS-GUI-HAI-LAN-BAM-DUP', [[DQ, 'gui.current = khoaGui((than) =>', 'gui.current = ((than) =>'], [PIN, 'if (dang || so.length < DO_DAI) return;', 'if (so.length < DO_DAI) return;'], [PIN, 'disabled={dang || so.length < DO_DAI}', 'disabled={so.length < DO_DAI}']]],
+  ['VS-GUI-HAI-LAN-BAM-DUP', [[DQ, 'const guiDoi = khoaGui((than) =>', 'const guiDoi = ((than) =>'], [PIN, 'if (dang || so.length < DO_DAI) return;', 'if (so.length < DO_DAI) return;'], [PIN, 'disabled={dang || so.length < DO_DAI}', 'disabled={so.length < DO_DAI}']]],
   ['VS-TU-TINH-DIEM-CON', [[DQ, 'datXong({ ...kq, ten: q.ten })', 'datXong({ ...kq, diemCon: soDiem - q.diemCan, ten: q.ten })']]],
-  ['VS-BO-PIN-KHOI-THAN', [[DQ, 'khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui(), pin };', 'khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui() };']]],
+  ['VS-BO-PIN-KHOI-THAN', [[DQ, 'khoa_gui: cu || taoKhoaGui(), pin };', 'khoa_gui: cu || taoKhoaGui() };']]],
   ['VS-CHO-DOI-KHI-THIEU-NUT', [[DQ, "const duoc = q.nut === 'doi';", "const duoc = q.nut !== 'het';"]]],
-  ['VS-KHOA-MOI-SAU-CHUA-RO', [[DQ, 'khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui(), pin };', 'khoa_gui: taoKhoaGui(), pin };']]],
-  ['BV-4XX-SAU-CHUA-RO-XOA-KHOA', [[DQ, "      if (e.code === 'CHUA_CO_PIN')", "      ghiChoRo(null);\n      if (e.code === 'CHUA_CO_PIN')"]]],
-  ['BV-CHUA-RO-CHI-TRONG-MAN', [[DQ, "  useEffect(() => { cuaDiem.lay(); }, []);", "  useEffect(() => { cuaDiem.lay(); return () => ghiChoRo(null); }, []);"]]],
-  ['BV-KHONG-GOP-PHIEU', [[DQ, 'if (kq.phieuTho) gopPhieu(kq.phieuTho);', '']]],
+  ['VS-KHOA-MOI-SAU-CHUA-RO', [[DQ, 'khoa_gui: cu || taoKhoaGui(), pin };', 'khoa_gui: taoKhoaGui(), pin };']]],
+  ['BV-4XX-SAU-CHUA-RO-XOA-KHOA', [[DQ, "      if (e.code === 'CHUA_CO_PIN')", "      xoaChoRo(q.ma);\n      if (e.code === 'CHUA_CO_PIN')"]]],
+  ['BV-CHUA-RO-CHI-TRONG-MAN', [[DQ, "  useEffect(() => { cuaDiem.lay(); }, []);", "  useEffect(() => { cuaDiem.lay(); return () => xoaChoRo(); }, []);"]]],
+  ['BV-KHONG-GOP-PHIEU', [[DQ, 'if (kq.phieuTho) gopPhieuQua(kq.phieuTho);', '']]],
   // Vòng sửa 1: DoiQua có HAI lamMoi (đổi xong · chưa rõ) → dò nguồn không còn phân biệt; ca trình duyệt "đổi xong → lấy lại /diem /voucher /qua-cua-toi" bắt.
   ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, 'lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);\n      if (kq.phieuTho)', 'lamMoi([cuaDiem]);\n      if (kq.phieuTho)']]],
+  ['BV-GHI-KHOA-SAU-KHI-GUI', [[DQ, '    ghiChoRo(q.ma, than.khoa_gui); // TRƯỚC', '    // TRƯỚC'], [DQ, "      if (e.code === 'KHONG_BIET') {", "      if (e.code === 'KHONG_BIET') { ghiChoRo(q.ma, than.khoa_gui);"]]],
+  ['BV-KHONG-CHAN-SONG-SONG', [[DQ, 'const p = guiDoi(than);', 'const p = guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi });']]],
+  ['BV-KEO-SANG-PHIEU-SAU-KHI-ROI', [[DQ, '      if (!conMo.current) return;\n', '']]],
   ['VS-NHAC-KHONG-THEO-POS', [[DQ, 'const nhac = cho.find((p) => p.nhac);', 'const nhac = cho[0];']]],
 ];
 

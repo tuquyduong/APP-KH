@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { layKhoQua, doiDiemApp } from '../api.js';
 import { dungTai } from '../dungTai.js';
-import { dungCua, cuaDiem, cuaVoucher, cuaQuaToi, lamMoi } from '../duLieuKhach.js';
+import { dungCua, cuaDiem, cuaVoucher, cuaQuaToi, lamMoi, gopPhieuQua } from '../duLieuKhach.js';
 import { guiDonAnToan, khoaGui, taoKhoaGui } from '../datDon.js';
-import { docKhoQua, docQuaCuaToi, docKetQuaDoi, conLaiSauDoi, ngayPos, docChoRo, ghiChoRo } from '../doiQua.js';
+import { docKhoQua, docQuaCuaToi, docKetQuaDoi, conLaiSauDoi, ngayPos, khoaChoRo, ghiChoRo, xoaChoRo } from '../doiQua.js';
 import { dinhDangSo } from '../dinhDang.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
@@ -17,17 +17,12 @@ import '../giaoDien/doi_qua.css';
 
 // Kho quà (/uudai/doi-qua, KH-DOI-1 — thiết kế duyệt 26.11): điểm (/diem — gọi MỚI mỗi lần mở màn), ô Quà của tôi + số phiếu chờ nhận, dải nhắc (`nhac` POS — câu 4a),
 // thẻ quà ĐÚNG thứ tự POS (câu 3a), bảng PIN đổi quà, màn "Đã đổi quà!" (voucher; số điểm còn lại = `diem_con` POS). Hiện vật xong → Phiếu quà (câu 2a).
-// Một lần bấm "Xác nhận" = một khoa_gui; guiDonAnToan tự gửi lại CÙNG thân khi chưa rõ; vẫn chưa rõ → ghi lần đó (doiQua.ghiChoRo) — mọi lần bấm sau cho ĐÚNG quà đó
-// (kể cả sau khi rời màn, kể cả khi POS trả 4xx) dùng LẠI khoá đó (PIN nhập lại, không lưu) cho tới khi đổi xong.
+// Một lần bấm "Xác nhận" = một khoa_gui, ghi vào doiQua.ghiChoRo TRƯỚC khi gửi; guiDonAnToan tự gửi lại CÙNG thân khi chưa rõ; lần bấm sau cho ĐÚNG quà đó (kể cả sau khi
+// rời màn) dùng LẠI khoá đó (PIN nhập lại, không lưu) tới khi đổi xong. Khoá chặn gửi song song ở CẤP MÔ-ĐUN (rời màn rồi vào lại vẫn chặn).
 const POS = ndDau('dq.pos');
 const NUT = { het: 'dq.nut.het', luot: 'dq.nut.luot', doi: 'dq.nut.doi' };
 
-/** Gộp phiếu POS vừa trả (POST /doi-diem) vào đầu kho Quà của tôi — Phiếu quà hiện ngay, không chờ GET /qua-cua-toi. */
-function gopPhieu(tho) {
-  const s = cuaQuaToi.kho.lay();
-  const cu = s.dl && Array.isArray(s.dl.data) ? s.dl.data : [];
-  cuaQuaToi.kho.dat({ ...s, dl: { ...(s.dl || {}), data: [tho, ...cu.filter((p) => !p || p.ma !== tho.ma)] }, loi: '' });
-}
+const guiDoi = khoaGui((than) => guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi })); // MỘT lần gửi đang chạy cho cả App
 
 function TheQua({ q, doi }) {
   const [k, bien] = q.nut !== 'thieu' ? [NUT[q.nut]] : q.thieu ? ['dq.nut.thieu', { so: dinhDangSo(q.thieu) }] : ['dq.nut.chuaDu'];
@@ -84,8 +79,8 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
   const [xong, datXong] = useState(null);
   const [loiPin, datLoiPin] = useState(''); // CHUA_CO_PIN: lời POS + nút đặt PIN
   const [datPinMo, datDatPinMo] = useState(false);
-  const gui = useRef(null);
-  if (!gui.current) gui.current = khoaGui((than) => guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi }));
+  const conMo = useRef(true); // màn còn mở: kết quả về sau khi khách đã rời màn thì không đổi màn / không kéo khách sang Phiếu quà
+  useEffect(() => { conMo.current = true; return () => { conMo.current = false; }; }, []);
 
   const soDiem = diem.dl && Number.isInteger(diem.dl.points) ? diem.dl.points : undefined;
   const { cho } = docQuaCuaToi(qt.dl);
@@ -93,25 +88,25 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
 
   const doi = (pin) => {
     const q = chon;
-    const cu = docChoRo();
-    const dungLai = cu && cu.ma_qua === q.ma ? cu : null;
-    const than = { ma_qua: q.ma, khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui(), pin };
-    const p = gui.current(than);
-    if (!p) return Promise.resolve(); // đang gửi: bấm thêm không gửi lần hai
+    const cu = khoaChoRo(q.ma);
+    const than = { ma_qua: q.ma, khoa_gui: cu || taoKhoaGui(), pin };
+    const p = guiDoi(than);
+    if (!p) return Promise.reject(new Error(nd('dq.dangGui'))); // một lần đổi khác còn đang gửi (kể cả từ lần mở màn trước): không gửi song song
+    ghiChoRo(q.ma, than.khoa_gui); // TRƯỚC khi có kết quả: rời màn rồi bấm lại quà này → cùng khoá
     return p.then((kq) => {
-      if (dungLai) ghiChoRo(null);
+      xoaChoRo(q.ma);
       lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);
-      if (kq.phieuTho) gopPhieu(kq.phieuTho);
+      if (kq.phieuTho) gopPhieuQua(kq.phieuTho);
+      if (!conMo.current) return;
       kho.taiLai();
       datChon(null);
       if (kq.loai === 'hien_vat') moPhieu(kq.phieu.ma); else datXong({ ...kq, ten: q.ten });
     }, (e) => {
-      if (e.code === 'KHONG_BIET') { // có thể đã trừ: giữ khoá cho lần bấm sau, lấy lại điểm / kho / phiếu để khách thấy số mới
-        ghiChoRo({ ma_qua: q.ma, khoa_gui: than.khoa_gui });
-        lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]); kho.taiLai();
+      if (e.code === 'KHONG_BIET') { // có thể đã trừ: GIỮ khoá cho lần bấm sau, lấy lại điểm / kho / phiếu để khách thấy số mới
+        lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]); if (conMo.current) kho.taiLai();
         throw new Error(nd('dq.chuaRo'));
       }
-      // 4xx có mã: lần gửi khoá MỚI → chắc chưa trừ (lần sau lại khoá mới); lần gửi khoá CŨ của lần chưa rõ → KHÔNG xoá (4xx không chứng minh lần đầu chưa trừ).
+      if (!cu) xoaChoRo(q.ma); // 4xx có mã cho khoá MỚI → chắc chưa trừ; khoá CŨ của lần chưa rõ → GIỮ (4xx không chứng minh lần đầu chưa trừ)
       if (e.code === 'CHUA_CO_PIN') { datChon(null); datLoiPin(e.message); return; }
       throw e;
     });

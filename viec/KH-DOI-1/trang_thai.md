@@ -143,3 +143,31 @@ Sau sửa:
 - Máy mới chưa có bản nội dung (`kh_nd_ban`): lần vẽ đầu `hien.dq` = mặc định tắt → link mở thẳng /uudai/doi-qua bị đưa về /uudai trước khi bản nội dung về (soát vòng 1, chưa thử).
 - Hỏi POS (gửi kèm khi DOI-DIEM-1): thứ tự kiểm của `POST /doi-diem` — tra `khoa_gui` TRƯỚC khi kiểm PIN / điểm / tồn (như `POST /don`)? App đã giữ khoá qua 4xx nên an toàn cả hai cách.
 HEAD ĐÃ KIỂM: 74424d1
+
+## /ra-soat vòng 2 (agent độc lập, 28.11) — báo cáo chép nguyên
+```
+KHÔNG ĐẠT
+Chạy lại ở HEAD 7a84512: KHONG_TRINH_DUYET=1 thu_KHDOI1 59/0 · Chromium 149/0 · KHONG_TRINH_DUYET=1 npm test 68/0. Lỗi vòng 1 đã sửa đúng (DoiQua.jsx:114,
+doiQua.js:62-64, gopPhieu DoiQua.jsx:26-30 + :104, CheDoSua.jsx:44, dq.chuaRo, AnhQua). Lý do KHÔNG ĐẠT: đường điểm vẫn còn cách đổi hai lần, bài thử / đột biến không phủ.
+LỖI TÌM ĐƯỢC:
+- src/pages/DoiQua.jsx:87-88, :96-110 — khoá "đang gửi" và "chưa rõ" chỉ có hiệu lực SAU khi lần gửi kết thúc (K4): khoaGui trong useRef; ghiChoRo chỉ sau KHONG_BIET
+  (1 + 3 lần gửi, mỗi lần tới 20 giây). Đang gửi mà khách bấm Back (PinSheet chỉ chặn nút đóng của nó, PinSheet.jsx:25) → DoiQua gỡ, vào lại: khoaGui mới, docChoRo() null →
+  bấm lại cùng quà → taoKhoaGui() mới, POST /doi-diem thứ hai song song khoá khác → POS trừ hai lần. POST /don ghi kh_don_gui TRƯỚC lần gửi đầu. Không ca "rời màn khi đang gửi".
+  Sửa: ghiChoRo trước gui; xoá khi lần đầu 4xx chắc chắn (khoá mới) hoặc đổi xong; khoá gửi ở cấp mô-đun.
+- src/doiQua.js:62-64 — MỘT ô "chưa rõ": A chưa rõ rồi B chưa rõ → ghi đè khoá A → lần bấm A sau khoá mới → có thể trừ A lần nữa (K4). Không ca / đột biến.
+- src/duLieuKhach.js:59, App.jsx:174, luuMay.js:68 — luật xoá đảo ngược so với kh_don_gui (K4/K5): xoaKhoKhach chạy ở donPhien = MỌI 401 → mất khoá; kh_don_gui chỉ
+  dangXuat mới xoá (App.jsx:219, CLAUDE.md §8). 401 ngay trong POST /doi-diem: donPhien xoá rồi DoiQua.jsx:110 ghi lại. Khách KHÁC đăng nhập cùng máy: luuMay.doiKhach không
+  xoá choRo → khách sau kế thừa khoa_gui. Ca thu_KHDOI1.js:142 gọi thẳng xoaKhoKhach — không phủ đường thật.
+- trang_thai.md "Vòng sửa 1" / "Phát hiện" (K1): "App đã giữ khoá qua 4xx nên an toàn cả hai cách", "chỉ xoá khi đổi xong ĐÚNG quà đó hoặc đăng xuất" không đúng code.
+NGHI NGỜ: (K5) A chưa rõ mà POS đã trừ, khách muốn đổi A thêm → lần bấm dùng khoá cũ → POS trả kết quả CŨ, App "Đã đổi quà!" mã cũ; phải bấm thêm lần nữa mới đổi thật.
+  DoiQua.jsx:107 đổi hiện vật xong SAU khi rời màn vẫn moPhieu → kéo khách sang Phiếu quà từ màn khác. docKetQuaDoi luôn null (phiếu hỏng) → kẹt "chưa rõ" tới đăng xuất /
+  tải lại. Máy mới chưa có kh_nd_ban (đã ở Phát hiện). gopPhieu sửa kho từ màn, lọc bằng tho.ma chưa cắt khoảng trắng.
+NGHIỆM THU: 18/18 (C6 ghi nhận). Thiếu một phần: B3 chưa ca riêng QUA_HET_LUOT_THANG, PIN_DANG_KHOA, QUA_KHONG_CO; C1 / C3 thiếu ca + đột biến cho 3 lỗi trên.
+CHƯA SOÁT ĐƯỢC: --day-du, cổng chay, đột biến (không chạy lại); "rời màn khi đang gửi" suy từ code; POS thật (khoá gắn theo khách?); Zalo, chữ phóng to, ảnh d1–d6.
+BÀI HỌC: KHOÁ — lệnh trừ điểm / tiền có khoa_gui ghi "đang gửi / chưa rõ" TRƯỚC lần gửi đầu, ở chỗ sống lâu hơn màn; ca "rời màn khi đang gửi rồi bấm lại → không POST
+  khoá mới". NGUYÊN TẮC — bản ghi "chưa rõ" mới chép ĐÚNG luật sống / xoá của kh_don_gui (giữ khi 401, xoá khi đăng xuất hoặc doiKhach báo khác khách, mỗi lệnh một bản
+  ghi hoặc chặn lệnh mới); ca thử đi qua đường thật (donPhien, doiKhach), không gọi thẳng hàm xoá.
+```
+Ghi chú: câu "App đã giữ khoá qua 4xx nên an toàn cả hai cách" ở mục Phát hiện là SAI theo vòng 2 (giữ dưới đây, sửa ở vòng sửa 2).
+
+## Vòng sửa 2 (28.11)
