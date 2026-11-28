@@ -81,7 +81,9 @@ async function trinhDuyet(pw) {
   const { dungMay } = require('./thu_KHMUA1b.js');
   const { may, mo, chu, doi, doiChu, chup, tranNgang, loiPos } = await dungMay(pw, k);
   const CA = [];
-  const them = (ten, opt, f) => { if (!process.env.CHI_CA || ten.includes(process.env.CHI_CA)) CA.push(() => may(ten, opt, f)); };
+  // POS giả của thu_KHMUA1b.js trả menu cố định → ở đây đè riêng đường /menu bằng `S.menu` (đăng ký sau thì được xử lý trước).
+  const baMenu = (S0) => async (a) => { await a.ctx.route(/\/api\/kh\/menu$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, data: a.S.menu || S0.menu }) })); };
+  const them = (ten, opt, f) => { if (!process.env.CHI_CA || ten.includes(process.env.CHI_CA)) CA.push(() => may(ten, opt, async (a) => { if (opt.S0 && opt.S0.menu) await baMenu(opt.S0)(a); return f(a); })); };
   const menu = (...ds) => ds;
   const tenO = (t) => t.locator('.cat-tiles .ct b').allInnerTexts();
   const thuongDuoi = (a) => a.filter((x) => !['Giờ vàng', 'Tất cả'].includes(x) && !/hội viên|Thẻ/i.test(x));
