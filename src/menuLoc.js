@@ -43,13 +43,31 @@ export function bieuTuongNhom(nhom) {
   return NHOM_DEMO.find((n) => n.khop.test(ten)) || NHOM_MAC_DINH;
 }
 
-/** Nhóm món theo `nhom` POS, giữ thứ tự xuất hiện; thiếu nhóm → "Khác". */
+/** MÃ nhóm POS (v19: `nhom` = mã ổn định; POS cũ: `nhom` là tên). Thiếu → "". */
+export const maNhom = (m) => (m && typeof m.nhom === 'string' ? m.nhom : '');
+
+/** Tên hiển thị của nhóm: `nhom_ten` (đã cắt) → `nhom` (POS cũ) → chữ "Khác" của danh mục. */
+export function tenNhom(m) {
+  const ten = m && typeof m.nhom_ten === 'string' ? m.nhom_ten.trim() : '';
+  return ten || maNhom(m) || nd('menu.nhomKhac');
+}
+
+/** Thứ tự nhóm POS (nhỏ đứng trước); không phải số hữu hạn → 9999 (cuối). */
+export const thuTuNhom = (m) => (m && Number.isFinite(m.nhom_thu_tu) ? m.nhom_thu_tu : 9999);
+
+/** Khoá ổn định của nhóm (mã; món không mã → tên "Khác") — dùng cho ô chọn, đường dẫn, lọc. */
+export const khoaNhom = (m) => maNhom(m) || tenNhom(m);
+
+/** { ic, bg } của một món theo tên nhóm POS của nó. */
+export const bieuTuongMon = (m) => bieuTuongNhom(tenNhom(m));
+
+/** Nhóm món theo MÃ POS → [tên, món[], khoá]; xếp theo thứ tự nhóm POS (bằng nhau giữ thứ tự xuất hiện); món trong nhóm giữ thứ tự POS. */
 export function nhomTheoTen(ds) {
   const ban = new Map();
   for (const m of ds) {
-    const ten = m.nhom || nd('menu.nhomKhac');
-    if (!ban.has(ten)) ban.set(ten, []);
-    ban.get(ten).push(m);
+    const ma = maNhom(m);
+    if (!ban.has(ma)) ban.set(ma, { ten: tenNhom(m), thuTu: thuTuNhom(m), khoa: khoaNhom(m), mon: [] });
+    ban.get(ma).mon.push(m);
   }
-  return [...ban];
+  return [...ban.values()].sort((a, b) => a.thuTu - b.thuTu).map((g) => [g.ten, g.mon, g.khoa]);
 }
