@@ -217,3 +217,24 @@ BÀI HỌC: KHOÁ — bản ghi "chưa rõ" / đang gửi của lệnh trừ đi
 ```
 
 ## Vòng sửa 3 (28.11 — vòng cuối được phép, so_vong_sua_toi_da = 3)
+| Lỗi soát vòng 3 | Sửa | Ca thử (đường thật) / đột biến |
+|---|---|---|
+| 1. Khoá "chưa rõ" không gắn khách — kho máy chặn → `doiKhach` không báo → B dùng khoá A | `doiQua.js` mỗi dòng `{ khoa, chu }` (chu = `luuMay.dauVet` SĐT từ /toi THẬT — `duLieuKhach.khachDangGiu`); `khoaChoRo(ma, chu)` chỉ trả khoá khi đúng khách; chưa biết khách → không gửi (`dq.choKhach`), không ghi | ca "kho máy chặn ghi chủ máy + hết phiên + khách B đăng nhập → không dùng khoá A" (kh_chu bị chặn ghi thật bằng Storage.setItem); hàm thuần "khoá GẮN khách"; VS-KHOA-KHONG-GAN-KHACH |
+| 2. Kết quả về khi phiên đã sang người khác vẫn ghi vào kho / bản ghi / màn phiên mới; tự gửi lại bằng phiên mới | `cungKhach()` chụp lúc bấm: kết quả về mà khách khác → bỏ hết (không gộp phiếu, không xoá / ghi khoá, không đổi màn); `guiDoi` truyền `cung` vào `gui` — khác khách thì KHÔNG gửi (lỗi `DOI_KHACH`) | ca "Đăng xuất KHI ĐANG GỬI → khách B không thấy phiếu / QR của A" (GET /qua-cua-toi của B hỏng để phiếu gộp nhầm lộ ra); ca "đổi phiên giữa các lần tự gửi lại → không gửi thân của A bằng phiên B"; BV-KET-QUA-KHAC-KHACH, BV-GUI-LAI-BANG-PHIEN-KHAC |
+| 3. Ca luật sống / xoá chỉ gọi thẳng hàm / dò chữ nguồn | bỏ ca dò chữ App; ca đi qua ĐƯỜNG THẬT trong trình duyệt: /diem trả 401 thật → `donPhien`; đăng nhập lại bằng màn Đăng nhập (`#sdt`, `#ma`); nút "Đăng xuất" ở Tài khoản; điều hướng trong App (pushState + popstate, không tải lại trang) | ca "401 → đăng nhập lại CÙNG khách giữ khoá; bấm Đăng xuất → xoá khoá"; VS-401-XOA-CHUA-RO, BV-DANG-XUAT-GIU-CHUA-RO chuyển sang nhóm trình duyệt (bắt bằng hành vi) |
+| 4. K1 trong trang_thai / chú thích | `docLaiGio` không còn xoá khoá (khoá gắn khách thay cho luật "khác khách"); bỏ câu "docLaiGio chỉ gọi khi doiKhach báo khác khách"; sửa chú thích doiQua.js, thu_KHDOI1.js ("khoá ghi TRƯỚC khi gửi" đã bỏ) | — |
+Nghi ngờ vòng 3 không sửa (ghi nhận): khoá song song cấp mô-đun không gỡ theo phiên — A đăng xuất lúc đang gửi thì B thấy `dq.dangGui` tới hết vòng gửi lại (có trần: 20 giây / lần,
+≤ 4 lần; DANG_XU_LY tới ~1 phút — không kẹt mãi); đổi voucher xong sau khi rời màn không có màn "Đã đổi quà!" (voucher vẫn vào Ví, điểm làm mới).
+
+Sau sửa (máy khởi động lại giữa chừng — `--day-du` chạy lại):
+- `thu_KHDOI1.js` 62 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 171 đạt · 0 hỏng (Chromium); gốc 5 · 45 / 26 · 66; `SỐ CA cong_cu/thu_KHDOI1.js: 62`.
+- Đột biến `--trinh-duyet`: đối chứng XANH (171/0), **34/34 BẮT ĐƯỢC** (lượt đầu sau sửa: 3 chuỗi vá cũ không còn → cập nhật; VS-401-XOA-CHUA-RO,
+  BV-DANG-XUAT-GIU-CHUA-RO SÓT ở nhóm dò nguồn vì đã bỏ ca dò chữ → chuyển nhóm trình duyệt + ca "Đăng xuất rồi đăng nhập lại → khoá mới").
+- `--day-du` **71 đạt · 0 hỏng** (thu_KHDOI1 có Chromium 92 giây — gần mức 120 giây/bài của bộ kiểm, xem Phát hiện).
+- Cổng (HEAD d3e4b80, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 50 ca ≠ 62 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
+
+## Phát hiện (thêm sau vòng sửa 3)
+- `thu_KHDOI1.js` phần Chromium chạy ~92 giây trong `npm test` (mức 120 giây/bài): máy bận có thể QUÁ GIỜ. GitHub chạy KHONG_TRINH_DUYET=1 (vài giây) nên không ảnh hưởng cổng.
+  Việc sau có thể tách các ca "đường thật" sang bài riêng.
+- Tự gửi lại đọc phiên mới mỗi lần (`guiDonAnToan` / `goi`) — đổi quà đã chặn bằng `cung()`; `POST /don` (Thanh toán) có cùng khuôn, chưa chặn — ngoài Phạm vi (soát vòng 3).
+HEAD ĐÃ KIỂM: d3e4b80
