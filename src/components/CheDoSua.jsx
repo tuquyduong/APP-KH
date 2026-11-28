@@ -41,7 +41,7 @@ function dsManDi(ds, don) {
     const tham = {};
     const ok = [...e.mau.matchAll(/:(\w+)/g)].every(([, t]) => {
       if (t === 'slug') tham.slug = ds && ds[0] ? slugMon(ds[0], ds) : '';
-      else if (t === 'ma') tham.ma = don && don[0] ? don[0].ma : '';
+      else if (t === 'ma') tham.ma = e.trang !== 'phieuqua' && don && don[0] ? don[0].ma : ''; // :ma = mã ĐƠN; Phiếu quà (KH-DOI-1) không có mã mẫu → bỏ khỏi danh sách
       else if (e.cho) tham[t] = (Array.isArray(e.cho) ? e.cho : e.cho[t] || [])[0] || '';
       return !!tham[t];
     });

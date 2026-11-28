@@ -135,6 +135,13 @@ const QUA_TOI = [
     k('A3 cuaQuaToi có, KHÔNG trong CUA_KHACH (làm mới ngầm sẽ gọi /qua-cua-toi khi công tắc tắt)', !!K.cuaQuaToi && !K.CUA_KHACH.includes(K.cuaQuaToi));
     if (K.cuaQuaToi) { K.cuaQuaToi.kho.dat({ dl: { data: [] }, luc: 1, loi: '' }); K.xoaKhoKhach(); }
     k('A3 xoaKhoKhach (đăng xuất / đổi khách) xoá cả cuaQuaToi', !!K.cuaQuaToi && K.cuaQuaToi.kho.lay().dl === null);
+    const ghi = D.ghiChoRo || (() => {}), docR = D.docChoRo || (() => 'x');
+    ghi({ ma_qua: 1, khoa_gui: 'k'.repeat(36), pin: '1234' });
+    k('A1 lần đổi chưa rõ giữ { ma_qua, khoa_gui } — KHÔNG giữ PIN', bang(docR(), { ma_qua: 1, khoa_gui: 'k'.repeat(36) }), JSON.stringify(docR()));
+    K.xoaKhoKhach();
+    k('A1 đăng xuất / đổi khách xoá cả lần đổi chưa rõ (khoá của khách cũ)', docR() === null);
+    const cds = doc('src/components/CheDoSua.jsx');
+    k("B5 Chế độ sửa \"Đi tới màn\" không mở Phiếu quà bằng mã ĐƠN", /e\.trang !== 'phieuqua'/.test(cds));
     const dq = doc('src/pages/DoiQua.jsx');
     k('A3 đổi xong → lamMoi([cuaDiem, cuaVoucher, cuaQuaToi])', /lamMoi\(\[cuaDiem, cuaVoucher, cuaQuaToi\]\)/.test(dq));
   });
@@ -276,7 +283,7 @@ async function trinhDuyet(pw) {
       if (duong === '/diem') return json(200, { success: true, points: S.diem, history: [{ id: 9, type: 'redeem', points: -500, reason: 'Đổi quà: Voucher giảm 20.000đ', created_at: '2026-11-20T09:00:00' }] });
       if (duong === '/voucher') return json(200, { success: true, data: S.vc, ma_khach_moi: [] });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-12-27T08:00:00' });
-      if (duong === '/qua-cua-toi') return json(200, { success: true, data: S.quaToi });
+      if (duong === '/qua-cua-toi') { if (S.chamQuaToi && S.doi.length) await new Promise((x) => setTimeout(x, S.chamQuaToi)); return json(200, { success: true, data: S.quaToi }); }
       if (duong === '/doi-diem' && pt === 'POST') {
         S.doi.push(than);
         const x = S.kich.shift();
@@ -431,7 +438,7 @@ async function trinhDuyet(pw) {
     k('B4 "Đặt món dùng ngay" → Menu', await doiUrl(t, /^\/menu$/), duongDan(t));
   });
 
-  them('B3 B5 đổi hiện vật (PIN sai rồi đúng) → Phiếu quà', {}, async (t, S) => {
+  them('B3 B5 đổi hiện vật (PIN sai rồi đúng) → Phiếu quà', { chamQuaToi: 5000 }, async (t, S) => {
     await mo(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6);
     await doiChu(t, '#doiqua .dq-hero', /1\.250/);
     await t.locator('#doiqua .dq-the').nth(2).locator('.dq-doi').click();
@@ -441,7 +448,7 @@ async function trinhDuyet(pw) {
     await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').dblclick();
     k('B5 hiện vật xong → mở thẳng Phiếu quà /uudai/qua/PQNEW1', await doiUrl(t, /^\/uudai\/qua\/PQNEW1$/), duongDan(t));
     k('A1 PIN sai + PIN đúng (bấm đúp) = đúng HAI POST; lần 2 pin 1234, ma_qua 3', S.doi.length === 2 && S.doi[1].pin === '1234' && S.doi[1].ma_qua === 3, JSON.stringify(S.doi));
-    await t.waitForSelector('#phieuqua .khung-qr svg path');
+    k('B5 Phiếu quà hiện NGAY từ phiếu POS vừa trả (GET /qua-cua-toi chậm 5 giây)', await doi(t, async () => co(t, '#phieuqua .khung-qr svg path'), 2000));
     k('B5 Phiếu quà: tên, "Đổi 1.200 điểm · hạn nhận 11/12/2026", mã phiếu, QR vẽ từ `qr`',
       /Tặng 1 ly Cà phê Muối/.test(await chu(t, '#phieuqua .dq-ph-ten')) && /Đổi 1\.200 điểm · hạn nhận\s*11\/12\/2026/.test(await chu(t, '#phieuqua .dq-ph-phu')) && /Mã phiếu: PQNEW1/.test(await chu(t, '#phieuqua .dq-ph-ma')), await chu(t, '#phieuqua'));
     k('B5 câu "Đưa mã này cho nhân viên ở quầy…"', /Đưa mã này cho nhân viên ở quầy/.test(await chu(t, '#phieuqua')));
@@ -495,6 +502,36 @@ async function trinhDuyet(pw) {
     k('B2 không phiếu → không dải nhắc, ô Quà của tôi không số', !(await co(t, '#doiqua .dq-nhac')) && !(await co(t, '#doiqua .dq-cua .so')));
     await mo(t, '/uudai/qua');
     k('B6 không phiếu → câu danh mục', await doiChu(t, '#quatoi', /chưa có phiếu quà/));
+  });
+
+  // Vòng sửa 1 (/ra-soat): "chưa rõ" phải giữ khoá qua lần bấm sau, qua cả khi rời màn, qua cả 4xx (PIN_SAI) đến sau — tới khi đổi xong.
+  const BAN = { st: 503, o: { error: 'Máy chủ bận' } }; // 5xx không mã → "chưa rõ", guiDonAnToan tự gửi lại
+  them('A1 chưa rõ → rời màn → bấm lại: CÙNG khoá tới khi xong', { kich: [BAN, BAN, BAN, BAN, { st: 400, o: { error: 'Mã PIN không đúng', code: 'PIN_SAI' } }] }, async (t, S) => {
+    await mo(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6);
+    await doiChu(t, '#doiqua .dq-hero', /1\.250/);
+    await t.locator('#doiqua .dq-the').nth(0).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    k('A1 hết lượt tự gửi lại → lời "Chưa rõ … Nhập lại PIN", bảng còn mở', (await doiChu(t, '.pin-sheet .pin-msg', /^Chưa rõ quán đã ghi nhận/, 15000)) && /Nhập lại PIN/.test(await chu(t, '.pin-sheet .pin-msg')));
+    const n0 = S.doi.length;
+    k('A1 4 lần gửi (1 + 3 tự gửi lại) cùng khoá', n0 === 4 && S.doi.every((x) => x.khoa_gui === S.doi[0].khoa_gui), String(n0));
+    const sauDoi = (d) => S.goi.some((x) => x.duong === d && x.luc > S.goi.map((y) => y.duong).lastIndexOf('/doi-diem'));
+    k('A1 chưa rõ → lấy lại /diem và /qua-cua-toi', await doi(t, async () => sauDoi('/diem') && sauDoi('/qua-cua-toi')));
+    await t.keyboard.press('Escape');
+    await t.locator('#doiqua .topbar .back-btn').click();
+    await doiUrl(t, /^\/uudai$/); await t.waitForSelector('#rewards .dq-nut'); await t.locator('#rewards .dq-nut').click();
+    await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6);
+    await t.locator('#doiqua .dq-the').nth(0).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doiChu(t, '.pin-sheet .pin-msg', /^Mã PIN không đúng$/);
+    k('A1 rời màn rồi vào lại → lần bấm sau dùng LẠI khoá cũ (POS trả PIN_SAI)', S.doi.length === 5 && S.doi[4].khoa_gui === S.doi[0].khoa_gui && S.doi[4].ma_qua === 1, JSON.stringify(S.doi.map((x) => x.khoa_gui.slice(0, 8))));
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
+    k('A1 4xx đến SAU lần chưa rõ không xoá khoá → lần đổi xong vẫn CÙNG khoá', S.doi.length === 6 && S.doi[5].khoa_gui === S.doi[0].khoa_gui, JSON.stringify(S.doi.map((x) => x.khoa_gui.slice(0, 8))));
+    await t.locator('#doiqua .cm-gio').click(); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6);
+    await t.locator('#doiqua .dq-the').nth(1).locator('.dq-doi').click();
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    await doiChu(t, '#doiqua', /Đã đổi quà!/);
+    k('A1 đổi xong → lần đổi sau là khoá MỚI', S.doi.length === 7 && S.doi[6].khoa_gui !== S.doi[0].khoa_gui);
   });
 
   them('B2 dải nhắc theo `nhac` POS, không theo thứ tự', { quaToi: [QUA_TOI[1], QUA_TOI[0]] }, async (t) => {

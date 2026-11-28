@@ -38,7 +38,7 @@ export const DOI_QUA = [
   chu('dq.pin.t', 'Bảng PIN đổi quà: tiêu đề', 'Nhập PIN để đổi quà'),
   chu('dq.pin.tru', 'Bảng PIN đổi quà: số điểm trừ', 'Trừ {so}', { bien: ['so'] }),
   chu('dq.pin.con', 'Bảng PIN đổi quà: số điểm còn lại (ước tính để khách xem)', 'Còn lại {so}', { bien: ['so'] }),
-  chu('dq.chuaRo', 'Báo lỗi: chưa rõ quán đã ghi nhận lần đổi chưa', 'Chưa rõ quán đã ghi nhận lần đổi này chưa. Bấm Xác nhận để gửi lại đúng lần đổi này — không bị trừ điểm hai lần.'),
+  chu('dq.chuaRo', 'Báo lỗi: chưa rõ quán đã ghi nhận lần đổi chưa', 'Chưa rõ quán đã ghi nhận lần đổi này chưa. Nhập lại PIN rồi bấm Xác nhận để gửi lại đúng lần đổi này.'),
   chu('dq.datPin', 'Nút đặt mã PIN (khi POS báo chưa có PIN)', 'Đặt mã PIN'),
   khoa('dq.loiPos', 'Lời POS khi đổi không được (thiếu điểm, hết quà, hết lượt, chưa có PIN…)', 'POS · lời POS trả nguyên văn'),
   // Đã đổi quà (voucher)

@@ -47,7 +47,7 @@ export function docKetQuaDoi(r) {
   if (!r || typeof r !== 'object' || !LOAI.includes(r.loai) || !soNguyen(r.diem_con)) return null;
   const voucherCode = chuoi(r.voucher_code) || null, phieu = docPhieu(r.phieu);
   if (r.loai === 'voucher' ? !voucherCode : !phieu) return null;
-  return { loai: r.loai, diemCon: r.diem_con, voucherCode: r.loai === 'voucher' ? voucherCode : null, phieu: r.loai === 'hien_vat' ? phieu : null };
+  return { loai: r.loai, diemCon: r.diem_con, voucherCode: r.loai === 'voucher' ? voucherCode : null, phieu: r.loai === 'hien_vat' ? phieu : null, phieuTho: r.loai === 'hien_vat' ? r.phieu : null };
 }
 
 /** Ngày của chuỗi giờ VN POS ("2026-11-28T23:59:59" / "2026-11-28") → "28/11/2026" (đọc chuỗi, không new Date). Không đọc được → "". */
@@ -55,3 +55,10 @@ export function ngayPos(s) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(chuoi(s));
   return m ? `${m[3]}/${m[2]}/${m[1]}` : '';
 }
+
+// Lần đổi "chưa rõ" (guiDonAnToan hết lượt tự gửi lại mà POS chưa trả lời chắc): { ma_qua, khoa_gui } — KHÔNG có PIN. Giữ ở cấp mô-đun (sống qua chuyển màn
+// trong App, mất khi tải lại trang); lần bấm sau cho ĐÚNG quà đó dùng lại khoá (POS trả đúng kết quả cũ, không trừ hai lần). CHỈ xoá khi đổi xong quà đó hoặc đăng xuất —
+// lỗi 4xx đến sau một lần chưa rõ không chứng minh lần đầu chưa trừ (luật guiDonAnToan, chủ quán 05.11) nên không xoá.
+let choRo = null;
+export const docChoRo = () => choRo;
+export const ghiChoRo = (x) => { choRo = x && Number.isInteger(x.ma_qua) && typeof x.khoa_gui === 'string' ? { ma_qua: x.ma_qua, khoa_gui: x.khoa_gui } : null; };

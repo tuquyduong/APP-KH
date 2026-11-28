@@ -6,6 +6,7 @@ import { layToi, layDiem, layVoucher, layDon, layGoiNap, layQuaCuaToi, ngam } fr
 import { taoKho, dungKho } from './kho.js';
 import { dauVet, docChu, cungKhach } from './luuMay.js';
 import { rutTomTat, ghiTomTat, docTomTat, tomTatCuaKhach } from './tomTatLuu.js';
+import { ghiChoRo } from './doiQua.js';
 
 export const PHUT_CON_MOI = 5;  // màn mở / đều đặn: bản chưa quá ngần này phút thì không hỏi lại POS
 export const GIAY_QUAY_LAI = 60; // khách quay lại app: bản quá ngần này giây thì lấy lại
@@ -55,7 +56,7 @@ export const cuaGoiNap = taoCua(layGoiNap);
 export const cuaQuaToi = taoCua(layQuaCuaToi);
 
 export const lamMoi = (ds) => ds.forEach((c) => c.lay());
-export const xoaKhoKhach = () => [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa());
+export const xoaKhoKhach = () => { [...CUA_KHACH, cuaQuaToi].forEach((c) => c.xoa()); ghiChoRo(null); }; // + lần đổi quà chưa rõ (khoá của khách cũ)
 /** Khách quay lại app: kho đã có mà quá 60 giây → lấy lại. */
 export const lamMoiKhiQuayLai = (ds, bay = Date.now()) => ds.forEach((c) => { if (c.kho.lay().dl) c.napNeuCu(GIAY_QUAY_LAI, bay); });
 

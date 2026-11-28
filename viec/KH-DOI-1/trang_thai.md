@@ -88,3 +88,33 @@ K8 nhận cửa trong `DA_HEN_POS`; thêm K8d (cửa đã hẹn đã có trong h
   `· CẢNH BÁO A16: cong_cu/thu_KHDOI1.js chạy trên gốc in 44 ca ≠ 56 ca ở head — bài dừng sớm trên gốc thì bỏ qua` (đúng: khối hàm thuần ném lỗi vì thiếu src/doiQua.js)
   · **✓ CỔNG CHẠY ĐẠT**.
 HEAD ĐÃ KIỂM: 9ce2ccd
+
+## /ra-soat vòng 1 (agent độc lập, 28.11) — báo cáo chép nguyên
+```
+KHÔNG ĐẠT
+Chạy lại: KHONG_TRINH_DUYET=1 thu_KHDOI1 56/0 · Chromium 138/0 · kiem_tra (tĩnh) 68/0. Lý do KHÔNG ĐẠT: đường đổi điểm còn một lỗ có thể trừ điểm hai lần, không bài thử nào phủ.
+LỖI TÌM ĐƯỢC:
+- src/pages/DoiQua.jsx:104 (khi `cu` khác null ở :92) — có thể trừ điểm hai lần (đường tiền/điểm, K4): lần trước "chưa rõ", bấm lại CÙNG khoá, POS trả 4xx có mã
+  (PIN_SAI / THIEU_DIEM vì lần đầu đã trừ / QUA_HET) → dòng 104 xoá choRo → lần sau KHOÁ MỚI. Trái luật guiDonAnToan (datDon.js:133-135) "4xx sau chưa rõ không chứng minh
+  chưa tạo" — luật chỉ giữ trong một lần gọi. Nếu POS kiểm PIN / điểm trước khoá gửi → đổi hai lần. Sửa: `cu` khác null thì không xoá choRo vì 4xx.
+- src/pages/DoiQua.jsx:82 — "chưa rõ" chỉ trong useRef của màn: rời Kho quà rồi vào lại → khoá mất. POST /don ghi kh_don_gui (datDon.js:166-170); đổi quà không.
+  dq.chuaRo (nd/doiQua.js:41) hứa "không bị trừ điểm hai lần" — chỉ đúng khi ở yên trên màn. Sau "chưa rõ" không làm mới /diem, /kho-qua, /qua-cua-toi (DoiQua.jsx:103).
+- cong_cu/thu_KHDOI1.js, dot_bien_tay.js — không ca nào cho "chưa rõ → bấm lại dùng lại khoá + mã quà" (K3); đột biến `khoa_gui: taoKhoaGui()` sẽ sống.
+- src/pages/PhieuQua.jsx:22-25 + DoiQua.jsx:101 — đổi hiện vật xong có thể thấy "Không thấy phiếu quà này": App bỏ kq.phieu, đọc kho cuaQuaToi bản cũ; lamMoi ngầm;
+  lỗi mạng thì kẹt, không nút Thử lại. Sửa: gộp kq.phieu vào đầu kho cuaQuaToi trước moPhieu.
+- src/components/CheDoSua.jsx:44 — "Đi tới màn" điền :ma bằng mã ĐƠN cho mọi đường có :ma → /uudai/qua/:ma mở bằng mã đơn → "Không thấy phiếu".
+- src/noiDung/nd/doiQua.js:41 ↔ PinSheet.jsx:41 — chữ "Bấm Xác nhận để gửi lại" nhưng PinSheet đã xoá số PIN; phải nhập lại PIN.
+NGHI NGỜ: thứ tự POS kiểm (khoá trước hay PIN / điểm trước) chưa ghi trong thư 16.11 → nên hỏi POS. Máy mới chưa có kh_nd_ban: lần vẽ đầu hien.dq = false →
+  link mở thẳng bị đẩy về /uudai trước khi bản nội dung về (chưa thử). Không trình duyệt: B1 / A3 / B7 / "A1 DoiQua" chỉ dò chuỗi nguồn. dq.qt.nhac / dq.ph.dua
+  "quán hoàn lại điểm" (hợp đồng: chỉ mặc định) ↔ dq.ghiChu "đổi xong không trả lại điểm" — sửa được ở /admin.
+Đơn giản: AnhQua export từ pages/DoiQua.jsx:23, dungGiuManSang từ pages/ManQR.jsx:13 → nên ở components/; DoiQua.jsx:28 ba ngôi 4 tầng → bảng.
+K4: guiDonAnToan 2 chỗ; PinSheet 5 chỗ (prop tuỳ chọn); xoaKhoKhach đúng; 401 chỉ /kho-qua giữ phiên; đường dẫn mới 3 (CheDoSua chưa xử lý); hien.dq 2 chỗ.
+K5: không thấy luồng hợp lệ bị chặn oan. Ảnh gốc beab831^ ↔ nhánh (thu_KHNAP1, 7 màn, công tắc tắt): không điểm ảnh lệch > 40. dist/ không commit.
+NGHIỆM THU: 18/18 mục có bằng chứng (C6 chủ quán thử tay sau khi POS gộp — ghi nhận). B3 chưa thử riêng QUA_HET_LUOT_THANG, PIN_DANG_KHOA, QUA_KHONG_CO.
+CHƯA SOÁT ĐƯỢC: cổng chay, --day-du, đột biến tay (dựa trang_thai.md); POS thật; trình duyệt Zalo, chữ phóng to; tỉ lệ lệch ảnh d1–d6.
+BÀI HỌC: KHOÁ — mọi đường gửi có khoa_gui phải có ca "chưa rõ → bấm lại → cùng khoá + mã", ca "4xx sau chưa rõ vẫn giữ khoá", đột biến "khoá mới lần bấm sau".
+  NGUYÊN TẮC — "chưa rõ" của lệnh trừ tiền / điểm phải sống lâu hơn màn hình (không lưu PIN); luật "4xx sau chưa rõ" giữ qua cả lần bấm sau.
+  NGUYÊN TẮC — lệnh ghi đã trả bản ghi mới thì hiện ngay (gộp vào kho). KHOÁ — "Đi tới màn" lấy mẫu tham số theo từng màn.
+```
+
+## Vòng sửa 1 (28.11)

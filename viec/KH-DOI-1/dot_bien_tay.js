@@ -13,7 +13,7 @@ const NHAP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'dot-bien-kh-doi-1
 for (const d of ['src', 'cong_cu', 'thiet_ke', 'public', 'package.json', 'package-lock.json', 'index.html', 'kiem_tra_truoc_khi_giao.js', 'viec/KH-DOI-1/sym.txt']) fs.cpSync(path.join(GOC, d), path.join(NHAP, d), { recursive: true });
 fs.symlinkSync(path.join(GOC, 'node_modules'), path.join(NHAP, 'node_modules'));
 
-const Q = 'src/doiQua.js', A = 'src/api.js', ND = 'src/noiDung/nd/doiQua.js', DL = 'src/duLieuKhach.js', DQ = 'src/pages/DoiQua.jsx', U = 'src/pages/UuDai.jsx', APP = 'src/App.jsx', PIN = 'src/components/PinSheet.jsx', KT = 'kiem_tra_truoc_khi_giao.js';
+const Q = 'src/doiQua.js', A = 'src/api.js', ND = 'src/noiDung/nd/doiQua.js', DL = 'src/duLieuKhach.js', DQ = 'src/pages/DoiQua.jsx', U = 'src/pages/UuDai.jsx', APP = 'src/App.jsx', PIN = 'src/components/PinSheet.jsx', CDS = 'src/components/CheDoSua.jsx', KT = 'kiem_tra_truoc_khi_giao.js';
 const DS = [
   ['VS-CONG-TAC-MAC-DINH-BAT', [[ND, "loai: 'battat', macDinh: false }", "loai: 'battat', macDinh: true }"]]],
   ['VS-APP-TU-XEP-LAI-QUA', [[Q, 'return ds.filter((q) => q && soNguyen(q.ma)', 'return [...ds].sort((a, b) => (a && b ? a.diem_can - b.diem_can : 0)).filter((q) => q && soNguyen(q.ma)']]],
@@ -27,6 +27,10 @@ const DS = [
   ['VS-UU-DAI-BO-CONG-TAC', [[U, "const coDoi = ndHien('hien.dq');", 'const coDoi = true;']]],
   ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, 'lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);', 'lamMoi([cuaDiem]);']]],
   // Bộ kiểm K8 / K8d (chủ quán 27.11): cửa lạ trong api.js vẫn phải đỏ K8; cửa đã hẹn vào hợp đồng phải đỏ K8d.
+  // Vòng sửa 1 (/ra-soat): "chưa rõ" giữ khoá (không PIN), đăng xuất xoá; Chế độ sửa không mở Phiếu quà bằng mã đơn.
+  ['VS-CHUA-RO-GIU-PIN', [[Q, '{ ma_qua: x.ma_qua, khoa_gui: x.khoa_gui }', '{ ...x }']]],
+  ['BV-DANG-XUAT-GIU-CHUA-RO', [[DL, ' ghiChoRo(null); };', ' };']]],
+  ['BV-CHE-DO-SUA-MA-DON-CHO-PHIEU', [[CDS, "tham.ma = e.trang !== 'phieuqua' && don && don[0]", 'tham.ma = don && don[0]']]],
   ['VS-K8-NHAN-MOI-CUA', [[KT, 'n > 0 && conLech.length === 0', 'n > 0']]],
   ['BV-K8D-KHONG-NHAC-GO', [[KT, 'daVao.length === 0, daVao.length', 'true, daVao.length']]],
 ];
@@ -37,6 +41,10 @@ const TRINH_DUYET = [
   ['VS-TU-TINH-DIEM-CON', [[DQ, 'datXong({ ...kq, ten: q.ten })', 'datXong({ ...kq, diemCon: soDiem - q.diemCan, ten: q.ten })']]],
   ['VS-BO-PIN-KHOI-THAN', [[DQ, 'khoa_gui: cu ? cu.khoa_gui : taoKhoaGui(), pin };', 'khoa_gui: cu ? cu.khoa_gui : taoKhoaGui() };']]],
   ['VS-CHO-DOI-KHI-THIEU-NUT', [[DQ, "const duoc = q.nut === 'doi';", "const duoc = q.nut !== 'het';"]]],
+  ['VS-KHOA-MOI-SAU-CHUA-RO', [[DQ, 'khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui(), pin };', 'khoa_gui: taoKhoaGui(), pin };']]],
+  ['BV-4XX-SAU-CHUA-RO-XOA-KHOA', [[DQ, "      if (e.code === 'CHUA_CO_PIN')", "      ghiChoRo(null);\n      if (e.code === 'CHUA_CO_PIN')"]]],
+  ['BV-CHUA-RO-CHI-TRONG-MAN', [[DQ, "  useEffect(() => { cuaDiem.lay(); }, []);", "  useEffect(() => { cuaDiem.lay(); return () => ghiChoRo(null); }, []);"]]],
+  ['BV-KHONG-GOP-PHIEU', [[DQ, 'if (kq.phieuTho) gopPhieu(kq.phieuTho);', '']]],
   ['VS-NHAC-KHONG-THEO-POS', [[DQ, 'const nhac = cho.find((p) => p.nhac);', 'const nhac = cho[0];']]],
 ];
 

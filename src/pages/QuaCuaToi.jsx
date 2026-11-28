@@ -7,7 +7,7 @@ import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import { Ico } from '../components/BieuTuong.jsx';
 import { bam } from '../components/bam.js';
-import { AnhQua } from './DoiQua.jsx';
+import AnhQua from '../components/AnhQua.jsx';
 import '../giaoDien/doi_qua.css';
 
 // Quà của tôi (/uudai/qua, KH-DOI-1 B6): phiếu quà hiện vật của khách (GET /qua-cua-toi, mới trước). "Chờ nhận" (chua_dung — `nhac` POS → chữ hồng; bấm → Phiếu quà)

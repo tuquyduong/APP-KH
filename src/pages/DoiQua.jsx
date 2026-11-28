@@ -3,7 +3,7 @@ import { layKhoQua, doiDiemApp } from '../api.js';
 import { dungTai } from '../dungTai.js';
 import { dungCua, cuaDiem, cuaVoucher, cuaQuaToi, lamMoi } from '../duLieuKhach.js';
 import { guiDonAnToan, khoaGui, taoKhoaGui } from '../datDon.js';
-import { docKhoQua, docQuaCuaToi, docKetQuaDoi, conLaiSauDoi, ngayPos } from '../doiQua.js';
+import { docKhoQua, docQuaCuaToi, docKetQuaDoi, conLaiSauDoi, ngayPos, docChoRo, ghiChoRo } from '../doiQua.js';
 import { dinhDangSo } from '../dinhDang.js';
 import { nd, ndDau, ndPhan } from '../noiDung/nd.js';
 import Chu from '../components/Chu.jsx';
@@ -11,21 +11,26 @@ import Man, { DauManCon } from '../components/Man.jsx';
 import TrangTai from '../components/TrangTai.jsx';
 import PinSheet from '../components/PinSheet.jsx';
 import { Ico, Med } from '../components/BieuTuong.jsx';
+import AnhQua from '../components/AnhQua.jsx';
 import '../giaoDien/the_hang.css';
 import '../giaoDien/doi_qua.css';
 
 // Kho quà (/uudai/doi-qua, KH-DOI-1 — thiết kế duyệt 26.11): điểm (/diem — gọi MỚI mỗi lần mở màn), ô Quà của tôi + số phiếu chờ nhận, dải nhắc (`nhac` POS — câu 4a),
 // thẻ quà ĐÚNG thứ tự POS (câu 3a), bảng PIN đổi quà, màn "Đã đổi quà!" (voucher; số điểm còn lại = `diem_con` POS). Hiện vật xong → Phiếu quà (câu 2a).
-// Một lần bấm "Xác nhận" = một khoa_gui; guiDonAnToan tự gửi lại CÙNG thân khi chưa rõ; vẫn chưa rõ → lần Xác nhận sau dùng LẠI khoá + mã quà đó (PIN nhập lại, không lưu).
+// Một lần bấm "Xác nhận" = một khoa_gui; guiDonAnToan tự gửi lại CÙNG thân khi chưa rõ; vẫn chưa rõ → ghi lần đó (doiQua.ghiChoRo) — mọi lần bấm sau cho ĐÚNG quà đó
+// (kể cả sau khi rời màn, kể cả khi POS trả 4xx) dùng LẠI khoá đó (PIN nhập lại, không lưu) cho tới khi đổi xong.
 const POS = ndDau('dq.pos');
+const NUT = { het: 'dq.nut.het', luot: 'dq.nut.luot', doi: 'dq.nut.doi' };
 
-/** Ảnh quà / phiếu: `anh` POS (https) hoặc huy hiệu theo loại (voucher → vé, hiện vật → hộp quà). */
-export function AnhQua({ anh, loai, s = 44 }) {
-  return anh ? <img src={anh} alt="" width={s} height={s} loading="lazy" {...POS} /> : <Med ten={loai === 'voucher' ? 'ticket' : 'gift'} s={s} />;
+/** Gộp phiếu POS vừa trả (POST /doi-diem) vào đầu kho Quà của tôi — Phiếu quà hiện ngay, không chờ GET /qua-cua-toi. */
+function gopPhieu(tho) {
+  const s = cuaQuaToi.kho.lay();
+  const cu = s.dl && Array.isArray(s.dl.data) ? s.dl.data : [];
+  cuaQuaToi.kho.dat({ ...s, dl: { ...(s.dl || {}), data: [tho, ...cu.filter((p) => !p || p.ma !== tho.ma)] }, loi: '' });
 }
 
 function TheQua({ q, doi }) {
-  const [k, bien] = q.nut === 'het' ? ['dq.nut.het'] : q.nut === 'luot' ? ['dq.nut.luot'] : q.nut === 'thieu' ? (q.thieu ? ['dq.nut.thieu', { so: dinhDangSo(q.thieu) }] : ['dq.nut.chuaDu']) : ['dq.nut.doi'];
+  const [k, bien] = q.nut !== 'thieu' ? [NUT[q.nut]] : q.thieu ? ['dq.nut.thieu', { so: dinhDangSo(q.thieu) }] : ['dq.nut.chuaDu'];
   const duoc = q.nut === 'doi';
   return (
     <div className={`dq-the${q.nut === 'het' || q.nut === 'luot' ? ' mo' : ''}`}>
@@ -79,7 +84,6 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
   const [xong, datXong] = useState(null);
   const [loiPin, datLoiPin] = useState(''); // CHUA_CO_PIN: lời POS + nút đặt PIN
   const [datPinMo, datDatPinMo] = useState(false);
-  const choRo = useRef(null); // { ma_qua, khoa_gui } của lần gửi chưa rõ
   const gui = useRef(null);
   if (!gui.current) gui.current = khoaGui((than) => guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi }));
 
@@ -89,19 +93,25 @@ export default function DoiQua({ lui, moQuaToi, moPhieu, moMenu }) {
 
   const doi = (pin) => {
     const q = chon;
-    const cu = choRo.current && choRo.current.ma_qua === q.ma ? choRo.current : null;
-    const than = { ma_qua: q.ma, khoa_gui: cu ? cu.khoa_gui : taoKhoaGui(), pin };
+    const cu = docChoRo();
+    const dungLai = cu && cu.ma_qua === q.ma ? cu : null;
+    const than = { ma_qua: q.ma, khoa_gui: dungLai ? dungLai.khoa_gui : taoKhoaGui(), pin };
     const p = gui.current(than);
     if (!p) return Promise.resolve(); // đang gửi: bấm thêm không gửi lần hai
     return p.then((kq) => {
-      choRo.current = null;
+      if (dungLai) ghiChoRo(null);
       lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);
+      if (kq.phieuTho) gopPhieu(kq.phieuTho);
       kho.taiLai();
       datChon(null);
       if (kq.loai === 'hien_vat') moPhieu(kq.phieu.ma); else datXong({ ...kq, ten: q.ten });
     }, (e) => {
-      if (e.code === 'KHONG_BIET') { choRo.current = { ma_qua: q.ma, khoa_gui: than.khoa_gui }; throw new Error(nd('dq.chuaRo')); }
-      choRo.current = null; // POS trả lỗi chắc chắn (chưa trừ gì) → lần sau khoá mới
+      if (e.code === 'KHONG_BIET') { // có thể đã trừ: giữ khoá cho lần bấm sau, lấy lại điểm / kho / phiếu để khách thấy số mới
+        ghiChoRo({ ma_qua: q.ma, khoa_gui: than.khoa_gui });
+        lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]); kho.taiLai();
+        throw new Error(nd('dq.chuaRo'));
+      }
+      // 4xx có mã: lần gửi khoá MỚI → chắc chưa trừ (lần sau lại khoá mới); lần gửi khoá CŨ của lần chưa rõ → KHÔNG xoá (4xx không chứng minh lần đầu chưa trừ).
       if (e.code === 'CHUA_CO_PIN') { datChon(null); datLoiPin(e.message); return; }
       throw e;
     });
