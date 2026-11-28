@@ -62,7 +62,7 @@ export default function Menu({ tai, hien, lanVao, nhuCau, boNhuCau, chonMon, moQ
   const coGv = !!tt && (!coMenu || maGv.size > 0); // Giờ vàng tắt / không món ghép được → ẩn mọi chỗ
   const chonGv = coGv && nhomSlug === GV_SLUG;
   // Ô nhóm theo MÃ POS; mã có đường dẫn trùng ô riêng của App (hoặc rỗng) không có ô — nhóm vẫn hiện ở "Tất cả".
-  const nhomCo = nhomTheoTen(ds).map(([ten, , id]) => ({ id, ten, ic: bieuTuongNhom(ten).ic })).filter((n) => slug(n.id) && slug(n.id) !== GV_SLUG && slug(n.id) !== THE_SLUG);
+  const nhomCo = nhomTheoTen(ds).map(([ten, , id]) => ({ id, ten, ic: bieuTuongNhom(ten).ic })).filter((n, i, a) => { const s = slug(n.id); return s && s !== GV_SLUG && s !== THE_SLUG && a.findIndex((x) => slug(x.id) === s) === i; }); // hai mã cùng đường dẫn: chỉ ô đầu
   const oThe = dsThe.length ? [{ id: THE_SLUG, ten: nd('menu.the.ten'), ic: 'member', khoa: 'menu.the.ten' }] : [];
   const oChon = [...nhomCo, ...oThe, { ...TAT_CA, ten: nd('menu.tatCa') }];
   const chonThe = oThe.length > 0 && nhomSlug === THE_SLUG;
