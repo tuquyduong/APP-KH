@@ -298,3 +298,107 @@ Sau sửa:
 - `--day-du` **71 đạt · 0 hỏng** (thu_KHDOI1 Chromium 103 giây — Phát hiện mức 120 giây).
 - Cổng (HEAD dc2c741, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 51 ca ≠ 63 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
 HEAD ĐÃ KIỂM: dc2c741
+
+## /ra-soat vòng 5 (agent độc lập, 28.11) — báo cáo chép nguyên (rút dòng)
+```
+ĐẠT
+Không còn lỗi [CAO]. Ba lỗi vòng 4 + chú thích đã sửa đúng (đọc code thật, chạy lại): KHONG_TRINH_DUYET=1 thu_KHDOI1 63/0 · Chromium 181/0 · bộ kiểm tĩnh 68/0.
+  dc2c741 → HEAD 5d6355b chỉ đổi trang_thai.md.
+1. 401 giữa chuỗi tự gửi lại: DoiQua.jsx:113 ghiChoRo TRƯỚC phép thử phiên :114 (chu chụp lúc bấm :95); api.js:87 → loaiLoi 'dung' (datDon.js:125) → KHONG_BIET (:150);
+   ca thu_KHDOI1.js:664-672 (503 → 401 thật → Đăng nhập lại → 3 POST cùng khoá) đỏ trên code cũ.
+2. GET đang bay đè phiếu: duLieuKhach.js:43 layMoi (tăng phien, bỏ cho), kết quả cũ bỏ ở :31, :34; DoiQua.jsx:28 cho /diem /voucher /qua-cua-toi, :105-106 trước gopPhieuQua;
+   ca :674-682 (POS giả chụp dữ liệu lúc nhận, trả sau 4 giây) tái hiện đúng; hàm thuần :155-161. Không hỏng nơi khác: chỉ App.jsx:185 chờ lay() của cuaToi (DoiQua không layMoi cuaToi).
+3. /toi lỗi: DoiQua.jsx:96 cuaToi.lay() rồi dq.choKhach; ca :684-692 đỏ trên code cũ.
+4. Chú thích: doiQua.js:59-64, App.jsx:220 đã sửa (xem THẤP 1). Đột biến đủ cho từng chỗ vá (dot_bien_tay.js:52-56; 37).
+LỖI TÌM ĐƯỢC (không CAO):
+[THẤP] DoiQua.jsx:113 + App.jsx:220 — đang tự gửi lại mà bấm Đăng xuất: xoaChoRo() chạy trước, chuỗi kết thúc "chưa rõ" ghi lại dòng của A → chú thích "CHỈ bấm Đăng xuất mới
+  xoá" không trọn. Không hại (bộ nhớ, không PIN, gắn SĐT A — B không đọc; A dùng lại → POS trả kết quả cũ). K1.
+[THẤP] doiQua.js:65-67 — khoá "chưa rõ" không có hạn; hợp đồng hẹn trả kết quả cũ trong 24 giờ (kh_don_gui có NGAY_MS). Tab mở > 24 giờ không tải lại rồi bấm lại đúng quà —
+  rất hiếm. K4.
+[THẤP] cùng tab, A hết phiên (không Đăng xuất), B đăng nhập đổi CÙNG quà → xoá / đè dòng "chưa rõ" của A (DoiQua.jsx:104, :113, :119); khớp §8 "khác khách → xoá",
+  đã ghi ở chú thích doiQua.js:63-64. K4.
+NGHI NGỜ: đổi phiên giữa HAI tab (tab 2 đăng xuất A, B đăng nhập; cuaToi tab 1 vẫn A) → tự gửi lại ở tab 1 đi bằng phiên B, cung() không bắt; tab 1 vẫn hiện phiếu / QR
+  của A — cách làm có từ trước (App chỉ nghe `storage` ở ThanhToan.jsx:86), mức thấp, cùng máy. Ca "B3 /toi lỗi" không thử /toi lỗi liên tiếp (nhánh vẫn đúng theo code).
+K4 ngoài Phạm vi: nơi khác vẫn lamMoi = lay() sau lệnh ghi (App.jsx:251/255/264, UuDai.jsx:245) — có thể ăn GET cũ đang bay; có từ trước.
+K5: không chặn oan (4xx khoá cũ giữ; 423 Chế độ sửa = chưa tạo; /toi chưa về chỉ báo "Đang tải" một lần).
+Đường điểm: không còn cách đổi hai lần ngoài tải lại trang (Phát hiện) và THẤP 2, 3; PIN không lưu; App không tự tính số thật; B không thấy dữ liệu A (DoiQua.jsx:103, ca :695-711).
+dist/ không commit. Đơn giản: vá thêm ~6 dòng app, dùng lại taoCua, guiDonAnToan, khoaGui.
+NGHIỆM THU: 18/18 · mục thiếu: không (C6 ghi nhận).
+CHƯA SOÁT ĐƯỢC: --day-du, cổng chay, đột biến tay, cả npm test (đã chạy bộ kiểm tĩnh); POS thật; Zalo, chữ phóng to, tỉ lệ lệch ảnh.
+BÀI HỌC: NGUYÊN TẮC — bản ghi "chưa rõ" của lệnh trừ điểm / tiền có hạn bằng đúng hạn POS hứa trả kết quả cũ (24 giờ, như kh_don_gui); luật xoá khi Đăng xuất tính cả lệnh
+  gửi còn đang bay lúc bấm.
+```
+
+## Chuyển KH-DOI-2 (chủ quán 28.11: soát vòng 5 chỉ còn lỗi THẤP → không sửa ở KH-DOI-1; làm TRƯỚC khi bật `hien.dq`)
+1. [THẤP] Đang tự gửi lại mà bấm Đăng xuất → chuỗi kết thúc "chưa rõ" ghi lại dòng khoá của A sau `xoaChoRo()` (DoiQua.jsx nhánh lỗi + App.jsx dangXuat). Sửa: chụp
+   "lượt phiên" lúc bấm (số tăng mỗi lần Đăng xuất), chỉ ghi khoá khi lượt chưa đổi; hoặc sửa chú thích cho khớp. Ca: Đăng xuất khi đang tự gửi lại → A đăng nhập lại → khoá mới.
+2. [THẤP] Khoá "chưa rõ" không có hạn — thêm thời điểm ghi, quá 24 giờ (hạn POS hứa trả kết quả cũ) thì coi như không có (như `kh_don_gui` NGAY_MS). Ca + đột biến.
+3. [THẤP] Cùng tab, khách B đổi cùng quà xoá / đè dòng "chưa rõ" của A — đánh khoá theo (mã quà, khách) nếu chủ quán muốn A giữ khoá qua lượt của B; hiện khớp §8.
+4. Lưu khoá "chưa rõ" trên máy (sống qua tải lại trang) — cần thêm khoá `kh_doi_gui` vào `src/luuMay.js` (ngoài Phạm vi KH-DOI-1), không PIN, cùng luật sống / xoá.
+5. Nghi ngờ soát vòng 5: đổi phiên giữa HAI tab (tab 1 vẫn coi là khách A) — nghe sự kiện `storage` của phiên / chủ máy để cập nhật khách đang giữ phiên.
+6. Ngoài DOI: `lamMoi` sau lệnh ghi ở App.jsx / UuDai.jsx (đặt đơn, huỷ, nhận mã) có thể ăn GET cũ đang bay — dùng `layMoi` (đã có ở duLieuKhach.js); `POST /don` tự gửi lại
+   đọc phiên mới mỗi lần (chưa chặn như đổi quà) — việc của luồng Thanh toán.
+7. Thời gian `thu_KHDOI1.js` phần Chromium ~100 giây (mức 120 giây/bài trong `npm test`) — tách các ca "đường thật" sang bài riêng.
+8. Hỏi POS khi gộp DOI-DIEM-1: `POST /doi-diem` tra `khoa_gui` TRƯỚC khi kiểm PIN / điểm / tồn? khoá có gắn theo khách? (App đã an toàn cả hai cách trong cùng phiên trang.)
+
+## Bài học (bước 11)
+Sự cố của việc: (1) K8 đỏ vì cửa ĐÃ HẸN chưa có trong hợp đồng máy đọc → hai lần dừng hỏi (Q1 chọn C; Q2 người gác G-LUAT + G1-PHIEU chặn sửa file luật khi Phạm vi
+phiếu chưa ghi đúng tên); (2) soát độc lập KHÔNG ĐẠT 4 vòng liền, đều ở đường "chưa rõ" của lệnh trừ điểm (khoá trong useRef → một ô → luật xoá ngược kh_don_gui →
+không gắn khách → 401 giữa chuỗi gửi lại) + "lấy mới sau lệnh ghi" dùng lại GET đang bay; vượt 3 vòng sửa, chủ quán cho vòng 4; (3) người gác chặn 28 lần: B-PHANTICH 10
+(lệnh nối / heredoc ghi file), B-BIMAT-CHU 5 (bài thử có mã lỗi giả chứa chữ TOKEN, `process.env` → phải commit trước khi chạy / sửa bằng Edit), B-CD-VITRI 4, còn lại mỗi
+mã 1 lần; (4) đột biến SÓT 3 lần (dữ liệu thử để phiếu `nhac` đầu; ca dò nguồn che đột biến khi có hai `lamMoi`; dòng ghi khoá trước khi gửi thừa); bản sao đột biến hỏng
+sẵn 1 ca (lượt đầu "49·2" mọi đột biến) → thêm lượt ĐỐI CHỨNG; (5) kho nông làm thu_KHND3e đỏ oan; (6) máy khởi động lại giữa `--day-du`; (7) ngân sách ~380 dòng app →
+thực tế ~520 (phần thêm do 4 vòng sửa đường "chưa rõ") — vượt < 1,5 lần.
+- **KHOÁ (đề xuất, ngoài Phạm vi — chat soát duyệt):**
+  - Bài thử chung (vd `cong_cu/thu_KHUNG.js` hoặc bài mới): mọi lệnh có `khoa_gui` (POST /don, POST /doi-diem, sau này) phải có ca trình duyệt "chưa rõ → rời màn / 401 giữa
+    chuỗi / Đăng xuất / khách khác → bấm lại" đi qua đường thật; ca đỏ trước: đổi `khoaChoRo` không so khách → đỏ.
+  - Khuôn đột biến tay chung (tu_chay/ — chủ quán cài): LUÔN có lượt ĐỐI CHỨNG (không đột biến phải xanh); ca đỏ trước: bản sao thiếu tệp → đối chứng đỏ, dừng.
+  - Người gác: B-BIMAT-CHU chặn chạy bài thử chưa commit vì mã lỗi công khai của hợp đồng chứa chữ TOKEN — đề xuất danh sách cho qua mã lỗi công khai `/api/kh`.
+- **NGUYÊN TẮC (đề xuất thêm KHUON_LOI.md — ngoài Phạm vi; tệp 18 / 120 dòng):**
+  - "Bản ghi 'chưa rõ' của lệnh trừ tiền / điểm": Đã gây: KH-DOI-1 soát vòng 1–4 (useRef, một ô, xoá khi 401, không gắn khách, 401 giữa chuỗi). Dấu hiệu: khoá gửi nằm trong
+    state của màn, hoặc xoá theo `doiKhach().xoa` / `donPhien`. Chặn: chép ĐÚNG luật của `kh_don_gui` — gắn khách, có hạn = hạn POS, ghi trước mọi phép thử phiên, chỉ
+    Đăng xuất / đổi xong / 4xx khoá mới mới xoá; ca thử đi qua 401 / Đăng nhập / Đăng xuất thật.
+  - "Lấy mới sau lệnh ghi": Đã gây: KH-DOI-1 soát vòng 4 (GET /qua-cua-toi mở màn về sau, đè phiếu). Dấu hiệu: `lamMoi` / `lay()` ngay sau POST. Chặn: `layMoi()` (bỏ lệnh
+    đang bay); ca thử làm chậm GET gửi TRƯỚC lệnh ghi.
+- **BỎ:** máy khởi động lại giữa `--day-du` (một lần, hạ tầng); kho nông làm thu_KHND3e đỏ (hook mở phiên đã kéo đủ ở các lần sau); bấm `force` trúng thanh tab (một lần, đã sửa ca).
+- Dọn: không lời dặn nào trong KHUON_LOI.md / CLAUDE.md có phép kiểm làm thay ở việc này.
+
+## Báo cáo 7 mục
+- **VIỆC:** KH-DOI-1 — đổi điểm lấy quà trên App theo hợp đồng POS ĐÃ HẸN DOI-DIEM-1, TẮT mặc định (`hien.dq`), thiết kế chủ quán duyệt 26.11 (câu 1a 2a 3a 4a).
+- **ĐÃ SỬA:**
+  - App: `src/api.js` (3 cửa qua `goi`; `/kho-qua` gửi phiên khách, 401 không thoát phiên), `src/doiQua.js` (đọc kho quà / quà của tôi / kết quả đổi; khoá "chưa rõ" gắn khách),
+    `src/datDon.js` (`guiDonAnToan` thêm tuỳ chọn `doc`), `src/duLieuKhach.js` (`cuaQuaToi`, `taoCua.layMoi`, `gopPhieuQua`, `khachDangGiu`), `src/duongDan.js` (3 đường),
+    `src/App.jsx` (3 màn, tắt → về /uudai, Đăng xuất xoá khoá), `src/pages/UuDai.jsx` (nút "Đổi quà ›"), `src/pages/DoiQua.jsx` / `QuaCuaToi.jsx` / `PhieuQua.jsx` (mới),
+    `src/pages/ManQR.jsx` (export), `src/components/PinSheet.jsx` (2 prop tuỳ chọn), `src/components/AnhQua.jsx` (mới), `src/components/CheDoSua.jsx` (bỏ Phiếu quà khỏi
+    "Đi tới màn"), `src/giaoDien/doi_qua.css`, `src/noiDung/nd/doiQua.js` (+ `nd/index.js`; `hien.dq` mặc định tắt), `src/kiemKhop/canTuPos.js` (3 cửa DOI-DIEM-1),
+    `index.html` (3 symbol demo).
+  - Bộ kiểm (chủ quán 27.11): `kiem_tra_truoc_khi_giao.js` khối K8 — `DA_HEN_POS` + K8d.
+- **BÀI THỬ:** `cong_cu/thu_KHDOI1.js` mới — 63 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 181 đạt · 0 hỏng (Chromium 360 / 390 / 430); gốc đỏ 5 · 46 / 29 · 70
+  (`bang_chung_do.txt`, `SỐ CA cong_cu/thu_KHDOI1.js: 63`). Đột biến tay 37/37 + đối chứng xanh. `--day-du` 71/0. Cổng `chay` ĐẠT. Soát độc lập vòng 5 ĐẠT.
+- **NGHIỆM THU (đếm đủ):**
+  - A1 ✓ ca A1 (api dò nguồn; Authorization /kho-qua; 401 /kho-qua giữ phiên; một POST có khoa_gui + pin; mạng chập gửi lại cùng thân; chưa rõ / rời màn / 401 / Đăng xuất / khách khác).
+  - A2 ✓ hàm thuần docKhoQua / docQuaCuaToi / docKetQuaDoi / conLaiSauDoi (đủ / thiếu / sai kiểu, thứ tự POS).
+  - A3 ✓ cuaQuaToi ngoài CUA_KHACH, xoá khi đăng xuất; đổi xong lấy mới /diem /voucher /qua-cua-toi (layMoi); Ví voucher thấy voucher mới.
+  - A4 ✓ canTuPos 3 cửa co:false viec_pos DOI-DIEM-1 (+ K8 / K8d nhận cửa đã hẹn).
+  - B1 ✓ tắt: không nút, ô không bấm, không gọi 3 cửa, mở thẳng → /uudai; bật: nút + bấm ô → Kho quà.
+  - B2 ✓ hero, ô Quà của tôi + số, dải nhắc theo `nhac`, 6 thẻ đúng thứ tự, 5 kiểu nút, chip, ảnh POS / huy hiệu, mo_ta nguyên văn, kho rỗng.
+  - B3 ✓ bảng PIN tóm tắt (Trừ / Còn lại), vòng chờ, PIN_SAI / THIEU_DIEM / QUA_HET nguyên lời POS, CHUA_CO_PIN → đặt PIN; hồ sơ lỗi tự tải lại.
+  - B4 ✓ "Đã đổi quà!" diem_con POS (760 ≠ 750), mã voucher, 2 nút.
+  - B5 ✓ hiện vật → Phiếu quà QR ngay (kể cả GET chậm / GET cũ về muộn), mã, hạn; phiếu đã nhận không QR.
+  - B6 ✓ Chờ nhận (nhắc chữ hồng) / Đã xong (đã nhận, hết hạn + hoàn điểm), rỗng.
+  - B7 ✓ Lịch sử điểm không đổi (`h.reason` nguyên văn).
+  - B8 ✓ danh mục doiQua.js, `hien.dq` battat false, kiemDanhMuc, mọi data-nd có trong danh mục, chữ sửa ở /admin hiện đúng, chữ POS = mục khoá.
+  - C1 ✓ bài mới, chạy cả KHONG_TRINH_DUYET=1, đỏ trên gốc.
+  - C2 ✓ không bài cũ nào đổi.
+  - C3 ✓ 37 đột biến (đủ các loại phiếu đòi: công tắc bật, gọi khi tắt, khoá mới khi gửi lại, gửi đúp, xếp lại, tự tính diem_con, lưu PIN, cho đổi khi thiếu / hết, bỏ pin).
+  - C4 ✓ ảnh 390 `so_anh/nhanh` + `so_anh/lech` + `doi_chieu_demo.md`; soát vòng 1 so ảnh gốc ↔ nhánh khi tắt (7 màn, không lệch > 40).
+  - C5 ✓ npm test / --day-du 71/0, cổng tinh + chay ĐẠT, K9 / K10 xanh, HEAD ĐÃ KIỂM trước /ra-soat.
+  - C6 — chủ quán thử tay SAU khi POS gộp DOI-DIEM-1 (bật `hien.dq` ở /admin → đổi 1 voucher + 1 quà hiện vật bằng SĐT thử → quầy quét phiếu "Đã trao").
+- **ĐÃ RÀ K4:** mọi nơi dùng guiDonAnToan (Thanh toán mặc định không đổi), PinSheet (Hồ sơ, Thanh toán — prop tuỳ chọn), CUA_KHACH / xoaKhoKhach / donPhien / dangXuat /
+  doiKhach, 401 (`CUA_401_GIU_PHIEN` chỉ /kho-qua), đường dẫn mới + CheDoSua, `hien.dq` (UuDai, App, danh mục), taoCua.lay / layMoi (chỉ DoiQua dùng layMoi).
+- **CHƯA KIỂM:** POS thật (cửa chưa có — POS gộp DOI-DIEM-1 sau khai trương); trình duyệt Zalo, chữ phóng to theo cài đặt máy; tải lại trang khi "chưa rõ" (mất khoá —
+  Chuyển KH-DOI-2); đổi phiên giữa hai tab; tỉ lệ lệch ảnh do máy đo (soát không đo lại). Thao tác thử tay cho chủ quán (sau khi POS gộp): bật `hien.dq` → Ưu đãi bấm
+  "Đổi quà ›" → đổi một voucher (nhập PIN) → xem Ví voucher; đổi một quà hiện vật → đưa QR ở quầy.
+- **GIT:** nhánh `viec/KH-DOI-1`, đã push; không merge, không PR.
+- **BÀI HỌC:** mục "Bài học" ở trên (2 KHOÁ + 1 luật người gác đề xuất, 2 NGUYÊN TẮC đề xuất, 3 BỎ).
+HEAD ĐÃ KIỂM: dc2c741
