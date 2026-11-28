@@ -44,7 +44,7 @@ export function bieuTuongNhom(nhom) {
 }
 
 /** MÃ nhóm POS (v19: `nhom` = mã ổn định; POS cũ: `nhom` là tên). Thiếu → "". */
-export const maNhom = (m) => (m && typeof m.nhom === 'string' ? m.nhom : '');
+export const maNhom = (m) => (m && typeof m.nhom === 'string' ? m.nhom.trim() : '');
 
 /** Tên hiển thị của nhóm: `nhom_ten` (đã cắt) → `nhom` (POS cũ) → chữ "Khác" của danh mục. */
 export function tenNhom(m) {
@@ -67,7 +67,9 @@ export function nhomTheoTen(ds) {
   for (const m of ds) {
     const ma = maNhom(m);
     if (!ban.has(ma)) ban.set(ma, { ten: tenNhom(m), thuTu: thuTuNhom(m), khoa: khoaNhom(m), mon: [] });
-    ban.get(ma).mon.push(m);
+    const g = ban.get(ma);
+    g.thuTu = Math.min(g.thuTu, thuTuNhom(m)); // món đầu thiếu số mà món sau có → nhóm vẫn theo số của POS
+    g.mon.push(m);
   }
   return [...ban.values()].sort((a, b) => a.thuTu - b.thuTu).map((g) => [g.ten, g.mon, g.khoa]);
 }
