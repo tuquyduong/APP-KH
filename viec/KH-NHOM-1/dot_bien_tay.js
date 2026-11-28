@@ -21,7 +21,6 @@ const DS = [
   ['VS-POS-CU-THIEU-NHOM-TEN-HIEN-KHAC', [[L, "return ten || maNhom(m) || nd('menu.nhomKhac');", "return ten || nd('menu.nhomKhac');"]]],
   ['VS-BIEU-TUONG-KHOP-THEO-MA', [[L, 'bieuTuongNhom(tenNhom(m))', 'bieuTuongNhom(maNhom(m))']]],
   ['VS-THU-TU-NHAN-CHUOI', [[L, 'Number.isFinite(m.nhom_thu_tu) ? m.nhom_thu_tu : 9999', 'Number.isFinite(Number(m.nhom_thu_tu)) ? Number(m.nhom_thu_tu) : 9999']]],
-  ['BV-MENU-LOC-DUNG-CHU-CU', [[MN, 'loc.filter((m) => khoaNhom(m) === nhom)', "loc.filter((m) => (m.nhom || '') === nhom)"]]],
 ];
 const TRINH_DUYET = [
   ['VS-LOC-THEO-TEN', [[MN, 'loc.filter((m) => khoaNhom(m) === nhom)', 'loc.filter((m) => (m.nhom_ten || m.nhom) === nhom)']]],
