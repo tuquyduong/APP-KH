@@ -118,3 +118,28 @@ BÀI HỌC: KHOÁ — mọi đường gửi có khoa_gui phải có ca "chưa r�
 ```
 
 ## Vòng sửa 1 (28.11)
+| Lỗi soát | Sửa | Ca thử / đột biến |
+|---|---|---|
+| DoiQua 4xx sau "chưa rõ" xoá khoá; "chưa rõ" chỉ trong useRef | `src/doiQua.js` `docChoRo` / `ghiChoRo` (cấp mô-đun, `{ ma_qua, khoa_gui }` — không PIN); chỉ xoá khi đổi xong ĐÚNG quà đó hoặc đăng xuất (`xoaKhoKhach`) | ca "A1 chưa rõ → rời màn → bấm lại: CÙNG khoá tới khi xong" (4 × 503 → PIN_SAI → xong; 6 POST cùng khoá; lần sau khoá mới); VS-KHOA-MOI-SAU-CHUA-RO, BV-4XX-SAU-CHUA-RO-XOA-KHOA, BV-CHUA-RO-CHI-TRONG-MAN, VS-CHUA-RO-GIU-PIN, BV-DANG-XUAT-GIU-CHUA-RO |
+| Sau "chưa rõ" không làm mới | `lamMoi([cuaDiem, cuaVoucher, cuaQuaToi])` + `kho.taiLai()` | "chưa rõ → lấy lại /diem và /qua-cua-toi" |
+| Phiếu quà "Không thấy phiếu" khi /qua-cua-toi chậm / lỗi | `docKetQuaDoi` trả thêm `phieuTho`; DoiQua gộp vào đầu kho `cuaQuaToi` trước khi mở Phiếu quà | B5 "hiện NGAY … (GET /qua-cua-toi chậm 5 giây)"; BV-KHONG-GOP-PHIEU |
+| CheDoSua "Đi tới màn" điền mã ĐƠN cho /uudai/qua/:ma | bỏ Phiếu quà khỏi danh sách (không có mã mẫu) | ca dò nguồn; BV-CHE-DO-SUA-MA-DON-CHO-PHIEU |
+| Chữ `dq.chuaRo` "Bấm Xác nhận…" lệch hành vi + hứa "không trừ hai lần" | "Nhập lại PIN rồi bấm Xác nhận để gửi lại đúng lần đổi này." | ca "Chưa rõ … Nhập lại PIN" |
+| Đơn giản: AnhQua ở pages; ba ngôi 4 tầng | `src/components/AnhQua.jsx`; bảng `NUT` | — |
+Không sửa (ghi nhận): `dungGiuManSang` vẫn export từ pages/ManQR.jsx (dời sang components = đụng ManQR thêm, không đổi hành vi); chữ "quán hoàn lại điểm" ↔ "đổi xong
+không trả lại điểm" — chữ thiết kế đã duyệt, sửa được ở /admin → `## Phát hiện`.
+
+Sau sửa:
+- `thu_KHDOI1.js` 59 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 149 đạt · 0 hỏng (Chromium); gốc 5 · 42 / 20 · 57; `SỐ CA cong_cu/thu_KHDOI1.js: 59`.
+- Đột biến `--trinh-duyet`: đối chứng XANH (149/0), **27/27 BẮT ĐƯỢC** (lượt đầu sau sửa: BV-KHONG-LAM-MOI-SAU-DOI sót ở nhóm dò nguồn vì DoiQua có hai `lamMoi` →
+  chuyển sang nhóm trình duyệt; VS-BO-PIN-KHOI-THAN đổi chuỗi theo code mới).
+- `--day-du` **71 đạt · 0 hỏng**. Cổng (HEAD 74424d1, KHONG_TRINH_DUYET=1): `· CẢNH BÁO A16 … 47 ca ≠ 59 ca … bài dừng sớm trên gốc thì bỏ qua` · **✓ CỔNG CHẠY ĐẠT**.
+
+## Phát hiện
+- Chữ mặc định `dq.qt.nhac` / `dq.ph.dua` nói "quán hoàn lại điểm" khi phiếu quá hạn; hợp đồng: hoàn là MẶC ĐỊNH, Cài đặt quán đổi được. `dq.ghiChu` "đổi xong không trả lại
+  điểm" (ý: đổi xong không đổi ngược). Chủ quán xem lại chữ ở /admin khi bật `hien.dq` (soát vòng 1).
+- "Chưa rõ" của đổi quà sống qua chuyển màn nhưng MẤT khi tải lại trang (không lưu máy: khoá mới trên máy phải thêm vào danh sách `src/luuMay.js` — ngoài Phạm vi).
+  Muốn bền như `kh_don_gui` của POST /don → việc sau (luuMay.js + khoá `kh_doi_gui`, không PIN).
+- Máy mới chưa có bản nội dung (`kh_nd_ban`): lần vẽ đầu `hien.dq` = mặc định tắt → link mở thẳng /uudai/doi-qua bị đưa về /uudai trước khi bản nội dung về (soát vòng 1, chưa thử).
+- Hỏi POS (gửi kèm khi DOI-DIEM-1): thứ tự kiểm của `POST /doi-diem` — tra `khoa_gui` TRƯỚC khi kiểm PIN / điểm / tồn (như `POST /don`)? App đã giữ khoá qua 4xx nên an toàn cả hai cách.
+HEAD ĐÃ KIỂM: 74424d1
