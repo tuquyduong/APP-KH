@@ -26,4 +26,4 @@ Trên code đã vá:
 $ KHONG_TRINH_DUYET=1 node cong_cu/thu_KHDOI1.js   → 56 đạt · 0 hỏng
 $ node cong_cu/thu_KHDOI1.js (Chromium)              → 138 đạt · 0 hỏng
 
-SỐ CA thu_KHDOI1.js: 56
+SỐ CA cong_cu/thu_KHDOI1.js: 56
