@@ -12,7 +12,7 @@
 có Chromium: 75 đạt · 0 hỏng
 KHONG_TRINH_DUYET=1: 15 đạt · 0 hỏng
 
-SỐ CA thu_KHNHOM1: 16
+SỐ CA cong_cu/thu_KHNHOM1.js: 16
 (sau vòng soát 1 thêm 1 ca thuần — maNhom cắt khoảng trắng + thứ tự nhóm lấy số nhỏ nhất: 16 ca ở KHONG_TRINH_DUYET=1, 76 có Chromium; ca mới đỏ trên gốc vì hàm chưa có)
 
 ## Đột biến tay (node viec/KH-NHOM-1/dot_bien_tay.js --trinh-duyet): 9/9 bị bắt (xem trang_thai.md)
