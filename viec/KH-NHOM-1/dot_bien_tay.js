@@ -17,7 +17,7 @@ const L = 'src/menuLoc.js', MN = 'src/pages/Menu.jsx';
 const DS = [
   ['VS-HIEN-NHOM-THAY-NHOM-TEN', [[L, "return ten || maNhom(m) || nd('menu.nhomKhac');", "return maNhom(m) || ten || nd('menu.nhomKhac');"]]],
   ['BV-BO-XEP-THEO-NHOM-THU-TU', [[L, '.sort((a, b) => a.thuTu - b.thuTu)', '.sort(() => 0)']]],
-  ['VS-GOP-HAI-MA-TRUNG-TEN', [[L, 'const ma = maNhom(m);', 'const ma = tenNhom(m);']]],
+  ['VS-GOP-HAI-MA-TRUNG-TEN', [[L, 'const khoa = khoaNhom(m);', 'const khoa = tenNhom(m);']]],
   ['VS-POS-CU-THIEU-NHOM-TEN-HIEN-KHAC', [[L, "return ten || maNhom(m) || nd('menu.nhomKhac');", "return ten || nd('menu.nhomKhac');"]]],
   ['VS-BIEU-TUONG-KHOP-THEO-MA', [[L, 'bieuTuongNhom(tenNhom(m))', 'bieuTuongNhom(maNhom(m))']]],
   ['VS-THU-TU-NHAN-CHUOI', [[L, 'Number.isFinite(m.nhom_thu_tu) ? m.nhom_thu_tu : 9999', 'Number.isFinite(Number(m.nhom_thu_tu)) ? Number(m.nhom_thu_tu) : 9999']]],
