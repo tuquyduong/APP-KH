@@ -63,3 +63,12 @@ BÀI HỌC (từ người soát): ghi `HEAD ĐÃ KIỂM` + kết quả cổng TR
 - **NGUYÊN TẮC (đề xuất):** kho mây nông (`git rev-parse --is-shallow-repository` = true) làm bài so với commit cũ đỏ giả — chạy `git fetch --unshallow` trước khi kết luận bài cũ đỏ (`thu_KHND3e.js` 28.11).
 - **BỎ:** đột biến "lọc theo m.nhom" tương đương code (một lần).
 - Dọn `KHUON_LOI.md`: không có lời dặn nào cần xoá.
+
+## Cổng (28.11, HEAD 6e4b32a, cây sạch, `KHONG_TRINH_DUYET=1`)
+- Lần 1 cổng `chay` đỏ: `✗ [A11]` (`thu_KHMUA1b.js` xanh trên gốc — do một dòng tôi thêm; đã HOÀN LẠI nguyên văn) và `✗ [A16]` (số ca phải đếm đúng chế độ `KHONG_TRINH_DUYET=1`, §9: 16). Chạy lại sau sửa:
+✓ CỔNG CHẠY ĐẠT
+- Cổng `tinh`: chỉ thiếu dòng `HEAD ĐÃ KIỂM` (ghi ngay dưới, sau lần kiểm cuối).
+- Soát `/ra-soat` vòng 1 → đã sửa mục 2–5 (xem trên); không phát sinh vòng 2 vì các sửa là thu hẹp hành vi, có ca thử + 9/9 đột biến + cổng đạt.
+- C6 (chủ quán thử tay trên điện thoại): ① mở App → Menu: thấy "Nước ép" rồi "Trà" (thứ tự POS), không thấy chữ `juice` / `tea`; ② ở POS đổi tên một nhóm → mở lại App thấy tên mới, link `/menu/juice` vẫn đúng.
+
+HEAD ĐÃ KIỂM: 6e4b32a
