@@ -43,3 +43,23 @@ KHÔNG ĐẠT (do chưa ghi C5/`HEAD ĐÃ KIỂM`, vài lỗi nhỏ). LỖI: (1)
 NGHIỆM THU: 14/17 có bằng chứng; thiếu C4 (ghi so ảnh), C5, C6 (chủ quán thử tay).
 Đã xử lý vòng 1: (2) bỏ ô trùng slug (`Menu.jsx` filter `findIndex`), (3) `Math.min` thứ tự, (4) `trim`, thêm ca thử (SỐ CA 15→16), cập nhật đột biến; (1) ghi ở dưới.
 BÀI HỌC (từ người soát): ghi `HEAD ĐÃ KIỂM` + kết quả cổng TRƯỚC `/ra-soat`; chuẩn hoá khoá nhóm ở một chỗ.
+
+## Vòng sửa sau soát 1 (28.11)
+- `thu_KHUI2.js` ("nhóm theo nhom, thiếu → Khác") đỏ do việc này (C2): POS cũ đặt tên nhóm "Khác" + món không nhóm bị tách thành hai nhóm "Khác". Sửa ở code (không sửa bài): `nhomTheoTen` gom theo `khoaNhom` (mã; món không mã theo tên) → `thu_KHUI2.js` 78/0. Đồng thời xử lý nghi vấn 5 của người soát (món không mã khác `nhom_ten`).
+- `--day-du` (code mới): `70 đạt · 0 hỏng`, vite build + dist + K2d xanh; K9/K10 trong kiểm tĩnh xanh. `thu_KHNHOM1.js` 76 đạt (Chromium) · 16 ca ở `KHONG_TRINH_DUYET=1`; đột biến 9/9 bị bắt.
+
+## BÁO CÁO 7 MỤC
+1. **VIỆC** — KH-NHOM-1: Menu lấy tên + thứ tự nhóm món từ POS (`nhom` = mã, `nhom_ten`, `nhom_thu_tu`, hợp đồng v19); chép hợp đồng v20 (đã có từ phiếu).
+2. **ĐÃ SỬA** — `src/menuLoc.js` (`maNhom`, `tenNhom`, `thuTuNhom`, `khoaNhom`, `bieuTuongMon`, `nhomTheoTen` gom theo khoá + xếp theo thứ tự POS); `Menu.jsx` (ô + tiêu đề theo tên, lọc / đường dẫn theo mã, ô riêng `gio-vang`/`the-thanh-vien`/slug rỗng/trùng không có ô nhóm POS); `TrangMon.jsx`, `GioHang.jsx`, `MonO.jsx` (tên + biểu tượng theo `bieuTuongMon`); `nd/menu.js` (chỉ đường `menu.nhom`); `thu_KHMUA1b.js` (+`S.menu` cho POS giả); bài mới `thu_KHNHOM1.js`.
+3. **BÀI THỬ** — `thu_KHNHOM1.js`: gốc 35 đạt · 30 hỏng → sau 76/0 (16 ca không trình duyệt, `SỐ CA thu_KHNHOM1: 16`); đột biến `dot_bien_tay.js` 9/9; `npm test` / `--day-du` 70/0; `thu_KHND3e.js` 42/0 sau unshallow.
+4. **ĐÃ RÀ K4** — `grep` `.nhom` trong `src/`: chỉ còn `canTuPos.js` (danh sách trường hợp đồng) và `App.jsx` (`r.tham.nhom` là slug đường dẫn); mọi chỗ dùng `bieuTuongNhom(mon.nhom)` / `mon.nhom || nd(...)` đã chuyển. Không đụng đường tiền.
+5. **CHƯA KIỂM** — chưa thử trên POS thật (chỉ POS giả theo dữ liệu đo 27.11); chưa so ảnh `LUU_ANH_DIR` gốc↔nhánh bằng công cụ so ảnh (chỉ ảnh trước/sau xem mắt ở `so_anh/`); C6 chủ quán thử tay; hai mã khác nhau cùng slug: chỉ ô đầu có ô chọn (không có ca trình duyệt riêng); cổng GitHub chưa chạy.
+6. **GIT** — nhánh `viec/KH-NHOM-1`, commit từng file, push `git push -u origin viec/KH-NHOM-1`; không merge, không PR.
+7. **BÀI HỌC** — xem bên dưới.
+
+## Bài học
+- **KHOÁ (đã làm):** ca "POS cũ đặt tên nhóm trùng chữ Khác" đã có sẵn trong `thu_KHUI2.js` bắt được việc tách nhóm; thêm ca `maNhom` cắt khoảng trắng + thứ tự nhóm = số nhỏ nhất vào `thu_KHNHOM1.js` (đỏ trên gốc).
+- **NGUYÊN TẮC (đề xuất, ngoài Phạm vi `KHUON_LOI.md`):** K-mới "Đổi nghĩa trường POS thì chạy ĐỦ `npm test` trước `/ra-soat`, không chỉ bài mới — lần này `thu_KHUI2.js` chỉ lộ ở bản `--day-du` vì lần `npm test` đầu bị cắt bằng `head -30`". Đã gây: KH-NHOM-1 28.11. Dấu hiệu: lọc kết quả bằng `head` rồi kết luận. Chặn: đọc dòng tổng cuối.
+- **NGUYÊN TẮC (đề xuất):** kho mây nông (`git rev-parse --is-shallow-repository` = true) làm bài so với commit cũ đỏ giả — chạy `git fetch --unshallow` trước khi kết luận bài cũ đỏ (`thu_KHND3e.js` 28.11).
+- **BỎ:** đột biến "lọc theo m.nhom" tương đương code (một lần).
+- Dọn `KHUON_LOI.md`: không có lời dặn nào cần xoá.
