@@ -39,6 +39,8 @@ export function taoCua(ham) {
   return {
     kho, lay,
     napNeuCu: (giay = PHUT_CON_MOI * 60, bay = Date.now()) => (conMoi(kho.lay().luc, bay, giay) ? Promise.resolve(kho.lay().dl) : lay()),
+    // Lấy mới SAU một lệnh ghi (KH-DOI-1): bỏ lệnh GET đang bay từ TRƯỚC lệnh ghi (kết quả của nó bị bỏ — không đè bản mới), giữ dữ liệu đang hiện.
+    layMoi: () => { phien++; cho = null; return lay(); },
     xoa: () => { phien++; cho = null; kho.dat(RONG); },
   };
 }

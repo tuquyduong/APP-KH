@@ -47,9 +47,13 @@ const TRINH_DUYET = [
   ['BV-CHUA-RO-CHI-TRONG-MAN', [[DQ, "  useEffect(() => { cuaDiem.lay(); }, []);", "  useEffect(() => { cuaDiem.lay(); return () => xoaChoRo(); }, []);"]]],
   ['BV-KHONG-GOP-PHIEU', [[DQ, 'if (kq.phieuTho) gopPhieuQua(kq.phieuTho);', '']]],
   // Vòng sửa 1: DoiQua có HAI lamMoi (đổi xong · chưa rõ) → dò nguồn không còn phân biệt; ca trình duyệt "đổi xong → lấy lại /diem /voucher /qua-cua-toi" bắt.
-  ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, 'lamMoi([cuaDiem, cuaVoucher, cuaQuaToi]);\n      if (kq.phieuTho)', 'lamMoi([cuaDiem]);\n      if (kq.phieuTho)']]],
+  ['BV-KHONG-LAM-MOI-SAU-DOI', [[DQ, '      layMoiSauDoi();\n      if (kq.phieuTho)', '      cuaDiem.layMoi();\n      if (kq.phieuTho)']]],
   // (BV-GHI-KHOA-SAU-KHI-GUI bỏ ở vòng sửa 2: SÓT vì dòng ghi trước khi gửi thừa — khoá song song cấp mô-đun đã chặn mọi lần bấm lại lúc đang gửi; đã bỏ dòng đó.)
-  ['BV-CHUA-RO-KHONG-GHI-KHOA', [[DQ, '        ghiChoRo(q.ma, than.khoa_gui, chu);\n', '']]],
+  ['BV-CHUA-RO-KHONG-GHI-KHOA', [[DQ, "      if (e.code === 'KHONG_BIET') ghiChoRo(q.ma, than.khoa_gui, chu);\n", '']]],
+  // Vòng sửa 4: mỗi lỗi soát vòng 4 một đột biến.
+  ['BV-401-GIUA-CHUOI-MAT-KHOA', [[DQ, "      if (e.code === 'KHONG_BIET') ghiChoRo(q.ma, than.khoa_gui, chu);\n      if (!cungKhach()) throw new Error(nd('dq.chuaRo'));", "      if (!cungKhach()) throw new Error(nd('dq.chuaRo'));\n      if (e.code === 'KHONG_BIET') ghiChoRo(q.ma, than.khoa_gui, chu);"]]],
+  ['BV-DUNG-LAI-GET-DANG-BAY', [[DQ, 'forEach((c) => c.layMoi());', 'forEach((c) => c.lay());']]],
+  ['BV-HO-SO-LOI-KHONG-TAI-LAI', [[DQ, 'if (!chu) { cuaToi.lay(); return', 'if (!chu) { return']]],
   ['BV-KET-QUA-KHAC-KHACH', [[DQ, '      if (!cungKhach()) return; //', '      //']]],
   ['BV-GUI-LAI-BANG-PHIEN-KHAC', [[DQ, 'gui: (t) => (cung() ? doiDiemApp(t) : DOI_KHACH())', 'gui: (t) => doiDiemApp(t)']]],
   ['BV-KHONG-CHAN-SONG-SONG', [[DQ, 'const p = guiDoi(than, cungKhach);', 'const p = guiDonAnToan(than, { gui: doiDiemApp, doc: docKetQuaDoi });']]],

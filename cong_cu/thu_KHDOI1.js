@@ -150,7 +150,15 @@ const QUA_TOI = [
     const cds = doc('src/components/CheDoSua.jsx');
     k("B5 Chế độ sửa \"Đi tới màn\" không mở Phiếu quà bằng mã ĐƠN", /e\.trang !== 'phieuqua'/.test(cds));
     const dq = doc('src/pages/DoiQua.jsx');
-    k('A3 đổi xong → lamMoi([cuaDiem, cuaVoucher, cuaQuaToi])', /lamMoi\(\[cuaDiem, cuaVoucher, cuaQuaToi\]\)/.test(dq));
+    k('A3 đổi xong → lấy MỚI cuaDiem, cuaVoucher, cuaQuaToi (layMoi — bỏ GET đang bay)', /\[cuaDiem, cuaVoucher, cuaQuaToi\]\.forEach\(\(c\) => c\.layMoi\(\)\)/.test(dq));
+    // Vòng sửa 4: GET đang bay từ TRƯỚC lệnh ghi về muộn không được đè bản lấy sau lệnh ghi.
+    let traCu, goiThu = 0;
+    const cuaThu = K.taoCua(() => (++goiThu === 1 ? new Promise((v) => { traCu = () => v({ ban: 'cu' }); }) : Promise.resolve({ ban: 'moi' })));
+    cuaThu.lay();
+    if (typeof cuaThu.layMoi === 'function') await cuaThu.layMoi();
+    if (traCu) traCu();
+    await new Promise((v) => setTimeout(v, 0));
+    k('A3 taoCua.layMoi: lệnh GET cũ về SAU không đè bản mới', goiThu === 2 && cuaThu.kho.lay().dl && cuaThu.kho.lay().dl.ban === 'moi', JSON.stringify(cuaThu.kho.lay().dl));
   });
 
   await thu('A4 canTuPos', async () => {
@@ -297,10 +305,16 @@ async function trinhDuyet(pw) {
       const ai = AI[auth.replace(/^Bearer /, '')];
       if (S.diem401 && duong === '/diem') { S.diem401 = false; return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' }); }
       if (!ai) return json(401, { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' });
+      if (duong === '/toi' && S.toiLoi) return json(500, { error: 'Lỗi máy chủ', code: 'LOI_MAY_CHU' });
       if (duong === '/toi') return json(200, { success: true, khach: { sdt: ai, ten: 'Linh', xung_ho: 'chi', dia_chi: null, qr: 'QR', hang: null, so_du_vi: 180600 } });
       if (duong === '/diem') return json(200, { success: true, points: S.diem, history: [{ id: 9, type: 'redeem', points: -500, reason: 'Đổi quà: Voucher giảm 20.000đ', created_at: '2026-11-20T09:00:00' }] });
       if (duong === '/voucher') return json(200, { success: true, data: S.vc, ma_khach_moi: [] });
       if (duong === '/gia-han') return json(200, { success: true, token: 'tok-A', het_han: '2026-12-27T08:00:00' });
+      if (duong === '/qua-cua-toi' && S.chamQuaToiDau && !S.doi.length) { // GET lúc MỞ màn chậm: chụp dữ liệu LÚC NHẬN yêu cầu (trước khi đổi) rồi mới trả
+        const banLuc = ai === SDT_A ? [...S.quaToi] : [];
+        await new Promise((x) => setTimeout(x, S.chamQuaToiDau));
+        return json(200, { success: true, data: banLuc });
+      }
       if (duong === '/qua-cua-toi') { if (S.chamQuaToi && S.doi.length) await new Promise((x) => setTimeout(x, S.chamQuaToi)); if (ai !== SDT_A && S.loiQuaToiB) return json(500, { error: 'Lỗi máy chủ', code: 'LOI_MAY_CHU' }); return json(200, { success: true, data: ai === SDT_A ? S.quaToi : [] }); }
       if (duong === '/doi-diem' && pt === 'POST') {
         S.doi.push(than); S.doiAi.push(ai);
@@ -644,6 +658,38 @@ async function trinhDuyet(pw) {
     await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_B); await doiUrl(t, /^\/uudai$/);
     await t.waitForTimeout(9000); // lần 2 trả 503 → chờ 2 giây → lần 3 (nếu App còn gửi) đi bằng phiên B
     k('A1 không lần gửi nào của A đi bằng phiên B (dừng ở lần 2)', S.doiAi.every((x) => x === SDT_A) && S.doi.length === 2, vet(S));
+  });
+
+  // Vòng sửa 4 (/ra-soat vòng 4) — ba lỗi, mỗi lỗi một ca.
+  them('A1 401 GIỮA chuỗi tự gửi lại → A đăng nhập lại → CÙNG khoá', { kich: [{ st: 503, o: { error: 'Máy chủ bận' } }, { st: 401, o: { error: 'Phiên đăng nhập đã hết', code: 'KH_TOKEN_SAI' } }] }, async (t, S) => {
+    await mo(t, '/uudai'); await t.waitForSelector('#rewards .dq-nut');
+    await vaoKho(t); await doiQua(t, 0);
+    k('A1 lần 2 (tự gửi lại) nhận 401 → mất phiên, về Trang chủ', await doi(t, async () => S.doi.length === 2 && !(await t.evaluate(() => localStorage.getItem('kh_token'))) && duongDan(t) === '/trangchu', 10000), duongDan(t));
+    await diTrong(t, '/dangnhap?tiep=%2Fuudai'); await dangNhapUi(t, SDT_A); await doiUrl(t, /^\/uudai$/);
+    await vaoKho(t); await doiQua(t, 0);
+    await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000);
+    k('A1 A đăng nhập lại, bấm cùng quà → dùng LẠI khoá của chuỗi bị 401 (không trừ lần hai)', S.doi.length === 3 && S.doi[2].khoa_gui === S.doi[0].khoa_gui && S.doi[1].khoa_gui === S.doi[0].khoa_gui, vet(S));
+  });
+
+  them('B5 GET /qua-cua-toi lúc MỞ màn về SAU khi đổi xong → không đè phiếu vừa đổi', { chamQuaToiDau: 4000 }, async (t, S) => {
+    await mo(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6); await doiChu(t, '#doiqua .dq-hero', /1\.250/);
+    await t.waitForTimeout(400);
+    await doiQua(t, 2);
+    await doiUrl(t, /^\/uudai\/qua\/PQNEW1$/);
+    k('B5 Phiếu quà hiện ngay', await doi(t, async () => co(t, '#phieuqua .khung-qr svg path'), 2000));
+    await t.waitForTimeout(4500); // GET cũ (dữ liệu trước khi đổi, chưa có PQNEW1) về
+    k('B5 GET cũ về muộn → Phiếu quà VẪN còn (mã PQNEW1, QR)', (await co(t, '#phieuqua .khung-qr svg path')) && /PQNEW1/.test(await chu(t, '#phieuqua .dq-ph-ma')), await chu(t, '#phieuqua'));
+  });
+
+  them('B3 hồ sơ (/toi) lỗi → bấm Xác nhận tự tải lại hồ sơ → bấm lại đổi được', { toiLoi: true }, async (t, S) => {
+    await mo(t, '/uudai/doi-qua'); await doi(t, async () => (await t.locator('#doiqua .dq-the').count()) === 6); await doiChu(t, '#doiqua .dq-hero', /1\.250/);
+    await t.waitForTimeout(800);
+    S.toiLoi = false; // POS hết lỗi — App không tự hỏi lại tới khi khách bấm
+    await doiQua(t, 0);
+    k('B3 lần đầu: lời "Đang tải thông tin tài khoản", không POST', (await doiChu(t, '.pin-sheet .pin-msg', /Đang tải thông tin tài khoản/)) && S.doi.length === 0);
+    await t.waitForTimeout(600);
+    await nhapPin(t, '1234'); await t.locator('.pin-sheet .pin-ok').click();
+    k('B3 bấm lại → đã tải lại hồ sơ → đổi được', await doiChu(t, '#doiqua', /Đã đổi quà!/, 8000));
   });
 
   // GET /qua-cua-toi của B hỏng: kho chỉ còn thứ App tự ghi vào → phiếu của A (nếu App gộp nhầm) lộ ra, không bị GET của B che.

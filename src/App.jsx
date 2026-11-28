@@ -217,7 +217,7 @@ export default function App() {
   };
   const chonTab = (t) => { datNhuCau(''); vaoTab(t); };
   const moDangNhap = (tiep) => di(taoDuongDan('dangnhap', { tiep }));
-  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; xoaChoRo() /* khoá đổi quà chưa rõ (KH-DOI-1; khoá gắn khách — 401 thì GIỮ, khách khác không đọc được) */; datGio([]); datMaCho(''); donPhien(); };
+  const dangXuat = () => { xoaToken(); xoaTatCa(); ghiGuiDo(null) /* cả bản trong bộ nhớ trang khi kho bị chặn */; xoaChoRo() /* khoá đổi quà chưa rõ (KH-DOI-1): CHỈ bấm Đăng xuất mới xoá; 401 / hết phiên — kể cả 401 giữa chuỗi tự gửi lại — giữ (DoiQua ghi trước phép thử phiên); khách khác không đọc được */; datGio([]); datMaCho(''); donPhien(); };
   const luiVe = () => lui(r.cha);
   const quangCaoTho = chonQuangCao({ gioVang: gioVangPos, chuongTrinh, bayGio: bayGio(), quangCao: quangCaoPos }); // MỘT lần: dải các trang + banner Trang chủ cùng đọc (có thể là hai dòng POS khác nhau)
   const quangCao = coDai(trang) && (dangNhap || !r.canDN) && quangCaoTho.chu && !(quangCaoTho.dai.dich === 'uudai' && trang === 'uudai') ? { ...quangCaoTho, ...quangCaoTho.dai } : null; // dải dẫn tới chính trang đang đứng thì thừa

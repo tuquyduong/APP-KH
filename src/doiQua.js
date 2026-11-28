@@ -59,7 +59,9 @@ export function ngayPos(s) {
 // Lần đổi "chưa rõ" của từng quà, GẮN với khách lúc gửi: ma_qua → { khoa_gui, chu } (chu = dấu vết SĐT — luuMay.dauVet; KHÔNG có PIN). Lúc ĐANG gửi đã có khoá chặn
 // song song cấp mô-đun (DoiQua.jsx guiDoi). Giữ ở cấp mô-đun — sống qua rời màn / vào lại / hết phiên (mất khi tải lại trang: khoá mới trên máy phải vào src/luuMay.js —
 // ngoài Phạm vi, xem Phát hiện). Lần bấm sau cho ĐÚNG quà đó và ĐÚNG khách đó dùng lại khoá (POS trả kết quả cũ, không trừ hai lần); khách khác KHÔNG BAO GIỜ đọc được
-// khoá này (dù kho máy bị chặn, dù không qua luuMay.doiKhach). Xoá: đổi xong quà đó, lần gửi bằng khoá MỚI bị 4xx chắc chắn, bấm Đăng xuất (App.jsx).
+// khoá này (dù kho máy bị chặn, dù không qua luuMay.doiKhach). GHI khi "chưa rõ" — kể cả khi 401 giữa chuỗi tự gửi lại đã xoá phiên (DoiQua.jsx ghi TRƯỚC phép thử phiên).
+// Xoá: đổi xong quà đó, lần gửi bằng khoá MỚI bị 4xx chắc chắn, bấm Đăng xuất (App.jsx). Khoá đánh theo mã quà: khách KHÁC (cùng tab) đổi cùng quà xong / 4xx khoá mới / "chưa rõ"
+// thì xoá hoặc ghi đè dòng của khách trước — đúng luật §8 "khách khác đăng nhập → xoá" (như kh_don_gui qua doiKhach).
 const choRo = new Map();
 export const khoaChoRo = (ma, chu) => { const x = choRo.get(ma); return x && chu && x.chu === chu ? x.khoa : null; };
 export const ghiChoRo = (ma, khoa, chu) => { if (Number.isInteger(ma) && typeof khoa === 'string' && khoa && typeof chu === 'string' && chu) choRo.set(ma, { khoa, chu }); };
