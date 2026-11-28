@@ -25,7 +25,7 @@ const DS = [
 const TRINH_DUYET = [
   ['VS-LOC-THEO-TEN', [[MN, 'loc.filter((m) => khoaNhom(m) === nhom)', 'loc.filter((m) => (m.nhom_ten || m.nhom) === nhom)']]],
   ['VS-SLUG-THEO-TEN', [[MN, '(nhomCo.find((n) => slug(n.id) === nhomSlug) || TAT_CA).id', '(nhomCo.find((n) => slug(n.ten) === nhomSlug) || TAT_CA).id']]],
-  ['VS-O-NHOM-POS-DE-LEN-O-RIENG-GIO-VANG', [[MN, " && slug(n.id) !== GV_SLUG", '']]],
+  ['VS-O-NHOM-POS-DE-LEN-O-RIENG-GIO-VANG', [[MN, ' && s !== GV_SLUG', '']]],
 ];
 
 function chay(ten, sua, trinhDuyet) {
