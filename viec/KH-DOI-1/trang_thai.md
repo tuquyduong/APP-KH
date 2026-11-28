@@ -238,3 +238,44 @@ Sau sửa (máy khởi động lại giữa chừng — `--day-du` chạy lại)
   Việc sau có thể tách các ca "đường thật" sang bài riêng.
 - Tự gửi lại đọc phiên mới mỗi lần (`guiDonAnToan` / `goi`) — đổi quà đã chặn bằng `cung()`; `POST /don` (Thanh toán) có cùng khuôn, chưa chặn — ngoài Phạm vi (soát vòng 3).
 HEAD ĐÃ KIỂM: d3e4b80
+
+## /ra-soat vòng 4 (agent độc lập, 28.11) — báo cáo chép nguyên (rút dòng)
+```
+KHÔNG ĐẠT
+Chạy lại: KHONG_TRINH_DUYET=1 thu_KHDOI1 62/0 · Chromium 171/0. Bốn lỗi vòng 3 đã sửa đúng (doiQua.js:63-67 gắn khách; DoiQua.jsx:94-96, :102 chụp khách, :27-28 không
+gửi lại bằng phiên khác; App.jsx:220 Đăng xuất xoá, :161 docLaiGio không xoá; ca đường thật thu_KHDOI1.js:604-663 qua 401 thật / màn Đăng nhập / nút Đăng xuất).
+LỖI TÌM ĐƯỢC:
+1. src/pages/DoiQua.jsx:111 (+ api.js:87, App.jsx:175, duLieuKhach.js:58, :60) — 401 GIỮA chuỗi tự gửi lại: lần 1 hết giờ (POS có thể đã trừ), lần gửi lại (hoặc một GET
+   cùng lúc) nhận 401 → donPhien → xoaKhoKhach xoá cuaToi → khachDangGiu() '' → `if (!cungKhach()) throw` chạy TRƯỚC nhánh KHONG_BIET → không ghiChoRo. A đăng nhập lại
+   (cùng tab), bấm lại cùng quà → khoá mới → có thể trừ hai lần. POST /don không mắc vì ghi kh_don_gui TRƯỚC lần gửi đầu. Ca 401 hiện có đặt 401 SAU khi chuỗi gửi xong.
+   Sửa: nhánh KHONG_BIET luôn ghiChoRo(q.ma, than.khoa_gui, chu) kể cả phiên đã đổi (khoá gắn chu A — khách khác không đọc; Đăng xuất xoá hết). Ca "lần 1 hết giờ → lần 2
+   401 → A đăng nhập lại → cùng khoá". Mức nặng: xác suất thấp nhưng là đường điểm, đúng ngoại lệ luật §8 / vòng sửa 2 hứa giữ. (K4 / K3)
+2. src/duLieuKhach.js:28 (`if (cho) return cho;`) + DoiQua.jsx:80, :104-105 — "lấy mới sau đổi" dùng lại GET /qua-cua-toi ĐANG BAY từ lúc mở màn → bản cũ (chưa có
+   phiếu mới) về SAU khi gộp → đè → Phiếu quà "Không thấy phiếu quà này", không lấy lại tới 5 phút / mở lại màn (đúng cái B5 hứa). /diem tương tự (Ưu đãi hiện số trước
+   khi đổi — chỉ hiển thị). Ca B5 "chậm 5 giây" chỉ làm chậm GET gửi SAU khi đổi (thu_KHDOI1.js:306). Sửa: sau lệnh ghi bỏ lệnh đang bay rồi lấy mới (vd taoCua có
+   layMoi() tăng `phien` không xoá kho), hoặc gopPhieuQua gộp lại khi bản về thiếu phiếu. (K4 / K3)
+3. src/pages/DoiQua.jsx:95 — /toi lỗi mạng → dq.choKhach "chờ rồi bấm lại" nhưng không ai gọi lại cuaToi.lay() → kẹt tới 5 phút / quay lại app / rời màn, mỗi lần nhập lại
+   PIN. Sửa: chưa biết khách thì gọi cuaToi.lay(). (K5, nhẹ)
+4. src/doiQua.js:61-62, App.jsx:220 (chú thích "401 thì GIỮ"), trang_thai.md vòng sửa 2 / 3 — "401 → GIỮ khoá" không đúng trọn vẹn vì lỗi 1. (K1)
+NGHI NGỜ: choRo đánh theo mã quà — B (cùng tab, A hết phiên) đổi cùng quà xong / 4xx khoá mới → xoá dòng A; B "chưa rõ" → đè dòng A (DoiQua.jsx:103, :113, :117) — khớp
+  luật §8 "khác khách → xoá", không tính lỗi, nên ghi rõ ở chú thích doiQua.js:61. Các mục Phát hiện cũ không nặng hơn.
+K5 khác: SĐT không đổi được (HoSo.jsx:65); gia hạn token không xoá cuaToi; Chế độ sửa chặn ghi bằng 423 CHE_DO_SUA → "chưa tạo", không kẹt.
+Đường điểm: còn lỗi 1; PIN không lưu; App không tự tính số thật; khách B không thấy dữ liệu A (DoiQua.jsx:102, :111; ca thu_KHDOI1.js:650-663). dist/ không commit.
+NGHIỆM THU: 18/18 có bằng chứng (C6 ghi nhận); B5 có lỗi 2; C3 / C5 dựa trang_thai.
+CHƯA SOÁT ĐƯỢC: npm test, --day-du, cổng chay, đột biến (không chạy lại); lỗi 1–3 suy từ code; POS thật; Zalo, chữ phóng to, tỉ lệ lệch ảnh.
+BÀI HỌC: KHOÁ — lệnh trừ điểm / tiền: bản ghi "chưa rõ" ghi KHÔNG điều kiện phiên (đã gắn chủ thì an toàn); ca "401 GIỮA chuỗi tự gửi lại → đăng nhập lại cùng khách →
+  cùng khoá". NGUYÊN TẮC — "lấy mới sau lệnh ghi" phải bỏ lệnh GET đang bay từ trước lệnh ghi (không dùng lại `cho`); ca thử làm chậm cả GET gửi TRƯỚC lệnh ghi.
+```
+
+## Câu hỏi
+**Q3 — hết 3 vòng sửa (`so_vong_sua_toi_da` = 3), soát vòng 4 còn KHÔNG ĐẠT.** Theo skill (bước 8) máy dừng, không tự mở vòng sửa 4. Ba lỗi còn lại (mục trên), máy đề xuất
+sửa đúng như người soát gợi ý — nhỏ, đều trong Phạm vi, không đổi hợp đồng:
+- Lỗi 1 (đường điểm): `DoiQua.jsx` nhánh `KHONG_BIET` ghi khoá TRƯỚC phép thử `cungKhach()` (khoá đã gắn SĐT A — khách khác không đọc được, Đăng xuất vẫn xoá hết) — ~2 dòng;
+  ca "lần 1 hết giờ → lần 2 trả 401 → A đăng nhập lại → cùng khoá" + đột biến.
+- Lỗi 2 (B5): `duLieuKhach.js` `taoCua` thêm `layMoi()` (bỏ lệnh GET đang bay, lấy mới, không xoá kho); DoiQua dùng nó sau đổi cho `/qua-cua-toi`, `/diem`, `/voucher` — ~6 dòng;
+  ca "GET /qua-cua-toi lúc MỞ màn chậm, đổi hiện vật xong trước → Phiếu quà vẫn còn" + đột biến.
+- Lỗi 3 (K5 nhẹ): chưa biết khách thì gọi `cuaToi.lay()` — 1 dòng; ca "/toi lỗi lần đầu → bấm lại đổi được".
+- Lỗi 4 (K1): sửa chú thích + trang_thai theo lỗi 1.
+Chủ quán chọn: (a) cho máy làm **vòng sửa 4** đúng 4 việc trên rồi soát lại; hoặc (b) gộp như hiện tại (công tắc `hien.dq` TẮT mặc định — khách chưa gặp lỗi nào cho tới khi
+chủ quán bật sau khi POS gộp DOI-DIEM-1), ghi 3 lỗi thành việc sau (vd KH-DOI-2) làm TRƯỚC khi bật `hien.dq`.
+Máy dừng ở đây (chưa làm bước 11 / báo cáo 7 mục — làm sau khi soát ĐẠT hoặc chủ quán chọn b).
