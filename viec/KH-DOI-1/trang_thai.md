@@ -74,3 +74,17 @@ K8 nhận cửa trong `DA_HEN_POS`; thêm K8d (cửa đã hẹn đã có trong h
 | DoiQua.jsx `pin` trong thân | VS-BO-PIN-KHOI-THAN (trình duyệt) |
 | DoiQua.jsx nút chỉ khi 'doi' | VS-CHO-DOI-KHI-THIEU-NUT (trình duyệt) |
 | DoiQua.jsx dải nhắc theo `nhac` POS | VS-NHAC-KHONG-THEO-POS (trình duyệt) |
+| kiem_tra_truoc_khi_giao.js K8 chỉ nhận cửa DA_HEN_POS | VS-K8-NHAN-MOI-CUA |
+| kiem_tra_truoc_khi_giao.js K8d | BV-K8D-KHONG-NHAC-GO |
+
+## Sau trả lời Q2 (chủ quán 27.11 — commit PHIEU 12599c2 thêm kiem_tra_truoc_khi_giao.js vào Phạm vi)
+- `git pull --no-rebase --ff-only origin viec/KH-DOI-1`: đã ở 12599c2 (hook mở phiên đã kéo).
+- Áp `va_K8.txt` vào `kiem_tra_truoc_khi_giao.js` (chỉ khối K8: hằng `DA_HEN_POS` 3 cửa, K8 nhận cửa đã hẹn, K8d) — commit 4dca29d.
+- `thu_KHDOI1.js`: 56 đạt · 0 hỏng (KHONG_TRINH_DUYET=1) · 138 đạt · 0 hỏng (Chromium). Gốc: 5 · 39 / 19 · 53. `SỐ CA cong_cu/thu_KHDOI1.js: 56`.
+- Đột biến `node viec/KH-DOI-1/dot_bien_tay.js --trinh-duyet`: đối chứng XANH (138/0), **20/20 BẮT ĐƯỢC** — TẤT CẢ ĐỘT BIẾN BỊ BẮT.
+- `node kiem_tra_truoc_khi_giao.js --day-du`: **71 đạt · 0 hỏng** (✓ K8 … (hoặc DA_HEN_POS) · ✓ K8d · ✓ vite build · ✓ dist/index.html · ✓ K2d; mọi thu_*.js xanh).
+- Cổng (cây sạch, HEAD 9ce2ccd): `node tu_chay/cong.js chay . beab831^ HEAD viec/KH-DOI-1` chạy ở máy có Chromium → `✗ [A16] … SỐ CA` (máy đếm 138 ca, §9);
+  chạy như GitHub `KHONG_TRINH_DUYET=1 node tu_chay/cong.js chay . beab831^ HEAD viec/KH-DOI-1` →
+  `· CẢNH BÁO A16: cong_cu/thu_KHDOI1.js chạy trên gốc in 44 ca ≠ 56 ca ở head — bài dừng sớm trên gốc thì bỏ qua` (đúng: khối hàm thuần ném lỗi vì thiếu src/doiQua.js)
+  · **✓ CỔNG CHẠY ĐẠT**.
+HEAD ĐÃ KIỂM: 9ce2ccd
