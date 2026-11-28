@@ -33,3 +33,13 @@ Kết quả: `node viec/KH-NHOM-1/dot_bien_tay.js --trinh-duyet` → "TẤT CẢ
 ## Ghi chú
 - Ảnh trước / sau 360·390·430: `so_anh/truoc`, `so_anh/sau`; đối chiếu: `doi_chieu_demo.md`.
 - Khoá danh mục /admin: không thêm khoá mới (giữ `menu.nhom`, đổi chỉ đường sang "POS › Quản lý › Giá bán & nhóm món (tên + thứ tự)"); mọi nơi hiện tên nhóm vẫn gắn `data-nd`.
+
+## Cập nhật theo chỉ đạo chủ quán (28.11)
+- Kho đã `git fetch --unshallow` (kho nông là nguyên nhân `thu_KHND3e.js` đỏ khi so với mốc `fe752c3`): chạy lại → `42 đạt · 0 hỏng` (xanh). Sửa mục Phát hiện cũ: KHÔNG còn bài đỏ ngoài phạm vi.
+- B6 `MON_KHONG_BAN`: chủ quán xác nhận Giỏ đã đánh dấu dòng qua `monLoi` — không cần sửa code; ca thử `mon-khong-ban` chứng minh.
+
+## Soát độc lập `/ra-soat` — vòng 1 (báo cáo nguyên văn rút gọn)
+KHÔNG ĐẠT (do chưa ghi C5/`HEAD ĐÃ KIỂM`, vài lỗi nhỏ). LỖI: (1) trang_thai thiếu `HEAD ĐÃ KIỂM` + kết quả cổng — K1; (2) `Menu.jsx` hai mã cùng slug cho hai ô cùng đường dẫn — K5; (3) `nhomTheoTen` lấy thứ tự theo món đầu (món đầu thiếu số → 9999) — K5; (4) `maNhom` không cắt khoảng trắng — K5; (5) món không mã mà `nhom_ten` khác nhau gộp một nhóm — K5 rất hiếm (POS thật mã rỗng đi với tên rỗng) — để nguyên, ghi nhận; (6) so TÊN với 'gio-vang' ở tiêu đề — nit, không thực tế.
+NGHIỆM THU: 14/17 có bằng chứng; thiếu C4 (ghi so ảnh), C5, C6 (chủ quán thử tay).
+Đã xử lý vòng 1: (2) bỏ ô trùng slug (`Menu.jsx` filter `findIndex`), (3) `Math.min` thứ tự, (4) `trim`, thêm ca thử (SỐ CA 15→16), cập nhật đột biến; (1) ghi ở dưới.
+BÀI HỌC (từ người soát): ghi `HEAD ĐÃ KIỂM` + kết quả cổng TRƯỚC `/ra-soat`; chuẩn hoá khoá nhóm ở một chỗ.
