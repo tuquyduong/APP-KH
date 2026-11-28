@@ -1,7 +1,7 @@
 {
   "he": "APP-KH",
   "tep_nay_thuoc_ve": "Kho App KH (tuquyduong/APP-KH · Cloudflare · tuquyduong.com) — dat o goc, ngang hang package.json",
-  "phien_ban_so": 68,
+  "phien_ban_so": 69,
   "cap_nhat": "2026-11-27",
   "cach_dung": "Nguon su that duy nhat ve tien do App KH. May khong ghi so: chu quan ghi bang script chat soan (kiem dung phien_ban_so truoc khi ghi). Viec phia POS ghi o TIEN_DO_POS.json kho POS.",
   "viec": [
@@ -681,13 +681,13 @@
       "ma": "KH-GHICHU-1",
       "loai": "Th",
       "model": "Sonnet",
-      "trang_thai": "cho",
+      "trang_thai": "bo",
       "phu_thuoc": [
         "KH-MUA-1b",
         "POS len hop dong co phan nay (YEU_CAU_APPKH_GUI_POS_02112026_b.md)"
       ],
       "ten": "Ghi chu mon: nut chon nhanh (GET /ghi-chu-nhanh: It da, Khong da, It duong…) + o go tu do o Trang mon; sua ghi chu ngay trong Gio; gui theo cach POS chot",
-      "ghi_chu": "02.11 chu quan: ghi chu mon LUC NAO cung phai co, o moi kenh (POS ban 4 muc 3d). App da co o go tu do (<= 100 ky tu). Truoc khai truong"
+      "ghi_chu": "02.11 chu quan: ghi chu mon LUC NAO cung phai co, o moi kenh (POS ban 4 muc 3d). App da co o go tu do (<= 100 ky tu). Truoc khai truong | 27.11 POS v20: ghi_chu_nhanh theo TUNG mon nam trong /menu (bo cua GET /ghi-chu-nhanh) -> GOP vao KH-TOPPING-1"
     },
     {
       "ma": "KH-HD-1",
@@ -907,6 +907,32 @@
       "ten": "Vong xoay cho POS kieu B chu quan chon 18.11 (CHI vong tron xoay giua man, khong nen, khong mo, khong chan bam; hien khi khach cho > 0,3 s; luot ngam khong tinh) + Gio / Thanh toan giu tong cu MO + vong nho luc tinh lai (nut tra tien van khoa) + nut gui co vong trang + preconnect toi goc POS trong index.html + bao gia gom DAU + DUOI (lan doi dau gui ngay)",
       "ghi_chu": "18.11 chu quan bao App hoi lag -> chat do that (sang: bao gia 1,6-1,9 s vi may chu POS van dung kho Tokyo; 17:40 sau trien khai kho Virginia: bao gia 0,63-0,75 s, mo App 11 luot ~0,8 s) + dung ban thu https://claude.ai/artifact/X1BRV2xZDDWDEcnWe4fLnk (App that + POS gia co do tre) -> chu quan chon kieu B, bo lop mo, bo nen trang; MO (Opus, khong cho duyet ke hoach); phieu + mau ban thu o viec/KH-NHANH-2/ | 19.11 may xong (HEAD DA KIEM 7dab641, soat doc lap vong 2 DAT); chu quan tra loi 2 cau (1 khong can nut tat o /admin, 2 b an vong khi man mo hien) -> vong sua c410e4a / 1853593, dau 66999ee (HEAD DA KIEM 1853593; thu_KHNHANH2 72/0, dot bien 15/15) | 25.11 chat soat cuoi DAT: cong tinh + chay (base 88af1ef; A16 chi canh bao 26 != 37 ca), --day-du Chromium 68/0 (goc 67/0), so 214 anh: khac chi o cho cho | Gop PR #45 (e96671b) 26.11 | thu tay D6 HOAN (26.11 chu quan: POS dang xay, chua ban hang duoc) -> chat nhac khi POS ban duoc",
       "commit": "e96671b"
+    },
+    {
+      "ma": "KH-NHOM-1",
+      "loai": "Th",
+      "model": "Sonnet",
+      "trang_thai": "dang_mo",
+      "ngay": "2026-11-27",
+      "han": "2026-11-29",
+      "phu_thuoc": [
+        "POS NHOM-MON-1 (hop dong v19)"
+      ],
+      "ten": "Menu: ten + thu tu nhom mon lay tu POS (v19): gom theo ma nhom, ten tab = nhom_ten, xep theo nhom_thu_tu, duong dan /menu/<ma nhom>; POS cu hien nhu truoc",
+      "ghi_chu": "27.11 POS v19 doi gia tri nhom tu ten sang ma (tea / juice) -> App that hien \"tea\" / \"juice\" (chat do 19:20) -> mo ngay (Sonnet, khong cho duyet ke hoach), song song KH-DOI-1 (khong dung api.js / datDon.js / App.jsx / canTuPos.js); hop dong v20 chep o thiet_ke/ + viec/KH-NHOM-1/hop_dong_v20.md; phieu o viec/KH-NHOM-1/"
+    },
+    {
+      "ma": "KH-TOPPING-1",
+      "loai": "Th",
+      "model": "Opus",
+      "trang_thai": "cho",
+      "phu_thuoc": [
+        "KH-NHOM-1",
+        "KH-DOI-1",
+        "POS TOPPING-1 (hop dong v20)"
+      ],
+      "ten": "Topping + nut ghi chu nhanh theo tung mon (v20): trang mon chon topping (toi da topping_toi_da_phan phan / loai, con_hang false mo) + nut ghi_chu_nhanh ghep vao ghi_chu theo demo; dong gio = mon + topping + ghi chu; gui topping [{ ma, so_phan }]; hien topping o gio / bao gia / thanh toan / xem don; 3 ma loi moi; mon nhom \"topping\" ban rieng",
+      "ghi_chu": "27.11 POS gop TOPPING-1 (thu TRA_LOI_POS_27112026) -> them viec, gop KH-GHICHU-1; mo SAU khi KH-NHOM-1 + KH-DOI-1 gop (cung Menu.jsx / datDon.js / canTuPos.js); [T] dung tien (bao gia) -> Opus; thu App 27.11 hoi POS 4 cau (ma topping trung ma mon, nhom_ten nhom topping, cach ghep ghi chu, cai 1 topping that de thu)"
     }
   ]
 }

@@ -3,6 +3,13 @@
 <!-- Chat App KH ghi theo lời chủ quán. Nguồn sự thật cho mọi chat App KH và máy App KH: quyết định ở đây THẮNG ghi chú cũ trong phiếu / đặc tả.
      Quyết định chung với POS: QUYET_DINH_CHU_QUAN.md ở kho POS (chat POS ghi). Mới ở trên cùng. Muốn đổi → chủ quán nói, chat ghi dòng mới, không xoá dòng cũ (gạch "thay bằng …"). -->
 
+## 27.11.2026
+- **Hợp đồng `/api/kh` v20** (thư `trao_doi/TRA_LOI_POS_27112026.md`): App chép nguyên bản POS. v19 đổi GIÁ TRỊ `nhom` từ tên sang mã (`tea`, `juice`) → App ngoài thật
+  đang hiện "tea" / "juice" → **KH-NHOM-1** (Sonnet, làm ngay, song song KH-DOI-1): tên tab = `nhom_ten`, thứ tự = `nhom_thu_tu`, gom + đường dẫn theo mã `nhom`.
+  **KH-TOPPING-1** (topping + nút ghi chú nhanh theo món, v20) mở SAU khi KH-NHOM-1 + KH-DOI-1 gộp; KH-GHICHU-1 gộp vào đó. Thư App 27.11 báo POS + 4 câu hỏi topping.
+- **KH-DOI-1 câu K8** (chủ quán 27.11 "C sửa"): cửa ĐÃ HẸN của POS ghi trong hằng `DA_HEN_POS` viết thẳng trong bộ kiểm (nguồn = thư POS 16.11), K8 nhận các cửa đó,
+  K8d đỏ khi cửa đã vào hợp đồng → gỡ; máy KH-DOI-1 được sửa `kiem_tra_truoc_khi_giao.js` CHỈ khối K8 (script `duyet_KHDOI1_K8.py` thêm vào Phạm vi phiếu).
+
 ## 26.11.2026
 - **Đổi điểm lấy quà (KH-DOI-1) — chủ quán DUYỆT thiết kế** (Artifact https://claude.ai/artifact/6Wpx3HESda2GE9uHEm43wf, "đồng ý với các đề xuất" = 1a 2a 3a 4a):
   làm ngay, công tắc /admin `hien.dq` mặc định TẮT tới khi POS gộp DOI-DIEM-1; quà HIỆN VẬT đổi TRÊN App (có PIN) → phiếu QR nhận ở quầy (THAY quyết định 11.11
